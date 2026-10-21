@@ -59,3 +59,6 @@ How are we doing on finding benchmark bots?
 
 ## 10. 2026-10-21 12:29 PDT
 Now that you've got a replica and some kind of benchmark going, I'd like to see you replicate the progress/ setup that 2023 used.  I liked those graphs
+
+## 11. 2026-10-21 14:58 PDT
+How is the benchmark download coming along?
