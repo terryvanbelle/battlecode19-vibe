@@ -14,9 +14,18 @@ const CrossVM = require(path.join(ENGINE, 'vm'));
 const st = toolchainStatus();
 const why = lang => (!st[lang] ? lang + ' toolchain not installed in ' + st.toolchain : !st.sandbox ? 'compile sandbox unavailable' : false);
 
+// CrossVM gives the bundle 200 ms to load; on a loaded machine a cold sandbox can miss that (LEARNINGS 1). The test
+// checks that the code loads, so it retries timeouts a few times; any other error fails at once.
 function loads(code) {
-  const v = new CrossVM(code);
-  assert.strictEqual(v.vm.run('typeof robot._do_turn'), 'function');
+  for (let i = 0; ; i++) {
+    try {
+      const v = new CrossVM(code);
+      assert.strictEqual(v.vm.run('typeof robot._do_turn'), 'function');
+      return;
+    } catch (e) {
+      if (i >= 4 || !(e && e.code === 'ERR_SCRIPT_EXECUTION_TIMEOUT')) throw e;
+    }
+  }
 }
 
 test('compile_bot: JavaScript example via the engine rollup', async () => {
