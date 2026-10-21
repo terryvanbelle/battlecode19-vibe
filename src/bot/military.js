@@ -77,7 +77,7 @@ function bandSources(B, tx, ty) {
 
 function go(B, key, sources, cap) {
   const w = B.w, S = STATS[w.me.unit];
-  const r = fuelStep(w.fuel, Math.min(S.speed, cap || S.speed), S.fuelPerMove, 60);
+  const r = fuelStep(w.fuel, Math.min(S.speed, cap || S.speed), S.fuelPerMove, cap ? CFG.CRUISE_FUEL_RESERVE : 60);
   // Unhurried (cruise) moves wait longer in a jam before sliding sideways or stepping back: each costs fuel.
   const s = B.nav.step(key, sources, r, undefined, cap ? [CFG.CRUISE_SLIDE_AFTER, CFG.CRUISE_ESCAPE_AFTER, !!CFG.CRUISE_RESET] : undefined,
     cap && CFG.DETOUR ? [CFG.DETOUR_AFTER, CFG.DETOUR, CFG.DETOUR_EVERY, CFG.DETOUR_MEMORY] : null);
