@@ -174,3 +174,7 @@
   ~3,900 fuel mining karbonite and ends with ~3,500 unspent. Delivery: seed 2202 vs h6, mining fuel down by >= 1,500
   and karbonite at round 1000 <= 1,500, units built not fewer. Gate: h17 vs h6, 40 games; falsifier net <= 0.
   Risk: a church or the endgame dump finds karbonite short.
+- Load audit of every batch file: games with any robot init failure (machine load, LEARNINGS 8) were h1 vs base 6/40,
+  h2 vs h1 5/40, h6 vs v3 5/40, v2 vs v1 16/24, ~/runs/results 18/56, v1 vs v0 24/24 (so "v0 beats v1" was noise).
+  tools/paired.js (new --h2h mode for direct batches) and the progress games table now skip such games; h6 vs v3 on
+  clean games reads 7 gained, 7 lost, 1 split: net 0.

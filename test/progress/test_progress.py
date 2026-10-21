@@ -107,12 +107,13 @@ class TestGames(Base):
                 batch_row('dist/h2', 'dist/dev', 'hh2', 'dev1', 1, 3),
                 batch_row('dist/dev', 'bots/rush', 'dev2', 'hashr', 1, 4),
                 batch_row('dist/h2', 'dist/h1', 'hh2', 'hash1', 1, 5, rounds=0, reason='both_init_failure'),
-                batch_row('dist/h2', 'dist/h1', 'hh2', 'hash1', 1, 6, error='spawn failed')]
+                batch_row('dist/h2', 'dist/h1', 'hh2', 'hash1', 1, 6, error='spawn failed'),
+                batch_row('dist/h2', 'dist/h1', 'hh2', 'hash1', 1, 7, a_team={'init_fail': 0}, b_team={'init_fail': 3})]
         out, skipped = games.local_rows([('batch-out/f', rows)], by_hash)
         self.assertEqual([(r['teamA'], r['teamB'], r['winner']) for r in out],
                          [('us:v1', 'us:v0', 'A'), ('cand:h2', 'bc19-starter', 'B'),
                           ('cand:h2', 'cand:dev@dev1', 'A'), ('cand:dev@dev2', 'spar:rush', 'A')])
-        self.assertEqual(dict(skipped), {'init failure': 1, 'error': 1})
+        self.assertEqual(dict(skipped), {'init failure': 1, 'error': 1, 'load (robot init failures)': 1})
         r = out[0]
         self.assertEqual((r['run'], r['seq'], r['map'], r['seed'], r['a_side'], r['time']),
                          ('batch-out/f', 1, 'seed-7', 7, 'red', '2026-10-21T19:00:00Z'))

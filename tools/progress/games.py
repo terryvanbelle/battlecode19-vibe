@@ -89,6 +89,10 @@ def local_rows(sources, by_hash):
                 skipped['error'] += 1; continue
             if init_failure(r.get('rounds'), r.get('reason')):
                 skipped['init failure'] += 1; continue
+            # Local games are between our own builds, which never fail to load on an idle machine: robots failing
+            # vm2's 200 ms load budget mean an oversubscribed VM, and the result is noise (LEARNINGS 8).
+            if any((r.get(k) or {}).get('init_fail', 0) > 0 for k in ('a_team', 'b_team')):
+                skipped['load (robot init failures)'] += 1; continue
             if r.get('winner_is_a') not in (0, 1, True, False) or not r.get('a_hash') or not r.get('b_hash'):
                 skipped['malformed'] += 1; continue
             seed = r.get('seed', '')

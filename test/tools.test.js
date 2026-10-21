@@ -97,6 +97,18 @@ test('paired: round-0 init failures (machine load) are skipped', () => {
   assert.strictEqual(r.cells, 1);
 });
 
+test('paired: --h2h pairs the two sides of a seed; load-contaminated rows are skipped', () => {
+  const { h2hRead, pairedRead } = require('../tools/paired.js');
+  const row = (seed, side, w, extra = {}) => ({ a_hash: 'c', b_hash: 'k', seed, a_side: side, winner_is_a: w, reason: 'castles', rounds: 400, a_team: { init_fail: 0 }, b_team: { init_fail: 0 }, ...extra });
+  const rows = [row(1, 'red', 1), row(1, 'blue', 1), row(2, 'red', 0), row(2, 'blue', 1), row(3, 'red', 0), row(3, 'blue', 0),
+    row(4, 'red', 1), row(4, 'blue', 1), row(5, 'red', 1), row(5, 'blue', 1, { b_team: { init_fail: 40 } })];
+  const r = h2hRead(rows);
+  assert.deepStrictEqual([r.cells, r.gained, r.lost, r.split, r.net, r.D, r.skipped, r.games, r.wins], [4, 2, 1, 1, 1, 3, 1, 9, 6]);
+  const p = [{ a_hash: 'c', b_hash: 'o', seed: 1, a_side: 'red', winner_is_a: 1, rounds: 400, a_team: { init_fail: 2 } },
+    { a_hash: 'k', b_hash: 'o', seed: 1, a_side: 'red', winner_is_a: 0, rounds: 400 }];
+  assert.strictEqual(pairedRead(p, 'c', 'k').cells, 0);
+});
+
 test('jobq: add and status list pending jobs in order', () => {
   const { execFileSync } = require('child_process');
   const os = require('os');
