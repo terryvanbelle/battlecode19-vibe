@@ -1,0 +1,6 @@
+{
+  "name": "bc19-engine-pin",
+  "private": true,
+  "description": "Pinned Battlecode 2019 engine. Only Game/Coldbrew/Compiler.JS are used; never run bc19upload/bc19cloud.",
+  "dependencies": { "bc19": "0.4.7" }
+}

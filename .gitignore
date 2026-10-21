@@ -1,0 +1,5 @@
+engine/node_modules/
+__pycache__/
+*.pyc
+scratch/
+/runs/
