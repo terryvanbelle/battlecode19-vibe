@@ -1,0 +1,4 @@
+# Our replica submissions -> build (bots/ROSTER.tsv name), for submissions whose description does not start with
+# the build name (tools/progress/games.py). Add a row when a submission is described otherwise.
+submission	build	note
+1	v1	description "src/bot @ f06db2e": its .js files are byte-identical to bots/v1 (diff -r, 2026-10-21)

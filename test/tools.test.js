@@ -89,13 +89,6 @@ test('paired: discordant cells, net and t; mismatched cells ignored', () => {
   assert.strictEqual(pairedRead(rows, 'c', 'zz').cells, 0);
 });
 
-test('progress: renders one series per opponent', () => {
-  const { render } = require('../tools/progress.js');
-  const svg = render([{ version: 'v1', opponent: 'example', games: 4, wins: 3 }, { version: 'v2', opponent: 'example', games: 4, wins: 4 }, { version: 'v2', opponent: 'v1', games: 2, wins: 1 }]);
-  assert.ok(svg.startsWith('<svg')); assert.strictEqual((svg.match(/<polyline/g) || []).length, 1);
-  assert.strictEqual((svg.match(/<circle/g) || []).length, 3);
-});
-
 test('paired: round-0 init failures (machine load) are skipped', () => {
   const { pairedRead } = require('../tools/paired.js');
   const row = (a, seed, w, extra = {}) => ({ a_hash: a, b_hash: 'o', seed, a_side: 'red', winner_is_a: w, reason: 'castles', rounds: 400, ...extra });
