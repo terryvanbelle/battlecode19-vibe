@@ -79,3 +79,18 @@
   health at round 1000. Reach: 9 of 20 h3 vs h2 games and 12 of 40 h2 vs h1 games ended on health. Displaces: late
   pilgrims and churches, the round-950 final push (units hold). Gate: h8 vs h6, 40 games (seeds 5000+); falsifier:
   health wins not up, or castle losses up. Dose ladder: ENDGAME_FUEL 0 / 900 / 850.
+
+## 2026-10-21 14:40 — h9 (church planner reach), h8 delivers, movement fuel census
+- h9 mechanism (pre-registered): the castle's church planner counted a cluster served if any depot lay within
+  2*SERVE_MOVES king steps, while staffing (struct.js) serves depots within SERVE_MOVES pilgrim moves (r2 4). A
+  diagonal 8-king-step depot takes ~8 pilgrim moves: such clusters were neither staffed nor churched. Seed 1755: 2
+  pilgrims and no church all game for both h6 and v3-line builds. Corpus estimate (seeds 1-600, red side): 135 of
+  577 maps (23%) orphan at least one depot, 517 of 8,728 own-side depots (6%). PLAN_SERVE_PILGRIM=1 counts served
+  by pilgrim moves and churches clusters with >= 2 unserved depots (or all, if smaller). Delivery: seed 1755 church
+  planned and built by round 50 (4 pilgrims vs 2). Gate: h9 vs h6, 40 games (seeds 5000+); falsifier net <= 0.
+  PIONEER_RESERVE (keep 60 K for a due pioneer) was the first guess; it did not deliver on 1755 and stays off.
+- h8 delivery (seed 2202 vs h6): health 2,710 vs 3,040 at round 900 became 4,450 vs 3,990 at 1000; preachers 7 -> 42.
+- Movement fuel census (seed 2202, h6 side): 21,154 fuel on moves of ~25,000 mined; 87% with no enemy attacker
+  within r2 100; 13,400 of it within 12 king steps of our own structures after round 450, ~100 near the enemy.
+  Military path length is 2.7-4.3x net displacement. Top mover: a newborn preacher circling a walled corner castle
+  for 57 rounds (nav slide/escape ladder in a jam). A move-mode census with logs is running.

@@ -8,7 +8,7 @@ import { bfs } from './mapinfo.js';
 import { offsets } from './util.js';
 import { structInit, structTurn, buildToward } from './struct.js';
 
-const KING = offsets(2);
+const KING = offsets(2), PILGRIM_OFFS = offsets(4);
 
 export function castleTurn(B) {
   const w = B.w, me = w.me, st = B.st;
@@ -62,6 +62,9 @@ function planClusters(B) {
   const w = B.w, st = B.st, n = w.n, me = w.me;
   const own = [...st.castles.values()].sort((a, b) => (a.y * n + a.x) - (b.y * n + b.x));
   const ownF = own.map(c => bfs(w, [[c.x, c.y]], KING));
+  // PLAN_SERVE_PILGRIM: "served" as struct.js staffs depots (pilgrim moves); king steps over-counted diagonal reach.
+  const ownP = CFG.PLAN_SERVE_PILGRIM ? own.map(c => bfs(w, [[c.x, c.y]], PILGRIM_OFFS)) : null;
+  const reach = d => ownP.some(f => { const v = f[d.y * n + d.x]; return v >= 0 && v <= CFG.SERVE_MOVES; });
   const enemyF = own.map(c => bfs(w, [w.mirror(c.x, c.y)], KING));
   const myIdx = own.findIndex(c => c.x === me.x && c.y === me.y);
   st.plan = [];
@@ -69,7 +72,9 @@ function planClusters(B) {
     const [sx, sy] = c.site, k = sy * n + sx;
     const dOwn = ownF.map(f => f[k] < 0 ? 999 : f[k]);
     const dUs = Math.min(...dOwn), dThem = Math.min(...enemyF.map(f => f[k] < 0 ? 999 : f[k]));
-    const served = c.depots.some(d => ownF.some(f => { const v = f[d.y * n + d.x]; return v >= 0 && v <= CFG.SERVE_MOVES * 2; }));
+    const unserved = ownP ? c.depots.filter(d => !reach(d)).length : 0;
+    const served = ownP ? unserved < Math.min(2, c.depots.length)
+      : c.depots.some(d => ownF.some(f => { const v = f[d.y * n + d.x]; return v >= 0 && v <= CFG.SERVE_MOVES * 2; }));
     if (served || dUs > dThem + CFG.CLAIM_MARGIN) continue;
     let owner = 0; for (let i = 1; i < own.length; i++) if (dOwn[i] < dOwn[owner]) owner = i;
     if (owner === myIdx) st.plan.push({ cluster: c.i, d: dUs, value: c.nk * 2 + c.nf });
