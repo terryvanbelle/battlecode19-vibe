@@ -93,6 +93,8 @@ function callAttack(B) {
   if (B.round < CFG.ATTACK_ROUND) return;
   const army = st.count[3] + st.count[4] + st.count[5];
   if (army < CFG.ATTACK_MIN_ARMY && B.round < 950) return;
+  // An army without fuel cannot shoot: attack only with fuel for a few volleys per unit (except at the very end).
+  if (w.fuel < CFG.ATTACK_FUEL_PER_UNIT * army && B.round < 950) return;
   if (B.round % 5 !== 0) return;
   const targets = [...st.castles.values()].map(c => w.mirror(c.x, c.y));
   targets.sort((a, b) => ((a[0] - me.x) ** 2 + (a[1] - me.y) ** 2) - ((b[0] - me.x) ** 2 + (b[1] - me.y) ** 2) || a[0] - b[0]);
