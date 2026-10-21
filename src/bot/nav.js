@@ -3,7 +3,7 @@
 // (+1) to get round a jam; it never returns to one of its last few tiles while sliding or escaping.
 import { bfs } from './mapinfo.js';
 
-const LADDER = [2, 4];
+const LADDER = [2, 4, false];
 
 export class Nav {
   constructor(w, offs, rnd, cacheSize = 6) {
@@ -24,8 +24,9 @@ export class Nav {
   dist(key, sources) { const w = this.w; return this.field(key, sources)[w.me.y * w.n + w.me.x]; }
 
   // Choose a step toward the key's sources. maxR2: largest step allowed (fuel). avoid(x,y): tiles to never enter.
-  // ladder: [slide after, step back after] this many blocked turns. Returns [dx, dy] or null (arrived, unreachable,
-  // or waiting).
+  // ladder: [slide after, step back after] this many blocked turns, and whether a slide or step back restarts the
+  // count (otherwise a long-blocked robot slides every turn). Returns [dx, dy] or null (arrived, unreachable, or
+  // waiting).
   step(key, sources, maxR2, avoid, ladder = LADDER) {
     const w = this.w, n = w.n, me = w.me, f = this.field(key, sources);
     if (key !== this.lastKey) { this.blocked = 0; this.lastKey = key; }
@@ -52,6 +53,7 @@ export class Nav {
       this.blocked++; this.stats.blocked++;
       if (this.blocked >= ladder[0]) { s = pick(cur); if (s) this.stats.slides++; }
       if (!s && this.blocked >= ladder[1]) { s = pick(cur + 1); if (s) this.stats.escapes++; }
+      if (s && ladder[2]) this.blocked = 0;
     } else this.blocked = 0;
     if (!s) return null;
     this.recent.push(me.y * n + me.x); if (this.recent.length > 4) this.recent.shift();

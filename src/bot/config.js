@@ -21,6 +21,7 @@ export const CFG = {
   CRUISE_R2: 2,              // largest step for unhurried military moves (fuel cost is r2 x fuel/move)
   CRUISE_SLIDE_AFTER: 2,     // unhurried moves: blocked turns before a sideways slide / a step back (seed 2202:
   CRUISE_ESCAPE_AFTER: 4,    // slides and step-backs were 11,500 of 19,400 move fuel, an army jammed in a corridor)
+  CRUISE_RESET: 0,           // 1: a slide or step back restarts that count (0: a long-blocked robot slides every turn)
   PILGRIM_FAST_FUEL: 1000,  // pilgrims take full r2 4 steps only above this fuel
   SWITCH_FUEL_LOW: 150,      // an empty-handed karbonite miner moves to fuel when fuel < this and karbonite >= ...
   SWITCH_KARB_HIGH: 200,

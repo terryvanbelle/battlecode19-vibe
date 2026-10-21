@@ -106,3 +106,7 @@
   15 instead of 4 (CRUISE_SLIDE_AFTER / CRUISE_ESCAPE_AFTER; engage and retreat moves unchanged). Delivery: seed 2202
   vs h6, move fuel down by at least a third with castle count not worse. Gate: h11 vs h6, 40 games; falsifier
   net <= 0. Risk: a jam that sliding would have dissolved now holds longer.
+- h11 delivery #1 (slide 6 / step back 15): move fuel 19,500 vs h6's 21,781 on seed 2202 (-10%), short of the
+  pre-registered third. Cause: Nav.step never restarts the blocked count after a slide, so a robot past the threshold
+  slides every turn of a long jam whatever the threshold. h11 rebuilt with CRUISE_RESET=1 (a slide or step back
+  restarts the count, cruise moves only) before its gate ran; delivery #2 on seed 2202 running.

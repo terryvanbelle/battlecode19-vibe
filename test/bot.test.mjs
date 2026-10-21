@@ -136,6 +136,9 @@ test('nav: a blocked robot waits ladder[0] turns before sliding and ladder[1] be
   // no equal-distance tile exists in a corridor, so the first move is the step back at ladder[1] blocked turns
   assert.deepStrictEqual(run([2, 4]).slice(0, 4), ['-', '-', '-', '-1,0']);
   assert.deepStrictEqual(run([6, 7]).slice(0, 7), ['-', '-', '-', '-', '-', '-', '-1,0']);
+  // Once over the threshold a robot keeps moving every turn unless the count restarts after each move.
+  const moves = l => run(l).filter(m => m !== '-').length;
+  assert.ok(moves([2, 4]) >= 4); assert.strictEqual(moves([2, 4, true]), 2);
 });
 
 test('comms: encode/decode', () => {
