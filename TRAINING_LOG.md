@@ -32,3 +32,14 @@
   re-run of one of them, so the spike is outside our code (state-message compile, GC or CPU starvation at load ~12).
 - Queued on the VM: h2 vs h1 (home guard, reseeded RNG, attack fuel gate), h3 vs h2 (depot cooldown after pilgrim
   deaths), h4 vs h3 (crusader/preacher rotation).
+
+## 2026-10-21 12:45 — rush sparring partner exposes a fuel death spiral (h5)
+- bots/rush = src/bot built with `--cfg RUSH=4` (crusaders at the mirror castle from round 5).
+- v3 vs rush: won seed 1375 (61x61, castles 18 tiles apart) at round 462; lost seed 2330 (41x41, 3 castles) on
+  castle count at round 1000. In the loss v3's prophets spent 28,735 fuel shooting (1,354 shots at 25 fuel), team
+  fuel sat near 0, pilgrims were idle on 5,815 of 11,262 turns (no fuel to move or mine) and 1,547 karbonite
+  floated. The rush side mined 9,056 K and 45,300 F with 10 pilgrims.
+- Replica: CS554-software-engineering-groupProject plays a crusader swarm (141 crusaders built in one game).
+  Fuel per damage: crusader 1.0, prophet 0.4, preacher 1.33 plus splash, castle 1.0.
+- h5 = h4 + karbonite miners switch to fuel when fuel < 150 and karbonite >= 200 (and back when karbonite < 30
+  and fuel >= 3000) + military keeps a 30-fuel floor when shooting.
