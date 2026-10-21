@@ -65,3 +65,17 @@
 - h3 vs h2 (depot cooldown alone): 10/20, stopped at half to give h6 vs v3 the VM. Depot cooldown stays in h6.
 - progress/ (2023-style Bradley-Terry charts, ATTEMPTS ledger, replica ladder) is live; refresh with
   tools/progress-refresh.sh. It shows v0 beating v1 27-10 locally, so v0 rates level with v3: v3 vs v0 queued.
+
+## 2026-10-21 14:00 — pre-registration: h7 (attack persistence), h8 (endgame fuel)
+- h7 mechanism: after a kill the army stays in the enemy half and is told the next castle. Counter: CT.DEAD talk
+  turns and FAR.WIDE (r2 7930) radio in replays. Reach: fires in every game where one enemy castle dies while
+  another lives (multi-castle maps; h1 vs v2 had 20 castle wins in 36). Displaces: the walk home, 90 fuel per kill.
+  Functional screen: h7 vs example finishes multi-castle games no later than h6 vs example (seeds 1972, 527, 1755,
+  1154). Gate: h7 vs h6, 40 games (seeds 5000+, both sides), wins by castles up; falsifier: fewer castle wins or
+  net <= 0. Zero arm: ATTACK_PERSIST=0 is the incumbent.
+- h8 mechanism: games that reach round 1000 are decided by total health; both teams end with ~2,500 karbonite and
+  < 100 fuel (h3 vs h2 rows), so from round 900 all fuel goes into preachers (60 HP per 50 fuel) and nothing else
+  (no pilgrims, churches, reserves, cruising away from home). Counter: preachers built in rounds 900-1000 and team
+  health at round 1000. Reach: 9 of 20 h3 vs h2 games and 12 of 40 h2 vs h1 games ended on health. Displaces: late
+  pilgrims and churches, the round-950 final push (units hold). Gate: h8 vs h6, 40 games (seeds 5000+); falsifier:
+  health wins not up, or castle losses up. Dose ladder: ENDGAME_FUEL 0 / 900 / 850.
