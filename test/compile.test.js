@@ -34,6 +34,20 @@ test('compile_bot: JavaScript example via the engine rollup', async () => {
   loads(r.code);
 });
 
+test('compile_bot: JS fallback resolves subdirectory and extensionless imports', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bc19-lenient-'));
+  try {
+    fs.mkdirSync(path.join(dir, 'lib'));
+    fs.writeFileSync(path.join(dir, 'lib', 'util.js'), 'export function two() { return 2; }\n');
+    fs.writeFileSync(path.join(dir, 'robot.js'), "import {BCAbstractRobot} from 'battlecode';\nimport {two} from './lib/util';\n" +
+      'class MyRobot extends BCAbstractRobot { turn() { this.log(two()); return null; } }\n');
+    await assert.rejects(compileBotDir(dir, { strict: true, noCache: true }));
+    const r = await compileBotDir(dir, { noCache: true });
+    assert.strictEqual(r.mode, 'lenient');
+    loads(r.code);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('compile_bot: Java example (JSweet) loads in CrossVM', { skip: why('java'), timeout: 600000 }, async () => {
   const r = await compileBotDir(path.join(ENGINE, 'bots', 'example_java'));
   assert.strictEqual(r.lang, 'java');

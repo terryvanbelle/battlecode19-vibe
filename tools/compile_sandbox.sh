@@ -23,6 +23,6 @@ mount --bind "$W" "$NEW/work"
 mount -t tmpfs -o size=64m tmpfs "$NEW/tmp"
 for dv in null zero urandom random; do touch "$NEW/dev/$dv"; mount --bind "/dev/$dv" "$NEW/dev/$dv"; done
 mount -t proc proc "$NEW/proc"
-mount -o remount,ro "$NEW"
+mount -o remount,ro "$NEW" 2>/dev/null || mount -o remount,bind,ro "$NEW"   # plain remount is refused on some kernels in a userns
 exec /usr/sbin/chroot "$NEW" /usr/bin/env -i PATH=/nodebin:/usr/bin:/bin HOME=/work LANG=C.UTF-8 \
   /bin/sh -c 'cd /work && exec "$@"' sh "$@"

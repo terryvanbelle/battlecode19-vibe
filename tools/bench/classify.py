@@ -7,11 +7,13 @@ A bot is (a) a directory holding an entry file robot.js / MyRobot.java / robot.p
 that language (recursively, minus nested bot dirs) use 2019-only API names; or (b) a single-file JS/Python bot: a file
 outside any bot dir that extends BCAbstractRobot and uses 2019 API names but does not define BCAbstractRobot itself
 (that would be the runtime library); or (c) a compiled bundle: a .js file outside bot dirs that defines BCAbstractRobot
-AND has a class extending it (the output of the bc19 compiler, e.g. a submitted 'botfinal.js'). Kinds: dir/file/bundle.
+AND has a class extending it (the output of the bc19 compiler, e.g. a submitted 'botfinal.js'), or a JSweet bundle of
+a Java bot (var BCAbstractRobot = ..., bc19.MyRobot). Kinds: dir/file/bundle.
 Per bot: language, files, lines, files using 2019 names, sha256 over sorted (path relative to bot, bytes), and flags:
   example   entry file byte-identical (whitespace-normalised) to an official example bot, or difflib ratio >= 0.85 on
             normalised lines with a total size within 1.5x of that example (near-identical starter)
-  official  the bot dir sits at a path that exists in the official battlecode/battlecode19 tree (monorepo forks/copies)
+  official  the bot dir sits at a coldbrew/ or transpiler/ path of the official battlecode/battlecode19 tree, or a
+            single-file/bundle bot is a file at an official path (e.g. app/src/views/docs.js): monorepo forks/copies
 """
 import difflib, hashlib, os, re, subprocess
 from pathlib import Path
@@ -37,13 +39,15 @@ def norm_lines(b):
 
 
 EX = {lang: [(p, norm_lines(p.read_bytes()), p.stat().st_size) for p in ps] for lang, ps in EXAMPLES.items()}
-OFFICIAL_DIRS = set()
+OFFICIAL_DIRS, OFFICIAL_FILES = set(), set()
 for l in subprocess.run(['git', '-C', str(OFF), 'ls-files'], capture_output=True, text=True).stdout.splitlines():
     OFFICIAL_DIRS.add(os.path.dirname(l))
+    OFFICIAL_FILES.add(l)
 
 
 def is_2019(b):
-    return bool(API19.search(b)) or (b'BCAbstractRobot' in b and b'karbonite' in b)
+    # BCAbstractRobot is the 2019-only base class (later years use RobotController / plain functions)
+    return bool(API19.search(b)) or b'BCAbstractRobot' in b
 
 
 def example_flag(lang, entry_bytes, total_size):
@@ -81,6 +85,8 @@ def main():
                     bots.append(('file', p, 'js' if p.suffix.lower() == '.js' else 'py', p, [p]))
                 elif p.suffix.lower() == '.js':
                     bots.append(('bundle', p, 'js', p, [p]))
+            elif p.suffix.lower() == '.js' and re.search(rb'var\s+BCAbstractRobot\s*=', b) and b'bc19.MyRobot' in b:
+                bots.append(('bundle', p, 'js', p, [p]))          # JSweet (Java) bundle of the bc19 compiler
         for kind, d, lang, e, src in bots:
             blobs = sorted((str(p.relative_to(d)) if kind == 'dir' else 'bot', p.read_bytes()) for p in src)  # single files: content only
             n19 = sum(is_2019(b) for _, b in blobs)
@@ -93,7 +99,8 @@ def main():
             total = sum(len(b) for _, b in blobs)
             rel = str(d.relative_to(repo)) if d != repo else '.'
             ex = example_flag(lang, e.read_bytes(), total)
-            off = 'yes' if kind == 'dir' and rel in OFFICIAL_DIRS and (rel.startswith('coldbrew') or rel.startswith('transpiler')) else ''
+            off = 'yes' if (kind == 'dir' and rel in OFFICIAL_DIRS and (rel.startswith('coldbrew') or rel.startswith('transpiler'))
+                            or kind != 'dir' and rel in OFFICIAL_FILES) else ''
             out.append('\t'.join([repo.name, rel, kind, lang, str(len(blobs)), str(lines), str(n19), ex, off, h.hexdigest()]))
     (ROOT / 'bots.tsv').write_text('\n'.join(out) + '\n')
     print(f'{len(out) - 1} bots -> {ROOT / "bots.tsv"}')

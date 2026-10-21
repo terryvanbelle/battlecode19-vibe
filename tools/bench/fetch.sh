@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Fetch candidate repos and keep those holding Battlecode 2019 code, WITHOUT reading any source.
 #
-#   tools/bench/fetch.sh [discovery.tsv]        (env: BENCH_ROOT, JOBS)
+#   tools/bench/fetch.sh [discovery.tsv]        (env: BENCH_ROOT, JOBS; incremental: rows already in _fetch.tsv are kept)
 #
 # Per candidate: full path list with blob sizes from the GitHub trees API (no clone) -> lists/<dir>.txt
 # (non-GitHub or truncated trees: depth-1 blob-less clone, ls-tree paths only).
@@ -83,6 +83,8 @@ fetch_one () {
   fi
 }
 export -f fetch_one; export BENCH_ROOT OUT
-tail -n +2 "$DISC" | awk -F'\t' '{print $1"\t"$2"\t"$3}' | sort -u | \
+# Order: candidates found by name/fork/web sources first, then gitlab, then date windows, then code search only.
+tail -n +2 "$DISC" | awk -F'\t' '{k=3; if ($3 ~ /(^|;)(repo|fork|forker|web)[:;]?/) k=0; else if ($3 ~ /(^|;)gitlab:/) k=1;
+  else if ($3 ~ /(^|;)win:/) k=2; print k"\t"$1"\t"$2"\t"$3}' | sort -t$'\t' -k1,1n -k2,2 -u | cut -f2- | \
   xargs -d '\n' -P "$JOBS" -I{} bash -c 'IFS=$'"'"'\t'"'"' read -r a b c <<< "$1"; fetch_one "$a" "$b" "$c"' _ {}
 echo "fetched: $(($(wc -l < "$OUT") - 1)) candidates; bc19: $(awk -F'\t' '$4=="bc19"' "$OUT" | wc -l); disk: $(du -sh "$BENCH_ROOT" | cut -f1)"

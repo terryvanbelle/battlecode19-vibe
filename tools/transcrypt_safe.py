@@ -41,7 +41,13 @@ class _BlockWorkImports:
     @staticmethod
     def find_spec(name, path=None, target=None):
         spec = importlib.machinery.PathFinder.find_spec(name, path)
-        if spec is not None and spec.origin and _inside_work(spec.origin):
+        if spec is None:
+            return None
+        # origin is a file path, or a marker such as 'namespace' (Python 3.6 namespace packages) that must not be
+        # resolved against the cwd; namespace packages are checked through their search locations.
+        where = [spec.origin] if spec.origin and os.path.isabs(spec.origin) else []
+        where += list(spec.submodule_search_locations or [])
+        if any(_inside_work(p) for p in where):
             raise ImportError('transcrypt_safe: compile-time import of bot module %r refused' % name)
         return None
 
@@ -124,6 +130,9 @@ compiler.eval = _safe_eval
 compiler.subprocess = _NoSubprocess
 utils.exec = _safe_exec
 utils.eval = _literal_eval
+# transcrypt/__main__ pops 'org' from sys.modules but then reuses our cached 'org.transcrypt', whose namespace-package
+# __path__ would look 'org' up again on the next submodule import (KeyError: 'org'): freeze it to a plain list.
+sys.modules['org.transcrypt'].__path__ = list(sys.modules['org.transcrypt'].__path__)
 
 import runpy  # noqa: E402
 

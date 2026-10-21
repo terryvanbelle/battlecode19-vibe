@@ -3,7 +3,9 @@
 
     python3 -I tools/bench/roster.py      -> tools/bench/field.tsv, tools/bench/candidates.tsv, funnel on stdout
 
-Per repo (after dropping example bots, bots at official monorepo paths, junk names and field-exclude.txt entries):
+Per repo (after dropping example bots, bots at official monorepo paths, junk names and field-exclude.txt entries;
+a repo left with no bot falls back to its junk-named non-example bots; when both picks failed to compile in an
+earlier run ($BENCH_ROOT/compile.tsv), the repo's next-best bot by name enters too, rule 'compile-fallback'):
   rule 'name': highest name score (final > submission > latest > main/current > postqual > qual > seeding > sprint;
                higher version numbers break ties; bundles of a dir bot rank just below it)
   rule 'last-commit': newest last commit touching the bot path (dates.py), name score breaks ties
@@ -19,7 +21,7 @@ ROOT = Path(os.environ.get('BENCH_ROOT', Path.home() / 'projects/vibe/bc19-bench
 TOOLS = Path(__file__).resolve().parent
 JUNK = re.compile(r'(^|[^a-z])(test|tests|testing|tester|template|example|examples|exampy|sample|starter|old|archive|archived|'
                   r'backup|deprecated|scratch|dummy|donothing|nothing|tutorial|lecture|copy|tmp|temp|playground|'
-                  r'examplefuncsplayer|node_modules|dist|build)([^a-z]|$)', re.I)
+                  r'examplefuncs[a-z]*|node_modules|dist|build)([^a-z]|$)', re.I)
 
 
 def tsv(p):
@@ -49,30 +51,44 @@ def main():
     disc = {r['full_name']: r for r in tsv(ROOT / '_discovery.tsv')}
     bots = tsv(ROOT / 'bots.tsv')
     dates = {(r['repo_dir'], r['rel_path']): r['last_commit'] for r in tsv(ROOT / 'dates.tsv')} if (ROOT / 'dates.tsv').exists() else {}
+    cf = ROOT / 'compile.tsv'
+    failed = {r['path'] for r in tsv(cf) if r.get('status') == 'fail'} if cf.exists() else set()
     excl = {}
     ef = TOOLS / 'field-exclude.txt'
     if ef.exists():
         for l in ef.read_text().splitlines():
             if l.strip() and not l.startswith('#'):
-                k, _, why = l.partition(' ')
+                k, _, why = l.partition('\t' if '\t' in l else ' ')   # tab-separated when the key has spaces
                 excl[k] = why.strip()
-    by_repo = defaultdict(list)
+    by_repo, junk_by_repo, fallback = defaultdict(list), defaultdict(list), set()
     stat = defaultdict(lambda: defaultdict(int))
     for b in bots:
         r = b['repo_dir']
         stat[r]['bots'] += 1
         if b['example']: stat[r]['example'] += 1; continue
         if b['official_path']: stat[r]['official'] += 1; continue
-        if r in excl or f"{r}/{b['rel_path']}" in excl: stat[r]['excluded'] += 1; continue
-        if JUNK.search(b['rel_path']) and 'final' not in b['rel_path'].lower(): stat[r]['junk'] += 1; continue
+        if r in excl or f"{r}/{b['rel_path']}" in excl or b['sha256'] in excl: stat[r]['excluded'] += 1; continue
         b['date'] = dates.get((r, b['rel_path']), '')
+        if JUNK.search(b['rel_path']) and 'final' not in b['rel_path'].lower():
+            stat[r]['junk'] += 1; junk_by_repo[r].append(b); continue
         by_repo[r].append(b)
+    # a repo whose only non-example bots have junk names (often a team that developed inside the scaffold's
+    # bots/example_js) still enters, from those bots
+    for r, bs in junk_by_repo.items():
+        if r not in by_repo: by_repo[r] = bs; fallback.add(r)
     picks = defaultdict(set)                       # sha -> {(repo, rel, rule)}
     for r, bs in by_repo.items():
         a = max(bs, key=lambda b: (name_score(b['rel_path']), b['date'], b['kind'] == 'dir'))
         c = max(bs, key=lambda b: (b['date'], name_score(b['rel_path']), b['kind'] == 'dir'))
         for b, rule in ((a, 'name'), (c, 'last-commit')):
-            picks[b['sha256']].add((r, b['rel_path'], rule))
+            picks[b['sha256']].add((r, b['rel_path'], rule + ('(junk-name fallback)' if r in fallback else '')))
+        # both picks failed to compile (compile.tsv of an earlier run): add the next-best bot by name
+        fp = lambda b: f"repos/{r}/{b['rel_path']}".rstrip('/.')
+        if fp(a) in failed and fp(c) in failed:
+            rest = [b for b in bs if fp(b) not in failed]
+            if rest:
+                f = max(rest, key=lambda b: (name_score(b['rel_path']), b['date'], b['kind'] == 'dir'))
+                picks[f['sha256']].add((r, f['rel_path'], 'compile-fallback'))
     allsha = defaultdict(set)
     for b in bots:
         allsha[b['sha256']].add(b['repo_dir'])
@@ -123,6 +139,8 @@ def main():
         elif dr in excl: fate = 'excluded: ' + excl[dr]
         elif not st.get('bots'): fate = '2019 code but no bot entry/bundle (library or tooling only)'
         elif st.get('bots', 0) == st.get('example', 0) + st.get('official', 0): fate = 'only example/official bots'
+        elif st.get('bots', 0) == st.get('example', 0) + st.get('official', 0) + st.get('excluded', 0):
+            fate = 'excluded bots only (field-exclude.txt)'
         elif dr in by_repo: fate = 'duplicate of ' + fetch[merged_into.get(dr, '')]['full_name'] if dr in merged_into else 'picks are duplicates of another repo'
         else: fate = 'only junk-named bots (test/old/example...)'
         cl.append('\t'.join([fn, d['host'], d['sources'], fv, str(st.get('bots', 0)), str(st.get('example', 0)),

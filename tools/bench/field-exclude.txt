@@ -1,0 +1,11 @@
+# Entrants removed from the benchmark field by hand (NAME/PATH only; no source read). Key: repo_dir, repo_dir/rel_path or
+# a bot sha256 (removes every copy),
+# then the reason (tab-separated when the key contains spaces).
+terryvanbelle__battlecode19-vibe our own repository (bots/ and src/bot are ours, not a competitor)
+abcdefguan__battlecode2019/Specs/Battlecode Dashboard_files/main.ad41134d.chunk.js	saved copy of the battlecode.org dashboard page script, not a bot
+1c8e446caf811e18289e19ee60bebf492fab8960d4732dbef8128e93890a9e8b official 2020 website repo: frontend/src/views/docs.js embeds the 2019 docs example, not a bot
+djkeyes__bc19/bots/vm_timeout_bug_bot engine-bug probe (name), not a playing bot
+Metta-AI__cogame-battlecode 2026 RL-environment repo: oracle/scenario/idle test bots (paths tools/oracle/bc19/*), not a contest entry
+djkeyes__bc19/bots/cpp_poc C++-to-JS toolchain proof of concept (name), not a playing bot
+djkeyes__bc19/bots/cpp_starter C++ starter (name)
+djkeyes__bc19/bots/noop no-op bot (name)

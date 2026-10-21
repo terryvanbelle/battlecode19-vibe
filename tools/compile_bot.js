@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Offline compiler for Battlecode 2019 bots in JavaScript, Java and Python. Never contacts battlecode.org.
 //
-//   node tools/compile_bot.js <bot dir> -o <bundle.js> [--no-cache] [--keep] [--quiet]
+//   node tools/compile_bot.js <bot dir> -o <bundle.js> [--no-cache] [--keep] [--quiet] [--strict]
+//        (--strict: JS only through the engine's own compiler, no lenient fallback; see compileJSLenient)
 //   node tools/compile_bot.js --check            (prints which toolchains are installed; exit 0 if all are)
 //
 // Language detection: robot.js -> the engine's own local rollup (Compiler.JS, as tools/run_game.js does);
@@ -103,7 +104,52 @@ function mkWork() { return fs.mkdtempSync(path.join(os.tmpdir(), 'bc19c-work-'))
 // --- JavaScript: the engine's own local compiler (rollup), no network. ---
 function compileJS(files) {
   const Compiler = require(path.join(ENGINE, 'compiler'));
+  // The engine's Java/Python paths POST source to battlecode.org/compile (CLAUDE.md rule 5): disable them outright.
+  Compiler.Java = Compiler.Python = () => { throw new Error('engine Java/Python compile (battlecode.org) is disabled'); };
   return new Promise((resolve, reject) => Compiler.JS(files, resolve, e => reject(new Error('compile error: ' + e))));
+}
+
+// --- JavaScript fallback, used only when the engine's compiler refuses the bot: the same rollup bundle (cjs, same
+// starter, same `var robot = new MyRobot();` postfix), but modules may sit in subdirectories and be imported without
+// the .js extension (both rejected by the engine 0.4.7 compiler's flat virtual file system; later CLI versions and
+// the teams' own build scripts accepted them). Still local and offline; bot code is parsed, never run.
+async function compileJSLenient(dir) {
+  const rollup = require(require.resolve('rollup', { paths: [ENGINE] }));
+  const mods = {};
+  const walk = rel => {
+    for (const f of fs.readdirSync(path.join(dir, rel)).sort()) {
+      if (f.startsWith('.') || f === 'node_modules') continue;
+      const r = rel ? rel + '/' + f : f, st = fs.statSync(path.join(dir, r));
+      if (st.isDirectory()) walk(r);
+      else if (st.isFile() && f.endsWith('.js')) mods[r] = fs.readFileSync(path.join(dir, r), 'utf8');
+    }
+  };
+  walk('');
+  if (!('robot.js' in mods)) throw new Error('No robot.js provided.');
+  mods['robot.js'] += '\nvar robot = new MyRobot();';
+  const P = '\0bc19:';
+  const plugin = {
+    name: 'bc19-lenient',
+    resolveId(id, importer) {
+      if (id === 'battlecode') return P + 'battlecode';
+      if (!importer) return id in mods ? P + id : null;
+      if (!importer.startsWith(P)) return null;
+      const p = path.posix.normalize(path.posix.join(path.posix.dirname(importer.slice(P.length)), id));
+      // also relative to the bot dir's parent (bots built from one level up: import './<botdir>/x')
+      const top = path.basename(path.resolve(dir)) + '/';
+      for (const q of p.startsWith(top) ? [p, p.slice(top.length)] : [p])
+        for (const c of [q, q + '.js', q + '/index.js']) if (c in mods) return P + c;
+      return null;
+    },
+    load(id) {
+      if (!id.startsWith(P)) return null;
+      const k = id.slice(P.length);
+      return k === 'battlecode' ? starterFor('js').battlecode : mods[k];
+    },
+  };
+  const bundle = await rollup.rollup({ input: { robot: 'robot.js' }, plugins: [plugin] });
+  const out = await bundle.generate({ format: 'cjs' });
+  return out.output[0].code;
 }
 
 // --- Java: mirrors transpiler/java.py (mvn generate-sources with the jsweet-maven-plugin config of java/pom.xml:
@@ -171,8 +217,8 @@ async function compilePython(files, opts) {
     const js = {};
     for (const f of fs.readdirSync(target)) if (f.endsWith('.js')) js[f] = fs.readFileSync(path.join(target, f), 'utf8');
     // engine compiler.js Compiler.Python, verbatim
-    const rollup = require(path.join(ENGINE, 'node_modules', 'rollup'));
-    const virtual = require(path.join(ENGINE, 'node_modules', 'rollup-plugin-virtual'));
+    const rollup = require(require.resolve('rollup', { paths: [ENGINE] }));   // resolved as the engine's compiler.js does
+    const virtual = require(require.resolve('rollup-plugin-virtual', { paths: [ENGINE] }));
     const bundle = await rollup.rollup({ input: { robot: 'robot.js' }, plugins: [virtual(js)] });
     const out = await bundle.generate({ name: 'robot', format: 'esm' });
     const code = out.output[0].code.split('\n');
@@ -185,7 +231,7 @@ async function compilePython(files, opts) {
 }
 
 function requireModule(name) {
-  try { return require(name); } catch (e) { return require(path.join(ENGINE, 'node_modules', name)); }
+  try { return require(name); } catch (e) { return require(require.resolve(name, { paths: [ENGINE] })); }
 }
 
 // Compile a bot directory. Resolves {code, lang, hash, cached, ms}.
@@ -202,12 +248,22 @@ async function compileBotDir(dir, opts = {}) {
     if (!st[lang]) throw new Error(lang + ' toolchain not installed in ' + TOOLCHAIN + ' (tools/install_compile_toolchain.sh)');
     if (!st.sandbox) throw new Error('compile sandbox unavailable (needs unprivileged user namespaces and /usr/sbin/chroot): refusing to compile untrusted source');
   }
-  const code = lang === 'js' ? await compileJS(files) : lang === 'java' ? await compileJava(files, opts) : await compilePython(files, opts);
+  let code, mode = 'engine';
+  if (lang === 'js') {
+    try { code = await compileJS(files); } catch (e) {
+      if (opts.strict) throw e;
+      try { code = await compileJSLenient(dir); mode = 'lenient'; } catch (e2) {
+        throw new Error(e.message + ' | lenient fallback: ' + String(e2 && e2.message || e2).replace(/\0bc19:/g, ''));
+      }
+      // depends on files outside the top level, which the cache key does not cover: not cached
+      return { code, lang, hash, cached: false, ms: Date.now() - t0, mode };
+    }
+  } else code = lang === 'java' ? await compileJava(files, opts) : await compilePython(files, opts);
   fs.mkdirSync(CACHE, { recursive: true });
   const tmp = cacheFile + '.' + process.pid + '.tmp';
   fs.writeFileSync(tmp, code);
   fs.renameSync(tmp, cacheFile);
-  return { code, lang, hash, cached: false, ms: Date.now() - t0 };
+  return { code, lang, hash, cached: false, ms: Date.now() - t0, mode };
 }
 
 async function main() {
@@ -225,14 +281,15 @@ async function main() {
     else if (a === '--no-cache') opts.noCache = true;
     else if (a === '--keep') opts.keep = true;
     else if (a === '--quiet') opts.quiet = true;
+    else if (a === '--strict') opts.strict = true;
     else if (a.startsWith('-')) throw new Error('unknown argument ' + a);
     else dir = a;
   }
-  if (!dir || !out) throw new Error('usage: compile_bot.js <bot dir> -o <bundle.js> [--no-cache] [--keep] [--quiet]');
+  if (!dir || !out) throw new Error('usage: compile_bot.js <bot dir> -o <bundle.js> [--no-cache] [--keep] [--quiet] [--strict]');
   const r = await compileBotDir(dir, opts);
   fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
   fs.writeFileSync(out, r.code);
-  if (!opts.quiet) console.log(JSON.stringify({ dir, out, lang: r.lang, hash: r.hash.slice(0, 16), cached: r.cached, bytes: r.code.length, ms: r.ms }));
+  if (!opts.quiet) console.log(JSON.stringify({ dir, out, lang: r.lang, hash: r.hash.slice(0, 16), cached: r.cached, bytes: r.code.length, ms: r.ms, mode: r.mode || 'engine' }));
 }
 
 module.exports = { compileBotDir, toolchainStatus, readBot, sourceHash, TOOLCHAIN, CACHE };
