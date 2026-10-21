@@ -7,7 +7,7 @@ Its only way out is the relay's unix socket ($GALAXY_HOME/run/relay.sock); the r
 siarnaq on 127.0.0.1:8019 with an ID token. Every compile and every game additionally runs under `unshare -rnm`: a new
 user, network and mount namespace in which everything except the task's own work directory is remounted read-only.
 
-  python3 tools/galaxy19/saturn.py run [--compile-slots 1] [--execute-slots 2]     (the service)
+  python3 tools/galaxy19/saturn.py run [--compile-slots 1] [--execute-slots 4]     (the service)
   python3 tools/galaxy19/saturn.py status                                          (queue counts)
 
 Pub/Sub, the task protocol and the step logs are the 2023 replica's (galaxy saturn pkg/saturn): a slot leases the
@@ -20,7 +20,7 @@ Build source code; Upload binary (binary.zip holding bundle.js); Compile succeed
   * a prebuilt bundle: exactly one .js file and no robot.js (e.g. a Java/Python bot transpiled beforehand);
   * Java or Python sources: transpiled only by the LOCAL transpiler named by $GALAXY_TRANSPILER (a node script
     `<script> <src dir> <out bundle.js>`); when none is installed the submission is rejected (accepted=false).
-    The stock bc19 compiler posts these to battlecode.org/compile: that path is never used.
+    The stock bc19 compiler posts these to the official compile server: that path is never used.
 Failures of the user's code are OK! with accepted=false; infrastructure failures are TRY.
 
 Execute recipe: Hello world; Prepare scaffold; Download binary (A and B); Run match (one run_game.js process per map,
@@ -57,6 +57,11 @@ from replica_gcp import config, spool, storage  # noqa: E402
 
 MAX_EXTRACTED = 64 * 1024 * 1024
 MAX_BUNDLE = 16 * 1024 * 1024
+MAX_EXECUTE_SLOTS = 4
+# per-team stats copied from run_game.js into match.json: errors and clock health (timeouts = vm2 script timeouts,
+# frozen = out of chess-clock time, slow_turns = turns over 20 ms of wall time) to watch CPU contention
+TEAM_KEYS = ('team', 'errors', 'frozen', 'timeouts', 'init_fail', 'exceptions', 'units', 'health', 'turns', 'ms_mean',
+             'ms_max', 'init_ms_max', 'slow_turns')
 REVISION = 'bc19-replica tools/galaxy19/saturn.py'
 MAP_RE = re.compile(r'^seed-([1-9][0-9]{0,9})$')
 
@@ -335,7 +340,7 @@ class Runtime:
         self.transpiler = os.environ.get('GALAXY_TRANSPILER') or ''
         # sandbox: the wrapper that puts a command in its own user + network + mount namespace with a read-only view
         # of everything but the work directory (sandbox.sh). Tests pass [] to run without it.
-        self.sandbox = [os.path.join(HERE, 'sandbox.sh')] if sandbox is None else sandbox
+        self.sandbox = ['/bin/sh', os.path.join(HERE, 'sandbox.sh')] if sandbox is None else sandbox
 
     def describe(self):
         eng = os.path.join(self.root, 'engine', 'node_modules', 'bc19', 'package.json')
@@ -502,8 +507,7 @@ class Runners:
                        'winner_label': win, 'winner_team': names.get(win), 'reason': res.get('reason'),
                        'rounds': res.get('rounds'), 'wall_s': round(time.time() - t0, 1),
                        'file': f'game-{i + 1:02d}-seed{seed}.bc19',
-                       'teams': [{k: v for k, v in tm.items() if k in ('team', 'errors', 'frozen', 'timeouts',
-                                                                        'init_fail', 'exceptions', 'units', 'health')}
+                       'teams': [{k: v for k, v in tm.items() if k in TEAM_KEYS}
                                  for tm in res.get('teams') or []]}
                 results.append((row, replay))
                 t.debug(f'  -> {row["winner_team"]} ({row["winner_color"]}) by {row["reason"]} in {row["rounds"]} '
@@ -543,7 +547,7 @@ def parse_message(msg):
 
 
 class Executor:
-    def __init__(self, compile_slots=1, execute_slots=2, runtime=None, reporter=None, poll=1.0):
+    def __init__(self, compile_slots=1, execute_slots=4, runtime=None, reporter=None, poll=1.0):
         self.compile_slots, self.execute_slots = compile_slots, execute_slots
         self.runtime = runtime or Runtime()
         self.reporter = reporter or RelayReporter()
@@ -612,7 +616,7 @@ def main(argv=None):
     sub = ap.add_subparsers(dest='cmd', required=True)
     r = sub.add_parser('run')
     r.add_argument('--compile-slots', type=int, default=int(os.environ.get('GALAXY_COMPILE_SLOTS') or 1))
-    r.add_argument('--execute-slots', type=int, default=int(os.environ.get('GALAXY_EXECUTE_SLOTS') or 2))
+    r.add_argument('--execute-slots', type=int, default=int(os.environ.get('GALAXY_EXECUTE_SLOTS') or 4))
     sub.add_parser('status')
     a = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(name)s %(message)s')
@@ -620,9 +624,10 @@ def main(argv=None):
         for topic in (config.TOPIC_COMPILE, config.TOPIC_EXECUTE):
             print(topic, spool.topic_queue(topic).counts())
         return 0
-    # the owner's cap: at most 2 games at once on the shared VM (one game per execute slot)
-    if not (0 <= a.compile_slots <= 1 and 0 <= a.execute_slots <= 2):
-        ap.error('slots: compile 0..1, execute 0..2 (at most 2 games at once on the shared VM)')
+    # the owner's cap: at most 4 replica games at once on the shared VM (one game per execute slot), so the
+    # 2019 chess clock (100 ms + 20 ms per turn, wall time) is not eaten by CPU contention
+    if not (0 <= a.compile_slots <= 1 and 0 <= a.execute_slots <= MAX_EXECUTE_SLOTS):
+        ap.error(f'slots: compile 0..1, execute 0..{MAX_EXECUTE_SLOTS} (at most {MAX_EXECUTE_SLOTS} games at once on the shared VM)')
     ex = Executor(a.compile_slots, a.execute_slots)
 
     def on_signal(signum, frame):

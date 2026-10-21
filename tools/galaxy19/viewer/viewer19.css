@@ -10,10 +10,7 @@ section { margin-bottom: 12px; }
 table { border-collapse: collapse; }
 th, td { padding: 3px 8px; border-bottom: 1px solid var(--line); text-align: left; }
 tr.sel td { background: rgba(36, 87, 197, .15); }
+#title { font-weight: 600; margin-bottom: 6px; }
 #controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
-#slider { flex: 1 1 200px; }
-#stage { display: flex; flex-wrap: wrap; gap: 16px; }
-#board { max-width: 100%; height: auto; image-rendering: pixelated; border: 1px solid var(--line); }
-#side { min-width: 240px; flex: 1 1 240px; }
-#stats td:nth-child(n+2) { text-align: right; }
-.red { color: #d33; } .blue { color: #36f; }
+#slider { flex: 1 1 240px; }
+#pixi canvas { max-width: 100%; height: auto; }

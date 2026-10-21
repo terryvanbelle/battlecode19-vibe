@@ -79,7 +79,9 @@ async function main() {
   // Warm-up: the first vm2 sandbox in a process costs 50-150 ms (cold JIT), which can push a castle past the 100 ms
   // initialisation limit and lose the game for a harness reason. Create and discard sandboxes for both bundles first.
   const CrossVM = require(path.join(ENGINE, 'vm'));
-  for (let i = 0; i < 3; i++) { new CrossVM(red); new CrossVM(blue); }
+  // A bundle that throws (or times out) while loading is the engine's business (initializeRobot catches it and the
+  // robot fails to initialise), so the warm-up must not let it crash the whole game.
+  for (let i = 0; i < 3; i++) for (const code of [red, blue]) { try { new CrossVM(code); } catch (e) { /* engine decides */ } }
   const c = new Coldbrew(g, null, null, null);
   c.player_one = red; c.player_two = blue; c.round = 0;
   const initMs = [0, 0], origInit = c.initializeRobot.bind(c);

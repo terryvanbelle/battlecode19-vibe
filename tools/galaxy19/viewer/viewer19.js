@@ -1,15 +1,12 @@
 // bc19 replica replay viewer (tools/galaxy19/viewer). Loads a match archive (ZIP of game-NN-seed<seed>.bc19 replays +
-// match.json, as the replica's saturn writes it) or a single .bc19 replay, re-simulates the chosen game with the
-// pinned engine (engine19.js: bc19 game.js; no bot code runs) and draws it on a canvas.
+// match.json, as the replica's saturn writes it) or a single .bc19 replay and shows the chosen game in the official
+// 2019 visualizer (visualizer-official.js + pixi.min.js; the engine's game.js re-simulates the actions, no bot code runs).
 // URL: visualizer.html?/storage/<bucket>/episode/<ep>/replays/<uuid>.bc19   (also ?gameSource=<same path>)
 (function () {
   'use strict';
-  var E = window.BC19Engine;
-  var UNIT = ['C', 'H', 'p', 'c', 'P', 'X'];
-  var UNIT_NAME = ['castle', 'church', 'pilgrim', 'crusader', 'prophet', 'preacher'];
-  var REASON = ['castles destroyed', 'health tiebreak', 'coin flip', 'init failure', 'both init failure'];
+    var REASON = ['castles destroyed', 'health tiebreak', 'coin flip', 'init failure', 'both init failure'];
   var $ = function (id) { return document.getElementById(id); };
-  var state = { games: [], cur: null, frames: [], idx: 0, timer: null };
+  var state = { games: [], cur: null, v: null, timer: null };
 
   function status(t) { $('status').textContent = t; }
 
@@ -113,132 +110,76 @@
     $('games').hidden = false;
   }
 
-  // ------------------------------------------------------------------ simulation
-  function simulate(buf) {
-    var h = header(buf);
-    var g = new E.Game(h.seed, E.SPECS.CHESS_INITIAL, E.SPECS.CHESS_EXTRA, false, false);
-    g.robotError = function () {}; g.robotLog = function () {};
-    var frames = [];
-    function snap() {
-      var r = g.robots, a = new Int32Array(r.length * 6);
-      for (var i = 0; i < r.length; i++) {
-        var o = r[i]; a.set([o.id, o.team, o.unit, o.x, o.y, o.health], i * 6);
-      }
-      frames.push({ round: g.round, robots: a, k: g.karbonite.slice(), f: g.fuel.slice() });
-    }
-    snap();
-    var lastRound = g.round;
-    for (var i = 0; i < h.turns; i++) {
-      g.enactTurn(buf.subarray(6 + 8 * i, 14 + 8 * i));
-      if (g.round !== lastRound) {
-        // the round advanced at the start of this turn: frames hold the board at the end of each round
-        var cur = frames.pop(); frames.push(cur); lastRound = g.round;
-      }
-      if (i + 1 === h.turns || (g.robin + 1 >= g.robots.length)) {
-        if (!frames.length || frames[frames.length - 1].round !== g.round || i + 1 === h.turns) {
-          if (frames.length && frames[frames.length - 1].round === g.round) frames.pop();
-          snap();
-        }
-      }
-    }
-    return { h: h, g: g, frames: frames };
+  // ------------------------------------------------------------------ the official visualizer
+  // window.BC19Visualizer is the official 2019 Visualizer class (visualizer-official.js). It re-simulates the recorded
+  // actions with the engine's Game (engine19.js) and draws with pixi.js; this page only feeds it one game at a time.
+  function retire(v) {
+    if (!v) return;
+    if (v.running) v.startStop();
+    v.draw = function () {};                     // ends its requestAnimationFrame loop
+    try { v.renderer.destroy(true); } catch (e) { /* already gone */ }
   }
+
+  function roundOf(v) { return v && v.game ? v.game.round : 0; }
 
   function showGame(i) {
     stop();
     var g = state.games[i];
-    status('Re-simulating game ' + (i + 1) + '...');
     var rows = $('game-rows').children;
     for (var k = 0; k < rows.length; k++) rows[k].className = k === i ? 'sel' : '';
+    status('Loading game ' + (i + 1) + '...');
     setTimeout(function () {
       try {
-        var s = simulate(g.data);
-        state.cur = { i: i, meta: g.meta || {}, sim: s };
-        state.frames = s.frames;
-        var sl = $('slider'); sl.max = String(s.frames.length - 1); sl.value = '0';
-        state.idx = 0;
+        retire(state.v);
+        var h = header(g.data), m = g.meta || {};
         $('player').hidden = false;
-        setupCanvas(s.g);
-        draw();
-        status('Game ' + (i + 1) + ': ' + s.frames.length + ' frames, ' + s.h.turns + ' robot-turns.');
-      } catch (e) { status('Could not simulate: ' + e.message); }
+        state.v = new window.BC19Visualizer('pixi', g.data, function (turn) {
+          $('slider').value = String(turn);
+          $('turn').textContent = 'turn ' + turn + ' / ' + h.turns + ', round ' + roundOf(state.v);
+        });
+        state.cur = { i: i, h: h, meta: m };
+        var sl = $('slider'); sl.max = String(state.v.numTurns()); sl.value = '0';
+        $('turn').textContent = 'turn 0 / ' + h.turns + ', round 0';
+        $('title').textContent = 'Game ' + (i + 1) + ', ' + (m.map || 'seed-' + h.seed) + ': ' + (m.red_team || 'red') +
+          ' (red) vs ' + (m.blue_team || 'blue') + ' (blue); winner ' + (m.winner_team ? m.winner_team + ' ' : '') +
+          '(' + (h.winner === 0 ? 'red' : 'blue') + ', ' + (REASON[h.reason] || h.reason) + ')';
+        status('Game ' + (i + 1) + ' of ' + state.games.length + ': ' + h.turns + ' robot-turns.');
+      } catch (e) { status('Could not show the game: ' + e.message); }
     }, 10);
   }
 
-  // ------------------------------------------------------------------ drawing
-  var cell = 10;
-  function setupCanvas(g) {
-    var w = g.map[0].length, hgt = g.map.length;
-    cell = Math.max(4, Math.floor(704 / Math.max(w, hgt)));
-    var c = $('board'); c.width = w * cell; c.height = hgt * cell;
+  // ------------------------------------------------------------------ playback (page controls around the class)
+  function go(turn) {
+    var v = state.v; if (!v) return;
+    turn = Math.max(0, Math.min(v.numTurns(), turn));
+    // the class fills its 1000-turn checkpoints in the background; until the one needed exists, step forward instead
+    if (v.checkpoints[Math.floor(turn / 1000)] || turn < v.turn) v.goToTurn(turn);
+    else while (v.turn < turn) v.nextTurn();
+    $('slider').value = String(turn);
+    $('turn').textContent = 'turn ' + turn + ' / ' + v.numTurns() + ', round ' + roundOf(v);
   }
-
-  function draw() {
-    var cur = state.cur; if (!cur) return;
-    var g = cur.sim.g, f = state.frames[state.idx], ctx = $('board').getContext('2d');
-    var w = g.map[0].length, hgt = g.map.length;
-    for (var y = 0; y < hgt; y++) for (var x = 0; x < w; x++) {
-      ctx.fillStyle = !g.map[y][x] ? '#3a3a3f' : g.karbonite_map[y][x] ? '#46b35a' : g.fuel_map[y][x] ? '#e3c23b' : '#f2f2ee';
-      ctx.fillRect(x * cell, y * cell, cell, cell);
-    }
-    var counts = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]], hp = [0, 0];
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = 'bold ' + Math.max(7, cell - 2) + 'px system-ui, sans-serif';
-    for (var i = 0; i < f.robots.length; i += 6) {
-      var team = f.robots[i + 1], unit = f.robots[i + 2], rx = f.robots[i + 3], ry = f.robots[i + 4];
-      counts[team][unit]++; hp[team] += f.robots[i + 5];
-      ctx.fillStyle = team === 0 ? '#d33' : '#36f';
-      if (unit <= 1) ctx.fillRect(rx * cell, ry * cell, cell, cell);
-      else { ctx.beginPath(); ctx.arc(rx * cell + cell / 2, ry * cell + cell / 2, cell * 0.45, 0, 2 * Math.PI); ctx.fill(); }
-      if (cell >= 8) { ctx.fillStyle = '#fff'; ctx.fillText(UNIT[unit], rx * cell + cell / 2, ry * cell + cell / 2 + 0.5); }
-    }
-    $('slider').value = String(state.idx);
-    var last = state.idx === state.frames.length - 1, h = cur.sim.h, m = cur.meta;
-    $('round').textContent = 'round ' + f.round + (last ? ' (end: ' + (h.winner === 0 ? 'red' : 'blue') + ' wins, ' + (REASON[h.reason] || h.reason) + ')' : '');
-    $('title').textContent = (m.map || 'seed-' + h.seed) + ': ' + (m.red_team || 'red') + ' (red) vs ' + (m.blue_team || 'blue') + ' (blue)';
-    var t = $('stats'); t.textContent = '';
-    var rows = [['', 'red', 'blue']];
-    UNIT_NAME.forEach(function (n, u) { rows.push([n, counts[0][u], counts[1][u]]); });
-    rows.push(['karbonite', f.k[0], f.k[1]], ['fuel', f.f[0], f.f[1]], ['total HP', hp[0], hp[1]]);
-    rows.forEach(function (r, ri) {
-      var tr = document.createElement('tr');
-      r.forEach(function (v, ci) {
-        var td = document.createElement(ri === 0 ? 'th' : 'td'); td.textContent = String(v);
-        if (ri === 0 && ci > 0) td.className = ci === 1 ? 'red' : 'blue';
-        tr.appendChild(td);
-      });
-      t.appendChild(tr);
-    });
+  function stepRound(dir) {
+    var v = state.v; if (!v) return;
+    var r = roundOf(v) + dir;
+    if (dir > 0) { while (v.turn < v.numTurns() && roundOf(v) < r) v.nextTurn(); go(v.turn); }
+    else if (r >= 0) { v.goToRound(r); go(v.turn); }
   }
-
-  function hover(ev) {
-    var cur = state.cur; if (!cur) return;
-    var c = $('board'), r = c.getBoundingClientRect();
-    var x = Math.floor((ev.clientX - r.left) * c.width / r.width / cell), y = Math.floor((ev.clientY - r.top) * c.height / r.height / cell);
-    var g = cur.sim.g; if (y < 0 || y >= g.map.length || x < 0 || x >= g.map[0].length) return;
-    var f = state.frames[state.idx], s = '(' + x + ', ' + y + ') ' + (!g.map[y][x] ? 'impassable' : g.karbonite_map[y][x] ? 'karbonite' : g.fuel_map[y][x] ? 'fuel' : 'passable');
-    for (var i = 0; i < f.robots.length; i += 6) if (f.robots[i + 3] === x && f.robots[i + 4] === y)
-      s += '; robot ' + f.robots[i] + ' ' + (f.robots[i + 1] === 0 ? 'red' : 'blue') + ' ' + UNIT_NAME[f.robots[i + 2]] + ' HP ' + f.robots[i + 5];
-    $('hover').textContent = s;
-  }
-
-  // ------------------------------------------------------------------ playback
   function stop() { if (state.timer) { clearInterval(state.timer); state.timer = null; } $('play').textContent = 'Play'; }
   function play() {
     if (state.timer) return stop();
-    if (state.idx >= state.frames.length - 1) state.idx = 0;
+    var v = state.v; if (!v) return;
+    if (v.turn >= v.numTurns()) go(0);
     $('play').textContent = 'Pause';
     state.timer = setInterval(function () {
-      if (state.idx >= state.frames.length - 1) return stop();
-      state.idx++; draw();
-    }, 1000 / Number($('speed').value));
+      if (!state.v || state.v.turn >= state.v.numTurns()) return stop();
+      go(state.v.turn + Number($('speed').value));
+    }, 33);
   }
 
   $('play').addEventListener('click', play);
-  $('back').addEventListener('click', function () { stop(); state.idx = Math.max(0, state.idx - 1); draw(); });
-  $('fwd').addEventListener('click', function () { stop(); state.idx = Math.min(state.frames.length - 1, state.idx + 1); draw(); });
-  $('slider').addEventListener('input', function () { stop(); state.idx = Number(this.value); draw(); });
-  $('speed').addEventListener('change', function () { if (state.timer) { stop(); play(); } });
-  $('board').addEventListener('mousemove', hover);
+  $('back').addEventListener('click', function () { stop(); stepRound(-1); });
+  $('fwd').addEventListener('click', function () { stop(); stepRound(1); });
+  $('slider').addEventListener('input', function () { stop(); go(Number(this.value)); });
   $('file').addEventListener('change', function () {
     var f = this.files[0]; if (!f) return;
     f.arrayBuffer().then(function (ab) { return load(ab, f.name, f.name); }).catch(function (e) { status('Error: ' + e.message); });

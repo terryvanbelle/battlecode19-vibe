@@ -8,39 +8,36 @@
 </head>
 <body>
 <header>
-  <strong>Battlecode 2019 replay viewer</strong> <span class="muted">(bc19 replica; re-simulates the replay with the pinned engine)</span>
+  <strong>Battlecode 2019 replay viewer</strong>
+  <span class="muted">the official 2019 visualizer (battlecode19 app, pixi.js 4.8) on the bc19 replica</span>
 </header>
 <main>
   <section id="source">
     <span id="status">No replay loaded.</span>
-    <label class="file">Open a local .bc19 or match archive <input type="file" id="file" accept=".bc19,.zip,application/zip,application/octet-stream"></label>
-    <a id="dl-all" hidden>Download match archive</a>
+    <label class="file">Open a local .bc19 replay or match archive <input type="file" id="file" accept=".bc19,.zip,application/zip,application/octet-stream"></label>
+    <a id="dl-all" hidden>Download</a>
   </section>
   <section id="games" hidden>
     <table><thead><tr><th>#</th><th>map</th><th>red</th><th>blue</th><th>winner</th><th>reason</th><th>rounds</th><th></th><th></th></tr></thead><tbody id="game-rows"></tbody></table>
   </section>
   <section id="player" hidden>
+    <div id="title"></div>
     <div id="controls">
       <button id="play" type="button">Play</button>
-      <button id="back" type="button" title="previous round">&lt;</button>
-      <button id="fwd" type="button" title="next round">&gt;</button>
+      <button id="back" type="button" title="previous round">&lt; round</button>
+      <button id="fwd" type="button" title="next round">round &gt;</button>
       <input type="range" id="slider" min="0" max="0" value="0">
-      <span id="round">round 0</span>
-      <label>speed <select id="speed"><option value="2">2</option><option value="5">5</option><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option></select> rounds/s</label>
+      <span id="turn">turn 0</span>
+      <label>speed <select id="speed"><option value="1">1</option><option value="5">5</option><option value="20" selected>20</option><option value="60">60</option><option value="200">200</option></select> turns/frame</label>
     </div>
-    <div id="stage">
-      <canvas id="board" width="640" height="640"></canvas>
-      <div id="side">
-        <div id="title"></div>
-        <table id="stats"></table>
-        <div id="hover" class="muted">Hover a tile for details.</div>
-        <div class="legend muted">C castle, H church, p pilgrim, c crusader, P prophet, X preacher; red/blue teams;
-          green karbonite, yellow fuel, dark impassable.</div>
-      </div>
-    </div>
+    <div id="pixi"></div>
+    <p class="muted">Click a tile or robot for details. Mouse wheel zooms, W A S D pan, ` (backquote) toggles the strategic view.
+      Red team: red tint; blue team: blue tint. The bars on the right are karbonite (green) and fuel (yellow).</p>
   </section>
 </main>
+<script src="pixi.min.js"></script>
 <script src="engine19.js"></script>
+<script src="visualizer-official.js"></script>
 <script src="viewer19.js"></script>
 </body>
 </html>

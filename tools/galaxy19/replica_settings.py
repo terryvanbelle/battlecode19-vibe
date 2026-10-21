@@ -122,6 +122,7 @@ class Replica(Base):
                 'NAME': os.environ.get('GALAXY_DB_NAME', 'siarnaq19'),
                 'USER': os.environ.get('GALAXY_DB_USER', 'bc19replica'),
                 'HOST': os.environ.get('GALAXY_DB_HOST', '/var/run/postgresql'),   # unix socket: peer auth, no TCP
+                'PORT': os.environ.get('GALAXY_DB_PORT', '5419'),                    # the bc19 cluster's socket name
                 'CONN_MAX_AGE': 60,
             }
         }

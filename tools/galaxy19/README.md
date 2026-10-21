@@ -1,0 +1,73 @@
+# tools/galaxy19: the private Battlecode 2019 contest site
+
+The bc19 replica is a private copy of the official judging site, galaxy (the siarnaq backend plus its frontend), with a
+local stand-in for saturn, the game runner. It runs on the VM `battlecode-dev` and plays only our engine
+(`engine/`, bc19 0.4.7). It is built on the 2023 replica (`/opt/bc23-galaxy`: siarnaq at galaxy commit f343088, its
+venv, the built frontend, and the shared Caddy). How the owner opens it is in `ACCESS.md` at the repository root.
+
+## Isolation (CLAUDE.md rules 5 and 6)
+
+- **No Google Cloud and no battlecode.org.** siarnaq runs unmodified, but `standins/google` and `replica_gcp`
+  replace Pub/Sub, Cloud Tasks, Cloud Scheduler, Secret Manager, GCS and OIDC tokens with local files (spool
+  directories, storage under `/srv/bc19-galaxy/storage`, HMAC tokens). Email, OAuth and Sentry are off. The tests in
+  `test/galaxy19/` check that no stand-in opens a socket or names an outside host.
+- **Egress.** The `bc19replica` user can reach only 127.0.0.1:8019 (nftables table `inet bc19_replica_egress`).
+  The cloud metadata server is dropped. Host-wide, table `inet bc19_official_block` rejects the addresses of
+  battlecode.org, api/play/releases.battlecode.org for every user, and the units carry `IPAddressDeny`.
+- **Frontend.** This is a copy of the 2023 replica's same-origin build, patched for episode `bc19`, so it never
+  calls api.battlecode.org. `frontend_check.py` audits each install (`/etc/bc19-galaxy/frontend-check.txt`): no
+  fetch goes to another host, and battlecode.org appears only as hyperlinks.
+- **Bot code.** Each compile and game command runs under `sandbox.sh`, which uses `unshare -rn` for no network and a
+  read-only view of everything but the work directory. saturn's unit also has `PrivateNetwork=yes`. Submissions are
+  JavaScript: a `robot.js` directory or a single bundle. Java and Python are transpiled beforehand on the driver
+  with `tools/compile_bot.js` / `compile19.js`; the stock bc19 compiler (which posts to battlecode.org) is never
+  used.
+
+## Parts
+
+| file | role |
+|---|---|
+| `saturn.py` | saturn stand-in: leases compile/execute messages from the spool, with 1 compile slot and 4 execute slots (hard cap 4). For each match it runs one game per map, alternating sides, and writes a match archive (ZIP of `game-NN-seed<n>.bc19` plus `match.json` with per-team timeouts, frozen, slow turns and ms). It reports to galaxy through the relay. |
+| `relay.py` | relay between saturn and siarnaq, plus the Cloud Tasks / Scheduler stand-in (`fire-jobs`, run each minute by `bc19-galaxy-scheduler.timer`). |
+| `bootstrap.py` | episode `bc19` (autoscrim `0 */8 * * *` UTC, ranked on, 20 ranked / 40 unranked requests per hour), the 40 maps of `maps.txt`, and the `owner` superuser. |
+| `maps.py`, `maps.txt` | maps are `seed-<n>`: 40 seeds stratified by size, castle count and symmetry from `maps/corpus.tsv`. |
+| `client.py` | API client library and CLI (accounts in `~/.bc19-galaxy/accounts.json`, site in `~/.bc19-galaxy/site`). |
+| `contest19.py` | our team's commands, below. |
+| `field.py` | the field: registers and submits the starter bot (`bc19-starter`, `bots/example`) and every compiled external bundle, idempotently. Its `activity` mode is `bc19-galaxy-activity.service`. |
+| `viewer/` | the `/viewer/` page. `build_official.js` assembles the official 2019 visualizer (battlecode19 `app/src/views/visualizer.js`, GPL-3.0) with its images and pixi.js 4.8.9, all pinned in `PINS.json`. `build_engine.js` builds `engine19.js` from the pinned engine. |
+| `deploy/deploy.sh`, `deploy/galaxy-setup.sh` | deployment from the driver (idempotent; per-step). |
+
+## Operating it
+
+```
+tools/galaxy19/deploy/deploy.sh                 # full (re)deploy; deploy.sh status | app | viewer | frontend | start | stop
+tools/galaxy19/deploy/deploy.sh scheduler on    # automatic ranked rounds (autoscrim every 8 h) + task firing
+tools/galaxy19/deploy/deploy.sh activity on     # spare-cycle challenges between field teams
+
+python3 tools/galaxy19/contest19.py register     # team vibe19 (credentials in ~/.bc19-galaxy-team, 600)
+python3 tools/galaxy19/contest19.py submit [DIR] # bundle src/bot (or DIR) with tools/compile_bot.js, upload, wait
+python3 tools/galaxy19/contest19.py ladder
+python3 tools/galaxy19/contest19.py scrim --n 4  # ranked vs the teams just above, unranked vs those just below
+python3 tools/galaxy19/contest19.py matches
+python3 tools/galaxy19/contest19.py fetch --new  # match archives -> ~/projects/vibe/bc19-galaxy-replays/<id>/
+python3 tools/galaxy19/contest19.py results
+
+# field (on the VM, where the bundles are rsynced; re-runnable)
+GALAXY19_CONNECT=127.0.0.1 GALAXY19_REPO=~/projects/vibe/2019 python3 ~/bc19-galaxy-stage/tools/galaxy19/field.py seed
+```
+
+The field roster is `tools/bench/roster.tsv` (compile ok, smoke test not a crash). If that file is missing,
+`$BENCH_ROOT/compile.tsv` is used, and bundles come from `$BENCH_ROOT/compiled/<name>/bot.js`.
+`field.py` only zips a bundle and never reads it.
+
+Game clock: the 2019 rules (100 ms bank plus 20 ms per turn). Load test on 2026-10-21: 60 games at 4 concurrent
+games on the 8-vCPU VM, 637k robot turns, 0 timeouts, 0 frozen robots, 0.07% of turns over 20 ms, slowest turn
+55 ms.
+
+## Units on battlecode-dev
+
+`bc19-galaxy-web` (gunicorn, 127.0.0.1:8019), `bc19-galaxy-relay`, `bc19-galaxy-saturn`, `bc19-galaxy-egress`,
+`postgresql@15-bc19` (port 5419, database `siarnaq19`), `bc19-galaxy-scheduler.timer`, `bc19-galaxy-activity`.
+The site is served by the shared `bc23-replica-caddy.service` (drop-in `/etc/caddy/bc19-galaxy.caddy`, basic-auth
+gate, CSP). Files: `/opt/bc19-galaxy` (code, runtime) and `/srv/bc19-galaxy` (frontend, viewer, static, storage).
+Configuration is in `/etc/bc19-galaxy`.

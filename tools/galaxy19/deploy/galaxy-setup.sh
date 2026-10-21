@@ -2,16 +2,17 @@
 # Root-side setup of the bc19 galaxy replica on battlecode-dev (Debian 12), alongside the 2023 replica (whose files,
 # units, user, database and nftables table are never modified; the one shared piece is the Caddy process, which gets
 # an `import` line for the bc19 site). Every step is idempotent. Run by tools/galaxy19/deploy/deploy.sh from the
-# driver; doc: docs/galaxy19.md.
+# driver; doc: tools/galaxy19/README.md.
 #
 #   sudo galaxy-setup.sh all STAGE      every step below, STAGE = the pushed copy of the 2019 repo (tools/galaxy19,
-#                                       tools/run_game.js, engine/, bots not needed)
+#                                       tools/run_game.js, engine/, bots not needed); the viewer's pinned inputs
+#                                       (official visualizer + images, pixi.js) are in $VIEWER_IN
 #   sudo galaxy-setup.sh user | egress | postgres | opt | app STAGE | runtime STAGE | dirs | secrets | password | env
 #   sudo galaxy-setup.sh units | cli | migrate | bootstrap | static | viewer | frontend | hostname | site | start
-#   sudo galaxy-setup.sh stop | status | teardown [--purge-data]
+#   sudo galaxy-setup.sh stop | status | teardown [--purge-data] | scheduler on|off | activity on|off
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOC=/home/terryvanbelle/projects/vibe/2019/docs/galaxy19.md
+DOC=/home/terryvanbelle/projects/vibe/2019/tools/galaxy19/README.md
 OPERATOR=terryvanbelle
 RUSER=bc19replica                         # runs every bc19 service; loopback-only network (nftables + slice)
 OPT=/opt/bc19-galaxy                      # root-owned: src/ (siarnaq), venv/, galaxy19/ (our code), runtime/ (engine)
@@ -24,10 +25,15 @@ CLI=/usr/local/bin/bc19-galaxy-manage
 PORT=8019                                 # siarnaq (gunicorn) on 127.0.0.1 only
 PG_CLUSTER=bc19; PG_PORT=5419; DB=siarnaq19
 NFT_TABLE=bc19_replica_egress
+NFT_OFFICIAL=bc19_official_block          # host-wide: no process on this VM may reach the official contest's hosts
+OFFICIAL_HOSTS="battlecode.org www.battlecode.org api.battlecode.org play.battlecode.org releases.battlecode.org"
+OFFICIAL_IPS_KNOWN="34.160.107.126 185.199.108.153 185.199.109.153 185.199.110.153 185.199.111.153"  # 2026-10-21
 SLICE=bc19-replica.slice
 U_EGRESS=bc19-replica-egress.service
 U_WEB=bc19-galaxy-web.service; U_RELAY=bc19-galaxy-relay.service; U_SATURN=bc19-galaxy-saturn.service
-U_ACT=bc19-galaxy-activity.service; T_ACT=bc19-galaxy-activity.timer
+U_ACT=bc19-galaxy-activity.service       # field.py activity (operator): field teams challenge near-rated teams
+U_SCHED=bc19-galaxy-scheduler.service; T_SCHED=bc19-galaxy-scheduler.timer   # Cloud Scheduler stand-in (autoscrim)
+VIEWER_IN=/home/terryvanbelle/projects/vibe/bc19-viewer-inputs   # battlecode19/ (official app files), pixi-4.8.9/
 SRC23=/opt/bc23-galaxy                    # copied (read only) for siarnaq's source and venv: same pinned version
 FRONT23=/srv/bc23-galaxy/frontend         # galaxy's built frontend (same-origin API), copied and patched for bc19
 CADDYFILE=/etc/caddy/Caddyfile
@@ -76,6 +82,29 @@ table inet $NFT_TABLE {
 	}
 }
 EOF
+  # host-wide block of the official contest (every user, not only the replica's): the addresses its host names resolve
+  # to now plus the ones recorded on 2026-10-21 (battlecode.org is GitHub Pages: those 4 addresses also serve other
+  # *.github.io sites, which this VM does not need)
+  local ips h
+  ips="$OFFICIAL_IPS_KNOWN"
+  for h in $OFFICIAL_HOSTS; do ips="$ips $(getent ahostsv4 "$h" 2>/dev/null | awk '{print $1}' | sort -u | tr '\n' ' ')"; done
+  ips=$(echo $ips | tr ' ' '\n' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' | sort -u | paste -sd, -)
+  cat >> "$ETC/egress.nft.new" <<EOF
+# Every process on this VM: no packet to the official Battlecode hosts ($OFFICIAL_HOSTS).
+table inet $NFT_OFFICIAL
+delete table inet $NFT_OFFICIAL
+table inet $NFT_OFFICIAL {
+	set official {
+		type ipv4_addr
+		elements = { $ips }
+	}
+	chain output {
+		type filter hook output priority filter - 20; policy accept;
+		ip daddr @official limit rate 6/minute burst 5 packets log prefix "bc19-official-block: " level info
+		ip daddr @official counter reject comment "official Battlecode hosts"
+	}
+}
+EOF
   mv -f "$ETC/egress.nft.new" "$ETC/egress.nft"
   cat > "/etc/systemd/system/$U_EGRESS" <<EOF
 [Unit]
@@ -94,6 +123,7 @@ RemainAfterExit=yes
 ExecStart=/usr/sbin/nft -f $ETC/egress.nft
 ExecReload=/usr/sbin/nft -f $ETC/egress.nft
 ExecStop=-/usr/sbin/nft delete table inet $NFT_TABLE
+ExecStop=-/usr/sbin/nft delete table inet $NFT_OFFICIAL
 
 [Install]
 WantedBy=sysinit.target
@@ -111,6 +141,7 @@ EOF
   systemctl enable --quiet "$U_EGRESS"
   systemctl restart "$U_EGRESS"
   nft list table inet "$NFT_TABLE" >/dev/null
+  nft list table inet "$NFT_OFFICIAL" >/dev/null
 }
 
 postgres_step () {
@@ -230,7 +261,7 @@ DJANGO_SETTINGS_MODULE=replica_settings
 DJANGO_CONFIGURATION=Replica
 SIARNAQ_REVISION=galaxy-f343088-bc19-replica
 GALAXY_COMPILE_SLOTS=1
-GALAXY_EXECUTE_SLOTS=2
+GALAXY_EXECUTE_SLOTS=4
 GALAXY_GAME_TIMEOUT=1800
 GALAXY_NACK_DELAY=10
 GALAXY_GUNICORN_WORKERS=2
@@ -264,7 +295,7 @@ EOF
 }
 
 units_step () {
-  say "units: $U_WEB $U_RELAY $U_SATURN (+ $U_ACT/$T_ACT, enabled by 'activity on')"
+  say "units: $U_WEB $U_RELAY $U_SATURN (+ $T_SCHED by 'scheduler on', $U_ACT by 'activity on')"
   local head="Documentation=file://$DOC
 Requires=$U_EGRESS
 After=$U_EGRESS network.target"
@@ -307,7 +338,7 @@ WantedBy=multi-user.target
 EOF
   cat > "/etc/systemd/system/$U_SATURN" <<EOF
 [Unit]
-Description=bc19 galaxy replica: saturn (compile submissions, run matches with the bc19 engine; no network; at most 2 games)
+Description=bc19 galaxy replica: saturn (compile submissions, run matches with the bc19 engine; no network; at most 4 games)
 $head $U_RELAY
 Wants=$U_RELAY
 
@@ -320,9 +351,11 @@ PrivateNetwork=yes
 ExecStart=/usr/bin/python3 $OPT/galaxy19/saturn.py run
 KillMode=mixed
 TimeoutStopSec=60
-# 2 games (~2 GB each) + 1 compile at most; CPU capped at 3 cores so the VM keeps the rest for our batches
-MemoryMax=7G
-CPUQuota=300%
+# 4 games + 1 compile at most (GALAXY_EXECUTE_SLOTS); the VM's other cores stay free for our own batches.
+# The CPU cap is a backstop above 4 single-threaded games (node's GC/JIT threads add bursts): a tighter quota would
+# throttle in 100 ms periods and turn into chess-clock timeouts.
+MemoryMax=10G
+CPUQuota=500%
 Restart=on-failure
 RestartSec=30s
 
@@ -331,29 +364,51 @@ WantedBy=multi-user.target
 EOF
   cat > "/etc/systemd/system/$U_ACT" <<EOF
 [Unit]
-Description=bc19 galaxy replica: idle play (field.py activity --once: one request when no match is waiting)
+Description=bc19 galaxy replica: field activity (field.py activity: field teams challenge near-rated teams when the queue is short)
 Documentation=file://$DOC
-After=$U_WEB
+After=$U_WEB bc23-replica-caddy.service
+
+[Service]
+Type=simple
+# the operator's contestant accounts (~/.bc19-galaxy, mode 600) and the site gate (~/.bc19-replica-password); it talks
+# only to the site, through Caddy on 127.0.0.1:443, as contestants do (the public API)
+User=$OPERATOR
+Environment=GALAXY19_CONNECT=127.0.0.1
+ExecStart=/usr/bin/python3 $OPT/galaxy19/field.py activity
+IPAddressDeny=any
+IPAddressAllow=localhost
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  rm -f /etc/systemd/system/bc19-galaxy-activity.timer
+  cat > "/etc/systemd/system/$U_SCHED" <<EOF
+[Unit]
+Description=bc19 galaxy replica: Cloud Scheduler stand-in (fire recorded jobs due this minute: the autoscrim job)
+$head
 
 [Service]
 Type=oneshot
-User=$OPERATOR
-Environment=GALAXY19_CONNECT=127.0.0.1
-ExecStart=/usr/bin/python3 /home/$OPERATOR/projects/vibe/2019/tools/galaxy19/field.py activity --once
-NoNewPrivileges=yes
-ProtectSystem=strict
-TimeoutStartSec=300
+$(unit_common "" "$HOMED")
+WorkingDirectory=$HOMED
+ExecStart=/usr/bin/python3 $OPT/galaxy19/relay.py fire-jobs
 EOF
-  cat > "/etc/systemd/system/$T_ACT" <<EOF
+  cat > "/etc/systemd/system/$T_SCHED" <<EOF
 [Unit]
-Description=bc19 galaxy replica: idle play every 2 minutes
+Description=bc19 galaxy replica: Cloud Scheduler stand-in, every minute (autoscrim job: episode autoscrim_schedule)
 Documentation=file://$DOC
 
 [Timer]
-OnCalendar=*-*-* *:00/2:30
-AccuracySec=5s
+OnCalendar=*-*-* *:*:00
+AccuracySec=1s
 Persistent=false
-Unit=$U_ACT
+Unit=$U_SCHED
 
 [Install]
 WantedBy=timers.target
@@ -392,11 +447,13 @@ bootstrap_step () { say "bootstrap: episode bc19 + maps, service user, superuser
 static_step () { say "collectstatic"; "$CLI" collectstatic --noinput --clear -v 0; }
 
 viewer_step () {
-  say "viewer: $WWW/viewer (bc19 re-simulation viewer)"
+  say "viewer: $WWW/viewer (the official 2019 visualizer around our match-archive page)"
   local v="$WWW/viewer"
   rm -rf "$v.new"; install -d -m 0750 "$v.new"
   install -m 0640 "$OPT/galaxy19/viewer/visualizer.html" "$OPT/galaxy19/viewer/viewer19.js" "$OPT/galaxy19/viewer/viewer19.css" "$v.new/"
   "$OPT/runtime/bin/node" "$OPT/galaxy19/viewer/build_engine.js" "$OPT/runtime/engine/node_modules" "$v.new/engine19.js"
+  # the official 2019 visualizer class, its unit images and pixi.js 4.8.9, each checked against viewer/PINS.json
+  "$OPT/runtime/bin/node" "$OPT/galaxy19/viewer/build_official.js" "$VIEWER_IN/battlecode19" "$VIEWER_IN/pixi-4.8.9/pixi.min.js" "$v.new"
   chown -R root:caddy "$v.new"; chmod -R u=rwX,g=rX,o= "$v.new"
   rm -rf "$v.old"; [ -e "$v" ] && mv "$v" "$v.old"; mv "$v.new" "$v"; rm -rf "$v.old"
 }
@@ -404,7 +461,11 @@ viewer_step () {
 frontend_step () {
   say "frontend: copy of $FRONT23 patched for episode bc19 (default episode, Replay! link to /viewer/)"
   local dst="$WWW/frontend"
-  [ -f "$FRONT23/index.html" ] || die "no built frontend at $FRONT23"
+  if [ ! -f "$FRONT23/index.html" ]; then
+    # the 2023 replica's copy is gone (retired): keep the patched copy already installed here
+    [ -f "$dst/index.html" ] || die "no built frontend at $FRONT23 and none installed at $dst"
+    say "frontend: $FRONT23 absent; keeping the installed $dst"; return 0
+  fi
   rm -rf "$dst.new"; cp -r "$FRONT23" "$dst.new"
   python3 - "$dst.new" <<'PY'
 import glob, os, sys
@@ -424,6 +485,8 @@ with open(os.path.join(d, 'REPLICA_BUILD.txt'), 'a') as fh:
     fh.write('bc19 replica: default episode bc19, Replay! link for bc19 -> /viewer/visualizer.html (galaxy-setup.sh frontend)\n')
 print('patched', os.path.basename(js[0]))
 PY
+  python3 "$OPT/galaxy19/frontend_check.py" "$dst.new" > "$ETC/frontend-check.txt" || { tail -5 "$ETC/frontend-check.txt"; die "frontend check failed ($ETC/frontend-check.txt)"; }
+  tail -3 "$ETC/frontend-check.txt"
   chown -R root:caddy "$dst.new"; chmod -R u=rwX,g=rX,o= "$dst.new"
   rm -rf "$dst.old"; [ -e "$dst" ] && mv "$dst" "$dst.old"; mv "$dst.new" "$dst"; rm -rf "$dst.old"
 }
@@ -544,11 +607,11 @@ start_step () {
   local u; for u in "$U_RELAY" "$U_WEB" "$U_SATURN"; do systemctl is-active --quiet "$u" || die "$u did not start (journalctl -u $u)"; done
 }
 
-stop_step () { systemctl stop "$T_ACT" "$U_SATURN" "$U_WEB" "$U_RELAY" 2>/dev/null || true; }
+stop_step () { systemctl stop "$U_ACT" "$T_SCHED" "$U_SATURN" "$U_WEB" "$U_RELAY" 2>/dev/null || true; }
 
 status_step () {
   local u
-  for u in "$U_EGRESS" "$U_WEB" "$U_RELAY" "$U_SATURN" "$T_ACT" "postgresql@15-$PG_CLUSTER"; do
+  for u in "$U_EGRESS" "$U_WEB" "$U_RELAY" "$U_SATURN" "$T_SCHED" "$U_ACT" "postgresql@15-$PG_CLUSTER"; do
     printf '%-34s enabled=%-9s active=%s\n' "$u" "$(systemctl is-enabled "$u" 2>/dev/null || true)" "$(systemctl is-active "$u" 2>/dev/null || true)"
   done
   [ -s "$ETC/hostname" ] && echo "url: https://$SITE_PREFIX$(cat "$ETC/hostname")/"
@@ -559,8 +622,8 @@ status_step () {
 
 teardown_step () {
   say "teardown: bc19 units, CLI, Caddy site (2023 untouched)"
-  systemctl disable --now "$T_ACT" "$U_SATURN" "$U_WEB" "$U_RELAY" 2>/dev/null || true
-  rm -f "/etc/systemd/system/"{$U_WEB,$U_RELAY,$U_SATURN,$U_ACT,$T_ACT} "$CLI"
+  systemctl disable --now "$U_ACT" "$T_SCHED" "$U_SATURN" "$U_WEB" "$U_RELAY" 2>/dev/null || true
+  rm -f "/etc/systemd/system/"{$U_WEB,$U_RELAY,$U_SATURN,$U_ACT,$U_SCHED,$T_SCHED} "$CLI"
   rm -f "/etc/systemd/system/$CADDY_UNIT.d/bc19-galaxy.conf" "$CADDY_SITE"
   sed -i "\#^import $CADDY_SITE\$#d; \#^\# bc19 galaxy replica#d" "$CADDYFILE"
   systemctl daemon-reload; systemctl reload "$CADDY_UNIT" || true
@@ -585,7 +648,8 @@ case "$step" in
   bootstrap) bootstrap_step ;; static) static_step ;; viewer) viewer_step ;; frontend) frontend_step ;;
   hostname) hostname_step ;; site) site_step ;; start) start_step ;; stop) stop_step ;; status) status_step ;;
   ensure-import) ensure_import ;;
-  activity) case "${1:-}" in on) systemctl enable --now "$T_ACT" ;; off) systemctl disable --now "$T_ACT" ;; *) die "activity on|off" ;; esac ;;
+  activity) case "${1:-}" in on) systemctl enable --now "$U_ACT" ;; off) systemctl disable --now "$U_ACT" ;; *) die "activity on|off" ;; esac ;;
+  scheduler) case "${1:-}" in on) systemctl enable --now "$T_SCHED" ;; off) systemctl disable --now "$T_SCHED" ;; *) die "scheduler on|off" ;; esac ;;
   teardown) teardown_step "${1:-}" ;;
   *) sed -n '2,12p' "$0" >&2; exit 2 ;;
 esac

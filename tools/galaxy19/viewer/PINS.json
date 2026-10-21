@@ -1,0 +1,16 @@
+{
+ "app/public/assets/img/castle.png": "046b99a3342b635621e252b329ec7357fe7505a0cd89999e550005c45677303c",
+ "app/public/assets/img/church.png": "033c87daef4a575a87bbae62347b3331e88deca6a1dfa6f732228fdf5fcd976b",
+ "app/public/assets/img/crusader.png": "126da190978bb67d70dde242f466eebbdd31696e4534bf92f128561885cab3da",
+ "app/public/assets/img/pilgrim.png": "bb1f5303dd4350a2b169933cdd2321953750c74195cbc4d4d9ed206ac0638f74",
+ "app/public/assets/img/preacher.png": "6ba1a7ae205542cb1c2a61c5d6dd37ed3e8150f36fca5f5a88e94a7e19d981c4",
+ "app/public/assets/img/prophet.png": "77fdb54bb2abf7b2a9b878d33f825a8139768046f147dedbf3e296d1b2c8486f",
+ "app/public/assets/img/s_castle.png": "a3640dec81d9fed61354efddac3b0c9030d898bfb10904e38e13e177e27cd52a",
+ "app/public/assets/img/s_church.png": "9a70cc4f872383d72d4dfb2dd0981bc9824418b4f6e3dd59587da3e2916793b2",
+ "app/public/assets/img/s_crusader.png": "3d38c0887f2652d9702f39b1ed9b0fcd74a03c5f268edb5dbddad1b40a589dbe",
+ "app/public/assets/img/s_pilgrim.png": "e21b19389e284813656ca63a0b004958601b83699e697b18a1fa9bcf7cd8c725",
+ "app/public/assets/img/s_preacher.png": "6e381eb00b9acbeba297b5e6510afb2c94e7a6f411560a48475ce210886c2ee5",
+ "app/public/assets/img/s_prophet.png": "e95ed15a780acc1cad47970466f37e9b03cac7bdd3740f129e04320197459806",
+ "app/src/views/visualizer.js": "ccfad435d370e0974c4247593b0867da9c4180ef34f3ed64aeb1c9ffdbb2339c",
+ "pixi.js@4.8.9/dist/pixi.min.js": "b5da6a3183b350355026219ca181e845c76a93886277db36b1263afde97117b0"
+}

@@ -11,12 +11,13 @@ work=$(realpath "$1"); shift
 exec unshare --user --map-root-user --net --mount --propagation private /bin/sh -c '
   set -eu
   w="$1"; shift
+  mount --bind "$w" "$w"          # its own mount first: a bind made after the remounts would inherit read-only
   # every mount point that is read-write now (mountinfo field 5 = mount point, 6 = per-mount options)
   awk "\$6 ~ /(^|,)rw(,|$)/ {print \$5}" /proc/self/mountinfo | sed "s/\\\\040/ /g" | sort -u | while read -r mp; do
+    [ "$mp" = "$w" ] && continue
     case "$mp" in /proc|/proc/*|/sys|/sys/*|/dev|/dev/pts|/dev/mqueue) continue ;; esac
     mount -o remount,bind,ro "$mp" 2>/dev/null || true
   done
-  mount --bind "$w" "$w"
   cd "$w"
   exec "$@"
 ' sandbox "$work" "$@"
