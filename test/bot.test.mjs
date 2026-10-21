@@ -7,7 +7,7 @@ import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
-import { nextTarget } from '../src/bot/military.js';
+import { nextTarget, isChoke } from '../src/bot/military.js';
 import { callDue } from '../src/bot/castle.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
@@ -191,6 +191,20 @@ test('castle: attack calls every ATTACK_EVERY rounds, or (WAVE) 3 rounds once en
     B.st = { count: [2, 0, 5, 10, 6, 4], march: 20 }; B.round = 960;   // last rounds: call regardless
     assert.ok(callDue(B));
   } finally { Object.assign(CFG, saved); }
+});
+
+test('military: chokepoints are tiles whose passable neighbours fall apart without them', () => {
+  const rows = ['#########',
+                '#.......#',
+                '#######.#',
+                '........#',
+                '........#'];
+  const w = { passable: (x, y) => y >= 0 && y < rows.length && x >= 0 && x < 9 && rows[y][x] === '.' };
+  assert.ok(isChoke(w, 3, 1));    // 1-wide corridor
+  assert.ok(isChoke(w, 7, 2));    // its 1-wide turn
+  assert.ok(!isChoke(w, 1, 1));   // its dead end
+  assert.ok(!isChoke(w, 3, 3));   // 2-wide open edge
+  assert.ok(!isChoke(w, 3, 4));   // map edge with open ground above
 });
 
 test('combat: target choice, preacher splash avoids friends, retreat', () => {

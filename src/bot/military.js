@@ -83,10 +83,57 @@ function go(B, key, sources, cap) {
   return s ? w.move(s[0], s[1]) : null;
 }
 
-// A lattice tile: (x + y) even, passable, not a depot, not adjacent to the home structure.
+// A lattice tile: (x + y) even, passable, not a depot, not adjacent to the home structure (CFG.KEEP_CLEAR: and not
+// kept clear).
 function latticeOk(B, x, y) {
   const w = B.w, h = B.st.home;
-  return ((x + y) & 1) === 0 && w.passable(x, y) && !w.isDepot(x, y) && d2(x, y, h.x, h.y) >= CFG.LATTICE_MIN_R2;
+  return ((x + y) & 1) === 0 && w.passable(x, y) && !w.isDepot(x, y) && d2(x, y, h.x, h.y) >= CFG.LATTICE_MIN_R2 &&
+    !(CFG.KEEP_CLEAR && keepClear(B, x, y));
+}
+
+// Tiles idle units keep clear (CFG.KEEP_CLEAR): depots, tiles next to our structures (pilgrims deliver and new units
+// appear there) and chokepoints (tiles whose passable neighbours fall apart without them, like a 1-wide corridor).
+const RING = [[-1, -1], [0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0]];
+function isChoke(w, x, y) {
+  const p = RING.map(([dx, dy]) => w.passable(x + dx, y + dy)), seen = new Array(8).fill(false);
+  let parts = 0;
+  for (let i = 0; i < 8; i++) {
+    if (!p[i] || seen[i]) continue;
+    parts++; const q = [i]; seen[i] = true;
+    while (q.length) {
+      const j = q.pop();
+      // King-adjacent ring cells: neighbours on the ring, and orthogonal cells two apart (N and E touch diagonally).
+      for (const k of (j & 1) ? [j + 1, j + 7, j + 2, j + 6] : [j + 1, j + 7]) {
+        const m = k % 8; if (p[m] && !seen[m]) { seen[m] = true; q.push(m); }
+      }
+    }
+  }
+  return parts > 1;
+}
+function keepClear(B, x, y) {
+  const w = B.w, st = B.st;
+  if (!st.choke) {
+    st.choke = new Uint8Array(w.n * w.n);
+    for (let yy = 0; yy < w.n; yy++) for (let xx = 0; xx < w.n; xx++) if (w.passable(xx, yy) && isChoke(w, xx, yy)) st.choke[yy * w.n + xx] = 1;
+  }
+  if (st.structsAt !== w.me.turn) {
+    st.structsAt = w.me.turn; st.structs = [st.home];
+    for (const r of w.friends) if (r.unit === CASTLE || r.unit === CHURCH) st.structs.push(r);
+  }
+  return w.isDepot(x, y) || st.choke[y * w.n + x] === 1 || st.structs.some(s => king(s.x, s.y, x, y) <= 1);
+}
+
+// Step off a kept-clear tile to a free one that is not, farthest from home (ties: first in RING order).
+function stepClear(B) {
+  const w = B.w, me = w.me, h = B.st.home;
+  if (!keepClear(B, me.x, me.y) || w.fuel < STATS[me.unit].fuelPerMove * 2) return null;
+  let best = null, bd = -1;
+  for (const [dx, dy] of RING) {
+    const x = me.x + dx, y = me.y + dy;
+    if (!w.free(x, y) || keepClear(B, x, y)) continue;
+    const d = d2(x, y, h.x, h.y); if (d > bd) { bd = d; best = [dx, dy]; }
+  }
+  return best ? w.move(best[0], best[1]) : null;
 }
 
 // The free lattice tile nearest an anchor ahead of home (toward the enemy), within LATTICE_R king steps of home.
@@ -157,7 +204,8 @@ export function militaryTurn(B) {
   // Hold the lattice.
   if (latticeOk(B, me.x, me.y) && king(me.x, me.y, h.x, h.y) <= LATTICE_R) return null;
   const t = latticeTarget(B);
-  if (!t) return null;
-  return go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);
+  if (!t) return CFG.KEEP_CLEAR ? stepClear(B) : null;
+  const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);
+  return a || (CFG.KEEP_CLEAR ? stepClear(B) : null);
 }
-export { isAttacker, PROPHET, PREACHER, nextTarget };
+export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke };

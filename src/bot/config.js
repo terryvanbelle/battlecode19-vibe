@@ -39,7 +39,8 @@ export const CFG = {
   PIONEER_RESERVE: 0,        // 1: ...and pilgrim + church karbonite (60) while a castle has a pioneer due (on poor
                              // maps the peacetime army spent every 25 K and no church was ever built: seed 1755)
   // lattice
-  LATTICE_MIN_R2: 5,         // lattice tiles at least this far (r2) from any structure
+  LATTICE_MIN_R2: 5,         // lattice tiles at least this far (r2) from the home structure
+  KEEP_CLEAR: 0,             // 1: idle military units keep off depots, tiles next to our structures and chokepoints
   LATTICE_ADVANCE: 0.35,     // weight of advancing toward the enemy in lattice tile choice
   // attack
   ATTACK_ROUND: 450,         // castles call a general attack from this round when the army is big
