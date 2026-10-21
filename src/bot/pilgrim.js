@@ -111,7 +111,7 @@ export function pilgrimTurn(B) {
   }
   if (!st.target) st.target = freeDepotNear(B, me.x, me.y, null);
   const t = st.target; if (!t) return null;
-  if (me.x === t.x && me.y === t.y) return w.fuel >= 1 ? w.mine() : null;
+  if (me.x === t.x && me.y === t.y) return w.fuel >= 1 && minesNow(w, t) ? w.mine() : null;
   const occ = w.occ(t.x, t.y);
   if (occ > 0) { // taken: choose the nearest free depot
     const alt = freeDepotNear(B, t.x, t.y, null);
@@ -119,3 +119,8 @@ export function pilgrimTurn(B) {
   }
   return go(B, 'd' + st.target.i, [[st.target.x, st.target.y]]);
 }
+
+// Karbonite nobody will spend (CFG.KARB_STOP): while the team holds that much, a karbonite miner on its depot waits
+// instead of mining (each mine costs a fuel, the resource that binds).
+function minesNow(w, t) { return !(CFG.KARB_STOP && t.k && w.karbonite >= CFG.KARB_STOP); }
+export { minesNow };

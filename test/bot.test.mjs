@@ -9,6 +9,7 @@ import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
 import { nextTarget, isChoke } from '../src/bot/military.js';
 import { callDue } from '../src/bot/castle.js';
+import { minesNow } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep } from '../src/bot/combat.js';
@@ -162,6 +163,16 @@ test('nav: detour: a robot facing a jammed corridor replans around it (and is st
   };
   assert.strictEqual(run(null), null);
   const t = run([3, 5, 10, 30]); assert.ok(t !== null && t <= 25, 'arrived at turn ' + t);
+});
+
+test('pilgrim: KARB_STOP pauses karbonite (not fuel) mining while the stockpile is high', () => {
+  const saved = CFG.KARB_STOP;
+  try {
+    CFG.KARB_STOP = 0; assert.ok(minesNow({ karbonite: 5000 }, { k: true }));
+    CFG.KARB_STOP = 500;
+    assert.ok(!minesNow({ karbonite: 500 }, { k: true })); assert.ok(minesNow({ karbonite: 499 }, { k: true }));
+    assert.ok(minesNow({ karbonite: 5000 }, { k: false }));
+  } finally { CFG.KARB_STOP = saved; }
 });
 
 test('comms: encode/decode', () => {

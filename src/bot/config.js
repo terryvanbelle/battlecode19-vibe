@@ -32,6 +32,7 @@ export const CFG = {
   SWITCH_KARB_LOW: 30,       // ...and a fuel miner moves to karbonite when karbonite < this and fuel >= ...
   SWITCH_FUEL_HIGH: 3000,
   SWITCH_KING: 8,            // only to depots within this many king steps
+  KARB_STOP: 0,              // >0: karbonite miners stop mining while the team holds this much karbonite
   SHOOT_FLOOR: 30,           // military units do not shoot the team's fuel below this
   PREACHER_EVERY: 4,         // every Nth peacetime defender is a preacher (when MIL_ROTATION is null)
   // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
