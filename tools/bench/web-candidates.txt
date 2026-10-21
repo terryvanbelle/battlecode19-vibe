@@ -1,0 +1,17 @@
+# Web sweep 2026-10-21 (WebSearch, URLs only; github/gitlab/bitbucket). One URL per line.
+https://github.com/StoneT2000/BC19
+https://github.com/VoidMercy/battlecode-2019
+https://github.com/nthistle/battlecode-2019
+https://github.com/mvpatel2000/Battlecode2019
+https://github.com/awesomelemonade/Battlecode2019
+https://github.com/haydenshively/Battle-Code-2019
+https://github.com/j-mao/battlecode-2019
+https://github.com/m-schier/battlecode-2019-wololo
+https://github.com/Helia-Karisani/BC2019
+https://github.com/moreda-a/BC2019
+https://github.com/npfoss/examplefuncsplayer2019
+https://github.com/vineetparikh/BigRedBattlecode2019
+https://github.com/twitu/bc19-tsp
+https://github.com/lighthouse16/Battlecode
+https://github.com/BackIsBroken/Battlecode-Bot
+https://github.com/RealAhmedKhairi/battlecode_Bot
