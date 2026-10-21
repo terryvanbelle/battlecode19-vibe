@@ -24,3 +24,11 @@
   movement burned 18,000 fuel. Movement fuel is r2 x fuel/move, so short steps are cheaper per tile.
 - Candidates: h1 = r2 <= 2 cruise steps, fuel-aware depot choice and military reserve; h2 = h1 + 30% home guard
   that ignores attack orders before round 900, and per-robot RNG reseeded by birth round.
+
+## 2026-10-21 11:55 — h1 accepted as v3
+- h1 vs v2 (dist/base): 27/36 at timescale 2, 20 seeds both sides (4 rows lost to round-0 init failures under load,
+  now retried by the batch runner). Wins by castles 20, by health 7.
+- 2 single-turn timeouts in 36 games (vm2's 200 ms per-turn cap). Our own code logged no turn over 30 ms in the
+  re-run of one of them, so the spike is outside our code (state-message compile, GC or CPU starvation at load ~12).
+- Queued on the VM: h2 vs h1 (home guard, reseeded RNG, attack fuel gate), h3 vs h2 (depot cooldown after pilgrim
+  deaths), h4 vs h3 (crusader/preacher rotation).

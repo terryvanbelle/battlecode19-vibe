@@ -11,11 +11,15 @@
 <text x="44" y="106.5" text-anchor="end">75%</text>
 <line x1="50" x2="570" y1="30" y2="30" stroke="#ddd"/>
 <text x="44" y="34" text-anchor="end">100%</text>
-<text x="310" y="338" text-anchor="middle">v2</text>
-<circle cx="310" cy="30" r="3.5" fill="#2a6fdb"><title>example: 20/20</title></circle>
+<text x="50" y="338" text-anchor="middle">v2</text>
+<text x="570" y="338" text-anchor="middle">v3</text>
+<circle cx="50" cy="30" r="3.5" fill="#2a6fdb"><title>example: 20/20</title></circle>
 <rect x="584" y="30" width="10" height="10" fill="#2a6fdb"/>
 <text x="600" y="39">example</text>
-<circle cx="310" cy="156.875" r="3.5" fill="#d9822b"><title>v1: 9/16</title></circle>
+<circle cx="50" cy="156.875" r="3.5" fill="#d9822b"><title>v1: 9/16</title></circle>
 <rect x="584" y="48" width="10" height="10" fill="#d9822b"/>
 <text x="600" y="57">v1</text>
+<circle cx="570" cy="102.5" r="3.5" fill="#3a9e5c"><title>v2: 27/36</title></circle>
+<rect x="584" y="66" width="10" height="10" fill="#3a9e5c"/>
+<text x="600" y="75">v2</text>
 </svg>

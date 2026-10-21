@@ -1,3 +1,5 @@
 name	hash	date_pdt	note
 v0	b0022f98405c	2026-10-21 07:14	foundation: economy, churches, lattice, waves, endgame crusader dump
 v1	d3ea4d79f2c3	2026-10-21 09:00	v0 + guard prophets grow with round, surplus crusaders, adaptive miner mix
+v2	5459fd274318	2026-10-21 12:06	rewrite in a canonical frame (side-symmetric), minified build; beats example 20/20
+v3	5ad87538e6af	2026-10-21 12:06	v2 + r2<=2 cruise steps, fuel-aware depot choice, military fuel reserve 300+10/unit; 27/36 vs v2
