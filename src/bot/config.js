@@ -20,7 +20,9 @@ export const CFG = {
   FUEL_PER_KARB: 2.5,        // staff fuel depots while fuel < this x karbonite (and below FUEL_HIGH)
   CRUISE_R2: 2,              // largest step for unhurried military moves (fuel cost is r2 x fuel/move)
   PILGRIM_FAST_FUEL: 1000,   // pilgrims take full r2 4 steps only above this fuel     // peacetime military builds keep this much fuel back (movement and mining need it)
-  PREACHER_EVERY: 4,         // every Nth peacetime defender is a preacher
+  PREACHER_EVERY: 4,         // every Nth peacetime defender is a preacher (when MIL_ROTATION is null)
+  // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
+  MIL_ROTATION: [4, 3, 4, 3, 5],   // peacetime build order by unit type (prophet 4, crusader 3, preacher 5)         // every Nth peacetime defender is a preacher
   RESERVE_CHURCH_K: 50,      // karbonite kept back while a pioneer is out
   // lattice
   LATTICE_MIN_R2: 5,         // lattice tiles at least this far (r2) from any structure
