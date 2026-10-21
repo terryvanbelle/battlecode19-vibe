@@ -4,7 +4,7 @@ import { CFG } from './config.js';
 import { STATS, CASTLE, CHURCH, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, king, rng } from './util.js';
 import { fuelStep } from './nav.js';
-import { SIG, dec, decFarRobot } from './comms.js';
+import { SIG, CT, dec, decFarRobot } from './comms.js';
 import { isAttacker, pickTarget, preacherTarget, retreatStep } from './combat.js';
 
 function init(B) {
@@ -18,6 +18,11 @@ function init(B) {
   if (B.birthRound) B.round = B.birthRound;
   if (!st.home) st.home = { x: me.x, y: me.y };
   st.target = null;   // [x, y] enemy structure to attack
+  st.tIdx = -1;       // its enemy castle index from the ATTACK message (-1: unknown)
+  st.known = [];      // ATTACK_PERSIST: enemy castle index -> [x, y] heard so far
+  st.dead = new Set();   // indices seen destroyed
+  st.reports = [];    // indices still to report over castle talk
+  st.waitUntil = 0;   // no orders after a kill: hold position until this round
   // Reseed with the birth round: units born on the same tile must not share one random stream.
   B.rnd = rng(((B.birthRound || 0) * 4096 + me.y * 64 + me.x) * 8 + me.unit); B.nav.rnd = B.rnd;
   st.guard = B.rnd() < CFG.HOME_GUARD_FRAC;   // stays home through general attacks (until the last rounds)
@@ -30,13 +35,35 @@ function listen(B) {
   for (const r of w.robots) {
     if (r.id === me.id || (r.seen && r.team !== me.team)) continue;
     const m = decFarRobot(r);
-    if (m && m.type === SIG.ATTACK && m.y >= n / 2 && w.passable(m.x, m.y) && (!st.guard || B.round >= 900)) st.target = [m.x, m.y];
+    if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || (st.guard && B.round < 900)) continue;
+    const i = CFG.ATTACK_PERSIST && m.extra >= 1 && m.extra <= 4 ? m.extra - 1 : -1;
+    if (i >= 0) { st.known[i] = [m.x, m.y]; if (st.dead.has(i)) continue; }
+    st.target = [m.x, m.y]; st.tIdx = i;
   }
   // Drop a target seen to be gone.
   if (st.target) {
     const [x, y] = st.target, id = w.occ(x, y);
-    if (id === 0 || (id > 0 && !w.enemies.some(e => e.x === x && e.y === y && (e.unit === CASTLE || e.unit === CHURCH)))) st.target = null;
+    if (id === 0 || (id > 0 && !w.enemies.some(e => e.x === x && e.y === y && (e.unit === CASTLE || e.unit === CHURCH)))) {
+      st.target = null;
+      if (CFG.ATTACK_PERSIST) nextTarget(B);
+    }
   }
+  if (st.reports.length) { w.talk(CT.DEAD + st.reports[0]); st.reports.push(st.reports.shift()); if (--st.reportTurns <= 0) st.reports = []; }
+}
+
+// After a kill: report it to our castles for a few turns, then march on the nearest other known enemy castle, or
+// wait where we stand for new orders (castles radio the next target map-wide).
+function nextTarget(B) {
+  const w = B.w, st = B.st, me = w.me;
+  if (st.tIdx >= 0 && !st.dead.has(st.tIdx)) { st.dead.add(st.tIdx); st.reports.push(st.tIdx); st.reportTurns = 3 * st.reports.length; }
+  st.tIdx = -1;
+  let bd = 1e9;
+  st.known.forEach((p, i) => {
+    if (!p || st.dead.has(i)) return;
+    const d = d2(p[0], p[1], me.x, me.y);
+    if (d < bd) { bd = d; st.target = p; st.tIdx = i; }
+  });
+  if (!st.target) st.waitUntil = B.round + CFG.ATTACK_WAIT;
 }
 
 function bandSources(B, tx, ty) {
@@ -108,7 +135,7 @@ export function militaryTurn(B) {
   }
 
   // Engage visible enemies near home (or anywhere when marching): melee closes in; prophets hold.
-  const h = st.home, marching = !!st.target;
+  const h = st.home, waiting = !st.target && B.round < st.waitUntil, marching = !!st.target || waiting;
   if (u !== PROPHET) {
     let e = null, ed = 1e9;
     for (const x of enemies) {
@@ -120,6 +147,7 @@ export function militaryTurn(B) {
   }
 
   // Fuel per move is proportional to r2, so short steps cover distance cheapest: unhurried moves use r2 <= 2.
+  if (waiting) return null;
   if (marching) return go(B, 'A' + st.target[0] + ',' + st.target[1], () => bandSources(B, st.target[0], st.target[1]), CFG.CRUISE_R2);
 
   // Hold the lattice.
@@ -128,4 +156,4 @@ export function militaryTurn(B) {
   if (!t) return null;
   return go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);
 }
-export { isAttacker, PROPHET, PREACHER };
+export { isAttacker, PROPHET, PREACHER, nextTarget };

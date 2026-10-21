@@ -20,6 +20,8 @@ export function castleTurn(B) {
     st.churched = new Set();
     st.lost = new Map();   // cluster -> round a pioneer for it died
     st.attackUntil = 0;
+    st.deadE = new Set();   // indices (into st.order) of enemy castles reported destroyed
+    st.lastT = -1;
   }
   if (me.turn === 1) w.talk(me.x + 1);
   else if (me.turn === 2) w.talk(me.y + 1);
@@ -37,7 +39,10 @@ export function castleTurn(B) {
       st.partial.set(r.id, p);
       if (p.x !== undefined && p.y !== undefined) st.castles.set(r.id, { x: p.x, y: p.y });
     } else if (me.turn > 3 && r.castle_talk >= CT.CHURCH) st.churched.add(r.castle_talk - CT.CHURCH);
+    else if (me.turn > 3 && r.castle_talk >= CT.DEAD && r.castle_talk < CT.DEAD + 4) st.deadE.add(r.castle_talk - CT.DEAD);
   }
+  // Our castles in canonical order (fixed at turn 3): enemy castle i is the mirror of st.order[i].
+  if (me.turn === 3) st.order = [...st.castles.values()].sort((a, b) => (a.y * w.n + a.x) - (b.y * w.n + b.x));
   if (me.turn === 3) planClusters(B);
   // A castle that disappeared from the id list is dead.
   if (me.turn > 3) for (const id of [...st.castles.keys()]) if (id !== me.id && !allIds.has(id)) st.castles.delete(id);
@@ -95,9 +100,29 @@ function callAttack(B) {
   if (army < CFG.ATTACK_MIN_ARMY && B.round < 950) return;
   // An army without fuel cannot shoot: attack only with fuel for a few volleys per unit (except at the very end).
   if (w.fuel < CFG.ATTACK_FUEL_PER_UNIT * army && B.round < 950) return;
+  if (CFG.ATTACK_PERSIST && st.order) return callAttackPersist(B);
   if (B.round % 5 !== 0) return;
   const targets = [...st.castles.values()].map(c => w.mirror(c.x, c.y));
   targets.sort((a, b) => ((a[0] - me.x) ** 2 + (a[1] - me.y) ** 2) - ((b[0] - me.x) ** 2 + (b[1] - me.y) ** 2) || a[0] - b[0]);
   const t = targets[0];
   if (w.fuel >= 20 + 20) w.signal(encXY(0, t[0], t[1]), FAR.ATTACK);
+}
+
+// ATTACK_PERSIST: target the nearest enemy castle not reported destroyed (whether or not our own mirror castle lives);
+// the message carries its index. After a kill the first of our living castles (canonical order) radios the next
+// target map-wide, since the army may stand far beyond FAR.ATTACK's 20 tiles.
+function callAttackPersist(B) {
+  const w = B.w, st = B.st, me = w.me;
+  let t = -1, td = 1e9;
+  st.order.forEach((c, i) => {
+    if (st.deadE.has(i)) return;
+    const [x, y] = w.mirror(c.x, c.y), d = (x - me.x) ** 2 + (y - me.y) ** 2;
+    if (d < td) { td = d; t = i; }
+  });
+  if (t < 0) return;
+  const [x, y] = w.mirror(st.order[t].x, st.order[t].y), msg = encXY(t + 1, x, y);
+  const living = [...st.castles.values()].sort((a, b) => (a.y * w.n + a.x) - (b.y * w.n + b.x));
+  const first = living[0].x === me.x && living[0].y === me.y;
+  if (st.deadE.size > 0 && st.lastT !== t && first && w.fuel >= 90 + 40) { st.lastT = t; return w.signal(msg, FAR.WIDE); }
+  if (B.round % 5 === 0 && w.fuel >= 20 + 20) w.signal(msg, FAR.ATTACK);
 }

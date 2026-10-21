@@ -6,7 +6,8 @@ import * as S from '../src/bot/specs.js';
 import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
-import { encXY, encNum, dec, SIG, FAR, decFarRobot } from '../src/bot/comms.js';
+import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
+import { nextTarget } from '../src/bot/military.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep } from '../src/bot/combat.js';
 const require = createRequire(import.meta.url);
@@ -129,6 +130,22 @@ test('comms: encode/decode', () => {
   const f = decFarRobot({ signal: encXY(0, 12, 40), signal_radius: FAR.ATTACK });
   assert.deepStrictEqual([f.type, f.x, f.y], [SIG.ATTACK, 12, 40]);
   assert.strictEqual(decFarRobot({ signal: 5, signal_radius: 400 }), null);
+  const g = decFarRobot({ signal: encXY(3, 7, 50), signal_radius: FAR.WIDE });   // map-wide ATTACK, castle index 2
+  assert.deepStrictEqual([g.type, g.x, g.y, g.extra], [SIG.ATTACK, 7, 50, 3]);
+  assert.ok(FAR.WIDE <= 2 * 63 * 63 && Math.ceil(Math.sqrt(FAR.WIDE)) === 90);
+  // castle talk ranges never overlap: unit status 64..69, kill reports 72..75, churches 128+
+  assert.ok(CT.UNIT + 5 < CT.DEAD && CT.DEAD + 3 < CT.CHURCH);
+});
+
+test('military: after a kill, report it and march on the nearest other known enemy castle, else wait', () => {
+  const B = { round: 500, w: { me: { x: 10, y: 40 } },
+    st: { tIdx: 1, known: [[30, 50], [10, 45], [12, 60]], dead: new Set(), reports: [], waitUntil: 0, target: null } };
+  nextTarget(B);
+  assert.deepStrictEqual([...B.st.dead], [1]); assert.deepStrictEqual(B.st.reports, [1]);
+  assert.deepStrictEqual(B.st.target, [12, 60]); assert.strictEqual(B.st.tIdx, 2);
+  B.st.target = null; nextTarget(B); B.st.target = null; nextTarget(B);
+  assert.deepStrictEqual([...B.st.dead].sort(), [0, 1, 2]); assert.strictEqual(B.st.target, null);
+  assert.ok(B.st.waitUntil > B.round);
 });
 
 test('combat: target choice, preacher splash avoids friends, retreat', () => {

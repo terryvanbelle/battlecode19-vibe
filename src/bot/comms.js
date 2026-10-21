@@ -17,15 +17,17 @@ export function dec(sig) { return { type: sig >> 12, x: (sig >> 6) & 63, y: sig 
 export const CT = {
   CHURCH: 128,   // + cluster index (< 128): a pilgrim built a church at that cluster's site this turn
   UNIT: 64,      // + unit type: the default status byte of every robot from round 4 (castles count the army)
+  DEAD: 72,      // + enemy castle index (< 4, see castle.js): a unit saw that enemy castle gone
 };
 
 // Far messages (to robots that may not see the sender, so cannot check its team): the message type is the exact
 // signal radius, which every receiver sees (game.js:675-700). Unusual radii make enemy radio almost never pass.
-// Payload: encXY(0, x, y) | extra bits in the top 4 bits.
-export const FAR = { ATTACK: 398, ENEMY: 99 };   // ceil(sqrt) costs: 20, 10
+// Payload: encXY(0, x, y) | extra bits in the top 4 bits (ATTACK: enemy castle index + 1, 0 = none).
+// WIDE is an ATTACK to the whole map (max r2 2*63^2 = 7938).
+export const FAR = { ATTACK: 398, ENEMY: 99, WIDE: 7930 };   // ceil(sqrt) costs: 20, 10, 90
 export function decFarRobot(r) {
   if (!(r.signal >= 0)) return null;
-  const type = r.signal_radius === FAR.ATTACK ? SIG.ATTACK : r.signal_radius === FAR.ENEMY ? SIG.ENEMY : 0;
+  const type = r.signal_radius === FAR.ATTACK || r.signal_radius === FAR.WIDE ? SIG.ATTACK : r.signal_radius === FAR.ENEMY ? SIG.ENEMY : 0;
   if (!type) return null;
   return { type, x: (r.signal >> 6) & 63, y: r.signal & 63, extra: r.signal >> 12 };
 }
