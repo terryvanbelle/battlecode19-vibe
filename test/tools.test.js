@@ -77,3 +77,14 @@ test('replay: rounds csv, board, unit life, nav', () => {
   const id = +ev[0].match(/builds crusader#(\d+)/)[1];
   assert.match(replay.unitLife(buf, id), /^robot \d+: blue crusader/);
 });
+
+test('paired: discordant cells, net and t; mismatched cells ignored', () => {
+  const { pairedRead } = require('../tools/paired');
+  const row = (a, seed, side, w, b = 'o') => ({ a_hash: a, b_hash: b, seed, a_side: side, winner_is_a: w });
+  const rows = [row('c', 1, 'red', 1), row('k', 1, 'red', 0), row('c', 2, 'red', 1), row('k', 2, 'red', 1),
+    row('c', 3, 'red', 0), row('k', 3, 'red', 1), row('c', 4, 'red', 1), row('k', 4, 'red', 0), row('c', 5, 'blue', 1)];
+  const r = pairedRead(rows, 'c', 'k');
+  assert.deepStrictEqual([r.cells, r.gained, r.lost, r.D, r.net], [4, 2, 1, 3, 1]);
+  assert.ok(Math.abs(r.t - 1 / Math.sqrt(3)) < 1e-9);
+  assert.strictEqual(pairedRead(rows, 'c', 'zz').cells, 0);
+});

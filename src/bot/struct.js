@@ -57,7 +57,8 @@ export function nextDepot(bot) {
   for (const [i] of st.assign) { if (bot.deps[i].k) nk++; else nf++; }
   const free = st.served.filter(d => !st.assign.has(d.i) && !enemyNear(bot, d.x, d.y));
   if (!free.length) return null;
-  const wantK = nk < CFG.KARB_PER_FUEL_MINER * (nf + 1);
+  let wantK = nk < CFG.KARB_PER_FUEL_MINER * (nf + 1);
+  if (CFG.ADAPT_MINERS) { if (bot.fuel > 1500 + 100 * nk) wantK = true; else if (bot.fuel < 300) wantK = false; }
   return free.find(d => d.k === wantK) || free[0];
 }
 
@@ -81,6 +82,17 @@ export function buildToward(bot, unit, tx, ty, signal) {
   if (!best) return null;
   if (signal !== undefined && bot.fuel >= STATS[unit].costF + 2) bot.signal(signal, 2);
   return { act: bot.buildUnit(unit, best[0], best[1]), x: me.x + best[0], y: me.y + best[1] };
+}
+
+function peacetimeV1(bot) {
+  const st = bot.state, me = bot.me;
+  const reserveK = CFG.RESERVE_K + 50 * st.pioneers.filter(p => p.id === -1 || p.id > 0).length;
+  const guard = bot.friends.filter(r => r.unit === PROPHET && d2(me.x, me.y, r.x, r.y) <= 100).length;
+  const want = Math.min(CFG.GUARD_MAX, 2 + Math.floor(bot.round / CFG.GUARD_ROUNDS));
+  const [ex, ey] = bot.mirror(me.x, me.y);
+  if (guard < want && canAfford(bot, PROPHET, reserveK, 100)) { const b = buildToward(bot, PROPHET, ex, ey); if (b) return b.act; }
+  if (bot.round > 30 && canAfford(bot, CRUSADER, reserveK + CFG.SURPLUS_KEEP_K, 150)) { const b = buildToward(bot, CRUSADER, ex, ey); if (b) return b.act; }
+  return null;
 }
 
 // Dump time: castles know how many structures share the bank; churches use a fixed round.
@@ -129,7 +141,8 @@ export function structTurn(bot, allIds, extra) {
   }
   if (extra) { const a = extra(); if (a) return a; }
 
-  // 4. Peacetime defenders, paced by round so the economy grows first.
+  // 4. Peacetime army.
+  if (CFG.PROD_V1) return peacetimeV1(bot);
   const defenders = bot.friends.filter(r => r.unit >= CRUSADER && d2(me.x, me.y, r.x, r.y) <= 100).length;
   const target = Math.min(CFG.DEFENDERS_PER_STRUCT * 4, Math.floor(bot.round / 40) + (bot.round > 20 ? 1 : 0));
   const reserveK = CFG.RESERVE_K + 50 * st.pioneers.filter(p => p.id === -1 || p.id > 0).length;
