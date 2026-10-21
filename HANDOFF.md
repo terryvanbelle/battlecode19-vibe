@@ -8,9 +8,10 @@
 - Dev line h6 (v3 + RNG reseed, depot cooldown, crusader/preacher rotation, miner switching, shooting fuel floor) is
   level with v3 (23-17, t 0.7; 7-7 without load-contaminated games): it loses every single-castle map on castles
   near round 500 and wins the multi-castle ones. Candidates are switches on h6, gated against h6 (ATTEMPTS.md).
-- VM queue (`~/jobq`, in order): h6 vs rush (running), h11c (cruise patience), h15 (ablation: no build rotation),
-  h16 (turtle: never attack), h7, h8, h9, h10, v3 vs v0, v3 vs rush. Parked (delivery failed or superseded): h11,
-  h12 (waves), h13 (keep clear), v3 vs v1, v3 vs example. h14 (detour) is in its delivery check.
+- VM queue (`~/jobq`, in order): h11c (cruise patience, running), h18 (cruise fuel reserve: delivery passed, the
+  strongest lead), h15 (ablation: no build rotation), h16 (turtle: never attack), h7, h8, h9, h10, v3 vs v0, v3 vs
+  rush. Parked (delivery failed or superseded): h11, h12 (waves), h13 (keep clear), h14 (detour), h17 (karbonite
+  stop), v3 vs v1, v3 vs example.
 - Main finding: armies jam in their own base. On seed 2202 85-90% of h6's army is within 12 king steps of home
   through round 700 although every unit has a target; the attack that does get out loses. h11c's patient army
   stays home and wins on health.

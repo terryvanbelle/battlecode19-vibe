@@ -25,3 +25,6 @@
    above the core count, robots fail init by the hundreds and whole games become noise (h6 vs v3: 5 of 40 games, both
    builds). Beside a running batch (4 games) and the replica (2), run one extra game process at most, under
    `flock ~/.bc-extra.lock`; check init_fail in every batch summary before reading a result.
+9. **A remote `pgrep -f PATTERN` matches the ssh shell that runs it.** `gssh 'pgrep -f "dist/h14 "'` always
+   succeeds, because the remote `bash -c` command line contains the pattern, so a wait-until-gone loop never ends (three
+   delivery reads hung an hour). Bracket one character (`pgrep -f "dist/h1[4] "`) or wait on an output file.

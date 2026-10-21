@@ -10,18 +10,18 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 12 queued, 4 accepted, 3 other, 2 dropped, 1 rejected, 1 sparring partners (23 rows).
+Totals: 9 queued, 5 other, 4 accepted, 2 dropped, 1 in progress, 1 rejected, 1 sparring partners (23 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
 | `h11c` | 2026-10-21 | h6 | cruise patience dose: unhurried moves slide after 20 blocked turns, step back after 50, count restarts (CRUISE_*) |  |  |  |  | QUEUED: delivery passed (move fuel -34%) |
 | `h12` | 2026-10-21 | h6 | attack waves: castles call reinforcements only once 12 free units gather (CFG.WAVE=12) |  |  |  |  | PARKED: delivery failed (waves called, but the army never leaves home) |
 | `h13` | 2026-10-21 | h6 | keep clear: idle military units stay off depots, tiles next to own structures and chokepoints (CFG.KEEP_CLEAR=1) |  |  |  |  | PARKED: delivery failed (full-idle pilgrim turns rose) |
-| `h14` | 2026-10-21 | h6 | detour: blocked cruise moves route around tiles friends recently stood on (CFG.DETOUR=5) |  |  |  |  | QUEUED |
+| `h14` | 2026-10-21 | h6 | detour: blocked cruise moves route around tiles friends recently stood on (CFG.DETOUR=5) |  |  |  |  | PARKED: delivery failed (home share 550-700 90% vs h6 88%, bar <= 2/3 of h6's) |
 | `h15` | 2026-10-21 | h6 | ablation: h6 without the crusader/preacher build rotation (MIL_ROTATION=null) |  |  |  |  | QUEUED |
 | `h16` | 2026-10-21 | h6 | turtle: never call a general attack (ATTACK_ROUND=1001) |  |  |  |  | QUEUED |
-| `h17` | 2026-10-21 | h6 | karbonite stop: miners pause while the team holds 500+ karbonite (KARB_STOP=500) |  |  |  |  | QUEUED |
-| `h18` | 2026-10-21 | h6 | cruise fuel reserve: marching and lattice moves leave 1,500 team fuel for shots (CRUISE_FUEL_RESERVE=1500) |  |  |  |  | QUEUED |
+| `h17` | 2026-10-21 | h6 | karbonite stop: miners pause while the team holds 500+ karbonite (KARB_STOP=500) |  |  |  |  | PARKED: delivery failed (mining fuel -1,446 vs bar -1,500; 183 military built vs h6 194) |
+| `h18` | 2026-10-21 | h6 | cruise fuel reserve: marching and lattice moves leave 1,500 team fuel for shots (CRUISE_FUEL_RESERVE=1500) |  |  |  |  | in progress: delivery PASS (fuel 500-700 mean 1,376 vs h6 49; attack fuel 12,085 vs 5,245); gate queued |
 | `v0` | 2026-10-21 07:14 |  | Foundation: castles assign pilgrims to depots within 6 king steps, churches at remote clusters we are nearer to, checkerboard prophet lattice, defenders on sight, castle attack, attack waves at 20 units, endgame crusader dump (health tiebreak); enemy castles = mirrors of ours. |  | 24/24 vs example (runs/results) |  | vs bc19-starter 21-0; vs v1 12-5 | ACCEPTED (v0, first build) |
 | `v1` | 2026-10-21 07:18 | v0 | Guard prophets that grow with the round, surplus karbonite into crusaders, adaptive miner mix. | 10/37 vs v0 (runs/results 6/32, runs/v1_vs_v0 4/5 after 19 round-0 init failures dropped) | 16/16 vs example (runs/v1_vs_ex) | submission 1 (src/bot @ f06db2e, byte-identical to bots/v1), first rated match 09:21 PDT | vs bc19-starter 97-0 (local+replica); vs v0 5-12; vs CS554-software-engineerin~a575dc 7-7 (replica); vs v2 7-7; vs CometsTech.battlecode2019 12-0 (replica) | ACCEPTED (v1, snapshot of the working copy) |
 | `v2` | 2026-10-21 10:06 | v1 | Rewrite in a canonical frame (src/bot/world.js): each robot sees its own side on top, no decision uses ids, team colour or visible-list order; robots born on one tile reseeded; minified single-file build (22 KB) to keep init inside the clock. | 13/30 vs v1: 9/24 at timescale 1 (out/v2_v1, heavy init failures under VM load), 4/6 at timescale 2 (out/v2_v1_ts2) | 20/20 vs example (out/v2_ex) |  | vs v3 9-25; vs bc19-starter 14-0; vs v1 7-7 | ACCEPTED (v2, the rewrite became the line) |
