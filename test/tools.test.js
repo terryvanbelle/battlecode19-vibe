@@ -115,3 +115,13 @@ test('jobq: add and status list pending jobs in order', () => {
   assert.ok(/runner: DOWN/.test(s));
   fs.rmSync(home, { recursive: true, force: true });
 });
+
+test('build_bot: --cfg overrides land in the bundle; unknown keys are refused', async () => {
+  const { build } = require('../tools/build_bot.js');
+  const os = require('os');
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'bb-'));
+  await build(path.join(__dirname, '..', 'src', 'bot'), out, { cfg: { RUSH: 7 } });
+  assert.ok(/Object\.assign\(CFG,\s*\{\s*RUSH:\s*7\s*\}\)/.test(fs.readFileSync(path.join(out, 'robot.js'), 'utf8')));
+  await assert.rejects(build(path.join(__dirname, '..', 'src', 'bot'), out, { cfg: { NO_SUCH_KEY: 1 } }), /unknown CFG key/);
+  fs.rmSync(out, { recursive: true, force: true });
+});

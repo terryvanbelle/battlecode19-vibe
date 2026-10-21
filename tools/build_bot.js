@@ -18,6 +18,12 @@ async function build(srcDir, outDir, opts = {}) {
   const input = {};
   for (const f of files) input[f] = fs.readFileSync(path.join(srcDir, f), 'utf8');
   input['robot.js'] += '\nexport { MyRobot };\n';
+  // --cfg KEY=JSON overrides (sparring partners, ablations): applied to CFG when config.js loads.
+  if (opts.cfg && Object.keys(opts.cfg).length) {
+    if (!input['config.js'] || !/export const CFG = \{/.test(input['config.js'])) throw new Error('--cfg needs config.js with CFG');
+    for (const k of Object.keys(opts.cfg)) if (!new RegExp('\\b' + k + ':').test(input['config.js'])) throw new Error('unknown CFG key ' + k);
+    input['config.js'] += '\nObject.assign(CFG, ' + JSON.stringify(opts.cfg) + ');\n';
+  }
   const bundle = await rollup.rollup({ input: { robot: 'robot.js' }, external: ['battlecode'], plugins: [virtual(input)] });
   const out = await bundle.generate({ format: 'es' });
   let code = out.output[0].code.replace(/\nexport \{ MyRobot \};\s*$/, '\n');
@@ -43,9 +49,10 @@ async function build(srcDir, outDir, opts = {}) {
 module.exports = { build };
 
 if (require.main === module) {
-  const [src, out, flag] = process.argv.slice(2);
-  if (!src || !out) { console.error('usage: build_bot.js <src dir> <out dir> [--no-minify]'); process.exit(2); }
-  build(src, out, { noMinify: flag === '--no-minify' })
+  const argv = process.argv.slice(2), [src, out] = argv, cfg = {};
+  if (!src || !out) { console.error('usage: build_bot.js <src dir> <out dir> [--no-minify] [--cfg KEY=JSON ...]'); process.exit(2); }
+  for (let i = 2; i < argv.length; i++) if (argv[i] === '--cfg') { const [k, v] = argv[++i].split(/=(.*)/s); cfg[k] = JSON.parse(v); }
+  build(src, out, { noMinify: argv.includes('--no-minify'), cfg })
     .then(r => console.log(`${out}/robot.js: ${r.before} -> ${r.after} bytes`))
     .catch(e => { console.error(String(e && e.stack || e)); process.exit(1); });
 }

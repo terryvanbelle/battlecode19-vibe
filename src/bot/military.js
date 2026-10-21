@@ -21,6 +21,7 @@ function init(B) {
   // Reseed with the birth round: units born on the same tile must not share one random stream.
   B.rnd = rng(((B.birthRound || 0) * 4096 + me.y * 64 + me.x) * 8 + me.unit); B.nav.rnd = B.rnd;
   st.guard = B.rnd() < CFG.HOME_GUARD_FRAC;   // stays home through general attacks (until the last rounds)
+  if (CFG.RUSH) st.target = w.mirror(st.home.x, st.home.y);   // sparring mode: march at once
 }
 
 // ATTACK orders: far messages (comms.decFarRobot authenticates them by radius); targets must lie in the enemy half.

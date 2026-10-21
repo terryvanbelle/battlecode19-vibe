@@ -34,6 +34,8 @@ export const CFG = {
   HOME_GUARD_FRAC: 0.3,      // military units that ignore attack orders before round 900
   // endgame
   ENDGAME_MARGIN: 6,
+  // sparring
+  RUSH: 0,                   // >0: crusader rush from this round (a sparring partner build, see tools/build_bot.js --cfg)
   // time
   TIME_SLOW_MS: 30,
 };

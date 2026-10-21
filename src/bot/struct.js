@@ -133,6 +133,12 @@ export function structTurn(B, allIds, extra) {
     if (t) return w.attack(t.x - me.x, t.y - me.y);
   }
 
+  // Sparring mode (CFG.RUSH, never in our submitted bot): after a few pilgrims, crusaders toward the enemy forever.
+  if (CFG.RUSH && (B.round || 0) > CFG.RUSH && w.canAfford(CRUSADER)) {
+    const [ex, ey] = w.mirror(me.x, me.y);
+    const b = buildToward(B, CRUSADER, ex, ey); if (b) return b.act;
+  }
+
   // 2. Endgame dump.
   if (endgame(B) && w.canAfford(CRUSADER)) {
     const [ex, ey] = w.mirror(me.x, me.y);
