@@ -65,11 +65,12 @@ async function main() {
   if (o.replays) fs.mkdirSync(o.replays, { recursive: true });
   const node = process.execPath;
   let next = 0, finished = 0;
+  const total = jobs.length;   // games to record; retried games are pushed onto jobs again
   const out = fs.openSync(o.out, 'a');
   console.error(`batch ${o.tag || ''}: ${jobs.length} games, a=${ah} b=${bh}, par ${o.par}`);
   await new Promise(resolve => {
     const launch = () => {
-      if (next >= jobs.length) { if (finished === jobs.length) resolve(); return; }
+      if (next >= jobs.length) { if (finished === total) resolve(); return; }
       const j = jobs[next++];
       const red = j.side === 'red' ? o.a : o.b, blue = j.side === 'red' ? o.b : o.a;
       const args = ['-rn', node, path.join(ROOT, 'tools', 'run_game.js'), '--red', red, '--blue', blue, '--seed', String(j.seed)];
@@ -88,9 +89,16 @@ async function main() {
             winner_is_a: r.winner === j.side ? 1 : 0, reason: r.reason, rounds: r.rounds, wall_s: r.wall_s,
             a_team: r.teams[ai], b_team: r.teams[1 - ai], map: r.map, t: new Date().toISOString() };
         } catch (e) { row = { tag: o.tag, a_hash: ah, b_hash: bh, seed: j.seed, a_side: j.side, error: (se || so).slice(-500), code }; }
+        // A castle that misses the init clock before round 1 says nothing about the bots: retry the game (machine
+        // load), and after 3 tries record it as an error row, which every reader skips.
+        if (!row.error && row.rounds === 0 && /init_failure/.test(row.reason)) {
+          j.tries = (j.tries || 0) + 1;
+          if (j.tries < 3) { jobs.push(j); launch(); return; }
+          row = { tag: o.tag, a_hash: ah, b_hash: bh, seed: j.seed, a_side: j.side, error: 'init failure at round 0 (3 tries)', code };
+        }
         fs.writeSync(out, JSON.stringify(row) + '\n');
         finished++; launch();
-        if (finished === jobs.length) resolve();
+        if (finished === total) resolve();
       });
     };
     for (let i = 0; i < o.par; i++) launch();

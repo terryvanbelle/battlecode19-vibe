@@ -10,7 +10,7 @@ const g = new Map();
 for (const r of rows) {
   const k = `${r.tag || ''}\t${r.a_hash}\t${r.b_hash}`;
   const s = g.get(k) || { n: 0, w: 0, err: 0, reasons: {}, exc: 0, to: 0, init: 0, frz: 0, slow: 0, msmax: 0, rounds: 0 };
-  if (r.error) { s.err++; g.set(k, s); continue; }
+  if (r.error || (r.rounds === 0 && /init_failure/.test(r.reason))) { s.err++; g.set(k, s); continue; } // round-0 init failure: machine load, not bots
   s.n++; s.w += r.winner_is_a; s.rounds += r.rounds;
   const why = (r.winner_is_a ? 'W-' : 'L-') + r.reason; s.reasons[why] = (s.reasons[why] || 0) + 1;
   const t = r.a_team; s.exc += t.exceptions + (t.exc_caught || 0); s.to += t.timeouts; s.init += t.init_fail; s.frz += t.frozen; s.slow += t.slow_turns;

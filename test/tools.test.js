@@ -95,3 +95,11 @@ test('progress: renders one series per opponent', () => {
   assert.ok(svg.startsWith('<svg')); assert.strictEqual((svg.match(/<polyline/g) || []).length, 1);
   assert.strictEqual((svg.match(/<circle/g) || []).length, 3);
 });
+
+test('paired: round-0 init failures (machine load) are skipped', () => {
+  const { pairedRead } = require('../tools/paired.js');
+  const row = (a, seed, w, extra = {}) => ({ a_hash: a, b_hash: 'o', seed, a_side: 'red', winner_is_a: w, reason: 'castles', rounds: 400, ...extra });
+  const rows = [row('c', 1, 1), row('k', 1, 0), row('c', 2, 1, { rounds: 0, reason: 'init_failure' }), row('k', 2, 0)];
+  const r = pairedRead(rows, 'c', 'k');
+  assert.strictEqual(r.cells, 1);
+});

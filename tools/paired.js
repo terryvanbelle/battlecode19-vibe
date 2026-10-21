@@ -10,7 +10,7 @@ function pairedRead(rows, cand, ctrl, opp) {
   const key = r => `${r.b_hash}:${r.seed}:${r.a_side}`;
   const A = new Map(), C = new Map();
   for (const r of rows) {
-    if (r.error || (opp && r.b_hash !== opp)) continue;
+    if (r.error || (r.rounds === 0 && /init_failure/.test(r.reason)) || (opp && r.b_hash !== opp)) continue;
     if (r.a_hash === cand) A.set(key(r), r); else if (r.a_hash === ctrl) C.set(key(r), r);
   }
   let n = 0, gained = 0, lost = 0, aw = 0, cw = 0;
