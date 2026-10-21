@@ -36,8 +36,8 @@ export const CFG = {
   // attack
   ATTACK_ROUND: 450,         // castles call a general attack from this round when the army is big
   ATTACK_MIN_ARMY: 20,
-  ATTACK_FUEL_PER_UNIT: 30,  // attack orders need this much fuel per military unit
-  HOME_GUARD_FRAC: 0.3,      // military units that ignore attack orders before round 900
+  ATTACK_FUEL_PER_UNIT: 0,   // attack orders need this much fuel per military unit (30 in h2: rejected, 17/40 vs h1)
+  HOME_GUARD_FRAC: 0,        // military units that ignore attack orders before round 900 (0.3 in h2: rejected)
   // endgame
   ENDGAME_MARGIN: 6,
   // sparring
