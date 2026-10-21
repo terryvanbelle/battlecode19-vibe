@@ -3,4 +3,4 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 NODE=${NODE:-node}
-exec "$NODE" --test test/
+exec "$NODE" --test test/*.test.js test/*.test.mjs

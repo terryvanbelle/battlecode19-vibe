@@ -75,8 +75,20 @@ async function main() {
 
   const seed = a.seed === 0 ? Math.floor(Math.random() * Math.pow(2, 31)) : a.seed;
   const g = new Game(seed, a.chi * a.timescale, a.che * a.timescale, false, !!a.replay);
+  // Warm-up: the first vm2 sandbox in a process costs 50-150 ms (cold JIT), which can push a castle past the 100 ms
+  // initialisation limit and lose the game for a harness reason. Create and discard sandboxes for both bundles first.
+  const CrossVM = require(path.join(ENGINE, 'vm'));
+  for (let i = 0; i < 3; i++) { new CrossVM(red); new CrossVM(blue); }
   const c = new Coldbrew(g, null, null, null);
   c.player_one = red; c.player_two = blue; c.round = 0;
+  const initMs = [0, 0], origInit = c.initializeRobot.bind(c);
+  c.initializeRobot = function () {
+    const s = process.hrtime.bigint(); const before = new Set(g.robots.filter(r => r.initialized).map(r => r.id));
+    origInit();
+    const ms = Number(process.hrtime.bigint() - s) / 1e6;
+    const r = g.robots.find(r => r.initialized && !before.has(r.id));
+    if (r && ms > initMs[r.team]) initMs[r.team] = ms;
+  };
 
   // Per-team instrumentation: wrap each robot's hook as it registers, to time turns as the engine does.
   const teams = [0, 1].map(() => ({ turns: 0, ms_total: 0, ms_max: 0, slow_turns: 0, robots_built: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } }));
@@ -107,9 +119,14 @@ async function main() {
 
   // Logs: g.logs[team] = [{type:'log'|'error', message, robot, timestamp}]
   const counts = [0, 1].map(team => {
-    let logs = 0, errors = 0, frozen = 0, init_fail = 0, exceptions = 0, timeouts = 0;
+    let logs = 0, errors = 0, frozen = 0, init_fail = 0, exceptions = 0, timeouts = 0, exc_caught = 0, slow_logged = 0;
     for (const e of g.logs[team]) {
-      if (e.type === 'log') logs++;
+      if (e.type === 'log') {
+        logs++;
+        // Our bots catch their own exceptions and log "EXC ..."; slow turns log "TIME ...".
+        const m = String(e.message);
+        if (m.startsWith('"EXC')) exc_caught++; else if (m.startsWith('"TIME')) slow_logged++;
+      }
       else {
         errors++;
         const m = String(e.message);
@@ -119,7 +136,7 @@ async function main() {
         else exceptions++;
       }
     }
-    return { logs, errors, frozen, timeouts, init_fail, exceptions };
+    return { logs, errors, frozen, timeouts, init_fail, exceptions, exc_caught, slow_logged };
   });
   if (a.logs) {
     const out = [];
@@ -140,7 +157,7 @@ async function main() {
     red: a.red, blue: a.blue,
     teams: [0, 1].map(i => ({ team: i === 0 ? 'red' : 'blue', ...counts[i], ...alive[i],
       turns: teams[i].turns, ms_mean: teams[i].turns ? +(teams[i].ms_total / teams[i].turns).toFixed(3) : 0,
-      ms_max: +teams[i].ms_max.toFixed(2), slow_turns: teams[i].slow_turns, built: teams[i].robots_built })),
+      ms_max: +teams[i].ms_max.toFixed(2), init_ms_max: +initMs[i].toFixed(1), slow_turns: teams[i].slow_turns, built: teams[i].robots_built })),
   };
   const line = JSON.stringify(result);
   if (a.json) fs.writeFileSync(a.json, line + '\n');
