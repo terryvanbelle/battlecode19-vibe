@@ -73,7 +73,8 @@ async function main() {
       const j = jobs[next++];
       const red = j.side === 'red' ? o.a : o.b, blue = j.side === 'red' ? o.b : o.a;
       const args = ['-rn', node, path.join(ROOT, 'tools', 'run_game.js'), '--red', red, '--blue', blue, '--seed', String(j.seed)];
-      if (o.replays) args.push('--replay', path.join(o.replays, `${ah}_${bh}_${j.seed}_${j.side}.bc19`));
+      if (o.replays) args.push('--replay', path.join(o.replays, `${ah}_${bh}_${j.seed}_${j.side}.bc19`),
+        '--errlog', path.join(o.replays, `${ah}_${bh}_${j.seed}_${j.side}.err.jsonl`));
       if (o.timescale) args.push('--timescale', o.timescale);
       const p = spawn('unshare', args, { stdio: ['ignore', 'pipe', 'pipe'] });
       let so = '', se = '';

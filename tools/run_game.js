@@ -29,6 +29,7 @@ function parseArgs(argv) {
     else if (k === '--seed' || k === '-s') a.seed = parseInt(v(), 10);
     else if (k === '--replay') a.replay = v();
     else if (k === '--logs') a.logs = v();
+    else if (k === '--errlog') a.errlog = v();
     else if (k === '--json') a.json = v();
     else if (k === '--det') a.det = true;
     else if (k === '--chi') a.chi = parseFloat(v());
@@ -142,6 +143,20 @@ async function main() {
     const out = [];
     for (const team of [0, 1]) for (const e of g.logs[team]) out.push(JSON.stringify({ team, ...e }));
     fs.writeFileSync(a.logs, out.join('\n') + '\n');
+  }
+  if (a.errlog) {
+    // Errors plus our own EXC/TIME lines only, first 200 per team: small enough to keep for every batch game.
+    const out = [];
+    for (const team of [0, 1]) {
+      let k = 0;
+      for (const e of g.logs[team]) {
+        const m = String(e.message);
+        if (e.type === 'log' && !m.startsWith('"EXC') && !m.startsWith('"TIME')) continue;
+        if (k++ >= 200) break;
+        out.push(JSON.stringify({ team, type: e.type, robot: e.robot, message: m.slice(0, 600) }));
+      }
+    }
+    fs.writeFileSync(a.errlog, out.join('\n') + '\n');
   }
   if (a.replay) fs.writeFileSync(a.replay, Buffer.from(new Uint8Array(g.replay)));
 
