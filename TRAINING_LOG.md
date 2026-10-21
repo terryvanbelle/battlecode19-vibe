@@ -122,3 +122,21 @@
   distance > 10 from home, groups = departures at most 3 rounds apart) in groups of mean size >= 4, castle count not
   worse. Gate: h12 vs h6, 40 games; falsifier net <= 0. Risk: free units idle at home while the front starves, and
   the enemy counter-attacks a front that waits. Dose ladder: WAVE 12, then 6 or 20.
+- h11c delivery (slide 20 / step back 50 / reset): move fuel 14,894 vs h6's 22,586 in the same game (-34%): PASS
+  (bar -33%). Castles 2-2; won on health 6,290-3,880; lost 71 units vs 122. Gate h11c vs h6 (40 games) queued ahead
+  of the older candidates.
+- h12 delivery: FAIL, mechanism wrong. The castles called waves as built (rounds 450-452, 468-470, 488-490, then not
+  until 941 because fewer than 12 units were ever free), but reinforcement groups stayed at mean 1.7-1.9 (h6 1.4-1.9,
+  departure threshold 10 or 14). The castle-talk census shows why: from round 450 every military unit has a target
+  (106 at round 450), yet 116 are still within 12 king steps of home at round 500 and ~50 at round 900. The army does
+  not trickle out because of the call cadence; it cannot get out of its own base. Not gated (parked).
+- Clog census (h6, 12 batch replays): military units stand on depots up to ~1,100 unit-rounds a game and next to own
+  structures up to ~6,500; pilgrims sit full away from any structure up to ~900 turns (seeds 1635, 2202, 2296). On
+  2202 a blue crusader holds fuel depot (44,47) from round 190 to 450 and another from 460 to 1000 (depot used 14% of
+  rounds), and prophets hold the 1-wide corridor along the bottom edge that leads to the far depots.
+- h13 (pre-registered): keep clear (CFG.KEEP_CLEAR=1): idle military units never take depots, tiles next to own
+  structures or chokepoints (tiles whose passable neighbours split without them) as lattice posts, and step off such
+  tiles when no post is reachable. Delivery: seed 2202 vs h6, military-on-depot unit-rounds and full-idle pilgrim
+  turns both down by at least two thirds, fuel mined not lower. Gate: h13 vs h6, 40 games; falsifier net <= 0. Risk:
+  fewer lattice posts near cramped castles, so more units wander. symcheck on dist/h13: seed 2202 exact for 400
+  rounds; 1635 and 2296 part only once combat starts.
