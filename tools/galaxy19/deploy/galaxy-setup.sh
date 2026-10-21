@@ -137,6 +137,11 @@ Documentation=file://$DOC
 IPAddressDeny=any
 IPAddressAllow=localhost
 EOF
+  # replica games keep their CPU when the main session's batches (timescale 2, user.slice, weight 100) load the VM: a
+  # robot's code load has a wall-clock budget, and big transpiled bundles fail it on a contended VM. The weight sits on
+  # the parent bc19.slice, the level that competes with user.slice; saturn's CPUQuota still caps games at 3 cores.
+  install -d -m 0755 /etc/systemd/system/bc19.slice.d
+  printf '[Slice]\nCPUWeight=400\n' > /etc/systemd/system/bc19.slice.d/cpu-weight.conf
   systemctl daemon-reload
   systemctl enable --quiet "$U_EGRESS"
   systemctl restart "$U_EGRESS"
@@ -628,7 +633,7 @@ teardown_step () {
   sed -i "\#^import $CADDY_SITE\$#d; \#^\# bc19 galaxy replica#d" "$CADDYFILE"
   systemctl daemon-reload; systemctl reload "$CADDY_UNIT" || true
   if [ "${1:-}" = --purge-data ]; then
-    systemctl disable --now "$U_EGRESS" 2>/dev/null || true; rm -f "/etc/systemd/system/$U_EGRESS" "/etc/systemd/system/$SLICE"
+    systemctl disable --now "$U_EGRESS" 2>/dev/null || true; rm -rf "/etc/systemd/system/$U_EGRESS" "/etc/systemd/system/$SLICE" /etc/systemd/system/bc19.slice.d
     pg_dropcluster --stop 15 "$PG_CLUSTER" || true
     rm -rf "$HOMED" "$WWW" "$OPT" "$ETC" "$LIB"; userdel -r "$RUSER" 2>/dev/null || true
     systemctl daemon-reload
