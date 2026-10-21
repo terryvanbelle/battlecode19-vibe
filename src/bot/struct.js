@@ -19,6 +19,8 @@ export function structInit(B) {
   st.pending = null;       // {x, y, kind, ref}: a unit built last turn whose id we still need
   st.pioneers = [];        // castles: [{id, cluster, since}]
   st.nDef = 0;             // peacetime defenders built (for the preacher rotation)
+  st.deaths = new Map();   // depot index -> pilgrims lost there (castles: seen through the id list)
+  st.cool = new Map();     // depot index -> structure turn before which no pilgrim is sent there
 }
 
 // The robot we built last turn: a friend on its first turn near the build tile.
@@ -43,8 +45,12 @@ function refreshAssign(B, allIds) {
   for (const [k, a] of st.assign) {
     const d = B.deps[k], on = w.occ(d.x, d.y);
     if (on > 0) a.seen = t;
-    if (allIds && a.id > 0 && !allIds.has(a.id)) st.assign.delete(k);
-    else if (t - a.seen > (allIds ? 40 : 25) && on === 0) st.assign.delete(k);
+    const dead = allIds && a.id > 0 && !allIds.has(a.id);
+    if (dead || (t - a.seen > (allIds ? 40 : 25) && on === 0)) {
+      st.assign.delete(k);
+      // A pilgrim lost at this depot: wait before sending another, longer after each loss.
+      if (dead) { const c = (st.deaths.get(k) || 0) + 1; st.deaths.set(k, c); st.cool.set(k, t + Math.min(CFG.DEPOT_COOL_MAX, CFG.DEPOT_COOL * c)); }
+    }
   }
   for (const r of w.friends) if (r.unit === PILGRIM) {
     const d = st.served.find(q => q.x === r.x && q.y === r.y);
@@ -57,7 +63,8 @@ export function nextDepot(B) {
   const st = B.st, w = B.w;
   let nk = 0, nf = 0;
   for (const [i] of st.assign) { if (B.deps[i].k) nk++; else nf++; }
-  const free = st.served.filter(d => !st.assign.has(d.i) && w.occ(d.x, d.y) <= 0 && !enemyNear(B, d.x, d.y));
+  const free = st.served.filter(d => !st.assign.has(d.i) && w.occ(d.x, d.y) <= 0 && !enemyNear(B, d.x, d.y) &&
+    !(st.cool.get(d.i) > w.me.turn));
   if (!free.length) return null;
   let wantK = nk < CFG.KARB_FIRST * (nf + 1);
   if (w.fuel < CFG.FUEL_LOW || (w.fuel < CFG.FUEL_HIGH && w.fuel < w.karbonite * CFG.FUEL_PER_KARB)) wantK = false;

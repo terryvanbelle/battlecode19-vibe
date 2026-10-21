@@ -6,6 +6,8 @@ export const CFG = {
   CLAIM_MARGIN: 1,           // church a remote cluster if our distance <= enemy's + margin (moves)
   MAX_PIONEERS: 2,           // church pioneers in flight per castle
   PIONEER_MIN_ROUND: 2,
+  DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
+  DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short
   FUEL_LOW: 400,             // below this fuel the next pilgrim takes a fuel depot (if any is free)
   FUEL_HIGH: 2000,           // above this fuel the next pilgrim takes karbonite (if any is free)
