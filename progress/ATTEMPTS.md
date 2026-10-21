@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 4 accepted, 2 dropped, 2 queued, 1 other, 1 rejected, 1 sparring partners (11 rows).
+Totals: 4 accepted, 3 queued, 2 dropped, 1 other, 1 rejected, 1 sparring partners (12 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -25,3 +25,4 @@ Totals: 4 accepted, 2 dropped, 2 queued, 1 other, 1 rejected, 1 sparring partner
 | `h5` | 2026-10-21 12:41 | h4 | Karbonite miners switch to fuel when fuel < 150 and karbonite >= 200 (back when karbonite < 30 and fuel >= 3000); military keeps a 30-fuel floor when shooting (fuel death spiral seen vs rush). |  |  |  |  | DROPPED (stacked on the rejected h2; its miner switching and fuel floor go into h6) |
 | `h6` | 2026-10-21 12:59 | v3 | v3 + birth-round RNG reseed + depot cooldown (h3) + crusader/preacher rotation (h4) + miner switching and shooting fuel floor (h5), without h2's home guard and attack fuel gate. | queued: 40 games vs v3 | queued: 15 seeds vs rush, paired with v3's rush batch |  |  | queued |
 | `h7` | 2026-10-21 13:25 | h6 | h6 + ATTACK_PERSIST: kill reports over castle talk, map-wide next target, units wait near the front instead of walking home; World.signal charges the signal's fuel at once (fixes rare 'Cannot afford' exceptions after an attack call). | queued: 40 games vs h6 (seeds 5000+, paired with h6 vs v3) |  |  |  | queued |
+| `h8` | 2026-10-21 13:55 | h6 | h6 + ENDGAME_FUEL=900: from round 900 all fuel goes into preachers (health tiebreak); no pilgrims, churches or reserves; units away from home stop cruising. | queued: 40 games vs h6 (seeds 5000+) |  |  |  | queued |
