@@ -43,3 +43,11 @@
   Fuel per damage: crusader 1.0, prophet 0.4, preacher 1.33 plus splash, castle 1.0.
 - h5 = h4 + karbonite miners switch to fuel when fuel < 150 and karbonite >= 200 (and back when karbonite < 30
   and fuel >= 3000) + military keeps a 30-fuel floor when shooting.
+
+## 2026-10-21 13:10 — h2 rejected; h6 = combined line vs v3
+- h2 vs h1: 17/40 (43%). Wins 11 by health and 6 by castles; losses 22 by castles. Keeping 30% of the army home
+  and requiring 30 fuel per unit for attack orders made attacks rarer and weaker. Both switches set to 0; the
+  birth-round RNG reseed (a symmetry fix) stays.
+- Queue restructured: h4/h5 stacked on h2 were cancelled. h6 = v3 + RNG reseed + depot cooldown + crusader/preacher
+  rotation + miner switching + shooting fuel floor, tested directly against v3 (40 games) and against rush
+  (15 seeds, paired with v3's rush batch). h3 vs h2 (depot cooldown alone) finishes first.
