@@ -17,3 +17,6 @@ Make sure that your attempts are a good combination of incremental tweaks and bi
 Starting with this one, save all of my prompts in a document called PROMPTS.md.  Note that the user is in the PDT timezone.
 
 This year we will compete in Battlecode 2019.  Store all results in a new Github repository called battlecode19-vibe.  Download the rules and begin.
+
+## 2. 2026-10-21 06:42 PDT
+You can delete anything you like from previous years
