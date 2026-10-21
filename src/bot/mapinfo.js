@@ -55,6 +55,30 @@ export function bfs(w, sources, offs) {
   return d;
 }
 
+// Like bfs, but entering tile i costs cost(i) >= 1 moves (integer): a bucket-queue Dijkstra. Int32 distances.
+export function costField(w, sources, offs, cost) {
+  const n = w.n, d = new Int32Array(w.N).fill(-1), buckets = [[]];
+  for (const [x, y] of sources) { if (x < 0 || y < 0 || x >= n || y >= n) continue; const i = y * n + x; if (w.pass[i] && d[i] < 0) { d[i] = 0; buckets[0].push(i); } }
+  const L = offs.length;
+  for (let b = 0; b < buckets.length; b++) {
+    const q = buckets[b]; if (!q) continue;
+    for (let h = 0; h < q.length; h++) {
+      const c = q[h]; if (d[c] !== b) continue;   // stale entry
+      const x = c % n, y = (c - x) / n;
+      for (let j = 0; j < L; j++) {
+        const nx = x + offs[j][0], ny = y + offs[j][1];
+        if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
+        const k = ny * n + nx; if (!w.pass[k]) continue;
+        const nd = b + cost(k);
+        if (d[k] >= 0 && d[k] <= nd) continue;
+        d[k] = nd; (buckets[nd] || (buckets[nd] = [])).push(k);
+      }
+    }
+    buckets[b] = null;
+  }
+  return d;
+}
+
 // Map analysis shared by economic roles, computed once per robot when first needed.
 export function econ(B) {
   if (!B.deps) { B.deps = depots(B.w); B.clusters = clusters(B.w, B.deps, CFG.CLUSTER_LINK_R2); }

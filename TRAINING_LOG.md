@@ -140,3 +140,26 @@
   turns both down by at least two thirds, fuel mined not lower. Gate: h13 vs h6, 40 games; falsifier net <= 0. Risk:
   fewer lattice posts near cramped castles, so more units wander. symcheck on dist/h13: seed 2202 exact for 400
   rounds; 1635 and 2296 part only once combat starts.
+- h6 vs v3 (40 games, 20 seeds x 2 sides): 23-17; by seed 10 double wins, 7 double losses, 3 splits (t = 0.7):
+  inconclusive. All 7 double losses are single-castle maps lost on castles near round 500 (seed 905: h6 marches
+  60 units at round 450 into v3's prophet army, loses 36 to v3's 4 in 40 rounds, and v3's counter-attack kills the
+  lone castle at 515). 5 of the 40 games are contaminated: robots failed vm2's 200 ms load budget by the hundreds
+  (seeds 241, 357, 499, 1325, 2642, both builds) while the VM ran 9-12 game processes (batch 4 + replica 2 +
+  benchmark smoke 2 + my diagnostics); without them it is 7-7. Rule from now: one extra game process at a time
+  beside a batch, under `flock ~/.bc-extra.lock` (LEARNINGS 8).
+- h13 delivery: FAIL. Military on depots 214 vs h6's 990 unit-rounds (-78%), but full-idle pilgrim turns 1,309 vs
+  954 (up) and units next to structures 6,575 vs 7,462 (-12%): the base is packed, so moving posts does not free the
+  delivery tiles. Not gated (parked).
+- Jam census (military within 12 king steps of an own structure / army): h6 on 2202 keeps 85-90% of its army at home
+  through round 700 although every unit has a target. h11c keeps 96% home (137/142 at 600, 135/159 at 1000): its
+  patient units wait instead of sliding, so its health win comes from not feeding a losing attack.
+- h15 (ablation, queued after h11c): h6 without the crusader/preacher rotation (MIL_ROTATION null: v3's prophets with
+  every 4th a preacher). Hypothesis: the rotation loses the single-castle race. Gate h15 vs h6, 40 games; falsifier
+  net <= 0.
+- h14 (pre-registered, structural): detour (CFG.DETOUR=5): a cruise move blocked 3 turns switches, for the rest of
+  that march, to a cost field rebuilt every 10 turns in which a tile a friend stood on in the last 30 turns costs 5
+  extra moves (Nav.step detour, mapinfo.costField). Mechanism: on 2202 the shortest route out of each bottom castle
+  is a 1-wide corridor along the bottom edge; ~100 units queue for it while an open route over the top goes unused.
+  Delivery: seed 2202 vs h6, home share of the army (sum over rounds 550-700) at most two thirds of h6's in the same
+  game. Gate: h14 vs h6, 40 games; falsifier net <= 0. Risk: units that do get out arrive piecemeal and die (the
+  h11c result says attacking here is a losing trade), so delivery may pass and the gate fail.

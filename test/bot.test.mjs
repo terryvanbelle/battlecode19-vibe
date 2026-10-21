@@ -4,7 +4,7 @@ import assert from 'node:assert';
 import { createRequire } from 'node:module';
 import * as S from '../src/bot/specs.js';
 import { offsets, rng, d2, king } from '../src/bot/util.js';
-import { depots, clusters, bfs } from '../src/bot/mapinfo.js';
+import { depots, clusters, bfs, costField } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
 import { nextTarget, isChoke } from '../src/bot/military.js';
@@ -141,6 +141,27 @@ test('nav: a blocked robot waits ladder[0] turns before sliding and ladder[1] be
   // Once over the threshold a robot keeps moving every turn unless the count restarts after each move.
   const moves = l => run(l).filter(m => m !== '-').length;
   assert.ok(moves([2, 4]) >= 4); assert.strictEqual(moves([2, 4, true]), 2);
+});
+
+test('nav: detour: a robot facing a jammed corridor replans around it (and is stuck without detour)', () => {
+  // 9x9: open rows y = 0, 4, 8 and columns x = 0, 8; row 4 is a 1-wide corridor that friends block at x = 2..4.
+  const n = 9, walls = [], jam = [[2, 4], [3, 4], [4, 4]];
+  for (let x = 1; x <= 7; x++) for (const y of [1, 2, 3, 5, 6, 7]) walls.push([x, y]);
+  const w0 = stubWorld(n, walls, jam);
+  assert.deepStrictEqual([...costField(w0, [[8, 4]], offsets(2), () => 1)], [...bfs(w0, [[8, 4]], offsets(2))]);
+  const run = detour => {
+    const w = stubWorld(n, walls, jam); w.friends = jam.map(([x, y]) => ({ x, y })); w.me = { x: 1, y: 4, turn: 0 };
+    const nav = new Nav(w, offsets(2), rng(5));
+    for (let t = 1; t <= 40; t++) {
+      w.me.turn = t;
+      const s = nav.step('g', [[8, 4]], 2, undefined, [2, 4, false], detour);
+      if (s) w.me = { x: w.me.x + s[0], y: w.me.y + s[1], turn: t };
+      if (w.me.x === 8 && w.me.y === 4) return t;
+    }
+    return null;
+  };
+  assert.strictEqual(run(null), null);
+  const t = run([3, 5, 10, 30]); assert.ok(t !== null && t <= 25, 'arrived at turn ' + t);
 });
 
 test('comms: encode/decode', () => {

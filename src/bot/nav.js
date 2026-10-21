@@ -1,7 +1,8 @@
 // Navigation: per-robot BFS move fields over static terrain (cached by destination key), descended greedily around
 // robots. Stuck ladder: a blocked robot waits one turn, then may slide (equal field value), then may step back
-// (+1) to get round a jam; it never returns to one of its last few tiles while sliding or escaping.
-import { bfs } from './mapinfo.js';
+// (+1) to get round a jam; it never returns to one of its last few tiles while sliding or escaping. Detour (optional):
+// a robot blocked long enough replans with a field that charges extra for every tile a robot it sees stands on.
+import { bfs, costField } from './mapinfo.js';
 
 const LADDER = [2, 4, false];
 
@@ -25,15 +26,31 @@ export class Nav {
 
   // Choose a step toward the key's sources. maxR2: largest step allowed (fuel). avoid(x,y): tiles to never enter.
   // ladder: [slide after, step back after] this many blocked turns, and whether a slide or step back restarts the
-  // count (otherwise a long-blocked robot slides every turn). Returns [dx, dy] or null (arrived, unreachable, or
-  // waiting).
-  step(key, sources, maxR2, avoid, ladder = LADDER) {
-    const w = this.w, n = w.n, me = w.me, f = this.field(key, sources);
-    if (key !== this.lastKey) { this.blocked = 0; this.lastKey = key; }
+  // count (otherwise a long-blocked robot slides every turn). detour: [after, penalty, every, memory]: once blocked
+  // `after` turns, follow (for the rest of this key, rebuilt every `every` turns) a field in which each tile a friend
+  // was seen on within the last `memory` turns costs `penalty` extra moves, so a jam out of sight still repels.
+  // Returns [dx, dy] or null (arrived, unreachable, or waiting).
+  step(key, sources, maxR2, avoid, ladder = LADDER, detour = null) {
+    const w = this.w, n = w.n, me = w.me;
+    let f = this.field(key, sources);
+    if (key !== this.lastKey) { this.blocked = 0; this.lastKey = key; this.det = null; }
+    if (detour) {
+      const seen = this.seenBusy || (this.seenBusy = new Int16Array(w.N));
+      for (const r of w.friends) seen[r.y * n + r.x] = me.turn;
+      if (this.det || this.blocked >= detour[0]) {
+        if (!this.det || me.turn >= this.det.until) {
+          const src = typeof sources === 'function' ? sources() : sources, mi = me.y * n + me.x, t0 = me.turn - detour[3];
+          const cost = i => (seen[i] > 0 && seen[i] >= t0 && i !== mi ? 1 + detour[1] : 1);
+          this.det = { until: me.turn + detour[2], f: costField(w, src, this.offs, cost) };
+          this.stats.detours = (this.stats.detours || 0) + 1;
+        }
+        f = this.det.f;
+      }
+    }
     const cur = f[me.y * n + me.x];
     if (cur === 0 || maxR2 <= 0) return null;
     const pick = (limit) => {
-      let best = null, bv = 32767, br = 99, bt = 2;
+      let best = null, bv = 1e9, br = 99, bt = 2;
       for (const o of this.offs) {
         if (o[2] > maxR2) continue;
         const nx = me.x + o[0], ny = me.y + o[1];
@@ -48,7 +65,7 @@ export class Nav {
       }
       return best;
     };
-    let s = cur < 0 ? pick(32766) : pick(cur - 1);
+    let s = cur < 0 ? pick(1e9 - 1) : pick(cur - 1);
     if (!s && cur > 0) {
       this.blocked++; this.stats.blocked++;
       if (this.blocked >= ladder[0]) { s = pick(cur); if (s) this.stats.slides++; }

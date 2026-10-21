@@ -21,3 +21,7 @@
    passed our affordability checks and the API threw. Wrap every API call that spends, and update the cache there.
 7. **Several agents share one git index.** `git add <paths> && git commit` also commits whatever another agent has
    staged; commit with `git commit -m ... -- <paths>` so only the named paths go in.
+8. **Never oversubscribe the batch VM.** vm2 gives each new robot 200 ms (wall clock) to load its code; at load
+   above the core count, robots fail init by the hundreds and whole games become noise (h6 vs v3: 5 of 40 games, both
+   builds). Beside a running batch (4 games) and the replica (2), run one extra game process at most, under
+   `flock ~/.bc-extra.lock`; check init_fail in every batch summary before reading a result.

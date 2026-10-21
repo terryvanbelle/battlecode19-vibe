@@ -22,6 +22,10 @@ export const CFG = {
   CRUISE_SLIDE_AFTER: 2,     // unhurried moves: blocked turns before a sideways slide / a step back (seed 2202:
   CRUISE_ESCAPE_AFTER: 4,    // slides and step-backs were 11,500 of 19,400 move fuel, an army jammed in a corridor)
   CRUISE_RESET: 0,           // 1: a slide or step back restarts that count (0: a long-blocked robot slides every turn)
+  DETOUR: 0,                 // >0: once a cruise move is blocked DETOUR_AFTER turns, it routes (rebuilt every
+  DETOUR_AFTER: 3,           // DETOUR_EVERY turns) with each tile a friend stood on in the last DETOUR_MEMORY turns
+  DETOUR_EVERY: 10,          // costing this many extra moves: traffic spills onto other routes instead of queueing
+  DETOUR_MEMORY: 30,         // in one corridor
   PILGRIM_FAST_FUEL: 1000,  // pilgrims take full r2 4 steps only above this fuel
   SWITCH_FUEL_LOW: 150,      // an empty-handed karbonite miner moves to fuel when fuel < this and karbonite >= ...
   SWITCH_KARB_HIGH: 200,
