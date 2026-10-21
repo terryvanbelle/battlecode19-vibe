@@ -110,3 +110,7 @@
   pre-registered third. Cause: Nav.step never restarts the blocked count after a slide, so a robot past the threshold
   slides every turn of a long jam whatever the threshold. h11 rebuilt with CRUISE_RESET=1 (a slide or step back
   restarts the count, cruise moves only) before its gate ran; delivery #2 on seed 2202 running.
+- h11 delivery #2 (slide 6 / step back 15 / reset): move fuel 18,088 vs 21,578 (-16%; march bucket 400-499 halved,
+  4,110 vs 8,518; crusader path/net 2.57 vs 3.55); won on health 4,480-3,120. Misses the pre-registered -33% bar:
+  not gated (parked). The rest of the move fuel is reinforcements walking ~10-12 tiles to the front (~200 units).
+  Dose step h11c (slide 20 / step back 50 / reset), same bar, delivery on seed 2202 running.
