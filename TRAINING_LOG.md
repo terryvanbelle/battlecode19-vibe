@@ -51,3 +51,17 @@
 - Queue restructured: h4/h5 stacked on h2 were cancelled. h6 = v3 + RNG reseed + depot cooldown + crusader/preacher
   rotation + miner switching + shooting fuel floor, tested directly against v3 (40 games) and against rush
   (15 seeds, paired with v3's rush batch). h3 vs h2 (depot cooldown alone) finishes first.
+
+## 2026-10-21 13:45 — h7 (attack persistence), a signal-fuel bug, h3 stopped
+- Army after a kill: units that saw their target gone dropped it and walked back to the home lattice; castles kept
+  calling the dead castle (they never learn of kills) and dropped targets whose own mirror castle had died.
+  h7 = h6 + ATTACK_PERSIST: ATTACK messages carry the enemy castle index; a unit that sees it gone reports
+  CT.DEAD+i over castle talk for 3 turns, marches on the nearest other castle it has heard of, else waits in place
+  up to 40 rounds; castles skip reported castles and the first living castle radios the next target map-wide
+  (FAR.WIDE r2 7930, 90 fuel) once per kill.
+- Bug: js_starter's signal() charges fuel at once (js_starter.js:108) but World kept the turn-start fuel, so a castle
+  that radioed an attack (20 fuel) and then built with 50-69 fuel threw "Cannot afford" (1 caught exception in the
+  saved logs). World.signal now lowers w.fuel; unit test added. In h7 only (h6 was built before the fix).
+- h3 vs h2 (depot cooldown alone): 10/20, stopped at half to give h6 vs v3 the VM. Depot cooldown stays in h6.
+- progress/ (2023-style Bradley-Terry charts, ATTEMPTS ledger, replica ladder) is live; refresh with
+  tools/progress-refresh.sh. It shows v0 beating v1 27-10 locally, so v0 rates level with v3: v3 vs v0 queued.

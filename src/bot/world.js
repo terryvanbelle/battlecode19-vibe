@@ -95,7 +95,8 @@ export class World {
   build(unit, dx, dy) { const [a, b] = this.T.dirE(dx, dy); return this.api.buildUnit(unit, a, b); }
   give(dx, dy, k, f) { const [a, b] = this.T.dirE(dx, dy); return this.api.give(a, b, k, f); }
   mine() { return this.api.mine(); }
-  signal(v, r2) { this.api.signal(v, r2); this.sentR2 = r2; }
+  // The API charges the signal at once (js_starter.js:108): later checks this turn must see the lower fuel.
+  signal(v, r2) { this.api.signal(v, r2); this.sentR2 = r2; this.fuel -= Math.ceil(Math.sqrt(r2)); }
   talk(v) { this.api.castleTalk(v); }
   log(s) { this.api.log(s); }
 

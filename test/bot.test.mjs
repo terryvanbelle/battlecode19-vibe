@@ -137,6 +137,13 @@ test('comms: encode/decode', () => {
   assert.ok(CT.UNIT + 5 < CT.DEAD && CT.DEAD + 3 < CT.CHURCH);
 });
 
+test('world: a signal lowers the fuel that later affordability checks see', () => {
+  const sent = [], w = Object.assign(Object.create(World.prototype), { api: { signal: (v, r) => sent.push([v, r]) }, karbonite: 100, fuel: 70 });
+  assert.ok(w.canAfford(S.PROPHET)); w.signal(1, 398);
+  assert.deepStrictEqual(sent, [[1, 398]]); assert.strictEqual(w.fuel, 50); assert.ok(w.canAfford(S.PROPHET));
+  w.signal(1, 2); assert.strictEqual(w.fuel, 48); assert.ok(!w.canAfford(S.PROPHET));
+});
+
 test('military: after a kill, report it and march on the nearest other known enemy castle, else wait', () => {
   const B = { round: 500, w: { me: { x: 10, y: 40 } },
     st: { tIdx: 1, known: [[30, 50], [10, 45], [12, 60]], dead: new Set(), reports: [], waitUntil: 0, target: null } };
