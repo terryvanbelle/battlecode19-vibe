@@ -10,6 +10,8 @@ import { structInit, structTurn, buildToward } from './struct.js';
 
 const KING = offsets(2), PILGRIM_OFFS = offsets(4);
 
+export { callDue };
+
 export function castleTurn(B) {
   const w = B.w, me = w.me, st = B.st;
   B.round = me.turn;
@@ -27,12 +29,15 @@ export function castleTurn(B) {
   else if (me.turn === 2) w.talk(me.y + 1);
   const allIds = new Set();
   st.count = [1, 0, 0, 0, 0, 0];   // our robots by type, from their status bytes (castles: self + talkers)
+  st.march = 0;                    // ...of which military units not free for a wave (CFG.WAVE)
   const all = w.robots.concat(w.unplaced);
   for (const r of all) {
     if (r.team !== me.team) continue;
     allIds.add(r.id);
     if (r.id === me.id) continue;
-    if (r.castle_talk >= CT.UNIT && r.castle_talk < CT.CHURCH) st.count[r.castle_talk - CT.UNIT]++;
+    const ct = r.castle_talk;
+    if (ct >= CT.UNIT && ct < CT.UNIT + 6) st.count[ct - CT.UNIT]++;
+    else if (ct >= CT.MARCH && ct < CT.MARCH + 6) { st.count[ct - CT.MARCH]++; st.march++; }
     if (me.turn <= 3 && r.castle_talk > 0 && r.castle_talk <= 64) {
       const p = st.partial.get(r.id) || {};
       if (r.turn === 1) p.x = r.castle_talk - 1; else if (r.turn === 2) p.y = r.castle_talk - 1;
@@ -113,7 +118,7 @@ function callAttack(B) {
   // An army without fuel cannot shoot: attack only with fuel for a few volleys per unit (except at the very end).
   if (w.fuel < CFG.ATTACK_FUEL_PER_UNIT * army && B.round < 950) return;
   if (CFG.ATTACK_PERSIST && st.order) return callAttackPersist(B);
-  if (B.round % CFG.ATTACK_EVERY !== 0) return;
+  if (!callDue(B)) return;
   const targets = [...st.castles.values()].map(c => w.mirror(c.x, c.y));
   targets.sort((a, b) => ((a[0] - me.x) ** 2 + (a[1] - me.y) ** 2) - ((b[0] - me.x) ** 2 + (b[1] - me.y) ** 2) || a[0] - b[0]);
   const t = targets[0];
@@ -136,5 +141,18 @@ function callAttackPersist(B) {
   const living = [...st.castles.values()].sort((a, b) => (a.y * w.n + a.x) - (b.y * w.n + b.x));
   const first = living[0].x === me.x && living[0].y === me.y;
   if (st.deadE.size > 0 && st.lastT !== t && first && w.fuel >= 90 + 40) { st.lastT = t; return w.signal(msg, FAR.WIDE); }
-  if (B.round % CFG.ATTACK_EVERY === 0 && w.fuel >= 20 + 20) w.signal(msg, FAR.ATTACK);
+  if (callDue(B) && w.fuel >= 20 + 20) w.signal(msg, FAR.ATTACK);
+}
+
+// Whether to radio the attack call this round: every ATTACK_EVERY rounds, or (CFG.WAVE) on 3 consecutive rounds once
+// WAVE free military units (neither marching nor home guard) have gathered, then not again for WAVE_GAP rounds, so
+// reinforcements go out together instead of one by one into the enemy's guns.
+function callDue(B) {
+  const st = B.st;
+  if (!CFG.WAVE) return B.round % CFG.ATTACK_EVERY === 0;
+  if (st.waveUntil && B.round < st.waveUntil) return true;
+  const idle = st.count[3] + st.count[4] + st.count[5] - st.march;
+  if (B.round < (st.waveNext || 0) || (idle < CFG.WAVE && B.round < 950)) return false;
+  st.waveUntil = B.round + 3; st.waveNext = B.round + 3 + CFG.WAVE_GAP;
+  return true;
 }

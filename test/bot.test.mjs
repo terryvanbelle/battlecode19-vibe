@@ -8,6 +8,8 @@ import { depots, clusters, bfs } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
 import { nextTarget } from '../src/bot/military.js';
+import { callDue } from '../src/bot/castle.js';
+import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep } from '../src/bot/combat.js';
 const require = createRequire(import.meta.url);
@@ -171,6 +173,24 @@ test('military: after a kill, report it and march on the nearest other known ene
   B.st.target = null; nextTarget(B); B.st.target = null; nextTarget(B);
   assert.deepStrictEqual([...B.st.dead].sort(), [0, 1, 2]); assert.strictEqual(B.st.target, null);
   assert.ok(B.st.waitUntil > B.round);
+});
+
+test('castle: attack calls every ATTACK_EVERY rounds, or (WAVE) 3 rounds once enough units are free, then a gap', () => {
+  const saved = { WAVE: CFG.WAVE, WAVE_GAP: CFG.WAVE_GAP };
+  try {
+    const B = { round: 500, st: { count: [2, 0, 5, 10, 6, 4], march: 12 } };
+    CFG.WAVE = 0;
+    assert.strictEqual(callDue(B), B.round % CFG.ATTACK_EVERY === 0);
+    CFG.WAVE = 10; CFG.WAVE_GAP = 15;
+    const calls = [];
+    for (B.round = 500; B.round < 540; B.round++) {
+      if (B.round === 510) B.st.march = 0;   // 20 military, 12 then 0 marching: free 8 < 10, then 20
+      if (callDue(B)) calls.push(B.round);
+    }
+    assert.deepStrictEqual(calls, [510, 511, 512, 528, 529, 530]);
+    B.st = { count: [2, 0, 5, 10, 6, 4], march: 20 }; B.round = 960;   // last rounds: call regardless
+    assert.ok(callDue(B));
+  } finally { Object.assign(CFG, saved); }
 });
 
 test('combat: target choice, preacher splash avoids friends, retreat', () => {

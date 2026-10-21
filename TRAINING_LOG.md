@@ -114,3 +114,11 @@
   4,110 vs 8,518; crusader path/net 2.57 vs 3.55); won on health 4,480-3,120. Misses the pre-registered -33% bar:
   not gated (parked). The rest of the move fuel is reinforcements walking ~10-12 tiles to the front (~200 units).
   Dose step h11c (slide 20 / step back 50 / reset), same bar, delivery on seed 2202 running.
+- h12 (pre-registered, structural): attack waves. Military units tell the castles whether they are free (CT.MARCH
+  80+unit while marching); after the first call a castle calls again only once WAVE=12 free units have gathered, on 3
+  consecutive rounds, then not for WAVE_GAP=15 rounds (CFG.WAVE, default 0 = call every 5 rounds). Mechanism: h6
+  sends reinforcements as they are built, ~2 at a time (seed 2202: 60 departures after the first wave in 33 groups,
+  mean 1.8), and they meet the enemy army piecemeal. Delivery: seed 2202 vs h6, reinforcement departures (king
+  distance > 10 from home, groups = departures at most 3 rounds apart) in groups of mean size >= 4, castle count not
+  worse. Gate: h12 vs h6, 40 games; falsifier net <= 0. Risk: free units idle at home while the front starves, and
+  the enemy counter-attacks a front that waits. Dose ladder: WAVE 12, then 6 or 20.

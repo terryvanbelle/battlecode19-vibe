@@ -48,6 +48,7 @@ function listen(B) {
       if (CFG.ATTACK_PERSIST) nextTarget(B);
     }
   }
+  if (CFG.WAVE && (st.target || (st.guard && B.round < 900))) w.talk(CT.MARCH + me.unit);   // not free for a wave
   if (st.reports.length) { w.talk(CT.DEAD + st.reports[0]); st.reports.push(st.reports.shift()); if (--st.reportTurns <= 0) st.reports = []; }
 }
 
