@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # Smoke-test every compiled benchmark bundle against the starter bot (bots/example). Runs ON THE VM.
 #
-#   tools/bench/smoke.sh [names...]        (env: BENCH_ROOT, NODE=~/bin/node, LOCK=~/.bc-extra.lock)  -> $BENCH_ROOT/smoke.jsonl
+#   tools/bench/smoke.sh [names...]   -> $BENCH_ROOT/smoke.jsonl
+#        env: BENCH_ROOT, NODE=~/bin/node, LOCK=~/.bc-extra.lock, GAME_TIMEOUT=2400 (s per game)
 #
 # Two games per bot: seed 1 with the bot as red, seed 2 with the bot as blue. Each game runs in
 # tools/galaxy19/sandbox.sh (no network, read-only file systems except a fresh temp work dir; CLAUDE.md rule 6).
 # VM load rule: one game at a time, each under the shared lock the main session's extra games also take
 # (flock $LOCK), so smoke games never stack on top of A/B batches. Each row records the 1-minute load average
 # before and after the game: init failures / timeouts seen under load > 8 are re-run before a bot is called broken.
-# One JSON line per game: {name, seed, side, ...run_game result} or {name, seed, side, error}. Incremental: games
+# One JSON line per game: {name, seed, side, ...run_game result} or {name, seed, side, error, exit}. Incremental: games
 # already in smoke.jsonl for the same bundle hash are skipped.
 set -uo pipefail
 cd "$(dirname "$0")/../.."
@@ -24,11 +25,12 @@ one () {
   grep -qF "\"key\":\"$name:$h:$seed:$side\"" "$OUT" && return 0
   w=$(mktemp -d)   # the sandbox keeps it read-only too; results go through stdout
   if [ "$side" = red ]; then set -- --red "$bot" --blue "$REPO/bots/example"; else set -- --red "$REPO/bots/example" --blue "$bot"; fi
-  local l0 l1
+  local l0 l1 rc
   {
     flock 9
     l0=$(cut -d' ' -f1 /proc/loadavg)
-    timeout 1200 sh "$REPO/tools/galaxy19/sandbox.sh" "$w" "$NODE" "$REPO/tools/run_game.js" "$@" --seed "$seed" --errlog /dev/stdout 2>"$w/stderr" 9>&- | cat > "$w/out"
+    timeout "${GAME_TIMEOUT:-2400}" sh "$REPO/tools/galaxy19/sandbox.sh" "$w" "$NODE" "$REPO/tools/run_game.js" "$@" --seed "$seed" --errlog /dev/stdout 2>"$w/stderr" 9>&- | cat > "$w/out"
+    rc=${PIPESTATUS[0]}
     l1=$(cut -d' ' -f1 /proc/loadavg)
   } 9>"$LOCK"
   res=$(tail -1 "$w/out")
@@ -44,8 +46,9 @@ one () {
       --argjson l0 "$l0" --argjson l1 "$l1" \
       '{key:$k, name:$n, side:$s, bot_won:(.winner==$s), reason, rounds, seed, bot:(if $s=="red" then .teams[0] else .teams[1] end), illegal_sample:$ill, exc_sample:$exc, first_errors:$e, load:[$l0,$l1]}' >> "$OUT"
   else
-    jq -cn --arg k "$name:$h:$seed:$side" --arg n "$name" --arg s "$side" --argjson seed "$seed" --arg e "$(tail -c 400 "$w/stderr")" \
-      --argjson l0 "$l0" --argjson l1 "$l1" '{key:$k, name:$n, side:$s, seed:$seed, error:$e, load:[$l0,$l1]}' >> "$OUT"
+    local e; e=$(tail -c 400 "$w/stderr"); [ "$rc" = 124 ] && e="game time limit (${GAME_TIMEOUT:-2400} s) $e"
+    jq -cn --arg k "$name:$h:$seed:$side" --arg n "$name" --arg s "$side" --argjson seed "$seed" --arg e "$e" --argjson rc "$rc" \
+      --argjson l0 "$l0" --argjson l1 "$l1" '{key:$k, name:$n, side:$s, seed:$seed, error:$e, exit:$rc, load:[$l0,$l1]}' >> "$OUT"
   fi
   rm -rf "$w"
 }

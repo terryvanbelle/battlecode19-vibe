@@ -1,0 +1,93 @@
+name	language	path	files	lines	last_commit	pick_rule	sha256	kind	same_bot_also_in
+18dcb01.Battlecode19-preacherRushSomeEconomy	py	repos/18dcb01__Battlecode19/preacherRushSomeEconomy	1	740	2019-01-20T03:11:46Z	last-commit	49bb5386edda8b50a6d4ce43db3ca4beda265d70fcca374b8c4830f23c013de2	dir	
+18dcb01.Battlecode19-robot2	py	repos/18dcb01__Battlecode19/robot2	1	357	2019-01-18T07:54:03Z	name	9d2eb3f2fad6dea402d2c71abcd8dc2c9ae758a27ad17491eedfb95374bc6fbf	dir	
+ArtemUstilov.bc19_CrazyTapok	js	repos/ArtemUstilov__bc19_CrazyTapok	7	3151	2019-01-22T07:44:30Z	last-commit+name	7779de023e6f879c1cee912dc6e4084bb01803c2761fc3f3d8200ceea137168c	dir	
+CS554-software-engineering-groupProject.battlecodeProject	js	repos/CS554-software-engineering-groupProject__battlecodeProject/bots/psuteam7bot	9	2909	2019-03-12T17:45:42Z	last-commit+name	92a3cc37f7fae92421f7e604232e89cf3e260392c50c8d3fce34f9d78c4eb9ea	dir	
+CometsTech.battlecode2019-dev	js	repos/CometsTech__battlecode2019/bots/dev	9	3032	2019-01-28T00:52:32Z	last-commit+name	6576319029c0c2fc9099ac93c6cdf54c5a220e14d8d6597dc740c469db27fdfb	dir	
+CometsTech.battlecode2019-example_js	js	repos/CometsTech__battlecode2019/bots/example_js	9	410	2019-01-27T23:43:06Z	last-commit(junk-name fallback)+name(junk-name fallback)	4527fa61c987a634316a6fc5ec4e4ebfc54b6638097f92bdd9e45045acbaadad	dir	n-gineer/examplefuncsplayer
+DivyanshuSaxena.Battlecode	java	repos/DivyanshuSaxena__Battlecode	1	78	2019-01-13T21:37:58Z	last-commit+name	e3183a056cf8f08112343b86db882b37cc41db1d298b790c0edf1d88a3f90210	dir	
+IanCoolidge0.battlecode2019-quals	js	repos/IanCoolidge0__battlecode2019/quals	13	5282	2019-01-31T01:36:27Z	last-commit	383f757603753b4e4c44757a7d334ad56ad88ffec7ed54c2a734c7ae43eac27d	dir	
+IanCoolidge0.battlecode2019-quals2	js	repos/IanCoolidge0__battlecode2019/quals2	13	4937	2019-01-30T23:54:20Z	name	c73f60c5d3f21576933da8db5571b7b8ad395a0c5be3501b7324443245827f78	dir	
+IvanGeffner.BC19-bot6b	js	repos/IvanGeffner__BC19/output/bot6b.js	1	3637	2019-01-20T06:54:47Z	name	03bef4842a68e63013421df9b799012342295b8c802eb2e863f82b9ca6c541f6	bundle	
+IvanGeffner.BC19-eigthbot	java	repos/IvanGeffner__BC19/output/eigthbot	22	3220	2019-01-27T05:52:35Z	last-commit	8559a824d94faaab6f0dce40de3048ac97aa10cb8c06b8f89de4aa1f1e51ebdd	dir	
+JasonLarson44.2019-Battlecode-Bot	js	repos/JasonLarson44__2019-Battlecode-Bot/bots/mainbot	9	1201	2019-03-11T17:28:15Z	last-commit+name	b58c46ef32de17620c9ddbbc3f1aead54a520cec42b719a7d582c4cab40e55b4	dir	snuchhi/2019-Battlecode-Bot
+NielsKornerup.Battlecode-2019	java	repos/NielsKornerup__Battlecode-2019/bot/src/bc19	20	3106	2019-01-28T00:53:42Z	last-commit+name	2aabb7d4d682d00e86a9a654cb610f5882bad20a27f660e6cf0740c9ddf83ef1	dir	
+Nischay-Pro.BattleCode2019	py	repos/Nischay-Pro__BattleCode2019/bc19-scaffold/bots/42.TheReallyTrulyFinalQualBot	30	5578	2019-01-27T21:08:52Z	last-commit+name	01b85a3131536802c1e8c8e38408a9be627c7115b6f606ba3e451d7ce82ac50b	dir	
+Nydroam.BatteredCod	java	repos/Nydroam__BatteredCod/betabot	12	2191	2019-01-28T00:58:58Z	last-commit+name	1a2f512f7934a2b5a205e6d2bddb72f4e4bb9d4516925de9ee07ac93fdbaad09	dir	
+OmarTahoun.battle-code	py	repos/OmarTahoun__battle-code/red-team	2	241	2019-01-23T17:49:22Z	last-commit+name	08d7e9e8b9aa4f0cebf277385fd3c491deec6f98158118482dada180d1d661e5	dir	
+RyanSharafuddin.Battlecode_2019	js	repos/RyanSharafuddin__Battlecode_2019/FirstBot	16	1626	2019-01-21T12:06:37Z	last-commit+name	b2e8ba228f2368f5456efb7e7d06bcbd9b2df982270af14308a0ecf87b9a7ad1	dir	
+SethKitchen.examplefuncsplayer	js	repos/SethKitchen__examplefuncsplayer/bots/example_js	9	399	2019-01-16T01:52:24Z	last-commit(junk-name fallback)+name(junk-name fallback)	2c69239f56c26e5d574980d5e2e184b2f3f6ac2a7e2ffdadc2dc57c8536df7f0	dir	
+Sisyphus192.battlecode19	js	repos/Sisyphus192__battlecode19/bots/alpha	9	390	2019-01-16T21:10:45Z	last-commit+name	b4075cc6757577b62ed38808c893ad5042fbbf3e11abf3c46bcfdd834e0104be	dir	
+StoneT2000.BC19-bot1v43	js	repos/StoneT2000__BC19/archivedBots/archivedCompiledBots/bot1v43.js	1	9026	2019-02-01T08:17:16Z	last-commit	f880179235415d3e9da1dd4d098b0ac16fdd127f54e5471ba7e30d26d659c800	bundle	
+StoneT2000.BC19-botfinalsafe	js	repos/StoneT2000__BC19/botfinalsafe.js	1	9051	2019-01-30T19:02:43Z	name	b0af4e64154349f5c32cc7306dd1f7bfac17865f51bbc2812f9837ac6c13415d	bundle	
+TestSubjector.BattleCode2019-12.FightingBot_Prophet	py	repos/TestSubjector__BattleCode2019/bc19-scaffold/bots/12.FightingBot_Prophet	16	1065	2019-01-13T07:53:56Z	name	7f9342b5d21b5f3788b63e14df4733efac21983c2d5c7e4d0a43a56c64d23801	dir	Nischay-Pro/BattleCode2019
+TestSubjector.BattleCode2019-13.FightingBot2	py	repos/TestSubjector__BattleCode2019/bc19-scaffold/bots/13.FightingBot2	16	1072	2019-01-13T11:35:21Z	last-commit	d148b17288239589256b04c00d43a8937094c40bf7c3d35a29708b1dab6748e2	dir	
+TheRobotCarlson.battlehack-notes-ref-bot	js	repos/TheRobotCarlson__battlehack-notes/ref-bot	9	457	2019-04-12T16:42:50Z	name	feaaaeb580be10d52c47b455c42d8cfc11666131b779a3ad93a080aaea0d51ba	dir	
+TheRobotCarlson.battlehack-notes-robot-kelsey	js	repos/TheRobotCarlson__battlehack-notes/scrim-bot/robot-kelsey.js	1	485	2019-04-13T16:41:55Z	last-commit	3362a47b5908a6de7702b2f8088e9247cb6e79c583d31ecc7713e6011356e2e0	file	
+Tom-CCS.BC19	py	repos/Tom-CCS__BC19/MyRobot/final.py	1	1033	2019-01-28T01:04:41Z	last-commit+name	832c5b09ebe38fb15e5a6045193ea73eeffe33411998bfd658e78e5afc063912	file	
+UpperArlingtonHighSchool.BattlecodeBoatMormons-seedingRobot	java	repos/UpperArlingtonHighSchool__BattlecodeBoatMormons/seedingRobot	1	1454	2019-01-22T16:04:39Z	name	58317e4f0ff54518de3a79d4617df6d2e3294d37d08fe71e4710c1f4b910b299	dir	
+UpperArlingtonHighSchool.BattlecodeBoatMormons-zainsExperiments	java	repos/UpperArlingtonHighSchool__BattlecodeBoatMormons/zainsExperiments	1	1996	2019-01-28T00:52:44Z	last-commit	10327724fdcd275ac1613076984fae9af8263ba9f7dbf1a273bb682be872207c	dir	
+VictorButoi.BattleCode2019-bot_v1	java	repos/VictorButoi__BattleCode2019/bots/bot_v1	1	907	2019-01-22T14:01:43Z	compile-fallback	6447f068aba43c66521f8b4a7e01725591dd580c8e0a11e29199563bb11f2007	dir	
+VictorButoi.BattleCode2019-currentBot	java	repos/VictorButoi__BattleCode2019/bots/currentBot	1	1327	2019-01-22T14:01:43Z	last-commit+name	0af0d889a57f617d6018af8a01f8096c6c02f3444b428276bb0075a6b2b6cc46	dir	
+VoidMercy.battlecode-2019-bot	js	repos/VoidMercy__battlecode-2019/bot	1	238	2019-01-22T05:08:09Z	name	63e58b7bc6d726f41f4c766627bda69b2f61fa017cc8238f9c2eff8c296d2e57	dir	
+VoidMercy.battlecode-2019-worker-strat	js	repos/VoidMercy__battlecode-2019/worker-strat	11	4426	2019-01-28T21:47:52Z	last-commit	fd684d842595d498d92a90e23d8cfeb62cc570588e1634f66002eabf9faa0ff5	dir	
+abcdefguan.battlecode2019	js	repos/abcdefguan__battlecode2019/bots/guanplayer5	10	4788	2019-09-10T00:01:45Z	last-commit+name	43868a7437652bb017ff5bcccdd0cb9c512e9b8e01f640beb95653a253987b09	dir	
+arya-k.bc19	js	repos/arya-k__bc19/bots/final	10	3450	2019-01-30T16:03:04Z	last-commit+name	3e4eba56822933017555fbd21bf6d585322a9fdf64cc73c8bf81997ec9dcb6e2	dir	arxk9/bc19
+asunathanr.asu_bc	js	repos/asunathanr__asu_bc/pathfinding	13	31538	2019-01-15T20:05:19Z	last-commit+name	a981179eab1b122d899303d2bd403392b487544d8f0e0b658fab20e2dfb082cf	dir	
+awesomelemonade.Battlecode2019	js	repos/awesomelemonade__Battlecode2019/bot	16	2950	2019-01-28T00:31:24Z	last-commit+name	01d41f3acba2a2b931eebd022adee11ceca5037ec08a841532eccb72539a6dac	dir	
+bayoumi17m.BattleCode-2019	py	repos/bayoumi17m__BattleCode-2019/TheSecondCrusade	6	3164	2019-01-28T00:56:19Z	last-commit+name	f0dc2c273f24b5d2d0fbf8876eeccaf3ac4aea383c82d9179ee4b8f20ef8771f	dir	asandberg17/https-github.com-bayoumi17m-BattleCode-2019
+bovard.battlecode-2019-unit-tests	js	repos/bovard__battlecode-2019-unit-tests/bot	5	503	2019-02-15T16:41:28Z	last-commit+name	a02ac1c8a1e48575b4c77cd242874b8e9990421e8f6893b81aad4c0cea16a4ac	dir	
+bqi343.cp-notebook	java	repos/bqi343__cp-notebook/Contests/Other Solutions/BattleCode/2019	19	3527	2019-12-27T23:41:02Z	last-commit+name	47b6fe1c8db74d765942ec6593fa7fa8fb3a0f04cbb79804c6f1f7d2c2c05c3d	dir	hemanggs/Comptetitive-Programming,koosaga/olympiad
+cemondr.BC19pdxgroup4	js	repos/cemondr__BC19pdxgroup4/bots/pdxgroup4real	6	1231	2019-03-12T17:16:16Z	last-commit+name	8ad15fb42658645ed4aebd076adf8acbd72faec6d25a2cc95ea3504ee0953cdd	dir	
+cvxluo.battlecode19	js	repos/cvxluo__battlecode19/javascript	5	1345	2019-01-28T00:57:13Z	last-commit+name	5ebfdc71192e566d45961b74bbe7df350a807c55a7e1479dac4196fe04aeca01	dir	
+dgh2.bc19-t1	js	repos/dgh2__bc19-t1/bots/jstest	8	779	2019-01-16T01:00:50Z	last-commit+name	2e0be75d0a7c5bd7d5dc6913134e32f7f112ab4733d05339978ceaa3326ca1bd	dir	
+djkeyes.bc19	js	repos/djkeyes__bc19/bots/dk_js	1	325	2019-01-12T08:02:38Z	last-commit+name	6b6a986651f090409b5dcb430de67c5d7f3989ed68603c387fcb7eb1228e6e0d	dir	
+dmunozc.bc19-g8-bots	js	repos/dmunozc__bc19-g8/bots	17	3720	2019-03-11T18:52:56Z	name	d8f884a644ff94e59ddec57be8e34fddb79d6652a15a9b6bcd0290e3c5f12917	dir	
+dmunozc.bc19-g8-davjasdiv	js	repos/dmunozc__bc19-g8/davjasdiv.js	1	2016	2019-03-11T18:53:20Z	last-commit	13901c0a18b0a291a55f5a3947f6ab04455b0cc377f43a2797f3295e90f93d1e	bundle	
+dndoja.battlecode19	js	repos/dndoja__battlecode19/BigRobus	15	3402	2019-01-25T16:13:14Z	last-commit+name	1f44520932cb981b0249d6856ea0e5abe542bbcca64abd4fac66fda132c782f6	dir	
+evanyeyeye.battlecode2019-qualifiers	js	repos/evanyeyeye__battlecode2019/qualifiers	13	3123	2019-01-29T02:19:11Z	last-commit+name	3c006c10f31cef45c626df6e2584753c2d0c76eea38eb2c524145d1dc67d7ab2	dir	
+evanyeyeye.battlecode2019-seeding	js	repos/evanyeyeye__battlecode2019/seeding	12	2878	2019-01-25T03:43:01Z	compile-fallback	e8463a778ee875f997767ea1c7f3caaf1f0b102ac021432fb3525a8358480c87	dir	
+haydenshively.Battle-Code-2019-compiled	js	repos/haydenshively__Battle-Code-2019/compiled.js	1	1396	2019-01-28T07:59:37Z	last-commit	413208acc3d5201dd23b0eea60bd4818d242ba43753e8396c70889e498c083ce	bundle	
+haydenshively.Battle-Code-2019-javascript	js	repos/haydenshively__Battle-Code-2019/javascript	10	1177	2019-01-28T07:57:30Z	name	67d9c6fa1b43a2fbd751a2bbbad73f66819a0428a38384b1f1be06cc6a4b441b	dir	
+howard36.Battlecode2019-eco6	js	repos/howard36__Battlecode2019/eco6.js	1	3121	2019-02-01T05:28:30Z	last-commit	f13631d56c1f208db11e86188adb324f64a8125d9f90d607c9e33a8d5c7d3218	bundle	
+howard36.Battlecode2019-sprint	js	repos/howard36__Battlecode2019/sprint.js	1	1582	2019-01-17T22:06:55Z	name	414a98b08279d62018b3a8defb70546bb83309188003a4608e42bf23fe14a639	bundle	
+ipercyNC.group6-battlecode	js	repos/ipercyNC__group6-battlecode/bots	13	2035	2019-03-02T02:13:03Z	last-commit+name	eb7af4cf9e101efb6bb257d14d426850ae99efa4eb47d9edd5a150c81b3566b8	dir	
+j-mao.battlecode-2019	java	repos/j-mao__battlecode-2019/newstart	8	3107	2019-01-31T01:19:05Z	last-commit+name	41a606ca5c4e43e280c2818730d84cf60246f31b26a4ae8cacc59fde0a218f3e	dir	coding-to-music/battlecode-2019
+jackliu612.Battlecode19	js	repos/jackliu612__Battlecode19/example_js	9	399	2019-01-19T18:29:36Z	last-commit(junk-name fallback)+name(junk-name fallback)	b7b60912d9ba6b62f44ae2a069df4267802c36cb90ecae2ec6f6fdf58b1d1883	dir	roy-love/OnshoreBattleCode2019JS
+jamesrayman.HCN-basic-bot	js	repos/jamesrayman__HCN/bots/basic-bot	20	1193	2019-01-28T21:40:08Z	last-commit	56f4ba213c5075d49b9843ad2a9bb3584418fc1e8c1522df99ad828fadbfb615	dir	
+jamesrayman.HCN-bot	js	repos/jamesrayman__HCN/bot.js	1	1078	2019-01-27T16:16:31Z	name	aac93c4d80d2f7a182bf8a8ff85005da1c56d84145e4eb3112ed5dfeeba78698	bundle	
+jbiewend.Battlecode2019	py	repos/jbiewend__Battlecode2019/UselessNesting	1	193	2019-01-10T04:21:37Z	last-commit+name	e446d7f61d60619db228eb71cc2ee2599ae9ed44e1fff5456d1a9999abbb2ef2	dir	
+jshin313.battlecodebot	java	repos/jshin313__battlecodebot/bots	1	150	2019-01-19T15:24:58Z	last-commit+name	c8e76ba6ce494ed610af71fc120eb30a897e61bad357ce376032c040d6a936fd	dir	
+jyurkanin.corn_bc19	java	repos/jyurkanin__corn_bc19/jsrc	22	2029	2019-01-21T19:06:54Z	last-commit+name	1276d6d0616d80bd99a2a44b41dc2b1b8026aa5219d9f7b41335b038e1aac060	dir	
+ldcWV.Battlecode-2019	java	repos/ldcWV__Battlecode-2019	21	3657	2019-01-31T01:04:05Z	last-commit+name	e914b60bc986df8e075e1ab95c5ee68f08b622462a7a2ba7522bd83542c783af	dir	
+liwanlin41.examplefuncsplayer	py	repos/liwanlin41__examplefuncsplayer/bots/exampy	1	53	2019-01-09T01:29:01Z	last-commit(junk-name fallback)+name(junk-name fallback)	b601f6a144bd5152bd7a5d29042cf1169e1d900225bcb3ed81f237dc75d21a6a	dir	
+lschaberg.bc19	java	repos/lschaberg__bc19/src/bc19	1	1622	2019-01-26T07:42:05Z	last-commit+name	443406dc4403a02073ca8ba4a8e66292a59885db9dd64dd6f35c3b26c08258a0	dir	
+m-schier.battlecode-2019-wololo	js	repos/m-schier__battlecode-2019-wololo	7	5315	2019-03-08T21:56:52Z	last-commit+name	7ada1c2edbc5cc87264cd0cefeb9b2e7be88748bcdf8935a945336d0ce00fc61	dir	
+m4reko.bc2019-tmores-angels	js	repos/m4reko__bc2019-tmores-angels/bots/our-amazing-bot	10	2144	2019-01-27T22:21:50Z	last-commit+name	aadb75e3088f7968fecfc49db19b84a88c0abce328f94cd497f0ab242b197d55	dir	
+moreda-a.BC2019-a31	java	repos/moreda-a__BC2019/bc/bots/a31	32	7957	2019-11-12T17:15:07Z	last-commit+name	b92979661219df85395759fdd843d32913a4299ffe8a65b67af9c6e7a16edd23	dir	Helia-Karisani/BC2019
+moreda-a.BC2019-t15	java	repos/moreda-a__BC2019/bc/bots/t15	17	1962	2019-11-12T17:15:07Z	last-commit	61efaae626b47a7fecd2e7fcb060af8b814f723678d8f5edb392e9eccb7cf4fb	dir	Helia-Karisani/BC2019
+mvpatel2000.Battlecode2019	js	repos/mvpatel2000__Battlecode2019/final-bots	10	3020	2019-01-31T05:01:16Z	last-commit+name	9cda93e258324b13d16bae32ad9ca6e472839b66ed50ec636bff31b1be98936c	dir	
+nhard.examplefuncsplayer	js	repos/nhard__examplefuncsplayer/bots/example_js	3	265	2019-01-12T16:34:12Z	last-commit(junk-name fallback)+name(junk-name fallback)	32e335dc4afe4416bca8273914cc960934f7ba3502a6bb4efa41207f2ba12c02	dir	
+nthistle.battlecode-2019	java	repos/nthistle__battlecode-2019/qualsbot	11	2443	2019-01-28T21:23:23Z	last-commit+name	7f57363e6ce413a4231636c48c7bc7490a64d62d5984bacb8e0d3005447e1dbb	dir	
+ovkulkarni.battlecode2019-20190127_quals	js	repos/ovkulkarni__battlecode2019/compiled/20190127_quals.js	1	2984	2019-01-28T00:44:56Z	name	7a36b99641a0333d6e1852133847357088092b5106076ac82410b8cd72913aea	bundle	neeyanthkvk/Battlecode19
+ovkulkarni.battlecode2019-20190129_HS	js	repos/ovkulkarni__battlecode2019/compiled/20190129_HS.js	1	2986	2019-01-29T22:06:09Z	last-commit	4f17a53d5cefaa254f8aae68dbf15551cfa52ec242790dc3c8957d318139f7c7	bundle	neeyanthkvk/Battlecode19
+programjames.BC19Bot-root	js	repos/programjames__BC19Bot	9	1676	2019-02-01T01:20:02Z	last-commit	4cba0795a764947d7ae43e3c7067739361274f444497426663ffcbaf5b35f86b	dir	
+programjames.BC19Bot-seeding	js	repos/programjames__BC19Bot/seeding	8	1325	2019-01-20T06:33:02Z	name	971ff7411bac1ca2f213689825c4b4291d1a5239a595f20004de96ef1d0a1984	dir	
+rafekruse.Battlecode-2019-Finals_v1	js	repos/rafekruse__Battlecode-2019/Finals_v1.js	1	3183	2019-01-30T19:29:26Z	name	85fb5d73852dfb506df705d873a3d8a717a8dcbf13b960edfd7315cddbddc57b	bundle	JeffreyLiangUF/Battlecode-2019
+rafekruse.Battlecode-2019-bc19	java	repos/rafekruse__Battlecode-2019/bc19	25	3282	2019-08-22T15:32:24Z	last-commit	da606aa532c4a00494f65952b2ee3c7a3b59537d284fba3216161d548bb44271	dir	JeffreyLiangUF/Battlecode-2019
+rooneyshuman.Battlecode	js	repos/rooneyshuman__Battlecode/build	2	3475	2019-03-11T23:57:30Z	last-commit(junk-name fallback)+name(junk-name fallback)	ca12386d4213b9a62f85d265c2febe8dfbb63825d55475bbed1220988e86f8d4	dir	
+roy-love.onshoreBattleCode2019	py	repos/roy-love__onshoreBattleCode2019	1	683	2019-01-16T00:17:56Z	last-commit+name	80ae6ed667a8e54b6d288113f3ac2936138b0f6e54f7ca11a3b62801aa4325f7	dir	
+ryanhzhao.Battlecode-2019	java	repos/ryanhzhao__Battlecode-2019/MovementBot1	11	458	2019-01-15T01:55:35Z	last-commit+name	f2fc2cb3bd9e4e138b82b35f4ab22a8c4500279463191d60080a34e04620346d	dir	
+spachava753.bc19	java	repos/spachava753__bc19/src/main/java/bc19	31	3640	2019-01-27T22:37:45Z	last-commit+name	98929716719b743dfe6caffaca704ae59390974d9956e17e41cd31561372c2ac	dir	
+sunanth123.battlecode19-mainbot	js	repos/sunanth123__battlecode19/bots/mainbot	7	1256	2019-02-24T06:31:00Z	name	5cb4ccbb8a23dce3463d3d7f7ca513714039f7e58f0d23e50d77746c16b36c71	dir	
+sunanth123.battlecode19-prorush	js	repos/sunanth123__battlecode19/bots/prorush	7	1351	2019-03-08T07:46:41Z	last-commit	5c61a43cfc157f3e2b559d575550c3cd725e6d774b730f44e7a67900799038a7	dir	
+twitu.bc19-tsp	java	repos/twitu__bc19-tsp/bc19	14	4030	2019-01-28T01:01:22Z	last-commit+name	256b0accceca98f48f21708c5faf688e0fd99a8e14cec852740efa0b00ddb30f	dir	
+unrevre.battlecode	js	repos/unrevre__battlecode/src	1	2989	2019-03-23T15:53:42Z	last-commit+name	66a7c0657095c2c4f80e236015569e5165b21c6985440eeb36ce9ff20212ee52	dir	
+uvafan.bc2019	js	repos/uvafan__bc2019/v29_final_bot	14	2620	2019-01-30T21:43:37Z	last-commit+name	67900b42dec923b88f00428591358832691d7a3aafe1789ed39ace10a6a3ae32	dir	
+vicennial.BattleCode19	js	repos/vicennial__BattleCode19/bots/example_js	3	1307	2019-01-24T22:29:29Z	last-commit(junk-name fallback)+name(junk-name fallback)	2ca79df49931a322eae3347b86e5d5aa7a8418b9c31da9c9d9a2ccc3a3b55865	dir	
+vineetparikh.BigRedBattlecode2019	java	repos/vineetparikh__BigRedBattlecode2019	24	6439	2019-01-31T22:23:29Z	last-commit+name	aa53c1207725255ab85092a7abd4bc882855fc6ab04336572ed6c6de559583a0	dir	
+virenvshah.Battlecode2019	java	repos/virenvshah__Battlecode2019/BigRedBattlecode	24	6439	2019-03-20T15:34:17Z	last-commit+name	0c78c0f8d27af89e36e664d49af7e1d36208a3f6a898ccd9b251daaae2c16eb5	dir	
+vishwasns99.BC_2019	py	repos/vishwasns99__BC_2019/final_bot	3	309	2019-01-21T14:38:50Z	last-commit+name	1529508a1c584461e075501cd8a5326c5ea7d908b210626eef4b5b50ec4f71d2	dir	
+waylon531.scala_starter	js	repos/waylon531__scala_starter/examjs	1	28	2019-01-11	last-commit+name	5a74d5043a264c1027ad15f28e057db98580b5b657bc6ee4e01135ecd58f21ee	dir	
+yujinwunz.battlecode_2019	js	repos/yujinwunz__battlecode_2019/src	17	3746	2019-01-31T17:45:24Z	last-commit+name	6cc85b489fef3f3277ef0525e362940a7ce14bcb1b5a0caf7499eaac3e74ad8b	dir	
+yunaganyh.bc19	py	repos/yunaganyh__bc19/bots/exampy	2	320	2019-01-27T21:43:44Z	last-commit(junk-name fallback)+name(junk-name fallback)	fc8d8e93fab7c27a2d5c01c7bfbb459ab45b8a5525edc1e58b86fc90192ea613	dir	
