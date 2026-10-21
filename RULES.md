@@ -49,8 +49,10 @@ Where the specs and the engine disagree, the engine wins and the difference is m
 | Splash r² | 0 | — | — | 0 | 0 | **3** |
 | Carry K / F | — | — | 20 / 100 | 20 / 100 | 20 / 100 | 20 / 100 |
 
-- Movement: one move of any (dx, dy) with dx²+dy² ≤ speed to a passable, unoccupied, **visible** tile; it may jump
-  over walls (`game.js:913-921`; `js_starter.js` move). Fuel cost = r² × fuel-per-move (`action_record.js:281`).
+- Movement: one move of any (dx, dy) with dx²+dy² ≤ speed to a passable, unoccupied tile; it may jump over walls
+  (`game.js:913-921`). The engine does not check visibility; the starter API refuses moves and attacks to tiles the
+  robot cannot see. An illegal action throws: the turn keeps its signal and castle talk but does nothing else.
+  The engine never emits the TIMEOUT action (7); an over-clock robot simply does nothing that turn. Fuel cost = r² × fuel-per-move (`action_record.js:281`).
 - Attack: any tile with r² inside the attack band (`game.js:923-930`), visible to the attacker (`js_starter.js`).
   **Attacking an empty tile is legal and costs fuel.** Damage hits every robot within the splash r² of the target tile,
   **friend or foe, including the attacker's own team** (`action_record.js:289-317`). Preacher splash r² 3 = the 3×3
