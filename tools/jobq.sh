@@ -27,6 +27,6 @@ case "${1:-}" in
     echo "pending:"; for f in $(ls "$Q/pending" | sort); do echo "  ${f%.sh}: $(cat "$Q/pending/$f")"; done
     echo "running:"; for f in $(ls "$Q/running"); do echo "  ${f%.sh}: $(cat "$Q/running/$f")"; done
     pgrep -f "flock -n $Q/runner.lock" >/dev/null && echo "runner: up" || echo "runner: DOWN"
-    tail -3 "$Q/runner.log" 2>/dev/null;;
+    tail -3 "$Q/runner.log" 2>/dev/null; true;;
   *) echo "usage: jobq.sh add <cmd> | start | status"; exit 2;;
 esac
