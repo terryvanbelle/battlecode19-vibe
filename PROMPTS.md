@@ -50,3 +50,12 @@ This year we will compete in Battlecode 2019.  Store all results in a new Github
 
 ## 7. 2026-10-21 08:44 PDT
 Figured out the crash problem.  I had accidentally run Claude outside of a tmux session, so it ended when I closed my laptop
+
+## 8. 2026-10-21 11:22 PDT
+Just want to check:  Your bot symmetry code works on horizontal symmetry as well as vertical, right?
+
+## 9. 2026-10-21 11:30 PDT
+How are we doing on finding benchmark bots?
+
+## 10. 2026-10-21 12:29 PDT
+Now that you've got a replica and some kind of benchmark going, I'd like to see you replicate the progress/ setup that 2023 used.  I liked those graphs
