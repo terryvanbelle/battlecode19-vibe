@@ -3,6 +3,8 @@
 // (+1) to get round a jam; it never returns to one of its last few tiles while sliding or escaping.
 import { bfs } from './mapinfo.js';
 
+const LADDER = [2, 4];
+
 export class Nav {
   constructor(w, offs, rnd, cacheSize = 6) {
     this.w = w; this.offs = offs; this.rnd = rnd; this.cache = new Map(); this.cacheSize = cacheSize;
@@ -22,8 +24,9 @@ export class Nav {
   dist(key, sources) { const w = this.w; return this.field(key, sources)[w.me.y * w.n + w.me.x]; }
 
   // Choose a step toward the key's sources. maxR2: largest step allowed (fuel). avoid(x,y): tiles to never enter.
-  // Returns [dx, dy] or null (arrived, unreachable, or waiting).
-  step(key, sources, maxR2, avoid) {
+  // ladder: [slide after, step back after] this many blocked turns. Returns [dx, dy] or null (arrived, unreachable,
+  // or waiting).
+  step(key, sources, maxR2, avoid, ladder = LADDER) {
     const w = this.w, n = w.n, me = w.me, f = this.field(key, sources);
     if (key !== this.lastKey) { this.blocked = 0; this.lastKey = key; }
     const cur = f[me.y * n + me.x];
@@ -47,8 +50,8 @@ export class Nav {
     let s = cur < 0 ? pick(32766) : pick(cur - 1);
     if (!s && cur > 0) {
       this.blocked++; this.stats.blocked++;
-      if (this.blocked >= 2) { s = pick(cur); if (s) this.stats.slides++; }
-      if (!s && this.blocked >= 4) { s = pick(cur + 1); if (s) this.stats.escapes++; }
+      if (this.blocked >= ladder[0]) { s = pick(cur); if (s) this.stats.slides++; }
+      if (!s && this.blocked >= ladder[1]) { s = pick(cur + 1); if (s) this.stats.escapes++; }
     } else this.blocked = 0;
     if (!s) return null;
     this.recent.push(me.y * n + me.x); if (this.recent.length > 4) this.recent.shift();

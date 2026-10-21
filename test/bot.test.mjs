@@ -123,6 +123,21 @@ test('nav: steps descend to the goal around a wall, and never enter occupied til
   assert.strictEqual(fuelStep(100, 4, 1, 98), 2); assert.strictEqual(fuelStep(10, 9, 2, 0), 5);
 });
 
+test('nav: a blocked robot waits ladder[0] turns before sliding and ladder[1] before stepping back', () => {
+  // Corridor y = 1 between walls; the goal (5,1) lies behind a friend at (2,1); the robot stands at (1,1).
+  const n = 7, walls = []; for (let x = 0; x < n; x++) { walls.push([x, 0]); walls.push([x, 2]); }
+  for (let y = 3; y < n; y++) for (let x = 0; x < n; x++) walls.push([x, y]);
+  const run = ladder => {
+    const w = stubWorld(n, walls, [[2, 1]]); w.me = { x: 1, y: 1 };
+    const nav = new Nav(w, offsets(2), rng(3)), out = [];
+    for (let t = 0; t < 8; t++) { const s = nav.step('g', [[5, 1]], 2, undefined, ladder); out.push(s ? s.join(',') : '-'); }
+    return out;
+  };
+  // no equal-distance tile exists in a corridor, so the first move is the step back at ladder[1] blocked turns
+  assert.deepStrictEqual(run([2, 4]).slice(0, 4), ['-', '-', '-', '-1,0']);
+  assert.deepStrictEqual(run([6, 7]).slice(0, 7), ['-', '-', '-', '-', '-', '-', '-1,0']);
+});
+
 test('comms: encode/decode', () => {
   const m = dec(encXY(SIG.CHURCH, 63, 5)); assert.deepStrictEqual([m.type, m.x, m.y], [SIG.CHURCH, 63, 5]);
   assert.strictEqual(dec(encNum(SIG.ROUND, 999)).v, 999);
