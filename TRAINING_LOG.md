@@ -163,3 +163,9 @@
   Delivery: seed 2202 vs h6, home share of the army (sum over rounds 550-700) at most two thirds of h6's in the same
   game. Gate: h14 vs h6, 40 games; falsifier net <= 0. Risk: units that do get out arrive piecemeal and die (the
   h11c result says attacking here is a losing trade), so delivery may pass and the gate fail.
+- h16 (pre-registered, doctrine swing): turtle. h6 with ATTACK_ROUND=1001: no general attack ever; units hold the
+  lattice, engage enemies within 14 tiles of home, and the endgame dump still runs. Mechanism: attacking into a
+  standing lattice is a losing trade (h11c's army stayed home and won 6,290-3,880 on health; on seed 905 v3's
+  army killed 36 of 60 h6 attackers for 4 losses, then took the lone castle). Delivery is mechanical (no attack call
+  is ever sent). Gate: h16 vs h6, 40 games, queued after h15; falsifier net <= 0. Risk: h6's waves take castles on
+  small single-castle maps before round 1000. Dose ladder if it passes: attack only from round 800, then 650.
