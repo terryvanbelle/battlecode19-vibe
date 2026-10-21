@@ -1,16 +1,23 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-21 13:30 PDT)
+## State (2026-10-21 15:30 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v3** (`bots/v3`, ROSTER.tsv); frozen history v0-v3, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
   a CFG switch whose default is the incumbent; candidates are built with `--cfg KEY=JSON` into `dist/hN`.
-- Open candidates: h6 (v3 + RNG reseed, depot cooldown, crusader/preacher rotation, miner switching, shooting fuel
-  floor) vs v3 and vs rush; h7 (h6 + ATTACK_PERSIST: kill reports over castle talk, map-wide next target, units wait
-  near the front instead of walking home).
-- Replica ladder (ACCESS.md, tools/galaxy19, `tools/galaxy19/contest19.py`): team vibe19 runs v3; benchmark bots
-  from the public field are entered by tools/bench (BENCHMARK.md).
-- VM work goes through the sequential job queue `tools/jobq.sh` (add/start/status) so batches never overlap.
+- Dev line h6 (v3 + RNG reseed, depot cooldown, crusader/preacher rotation, miner switching, shooting fuel floor) is
+  level with v3 (23-17, t 0.7; 7-7 without load-contaminated games): it loses every single-castle map on castles
+  near round 500 and wins the multi-castle ones. Candidates are switches on h6, gated against h6 (ATTEMPTS.md).
+- VM queue (`~/jobq`, in order): h6 vs rush (running), h11c (cruise patience), h15 (ablation: no build rotation),
+  h16 (turtle: never attack), h7, h8, h9, h10, v3 vs v0, v3 vs rush. Parked (delivery failed or superseded): h11,
+  h12 (waves), h13 (keep clear), v3 vs v1, v3 vs example. h14 (detour) is in its delivery check.
+- Main finding: armies jam in their own base. On seed 2202 85-90% of h6's army is within 12 king steps of home
+  through round 700 although every unit has a target; the attack that does get out loses. h11c's patient army
+  stays home and wins on health.
+- Replica ladder (ACCESS.md, tools/galaxy19, `tools/galaxy19/contest19.py`): team vibe19 runs v3; the benchmark
+  field (87 public 2019 bots found, tools/bench/field.tsv) is being compiled and smoke-tested by a helper agent.
+- VM work goes through the sequential job queue `tools/jobq.sh` (add/start/status) so batches never overlap. Beside
+  a batch, at most one extra game process, under `flock ~/.bc-extra.lock` (LEARNINGS 8).
 
 ## Commands
 ```
