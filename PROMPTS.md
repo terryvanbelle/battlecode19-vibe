@@ -20,3 +20,9 @@ This year we will compete in Battlecode 2019.  Store all results in a new Github
 
 ## 2. 2026-10-21 06:42 PDT
 You can delete anything you like from previous years
+
+## 3. 2026-10-21 07:48 PDT
+Are we all good here?  I see remote control got disconnected while I was away
+
+## 4. 2026-10-21 07:51 PDT
+When you write your code, make sure that all moves are symmetric when switching sides.  That was something that we forgot to do for 2023
