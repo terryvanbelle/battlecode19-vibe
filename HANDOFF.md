@@ -14,8 +14,11 @@
 - Main finding: armies jam in their own base. On seed 2202 85-90% of h6's army is within 12 king steps of home
   through round 700 although every unit has a target; the attack that does get out loses. h11c's patient army
   stays home and wins on health.
-- Replica ladder (ACCESS.md, tools/galaxy19, `tools/galaxy19/contest19.py`): team vibe19 runs v3; the benchmark
-  field (87 public 2019 bots found, tools/bench/field.tsv) is being compiled and smoke-tested by a helper agent.
+- Replica ladder (ACCESS.md, tools/galaxy19, `tools/galaxy19/contest19.py`): team vibe19 runs v3. Benchmark field:
+  92 entrants, 89 compiled (BENCHMARK.md). Entry trickles in by VM cron, `field.py seed --next 6` every 20 minutes
+  (smoke-tested first, duplicates by bundle digest skipped; log bc19-benchmarks/trickle.log): 15 new teams on at
+  16:40 PDT 2026-10-21, the rest by ~21:00. Replica games are the smoke test; the separate smoke harness is stopped.
+  Sisyphus192 is byte-identical to SethKitchen: team status X. Remove the cron line once `seed --next` finds none.
 - VM work goes through the sequential job queue `tools/jobq.sh` (add/start/status) so batches never overlap. Beside
   a batch, at most one extra game process, under `flock ~/.bc-extra.lock` (LEARNINGS 8).
 

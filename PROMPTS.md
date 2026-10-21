@@ -62,3 +62,9 @@ Now that you've got a replica and some kind of benchmark going, I'd like to see 
 
 ## 11. 2026-10-21 14:58 PDT
 How is the benchmark download coming along?
+
+## 12. 2026-10-21 16:29 PDT
+I'd like you to get some more bots into the benchmark.  They can't all be blocked on compiling and smoke tests, can they?  Can you maybe add a few at a time to the replica?
+
+## 13. 2026-10-21 16:31 PDT
+If 30 smoke test games are complete, that suggests that there are 30 bots you can add to the benchmark, right?

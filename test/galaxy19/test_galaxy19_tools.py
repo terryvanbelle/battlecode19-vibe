@@ -177,6 +177,29 @@ class Field(unittest.TestCase):
         self.assertIsNone(field.pick_challenge(ladder, {'z': 5}, rnd))
         self.assertIsNone(field.pick_challenge(ladder, {}, rnd))
 
+    def test_trickle_order(self):
+        with tempfile.TemporaryDirectory() as bench:
+            g = lambda n, side, reason='castles', init=0: json.dumps(  # noqa: E731
+                {'name': n, 'side': side, 'reason': reason, 'bot': {'init_fail': init}})
+            touch(bench, 'smoke.jsonl', '\n'.join([
+                g('clean', 'red'), g('clean', 'blue'), g('half', 'red'), g('half', 'blue', 'init_failure', 3),
+                g('loady', 'red', 'health', 40), g('loady', 'blue', 'health', 9), 'not json',
+                g('dead', 'red', 'init_failure', 3), json.dumps({'name': 'dead', 'side': 'blue', 'error': 'x'})]))
+            tier = field.smoke_tier(bench)
+            self.assertEqual(tier, {'clean': 0, 'half': 1, 'loady': 1, 'dead': 3})
+            self.assertEqual(field.smoke_tier(os.path.join(bench, 'nowhere')), {})
+        rows = [{'team': n, 'entrant': n, 'path': None if n == 'nobundle' else '/b/' + n, 'note': ''}
+                for n in ('dead', 'fresh', 'half', 'nobundle', 'clean', 'up', 'loady', 'later')]
+        acc = {'up': {'team_id': 7, 'digest': 'abc'}, 'half': {'team_id': 8}}   # half: registered, upload failed
+        nx = lambda a, k: [r['team'] for r in field.next_entrants(a, rows, k, tier, lambda p: 'h' + p)]  # noqa: E731
+        self.assertEqual(nx(acc, 4), ['clean', 'half', 'loady', 'fresh'])
+        self.assertEqual(nx(acc, 99)[4:], ['later', 'dead'])
+        self.assertEqual(nx(acc, 0), [])
+        renamed = dict(acc, old={'team_id': 9, 'digest': 'h/b/clean'})          # clean's bundle, seeded under another name
+        self.assertEqual(nx(renamed, 2), ['half', 'loady'])
+        twins = [r['team'] for r in field.next_entrants(acc, rows, 3, tier, lambda p: 'same')]
+        self.assertEqual(twins, ['clean'])                                  # identical bundles: the first one only
+
     def test_our_team_never_challenges(self):
         self.assertIn('vibe19', field.OUR_TEAMS)
 

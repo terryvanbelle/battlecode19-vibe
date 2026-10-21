@@ -8,6 +8,9 @@ is not handled here: tools/galaxy19/contest19.py submits and plays for it.
   python3 tools/galaxy19/field.py seed [--only NAME]   register + upload: team "bc19-starter" (bots/example) and one
                                                        team per compiled external bot (below). A team whose uploaded
                                                        bot is unchanged (content hash) is not re-uploaded.
+  python3 tools/galaxy19/field.py seed --next N        the trickle (cron): register + upload the next N entrants not on
+                                                       the site yet, smoke-tested ones first (smoke_tier). Ladder games
+                                                       are the smoke test of the rest.
   python3 tools/galaxy19/field.py status               one line per team: rating, latest submission status
   python3 tools/galaxy19/field.py activity [--once] [--poll 60] [--low 2]
         spare-cycle play (bc19-galaxy-activity.service): while fewer than --low matches wait in the queue, a random
@@ -23,6 +26,7 @@ bundle each; Java/Python were transpiled locally). The roster is tools/bench/ros
 """
 import argparse
 import csv
+import json
 import os
 import random
 import signal
@@ -84,6 +88,45 @@ def entrants(only=None, repo=REPO, bench=BENCH_ROOT):
     if only:
         rows = [r for r in rows if r['team'] == only or r['entrant'] == only]
     return rows
+
+
+def smoke_tier(bench=BENCH_ROOT):
+    """{entrant: tier} from $BENCH_ROOT/smoke.jsonl (games vs the starter, one per side): 0 = a game on each side with
+    no init failure, 1 = some game played, 3 = only init failures or errors. Entrants not smoked yet are tier 2."""
+    games = {}
+    try:
+        with open(os.path.join(bench, 'smoke.jsonl')) as fh:
+            for line in fh:
+                try:
+                    g = json.loads(line)
+                except ValueError:
+                    continue
+                if g.get('name'):
+                    games.setdefault(g['name'], []).append(g)
+    except OSError:
+        return {}
+    tier = {}
+    for name, gs in games.items():
+        played = [g for g in gs if g.get('reason') and g['reason'] != 'init_failure']
+        clean = {g.get('side') for g in played if not (g.get('bot') or {}).get('init_fail')}
+        tier[name] = 0 if clean >= {'red', 'blue'} else 1 if played else 3
+    return tier
+
+
+def next_entrants(acc, rows, n, tier, digest=lambda p: cl.bot_zip(p)[1]):
+    """The first n uploadable rows not uploaded yet (no digest saved), by smoke tier (stable: field order within). A
+    bundle some team already runs or an earlier pick has (a renamed entrant, two repos that compile alike) is skipped."""
+    on = {a.get('digest') for a in acc.values()} - {None}
+    new = [r for r in rows if r['path'] and not (acc.get(r['team']) or {}).get('digest')]
+    out = []
+    for r in sorted(new, key=lambda r: tier.get(r['entrant'], 2)):
+        if len(out) >= n:
+            break
+        h = digest(r['path'])
+        if h not in on:
+            on.add(h)
+            out.append(r)
+    return out
 
 
 def seed(c, acc, rows):
@@ -162,9 +205,13 @@ def pick_challenge(ladder, ids, rnd, band=3):
 
 def activity(c, acc, poll=60, once=False, seed_=None, n_maps=3, low=2):
     rnd = random.Random(seed_)
-    ids = {t: a['team_id'] for t, a in acc.items() if a.get('team_id') and t not in OUR_TEAMS}
-    sess = {t: cl.Session(c, acc[t]['user'], acc[t]['password']) for t in ids}
-    rest, stop = {}, {'now': False}
+    ids, sess, rest, stop = {}, {}, {}, {'now': False}
+
+    def join(acc):                              # teams the trickle (seed --next) registered since the last poll
+        for t, a in acc.items():
+            if a.get('team_id') and t not in OUR_TEAMS and t not in ids:
+                ids[t], sess[t] = a['team_id'], cl.Session(c, a['user'], a['password'])
+    join(acc)
 
     def on_signal(signum, frame):
         stop['now'] = True
@@ -175,6 +222,10 @@ def activity(c, acc, poll=60, once=False, seed_=None, n_maps=3, low=2):
     log(f'activity: {len(ids)} field teams, keep {low} match(es) waiting, poll {poll}s')
     while not stop['now']:
         try:
+            n0 = len(ids)
+            join(cl.load_accounts())
+            if len(ids) > n0:
+                log(f'activity: {len(ids) - n0} new field team(s), {len(ids)} in all')
             want = low - queue_backlog(c)
             if want > 0:
                 ladder = cl.rankings(c)
@@ -212,7 +263,7 @@ def main(argv=None):
     ap.add_argument('--site', default=None)
     sub = ap.add_subparsers(dest='cmd', required=True)
     sub.add_parser('plan')
-    p = sub.add_parser('seed'); p.add_argument('--only')
+    p = sub.add_parser('seed'); p.add_argument('--only'); p.add_argument('--next', type=int)
     sub.add_parser('status')
     p = sub.add_parser('activity'); p.add_argument('--once', action='store_true')
     p.add_argument('--poll', type=int, default=60); p.add_argument('--low', type=int, default=2)
@@ -226,7 +277,8 @@ def main(argv=None):
     c = cl.Client(a.site)
     acc = cl.load_accounts()
     if a.cmd == 'seed':
-        n = seed(c, acc, entrants(a.only))
+        rows = entrants(a.only)
+        n = seed(c, acc, rows if a.next is None else next_entrants(acc, rows, a.next, smoke_tier()))
         log(f'seed: {n} upload(s)')
     elif a.cmd == 'status':
         status(c, acc)

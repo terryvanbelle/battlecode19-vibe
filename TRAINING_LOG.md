@@ -187,3 +187,8 @@
   spend team fuel above 1,500; engage moves, retreats and shots keep their old floors. Delivery: seed 2202 vs h6, mean
   team fuel over rounds 500-700 >= 1,000 (h6: ~30) and attack fuel not below h6's. Gate: h18 vs h6, 40 games;
   falsifier net <= 0. Risk: the army reaches the front later or never. Dose ladder: 1,500, then 500 or 3,000.
+- Fuel census, 8 sampled h6 vs v3 replays (driver, out/dbg/fuelline.js): on 1635, 2030, 2296, 2299, 241 and 2872
+  both sides hold 7,000-9,000 fuel at round 450, under 100 by 500, and average 17-214 over rounds 500-700. The
+  exceptions, 905 and 2855, are short single-castle games that h6 loses around round 530 with fuel still banked:
+  decided by the fight, not the freeze. The post-attack fuel freeze is a flaw of the whole line (v3 included), so
+  h18 tests something general.
