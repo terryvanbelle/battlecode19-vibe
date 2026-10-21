@@ -103,3 +103,15 @@ test('paired: round-0 init failures (machine load) are skipped', () => {
   const r = pairedRead(rows, 'c', 'k');
   assert.strictEqual(r.cells, 1);
 });
+
+test('jobq: add and status list pending jobs in order', () => {
+  const { execFileSync } = require('child_process');
+  const os = require('os');
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'jobq-'));
+  const run = (...a) => execFileSync('bash', [path.join(__dirname, '..', 'tools', 'jobq.sh'), ...a], { env: { ...process.env, HOME: home }, encoding: 'utf8' });
+  run('add', 'echo one'); run('add', 'echo two');
+  const s = run('status');
+  assert.ok(s.indexOf('echo one') >= 0 && s.indexOf('echo one') < s.indexOf('echo two'));
+  assert.ok(/runner: DOWN/.test(s));
+  fs.rmSync(home, { recursive: true, force: true });
+});
