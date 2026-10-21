@@ -82,7 +82,7 @@ export function militaryTurn(B) {
   if (me.turn === 1) init(B);
   listen(B);
   const enemies = w.enemies;
-  const canShoot = w.fuel >= S.atkFuel;
+  const canShoot = w.fuel >= S.atkFuel + CFG.SHOOT_FLOOR;   // keep a little fuel so pilgrims can still mine
 
   // Prophets: step away from melee attackers that are (or will be) inside the dead zone.
   if (u === PROPHET) {

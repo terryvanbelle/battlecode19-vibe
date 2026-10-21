@@ -30,9 +30,11 @@ function init(B) {
 function depotAt(B, x, y) { for (const d of B.deps) if (d.x === x && d.y === y) return d; return null; }
 
 // Nearest depot (king distance) that no robot is seen on, optionally restricted to a cluster; karbonite first on ties.
-function freeDepotNear(B, x, y, cluster) {
+function freeDepotNear(B, x, y, cluster, kind, maxKing) {
   const w = B.w, list = cluster ? cluster.depots : B.deps; let best = null, bd = 1e9;
   for (const d of list) {
+    if (kind !== undefined && d.k !== kind) continue;
+    if (maxKing && king(x, y, d.x, d.y) > maxKing) continue;
     const occ = w.occ(d.x, d.y);
     if (occ > 0 && occ !== w.me.id) continue;
     const k = king(x, y, d.x, d.y) * 2 + (d.k ? 0 : 1);
@@ -100,7 +102,13 @@ export function pilgrimTurn(B) {
     return go(B, st.depKey, src);
   }
 
-  // Mine.
+  // Mine. Out of fuel nothing moves, mines or shoots: karbonite miners switch to a nearby free fuel depot while
+  // fuel is short and karbonite piles up (and back when the shortage reverses).
+  if (st.target && me.karbonite === 0 && me.fuel === 0) {
+    const short = st.target.k ? (w.fuel < CFG.SWITCH_FUEL_LOW && w.karbonite >= CFG.SWITCH_KARB_HIGH)
+      : (w.karbonite < CFG.SWITCH_KARB_LOW && w.fuel >= CFG.SWITCH_FUEL_HIGH);
+    if (short) { const alt = freeDepotNear(B, me.x, me.y, null, !st.target.k, CFG.SWITCH_KING); if (alt) st.target = alt; }
+  }
   if (!st.target) st.target = freeDepotNear(B, me.x, me.y, null);
   const t = st.target; if (!t) return null;
   if (me.x === t.x && me.y === t.y) return w.fuel >= 1 ? w.mine() : null;

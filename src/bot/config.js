@@ -19,7 +19,13 @@ export const CFG = {
   MIL_FUEL_PER_UNIT: 10,     // ...plus this much per military unit we have (each needs fuel to shoot and move)
   FUEL_PER_KARB: 2.5,        // staff fuel depots while fuel < this x karbonite (and below FUEL_HIGH)
   CRUISE_R2: 2,              // largest step for unhurried military moves (fuel cost is r2 x fuel/move)
-  PILGRIM_FAST_FUEL: 1000,   // pilgrims take full r2 4 steps only above this fuel     // peacetime military builds keep this much fuel back (movement and mining need it)
+  PILGRIM_FAST_FUEL: 1000,
+  SWITCH_FUEL_LOW: 150,      // an empty-handed karbonite miner moves to fuel when fuel < this and karbonite >= ...
+  SWITCH_KARB_HIGH: 200,
+  SWITCH_KARB_LOW: 30,       // ...and a fuel miner moves to karbonite when karbonite < this and fuel >= ...
+  SWITCH_FUEL_HIGH: 3000,
+  SWITCH_KING: 8,
+  SHOOT_FLOOR: 30,           // military units do not shoot the team's fuel below this            // only to depots within this many king steps   // pilgrims take full r2 4 steps only above this fuel     // peacetime military builds keep this much fuel back (movement and mining need it)
   PREACHER_EVERY: 4,         // every Nth peacetime defender is a preacher (when MIL_ROTATION is null)
   // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
   MIL_ROTATION: [4, 3, 4, 3, 5],   // peacetime build order by unit type (prophet 4, crusader 3, preacher 5)         // every Nth peacetime defender is a preacher
