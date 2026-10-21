@@ -118,3 +118,12 @@ test('build_bot: --cfg overrides land in the bundle; unknown keys are refused', 
   await assert.rejects(build(path.join(__dirname, '..', 'src', 'bot'), out, { cfg: { NO_SUCH_KEY: 1 } }), /unknown CFG key/);
   fs.rmSync(out, { recursive: true, force: true });
 });
+
+test('basics: --team auto reads team A side from a batch replay name', () => {
+  const { teamOf } = require('../tools/basics.js');
+  assert.strictEqual(teamOf('auto', 'out/rp/aaa_bbb_1154_blue.bc19'), 1);
+  assert.strictEqual(teamOf('auto', 'aaa_bbb_7_red.bc19'), 0);
+  assert.strictEqual(teamOf('blue', 'x.bc19'), 1);
+  assert.strictEqual(teamOf('red', 'x_blue.bc19'), 0);
+  assert.throws(() => teamOf('auto', 'game.bc19'));
+});

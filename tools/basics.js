@@ -17,6 +17,15 @@ function floatShare(buf, team) {
   return n ? hi / n : 0;
 }
 
+// --team red|blue, or auto: team A's side from a batch replay name (<a_hash>_<b_hash>_<seed>_<side>.bc19).
+function teamOf(opt, file) {
+  if (opt === 'red') return 0;
+  if (opt === 'blue') return 1;
+  const m = opt === 'auto' && /_(red|blue)\.bc19$/.exec(file);
+  if (!m) throw new Error(`--team ${opt}: expected red, blue, or auto with a batch replay name (${path.basename(file)})`);
+  return m[1] === 'red' ? 0 : 1;
+}
+
 function check(buf, team) {
   const an = R.analyze(buf), T = an.tally[team];
   const sum = a => a.reduce((x, y) => x + y, 0);
@@ -45,8 +54,8 @@ if (require.main === module) {
       rows.push(c);
     }
   } else {
-    const team = opt('--team') === 'blue' ? 1 : 0;
-    for (const f of argv.filter(a => a.endsWith('.bc19'))) rows.push(Object.assign({ file: path.basename(f) }, check(fs.readFileSync(f), team)));
+    const t = opt('--team') || 'red';
+    for (const f of argv.filter(a => a.endsWith('.bc19'))) rows.push(Object.assign({ file: path.basename(f) }, check(fs.readFileSync(f), teamOf(t, f))));
   }
   if (!rows.length) { console.log('no games'); process.exit(0); }
   const cols = Object.keys(rows[0]);
@@ -55,4 +64,4 @@ if (require.main === module) {
   const bad = rows.filter(r => r.friendly_dmg || r.gifted_enemy || r.exc || r.timeouts || r.init_fail);
   console.log(`\n${rows.length} games; basics failures (exceptions, timeouts, init, friendly damage, gifts): ${bad.length}`);
 }
-module.exports = { check };
+module.exports = { check, teamOf };
