@@ -115,7 +115,8 @@ export function structTurn(B, allIds, extra) {
   resolvePending(B);
   refreshAssign(B, allIds);
   const attackers = w.enemies.filter(e => isAttacker(e.unit));
-  const reserveK = st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0;
+  const reserveK = (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
+    (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0);
 
   // 1. Defence: answer visible attackers with a defender while they outnumber ours; otherwise shoot.
   if (attackers.length) {

@@ -53,6 +53,7 @@ export function castleTurn(B) {
   });
   st.nStructs = () => st.castles.size + st.churched.size;
   callAttack(B);
+  st.pioneerDue = !!nextPioneer(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
   return structTurn(B, allIds, () => pioneer(B));
 }
 
@@ -76,11 +77,17 @@ function planClusters(B) {
   st.plan.sort((a, b) => a.d - b.d || b.value - a.value || a.cluster - b.cluster);
 }
 
-function pioneer(B) {
+// The next cluster this castle should send a pioneer to now, if any.
+function nextPioneer(B) {
   const w = B.w, st = B.st;
   if (!st.plan || st.pioneers.length >= CFG.MAX_PIONEERS || w.me.turn < CFG.PIONEER_MIN_ROUND) return null;
-  const next = st.plan.find(p => !st.churched.has(p.cluster) && !st.pioneers.some(q => q.cluster === p.cluster) &&
-    !(st.lost.has(p.cluster) && w.me.turn - st.lost.get(p.cluster) < 100));
+  return st.plan.find(p => !st.churched.has(p.cluster) && !st.pioneers.some(q => q.cluster === p.cluster) &&
+    !(st.lost.has(p.cluster) && w.me.turn - st.lost.get(p.cluster) < 100)) || null;
+}
+
+function pioneer(B) {
+  const w = B.w, st = B.st;
+  const next = nextPioneer(B);
   if (!next) return null;
   if (!w.canAfford(PILGRIM, 50, 200)) return null;
   const c = B.clusters[next.cluster];

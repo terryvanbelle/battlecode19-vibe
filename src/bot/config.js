@@ -30,6 +30,8 @@ export const CFG = {
   // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
   MIL_ROTATION: [4, 3, 4, 3, 5],   // peacetime build order by unit type (prophet 4, crusader 3, preacher 5)
   RESERVE_CHURCH_K: 50,      // karbonite kept back while a pioneer is out
+  PIONEER_RESERVE: 0,        // 1: ...and pilgrim + church karbonite (60) while a castle has a pioneer due (on poor
+                             // maps the peacetime army spent every 25 K and no church was ever built: seed 1755)
   // lattice
   LATTICE_MIN_R2: 5,         // lattice tiles at least this far (r2) from any structure
   LATTICE_ADVANCE: 0.35,     // weight of advancing toward the enemy in lattice tile choice
