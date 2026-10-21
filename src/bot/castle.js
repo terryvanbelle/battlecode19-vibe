@@ -1,96 +1,101 @@
-// Castle: shares positions with the other castles over castle talk, sends church pioneers, runs the structure loop.
+// Castle: shares its position with the other castles over castle talk (canonical x+1 on turn 1, y+1 on turn 2),
+// plans and sends church pioneers, calls attacks, and runs the structure loop.
+// Enemy castles are exactly the mirrors of ours (canonical frame: (x, n-1-y)).
 import { CFG } from './config.js';
-import { CASTLE, PILGRIM } from './specs.js';
-import { SIG, encXY, CT_CHURCH } from './comms.js';
-import { kingField } from './mapinfo.js';
-import { structInit, structTurn, buildToward, canAfford } from './struct.js';
+import { PILGRIM, CRUSADER } from './specs.js';
+import { SIG, encXY, CT, FAR } from './comms.js';
+import { bfs } from './mapinfo.js';
+import { offsets } from './util.js';
+import { structInit, structTurn, buildToward } from './struct.js';
 
-export function castleTurn(bot) {
-  const me = bot.me, st = bot.state, n = bot.n;
-  bot.round = me.turn; // castles exist from round 1 and act every round
+const KING = offsets(2);
+
+export function castleTurn(B) {
+  const w = B.w, me = w.me, st = B.st;
+  B.round = me.turn;
   if (me.turn === 1) {
-    structInit(bot, CFG.CASTLE_SERVE_KING);
+    structInit(B);
     st.castles = new Map([[me.id, { x: me.x, y: me.y }]]);
     st.partial = new Map();
     st.churched = new Set();
+    st.lost = new Map();   // cluster -> round a pioneer for it died
+    st.attackUntil = 0;
   }
-  // Castle talk: x+1 in round 1, y+1 in round 2.
-  if (me.turn === 1) bot.castleTalk(me.x + 1);
-  else if (me.turn === 2) bot.castleTalk(me.y + 1);
+  if (me.turn === 1) w.talk(me.x + 1);
+  else if (me.turn === 2) w.talk(me.y + 1);
   const allIds = new Set();
-  for (const r of bot.visible) {
-    if (r.team !== me.team) continue; // castles see every friendly robot, with team set
+  st.count = [1, 0, 0, 0, 0, 0];   // our robots by type, from their status bytes (castles: self + talkers)
+  const all = w.robots.concat(w.unplaced);
+  for (const r of all) {
+    if (r.team !== me.team) continue;
     allIds.add(r.id);
     if (r.id === me.id) continue;
-    if (me.turn <= 3 && r.castle_talk > 0) {
-      // The talk value belongs to the robot's latest turn: round r.turn.
+    if (r.castle_talk >= CT.UNIT && r.castle_talk < CT.CHURCH) st.count[r.castle_talk - CT.UNIT]++;
+    if (me.turn <= 3 && r.castle_talk > 0 && r.castle_talk <= 64) {
       const p = st.partial.get(r.id) || {};
       if (r.turn === 1) p.x = r.castle_talk - 1; else if (r.turn === 2) p.y = r.castle_talk - 1;
       st.partial.set(r.id, p);
       if (p.x !== undefined && p.y !== undefined) st.castles.set(r.id, { x: p.x, y: p.y });
-    } else if (me.turn > 3 && r.castle_talk >= CT_CHURCH) st.churched.add(r.castle_talk - CT_CHURCH);
+    } else if (me.turn > 3 && r.castle_talk >= CT.CHURCH) st.churched.add(r.castle_talk - CT.CHURCH);
   }
-  if (me.turn === 3) planClusters(bot);
-  // A pioneer that disappeared frees its cluster; one that built its church or is overdue is done.
+  if (me.turn === 3) planClusters(B);
+  // A castle that disappeared from the id list is dead.
+  if (me.turn > 3) for (const id of [...st.castles.keys()]) if (id !== me.id && !allIds.has(id)) st.castles.delete(id);
+  // Pioneers: one that disappeared frees its cluster for a later retry; one that built its church or is overdue is done.
   st.pioneers = st.pioneers.filter(p => {
-    if (p.id > 0 && !allIds.has(p.id)) { (st.lost = st.lost || new Set()).add(p.cluster); return false; }
-    return !st.churched.has(p.cluster) && me.turn - p.since <= 60;
+    if (p.id > 0 && !allIds.has(p.id)) { st.lost.set(p.cluster, me.turn); return false; }
+    return !st.churched.has(p.cluster) && me.turn - p.since <= 80;
   });
   st.nStructs = () => st.castles.size + st.churched.size;
-  const act = structTurn(bot, allIds, () => pioneer(bot));
-  wave(bot);
-  return act;
+  callAttack(B);
+  return structTurn(B, allIds, () => pioneer(B));
 }
 
-// Attack waves: when enough military stands around this castle, radio the enemy castles' positions (one per turn,
-// rotating) to everything within ATTACK_SIGNAL_R2. Units that hear it march.
-function wave(bot) {
-  const st = bot.state, me = bot.me;
-  if (me.turn <= 3 || bot._bc_signal_radius > 0) return;
-  const army = bot.friends.filter(r => r.unit >= 3 && (r.x - me.x) ** 2 + (r.y - me.y) ** 2 <= CFG.ATTACK_SIGNAL_R2).length;
-  if (!st.waving && army >= CFG.ATTACK_MIN_ARMY && me.turn >= CFG.ATTACK_MIN_ROUND) st.waving = 6;
-  if (!st.waving) return;
-  const targets = [...st.castles.values()].map(c => bot.mirror(c.x, c.y));
-  const t = targets[me.turn % targets.length];
-  const cost = Math.ceil(Math.sqrt(CFG.ATTACK_SIGNAL_R2));
-  if (bot.fuel >= cost + 50) bot.signal(encXY(SIG.ATTACK, t[0], t[1]), CFG.ATTACK_SIGNAL_R2);
-  st.waving--;
-}
-
-// Remote clusters (not served by any of our castles) that this castle should church, nearest first.
-function planClusters(bot) {
-  const st = bot.state, n = bot.n, me = bot.me;
-  const own = [...st.castles.values()];
-  const ownF = own.map(c => kingField(bot.map, c.x, c.y));
-  const enemyF = own.map(c => { const [x, y] = bot.mirror(c.x, c.y); return kingField(bot.map, x, y); });
+// Remote clusters (no depot served by any of our castles) that this castle should church, nearest first.
+function planClusters(B) {
+  const w = B.w, st = B.st, n = w.n, me = w.me;
+  const own = [...st.castles.values()].sort((a, b) => (a.y * n + a.x) - (b.y * n + b.x));
+  const ownF = own.map(c => bfs(w, [[c.x, c.y]], KING));
+  const enemyF = own.map(c => bfs(w, [w.mirror(c.x, c.y)], KING));
   const myIdx = own.findIndex(c => c.x === me.x && c.y === me.y);
   st.plan = [];
-  for (const c of bot.clusters) {
+  for (const c of B.clusters) {
     const [sx, sy] = c.site, k = sy * n + sx;
     const dOwn = ownF.map(f => f[k] < 0 ? 999 : f[k]);
     const dUs = Math.min(...dOwn), dThem = Math.min(...enemyF.map(f => f[k] < 0 ? 999 : f[k]));
-    const served = c.depots.some(d => ownF.some(f => { const v = f[d.y * n + d.x]; return v >= 0 && v <= CFG.CASTLE_SERVE_KING; }));
+    const served = c.depots.some(d => ownF.some(f => { const v = f[d.y * n + d.x]; return v >= 0 && v <= CFG.SERVE_MOVES * 2; }));
     if (served || dUs > dThem + CFG.CLAIM_MARGIN) continue;
-    // Owner: the nearest of our castles; ties by castle position (castles list each other in different orders).
-    let owner = -1, bd = 1e9;
-    own.forEach((o, i) => { if (dOwn[i] < bd || (dOwn[i] === bd && (o.y * n + o.x) < (own[owner].y * n + own[owner].x))) { bd = dOwn[i]; owner = i; } });
+    let owner = 0; for (let i = 1; i < own.length; i++) if (dOwn[i] < dOwn[owner]) owner = i;
     if (owner === myIdx) st.plan.push({ cluster: c.i, d: dUs, value: c.nk * 2 + c.nf });
   }
-  st.plan.sort((a, b) => a.d - b.d || b.value - a.value);
+  st.plan.sort((a, b) => a.d - b.d || b.value - a.value || a.cluster - b.cluster);
 }
 
-function pioneer(bot) {
-  const st = bot.state;
-  if (!st.plan || st.pioneers.length >= CFG.MAX_PIONEERS || bot.me.turn < CFG.PIONEER_MIN_ROUND) return null;
+function pioneer(B) {
+  const w = B.w, st = B.st;
+  if (!st.plan || st.pioneers.length >= CFG.MAX_PIONEERS || w.me.turn < CFG.PIONEER_MIN_ROUND) return null;
   const next = st.plan.find(p => !st.churched.has(p.cluster) && !st.pioneers.some(q => q.cluster === p.cluster) &&
-    !(st.lost && st.lost.has(p.cluster) && bot.me.turn % 100 !== 0));
+    !(st.lost.has(p.cluster) && w.me.turn - st.lost.get(p.cluster) < 100));
   if (!next) return null;
-  if (!canAfford(bot, PILGRIM, 50, 200)) return null;
-  const c = bot.clusters[next.cluster];
-  const b = buildToward(bot, PILGRIM, c.site[0], c.site[1], encXY(SIG.CHURCH, c.site[0], c.site[1]));
+  if (!w.canAfford(PILGRIM, 50, 200)) return null;
+  const c = B.clusters[next.cluster];
+  const b = buildToward(B, PILGRIM, c.site[0], c.site[1], encXY(SIG.CHURCH, c.site[0], c.site[1]));
   if (!b) return null;
-  st.pending = { x: b.x, y: b.y, kind: 'pioneer', ref: next.cluster };
-  st.pioneers.push({ id: -1, cluster: next.cluster, since: bot.me.turn });
+  st.pending = { x: b.x, y: b.y, unit: PILGRIM, kind: 'pioneer', ref: next.cluster };
+  st.pioneers.push({ id: -1, cluster: next.cluster, since: w.me.turn });
   return b.act;
 }
-export { CASTLE };
+
+// General attack: from ATTACK_ROUND, when enough military stands near this castle, radio the nearest enemy castle
+// (mirror of one of ours) every few rounds as a far message (radius FAR.ATTACK, about 20 tiles).
+function callAttack(B) {
+  const w = B.w, st = B.st, me = w.me;
+  if (B.round < CFG.ATTACK_ROUND) return;
+  const army = st.count[3] + st.count[4] + st.count[5];
+  if (army < CFG.ATTACK_MIN_ARMY && B.round < 950) return;
+  if (B.round % 5 !== 0) return;
+  const targets = [...st.castles.values()].map(c => w.mirror(c.x, c.y));
+  targets.sort((a, b) => ((a[0] - me.x) ** 2 + (a[1] - me.y) ** 2) - ((b[0] - me.x) ** 2 + (b[1] - me.y) ** 2) || a[0] - b[0]);
+  const t = targets[0];
+  if (w.fuel >= 20 + 20) w.signal(encXY(0, t[0], t[1]), FAR.ATTACK);
+}

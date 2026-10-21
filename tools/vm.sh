@@ -28,7 +28,7 @@ vm_sync () {
   local here; here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
   gssh "mkdir -p ~/$REMOTE_REPO ~/projects/vibe/bc19-benchmarks"
   local d
-  for d in src tools test maps engine bots; do
+  for d in src tools test maps engine bots dist build; do
     [ -e "$here/$d" ] || continue
     # seed the staging copy with hard links so rsync sends only changes (rsync writes changed files to a temp name
     # and renames, so the live tree's inodes are never modified)

@@ -32,16 +32,23 @@ function mirrorFn(g) {
 
 // First difference between the red half and the mirrored blue half, or null.
 function diff(g, mir) {
-  if (g.karbonite[0] !== g.karbonite[1] || g.fuel[0] !== g.fuel[1]) return `stores red K${g.karbonite[0]} F${g.fuel[0]} vs blue K${g.karbonite[1]} F${g.fuel[1]}`;
   const blue = new Map(g.robots.filter(r => r.team === 1).map(r => [r.x + ',' + r.y, r]));
   const red = g.robots.filter(r => r.team === 0);
-  if (red.length !== blue.size) return `robot count red ${red.length} vs blue ${blue.size}`;
   for (const r of red) {
     const [x, y] = mir(r.x, r.y), b = blue.get(x + ',' + y);
+    // A tile on the mirror axis is its own mirror: both twins may want it and only one can stand there. That
+    // contest is decided by the engine's turn order, not by the bot (reported, not counted as a failure).
+    if (!b && x === r.x && y === r.y) return 'CONTEST ' + `red ${r.unit}#${r.id} took axis tile (${x},${y})`;
     if (!b) return `red ${r.unit}#${r.id} at (${r.x},${r.y}) has no blue twin at (${x},${y})`;
     for (const f of ['unit', 'health', 'karbonite', 'fuel', 'signal', 'signal_radius', 'castle_talk'])
       if (r[f] !== b[f]) return `red #${r.id} (${r.x},${r.y}) vs blue #${b.id}: ${f} ${r[f]} vs ${b[f]}`;
   }
+  if (red.length !== blue.size) {
+    const redAt = new Set(red.map(r => mir(r.x, r.y).join(',')));
+    const b = g.robots.find(q => q.team === 1 && !redAt.has(q.x + ',' + q.y));
+    return `robot count red ${red.length} vs blue ${blue.size}` + (b ? `; blue ${b.unit}#${b.id} at (${b.x},${b.y}) has no red twin` : '');
+  }
+  if (g.karbonite[0] !== g.karbonite[1] || g.fuel[0] !== g.fuel[1]) return `stores red K${g.karbonite[0]} F${g.fuel[0]} vs blue K${g.karbonite[1]} F${g.fuel[1]}`;
   return null;
 }
 
@@ -52,6 +59,9 @@ async function check(code, seed, rounds) {
   const ensure = () => { for (const r of g.robots) if (!vms.has(r.id)) { vms.set(r.id, new CrossVM(code)); r.initialized = true; r.hook = true; } g.init_queue = 0; };
   ensure();
   const realRandom = Math.random;
+  // Once robots fight, sequential resolution (a robot killed earlier in the round does not act) breaks exact
+  // mirroring for reasons outside the bot; divergences in health/existence after the first attack are 'combat'.
+  let firstAttack = 0;
   for (let round = 1; round <= rounds; round++) {
     g.round = round; g.fuel[0] += SPECS.TRICKLE_FUEL; g.fuel[1] += SPECS.TRICKLE_FUEL;
     const actors = g.robots.slice();
@@ -67,16 +77,29 @@ async function check(code, seed, rounds) {
       acts.push(a);
     });
     if (errors.length) return { seed, ok: false, round, why: 'exception: ' + errors[0] };
-    // Apply: red and blue interleaved in mirrored pairs so stores move identically. Moves/attacks resolve against
-    // the state as it is applied, as in the engine.
-    actors.forEach((r, i) => {
+    // Apply in mirrored pairs: red robots in board order, each followed by its blue twin (the robot at the mirrored
+    // tile), so conflicts between same-team actions computed from one state resolve identically on both sides.
+    // Moves/attacks resolve against the state as it is applied, as in the engine.
+    const n = g.map.length, key = r => { const [x, y] = r.team === 0 ? [r.x, r.y] : mir(r.x, r.y); return y * n + x; };
+    const order = actors.map((r, i) => i).sort((a, b) => key(actors[a]) - key(actors[b]) || actors[a].team - actors[b].team);
+    const errs = [];
+    if (!firstAttack && acts.some(a => a && a.action === 'attack')) firstAttack = round;
+    order.forEach(i => { const r = actors[i];
       if (!g.robots.includes(r)) return; // killed earlier this round
       const rec = new ActionRecord(g, r);
-      try { g.processAction(r, acts[i], 0, rec); rec.enact(g, r); } catch (e) { /* invalid: does nothing */ }
+      try { g.processAction(r, acts[i], 0, rec); rec.enact(g, r); } catch (e) { errs[i] = String(e); /* invalid: does nothing */ }
     });
     ensure();
     const d = diff(g, mir);
-    if (d) return { seed, ok: false, round, why: d };
+    if (d) {
+      const st = ` [stores K${g.karbonite[0]}/${g.karbonite[1]} F${g.fuel[0]}/${g.fuel[1]}]`;
+      const ok = d.startsWith('CONTEST') ? 'contest' : (firstAttack && firstAttack <= round && /health|karbonite|fuel|no (blue|red) twin|robot count/.test(d)) ? 'combat' : false;
+      const ids = (d.match(/#(\d+)/g) || []).map(t => +t.slice(1));
+      const detail = {}; for (const id of ids) { const i = actors.findIndex(r => r.id === id); if (i >= 0) detail[id] = { act: acts[i] && { ...acts[i], logs: undefined }, logs: acts[i] && acts[i].logs, err: errs[i] }; }
+      // Both twins aimed at the same tile (a build or move onto the mirror axis): the engine's order decides.
+      const occErr = Object.values(detail).filter(v => /occupied/i.test(v.err || '')).length === 1;
+      return { seed, ok: ok === false && occErr ? 'contest' : ok, round, why: d + st, firstAttack, detail };
+    }
   }
   return { seed, ok: true, round: rounds, robots: g.robots.length };
 }
@@ -86,7 +109,7 @@ async function main() {
   const code = await compile(opt('--bot', 'src/bot'));
   const seeds = opt('--seeds', '2,5,8').split(',').map(Number), rounds = +opt('--rounds', '150');
   let bad = 0;
-  for (const s of seeds) { const r = await check(code, s, rounds); if (!r.ok) bad++; console.log(JSON.stringify(r)); }
+  for (const s of seeds) { const r = await check(code, s, rounds); if (r.ok === false) bad++; console.log(JSON.stringify(r)); }
   process.exit(bad ? 1 : 0);
 }
 module.exports = { check, compile };

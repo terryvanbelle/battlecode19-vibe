@@ -4,9 +4,10 @@ import assert from 'node:assert';
 import { createRequire } from 'node:module';
 import * as S from '../src/bot/specs.js';
 import { offsets, rng, d2, king } from '../src/bot/util.js';
-import { symmetry, mirror, depots, clusters, kingField } from '../src/bot/mapinfo.js';
-import { moveField, step } from '../src/bot/nav.js';
-import { encXY, encNum, dec, SIG } from '../src/bot/comms.js';
+import { depots, clusters, bfs } from '../src/bot/mapinfo.js';
+import { Nav, fuelStep } from '../src/bot/nav.js';
+import { encXY, encNum, dec, SIG, FAR, decFarRobot } from '../src/bot/comms.js';
+import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep } from '../src/bot/combat.js';
 const require = createRequire(import.meta.url);
 const SPECS = require('../engine/node_modules/bc19/specs.json');
@@ -40,60 +41,101 @@ test('util: offsets, rng, distances', () => {
   assert.strictEqual(d2(0, 0, 3, 4), 25); assert.strictEqual(king(0, 0, 3, 4), 4);
 });
 
-test('mapinfo: symmetry and mirror agree with engine maps', () => {
-  for (const seed of [1, 2, 3, 5, 8, 13]) {
-    const g = new Game(seed, 100, 20, false, false);
-    const sym = symmetry(g.map, g.karbonite_map, g.fuel_map), n = g.map.length;
-    assert.ok(sym === 'H' || sym === 'V', 'seed ' + seed + ' ' + sym);
-    // Every red castle mirrors onto a blue castle.
-    for (const r of g.robots.filter(r => r.team === 0)) {
-      const [x, y] = mirror(r.x, r.y, sym, n);
-      assert.ok(g.robots.some(b => b.team === 1 && b.x === x && b.y === y), 'seed ' + seed);
+// A World over a generated game, seen by robot r (engine frame). occ() uses the game's robot positions.
+function worldFor(g, r) {
+  const n = g.map.length, shadow = Array.from({ length: n }, () => Array(n).fill(0));
+  for (const q of g.robots) shadow[q.y][q.x] = q.id;
+  const api = { map: g.map, karbonite_map: g.karbonite_map, fuel_map: g.fuel_map, me: r, karbonite: 100, fuel: 500,
+    getVisibleRobotMap: () => shadow, getVisibleRobots: () => g.robots.map(q => ({ ...q })), log() {},
+    move: (dx, dy) => ({ action: 'move', dx, dy }), attack: (dx, dy) => ({ action: 'attack', dx, dy }),
+    buildUnit: (u, dx, dy) => ({ action: 'build', u, dx, dy }), give: (dx, dy) => ({ action: 'give', dx, dy }),
+    mine: () => ({ action: 'mine' }), signal() {}, castleTalk() {} };
+  const w = new World(api); w.update(); return w;
+}
+
+test('world: transforms round-trip and directions agree', () => {
+  for (const sym of ['H', 'V']) for (const team of [0, 1]) {
+    const n = 7, T = makeTransform(sym, team, n);
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const [cx, cy] = T.toC(x, y); assert.deepStrictEqual(T.toE(cx, cy), [x, y]);
+      for (const [dx, dy] of [[1, 0], [0, 1], [-1, 2]]) {
+        const e2 = T.toE(cx + dx, cy + dy), d = T.dirE(dx, dy);
+        assert.deepStrictEqual([e2[0] - x, e2[1] - y], d, sym + team);
+      }
     }
   }
 });
 
-test('mapinfo: clusters partition depots and sites are free tiles', () => {
-  const g = new Game(2, 100, 20, false, false);
-  const deps = depots(g.karbonite_map, g.fuel_map), cs = clusters(g.map, g.karbonite_map, g.fuel_map, deps, 18);
+test('world: both teams see the same canonical board, own castles on top, enemies at the mirror', () => {
+  for (const seed of [1, 2, 3, 5, 8, 13, 21, 34]) {
+    const g = new Game(seed, 100, 20, false, false);
+    const red = g.robots.find(r => r.team === 0), blue = g.robots.find(r => r.team === 1);
+    const wr = worldFor(g, red), wb = worldFor(g, blue), n = wr.n;
+    assert.strictEqual(detectSymmetry(g.map, g.karbonite_map, g.fuel_map), wr.sym);
+    assert.deepStrictEqual(wr.pass, wb.pass, 'seed ' + seed); assert.deepStrictEqual(wr.karb, wb.karb); assert.deepStrictEqual(wr.fuelD, wb.fuelD);
+    for (const w of [wr, wb]) {
+      const own = w.robots.filter(r => r.team === w.team), them = w.robots.filter(r => r.team !== w.team);
+      assert.ok(own.length && own.length === them.length);
+      for (const c of own) {
+        assert.ok(c.y < n / 2, 'seed ' + seed + ' castle not on top');
+        const [mx, my] = w.mirror(c.x, c.y); assert.ok(them.some(e => e.x === mx && e.y === my));
+      }
+      // Canonical occupancy agrees with canonical robot positions; the list is in position order.
+      for (const r of w.robots) assert.strictEqual(w.occ(r.x, r.y), r.id);
+      for (let i = 1; i < w.robots.length; i++) assert.ok(w.robots[i].y * n + w.robots[i].x > w.robots[i - 1].y * n + w.robots[i - 1].x);
+    }
+    // The twin castles of the two teams sit on the same canonical tiles.
+    const key = w => w.robots.filter(r => r.team === w.team).map(r => r.x + ',' + r.y).join(' ');
+    assert.strictEqual(key(wr), key(wb));
+  }
+});
+
+test('mapinfo: clusters partition depots, sites are free tiles, bfs counts moves', () => {
+  const g = new Game(2, 100, 20, false, false), w = worldFor(g, g.robots[0]), n = w.n;
+  const deps = depots(w), cs = clusters(w, deps, 10);
   assert.strictEqual(cs.reduce((s, c) => s + c.depots.length, 0), deps.length);
-  for (const c of cs) { const [x, y] = c.site; assert.ok(g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x]); }
+  for (const c of cs) { const i = c.site[1] * n + c.site[0]; assert.ok(w.pass[i] && !w.karb[i] && !w.fuelD[i]); }
   cs.forEach((c, i) => assert.strictEqual(c.i, i));
+  const me = w.me, f = bfs(w, [[me.x, me.y]], offsets(2));
+  assert.strictEqual(f[me.y * n + me.x], 0);
+  for (let i = 0; i < w.N; i++) if (!w.pass[i]) assert.strictEqual(f[i], -1);
 });
 
-test('mapinfo: kingField', () => {
-  const p = [[true, false, true], [true, false, true], [true, true, true]];
-  const f = kingField(p, 0, 0);
-  assert.strictEqual(f[2], 4); assert.strictEqual(f[1], -1);
-});
+// A tiny open World stub for nav tests.
+function stubWorld(n, walls, robots) {
+  const pass = new Uint8Array(n * n).fill(1); for (const [x, y] of walls) pass[y * n + x] = 0;
+  const w = { n, N: n * n, pass, me: { x: 0, y: 0 }, occ: (x, y) => (robots.some(r => r[0] === x && r[1] === y) ? 9 : 0) };
+  return w;
+}
 
-test('nav: moveField and step descend toward the target', () => {
-  const n = 8, pass = Array.from({ length: n }, () => Array(n).fill(true));
-  for (let y = 0; y < 7; y++) pass[y][4] = false; // a wall with a gap at the bottom
-  const offs = offsets(4), f = moveField(pass, [[7, 0]], offs);
-  assert.ok(f[0] > 0);
-  const empty = Array.from({ length: n }, () => Array(n).fill(0));
-  let x = 0, y = 0, steps = 0;
-  const r = rng(1);
-  while ((x !== 7 || y !== 0) && steps < 30) { const s = step(f, n, x, y, offs, empty, 4, r); assert.ok(s, 'stuck at ' + x + ',' + y); x += s[0]; y += s[1]; assert.ok(pass[y][x]); steps++; }
-  assert.strictEqual(steps, f[0]);
-  // Occupied tiles are not entered; unseen tiles (-1) are not entered.
-  const block = empty.map(row => row.slice()); block[1][1] = 7;
-  const s = step(moveField(pass, [[1, 1]], offs), n, 0, 0, offs, block, 4, r);
-  assert.ok(!(s && s[0] === 1 && s[1] === 1));
+test('nav: steps descend to the goal around a wall, and never enter occupied tiles', () => {
+  const n = 8, walls = []; for (let y = 0; y < 7; y++) walls.push([4, y]);
+  const w = stubWorld(n, walls, []), nav = new Nav(w, offsets(4), rng(1));
+  let steps = 0;
+  while ((w.me.x !== 7 || w.me.y !== 0) && steps < 30) {
+    const s = nav.step('g', [[7, 0]], 4); assert.ok(s, 'stuck at ' + w.me.x + ',' + w.me.y);
+    w.me = { x: w.me.x + s[0], y: w.me.y + s[1] }; assert.ok(w.pass[w.me.y * n + w.me.x]); steps++;
+  }
+  assert.ok(steps <= 10);
+  const w2 = stubWorld(n, [], [[1, 1]]), nav2 = new Nav(w2, offsets(2), rng(2));
+  const s = nav2.step('t', [[1, 1]], 2); assert.ok(!s || !(s[0] === 1 && s[1] === 1));
+  assert.strictEqual(fuelStep(100, 4, 1, 98), 2); assert.strictEqual(fuelStep(10, 9, 2, 0), 5);
 });
 
 test('comms: encode/decode', () => {
   const m = dec(encXY(SIG.CHURCH, 63, 5)); assert.deepStrictEqual([m.type, m.x, m.y], [SIG.CHURCH, 63, 5]);
   assert.strictEqual(dec(encNum(SIG.ROUND, 999)).v, 999);
   assert.ok(encXY(15, 63, 63) < 65536);
+  const f = decFarRobot({ signal: encXY(0, 12, 40), signal_radius: FAR.ATTACK });
+  assert.deepStrictEqual([f.type, f.x, f.y], [SIG.ATTACK, 12, 40]);
+  assert.strictEqual(decFarRobot({ signal: 5, signal_radius: 400 }), null);
 });
 
 test('combat: target choice, preacher splash avoids friends, retreat', () => {
   const es = [{ id: 9, unit: 2, x: 5, y: 0, team: 1 }, { id: 4, unit: 5, x: 0, y: 3, team: 1 }, { id: 3, unit: 5, x: 3, y: 0, team: 1 }];
-  assert.strictEqual(pickTarget(3, 0, 0, es).id, 3); // preachers first, then closer
-  assert.strictEqual(pickTarget(4, 0, 0, es).id, 9); // prophet min range 16 excludes the preachers
-  const robots = [{ id: 1, unit: 5, x: 0, y: 0, team: 0 }, { id: 2, unit: 3, x: 3, y: 0, team: 1 }, { id: 5, unit: 2, x: 2, y: 1, team: 0 }];
+  assert.strictEqual(pickTarget(3, 0, 0, es, 64).id, 3); // preachers first, then closer
+  assert.strictEqual(pickTarget(4, 0, 0, es, 64).id, 9); // prophet min range 16 excludes the preachers
+  const robots = [{ id: 1, unit: 5, x: 0, y: 0, team: 0 }, { id: 2, unit: 3, x: 3, y: 0, team: 1 }, { id: 5, unit: 2, x: 2, y: 1, team: 0 }].map(r => ({ ...r, seen: true }));
   const t = preacherTarget(0, 0, robots, 0, () => true);
   assert.ok(t); assert.ok(d2(t.dx, t.dy, 3, 0) <= 3); assert.ok(d2(t.dx, t.dy, 2, 1) > 3);
   const s = retreatStep(5, 5, [{ unit: 3, x: 7, y: 5 }], offsets(4), 4, () => true);

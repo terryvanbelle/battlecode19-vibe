@@ -1,131 +1,126 @@
-// Crusaders, prophets, preachers: shoot the best target; keep prophets out of reach of melee; otherwise hold a
-// checkerboard lattice around the home structure.
+// Crusaders, prophets, preachers: shoot the best target; prophets keep melee out of their dead zone; engage enemies
+// near home; march on ATTACK orders; otherwise hold a checkerboard lattice that grows from home toward the enemy.
 import { CFG } from './config.js';
 import { STATS, CASTLE, CHURCH, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, king } from './util.js';
-import { moveField, step } from './nav.js';
-import { SIG, dec } from './comms.js';
+import { fuelStep } from './nav.js';
+import { SIG, dec, decFarRobot } from './comms.js';
 import { isAttacker, pickTarget, preacherTarget, retreatStep } from './combat.js';
 
-function init(bot) {
-  const me = bot.me, st = bot.state;
+function init(B) {
+  const w = B.w, me = w.me, st = B.st;
   st.home = null;
-  for (const r of bot.friends) if ((r.unit === CASTLE || r.unit === CHURCH) && king(r.x, r.y, me.x, me.y) <= 1) {
-    st.home = { x: r.x, y: r.y }; st.homeId = r.id;
-    if (r.unit === CASTLE) bot.round = r.turn;
+  for (const r of w.friends) if ((r.unit === CASTLE || r.unit === CHURCH) && king(r.x, r.y, me.x, me.y) <= 1) {
+    st.home = { x: r.x, y: r.y };
+    if (r.unit === CASTLE) B.birthRound = r.turn;
+    if (r.signal > 0) { const m = dec(r.signal); if (m.type === SIG.ROUND) B.birthRound = m.v; }
   }
+  if (B.birthRound) B.round = B.birthRound;
   if (!st.home) st.home = { x: me.x, y: me.y };
-  st.fields = new Map();
-  st.targets = [];   // enemy castle positions heard in ATTACK orders
+  st.target = null;   // [x, y] enemy structure to attack
 }
 
-// ATTACK orders come from our castles: accept a radio only from a robot we can see is ours, or from home.
-function listen(bot) {
-  const st = bot.state, me = bot.me;
-  for (const r of bot.visible) {
-    if (!(r.signal > 0) || r.id === me.id) continue;
-    if (r.team !== me.team && r.id !== st.homeId) continue;
-    const m = dec(r.signal);
-    if (m.type === SIG.ATTACK && !st.targets.some(t => t[0] === m.x && t[1] === m.y)) st.targets.push([m.x, m.y]);
+// ATTACK orders: far messages (comms.decFarRobot authenticates them by radius); targets must lie in the enemy half.
+function listen(B) {
+  const w = B.w, st = B.st, me = w.me, n = w.n;
+  for (const r of w.robots) {
+    if (r.id === me.id || (r.seen && r.team !== me.team)) continue;
+    const m = decFarRobot(r);
+    if (m && m.type === SIG.ATTACK && m.y >= n / 2 && w.passable(m.x, m.y)) st.target = [m.x, m.y];
   }
-  // Drop targets seen to be gone.
-  st.targets = st.targets.filter(([x, y]) => {
-    if (!bot.visibleTile(x, y)) return true;
-    const id = bot.robotMap[y][x];
-    return id > 0 && bot.enemies.some(e => e.id === id && e.unit === CASTLE);
-  });
+  // Drop a target seen to be gone.
+  if (st.target) {
+    const [x, y] = st.target, id = w.occ(x, y);
+    if (id === 0 || (id > 0 && !w.enemies.some(e => e.x === x && e.y === y && (e.unit === CASTLE || e.unit === CHURCH)))) st.target = null;
+  }
 }
 
-function bandSources(bot, tx, ty) {
-  const S = STATS[bot.me.unit], out = [], m = Math.floor(Math.sqrt(S.atkMax));
+function bandSources(B, tx, ty) {
+  const S = STATS[B.w.me.unit], out = [], m = Math.floor(Math.sqrt(S.atkMax));
   for (let dy = -m; dy <= m; dy++) for (let dx = -m; dx <= m; dx++) {
     const r = dx * dx + dy * dy; if (r >= Math.max(1, S.atkMin) && r <= S.atkMax) out.push([tx + dx, ty + dy]);
   }
   return out;
 }
 
-function moveTo(bot, key, sources, maxR2) {
-  const st = bot.state, me = bot.me;
-  let f = st.fields.get(key);
-  if (!f) { f = moveField(bot.map, sources, bot.moveOffs); st.fields.set(key, f); if (st.fields.size > 4) st.fields.delete(st.fields.keys().next().value); }
-  const s = step(f, bot.n, me.x, me.y, bot.moveOffs, bot.robotMap, maxR2, bot.rnd);
-  return s ? bot.move(s[0], s[1]) : null;
-}
-
-function fuelR2(bot, maxR2) {
-  const fpm = STATS[bot.me.unit].fuelPerMove; let r = maxR2;
-  while (r > 0 && bot.fuel < r * fpm + 50) r--;
-  return r;
+function go(B, key, sources, cap) {
+  const w = B.w, S = STATS[w.me.unit];
+  const r = fuelStep(w.fuel, Math.min(S.speed, cap || S.speed), S.fuelPerMove, 60);
+  const s = B.nav.step(key, sources, r);
+  return s ? w.move(s[0], s[1]) : null;
 }
 
 // A lattice tile: (x + y) even, passable, not a depot, not adjacent to the home structure.
-function latticeOk(bot, x, y) {
-  const h = bot.state.home;
-  return ((x + y) & 1) === 0 && bot.map[y][x] && !bot.karbonite_map[y][x] && !bot.fuel_map[y][x] && d2(x, y, h.x, h.y) >= CFG.LATTICE_MIN_R2;
+function latticeOk(B, x, y) {
+  const w = B.w, h = B.st.home;
+  return ((x + y) & 1) === 0 && w.passable(x, y) && !w.isDepot(x, y) && d2(x, y, h.x, h.y) >= CFG.LATTICE_MIN_R2;
 }
 
-function latticeTarget(bot) {
-  const me = bot.me, h = bot.state.home, n = bot.n;
+// The free lattice tile nearest an anchor ahead of home (toward the enemy), within LATTICE_R king steps of home.
+const LATTICE_R = 12;
+function latticeTarget(B) {
+  const w = B.w, me = w.me, h = B.st.home, n = w.n;
+  const ay = h.y + (h.y < n / 2 ? 2 : 0);
   let best = null, bd = 1e9;
-  for (let dy = -9; dy <= 9; dy++) for (let dx = -9; dx <= 9; dx++) {
+  for (let dy = -LATTICE_R; dy <= LATTICE_R; dy++) for (let dx = -LATTICE_R; dx <= LATTICE_R; dx++) {
     const x = h.x + dx, y = h.y + dy;
-    if (x < 0 || y < 0 || x >= n || y >= n || !latticeOk(bot, x, y)) continue;
-    const occ = bot.robotMap[y][x];
+    if (x < 0 || y < 0 || x >= n || y >= n || !latticeOk(B, x, y)) continue;
+    const occ = w.occ(x, y);
     if (occ > 0 && occ !== me.id) continue;
-    const v = d2(x, y, h.x, h.y) * 4 + d2(x, y, me.x, me.y);
+    const v = d2(x, y, h.x, ay) * 8 + d2(x, y, me.x, me.y);
     if (v < bd) { bd = v; best = [x, y]; }
   }
   return best;
 }
 
-export function militaryTurn(bot) {
-  const me = bot.me, st = bot.state, u = me.unit, S = STATS[u];
-  if (me.turn === 1) init(bot);
-  listen(bot);
-  const enemies = bot.enemies;
-  const canShoot = bot.fuel >= S.atkFuel;
+export function militaryTurn(B) {
+  const w = B.w, me = w.me, st = B.st, u = me.unit, S = STATS[u];
+  if (me.turn === 1) init(B);
+  listen(B);
+  const enemies = w.enemies;
+  const canShoot = w.fuel >= S.atkFuel;
 
-  // Prophets: step away from melee threats that are inside our minimum range.
+  // Prophets: step away from melee attackers that are (or will be) inside the dead zone.
   if (u === PROPHET) {
-    const melee = enemies.filter(e => (e.unit === CRUSADER || e.unit === PREACHER) && d2(me.x, me.y, e.x, e.y) < S.atkMin + 9);
-    if (melee.length && bot.fuel >= 8) {
-      const s = retreatStep(me.x, me.y, melee, bot.moveOffs, 4, (x, y) => bot.freeTile(x, y));
-      if (s && !(canShoot && pickTarget(u, me.x, me.y, enemies) && melee.every(e => d2(me.x, me.y, e.x, e.y) >= S.atkMin))) return bot.move(s[0], s[1]);
+    const melee = enemies.filter(e => (e.unit === CRUSADER || e.unit === PREACHER) && d2(me.x, me.y, e.x, e.y) < 36);
+    if (melee.length && w.fuel >= 8) {
+      const inDead = melee.some(e => d2(me.x, me.y, e.x, e.y) < S.atkMin);
+      const t = canShoot ? pickTarget(u, me.x, me.y, enemies, w.n) : null;
+      if (inDead || !t) {
+        const s = retreatStep(me.x, me.y, melee, B.offs, 4, (x, y) => w.free(x, y));
+        if (s) return w.move(s[0], s[1]);
+      }
     }
   }
 
   if (canShoot) {
     if (u === PREACHER) {
-      const t = preacherTarget(me.x, me.y, bot.visible, me.team, (x, y) => bot.visibleTile(x, y));
-      if (t) return bot.attack(t.dx, t.dy);
+      const t = preacherTarget(me.x, me.y, w.robots, me.team, (x, y) => w.occ(x, y) >= 0);
+      if (t) return w.attack(t.dx, t.dy);
     } else {
-      const t = pickTarget(u, me.x, me.y, enemies);
-      if (t) return bot.attack(t.x - me.x, t.y - me.y);
+      const t = pickTarget(u, me.x, me.y, enemies, w.n);
+      if (t) return w.attack(t.x - me.x, t.y - me.y);
     }
   }
 
-  // Engage visible enemies near home (or near us when marching); ignore the rest.
-  const h = st.home, marching = st.targets.length > 0;
-  const near = enemies.filter(e => marching ? d2(e.x, e.y, me.x, me.y) <= 64 : d2(e.x, e.y, h.x, h.y) <= 196);
-  if (near.length && u !== PROPHET) {
-    const e = near.reduce((a, b) => d2(me.x, me.y, a.x, a.y) <= d2(me.x, me.y, b.x, b.y) ? a : b);
-    const r = fuelR2(bot, S.speed);
-    if (r > 0) return moveTo(bot, 'e' + e.x + ',' + e.y, [[e.x, e.y], ...[[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => [e.x + dx, e.y + dy])], r);
-    return null;
+  // Engage visible enemies near home (or anywhere when marching): melee closes in; prophets hold.
+  const h = st.home, marching = !!st.target;
+  if (u !== PROPHET) {
+    let e = null, ed = 1e9;
+    for (const x of enemies) {
+      const near = marching ? d2(x.x, x.y, me.x, me.y) <= 64 : d2(x.x, x.y, h.x, h.y) <= 196;
+      if (!near) continue;
+      const r = d2(me.x, me.y, x.x, x.y); if (r < ed) { ed = r; e = x; }
+    }
+    if (e) return go(B, 'e' + e.x + ',' + e.y, [[e.x + 1, e.y], [e.x - 1, e.y], [e.x, e.y + 1], [e.x, e.y - 1]]);
   }
 
-  // March on the nearest known enemy castle.
-  if (marching) {
-    const t = st.targets.reduce((a, b) => d2(me.x, me.y, a[0], a[1]) <= d2(me.x, me.y, b[0], b[1]) ? a : b);
-    const r = fuelR2(bot, S.speed);
-    return r > 0 ? moveTo(bot, 'A' + t[0] + ',' + t[1], bandSources(bot, t[0], t[1]), r) : null;
-  }
+  if (marching) return go(B, 'A' + st.target[0] + ',' + st.target[1], () => bandSources(B, st.target[0], st.target[1]));
 
   // Hold the lattice.
-  if (latticeOk(bot, me.x, me.y) && d2(me.x, me.y, h.x, h.y) <= 100) return null;
-  const t = latticeTarget(bot);
+  if (latticeOk(B, me.x, me.y) && king(me.x, me.y, h.x, h.y) <= LATTICE_R) return null;
+  const t = latticeTarget(B);
   if (!t) return null;
-  const r = fuelR2(bot, Math.min(S.speed, 4));
-  return r > 0 ? moveTo(bot, 'l' + t[0] + ',' + t[1], [t], r) : null;
+  return go(B, 'l' + t[0] + ',' + t[1], [t], 4);
 }
-export { isAttacker };
+export { isAttacker, PROPHET, PREACHER };

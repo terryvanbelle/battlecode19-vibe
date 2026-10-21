@@ -1,0 +1,6 @@
+{
+  "name": "bc19-build",
+  "private": true,
+  "description": "Build-time tools for our own bot only (minifier). Never bundled into bots.",
+  "dependencies": { "terser": "5.31.0" }
+}
