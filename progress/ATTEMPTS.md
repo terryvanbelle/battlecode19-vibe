@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 5 queued, 4 accepted, 2 dropped, 1 other, 1 rejected, 1 sparring partners (14 rows).
+Totals: 6 queued, 4 accepted, 2 dropped, 1 other, 1 rejected, 1 sparring partners (15 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -28,3 +28,4 @@ Totals: 5 queued, 4 accepted, 2 dropped, 1 other, 1 rejected, 1 sparring partner
 | `h8` | 2026-10-21 13:55 | h6 | h6 + ENDGAME_FUEL=900: from round 900 all fuel goes into preachers (health tiebreak); no pilgrims, churches or reserves; units away from home stop cruising. | queued: 40 games vs h6 (seeds 5000+) | delivery seed 2202 vs h6: health 2710-3040 at round 900 -> 4450-3990 at 1000 (won) |  |  | queued |
 | `h9` | 2026-10-21 14:35 | h6 | h6 + PLAN_SERVE_PILGRIM: church planning counts depots served by pilgrim moves (as staffing does); clusters with >= 2 unserved depots get a church. 23% of maps orphaned depots before. | queued: 40 games vs h6 (seeds 5000+) |  |  |  | queued |
 | `h10` | 2026-10-21 14:55 | h6 | h6 + ATTACK_EVERY=20: castles repeat the 20-fuel attack call every 20 rounds instead of 5 (~3,300 fuel a game saved). | queued: 40 games vs h6 (seeds 5000+) |  |  |  | queued |
+| `h11` | 2026-10-21 15:15 | h6 | h6 + cruise nav patience: unhurried moves slide after 6 blocked turns (was 2) and step back after 15 (was 4); slides and step-backs were 11.5k of 19.4k move fuel on seed 2202. | queued: 40 games vs h6 (seeds 5000+) |  |  |  | queued |
