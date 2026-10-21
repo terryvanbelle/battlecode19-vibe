@@ -113,7 +113,7 @@ function callAttack(B) {
   // An army without fuel cannot shoot: attack only with fuel for a few volleys per unit (except at the very end).
   if (w.fuel < CFG.ATTACK_FUEL_PER_UNIT * army && B.round < 950) return;
   if (CFG.ATTACK_PERSIST && st.order) return callAttackPersist(B);
-  if (B.round % 5 !== 0) return;
+  if (B.round % CFG.ATTACK_EVERY !== 0) return;
   const targets = [...st.castles.values()].map(c => w.mirror(c.x, c.y));
   targets.sort((a, b) => ((a[0] - me.x) ** 2 + (a[1] - me.y) ** 2) - ((b[0] - me.x) ** 2 + (b[1] - me.y) ** 2) || a[0] - b[0]);
   const t = targets[0];
@@ -136,5 +136,5 @@ function callAttackPersist(B) {
   const living = [...st.castles.values()].sort((a, b) => (a.y * w.n + a.x) - (b.y * w.n + b.x));
   const first = living[0].x === me.x && living[0].y === me.y;
   if (st.deadE.size > 0 && st.lastT !== t && first && w.fuel >= 90 + 40) { st.lastT = t; return w.signal(msg, FAR.WIDE); }
-  if (B.round % 5 === 0 && w.fuel >= 20 + 20) w.signal(msg, FAR.ATTACK);
+  if (B.round % CFG.ATTACK_EVERY === 0 && w.fuel >= 20 + 20) w.signal(msg, FAR.ATTACK);
 }

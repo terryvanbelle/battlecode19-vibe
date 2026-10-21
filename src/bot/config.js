@@ -43,6 +43,7 @@ export const CFG = {
   ATTACK_MIN_ARMY: 20,
   ATTACK_FUEL_PER_UNIT: 0,   // attack orders need this much fuel per military unit (30 in h2: rejected, 17/40 vs h1)
   HOME_GUARD_FRAC: 0,        // military units that ignore attack orders before round 900 (0.3 in h2: rejected)
+  ATTACK_EVERY: 5,           // castles repeat the attack call (20 fuel) every this many rounds (5: ~4,400 fuel a game)
   ATTACK_PERSIST: 0,         // 1: units report destroyed enemy castles (CT.DEAD), castles drop them and radio the next
                              // target map-wide (FAR.WIDE); units without orders wait where they are, not at home
   ATTACK_WAIT: 40,           // ...for this many rounds

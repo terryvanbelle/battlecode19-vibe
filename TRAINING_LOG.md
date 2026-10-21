@@ -94,3 +94,7 @@
   within r2 100; 13,400 of it within 12 king steps of our own structures after round 450, ~100 near the enemy.
   Military path length is 2.7-4.3x net displacement. Top mover: a newborn preacher circling a walled corner castle
   for 57 rounds (nav slide/escape ladder in a jam). A move-mode census with logs is running.
+- h10 (pre-registered): castles repeat the 20-fuel attack call every 5 rounds from round 450 (about 220 calls, ~4,400
+  fuel a game on seed 2202, mostly to units that already have the target). ATTACK_EVERY=20 saves ~3,300 fuel (~66
+  preachers); newborns wait up to 20 rounds for orders. Gate: h10 vs h6, 40 games (seeds 5000+); falsifier net <= 0
+  or fewer castle wins. Queue trimmed: v3 vs v1 and v3 vs example parked (~/jobq/parked) for the candidate gates.
