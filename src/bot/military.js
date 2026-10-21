@@ -148,6 +148,8 @@ export function militaryTurn(B) {
 
   // Fuel per move is proportional to r2, so short steps cover distance cheapest: unhurried moves use r2 <= 2.
   if (waiting) return null;
+  // Endgame fuel: units away from home stand still so the fuel goes into preachers (newborns still clear the exits).
+  if (CFG.ENDGAME_FUEL && B.round >= CFG.ENDGAME_FUEL && king(me.x, me.y, h.x, h.y) > 3) return null;
   if (marching) return go(B, 'A' + st.target[0] + ',' + st.target[1], () => bandSources(B, st.target[0], st.target[1]), CFG.CRUISE_R2);
 
   // Hold the lattice.

@@ -133,6 +133,15 @@ export function structTurn(B, allIds, extra) {
     if (t) return w.attack(t.x - me.x, t.y - me.y);
   }
 
+  // Endgame fuel (CFG.ENDGAME_FUEL): fuel is the binding resource late (karbonite floats), so it all becomes HP.
+  if (CFG.ENDGAME_FUEL && B.round >= CFG.ENDGAME_FUEL) {
+    const unit = w.karbonite >= STATS[PREACHER].costK ? PREACHER : CRUSADER;
+    if (!w.canAfford(unit)) return null;
+    const [ex, ey] = w.mirror(me.x, me.y);
+    const b = buildToward(B, unit, ex, ey, encNum(SIG.ROUND, B.round));
+    return b ? b.act : null;
+  }
+
   // Sparring mode (CFG.RUSH, never in our submitted bot): after a few pilgrims, crusaders toward the enemy forever.
   if (CFG.RUSH && (B.round || 0) > CFG.RUSH && w.canAfford(CRUSADER)) {
     const [ex, ey] = w.mirror(me.x, me.y);

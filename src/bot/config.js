@@ -43,6 +43,9 @@ export const CFG = {
   ATTACK_WAIT: 40,           // ...for this many rounds
   // endgame
   ENDGAME_MARGIN: 6,
+  ENDGAME_FUEL: 0,           // >0: from this round all fuel goes into preachers (health breaks round-1000 ties; a
+                             // preacher is 60 HP per 50 fuel, crusader 40, prophet 20): no pilgrims, churches or
+                             // reserves, and military units more than 3 king steps from home stop cruising
   // sparring
   RUSH: 0,                   // >0: crusader rush from this round (a sparring partner build, see tools/build_bot.js --cfg)
   // time
