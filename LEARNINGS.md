@@ -16,3 +16,8 @@
    in the generator's first half) makes both teams' worlds identical; tools/symcheck.js plays the bot against itself
    with twin-paired action application and reports the first divergence. Remaining divergences are mirror-axis
    tile contests and combat resolution order, both decided by the engine's turn order. (2026-10-21)
+6. **Mirror the API's own bookkeeping, not just its inputs.** The JS API charges a signal's fuel the moment
+   `signal()` is called and checks later actions against the lowered figure; a cached copy of the turn-start fuel
+   passed our affordability checks and the API threw. Wrap every API call that spends, and update the cache there.
+7. **Several agents share one git index.** `git add <paths> && git commit` also commits whatever another agent has
+   staged; commit with `git commit -m ... -- <paths>` so only the named paths go in.

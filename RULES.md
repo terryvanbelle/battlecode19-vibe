@@ -82,7 +82,8 @@ Where the specs and the engine disagree, the engine wins and the difference is m
 - **Radio**: `signal(value, r²)`: a 16-bit value to every robot (either team) within r² of the sender, costing
   ceil(√r²) Fuel (`action_record.js:329`). Receivers see it on **their next turn** together with the sender's id and
   position (`game.js:675, 696-706`), not its team (unless visible). The signal stays attached to the sender until its
-  next turn. Max r² = 2·63² (`game.js:834`).
+  next turn. Max r² = 2·63² (`game.js:834`). The JS API lowers the robot's own `this.fuel` by the cost at once
+  (`starter/js_starter.js:108`), and its build/move/attack checks use that lowered value.
 - **Castle talk**: `castleTalk(value)`: 8 bits, free, visible to all own castles anywhere (`game.js:677-682, 710`).
   Castles see every friendly robot (id, castle_talk; no position unless visible or radioing) (`game.js:671-710`).
 - A newborn's first turn sees signals sent by robots in their latest turns (including its builder's same-round signal
