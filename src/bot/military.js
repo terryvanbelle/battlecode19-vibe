@@ -2,7 +2,7 @@
 // near home; march on ATTACK orders; otherwise hold a checkerboard lattice that grows from home toward the enemy.
 import { CFG } from './config.js';
 import { STATS, CASTLE, CHURCH, CRUSADER, PROPHET, PREACHER } from './specs.js';
-import { d2, king } from './util.js';
+import { d2, king, rng } from './util.js';
 import { fuelStep } from './nav.js';
 import { SIG, dec, decFarRobot } from './comms.js';
 import { isAttacker, pickTarget, preacherTarget, retreatStep } from './combat.js';
@@ -18,6 +18,9 @@ function init(B) {
   if (B.birthRound) B.round = B.birthRound;
   if (!st.home) st.home = { x: me.x, y: me.y };
   st.target = null;   // [x, y] enemy structure to attack
+  // Reseed with the birth round: units born on the same tile must not share one random stream.
+  B.rnd = rng(((B.birthRound || 0) * 4096 + me.y * 64 + me.x) * 8 + me.unit); B.nav.rnd = B.rnd;
+  st.guard = B.rnd() < CFG.HOME_GUARD_FRAC;   // stays home through general attacks (until the last rounds)
 }
 
 // ATTACK orders: far messages (comms.decFarRobot authenticates them by radius); targets must lie in the enemy half.
@@ -26,7 +29,7 @@ function listen(B) {
   for (const r of w.robots) {
     if (r.id === me.id || (r.seen && r.team !== me.team)) continue;
     const m = decFarRobot(r);
-    if (m && m.type === SIG.ATTACK && m.y >= n / 2 && w.passable(m.x, m.y)) st.target = [m.x, m.y];
+    if (m && m.type === SIG.ATTACK && m.y >= n / 2 && w.passable(m.x, m.y) && (!st.guard || B.round >= 900)) st.target = [m.x, m.y];
   }
   // Drop a target seen to be gone.
   if (st.target) {
@@ -115,12 +118,13 @@ export function militaryTurn(B) {
     if (e) return go(B, 'e' + e.x + ',' + e.y, [[e.x + 1, e.y], [e.x - 1, e.y], [e.x, e.y + 1], [e.x, e.y - 1]]);
   }
 
-  if (marching) return go(B, 'A' + st.target[0] + ',' + st.target[1], () => bandSources(B, st.target[0], st.target[1]));
+  // Fuel per move is proportional to r2, so short steps cover distance cheapest: unhurried moves use r2 <= 2.
+  if (marching) return go(B, 'A' + st.target[0] + ',' + st.target[1], () => bandSources(B, st.target[0], st.target[1]), CFG.CRUISE_R2);
 
   // Hold the lattice.
   if (latticeOk(B, me.x, me.y) && king(me.x, me.y, h.x, h.y) <= LATTICE_R) return null;
   const t = latticeTarget(B);
   if (!t) return null;
-  return go(B, 'l' + t[0] + ',' + t[1], [t], 4);
+  return go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);
 }
 export { isAttacker, PROPHET, PREACHER };

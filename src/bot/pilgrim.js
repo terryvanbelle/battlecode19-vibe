@@ -1,7 +1,8 @@
 // Pilgrim: mines its assigned depot and deposits at the nearest friendly structure; a pioneer first builds a church at
 // its cluster's site. Flees attackers that could hit it next turn.
+import { CFG } from './config.js';
 import { STATS, CASTLE, CHURCH, KARB_CAP, FUEL_CAP } from './specs.js';
-import { d2, king, ADJ } from './util.js';
+import { d2, king, ADJ, rng } from './util.js';
 import { SIG, dec, encNum, CT } from './comms.js';
 import { econ } from './mapinfo.js';
 import { fuelStep } from './nav.js';
@@ -22,6 +23,7 @@ function init(B) {
     }
   }
   if (B.birthRound) B.round = B.birthRound;
+  B.rnd = rng(((B.birthRound || 0) * 4096 + me.y * 64 + me.x) * 8 + me.unit); B.nav.rnd = B.rnd;
   if (!st.target && !st.site) st.target = freeDepotNear(B, me.x, me.y, null);
 }
 
@@ -44,7 +46,7 @@ function adjSources(x, y) { return ADJ.map(([dx, dy]) => [x + dx, y + dy]); }
 function go(B, key, sources) {
   const w = B.w;
   const r = fuelStep(w.fuel, 4, 1, w.fuel > 300 ? 0 : 40);
-  const s = B.nav.step(key, sources, w.fuel > 300 ? r : Math.min(r, 2));
+  const s = B.nav.step(key, sources, w.fuel > CFG.PILGRIM_FAST_FUEL ? r : Math.min(r, 2));
   return s ? w.move(s[0], s[1]) : null;
 }
 

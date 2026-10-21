@@ -60,7 +60,8 @@ export function nextDepot(B) {
   const free = st.served.filter(d => !st.assign.has(d.i) && w.occ(d.x, d.y) <= 0 && !enemyNear(B, d.x, d.y));
   if (!free.length) return null;
   let wantK = nk < CFG.KARB_FIRST * (nf + 1);
-  if (w.fuel < CFG.FUEL_LOW) wantK = false; else if (w.fuel > CFG.FUEL_HIGH) wantK = true;
+  if (w.fuel < CFG.FUEL_LOW || (w.fuel < CFG.FUEL_HIGH && w.fuel < w.karbonite * CFG.FUEL_PER_KARB)) wantK = false;
+  else if (w.fuel > CFG.FUEL_HIGH) wantK = true;
   return free.find(d => d.k === wantK) || free[0];
 }
 
@@ -144,7 +145,8 @@ export function structTurn(B, allIds, extra) {
   const have = defenders(B, 100);
   if (have < want || w.karbonite > 200 + reserveK) {
     const unit = (st.nDef % CFG.PREACHER_EVERY === CFG.PREACHER_EVERY - 1) ? PREACHER : PROPHET;
-    if (w.canAfford(unit, reserveK, CFG.MIL_FUEL_RESERVE)) {
+    const army = st.count ? st.count[3] + st.count[4] + st.count[5] : have;
+    if (w.canAfford(unit, reserveK, CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army)) {
       const [ex, ey] = w.mirror(me.x, me.y);
       const sig = B.round ? encNum(SIG.ROUND, B.round) : undefined;
       const b = buildToward(B, unit, ex, ey, sig); if (b) { st.nDef++; return b.act; }

@@ -88,3 +88,10 @@ test('paired: discordant cells, net and t; mismatched cells ignored', () => {
   assert.ok(Math.abs(r.t - 1 / Math.sqrt(3)) < 1e-9);
   assert.strictEqual(pairedRead(rows, 'c', 'zz').cells, 0);
 });
+
+test('progress: renders one series per opponent', () => {
+  const { render } = require('../tools/progress.js');
+  const svg = render([{ version: 'v1', opponent: 'example', games: 4, wins: 3 }, { version: 'v2', opponent: 'example', games: 4, wins: 4 }, { version: 'v2', opponent: 'v1', games: 2, wins: 1 }]);
+  assert.ok(svg.startsWith('<svg')); assert.strictEqual((svg.match(/<polyline/g) || []).length, 1);
+  assert.strictEqual((svg.match(/<circle/g) || []).length, 3);
+});

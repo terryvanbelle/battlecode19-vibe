@@ -13,7 +13,11 @@ export const CFG = {
   GUARD_BASE: 2,             // peacetime prophets wanted per structure at round 0
   GUARD_ROUNDS: 40,          // one more wanted per this many rounds
   GUARD_MAX: 25,
-  MIL_FUEL_RESERVE: 300,     // peacetime military builds keep this much fuel back (movement and mining need it)
+  MIL_FUEL_RESERVE: 300,
+  MIL_FUEL_PER_UNIT: 10,     // ...plus this much per military unit we have (each needs fuel to shoot and move)
+  FUEL_PER_KARB: 2.5,        // staff fuel depots while fuel < this x karbonite (and below FUEL_HIGH)
+  CRUISE_R2: 2,              // largest step for unhurried military moves (fuel cost is r2 x fuel/move)
+  PILGRIM_FAST_FUEL: 1000,   // pilgrims take full r2 4 steps only above this fuel     // peacetime military builds keep this much fuel back (movement and mining need it)
   PREACHER_EVERY: 4,         // every Nth peacetime defender is a preacher
   RESERVE_CHURCH_K: 50,      // karbonite kept back while a pioneer is out
   // lattice
@@ -22,6 +26,7 @@ export const CFG = {
   // attack
   ATTACK_ROUND: 450,         // castles call a general attack from this round when the army is big
   ATTACK_MIN_ARMY: 20,
+  HOME_GUARD_FRAC: 0.3,      // military units that ignore attack orders before round 900
   // endgame
   ENDGAME_MARGIN: 6,
   // time
