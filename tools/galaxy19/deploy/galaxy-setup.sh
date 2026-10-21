@@ -261,7 +261,7 @@ DJANGO_SETTINGS_MODULE=replica_settings
 DJANGO_CONFIGURATION=Replica
 SIARNAQ_REVISION=galaxy-f343088-bc19-replica
 GALAXY_COMPILE_SLOTS=1
-GALAXY_EXECUTE_SLOTS=4
+GALAXY_EXECUTE_SLOTS=2
 GALAXY_GAME_TIMEOUT=1800
 GALAXY_NACK_DELAY=10
 GALAXY_GUNICORN_WORKERS=2
@@ -351,11 +351,11 @@ PrivateNetwork=yes
 ExecStart=/usr/bin/python3 $OPT/galaxy19/saturn.py run
 KillMode=mixed
 TimeoutStopSec=60
-# 4 games + 1 compile at most (GALAXY_EXECUTE_SLOTS); the VM's other cores stay free for our own batches.
-# The CPU cap is a backstop above 4 single-threaded games (node's GC/JIT threads add bursts): a tighter quota would
+# 2 games + 1 compile at most (GALAXY_EXECUTE_SLOTS; saturn caps it at 4): the main session's A/B batches (--par 4) share the VM.
+# The CPU cap is a backstop above 2 single-threaded games (node's GC/JIT threads add bursts): a tighter quota would
 # throttle in 100 ms periods and turn into chess-clock timeouts.
 MemoryMax=10G
-CPUQuota=500%
+CPUQuota=300%
 Restart=on-failure
 RestartSec=30s
 

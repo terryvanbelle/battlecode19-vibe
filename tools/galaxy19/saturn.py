@@ -58,6 +58,9 @@ from replica_gcp import config, spool, storage  # noqa: E402
 MAX_EXTRACTED = 64 * 1024 * 1024
 MAX_BUNDLE = 16 * 1024 * 1024
 MAX_EXECUTE_SLOTS = 4
+# V8 heap cap per game process (both bots share it: the engine's own memory check is disabled). A runaway bot then
+# ends its game (the match retries, then errors) instead of driving the VM into reclaim thrash.
+GAME_HEAP_MB = int(os.environ.get('GALAXY_GAME_HEAP_MB', '2048'))
 # per-team stats copied from run_game.js into match.json: errors and clock health (timeouts = vm2 script timeouts,
 # frozen = out of chess-clock time, slow_turns = turns over 20 ms of wall time) to watch CPU contention
 TEAM_KEYS = ('team', 'errors', 'frozen', 'timeouts', 'init_fail', 'exceptions', 'units', 'health', 'turns', 'ms_mean',
@@ -350,6 +353,10 @@ class Runtime:
             ver = '?'
         return f'bc19 engine {ver}, node {self.node}, sandbox {"on" if self.sandbox else "OFF"}'
 
+    def game_argv(self, red, blue, seed, replay, out_json):
+        return [self.node, f'--max-old-space-size={GAME_HEAP_MB}', self.run_game, '--red', red, '--blue', blue,
+                '--seed', str(seed), '--replay', replay, '--json', out_json]
+
     def cmd(self, workdir, argv):
         return [*self.sandbox, workdir, *argv] if self.sandbox else list(argv)
 
@@ -492,8 +499,7 @@ class Runners:
                 os.makedirs(gdir)
                 replay = os.path.join(gdir, 'replay.bc19')
                 out_json = os.path.join(gdir, 'result.json')
-                argv = [self.rt.node, self.rt.run_game, '--red', bundles[red], '--blue', bundles[blue],
-                        '--seed', str(seed), '--replay', replay, '--json', out_json]
+                argv = self.rt.game_argv(bundles[red], bundles[blue], seed, replay, out_json)
                 t.debug(f'Game {i + 1}/{len(seeds)}: seed {seed}, red {names[red]} ({red}), blue {names[blue]} ({blue})')
                 t0 = time.time()
                 rc, out, err = run_cmd(t, self.rt.cmd(gdir, argv), timeout=self.game_timeout, env=game_env())

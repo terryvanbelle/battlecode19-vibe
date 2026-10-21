@@ -27,7 +27,7 @@ venv, the built frontend, and the shared Caddy). How the owner opens it is in `A
 
 | file | role |
 |---|---|
-| `saturn.py` | saturn stand-in: leases compile/execute messages from the spool, with 1 compile slot and 4 execute slots (hard cap 4). For each match it runs one game per map, alternating sides, and writes a match archive (ZIP of `game-NN-seed<n>.bc19` plus `match.json` with per-team timeouts, frozen, slow turns and ms). It reports to galaxy through the relay. |
+| `saturn.py` | saturn stand-in: leases compile/execute messages from the spool, with 1 compile slot and 2 execute slots (`GALAXY_EXECUTE_SLOTS`; hard cap 4), each game's V8 heap capped at 2 GB. For each match it runs one game per map, alternating sides, and writes a match archive (ZIP of `game-NN-seed<n>.bc19` plus `match.json` with per-team timeouts, frozen, slow turns and ms). It reports to galaxy through the relay. |
 | `relay.py` | relay between saturn and siarnaq, plus the Cloud Tasks / Scheduler stand-in (`fire-jobs`, run each minute by `bc19-galaxy-scheduler.timer`). |
 | `bootstrap.py` | episode `bc19` (autoscrim `0 */8 * * *` UTC, ranked on, 20 ranked / 40 unranked requests per hour), the 40 maps of `maps.txt`, and the `owner` superuser. |
 | `maps.py`, `maps.txt` | maps are `seed-<n>`: 40 seeds stratified by size, castle count and symmetry from `maps/corpus.tsv`. |
@@ -62,7 +62,9 @@ The field roster is `tools/bench/roster.tsv` (compile ok, smoke test not a crash
 
 Game clock: the 2019 rules (100 ms bank plus 20 ms per turn). Load test on 2026-10-21: 60 games at 4 concurrent
 games on the 8-vCPU VM, 637k robot turns, 0 timeouts, 0 frozen robots, 0.07% of turns over 20 ms, slowest turn
-55 ms.
+55 ms. Since then the replica runs 2 games at once, because the main session's A/B batches (`--par 4`) share the
+VM. On 2026-10-21 the VM hung (load about 21) while the replica's 4 games ran alongside those batches and the
+bench smoke runner (`PAR=6`); it was reset. Keep the VM's total game count at or below its 8 vCPUs.
 
 ## Units on battlecode-dev
 
