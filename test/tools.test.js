@@ -109,6 +109,22 @@ test('paired: --h2h pairs the two sides of a seed; load-contaminated rows are sk
   assert.strictEqual(pairedRead(p, 'c', 'k').cells, 0);
 });
 
+test('run_game: --timescale stretches the vm2 kill, --init-ms only the sandbox-creation limit', () => {
+  const Game = require('../engine/node_modules/bc19/game.js'), SPECS = require('../engine/node_modules/bc19/specs.json');
+  const { setLimits, parseArgs } = require('../tools/run_game.js');
+  const base = SPECS.TURN_MAX_TIME;
+  try {
+    const a = parseArgs(['node', 'run_game.js', '-r', 'x', '-b', 'y', '--timescale', '2', '--init-ms', '1000']);
+    const g = new Game(3, a.chi * a.timescale, a.che * a.timescale, false, false);
+    assert.deepStrictEqual(setLimits(g, a), { init_ms: 1000, turn_kill_ms: base * 2 });
+    assert.strictEqual(g.chess_initial, 1000);
+    const r = g.initializeRobot();
+    assert.strictEqual(r.time, SPECS.CHESS_INITIAL * 2);   // the robot's own clock is unchanged
+    const b = parseArgs(['node', 'run_game.js', '-r', 'x', '-b', 'y']), h = new Game(3, b.chi, b.che, false, false);
+    assert.deepStrictEqual(setLimits(h, b), { init_ms: SPECS.CHESS_INITIAL, turn_kill_ms: base });
+  } finally { SPECS.TURN_MAX_TIME = base; }
+});
+
 test('jobq: add and status list pending jobs in order', () => {
   const { execFileSync } = require('child_process');
   const os = require('os');

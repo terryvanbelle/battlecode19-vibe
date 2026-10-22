@@ -2,7 +2,7 @@
 // Parallel game batches. Every game runs in its own process inside `unshare -rn` (no network), on the VM.
 //
 //   node tools/batch.js --a <bot dir> --b <bot dir> --seeds 1,2,3 | --seed-file f | --random N [--seed0 S]
-//        [--sides both|a-red] [--par 6] --out results.jsonl [--replays dir] [--tag name]
+//        [--sides both|a-red] [--par 6] [--timescale K] [--init-ms MS] --out results.jsonl [--replays dir] [--tag name]
 //
 // One JSON row per game: {tag, a, b, a_hash, b_hash, seed, a_side, winner_is_a, reason, rounds, ...runner fields}.
 // Rows are keyed by (a_hash, b_hash, seed, a_side): the same cell is never played twice into one file.
@@ -37,6 +37,7 @@ function parse(argv) {
     else if (k === '--sides') a.sides = v(); else if (k === '--par') a.par = +v();
     else if (k === '--out') a.out = v(); else if (k === '--replays') a.replays = v(); else if (k === '--tag') a.tag = v();
     else if (k === '--timescale') a.timescale = v();
+    else if (k === '--init-ms') a.initMs = v();
     else throw new Error('unknown ' + k);
   }
   if (!a.a || !a.b || !a.out) throw new Error('need --a --b --out');
@@ -77,6 +78,7 @@ async function main() {
       if (o.replays) args.push('--replay', path.join(o.replays, `${ah}_${bh}_${j.seed}_${j.side}.bc19`),
         '--errlog', path.join(o.replays, `${ah}_${bh}_${j.seed}_${j.side}.err.jsonl`));
       if (o.timescale) args.push('--timescale', o.timescale);
+      if (o.initMs) args.push('--init-ms', o.initMs);
       const p = spawn('unshare', args, { stdio: ['ignore', 'pipe', 'pipe'] });
       let so = '', se = '';
       p.stdout.on('data', d => { so += d; }); p.stderr.on('data', d => { se += d; });

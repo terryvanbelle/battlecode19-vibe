@@ -4,12 +4,15 @@
 //
 //   node tools/run_game.js --red <bot dir | bundle.js> --blue <bot dir | bundle.js> [--seed N]
 //        [--replay out.bc19] [--logs out.jsonl] [--json out.json] [--det] [--chi 100] [--che 20]
-//        [--max-rounds N] [--timescale K]
+//        [--max-rounds N] [--timescale K] [--init-ms MS]
 //
 // --det        deterministic mode: seeds Math.random in the engine (the per-turn shuffle of visible robots) from
 //              the game seed. Bots that use their own seeded PRNG then replay identically except for clock effects.
-// --timescale  multiplies both chess-clock numbers (e.g. 4 on a slow or loaded machine for diagnostics; never in
-//              evaluations: the contest clock is 100 ms + 20 ms/turn).
+// --timescale  multiplies both chess-clock numbers and vm2's hard limit (200 ms wall clock to load the code and for
+//              every turn), for a slow or loaded machine (strategy batches on the shared VM use 2; the contest clock is
+//              100 ms + 20 ms/turn, and time robustness is measured at 1).
+// --init-ms    wall-clock limit for creating a robot's sandbox (the engine uses the clock's initial value, which
+//              VM load alone overruns; LEARNINGS 3). The robot's clock still starts at the scaled initial value.
 // Prints one JSON line: {winner:"red"|"blue", win_condition, reason, rounds, seed, map:{w,castles}, teams:[...]}.
 'use strict';
 const fs = require('fs');
@@ -36,6 +39,7 @@ function parseArgs(argv) {
     else if (k === '--che') a.che = parseFloat(v());
     else if (k === '--max-rounds') a.maxRounds = parseInt(v(), 10);
     else if (k === '--timescale') a.timescale = parseFloat(v());
+    else if (k === '--init-ms') a.initMs = parseFloat(v());
     else throw new Error('unknown argument ' + k);
   }
   if (!a.red || !a.blue) throw new Error('need --red and --blue');
@@ -76,6 +80,7 @@ async function main() {
 
   const seed = a.seed === 0 ? Math.floor(Math.random() * Math.pow(2, 31)) : a.seed;
   const g = new Game(seed, a.chi * a.timescale, a.che * a.timescale, false, !!a.replay);
+  const limits = setLimits(g, a);
   // Warm-up: the first vm2 sandbox in a process costs 50-150 ms (cold JIT), which can push a castle past the 100 ms
   // initialisation limit and lose the game for a harness reason. Create and discard sandboxes for both bundles first.
   const CrossVM = require(path.join(ENGINE, 'vm'));
@@ -170,7 +175,7 @@ async function main() {
   const result = {
     winner: g.winner === 0 ? 'red' : g.winner === 1 ? 'blue' : null,
     win_condition: g.win_condition, reason: REASONS[g.win_condition], rounds: g.round, seed,
-    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale,
+    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale, ...limits,
     red: a.red, blue: a.blue,
     teams: [0, 1].map(i => ({ team: i === 0 ? 'red' : 'blue', ...counts[i], ...alive[i],
       turns: teams[i].turns, ms_mean: teams[i].turns ? +(teams[i].ms_total / teams[i].turns).toFixed(3) : 0,
@@ -181,4 +186,18 @@ async function main() {
   console.log(line);
 }
 
-main().catch(e => { console.error(String(e && e.stack || e)); process.exit(2); });
+// Time limits for game g (see --timescale, --init-ms). Returns them for the result line.
+const TURN_MAX_TIME = SPECS.TURN_MAX_TIME;
+function setLimits(g, a) {
+  SPECS.TURN_MAX_TIME = TURN_MAX_TIME * a.timescale;   // read by each new CrossVM (engine vm.js)
+  const clock0 = g.chess_initial;
+  if (a.initMs) {
+    g.chess_initial = a.initMs;   // runtime.js initializeRobot compares sandbox creation time with this
+    const gi = g.initializeRobot.bind(g);
+    g.initializeRobot = function () { const r = gi(); if (r) r.time = clock0; return r; };
+  }
+  return { init_ms: g.chess_initial, turn_kill_ms: SPECS.TURN_MAX_TIME };
+}
+
+if (require.main === module) main().catch(e => { console.error(String(e && e.stack || e)); process.exit(2); });
+module.exports = { setLimits, parseArgs };
