@@ -12,6 +12,7 @@ export const SIG = {
   RECALL: 9,  // castle -> army (far, FAR.RECALL): come home to the castle at (x, y), it is under attack (CFG.RECALL)
   CHAIN: 10,  // castle -> newborn chainer, chain link -> newborn link or military: church chain at the enemy castle (x, y)
   HUNT: 11,   // pilgrim -> melee units (far, FAR.HUNT): an enemy pilgrim loiters in our half at (x, y) (CFG.HUNT)
+  GUARD: 12,  // castle -> newborn military: hold the lattice around a pioneer's site (x, y) (CFG.ESCORT)
 };
 export function encXY(type, x, y) { return (type << 12) | (x << 6) | y; }
 export function encNum(type, v) { return (type << 12) | (v & 4095); }

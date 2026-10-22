@@ -8,7 +8,7 @@ import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost } from '../src/bot/military.js';
-import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue } from '../src/bot/castle.js';
+import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, openEscort, escort } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
@@ -1034,6 +1034,72 @@ test('castle: PIONEER_LOST_DOUBLE doubles the rest before re-sending a pioneer w
     assert.strictEqual(lostRest(st, c), 100);
     st.lostN.set(c, 40);
     assert.strictEqual(lostRest(st, c), 1600);                     // capped at 16x
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('castle: ESCORT owes escorts to an overdue or lost pioneer and builds them radioing SIG.GUARD at the site', () => {
+  const saved = { ...CFG };
+  try {
+    CFG.ESCORT = 2;
+    const g = new Game(1205, 100, 20, false, false);   // one castle a side, 12 clusters
+    const castle = g.robots.find(r => r.team === 0);
+    const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    for (const t of [1, 2, 3]) { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; castleTurn(B); }
+    const st = B.st, c = st.plan[0].cluster, site = B.clusters[c].site;
+    // Overdue: alive (its id is in the id list) and ESCORT_SLACK turns past its distance.
+    const turn = t => { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; w.karbonite = 0; castleTurn(B); };
+    st.pioneers = [{ id: castle.id, cluster: c, since: 3, d: 5 }];
+    turn(3 + 5 + CFG.ESCORT_SLACK);
+    assert.strictEqual(st.escorts.length, 0);
+    turn(3 + 5 + CFG.ESCORT_SLACK + 1);
+    assert.deepStrictEqual(st.escorts, [{ cluster: c, x: site[0], y: site[1], left: 2 }]);
+    openEscort(B, c);                                    // owed once per cluster
+    assert.strictEqual(st.escorts.length, 1);
+    // Build: a prophet that hears the site; nothing on a turn whose radio is taken or when the bank is short.
+    const sent = [], w = worldFor(g, castle); B.w = w; B.api = w.api; w.api.signal = (v, r2) => sent.push([v, r2]);
+    st.pioneers = [];
+    w.karbonite = 20; assert.strictEqual(escort(B), null);
+    w.karbonite = 100; w.sentR2 = 2; assert.strictEqual(escort(B), null);
+    w.sentR2 = 0;
+    const a = escort(B);
+    assert.strictEqual(a.action, 'build'); assert.strictEqual(a.u, S.PROPHET);
+    assert.deepStrictEqual(sent, [[encXY(SIG.GUARD, site[0], site[1]), 2]]);
+    assert.strictEqual(st.escorts[0].left, 1);
+    // Lost on the way: a pioneer whose id is gone owes escorts to its cluster too; a churched cluster owes none.
+    const c2 = st.plan[1].cluster;
+    st.pioneers = [{ id: 987654, cluster: c2, since: 3, d: 5 }];
+    turn(30);
+    assert.ok(st.escorts.some(e => e.cluster === c2));
+    st.churched.add(c2); w.sentR2 = 0; w.karbonite = 100;
+    st.escorts = st.escorts.filter(e => e.cluster === c2); escort(B);
+    assert.strictEqual(st.escorts.length, 0);
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('military: ESCORT a unit born hearing SIG.GUARD holds the lattice around that site, not home', () => {
+  const saved = { ...CFG };
+  try {
+    const g = new Game(1205, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let at = null; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]) if (!at && free(castle.x + dx, castle.y + dy)) at = [castle.x + dx, castle.y + dy];
+    const cw = worldFor(g, castle), site = [cw.me.x + 6, cw.me.y + 8];
+    const born = on => {
+      CFG.ESCORT = on;
+      castle.signal = encXY(SIG.GUARD, site[0], site[1]); castle.signal_radius = 2;
+      const p = { id: 4004, team: 0, unit: S.PROPHET, x: at[0], y: at[1], turn: 1, health: 20, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      g.robots.push(p);
+      try {
+        const w = worldFor(g, p), B = { api: w.api, w, round: 0, birthRound: 0, st: {}, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[S.PROPHET].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        militaryTurn(B);
+        return { home: [B.st.home.x, B.st.home.y], me: [w.me.x, w.me.y], round: B.birthRound };
+      } finally { g.robots.pop(); castle.signal = 0; castle.signal_radius = 0; }
+    };
+    const off = born(0), on = born(2);
+    assert.deepStrictEqual(on.home, site);
+    assert.notDeepStrictEqual(off.home, site);
+    assert.strictEqual(on.round, off.round);   // castle-born: the round still comes from the castle's turn
   } finally { Object.assign(CFG, saved); }
 });
 

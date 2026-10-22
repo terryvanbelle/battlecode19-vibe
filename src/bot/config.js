@@ -20,6 +20,13 @@ export const CFG = {
   PIONEER_LOST_REST: 100,    // rounds a castle waits before re-sending a pioneer to a cluster where the last one died
   PIONEER_LOST_DOUBLE: 0,    // 1: ...doubled per pioneer lost there (replica scrims vs StoneT2000: 25 of 46 pioneers killed,
                              // castles re-sent one into the same prophets every ~105 rounds)
+  ESCORT: 0,                 // >0: a pioneer overdue at its site (ESCORT_SLACK turns past its king-step distance) or lost
+                             // on the way gets this many military units built with SIG.GUARD at its site; they hold the
+                             // lattice there instead of home (replica 206-2, seed 2321: our pioneer waited 137 turns at
+                             // the edge of two StoneT2000 prophets' range beside its site and died; vs StoneT2000 46 of
+                             // our 114 pioneers died or stalled 30+ turns)
+  ESCORT_SLACK: 10,
+  ESCORT_UNIT: 4,            // prophet
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short

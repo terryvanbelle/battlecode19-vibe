@@ -24,6 +24,7 @@ export function castleTurn(B) {
     st.lost = new Map();   // cluster -> round a pioneer for it died
     st.lostN = new Map();  // cluster -> pioneers lost there (CFG.PIONEER_LOST_DOUBLE)
     st.taken = new Map();  // cluster -> round a pioneer saw an enemy structure there (CFG.EXPAND_ROUND) or gave up (PIONEER_GIVEUP)
+    st.escorts = [];       // CFG.ESCORT: [{cluster, x, y, left}] pioneer sites still owed escort units
     st.attackUntil = 0;
     st.deadE = new Set();   // indices (into st.order) of enemy castles reported destroyed
     st.lastT = -1;
@@ -63,8 +64,10 @@ export function castleTurn(B) {
   st.pioneers = st.pioneers.filter(p => {
     if (p.id > 0 && !allIds.has(p.id)) {
       st.lost.set(p.cluster, me.turn); st.lostN.set(p.cluster, (st.lostN.get(p.cluster) || 0) + 1);
+      if (CFG.ESCORT) openEscort(B, p.cluster);
       return false;
     }
+    if (CFG.ESCORT && !p.esc && me.turn - p.since > p.d + CFG.ESCORT_SLACK) { p.esc = true; openEscort(B, p.cluster); }
     if (CFG.PIONEER_GIVEUP && st.taken.has(p.cluster) && st.taken.get(p.cluster) >= p.since) return false;   // it gave up
     return !st.churched.has(p.cluster) && me.turn - p.since <= 80;
   });
@@ -72,7 +75,8 @@ export function castleTurn(B) {
   if (CFG.RECALL) callRecall(B);
   callAttack(B);
   st.pioneerDue = pioneerDue(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
-  const act = structTurn(B, allIds, () => pioneer(B) || (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null));
+  const act = structTurn(B, allIds, () => pioneer(B) || (CFG.ESCORT ? escort(B) : null) ||
+    (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null));
   if (CFG.CASTLE_POST) callPost(B);   // after the build, so a newborn's radio comes first
   return act;
 }
@@ -173,7 +177,28 @@ function pioneer(B) {
   const b = buildToward(B, PILGRIM, c.site[0], c.site[1], encXY(SIG.CHURCH, c.site[0], c.site[1]));
   if (!b) return null;
   st.pending = { x: b.x, y: b.y, unit: PILGRIM, kind: 'pioneer', ref: next.cluster };
-  st.pioneers.push({ id: -1, cluster: next.cluster, since: w.me.turn });
+  st.pioneers.push({ id: -1, cluster: next.cluster, since: w.me.turn, d: next.d });
+  return b.act;
+}
+
+// CFG.ESCORT: owe ESCORT units to a cluster's site (once per cluster while any are still owed).
+export function openEscort(B, cluster) {
+  const st = B.st, c = B.clusters[cluster];
+  if (!c || st.churched.has(cluster) || st.escorts.some(e => e.cluster === cluster)) return;
+  st.escorts.push({ cluster, x: c.site[0], y: c.site[1], left: CFG.ESCORT });
+}
+
+// Build the next escort unit owed, radioing it the site (a turn whose radio is taken waits: the unit must hear it).
+export function escort(B) {
+  const w = B.w, st = B.st;
+  st.escorts = st.escorts.filter(e => e.left > 0 && !st.churched.has(e.cluster));
+  const e = st.escorts[0];
+  if (!e || w.sentR2) return null;
+  const reserveK = CFG.DEF_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0);
+  if (!w.canAfford(CFG.ESCORT_UNIT, reserveK, CFG.MIL_FUEL_RESERVE)) return null;
+  const b = buildToward(B, CFG.ESCORT_UNIT, e.x, e.y, encXY(SIG.GUARD, e.x, e.y));
+  if (!b) return null;
+  e.left--;
   return b.act;
 }
 
