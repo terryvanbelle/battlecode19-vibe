@@ -890,3 +890,45 @@
   lost; a new arm would need a delivery on castle safety first.
 - Driver diagnostic h43 vs h35 on 905 (600 rounds): h43 won by castles at 503, 0 exceptions, but sent no recall
   (its castle was never threatened); the 2855 pair runs in the VM extra lane.
+
+## 2026-10-22 00:37 — h43 diagnostic on 2855 (red); h44 pre-registered: only crusaders march before round 900
+- h43 vs h35 on 2855, h43 red (VM extra lane, 2019-next/out/diag_h43_2855.jsonl): h35 won by castles at 710; 0
+  exceptions. h43's castle radioed two recalls (rounds 495 and 681). After 495 the army came home (own military
+  within 8 king steps of the castle 1 -> 11 -> 36 -> 62 of 97 at +30) but no enemy was within 8 and the castle
+  kept 200 HP; the run home cost 10,946 move fuel in rounds 490-520 (blue h35 957). When the recall lapsed, the
+  attack call sent the army into h35's held lattice: rounds 520-640 h43's military 97 -> 33 (mean king distance
+  to the enemy castle 39.6 -> 29.9, min 4), h35's 102 -> 92. The second recall (681) gathered 4 of 44; the castle
+  fell at 710. Same shape as v5's 905 loss: the side that walks into a held lattice loses the exchange.
+- Source for h44: replica 616 (v3 vs StoneT2000): 160 marching prophets burned ~8,700 move fuel in 40 rounds
+  around the attack call; from round 500 to the end our bank held 10-257 fuel with K 3,800 floating. Prophets pay
+  2 fuel and preachers 3 per r2 moved, crusaders 1, and prophets shoot from 8 tiles: a held prophet lattice is
+  the strong formation, a marching one the weak.
+- Mechanism: new switch CFG.MARCH_MASK (default 56: all three types obey attack orders; bit 3 crusader, 4
+  prophet, 5 preacher). Unit types outside the mask hold the lattice through attack calls until round 900, as
+  home guards do. Unit tests 70/70.
+- h44 = v5 + MARCH_MASK 8 (crusaders only). Delivery (VM queue, 8 games of 1000 rounds vs h35 on 616, 2202, 241,
+  1915 both sides), from front.js windows over rounds 450-650: (1) h44's move fuel (all units) at most 60% of
+  h35's, summed; (2) h44's shots fired at least 100% of h35's, summed (the saved fuel buys shots, not an idle
+  bank); (3) castles lost no more than h35's. Gate 40 games vs h35, falsifier t <= 0 (crusaders alone cannot
+  crack a castle guard; the late-game march at 900 may be too late). Dose ladder: MARCH_MASK 8 -> 40 (crusaders
+  and preachers).
+
+## 2026-10-22 00:42 — h45 pre-registered: marching units hold at the edge of enemy reach (EDGE)
+- Source: replica 200-3 (v4 vs StoneT2000 bot1v43, 2965, lost by castles): three karbonite depots a side, both
+  teams mined alike (K 4,300 : 4,994); we built 132 prophets and 30 preachers and lost 131 and 30, killing 106
+  prophets and 13 preachers (damage dealt 3,460 : 4,890). Our army fell at each attack (23 -> 13 in rounds
+  400-500, 19 -> 2 in 600-700) while their prophets held (idle 18,908 of 20,325 prophet turns). Gate cells 905
+  (v5 vs h19) and the h43 diagnostic on 2855 show the same: the side that walks into a held line loses the
+  exchange. A prophet's vision is its attack reach (r2 64), so a marcher steps into range of the prophets it
+  sees and takes the first volley alone.
+- Mechanism: new switch CFG.EDGE (default 0). On the march step only (shooting, melee engage, recall and the
+  lattice unchanged), a unit that sees enemy attackers whose reach (combat THREAT_R2) does not cover its tile
+  avoids tiles they reach unless our military in its sight, itself included, number at least EDGE times them.
+  Unit tests 71/71.
+- h45 = v5 + EDGE 1.5. Delivery (VM queue, 8 games of 1000 rounds vs h35 on 905, 2855, 2965, 616 both sides),
+  whole game, summed: (1) h45's military units lost at most 92% of h35's (the same as lost per kill at most 85%
+  of h35's in these two-team games); (2) h45's shots fired at least 90% of h35's (holding at the edge does not
+  stop the fighting); (3) castles lost no more than h35's. Gate 40 games vs h35, falsifier t <= 0 (held armies
+  never break a line, so castles fall only to the late push). Dose ladder: EDGE 1.5 -> 1 -> 2.
+- No-op of the new defaults (h35e, defaults-only build, vs h35, --det --timescale 10) and sym_h45 queued in the
+  VM extra lane (2019-next/out/dlv_chain14.sh); sym_h44 in chain13.

@@ -1001,3 +1001,11 @@ batch-out/dlv_h40_h19,3,cand:h40,us:v4,seed-2924,B,784,castles,2924,red,2026-10-
 batch-out/dlv_h40_h19,4,cand:h40,us:v4,seed-2924,A,1000,castles,2924,blue,2026-10-22T07:16:14Z
 batch-out/dlv_h40_h19,5,cand:h40,us:v4,seed-1828,A,1000,health,1828,red,2026-10-22T07:17:58Z
 batch-out/dlv_h40_h19,6,cand:h40,us:v4,seed-1828,A,1000,health,1828,blue,2026-10-22T07:18:27Z
+batch-out/dlv_h40_h19,7,cand:h40,us:v4,seed-826,A,1000,castles,826,red,2026-10-22T07:23:28Z
+batch-out/dlv_h40_h19,8,cand:h40,us:v4,seed-826,B,1000,castles,826,blue,2026-10-22T07:26:11Z
+batch-out/dlv_h41_h35,1,cand:h41,us:v5,seed-1915,A,482,castles,1915,blue,2026-10-22T07:28:20Z
+batch-out/dlv_h41_h35,2,cand:h41,us:v5,seed-1915,B,478,castles,1915,red,2026-10-22T07:28:23Z
+batch-out/dlv_h41_h35,3,cand:h41,us:v5,seed-2924,B,641,castles,2924,red,2026-10-22T07:36:14Z
+batch-out/dlv_h41_h35,4,cand:h41,us:v5,seed-2202,A,1000,health,2202,blue,2026-10-22T07:36:29Z
+batch-out/dlv_h41_h35,5,cand:h41,us:v5,seed-2202,B,1000,health,2202,red,2026-10-22T07:36:34Z
+batch-out/dlv_h41_h35,6,cand:h41,us:v5,seed-2924,A,945,castles,2924,blue,2026-10-22T07:39:52Z
