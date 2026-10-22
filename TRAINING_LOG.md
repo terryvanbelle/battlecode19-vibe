@@ -1247,3 +1247,23 @@
   from blue's only castle; it fell at 460 (0 exceptions): the two mechanisms work together.
 - Gate job ...a3d57, after h54's (pre-registered here): if h54's gate accepts (t >= 2, h54 becomes the incumbent)
   it plays h57 vs h54, 40 games, seed0 5000; otherwise h55 vs h35. Accept t >= 2, reject t <= 0.
+
+## 2026-10-22 04:40 — h53 delivery FAILED 2 of 3; symmetry h54-h56; h58 (church-first defence) pre-registered
+- h53 (ATTACK_ROUND 550) vs h35, 8 games (`tools/dlv.js` SUM on out/rp_dlv_h53): (1) castles destroyed 5, own lost
+  6 (bar at least 8): fails; (2) wins 5 of 8: passes; (3) enemy military killed 1,815 for 1,443 lost (126%): passes.
+  Meeting the march at home wins the exchange but takes no more castles; 650 would leave less time to take them, so
+  the ladder stops. Attack timing is done both ways (h52 0 of 3, h53 2 of 3): ATTACK_ROUND stays 450.
+- Symmetry (`tools/symcheck.js`, VM): h54 and h56 split only at contests or after combat. h55 seed 2 failed at
+  round 215 on the stores alone (fuel 580 vs 605, first attack 131): red prophet 845 at (20,15) never acted (killed
+  earlier in the round) while its twin 1924 fired and died later, so an earlier pair spent alike on targets that do
+  not mirror. symcheck now names that pair (action, mirrored offset, radius, result, stores change); the rerun is on
+  the VM extra lane (out/dlv_chain24.sh: the driver trips vm2's 200 ms limit on robot init at round 171).
+- CFG.CHURCH_FIRST_R2 (commit 5cf633a, off): an enemy church within r2 R of the shooter's home structure ranks
+  above every unit (prophets, crusaders, castles shoot it first; preachers count it CHURCH_FIRST_V = 3 in the
+  splash; melee engages it first). Unit test; a null-value bug in preacherTarget's off path (every enemy counted 0)
+  caught before commit. No-op check h35m (current source, defaults) vs h35 on the extra lane.
+- h58 = v5 + CHURCH_FIRST_R2 144 (12 tiles). Pre-registered delivery (extra lane, 8 games of 1000 rounds vs h55
+  on h55's delivery seeds 2924, 616, 2202, 357 both sides; `tools/dlv.js` SUM, h35's numbers in h55's delivery as
+  the baseline): (1) castles lost at most 8 (h35 13); (2) wins at least 4 of 8 (h35 2); (3) h55's churches lost at
+  least 70 (h35 killed 58). Then a gate vs h35 (40 games, falsifier t <= 0): the defence must not cost the mirror
+  games, where enemy churches near our churches sit beside enemy military (h54's knife fight).

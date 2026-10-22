@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 04:24 PDT)
+## State (2026-10-22 04:42 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -39,9 +39,11 @@
   `out/dlv_chain15.sh` (no-op h35f vs h35: IDENTICAL; sym_h46),
   `out/dlv_chain16.sh` (no-op h35g vs h35: IDENTICAL; sym_h47 clean), `out/dlv_chain17.sh` (sym_h48 clean), `out/dlv_chain18.sh` (no-op h35h vs h35 IDENTICAL; sym_h49, sym_h50 clean), `out/dlv_chain19.sh` (no-op h35i,
   sym_h51; rerun at 02:15 on the CASTLE_POST_R builds: no-op IDENTICAL, sym_h51 clean), `out/dlv_chain20.sh`
-  (deliveries of h52 and h53, attack timing 350 / 550, started 02:44; TRAINING_LOG 02:40), `out/dlv_chain21.sh`
-  (no-op h35j vs h35 for the new defaults PREACHER_SELF / PREACHER_MIL / STRIKE_R2; sym_h54), `out/dlv_chain22.sh`
-  (no-op h35k vs h35 for the chain code, CHAIN_ROUND 0; sym_h55, 260 rounds; started 03:38). h51's second driver diagnostic
+  (deliveries of h52 and h53, attack timing 350 / 550: failed 0 and 2 of 3, ATTACK_ROUND stays 450), `out/dlv_chain21.sh`
+  (no-op h35j IDENTICAL; sym_h54 clean), `out/dlv_chain22.sh` (no-op h35k IDENTICAL; sym_h55: seed 2 split on the
+  stores alone at round 215), `out/dlv_chain23.sh` (no-op h35l IDENTICAL; sym_h56 clean), `out/dlv_chain24.sh`
+  (started 04:38: no-op h35m vs h35 for CHURCH_FIRST code; sym_h55 seed 2 rerun with the pair-naming symcheck;
+  sym_h58; h58's delivery vs h55, pre-registered TRAINING_LOG 04:40). h51's second driver diagnostic
   (2299): 33 units by the castle at 450 against h35's 3, yet h51 lost that castle at 562 (TRAINING_LOG 02:33). Symmetry checks stop only at axis-tile contests or
   combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new
@@ -60,7 +62,8 @@
   corridor. That jam is a movement lead for v5 itself (idle units on and next to a corridor by a corner castle).
   Defence: CFG.HUNT (h56b = HUNT 2) partly stops chainers that wait (driver diagnostics vs h55w, TRAINING_LOG
   04:17), not ones whose bank is ready on arrival; a line's churches then survive as factories because shooters
-  rank churches last (combat.js PRIORITY). Not queued.
+  rank churches last (combat.js PRIORITY). Not queued. CFG.CHURCH_FIRST_R2 (h58 = 144): enemy churches near home
+  outrank units for every shooter; delivery vs h55 on the extra lane.
 - tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
   cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were
   started without it, our own builds only). Not yet synced to the VM trees (they start games under unshare anyway).
