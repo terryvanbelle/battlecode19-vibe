@@ -1108,6 +1108,9 @@ batch-out/dlv_h42_h35,1,cand:h42,us:v5,seed-905,B,490,castles,905,red,2026-10-22
 batch-out/dlv_h42_h35,2,cand:h42,us:v5,seed-905,B,491,castles,905,blue,2026-10-22T07:55:57Z
 batch-out/dlv_h42_h35,3,cand:h42,us:v5,seed-2855,B,493,castles,2855,blue,2026-10-22T07:58:12Z
 batch-out/dlv_h42_h35,4,cand:h42,us:v5,seed-2855,B,493,castles,2855,red,2026-10-22T07:58:14Z
+galaxy-235,1,CS554-software-engineerin~a575dc,us:v5,seed-2674,B,473,castles,2674,red,2026-10-22T08:00:01Z
+galaxy-235,2,CS554-software-engineerin~a575dc,us:v5,seed-1706,A,28,castles,1706,blue,2026-10-22T08:00:01Z
+galaxy-235,3,CS554-software-engineerin~a575dc,us:v5,seed-2046,B,467,castles,2046,red,2026-10-22T08:00:01Z
 galaxy-244,1,uvafan.bc2019,vishwasns99.BC_2019,,A,,score,,,2026-10-22T08:00:01Z
 galaxy-244,2,uvafan.bc2019,vishwasns99.BC_2019,,A,,score,,,2026-10-22T08:00:01Z
 galaxy-244,3,uvafan.bc2019,vishwasns99.BC_2019,,A,,score,,,2026-10-22T08:00:01Z
@@ -1380,6 +1383,12 @@ galaxy-385,3,us:v5,StoneT2000.BC19-botfinalsafe,seed-60,A,515,castles,60,red,202
 galaxy-388,1,us:v5,StoneT2000.BC19-bot1v43,seed-493,B,1000,health,493,red,2026-10-22T13:28:30Z
 galaxy-388,2,us:v5,StoneT2000.BC19-bot1v43,seed-1822,B,1000,castles,1822,blue,2026-10-22T13:28:30Z
 galaxy-388,3,us:v5,StoneT2000.BC19-bot1v43,seed-1241,B,412,castles,1241,red,2026-10-22T13:28:30Z
+galaxy-397,1,nthistle.battlecode-2019,us:v5,seed-2674,B,485,castles,2674,red,2026-10-22T13:28:32Z
+galaxy-397,2,nthistle.battlecode-2019,us:v5,seed-1884,B,1000,castles,1884,blue,2026-10-22T13:28:32Z
+galaxy-397,3,nthistle.battlecode-2019,us:v5,seed-53,B,495,castles,53,red,2026-10-22T13:28:32Z
+galaxy-400,1,jamesrayman.HCN-bot,us:v5,seed-520,B,679,castles,520,red,2026-10-22T13:28:33Z
+galaxy-400,2,jamesrayman.HCN-bot,us:v5,seed-2674,B,470,castles,2674,blue,2026-10-22T13:28:33Z
+galaxy-400,3,jamesrayman.HCN-bot,us:v5,seed-2644,B,459,castles,2644,red,2026-10-22T13:28:33Z
 batch-out/h24v5_h35,38,cand:h24v5,us:v5,seed-1325,B,568,castles,1325,blue,2026-10-22T13:28:43Z
 batch-out/h24v5_h35,39,cand:h24v5,us:v5,seed-1862,A,485,castles,1862,blue,2026-10-22T13:28:53Z
 batch-out/h24v5_h35,40,cand:h24v5,us:v5,seed-499,B,1000,castles,499,blue,2026-10-22T13:29:23Z
@@ -1489,3 +1498,6 @@ batch-out/h8v5_h35,37,cand:h8v5,us:v5,seed-2927,A,470,castles,2927,red,2026-10-2
 batch-out/h8v5_h35,38,cand:h8v5,us:v5,seed-1862,A,491,castles,1862,red,2026-10-22T16:36:36Z
 batch-out/h8v5_h35,39,cand:h8v5,us:v5,seed-2927,B,470,castles,2927,blue,2026-10-22T16:36:36Z
 batch-out/h8v5_h35,40,cand:h8v5,us:v5,seed-1862,B,491,castles,1862,blue,2026-10-22T16:37:13Z
+batch-out/h63_h50,1,cand:h63,us:v6,seed-241,A,1000,castles,241,red,2026-10-22T16:55:50Z
+batch-out/h63_h50,2,cand:h63,us:v6,seed-241,B,1000,castles,241,blue,2026-10-22T16:57:50Z
+batch-out/dlv_h61_h50,5,cand:h61,us:v6,seed-2542,B,963,castles,2542,red,2026-10-22T16:58:35Z

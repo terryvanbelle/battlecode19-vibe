@@ -327,3 +327,27 @@ test('gatesim: certain outcomes decide at the first look; no discordance stays o
   assert.ok(Math.abs(s.accept + s.reject + s.open - 1) < 1e-9);
   assert.deepStrictEqual(simulate({ q: 0.3, p: 0.7, trials: 500, seed: 9 }), simulate({ q: 0.3, p: 0.7, trials: 500, seed: 9 }));
 });
+
+test('census: pioneers, churches by round, mines; gate replay names sum by role', () => {
+  const { census, candSide, summarize } = require('../tools/census');
+  const buf = fs.readFileSync(path.join(FIX, 'rush_s2908_r80.bc19'));   // h6 (red) vs bots/rush, first 80 rounds
+  const T = census(buf, { by: [40, 80] }), an = replay.analyze(buf);
+  for (const team of [0, 1]) {
+    assert.strictEqual(T[team].churches, an.tally[team].built[1]);
+    assert.strictEqual(T[team].mines, an.tally[team].mined_k / 2 + an.tally[team].mined_f / 10);
+    assert.strictEqual(T[team].churches_by[80], T[team].churches);
+  }
+  assert.deepStrictEqual([T[0].pioneers, T[0].pioneer_churches, T[0].phase_sum, T[0].churches_by[40], T[0].depot_idle],
+    [3, 2, 35, 1, 13]);
+  assert.strictEqual(T[1].pioneers, 0);                     // the rush sends no pioneers
+  const all = census(buf, { late: 0 });                       // every preacher is a late one from round 0
+  for (const team of [0, 1]) assert.strictEqual(all[team].late_preachers, an.tally[team].built[5]);
+  assert.ok(an.tally[0].built[5] > 0 && T[0].late_preachers === 0);
+  const short = census(buf, { to: 40, stuck: 10 });
+  assert.strictEqual(short[0].churches, 1);
+  assert.ok(short[0].mines < T[0].mines);
+  assert.deepStrictEqual([candSide('a_b_1205_red.bc19'), candSide('x/a_b_1205_blue.bc19'), candSide('g.bc19')], [0, 1, null]);
+  const tot = summarize([{ cand: 1, teams: T }, { cand: 0, teams: T }]);
+  assert.deepStrictEqual([tot.cand.pioneers, tot.ctrl.pioneers, tot.cand.games, tot.cand.phase_mean], [3, 3, 2, 17.5]);
+  assert.deepStrictEqual(Object.keys(summarize([{ cand: null, teams: T }])), ['red', 'blue']);
+});

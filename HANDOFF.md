@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 09:40 PDT)
+## State (2026-10-22 09:55 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -16,7 +16,8 @@
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
   replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 09:40:
   **h63** (PILGRIM_HERE, ...a3d5771, running), **h64** (PIONEER_FAST,
-  ...a3d57715) and **h65** (ESCORT 2, ...a3d57716, after its no-op/symcheck job ...a3d577158) gates vs h50; the
+  ...a3d57715) and **h65** (ESCORT 2, ...a3d57716, after its no-op/symcheck job ...a3d577158) gates vs h50; **h66** (stack: v6 +
+  ENDGAME_FUEL 900 + CHAIN_ROUND 150, symcheck then gate vs h50, ...a3d57717; TRAINING_LOG 09:55); the
   **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each vs h55v6); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775; h8v5 vs h35 ended at D 4, below the first
   look, TRAINING_LOG 09:40); h55's extension vs h35 (...a3d585, seed0 6000) and h24v5's (...a3d597, look 1 D 13 t 0.83, next look D >= 24); then
   the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50, outputs out/<name>_h50.jsonl): h51v6's
@@ -82,10 +83,10 @@
 - Idle on safe depots (TRAINING_LOG 08:43, replica 206-3): a pilgrim mines only on its target; when the target is
   taken or under an enemy attacker it never takes the depot it stands on, so seven pilgrims of castle (0,14) mined
   nothing for 200+ rounds beside StoneT2000's prophets. CFG.PILGRIM_HERE (h63 = 1): gate vs h50 is next in the job
-  queue (...a3d5771), delivery = scratch depotidle.js on its replays (copy in 2019-next/out); chain31 runs its no-op
+  queue (...a3d5771), delivery = `tools/census.js --to 450` on its replays (depot_idle, mines by cand / ctrl); chain31 runs its no-op
   (v6f) and symchecks. h62 (PIONEER_LOST_DOUBLE 1, the longer rest after a pioneer dies) is built and waits for a
   replica panel vs StoneT2000.
-- Pioneers (TRAINING_LOG 08:16, scratch pioneers.js in VM 2019-next/out): in h50's gate v6 left 40 pioneers stuck
+- Pioneers (TRAINING_LOG 08:16; now `tools/census.js`, which also reads h64's and h65's deliveries): in h50's gate v6 left 40 pioneers stuck
   (7,874 turns to round 450) beside contested sites on 7 maps, and castles re-send to the same site every 81 rounds;
   vs StoneT2000 our pioneers are mostly killed en route (25 of 46) and re-sent every ~105 rounds. CFG.PIONEER_GIVEUP
   (h61 = 20; h61b = 50 built) gives the site up: chain29 (no-op v6e, symcheck), then chain30 (delivery vs h50 on

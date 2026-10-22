@@ -1667,3 +1667,34 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   rather than extended against v5: **h8v6** = v6 + ENDGAME_FUEL 900 (sha a6865c24abac) vs h50, 20 random cells,
   seed0 5000, par 2 (VM job ...a3d5775, after the anti-chain panel). Same bar: looks at D 12 / 24 / 48; accept
   t >= 2, reject t <= 0. h8v5's delivery (3 of 3) stands; the switch acts only from round 900, so most cells split.
+
+## 2026-10-22 09:55 — vs StoneT2000 our churches stop at ~3; h66 stack pre-registered; tools/census.js
+- Opening timeline, us vs StoneT2000 (botfinalsafe, bot1v43) over the 33 fetched replica games (matches 199-206,
+  287, 385, 388, 406, 407; mean per game, scratch tl_vs.js):
+
+  | round | churches us/them | pilgrims us/them | army us/them | mined K us/them | mined F us/them |
+  |---:|---|---|---|---|---|
+  | 25 | 0.2 / 0.9 | 7.2 / 6.3 | 2.9 / 1.2 | 119 / 108 | 652 / 217 |
+  | 50 | 0.9 / 1.7 | 9.3 / 9.3 | 5.9 / 1.9 | 279 / 233 | 1,516 / 897 |
+  | 100 | 2.0 / 4.3 | 12.8 / 16.6 | 14.8 / 7.6 | 709 / 720 | 3,799 / 3,224 |
+  | 200 | 2.7 / 5.8 | 15.2 / 20.8 | 40.6 / 26.8 | 1,827 / 2,064 | 9,501 / 10,219 |
+  | 300 | 2.7 / 7.3 | 15.6 / 23.9 | 70.6 / 38.6 | 3,064 / 3,471 | 15,899 / 17,251 |
+
+  Our church count stops growing after round 150 while theirs keeps climbing; we hold twice their army from round
+  25 on and mine three times their fuel by round 25. Next: where those churches stand (own half / midline / enemy
+  half), then a structural economy candidate.
+- Replica 400 vs jamesrayman HCN-bot: won 3-0 (castles at 679, 470, 459). The new census reads their 450-1,130
+  errors a game as their own "Cannot afford to build specified unit." (and 3 "Not enough fuel to move"); ours 0.
+  Bumped match 306 (StoneT bot1v43 vs botfinalsafe) to the front for the census of StoneT's errors without us.
+- tools/census.js: per replay and team, pioneers (phase, died, stuck), churches (and by given rounds), depot-idle
+  pilgrim turns, mines, escorts (SIG.GUARD builds), chainers (SIG.CHAIN builds), recalls (FAR.RECALL radios) and
+  late preachers; gate replays sum by role (cand / ctrl from the file name). It replaces the scratch pioneers.js and
+  depotidle.js for the pre-registered deliveries of h63, h64 and h65 (same definitions; unit test on the rush
+  fixture checks churches, mines and late preachers against replay.js's tally).
+- **h66 = v6 + ENDGAME_FUEL 900 + CHAIN_ROUND 150** (sha 6f53bb5b82b8): the stack of the two delivered near-misses
+  with positive estimates (h8v5 vs h35 +4 -0; h55 vs h35 +6 -5), independent mechanisms (endgame preachers from
+  round 900; church chains at the mirror castles from round 150). RECALL (h43) stays out: delivered but never gated.
+  VM job ...a3d57717 (after h65's gate): symcheck 1, 2, 3 to round 250, then gate vs h50, 20 random cells, seed0
+  5000, par 2. Delivery (census.js --to 1000 on its replays): (1) chainers on h66's side in at least 20 of 40 games;
+  (2) late preachers on h66's side at least 3x h50's. Accept at t >= 2 (looks at D 12 / 24 / 48); reject at t <= 0.
+  If h66 is accepted, h8v6's single gate (...a3d5775) is withdrawn.
