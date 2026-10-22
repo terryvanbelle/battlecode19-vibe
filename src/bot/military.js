@@ -37,6 +37,8 @@ function listen(B) {
   for (const r of w.robots) {
     if (r.id === me.id || (r.seen && r.team !== me.team)) continue;
     const m = decFarRobot(r);
+    if (m && m.type === SIG.RECALL && CFG.RECALL && w.passable(m.x, m.y)) { st.recall = { x: m.x, y: m.y, until: me.turn + CFG.RECALL }; st.target = null; continue; }
+    if (CFG.RECALL && st.recall && me.turn <= st.recall.until) continue;   // recalled: attack orders wait
     if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || (st.guard && B.round < 900)) continue;
     const i = CFG.ATTACK_PERSIST && m.extra >= 1 && m.extra <= 4 ? m.extra - 1 : -1;
     if (i >= 0) { st.known[i] = [m.x, m.y]; if (st.dead.has(i)) continue; }
@@ -74,6 +76,12 @@ function bandSources(B, tx, ty) {
   for (let dy = -m; dy <= m; dy++) for (let dx = -m; dx <= m; dx++) {
     const r = dx * dx + dy * dy; if (r >= Math.max(1, S.atkMin) && r <= S.atkMax) out.push([tx + dx, ty + dy]);
   }
+  return out;
+}
+
+function recallRing(x, y) {
+  const out = [];
+  for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) if (Math.max(Math.abs(dx), Math.abs(dy)) >= 2) out.push([x + dx, y + dy]);
   return out;
 }
 
@@ -252,7 +260,8 @@ export function militaryTurn(B) {
   }
 
   // Engage visible enemies near home (or anywhere when marching): melee closes in; prophets hold.
-  const h = st.home, c = latticeCentre(B), waiting = !st.target && B.round < st.waitUntil, marching = !!st.target || waiting;
+  const h = st.home, c = latticeCentre(B), waiting = !st.target && B.round < st.waitUntil;
+  const rc = CFG.RECALL && st.recall && me.turn <= st.recall.until ? st.recall : null, marching = !!st.target || waiting || !!rc;
   if (u !== PROPHET) {
     let e = null, ed = 1e9;
     for (const x of enemies) {
@@ -269,6 +278,12 @@ export function militaryTurn(B) {
       return w.give(r.x - me.x, r.y - me.y, me.karbonite, me.fuel);
   }
 
+  // CFG.RECALL: hurry to 2-3 king steps from the castle that called (off its build tiles) and hold there.
+  if (rc) {
+    const k = king(me.x, me.y, rc.x, rc.y);
+    if (k === 2 || k === 3) return null;
+    return go(B, 'R' + rc.x + ',' + rc.y, () => recallRing(rc.x, rc.y));
+  }
   // Fuel per move is proportional to r2, so short steps cover distance cheapest: unhurried moves use r2 <= 2.
   if (waiting) return null;
   // Endgame fuel: units away from home stand still so the fuel goes into preachers (newborns still clear the exits).

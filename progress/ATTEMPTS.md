@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 25 other, 18 queued, 9 in progress, 8 accepted, 3 dropped, 3 rejected, 1 sparring partners (67 rows).
+Totals: 25 other, 18 queued, 10 in progress, 8 accepted, 3 dropped, 3 rejected, 1 sparring partners (68 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -77,6 +77,7 @@ Totals: 25 other, 18 queued, 9 in progress, 8 accepted, 3 dropped, 3 rejected, 1
 | `h20v5` | 2026-10-22 | h35 | v5 + standing defence reserve: every karbonite spend but a threat response (pilgrims, pioneers, churches, peacetime army) leaves 30 K in the bank, so a castle that spots attackers can afford a preacher (DEF_RESERVE_K=30); rebased from h20 |  |  |  |  | QUEUED: 40 games vs h35 |
 | `h24v5` | 2026-10-22 | h35 | v5 + economy first: no peacetime army before round 100, threat responses still build (ECON_UNTIL=100); rebased from h24 |  |  |  |  | QUEUED: 40 games vs h35 |
 | `h42` | 2026-10-22 | h35 | h35 + unit mix by the binding resource: crusaders while bank fuel / karbonite >= 10, preachers while <= 1, else the rotation (MIX_BY_STOCK [10, 1]) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
+| `h43` | 2026-10-22 | h35 | v5 + castle recall: a castle whose visible attackers outnumber half its defenders radios its position (50 tiles) every 10 rounds; units that hear it come home for 30 rounds (RECALL=30) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
 | `h7v5` | 2026-10-22 | h35 | v5 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | QUEUED: 40 games vs h35 |
 | `h8v5` | 2026-10-22 | h35 | v5 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8r |  |  |  |  | QUEUED: 40 games vs h35 |
 | `h9v5` | 2026-10-22 | h35 | v5 + church planning counts depots served by pilgrim moves (PLAN_SERVE_PILGRIM=1); rebased from h9r |  |  |  |  | QUEUED: 40 games vs h35 |

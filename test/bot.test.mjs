@@ -375,6 +375,67 @@ test('struct: MIX_BY_STOCK builds crusaders when karbonite binds, preachers when
   } finally { [CFG.MIX_BY_STOCK, CFG.SERVE_MOVES] = saved; }
 });
 
+test('castle: RECALL radios its position when attackers outnumber half its defenders, at most every 10 rounds', () => {
+  const saved = CFG.RECALL;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    let ex = null;
+    for (let dy = -4; dy <= 4 && !ex; dy++) for (let dx = -4; dx <= 4 && !ex; dx++) {
+      const x = castle.x + dx, y = castle.y + dy;
+      if (dx * dx + dy * dy >= 9 && dx * dx + dy * dy <= 16 && x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y)) ex = [x, y];
+    }
+    g.robots.push({ id: 4999, team: 1, unit: S.CRUSADER, x: ex[0], y: ex[1], turn: 5, health: 40, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    const turn = t => {
+      castle.turn = t; const w = worldFor(g, castle), sent = [];
+      w.api.signal = (v, r2) => sent.push([v, r2]);
+      B.w = w; B.api = w.api; castleTurn(B);
+      return { sent: sent.filter(([, r2]) => r2 === FAR.RECALL), me: w.me };
+    };
+    CFG.RECALL = 0;
+    assert.strictEqual(turn(1).sent.length, 0);
+    CFG.RECALL = 30;
+    for (let t = 2; t <= 4; t++) turn(t);   // past setup (turns 1-3)
+    const a = turn(20);
+    assert.deepStrictEqual(a.sent, [[encXY(0, a.me.x, a.me.y), FAR.RECALL]]);
+    assert.strictEqual(turn(25).sent.length, 0);   // within 10 rounds
+    assert.strictEqual(turn(30).sent.length, 1);
+  } finally { CFG.RECALL = saved; }
+});
+
+test('military: RECALL sends a unit that hears it toward the castle, holding 2-3 king steps out, and nothing changes when off', () => {
+  const saved = CFG.RECALL;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    const spot = (lo, hi) => { for (let r = lo; r <= hi; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++)
+      if (Math.max(Math.abs(dx), Math.abs(dy)) === r && free(castle.x + dx, castle.y + dy)) return [castle.x + dx, castle.y + dy]; return null; };
+    const far = spot(8, 12), near = spot(2, 2);
+    assert.ok(far && near);
+    const cw = worldFor(g, castle);
+    castle.signal = encXY(0, cw.me.x, cw.me.y); castle.signal_radius = FAR.RECALL;
+    const run = ([x, y], on) => {
+      CFG.RECALL = on;
+      const cru = { id: 4002, team: 0, unit: S.CRUSADER, x, y, turn: 3, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      g.robots.push(cru);
+      try {
+        const w = worldFor(g, cru), B = { api: w.api, w, round: 20, birthRound: 18, st: {}, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        const a = militaryTurn(B);
+        return { a, B, w };
+      } finally { g.robots.pop(); }
+    };
+    const k0 = king(far[0], far[1], castle.x, castle.y);
+    const on = run(far, 30);
+    assert.ok(on.B.st.recall && on.a && on.a.action === 'move');
+    assert.ok(king(far[0] + on.a.dx, far[1] + on.a.dy, castle.x, castle.y) < k0);
+    assert.strictEqual(run(near, 30).a, null);       // already 2 king steps out: holds
+    assert.strictEqual(run(far, 0).B.st.recall, undefined);
+  } finally { CFG.RECALL = saved; }
+});
+
 test('relay: a full pilgrim not next to a structure hands its load to a unit next to one, which deposits it', () => {
   const saved = CFG.RELAY;
   try {

@@ -853,3 +853,27 @@
   (ATTACK_EVERY 20), h11v5 (cruise patience), h9v5 (PLAN_SERVE_PILGRIM), h18v5 (CRUISE_FUEL_RESERVE 500). h40's
   delivery (vs h19) keeps running as a mechanism check; if it passes, h40v5 (h35 + FRONT_ROUND 200) is gated vs
   h35. The reference jobs now play bots/v5 vs v0 and vs rush.
+
+## 2026-10-22 00:27 — v5's two lost gate cells read; h43 pre-registered: castle recall (RECALL)
+- Clean no-op of the new defaults (VM extra lane, --det, --timescale 10, seed 1828, 200 rounds): h35d (defaults-only
+  build) vs h35 replays byte-identical to h35 vs h35. sym_h41 and sym_h42 clean (stops only at an axis-tile contest
+  and at combat after the first attack).
+- 905 (35x35, one castle, 2 karbonite depots a side): armies equal at the round-450 attack call (24/26/12 each);
+  h35's advanced (mean king distance to the enemy castle 25.7 -> 21.3) into h19's, which mostly held (~24.5), and
+  lost the exchange (62 -> 22 military vs 62 -> 31); h19 then took the castle at 547.
+- 2855 (53x53, one castle, four churches, three of them 30-44 tiles west of the castle): at round 440 most of
+  h35's army stood around the western churches. The attack call (FAR.ATTACK, ~20 tiles) reached only the castle's
+  own guard, which marched and died (139 -> 99 units); the western mass never moved (440 vs 540 positions alike).
+  From round 540 six to eight h19 units walked up to the castle and killed it (200 HP at 555, dead at 568) while
+  89 of h35's 92 military units stood 15 or more king steps away and 0-2 of them fired in any 5 rounds (F 13,916
+  unspent, K 0: the castle could not rebuild a guard).
+- Mechanism: new switch CFG.RECALL (default 0; rounds a recall lasts). A castle whose visible mobile attackers
+  outnumber half its military within r2 100 radios its position at FAR.RECALL (r2 2501, 50 tiles, 51 fuel) at most
+  every 10 rounds; a military unit that hears it drops attack orders for that long and hurries (full speed) to 2-3
+  king steps from that castle, then holds; shooting and engaging come first as before. The attack call skips its
+  radio on a turn the recall used. Unit tests 69/69.
+- h43 = v5 + RECALL 30. Delivery (VM queue, 8 games of 1000 rounds vs h35 on 2855, 905, 1250, 2299 both sides):
+  (1) h43 radios a recall in at least 4 of the 8 games; (2) castles lost in total: h43 fewer than h35; (3) h43's
+  military units lost at most 110% of h35's. Gate 40 games vs h35, falsifier t <= 0 (a recall pulls the army off
+  winning attacks). Dose ladder: RECALL 30 -> 60; the radius 50 tiles -> map-wide. Diagnostics: driver 905 (600
+  rounds), VM extra lane 2855 both sides (out/diag_h43_2855.jsonl).

@@ -5,7 +5,7 @@ import { CFG } from './config.js';
 import { PILGRIM, CRUSADER } from './specs.js';
 import { SIG, encXY, CT, FAR } from './comms.js';
 import { bfs } from './mapinfo.js';
-import { offsets } from './util.js';
+import { offsets, d2 } from './util.js';
 import { structInit, structTurn, buildToward } from './struct.js';
 
 const KING = offsets(2), PILGRIM_OFFS = offsets(4);
@@ -61,6 +61,7 @@ export function castleTurn(B) {
     return !st.churched.has(p.cluster) && me.turn - p.since <= 80;
   });
   st.nStructs = () => st.castles.size + st.churched.size;
+  if (CFG.RECALL) callRecall(B);
   callAttack(B);
   st.pioneerDue = pioneerDue(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
   return structTurn(B, allIds, () => pioneer(B));
@@ -166,7 +167,19 @@ function callAttack(B) {
   const targets = [...st.castles.values()].map(c => w.mirror(c.x, c.y));
   targets.sort((a, b) => ((a[0] - me.x) ** 2 + (a[1] - me.y) ** 2) - ((b[0] - me.x) ** 2 + (b[1] - me.y) ** 2) || a[0] - b[0]);
   const t = targets[0];
-  if (w.fuel >= 20 + 20) w.signal(encXY(0, t[0], t[1]), FAR.ATTACK);
+  if (w.fuel >= 20 + 20 && !w.sentR2) w.signal(encXY(0, t[0], t[1]), FAR.ATTACK);
+}
+
+// CFG.RECALL: mobile attackers in sight outnumber half our military within r2 100 -> radio this castle's position
+// (FAR.RECALL) at most every 10 rounds, so units guarding far churches come home before it falls.
+function callRecall(B) {
+  const w = B.w, st = B.st, me = w.me, a = w.enemies.filter(e => e.unit >= CRUSADER).length;
+  if (!a || B.round - (st.recallAt || -99) < 10 || w.fuel < Math.ceil(Math.sqrt(FAR.RECALL)) + 50) return;
+  let ours = 0;
+  for (const r of w.friends) if (r.unit >= CRUSADER && d2(me.x, me.y, r.x, r.y) <= 100) ours++;
+  if (ours >= a * 2 + 1) return;
+  st.recallAt = B.round;
+  w.signal(encXY(0, me.x, me.y), FAR.RECALL);
 }
 
 // ATTACK_PERSIST: target the nearest enemy castle not reported destroyed (whether or not our own mirror castle lives);
@@ -184,6 +197,7 @@ function callAttackPersist(B) {
   const [x, y] = w.mirror(st.order[t].x, st.order[t].y), msg = encXY(t + 1, x, y);
   const living = [...st.castles.values()].sort((a, b) => (a.y * w.n + a.x) - (b.y * w.n + b.x));
   const first = living[0].x === me.x && living[0].y === me.y;
+  if (w.sentR2) return;
   if (st.deadE.size > 0 && st.lastT !== t && first && w.fuel >= 90 + 40) { st.lastT = t; return w.signal(msg, FAR.WIDE); }
   if (callDue(B) && w.fuel >= 20 + 20) w.signal(msg, FAR.ATTACK);
 }

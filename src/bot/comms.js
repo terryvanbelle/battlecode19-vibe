@@ -9,6 +9,7 @@ export const SIG = {
   POST: 6,    // structure -> newborn military: hold lattice near (x, y) (the structure)
   FRONT: 7,   // structure -> newborn pilgrim: build a church at the builder's front site (struct.js frontSite); v = round
   ZONE: 8,    // structure -> newborn military (r2 25, the turn after the build): a unit of ours died at (x, y) (CFG.KILL_ZONE)
+  RECALL: 9,  // castle -> army (far, FAR.RECALL): come home to the castle at (x, y), it is under attack (CFG.RECALL)
 };
 export function encXY(type, x, y) { return (type << 12) | (x << 6) | y; }
 export function encNum(type, v) { return (type << 12) | (v & 4095); }
@@ -27,11 +28,12 @@ export const CT = {
 // Far messages (to robots that may not see the sender, so cannot check its team): the message type is the exact
 // signal radius, which every receiver sees (game.js:675-700). Unusual radii make enemy radio almost never pass.
 // Payload: encXY(0, x, y) | extra bits in the top 4 bits (ATTACK: enemy castle index + 1, 0 = none).
-// WIDE is an ATTACK to the whole map (max r2 2*63^2 = 7938).
-export const FAR = { ATTACK: 398, ENEMY: 99, WIDE: 7930 };   // ceil(sqrt) costs: 20, 10, 90
+// WIDE is an ATTACK to the whole map (max r2 2*63^2 = 7938); RECALL reaches 50 tiles.
+export const FAR = { ATTACK: 398, ENEMY: 99, WIDE: 7930, RECALL: 2501 };   // ceil(sqrt) costs: 20, 10, 90, 51
 export function decFarRobot(r) {
   if (!(r.signal >= 0)) return null;
-  const type = r.signal_radius === FAR.ATTACK || r.signal_radius === FAR.WIDE ? SIG.ATTACK : r.signal_radius === FAR.ENEMY ? SIG.ENEMY : 0;
+  const type = r.signal_radius === FAR.ATTACK || r.signal_radius === FAR.WIDE ? SIG.ATTACK : r.signal_radius === FAR.ENEMY ? SIG.ENEMY
+    : r.signal_radius === FAR.RECALL ? SIG.RECALL : 0;
   if (!type) return null;
   return { type, x: (r.signal >> 6) & 63, y: r.signal & 63, extra: r.signal >> 12 };
 }

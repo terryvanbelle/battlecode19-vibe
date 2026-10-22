@@ -106,6 +106,10 @@ export const CFG = {
   ATTACK_PERSIST: 0,         // 1: units report destroyed enemy castles (CT.DEAD), castles drop them and radio the next
                              // target map-wide (FAR.WIDE); units without orders wait where they are, not at home
   ATTACK_WAIT: 40,           // ...for this many rounds
+  RECALL: 0,                 // >0: a castle whose visible attackers outnumber half its defenders (r2 100) radios a
+                             // recall (FAR.RECALL, 50 tiles, 51 fuel) at most every 10 rounds; units that hear it drop
+                             // attack orders and go to 2-3 king steps from that castle for this many rounds (gate seed
+                             // 2855: 89 of h35's 92 units guarded far churches while 8 attackers killed its lone castle)
   // endgame
   ENDGAME_MARGIN: 6,
   ENDGAME_FUEL: 0,           // >0: from this round all fuel goes into preachers (health breaks round-1000 ties; a
