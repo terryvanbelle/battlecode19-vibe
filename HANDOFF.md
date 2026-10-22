@@ -1,17 +1,17 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-21 19:40 PDT)
+## State (2026-10-21 20:10 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
-  teams make mirror-image decisions. Champion **v3** (`bots/v3`, ROSTER.tsv); frozen history v0-v3, sparring partner
+  teams make mirror-image decisions. Champion **v4** (`bots/v4` = h19, ROSTER.tsv); frozen history v0-v4, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
   a CFG switch whose default is the incumbent; candidates are built with `--cfg KEY=JSON` into `dist/hN`.
 - Dev line h6 (v3 + RNG reseed, depot cooldown, crusader/preacher rotation, miner switching, shooting fuel floor) is
   level with v3 (23-17, t 0.7; 7-7 without load-contaminated games): it loses every single-castle map on castles
   near round 500 and wins the multi-castle ones. h19 = src defaults = h6 + two bug fixes (World.signal fuel;
-  setup that re-runs until complete, LEARNINGS 10), measured vs h6 next; candidates from now on are switches on h19,
-  gated against h19 with `--timescale 2 --init-ms 1000` (TRAINING_LOG 17:40).
-- VM queue (`~/jobq`, in order): h19 vs h6 (running since 18:40); gates run from the shadow tree ~/projects/vibe/2019-next (new tools incl. `--init-ms`; engine/maps/bots/dist link to the main tree;
-  outputs in the main tree's out/): h19 vs h6, then h16r (turtle, moved up 18:53 after the field study, TRAINING_LOG),
+  setup that re-runs until complete, LEARNINGS 10): 21-19 vs h6 (t 0.58), ACCEPTED 20:04 and frozen as v4.
+  Candidates are switches on h19, gated against h19 with `--timescale 2 --init-ms 1000 --fast-turn`.
+- VM queue (`~/jobq`, in order): h16r vs h19 (running since 19:56); gates run from the shadow tree ~/projects/vibe/2019-next (new tools incl. `--init-ms`; engine/maps/bots/dist link to the main tree;
+  outputs in the main tree's out/): h16r (turtle, moved up 18:53 after the field study, TRAINING_LOG),
   h22 (preachers, moved up 19:18: prophets lose the fuel exchange vs a rush), h25 (NAV_FIT movement fix, 19:07), h24
   (economy first, 19:00), h21, h20, h23, h15r, h8r, h9r vs h19; then the reference jobs v3 vs v0
   and v3 vs rush (main tree, synced 18:50 except engine/maps/bots/dist). The h6-based h15, h16, h7-h10 jobs are in ~/jobq/superseded. Deliveries in
@@ -28,9 +28,9 @@
   pilgrims boxed in full next to packed castles (h21 relay) and prophets firing 84% of attack fuel at 0.40 damage
   per fuel (h22 preachers in their place; h23 prophets keep off a short bank). `replay.js fire`: prophets fire 93%
   of attack fuel in self-play, ~13,500 a game.
-- Replica ladder (ACCESS.md, tools/galaxy19, `tools/galaxy19/contest19.py`): team vibe19 runs v3, which threw
-  31,098 exceptions in 40 of its 192 replica games (the setup bug h19 fixes): submit h19 once its gate vs h6 is not a
-  loss. Benchmark field:
+- Replica ladder (ACCESS.md, tools/galaxy19, `tools/galaxy19/contest19.py`): team vibe19 runs v4 since submission
+  89 (20:05 PDT); v3 threw 31,098 exceptions in 40 of its 192 replica games (the setup bug v4 fixes). Matches
+  created before 89, including scrims 199-202, still play v3. Benchmark field:
   92 entrants, 89 compiled (BENCHMARK.md). Entry trickles in by VM cron, `field.py seed --next 6` every 20 minutes
   (smoke-tested first, duplicates by bundle digest skipped; log bc19-benchmarks/trickle.log): 15 new teams on at
   16:40 PDT 2026-10-21, the rest by ~21:00. Replica games are the smoke test; the separate smoke harness is stopped.
