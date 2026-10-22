@@ -1267,3 +1267,17 @@
   the baseline): (1) castles lost at most 8 (h35 13); (2) wins at least 4 of 8 (h35 2); (3) h55's churches lost at
   least 70 (h35 killed 58). Then a gate vs h35 (40 games, falsifier t <= 0): the defence must not cost the mirror
   games, where enemy churches near our churches sit beside enemy military (h54's knife fight).
+
+## 2026-10-22 04:58 — symmetry of h55 holds (a twin duel); gates of conditional switches have few live cells
+- h55 seed 2, round 215, resolved with symcheck's new per-pair mirror check (`mid`): red prophet 1924 at (25,15)
+  and its blue twin 845 at (20,15) shot each other; within a pair red resolves first, so 845 died before acting and
+  1924 died later to another shot: the board stays a mirror and the stores differ by 845's unspent 25 fuel.
+  Sequential resolution, not the bot: symcheck now counts it as combat (verdict() unit-tested; live 12-round check
+  of v5 under `unshare -rn`). sym_h58 (VM): contest at 45 on seed 1, combat on 2924, clean on 2 and 3.
+- No-op h35m (source with CHURCH_FIRST code, defaults) vs h35: IDENTICAL.
+- Instrument, not a result (the h54 gate is still running and is not read for a decision): in its finished cells the
+  two games of seeds 418, 2299, 2855 and 241 are byte-identical replays (`cmp` on rp_h54h35): h54's switches never
+  changed a decision there, the engine is deterministic, so the cell is a guaranteed split and carries nothing.
+  2030 and 1635 differ. A switch that fires only on some maps (h54: the knife fight at mirror churches) gets a few
+  live cells per 20, and a 40-game gate cannot resolve it. When this gate ends: count identical cells in every
+  gate since v5 (`cmp` per seed pair) to measure the live fraction before choosing the next gate's size.
