@@ -503,3 +503,11 @@
 - Delivery (pre-registered, 300-round games vs h19, driver): seed 826 both sides and 1205: at round 300 more
   churches and pilgrims than h19 and K+F mined >= h19's; 0 exceptions. Falsifier: gate t <= 0. Dose: the switch
   only (EXPAND_ROUND 100); stacking on h24 waits for h24's gate.
+
+## 2026-10-21 20:25 — h23 delivery FAILED (2 of 3 items); gate withdrawn
+- h23 (PROPHET_FLOOR=200) vs bots/rush, seeds 1337/1879/2544/2908 both sides (out/dlv_h23_rush.jsonl in the shadow
+  tree), against the thresholds of 19:23: prophet share of attack fuel 73% (needed <= 60%: FAIL; h19 85%), damage
+  per fuel 0.60 (needed >= 0.66: FAIL; h19 0.51), castles lost 5 (<= 8: PASS). Outcome 1 win in 8 (h19 0, h20 0).
+  End-of-game bank still ~60 fuel: the floor keeps prophets off the last 225 fuel but the other shooters drain it.
+- Pre-registered rule: a failed delivery takes the gate out. Job moved to ~/jobq/superseded. The direction was right
+  (85% -> 73%, 0.51 -> 0.60); a larger floor would be a new candidate with its own delivery.

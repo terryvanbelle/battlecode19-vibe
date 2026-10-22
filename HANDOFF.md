@@ -14,7 +14,7 @@
   outputs in the main tree's out/): h16r (turtle, moved up 18:53 after the field study, TRAINING_LOG),
   h24 (economy first, 19:00; delivery passed on 826/1828, moved up 20:12), h22 (preachers, moved up 19:18: prophets lose
   the fuel exchange vs a rush), h25s (NAV_FIT + LATTICE_STICKY; h25 withdrawn 20:12 for its preacher two-cycle), h26
-  (LATTICE_STICKY alone), h21, h20, h23, h15r, h8r, h9r vs h19; then the reference jobs v3 vs v0
+  (LATTICE_STICKY alone), h21, h20, h15r, h8r, h9r vs h19 (h23 withdrawn 20:25: delivery failed); then the reference jobs v4 vs v0
   and v3 vs rush (main tree, synced 18:50 except engine/maps/bots/dist). The h6-based h15, h16, h7-h10 jobs are in ~/jobq/superseded. Deliveries in
   the extra lane (`out/dlv_chain2.sh` in the shadow tree, via `tools/xbatch.js` so they do not hold the queue,
   LEARNINGS 11): h20 and h19 vs bots/rush on h6's four rush-losing maps, h21 vs h19 on 2202/1635/2296, h22 vs
