@@ -1919,3 +1919,15 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - 13:47: h72's delivery moved to ...a3d57700, first after the tools swap (before h68, h70, h71): it copies the field
   leader's main weapon, fires on most maps (any map where the bank reaches 1000 K), and its result decides the
   anti-chain panel's bomber and h66's chain half.
+
+## 2026-10-22 13:55 — h63 closed: gate inconclusive (D 7, t 1.13), delivery failed 1 of 2
+- **h63 (PILGRIM_HERE 1) gate vs h50** (out/h63_h50.jsonl, 20 random cells from 5000, par 2): 23-17, h2h gained 5
+  lost 2 split 13, D 7, net +3, t 1.13: no decision at D 7 (first look at D 12).
+- Delivery (census.js --to 450 on the 40 gate replays, the shadow tree's new census): depot-idle turns h63 562 vs
+  h50 983 = **57%, bar <= 50%: FAIL**; mine actions 166,004 vs 155,284 = **107%, bar >= 100%: pass**. Churches 92 vs
+  90, pioneers 145 vs 139, died 5 vs 6, stuck 40 vs 36. One of two fails, so the basics-fix route (accept at net >=
+  0 with D >= 12 if the delivery passes) is closed and the gate is not extended. h63 closed; its +7% mine actions are
+  noted, not acted on: a revised retarget rule would need its own pre-registration.
+- VM: the tools swap ran at h63's boundary (shadow tree run_game.js fd653422..., census.js 27f14e6b..., as staged);
+  h72's delivery is running (...a3d57700). Its symcheck: seed 2 clean to 300; seeds 1, 3 and 2013 end at the known
+  engine-order divergences (an axis tile contest r43, combat order r29 and r53), all before lines can fire (r200).

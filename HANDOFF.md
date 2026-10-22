@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 13:43 PDT)
+## State (2026-10-22 13:55 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -14,8 +14,8 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 13:00:
-  **h63** (PILGRIM_HERE, ...a3d5771, running: 34/40 games at 13:34), **h68** delivery (PIONEER_GIVEUP 20 +
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 13:55:
+  **h68** delivery (PIONEER_GIVEUP 20 +
   PIONEER_STALL_ANY 40: no-op v6j, symcheck, 8 games vs h50 on h61's cells, ...a3d577100; TRAINING_LOG 11:52; a
   tools swap job ...a3d5770 runs first: the shadow tree gets the driver's tools at that boundary; then **h72**'s delivery,
   moved up 13:47: StoneT2000's long church line, CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5];
@@ -37,7 +37,7 @@
   (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6
   vs v0 and v6 vs rush. Gates of passed deliveries go in after h43v6's (job names ...4b01b1a45 onward). The extra
   lane is retired; deliveries and no-op checks go into the jobq as their own jobs. Parked: h69 (CHAIN_ROUND 150 +
-  CHAIN_END_R2 2; TRAINING_LOG 12:50).
+  CHAIN_END_R2 2; TRAINING_LOG 12:50). Closed 13:55: h63 (PILGRIM_HERE; gate D 7 t 1.13, delivery failed 1 of 2).
   Superseded at v5: h31x, h33, h29, h28, h21. Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
   their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h46 (SPOT for melee) failed 1 of 3 at 01:52; h47 (FOCUS 1) failed 1 of 3 at 02:04; h48 (preachers when fuel binds) failed 1 of 3 at 02:20; h49 (SPOT for prophets) failed 0 of 3 at 02:32; h58 (CHURCH_FIRST_R2) failed 1 of 3 and h59 (PILGRIM_HOT) 0 of 3 at 06:13; h45 (EDGE 1.5) withdrawn before its delivery (inert: prophet vision equals reach); h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.

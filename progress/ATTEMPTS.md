@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 54 other, 29 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected, 1 sparring partners (110 rows).
+Totals: 55 other, 28 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected, 1 sparring partners (110 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -106,7 +106,7 @@ Totals: 54 other, 29 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected,
 | `h60` | 2026-10-22 | h35 | v5 + PILGRIM_ORPHAN=1: a pilgrim that knows no living structure (its church fell) walks to our half's unseen cluster sites until it sees a castle or church, instead of standing still with its load |  |  |  | vs v5 4-4 | DELIVERY FAILED 1 of 3 vs h35: stalled turns 80% of h35 (bar 70%), mines 100.1% (bar 100%), wins 4/8 (bar 4); no gate |
 | `h61` | 2026-10-22 | h50 | v6 + a pioneer 20 turns no nearer its site with an enemy attacker in sight gives the site up, reports it taken (castles rest it 200 rounds, free its slot) and mines (PIONEER_GIVEUP=20) |  |  |  | vs v6 5-3 | DELIVERY FAIL: stuck-pioneer turns 0.40 of h50's (bar 0.30); churches by 450 39 vs 33; wins 5/8; no gate (h61b dropped) |
 | `h62` | 2026-10-22 | h50 | v6 + the rest before re-sending a pioneer where one died doubles per loss (100, 200, 400 ... 1600 rounds; PIONEER_LOST_DOUBLE=1) |  |  |  |  | built; not queued (self-play kills few pioneers); waits for a replica panel vs StoneT2000 |
-| `h63` | 2026-10-22 | h50 | v6 + a pilgrim whose target depot is taken or hot mines the depot it stands on, else takes the nearest free depot that is not hot (PILGRIM_HERE=1) |  |  |  | vs v6 21-15 | QUEUED: gate vs h50 (20 random cells, par 2), delivery on its replays (depot-idle turns at most 50% of h50's, mines at least 100%) |
+| `h63` | 2026-10-22 | h50 | v6 + a pilgrim whose target depot is taken or hot mines the depot it stands on, else takes the nearest free depot that is not hot (PILGRIM_HERE=1) | 20 cells vs h50: 23-17, h2h gained 5 lost 2 split 13, D 7, net +3, t 1.13 |  |  | vs v6 21-15 | CLOSED: gate inconclusive at D 7; delivery FAILED 1 of 2 (depot-idle 57% of h50, bar 50%; mines 107%, bar 100%), so no extension |
 | `h64` | 2026-10-22 | h50 | v6 + pioneers take full r2 4 steps whatever the fuel (PIONEER_FAST=1) |  |  |  |  | QUEUED: gate vs h50 (20 random cells, par 2) after h63; delivery: pioneer phase at most 85% of h50's, churches by 150 at least 105% |
 | `h65` | 2026-10-22 | h50 | v6 + escorts: a castle whose pioneer is overdue (10 turns past its distance) or lost builds 2 prophets that hold the lattice at its site (ESCORT=2) |  |  |  |  | QUEUED: gate vs h50 (20 random cells, par 2) after h64; delivery: escorts in >= 5 of 40 games, stuck pioneers <= 75% of h50's, churches by 300 >= h50's |
 | `h66` | 2026-10-22 | h50 | v6 + endgame fuel (ENDGAME_FUEL=900) + church chains from round 150 (CHAIN_ROUND=150): stack of the delivered near-misses h8v5 and h55 |  |  |  |  | QUEUED: symcheck, then gate vs h50 (20 random cells, par 2) after h65; delivery: chainers in >= 20 of 40 games, late preachers >= 3x h50 |
