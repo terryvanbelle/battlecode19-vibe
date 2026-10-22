@@ -2,6 +2,7 @@
 // planClusters, struct.js structInit): per castle the depots it staffs (SERVE_MOVES pilgrim moves) and the clusters
 // it plans to church; then the depots on our side of the map (nearer our castles than their mirrors, king steps)
 // that no castle staffs and no plan churches: orphans, which only EXPAND_ROUND or a church nearby can reach.
+// Each planned cluster: c<index>@(site) d<king steps from us> m<their steps minus ours> n<depots>.
 // Canonical frame (our castles on top). Usage: node tools/plan.mjs <seed> [--team 0|1] [--cfg KEY=JSON ...]
 import { createRequire } from 'node:module';
 import { CFG } from '../src/bot/config.js';
@@ -46,7 +47,8 @@ export function report(seed, team) {
     for (const p of B.st.plan) planned.add(p.cluster);
     const k = B.st.served.filter(d => d.k).length;
     out.push(`castle (${x},${y}): staffs ${B.st.served.length} depots (K ${k} F ${B.st.served.length - k}); plans ` +
-      (B.st.plan.map(p => `c${p.cluster}@(${clusters[p.cluster].site})d${p.d}`).join(' ') || 'none'));
+      (B.st.plan.map(p => `c${p.cluster}@(${clusters[p.cluster].site})d${p.d}` + (p.m !== undefined ? `m${p.m}` : '') +
+        `n${clusters[p.cluster].depots.length}`).join(' ') || 'none'));
   }
   const side = deps.filter(d => { const a = ours[d.y * n + d.x], b = theirs[d.y * n + d.x]; return a >= 0 && (b < 0 || a <= b); });
   const orphans = side.filter(d => !served.has(d.i) && !clusters.some(c => planned.has(c.i) && c.depots.includes(d)));
