@@ -1,6 +1,6 @@
 # Galaxy replica ladder
 
-Snapshot of the Rankings page of our private galaxy replica (https://galaxy19.136-86-167-127.sslip.io/bc19/rankings), taken Oct 22 04:38 PDT. Written by `tools/progress/ladder.py` (`tools/progress-refresh.sh`): regenerate it, do not edit it. How to open the live site, with replays: `ACCESS.md`.
+Snapshot of the Rankings page of our private galaxy replica (https://galaxy19.136-86-167-127.sslip.io/bc19/rankings), taken Oct 22 05:45 PDT. Written by `tools/progress/ladder.py` (`tools/progress-refresh.sh`): regenerate it, do not edit it. How to open the live site, with replays: `ACCESS.md`.
 
 **Rating is the replica's displayed rating**: siarnaq's penalized Elo, mean − 1500·0.85^n after n rated matches, so every team starts at 0 and climbs over its first ~20 ranked matches. **BT** is the Bradley-Terry rating of `progress/ELO.md` (± 95%; for our team, the build of our latest submission). Games W-L counts the replica games in `progress/games.csv`. 89 teams; our team is **vibe19**. The field of public 2019 bots is still being compiled, so the ladder is small.
 
@@ -8,30 +8,30 @@ Snapshot of the Rankings page of our private galaxy replica (https://galaxy19.13
 
 | # | Team | Rating | BT | Games W-L | Submission |
 |---:|---|---:|---:|---|---|
-| 1 | **vibe19** (v5) | 1725.1 | 1853 ± 174 | 184-15 | accepted |
-| 2 | CometsTech.battlecode2019 | 1552.8 | 1091 ± 165 | 89-82 | accepted |
-| 3 | CS554-software-engineerin\~a575dc | 1503.7 | 1100 ± 163 | 130-82 | accepted |
-| 4 | bc19-starter | 1380.8 | 308 ± 307 | 44-198 | accepted |
-| 5 | IanCoolidge0.battlecode20\~f649f3 | 963.4 | 1490 ± 243 | 12-6 | accepted |
-| 6 | IanCoolidge0.battlecode20\~69ce88 | 875.8 | 1652 ± 408 | 13-2 | accepted |
-| 7 | StoneT2000.BC19-botfinalsafe | 752.0 | 1775 ± 373 | 14-1 | accepted |
-| 8 | SethKitchen.examplefuncsplayer | 733.2 | 1199 ± 642 | 8-4 | accepted |
-| 9 | TestSubjector.BattleCode2\~fb22c7 | 723.3 | 1155 ± 505 | 7-5 | accepted |
-| 10 | 18dcb01.Battlecode19-prea\~fb5c48 | 711.9 | 1394 ± 295 | 5-7 | accepted |
-| 11 | TestSubjector.BattleCode2\~e6de74 | 705.1 | 481 ± 521 | 5-7 | accepted |
-| 12 | 18dcb01.Battlecode19-robot2 | 695.3 | 1252 ± 383 | 3-9 | accepted |
-| 13 | TheRobotCarlson.battlehac\~323871 | 670.9 | 352 ± 1163 | 0-12 | accepted |
-| 14 | IvanGeffner.BC19-eigthbot | 592.9 | 1404 ± 331 | 6-3 | accepted |
-| 15 | JasonLarson44.2019-Battle\~1c7639 | 590.4 | 1160 ± 363 | 5-4 | accepted |
-| 16 | NielsKornerup.Battlecode-2019 | 584.1 | 1270 ± 353 | 5-4 | accepted |
-| 17 | OmarTahoun.battle-code | 574.4 | 1071 ± 647 | 4-5 | accepted |
-| 18 | CometsTech.battlecode2019\~187e8c | 551.9 | 957 ± 471 | 1-8 | accepted |
-| 19 | DivyanshuSaxena.Battlecode | 544.5 | -107 ± 1189 | 0-9 | accepted |
-| 20 | Tom-CCS.BC19 | 439.7 | 1804 ± 1152 | 6-0 | accepted |
-| 21 | StoneT2000.BC19-bot1v43 | 439.4 | 1664 ± 414 | 8-1 | accepted |
-| 22 | IvanGeffner.BC19-bot6b | 424.8 | 1568 ± 501 | 4-2 | accepted |
-| 23 | Nydroam.BatteredCod | 416.5 | 1193 ± 454 | 3-3 | accepted |
-| 24 | RyanSharafuddin.Battlecode\_2019 | 392.6 | 467 ± 1145 | 0-6 | accepted |
+| 1 | **vibe19** (v5) | 1725.1 | 1828 ± 162 | 184-15 | accepted |
+| 2 | CometsTech.battlecode2019 | 1552.8 | 1080 ± 164 | 89-82 | accepted |
+| 3 | CS554-software-engineerin\~a575dc | 1503.7 | 1090 ± 162 | 130-82 | accepted |
+| 4 | bc19-starter | 1380.3 | 293 ± 307 | 45-200 | accepted |
+| 5 | IanCoolidge0.battlecode20\~f649f3 | 963.4 | 1455 ± 247 | 12-6 | accepted |
+| 6 | IanCoolidge0.battlecode20\~69ce88 | 875.8 | 1620 ± 420 | 13-2 | accepted |
+| 7 | 18dcb01.Battlecode19-robot2 | 801.6 | 1099 ± 379 | 3-12 | accepted |
+| 8 | StoneT2000.BC19-botfinalsafe | 752.0 | 1755 ± 373 | 14-1 | accepted |
+| 9 | NielsKornerup.Battlecode-2019 | 733.4 | 1346 ± 337 | 8-4 | accepted |
+| 10 | SethKitchen.examplefuncsplayer | 733.2 | 1171 ± 655 | 8-4 | accepted |
+| 11 | OmarTahoun.battle-code | 724.0 | 1048 ± 643 | 7-5 | accepted |
+| 12 | TestSubjector.BattleCode2\~fb22c7 | 723.3 | 1010 ± 505 | 7-5 | accepted |
+| 13 | 18dcb01.Battlecode19-prea\~fb5c48 | 711.9 | 1367 ± 296 | 5-7 | accepted |
+| 14 | TestSubjector.BattleCode2\~e6de74 | 705.1 | 603 ± 510 | 5-7 | accepted |
+| 15 | DivyanshuSaxena.Battlecode | 683.9 | 315 ± 450 | 2-10 | accepted |
+| 16 | TheRobotCarlson.battlehac\~323871 | 670.9 | 283 ± 1148 | 0-12 | accepted |
+| 17 | IvanGeffner.BC19-eigthbot | 592.9 | 1389 ± 330 | 6-3 | accepted |
+| 18 | JasonLarson44.2019-Battle\~1c7639 | 590.4 | 1152 ± 359 | 5-4 | accepted |
+| 19 | CometsTech.battlecode2019\~187e8c | 551.9 | 985 ± 473 | 1-8 | accepted |
+| 20 | RyanSharafuddin.Battlecode\_2019 | 543.8 | 284 ± 1149 | 0-9 | accepted |
+| 21 | Tom-CCS.BC19 | 439.7 | 1709 ± 1168 | 6-0 | accepted |
+| 22 | StoneT2000.BC19-bot1v43 | 439.4 | 1650 ± 413 | 8-1 | accepted |
+| 23 | IvanGeffner.BC19-bot6b | 424.8 | 1539 ± 506 | 4-2 | accepted |
+| 24 | Nydroam.BatteredCod | 416.5 | 1198 ± 448 | 3-3 | accepted |
 | 25 | Nischay-Pro.BattleCode2019 | 0.0 | – | 0-0 | accepted |
 | 26 | UpperArlingtonHighSchool.\~5e7875 | 0.0 | – | 0-0 | accepted |
 | 27 | UpperArlingtonHighSchool.\~682aa9 | 0.0 | – | 0-0 | accepted |
