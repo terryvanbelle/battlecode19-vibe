@@ -23,7 +23,7 @@ export function castleTurn(B) {
     st.churched = new Set();
     st.lost = new Map();   // cluster -> round a pioneer for it died
     st.lostN = new Map();  // cluster -> pioneers lost there (CFG.PIONEER_LOST_DOUBLE)
-    st.taken = new Map();  // cluster -> round a pioneer saw an enemy structure there (CFG.EXPAND_ROUND) or gave up (PIONEER_GIVEUP)
+    st.taken = new Map();  // cluster -> round a pioneer saw an enemy structure there (CFG.EXPAND_ROUND) or gave up (PIONEER_GIVEUP, _STALL_ANY)
     st.escorts = [];       // CFG.ESCORT: [{cluster, x, y, left}] pioneer sites still owed escort units
     st.attackUntil = 0;
     st.deadE = new Set();   // indices (into st.order) of enemy castles reported destroyed
@@ -68,7 +68,7 @@ export function castleTurn(B) {
       return false;
     }
     if (CFG.ESCORT && !p.esc && me.turn - p.since > p.d + CFG.ESCORT_SLACK) { p.esc = true; openEscort(B, p.cluster); }
-    if (CFG.PIONEER_GIVEUP && st.taken.has(p.cluster) && st.taken.get(p.cluster) >= p.since) return false;   // it gave up
+    if ((CFG.PIONEER_GIVEUP || CFG.PIONEER_STALL_ANY) && st.taken.has(p.cluster) && st.taken.get(p.cluster) >= p.since) return false;   // it gave up
     return !st.churched.has(p.cluster) && me.turn - p.since <= 80;
   });
   st.nStructs = () => st.castles.size + st.churched.size;

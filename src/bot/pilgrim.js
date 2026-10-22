@@ -147,7 +147,7 @@ function pilgrimAct(B) {
         if ((w.karb[i] && me.karbonite < KARB_CAP) || (w.fuelD[i] && me.fuel < FUEL_CAP)) return w.fuel >= 1 ? w.mine() : null;
         return null;
       }
-    } else if (!(CFG.PIONEER_GIVEUP && siteStalled(B))) return go(B, 'site', adjSources(sx, sy), CFG.PIONEER_FAST);
+    } else if (!((CFG.PIONEER_GIVEUP || CFG.PIONEER_STALL_ANY) && siteStalled(B))) return go(B, 'site', adjSources(sx, sy), CFG.PIONEER_FAST);
   }
 
   if (CFG.PILGRIM_ORPHAN && !st.structs.length && !st.site) { const a = orphanStep(B); if (a !== undefined) return a; }
@@ -185,12 +185,14 @@ function pilgrimAct(B) {
 
 // CFG.PIONEER_GIVEUP: count the turns a pioneer spends no nearer its site than its best while an enemy attacker is in
 // sight; at PIONEER_GIVEUP it reports the cluster taken, drops the site and takes the nearest free depot (true: the
-// caller falls through to mining).
+// caller falls through to mining). CFG.PIONEER_STALL_ANY: the same at that many turns no nearer, with or without enemies.
 export function siteStalled(B) {
   const w = B.w, me = w.me, st = B.st, k = king(me.x, me.y, st.site[0], st.site[1]);
-  if (st.siteBest === undefined || k < st.siteBest) { st.siteBest = k; st.siteStall = 0; return false; }
-  if (!w.enemies.some(e => isAttacker(e.unit))) return false;
-  if (++st.siteStall < CFG.PIONEER_GIVEUP) return false;
+  if (st.siteBest === undefined || k < st.siteBest) { st.siteBest = k; st.siteStall = 0; st.siteIdle = 0; return false; }
+  if (!(CFG.PIONEER_STALL_ANY && ++st.siteIdle >= CFG.PIONEER_STALL_ANY)) {
+    if (!CFG.PIONEER_GIVEUP || !w.enemies.some(e => isAttacker(e.unit))) return false;
+    if (++st.siteStall < CFG.PIONEER_GIVEUP) return false;
+  }
   if (st.cluster >= 0 && st.cluster < 40) w.talk(CT.TAKEN + st.cluster);
   st.site = null; st.target = freeDepotNear(B, me.x, me.y, null);
   return true;

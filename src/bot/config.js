@@ -20,6 +20,9 @@ export const CFG = {
                              // (king steps) than its best gives the site up: reports it taken (CT.TAKEN: castles rest it 200
                              // rounds and free its pioneer slot) and mines (replica seed 1325 self-play: pioneers waited
                              // 105-375 turns beside contested sites; castles re-sent one every ~100 rounds)
+  PIONEER_STALL_ANY: 0,      // >0: ...and one that goes this many turns no nearer its site than its best gives it up the
+                             // same way whatever it sees (h61's delivery, seed 418: pioneer #1936 wandered 349 turns 16-22
+                             // king steps from a site its own team had churched, no enemy in sight, so h61 never fired)
   PIONEER_LOST_REST: 100,    // rounds a castle waits before re-sending a pioneer to a cluster where the last one died
   PIONEER_LOST_DOUBLE: 0,    // 1: ...doubled per pioneer lost there (replica scrims vs StoneT2000: 25 of 46 pioneers killed,
                              // castles re-sent one into the same prophets every ~105 rounds)

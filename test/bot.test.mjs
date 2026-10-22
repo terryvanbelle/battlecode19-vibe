@@ -799,7 +799,7 @@ test('pilgrim: PIONEER_FAST pioneers take full r2 4 steps on a short bank', () =
 });
 
 test('pilgrim: PIONEER_GIVEUP drops a site it gets no nearer to under enemy eyes, reports it taken, and mines', () => {
-  const saved = CFG.PIONEER_GIVEUP;
+  const saved = CFG.PIONEER_GIVEUP, savedAny = CFG.PIONEER_STALL_ANY;
   try {
     const g = new Game(3, 100, 20, false, false), n = g.map.length;
     const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
@@ -826,7 +826,13 @@ test('pilgrim: PIONEER_GIVEUP drops a site it gets no nearer to under enemy eyes
     const w2 = worldFor(g, pil), B2 = { ...B, w: w2, api: w2.api, st: { site: B.clusters[far].site.slice(), cluster: far } };
     assert.deepStrictEqual([1, 2, 3, 4, 5].map(() => siteStalled(B2)), [false, false, false, false, false]);
     assert.ok(B2.st.site);
-  } finally { CFG.PIONEER_GIVEUP = saved; }
+    // CFG.PIONEER_STALL_ANY counts those turns too, and alone gives the site up just the same.
+    CFG.PIONEER_GIVEUP = 0; CFG.PIONEER_STALL_ANY = 4;
+    w2.api.castleTalk = v => { talked = v; };
+    const B3 = { ...B2, st: { site: B.clusters[far].site.slice(), cluster: far } };
+    assert.deepStrictEqual([1, 2, 3, 4, 5].map(() => siteStalled(B3)), [false, false, false, false, true]);
+    assert.strictEqual(B3.st.site, null); assert.strictEqual(talked, CT.TAKEN + far); assert.ok(B3.st.target);
+  } finally { CFG.PIONEER_GIVEUP = saved; CFG.PIONEER_STALL_ANY = savedAny; }
 });
 
 test('military: PROPHET_FLOOR keeps prophets from shooting a short bank that other shooters can use', () => {

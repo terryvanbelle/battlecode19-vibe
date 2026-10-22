@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 10:15 PDT)
+## State (2026-10-22 11:52 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -14,11 +14,12 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 10:47:
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 11:52:
   **h63** (PILGRIM_HERE, ...a3d5771, running), **h67** (PIONEERS_TEAM 4: a lone castle keeps 4 pioneers in flight;
   no-op v6i, symcheck, then gate vs h50 on 20 one-castle cells, ...a3d57711; TRAINING_LOG 10:15), **h20v6**
   (DEF_RESERVE_K 30, the answer to CS554's rush: delivery h50 and h20v6 vs bots/rush4 on 20 poor one-castle maps at
-  200 rounds, then its gate vs h50, ...a3d577112; TRAINING_LOG 10:47), **h64** (PIONEER_FAST,
+  200 rounds, then its gate vs h50, ...a3d577112; TRAINING_LOG 10:47), **h68** (PIONEER_GIVEUP 20 + PIONEER_STALL_ANY 40:
+  no-op v6j, symcheck, delivery vs h50 on h61's 8 cells, ...a3d577113; TRAINING_LOG 11:52), **h64** (PIONEER_FAST,
   ...a3d57715) and **h65** (ESCORT 2, ...a3d57716, after its no-op/symcheck job ...a3d577158) gates vs h50; **h66** (stack: v6 +
   ENDGAME_FUEL 900 + CHAIN_ROUND 150, symcheck then gate vs h50, ...a3d57717; TRAINING_LOG 09:55); the
   **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each vs h55v6); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775; h8v5 vs h35 ended at D 4, below the first
@@ -26,10 +27,8 @@
   the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50, outputs out/<name>_h50.jsonl): h51v6's
   delivery (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h15v6 (MIL_ROTATION null, ...a5), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6 vs v0 and v6 vs rush. Gates of
   passed deliveries go in after h43v6's (job names ...4b01b1a45 onward). h54's h2h extensions were withdrawn (the
-  panel rates it). Extra lane: chain29 (no-op v6e, sym_h61) -> chain30 (h61 delivery) -> chain31 (no-op v6f,
-  sym_h63, sym_h62) -> chain32 (no-op v6g, sym_h64). **When chain32 is done the extra lane retires** while the
-  replica queue is long (the 5th replica slot, its core, has been live since 09:36: TRAINING_LOG 09:40); later
-  deliveries and no-op checks go into the jobq as their own jobs.
+  panel rates it). The extra lane is retired (chain32 done: no-ops v6f, v6g identical; sym_h62-h64 diverge only at
+  accepted classes); deliveries and no-op checks go into the jobq as their own jobs.
   Superseded at v5: h31x, h33, h29, h28, h21. Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
   their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h46 (SPOT for melee) failed 1 of 3 at 01:52; h47 (FOCUS 1) failed 1 of 3 at 02:04; h48 (preachers when fuel binds) failed 1 of 3 at 02:20; h49 (SPOT for prophets) failed 0 of 3 at 02:32; h58 (CHURCH_FIRST_R2) failed 1 of 3 and h59 (PILGRIM_HOT) 0 of 3 at 06:13; h45 (EDGE 1.5) withdrawn before its delivery (inert: prophet vision equals reach); h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
@@ -91,8 +90,9 @@
 - Pioneers (TRAINING_LOG 08:16; now `tools/census.js`, which also reads h64's and h65's deliveries): in h50's gate v6 left 40 pioneers stuck
   (7,874 turns to round 450) beside contested sites on 7 maps, and castles re-send to the same site every 81 rounds;
   vs StoneT2000 our pioneers are mostly killed en route (25 of 46) and re-sent every ~105 rounds. CFG.PIONEER_GIVEUP
-  (h61 = 20; h61b = 50 built) gives the site up: chain29 (no-op v6e, symcheck), then chain30 (delivery vs h50 on
-  418, 1325, 2542, 2072; out/pioneers_dlv_h61.txt). The longer rest after a pioneer is killed is h62 (above).
+  (h61 = 20) gives the site up when an attacker is in sight: its delivery FAILED (stuck turns 0.40 of h50's, bar
+  0.30; TRAINING_LOG 11:52) because most stalls see no enemy. h68 adds CFG.PIONEER_STALL_ANY 40 (give up after 40
+  turns no nearer, whatever it sees), queued ...a3d577113. The longer rest after a pioneer is killed is h62 (above).
 - tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
   cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were
   started without it, our own builds only). Not yet synced to the VM trees (they start games under unshare anyway).

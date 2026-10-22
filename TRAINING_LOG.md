@@ -1761,3 +1761,23 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   reverted. Instead run_game.js --init-ms now also bounds that bundle run (loadLimit; each sandbox returns to the
   per-turn kill at its first turn; unit test with a bundle that loads for 300 ms). A runtime-only deploy: new games
   pick it up, games in flight keep their loaded code, no saturn restart.
+
+## 2026-10-22 11:52 — h61's delivery fails; h68 (give up a stalled site with no enemy in sight) pre-registered
+- h61 delivery (8 games vs h50 on 418, 1325, 2542, 2072 both sides, out/pioneers_dlv_h61.txt, census to 450):
+  (1) stuck-pioneer turns, h61's side 3,128 vs h50's 7,787: ratio 0.40 against the 0.30 bar, FAIL; (2) churches by
+  450, 39 vs 33, pass; (3) h61 wins 5 of 8, pass. Pre-registered falsifier (1) holds: **h61 is falsified, no gate**;
+  h61b (dose 50) is dropped with it.
+- Why it fell short: most stuck turns have no enemy in sight, so the trigger never fires. Seed 418, h50 blue: pioneer
+  #1936 (site (9,32), radio 8800) wanders x 24-34 for 349-418 turns, 16-22 king steps from a site its own team had
+  churched by round 120; no enemy unit in sight the whole time.
+- **h68** = v6 + PIONEER_GIVEUP 20 + PIONEER_STALL_ANY 40 (new, config.js; pilgrim.js siteStalled): a pioneer that
+  goes 40 turns no nearer its site than its best gives the site up the same way (reports CT.TAKEN + cluster, castles
+  rest it and free its slot, the pioneer mines the nearest free depot) whether or not it sees an enemy; the h61
+  trigger (20 turns with an attacker in sight) stays. sha ae584f00df6e; identity build v6j (defaults, e3dee862d15f).
+  Unit test extended (no enemies, STALL_ANY 4: fires on the 5th stalled turn, radios TAKEN). Node 101, Python 54 pass.
+- Checks and delivery, VM job ...a3d577113 (after h20v6): v6j vs h50 --det on 1828 must replay noop_h50_h50
+  byte-identical; symcheck h68 on 1, 2, 3, 418 to 250; then h68 vs h50 on h61's 8 cells, read with pioneers.js to
+  450. PASS needs all 3 of h61's criteria: (1) stuck-pioneer turns <= 30% of h50's; (2) churches by 450 >= h50's;
+  (3) wins >= 4 of 8. Falsifier: (1) fails again, i.e. the stalls are not monotone-distance stalls (a pioneer that
+  creeps nearer one step every 40 turns resets the count) or castles refill the same sites. On PASS: gate h68 vs
+  h50, 20 random cells from seed0 5000, accept t >= 2, reject t <= 0.
