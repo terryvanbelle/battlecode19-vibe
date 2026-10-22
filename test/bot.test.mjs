@@ -127,6 +127,23 @@ test('nav: steps descend to the goal around a wall, and never enter occupied til
   assert.strictEqual(fuelStep(100, 4, 1, 98), 2); assert.strictEqual(fuelStep(10, 9, 2, 0), 5);
 });
 
+test('nav: NAV_FIT: a step capped below full speed makes progress every turn on open ground', () => {
+  const saved = CFG.NAV_FIT;
+  try {
+    const run = fit => {
+      CFG.NAV_FIT = fit;
+      const n = 12, w = stubWorld(n, [], []), nav = new Nav(w, offsets(4), rng(4)), out = [];
+      for (let t = 0; t < 20 && (w.me.x !== 0 || w.me.y !== 11); t++) {
+        const s = nav.step('g', [[0, 11]], 2); out.push(s ? 'm' : '-');
+        if (s) w.me = { x: w.me.x + s[0], y: w.me.y + s[1] };
+      }
+      return out.join('');
+    };
+    assert.strictEqual(run(1), 'm'.repeat(11));   // 11 tiles, 11 turns
+    assert.ok(run(0).includes('-'));              // the full-speed field: waits on the way
+  } finally { CFG.NAV_FIT = saved; }
+});
+
 test('nav: a blocked robot waits ladder[0] turns before sliding and ladder[1] before stepping back', () => {
   // Corridor y = 1 between walls; the goal (5,1) lies behind a friend at (2,1); the robot stands at (1,1).
   const n = 7, walls = []; for (let x = 0; x < n; x++) { walls.push([x, 0]); walls.push([x, 2]); }

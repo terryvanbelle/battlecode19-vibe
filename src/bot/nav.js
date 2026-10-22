@@ -3,6 +3,7 @@
 // (+1) to get round a jam; it never returns to one of its last few tiles while sliding or escaping. Detour (optional):
 // a robot blocked long enough replans with a field that charges extra for every tile a robot it sees stands on.
 import { bfs, costField } from './mapinfo.js';
+import { CFG } from './config.js';
 
 const LADDER = [2, 4, false];
 
@@ -12,10 +13,10 @@ export class Nav {
     this.blocked = 0; this.recent = []; this.lastKey = null; this.stats = { moves: 0, blocked: 0, slides: 0, escapes: 0 };
   }
 
-  field(key, sources) {
+  field(key, sources, offs = this.offs) {
     let f = this.cache.get(key);
     if (f) { this.cache.delete(key); this.cache.set(key, f); return f; } // LRU touch
-    f = bfs(this.w, typeof sources === 'function' ? sources() : sources, this.offs);
+    f = bfs(this.w, typeof sources === 'function' ? sources() : sources, offs);
     this.cache.set(key, f);
     if (this.cache.size > this.cacheSize) this.cache.delete(this.cache.keys().next().value);
     return f;
@@ -32,7 +33,14 @@ export class Nav {
   // Returns [dx, dy] or null (arrived, unreachable, or waiting).
   step(key, sources, maxR2, avoid, ladder = LADDER, detour = null) {
     const w = this.w, n = w.n, me = w.me;
-    let f = this.field(key, sources);
+    // CFG.NAV_FIT: a step capped below full speed follows a field counted in such steps. In full-speed moves a short
+    // step lowers the distance only every other tile (every third for a crusader), and the robot counted itself
+    // blocked and waited before sliding on: a third of cruise and slow-pilgrim turns were lost that way.
+    let offs = this.offs, fkey = key;
+    if (CFG.NAV_FIT && maxR2 > 0 && maxR2 < offs[offs.length - 1][2]) {
+      offs = offs.filter(o => o[2] <= maxR2); fkey = key + '#' + offs[offs.length - 1][2];
+    }
+    let f = this.field(fkey, sources, offs);
     if (key !== this.lastKey) { this.blocked = 0; this.lastKey = key; this.det = null; }
     if (detour) {
       const seen = this.seenBusy || (this.seenBusy = new Int16Array(w.N));
@@ -41,7 +49,7 @@ export class Nav {
         if (!this.det || me.turn >= this.det.until) {
           const src = typeof sources === 'function' ? sources() : sources, mi = me.y * n + me.x, t0 = me.turn - detour[3];
           const cost = i => (seen[i] > 0 && seen[i] >= t0 && i !== mi ? 1 + detour[1] : 1);
-          this.det = { until: me.turn + detour[2], f: costField(w, src, this.offs, cost) };
+          this.det = { until: me.turn + detour[2], f: costField(w, src, offs, cost) };
           this.stats.detours = (this.stats.detours || 0) + 1;
         }
         f = this.det.f;

@@ -39,3 +39,8 @@
    diagnostics go to the VM's extra lane; the driver re-simulates replays only. On the VM, `jobq.sh` starts a gate
    only when no `tools/batch.js` runs, so extra-lane batches go through the link `tools/xbatch.js` in the shadow
    tree ~/projects/vibe/2019-next (new tools, the main tree's engine/maps/bots/dist linked) so as not to hold the queue. (2026-10-21)
+12. **A step capped below a robot's speed needs a field counted in such steps.** Nav fields counted full-speed moves
+   (r2 4 or 9); cruise moves capped at r2 2 lowered that distance only every other tile (every third for crusaders),
+   so the robot counted itself blocked and waited two turns before sliding on: 24 tiles took 36 turns (46 for a
+   crusader). Read "slides" and "blocked" counts as jams only after ruling this out. `CFG.NAV_FIT`; unit test 'nav:
+   NAV_FIT'. (2026-10-21)
