@@ -36,10 +36,12 @@ function init(B) {
 function depotAt(B, x, y) { for (const d of B.deps) if (d.x === x && d.y === y) return d; return null; }
 
 // Nearest depot (king distance) that no robot is seen on, optionally restricted to a cluster; karbonite first on ties.
-function freeDepotNear(B, x, y, cluster, kind, maxKing) {
+// skip(d): true for depots to leave out (CFG.PILGRIM_HOT).
+function freeDepotNear(B, x, y, cluster, kind, maxKing, skip) {
   const w = B.w, list = cluster ? cluster.depots : B.deps; let best = null, bd = 1e9;
   for (const d of list) {
     if (kind !== undefined && d.k !== kind) continue;
+    if (skip && skip(d)) continue;
     if (maxKing && king(x, y, d.x, d.y) > maxKing) continue;
     const occ = w.occ(d.x, d.y);
     if (occ > 0 && occ !== w.me.id) continue;
@@ -165,6 +167,7 @@ function pilgrimAct(B) {
     if (short) { const alt = freeDepotNear(B, me.x, me.y, null, !st.target.k, CFG.SWITCH_KING); if (alt) st.target = alt; }
   }
   if (!st.target) st.target = freeDepotNear(B, me.x, me.y, null);
+  if (CFG.PILGRIM_HOT && st.target) hotRetarget(B);
   const t = st.target; if (!t) return null;
   if (me.x === t.x && me.y === t.y) return w.fuel >= 1 && minesNow(w, t) ? w.mine() : null;
   const occ = w.occ(t.x, t.y);
@@ -173,6 +176,30 @@ function pilgrimAct(B) {
     if (alt && alt !== t) st.target = alt;
   }
   return go(B, 'd' + st.target.i, [[st.target.x, st.target.y]]);
+}
+
+// CFG.PILGRIM_HOT: a pilgrim stuck PILGRIM_HOT turns in a row gives its target depot up for PILGRIM_HOT_MEM turns,
+// for the nearest free depot neither threatened now nor given up. Stuck: off the target, and the target lies in a
+// visible enemy attacker's threat range, or an enemy attacker is in sight and we are no nearer the target (king
+// steps) than our best since we took it. PILGRIM_SAFE_STEP keeps pilgrims off threatened tiles, so before this they
+// waited at the edge of the range for good (h50's gate to round 450: 17 streaks of 50-435 turns on 7 of 20 maps,
+// each with an enemy attacker in sight at r2 53-100; seed 1250: h35's church at (11,31) fell by round 60 and four
+// pilgrims of its cluster stood by its depots under two enemy prophets; that side mined 37% of the other's).
+export function hotRetarget(B) {
+  const w = B.w, me = w.me, st = B.st, t = st.target;
+  if (me.x === t.x && me.y === t.y) { st.hotN = 0; return; }
+  const threats = w.enemies.filter(e => isAttacker(e.unit));
+  const hot = (x, y) => threats.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]);
+  const k = king(me.x, me.y, t.x, t.y);
+  if (st.hotFor !== t) { st.hotFor = t; st.hotBest = k; st.hotN = 0; }
+  const stuck = hot(t.x, t.y) || (threats.length > 0 && k >= st.hotBest);
+  if (k < st.hotBest) st.hotBest = k;
+  if (!stuck) { st.hotN = 0; return; }
+  st.hotN = (st.hotN || 0) + 1; if (st.hotN < CFG.PILGRIM_HOT) return;
+  const gave = st.gaveUp || (st.gaveUp = new Map());
+  gave.set(t.i, me.turn); st.hotN = 0;
+  const alt = freeDepotNear(B, me.x, me.y, null, undefined, 0, d => hot(d.x, d.y) || (gave.has(d.i) && me.turn - gave.get(d.i) <= CFG.PILGRIM_HOT_MEM));
+  if (alt) st.target = alt;
 }
 
 // Relay (CFG.RELAY): a friend next to us that stands next to one of our structures and will deposit what we give it:

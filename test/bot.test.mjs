@@ -12,7 +12,7 @@ import { callDue, castleTurn, nextPioneer, pioneerDue } from '../src/bot/castle.
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
-import { minesNow, pilgrimTurn, stepAvoid, huntSpot } from '../src/bot/pilgrim.js';
+import { minesNow, pilgrimTurn, stepAvoid, huntSpot, hotRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, PRIORITY } from '../src/bot/combat.js';
@@ -1318,4 +1318,31 @@ test('chain: with CHAIN_ROUND 0 castles never launch a chainer and the peacetime
     const B = { w: { me: { x: 0, y: 0 } }, st: { order: [{ x: 0, y: 0 }] }, round: 500 };
     assert.strictEqual(chainLaunch(B, () => { throw new Error('built'); }), null);
   } finally { CFG.CHAIN_ROUND = saved; }
+});
+
+test('pilgrim: PILGRIM_HOT gives up a depot under a visible attacker for one that is not, and remembers it', () => {
+  const saved = [CFG.PILGRIM_HOT, CFG.PILGRIM_HOT_MEM];
+  try {
+    CFG.PILGRIM_HOT = 3; CFG.PILGRIM_HOT_MEM = 50;
+    const deps = [{ i: 0, x: 5, y: 5, k: true }, { i: 1, x: 20, y: 20, k: false }, { i: 2, x: 6, y: 5, k: true }];
+    const B = { deps, st: { target: deps[0] } };
+    const turn = (t, enemies, x = 5, y = 9) => { B.w = { me: { id: 9, x, y, turn: t }, enemies, occ: () => -1 }; hotRetarget(B); return B.st.target.i; };
+    const prophetAt = (x, y) => [{ unit: S.PROPHET, x, y }];
+    // (5,12) covers both karbonite depots (r2 49, 50), not the fuel one.
+    assert.deepStrictEqual([1, 2, 3].map(t => turn(t, prophetAt(5, 12))), [0, 0, 1]);
+    assert.strictEqual(turn(4, []), 1);
+    // Now the fuel depot is threatened: depot 0 was given up at turn 3, depot 2 is free and cold.
+    assert.deepStrictEqual([5, 6, 7].map(t => turn(t, prophetAt(20, 26))), [1, 1, 2]);
+    // A pilgrim (no threat) and a streak broken by a quiet turn do not count.
+    B.st.target = deps[2]; B.st.hotN = 0;
+    assert.deepStrictEqual([8, 9, 10, 11].map(t => turn(t, t === 9 ? [] : t === 10 ? [{ unit: S.PILGRIM, x: 6, y: 6 }] : prophetAt(5, 12))), [2, 2, 2, 2]);
+    // Past PILGRIM_HOT_MEM, a given-up depot counts again.
+    B.st.target = deps[1]; B.st.hotN = 0;
+    assert.deepStrictEqual([60, 61, 62].map(t => turn(t, [...prophetAt(20, 26), { unit: S.PREACHER, x: 12, y: 5 }])), [1, 1, 0]);
+    // An attacker in sight that threatens no depot: getting nearer the target is fine, standing still is stuck.
+    const far = prophetAt(0, 15);
+    B.st.target = deps[1];
+    assert.deepStrictEqual([70, 71, 72, 73].map(t => turn(t, far, 5 + (t - 70), 9 + (t - 70))), [1, 1, 1, 1]);
+    assert.deepStrictEqual([74, 75, 76].map(t => turn(t, far, 8, 12)), [1, 1, 0]);
+  } finally { [CFG.PILGRIM_HOT, CFG.PILGRIM_HOT_MEM] = saved; }
 });
