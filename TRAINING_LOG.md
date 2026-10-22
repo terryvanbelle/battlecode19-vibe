@@ -1591,7 +1591,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   against our own chain bomber, **h55v6 = v6 + CHAIN_ROUND 150** (h55's chain: wait 12 steps out, church-pilgrim-
   church in one round, preachers at the castle).
 - **Anti-chain panel (pre-registered):** h50 (control), h54v6 (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) and
-  h56v6 (HUNT 2), each vs h55v6 on the same 20 random cells (, both sides, par 2; VM jobs
+  h56v6 (HUNT 2), each vs h55v6 on the same 20 random cells (`--seed0 5000`, both sides, par 2; VM jobs
   ...a3d5772-4 after h63's gate; out/panel_chain_<build>.jsonl, replays out/rp_panel_chain). Read: `paired.js
   --cand <hash> --ctrl <h50 hash> --opp <h55v6 hash>` on the concatenated files. A candidate that reaches t >= 2 (or
   net >= +3 at t >= 1.5) goes to a no-harm gate vs h50 (accept at net >= 0, D >= 12); t <= 0 closes it. Control
