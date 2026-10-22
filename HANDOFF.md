@@ -16,7 +16,9 @@
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
   replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 13:00:
   **h63** (PILGRIM_HERE, ...a3d5771, running: 30/40 games D 6 net +2 t 0.82), **h68** delivery (PIONEER_GIVEUP 20 +
-  PIONEER_STALL_ANY 40: no-op v6j, symcheck, 8 games vs h50 on h61's cells, ...a3d577100; TRAINING_LOG 11:52),
+  PIONEER_STALL_ANY 40: no-op v6j, symcheck, 8 games vs h50 on h61's cells, ...a3d577100; TRAINING_LOG 11:52; a
+  tools swap job ...a3d5770 runs first: the shadow tree gets the driver's tools at that boundary), **h70** delivery
+  (PEACE_RESERVE_K 60: no-op v6k, symcheck, 8 games vs h50 on 70, 520, 2591, 1592, ...a3d5771005; TRAINING_LOG 13:20),
   **h20v6** (DEF_RESERVE_K 30, the answer to CS554's rush: delivery h50 and h20v6 vs bots/rush4 on 20 poor one-castle
   maps at 200 rounds, then its gate vs h50, ...a3d577101; TRAINING_LOG 10:47), **h15v6** (MIL_ROTATION null, ~75%
   prophets: the replica's prophet-lattice duels, TRAINING_LOG 12:50; ...a3d577102), **h67** (PIONEERS_TEAM 4: a lone
