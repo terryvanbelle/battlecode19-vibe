@@ -11,7 +11,7 @@
   setup that re-runs until complete, LEARNINGS 10): 21-19 vs h6 (t 0.58), ACCEPTED 20:04 and frozen as v4.
   Candidates are switches on h19, gated against h19 with `--timescale 2 --init-ms 1000 --fast-turn`.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
-  bots/dist linked to the main tree, outputs in the main tree's out/): h24 (economy first; running since 00:00), h22
+  bots/dist linked to the main tree, outputs in the main tree's out/): h24 (economy first; running since 21:02), h22
   (preachers: prophets lose the fuel exchange vs a rush), h29 (NAV_FIT + LATTICE_STICKY 2: lattice memory), h28
   (LATTICE_STICKY 2 alone), h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b vs h19; then the reference jobs v4 vs v0
   and v4 vs rush (main tree). h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
