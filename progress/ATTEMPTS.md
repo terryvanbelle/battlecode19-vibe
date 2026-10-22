@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 17 other, 12 queued, 5 accepted, 4 in progress, 3 dropped, 2 rejected, 1 sparring partners (44 rows).
+Totals: 17 other, 11 queued, 5 accepted, 4 in progress, 3 dropped, 3 rejected, 1 sparring partners (44 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -23,7 +23,7 @@ Totals: 17 other, 12 queued, 5 accepted, 4 in progress, 3 dropped, 2 rejected, 1
 | `h15` | 2026-10-21 | h6 | ablation: h6 without the crusader/preacher build rotation (MIL_ROTATION=null) |  |  |  |  | SUPERSEDED by h15r (rebased on h19 before its gate ran) |
 | `h15r` | 2026-10-21 | h19 | h19 + ablation: h19 without the crusader/preacher build rotation (MIL_ROTATION=null); rebased from h15 |  |  |  |  | QUEUED: 40 games vs h19 |
 | `h16` | 2026-10-21 | h6 | turtle: never call a general attack (ATTACK_ROUND=1001) |  |  |  |  | SUPERSEDED by h16r (rebased on h19 before its gate ran) |
-| `h16r` | 2026-10-21 | h19 | h19 + turtle: never call a general attack (ATTACK_ROUND=1001); rebased from h16 |  |  |  |  | QUEUED: 40 games vs h19 |
+| `h16r` | 2026-10-21 | h19 | h19 + turtle: never call a general attack (ATTACK_ROUND=1001); rebased from h16 | 16/40 vs h19: h2h 20 cells gained 5 lost 9 net -4 t -1.07; castles lost 23 vs 6 |  |  |  | REJECTED (t <= 0) |
 | `h17` | 2026-10-21 | h6 | karbonite stop: miners pause while the team holds 500+ karbonite (KARB_STOP=500) |  |  |  |  | PARKED: delivery failed (mining fuel -1,446 vs bar -1,500; 183 military built vs h6 194) |
 | `h18` | 2026-10-21 | h6 | cruise fuel reserve: marching and lattice moves leave 1,500 team fuel for shots (CRUISE_FUEL_RESERVE=1500) | 15/40 raw vs h6 (out/h18_h6; castles 7+17, health 8+8); clean h2h: 8 cells, +1 -6, split 1, net -5, t -1.89; 15 games skipped (init failures) |  |  | vs h6 6-19 | REJECTED (t -1.89): the kept bank costs more than it saves |
 | `h18b` | 2026-10-21 | h19 | h19 + cruise fuel reserve 500 (CRUISE_FUEL_RESERVE=500): h18's pre-registered lower dose |  |  |  |  | QUEUED: 40 games vs h19 (last in the queue) |

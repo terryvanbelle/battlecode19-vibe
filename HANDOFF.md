@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-21 20:53 PDT)
+## State (2026-10-21 21:12 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v4** (`bots/v4` = h19, ROSTER.tsv); frozen history v0-v4, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -10,17 +10,18 @@
   near round 500 and wins the multi-castle ones. h19 = src defaults = h6 + two bug fixes (World.signal fuel;
   setup that re-runs until complete, LEARNINGS 10): 21-19 vs h6 (t 0.58), ACCEPTED 20:04 and frozen as v4.
   Candidates are switches on h19, gated against h19 with `--timescale 2 --init-ms 1000 --fast-turn`.
-- VM queue (`~/jobq`, in order): h16r vs h19 (running since 19:56); gates run from the shadow tree ~/projects/vibe/2019-next (new tools incl. `--init-ms`; engine/maps/bots/dist link to the main tree;
-  outputs in the main tree's out/): h16r (turtle, moved up 18:53 after the field study, TRAINING_LOG),
-  h24 (economy first, 19:00; delivery passed on 826/1828, moved up 20:12), h22 (preachers, moved up 19:18: prophets lose
-  the fuel exchange vs a rush), h29 (NAV_FIT + LATTICE_STICKY 2: lattice memory; replaced h25s 20:53), h28
-  (LATTICE_STICKY 2 alone; replaced h26), h21, h20, h15r, h8r, h9r vs h19 (h23 withdrawn 20:25 and h27 EXPAND 20:46: deliveries failed); then the reference jobs v4 vs v0
-  and v4 vs rush (main tree, synced 18:50 except engine/maps/bots/dist). The h6-based h15, h16, h7-h10 jobs are in ~/jobq/superseded. Deliveries in
-  the extra lane (`out/dlv_chain2.sh` in the shadow tree, via `tools/xbatch.js` so they do not hold the queue,
-  LEARNINGS 11): h20 and h19 vs bots/rush on h6's four rush-losing maps, h21 vs h19 on 2202/1635/2296, h22 vs
-  rush, h23 vs rush (`out/dlv_chain3.sh`), h24's 200-round games vs h19 and vs rush (`out/dlv_chain4.sh`), h25's 200-round games
-  vs h19 (`out/dlv_chain5.sh`), symchecks of h20-h25, h28 and h29 (`out/dlv_chain7.sh`). A failed delivery: delete that gate's job from ~/jobq/pending. In ~/jobq/hold (back to pending if turtle is
-  rejected): the march tweaks h7r, h11r, h10r, h18b. Parked: h11, h12
+- VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
+  bots/dist linked to the main tree, outputs in the main tree's out/): h24 (economy first; running since 00:00), h22
+  (preachers: prophets lose the fuel exchange vs a rush), h29 (NAV_FIT + LATTICE_STICKY 2: lattice memory), h28
+  (LATTICE_STICKY 2 alone), h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b vs h19; then the reference jobs v4 vs v0
+  and v4 vs rush (main tree). h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
+  ~/jobq/hold. Withdrawn before their gates: h23 and h27 (deliveries failed), h25s and h26 (replaced by h29, h28).
+  Superseded job files are in ~/jobq/superseded.
+- Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
+  at a time under `flock ~/.bc-extra.lock`): `out/dlv_chain2.sh` (h21 vs h19 on 2202/1635/2296 running, then h22 vs
+  rush and sym_h22), `out/dlv_chain3.sh` (sym_h23), `out/dlv_chain4.sh` (h24's 200-round games vs h19, h24 vs rush,
+  sym_h24), `out/dlv_chain7.sh` (sym_h28, sym_h29). A failed delivery: move that gate's job to ~/jobq/superseded.
+  Kill chain processes by PID (LEARNINGS 14). Parked: h11, h12
   (waves), h13 (keep clear), h14 (detour), h17 (karbonite stop).
 - Main finding: after the attack call at round 450 the army burns the fuel bank in ~50 rounds (8 sampled games:
   7,000-9,000 fuel at 450, under 100 by 500), then cannot shoot or move: 85-90% of it stays within 12 king steps of

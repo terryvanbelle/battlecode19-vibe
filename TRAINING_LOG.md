@@ -542,3 +542,16 @@
 - h29 takes h25s's queue slot and h28 takes h26's (job files rewritten; h25s and h26 superseded, never gated).
   Mechanism: no wasted idle moves; falsifier gate t <= 0. Symmetry checks of h28 and h29 run in the extra lane
   (out/dlv_chain7.sh).
+
+## 2026-10-21 21:12 — h16r (turtle) REJECTED; march tweaks back in the queue
+- h16r (ATTACK_ROUND=1001) vs h19, 40 games (out/h16r_h19.jsonl, seed0 5000, --timescale 2 --init-ms 1000
+  --fast-turn): raw 16-24 (wins 11 health, 5 castles; losses 22 castles, 2 health); head-to-head 20 cells: gained
+  5, lost 9, split 6, net -4, t -1.07. Pre-registered: reject at t <= 0. REJECTED.
+- Castles lost: h16r 23, h19 6. In self-play h19's round-450 march takes castles from a turtle despite the first
+  shot a standing prophet line gets; the attack is worth keeping against our own kind. On the replica (seed 2965 vs
+  bot1v43, 616 vs botfinalsafe) the same march spent the army or the fuel bank: what to attack with and when, not
+  whether, is the open question.
+- 0 exceptions, 0 timeouts, 0 frozen on both sides. Mean wall 388 s a game with --fast-turn (h19 vs h6 without
+  it: 462 s; different bots, so indicative only).
+- Per HANDOFF the march tweaks held for this result go back to pending: h7r (attack persistence), h11r (cruise
+  patience), h10r (attack call every 20), h18b (cruise fuel reserve 500).
