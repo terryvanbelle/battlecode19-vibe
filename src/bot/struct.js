@@ -91,6 +91,38 @@ export function buildToward(B, unit, tx, ty, signal) {
   return { act: w.build(unit, best[0], best[1]), x: me.x + best[0], y: me.y + best[1] };
 }
 
+// CFG.FRONT_ROUND: the site of a structure's front church: the tile nearest FRONT_STEP rows toward the enemy
+// (canonical +y) that is passable, not a depot and off the lattice ((x + y) odd, where our units do not stand), within
+// 3 king steps; from the map only, so the pilgrim finds the same site from its builder's position.
+export function frontSite(w, bx, by) {
+  const n = w.n, tx = bx, ty = Math.min(n - 1, by + CFG.FRONT_STEP); let best = null, bd = 1e9;
+  for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) {
+    const x = tx + dx, y = ty + dy;
+    if (x < 0 || y <= by || x >= n || y >= n || !((x + y) & 1) || !w.passable(x, y) || w.isDepot(x, y)) continue;
+    const v = d2(x, y, tx, ty) * 4096 + y * 64 + x;
+    if (v < bd) { bd = v; best = [x, y]; }
+  }
+  return best;
+}
+
+// From FRONT_ROUND, a structure with no structure of ours ahead of it in sight sends a pilgrim to build a church at
+// its front site, at most every FRONT_EVERY rounds; units born there hold the lattice around it, so the front
+// advances by building instead of marching (replica scrim 200, seed 2924: StoneT2000 built lines of churches 5-13
+// tiles from each of our castles at rounds 235, 341 and 541 and killed each castle from there).
+export function frontPioneer(B) {
+  const w = B.w, me = w.me, st = B.st;
+  if (!CFG.FRONT_ROUND || !(B.round >= CFG.FRONT_ROUND)) return null;
+  if (st.frontAt !== undefined && B.round - st.frontAt < CFG.FRONT_EVERY) return null;
+  if (w.friends.some(r => (r.unit === CASTLE || r.unit === CHURCH) && r.y > me.y + 2)) return null;
+  const site = frontSite(w, me.x, me.y);
+  if (!site || !(st.pf[site[1] * w.n + site[0]] >= 0)) return null;
+  if (!w.canAfford(PILGRIM, STATS[CHURCH].costK + CFG.DEF_RESERVE_K, STATS[CHURCH].costF + 2)) return null;
+  const b = buildToward(B, PILGRIM, site[0], site[1], encNum(SIG.FRONT, B.round));
+  if (!b) return null;
+  st.frontAt = B.round;
+  return b.act;
+}
+
 // Endgame: health is the tiebreak at round 1000; crusaders give the most HP per karbonite. Castles know how many
 // structures share the bank; churches use a fixed lead.
 export function endgame(B) {
@@ -116,6 +148,7 @@ export function structTurn(B, allIds, extra) {
   refreshAssign(B, allIds);
   const attackers = w.enemies.filter(e => isAttacker(e.unit));
   const reserveK = CFG.DEF_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
+    (CFG.FRONT_ROUND && st.frontAt !== undefined && B.round - st.frontAt < 40 ? STATS[CHURCH].costK : 0) +
     (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0);
 
   // 1. Defence: answer visible attackers with a defender while they outnumber ours; otherwise shoot.
@@ -162,6 +195,7 @@ export function structTurn(B, allIds, extra) {
     if (b) { st.pending = { x: b.x, y: b.y, unit: PILGRIM, kind: 'mine', ref: dep.i }; st.assign.set(dep.i, { id: -1, seen: me.turn }); return b.act; }
   }
   if (extra) { const a = extra(); if (a) return a; }
+  { const a = frontPioneer(B); if (a) return a; }
 
   // 4. Peacetime army: a growing guard (prophets, every Nth a preacher), spending what the economy leaves.
   if ((B.round || 0) < CFG.ECON_UNTIL) return null;

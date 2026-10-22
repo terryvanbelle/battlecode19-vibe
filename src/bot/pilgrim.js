@@ -7,6 +7,7 @@ import { SIG, dec, encNum, CT } from './comms.js';
 import { econ } from './mapinfo.js';
 import { fuelStep } from './nav.js';
 import { isAttacker, retreatStep, THREAT_R2 } from './combat.js';
+import { frontSite } from './struct.js';
 
 function init(B) {
   econ(B);
@@ -20,6 +21,7 @@ function init(B) {
       if (m.type === SIG.MINE) st.target = depotAt(B, m.x, m.y);
       else if (m.type === SIG.CHURCH) { st.site = [m.x, m.y]; st.cluster = B.clusters.findIndex(c => c.site[0] === m.x && c.site[1] === m.y); }
       else if (m.type === SIG.ROUND) B.birthRound = m.v;
+      else if (m.type === SIG.FRONT) { B.birthRound = m.v; st.site = frontSite(w, r.x, r.y); st.cluster = -1; }
     }
   }
   if (B.birthRound) B.round = B.birthRound + me.turn - 1;

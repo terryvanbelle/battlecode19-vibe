@@ -10,6 +10,7 @@ import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.
 import { nextTarget, isChoke, militaryTurn, holdTarget } from '../src/bot/military.js';
 import { callDue, castleTurn, nextPioneer, pioneerDue } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
+import { structInit, frontSite, frontPioneer } from '../src/bot/struct.js';
 import { minesNow, pilgrimTurn, stepAvoid } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
@@ -571,6 +572,53 @@ test('castle: PIONEER_RESERVE 2 holds the pioneer karbonite at every castle unti
     const mirror = run(1);
     assert.deepStrictEqual(mirror.map(B => [B.st.plan.length, B.st.planAll]), run(0).map(B => [B.st.plan.length, B.st.planAll]));
   } finally { CFG.PIONEER_RESERVE = saved; }
+});
+
+test('struct: FRONT_ROUND sends a pilgrim to build a church FRONT_STEP rows ahead, which finds the same site; mirror-identical', () => {
+  const saved = CFG.FRONT_ROUND;
+  try {
+    const setup = team => {
+      const g = new Game(2965, 100, 20, false, false), n = g.map.length;
+      const cs = g.robots.filter(r => r.team === team && r.unit === S.CASTLE);
+      const ws = cs.map(c => { c.turn = 1; return worldFor(g, c); });
+      const i = ws[0].me.y * n + ws[0].me.x < ws[1].me.y * n + ws[1].me.x ? 0 : 1;   // first castle, canonical order
+      const castle = cs[i], w = ws[i], sigs = [];
+      w.api.signal = (v, r2) => sigs.push(v);
+      const B = { api: w.api, w, round: 1, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      structInit(B); w.karbonite = 500; w.fuel = 2000;
+      return { g, castle, w, B, sigs };
+    };
+    const a = setup(0), { B, w } = a;
+    CFG.FRONT_ROUND = 0; B.round = 300;
+    assert.strictEqual(frontPioneer(B), null);                       // default: off
+    CFG.FRONT_ROUND = 200; B.round = 150;
+    assert.strictEqual(frontPioneer(B), null);                       // too early
+    B.round = 300;
+    const site = frontSite(w, w.me.x, w.me.y);
+    assert.ok(site && ((site[0] + site[1]) & 1) && w.passable(site[0], site[1]) && !w.isDepot(site[0], site[1]));
+    assert.ok(site[1] > w.me.y && Math.abs(site[1] - (w.me.y + CFG.FRONT_STEP)) <= 3, 'ahead: ' + site);
+    const act = frontPioneer(B);
+    assert.strictEqual((act || {}).u, S.PILGRIM);
+    assert.deepStrictEqual(a.sigs, [encNum(SIG.FRONT, 300)]);
+    B.round = 320; assert.strictEqual(frontPioneer(B), null);        // FRONT_EVERY
+    // The pilgrim, born next to the castle, reads the order: the same site, and the round.
+    const [ex, ey] = [a.castle.x + act.dx, a.castle.y + act.dy];
+    const p = { id: 4200, team: 0, unit: S.PILGRIM, x: ex, y: ey, turn: 1, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    a.castle.signal = encNum(SIG.FRONT, 300); a.g.robots.push(p);
+    const pw = worldFor(a.g, p), PB = { api: pw.api, w: pw, st: {}, deps: B.deps || depots(pw), clusters: B.clusters || [], rnd: rng(2) };
+    PB.nav = new Nav(pw, offsets(4), PB.rnd);
+    pilgrimTurn(PB);
+    assert.deepStrictEqual(PB.st.site, site); assert.strictEqual(PB.round, 300);
+    // A structure of ours ahead in sight: this one is not the front.
+    const b2 = setup(0);
+    b2.g.robots.push({ id: 4300, team: 0, unit: S.CHURCH, x: b2.castle.x, y: b2.castle.y, turn: 9, health: 100, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const ch = b2.g.robots[b2.g.robots.length - 1];
+    [ch.x, ch.y] = b2.w.T.toE(site[0], site[1]);   // on the front site, in engine coordinates
+    const w2 = worldFor(b2.g, b2.castle); Object.assign(b2.B, { w: w2, api: w2.api, round: 300 }); w2.karbonite = 500; w2.fuel = 2000;
+    assert.strictEqual(frontPioneer(b2.B), null);
+    // Both teams choose the same canonical site.
+    const c = setup(1); assert.deepStrictEqual(frontSite(c.w, c.w.me.x, c.w.me.y), site);
+  } finally { CFG.FRONT_ROUND = saved; }
 });
 
 test('pilgrim: PILGRIM_SAFE_STEP keeps steps out of a visible attacker\'s threat range (scrim 199, seed 1915)', () => {

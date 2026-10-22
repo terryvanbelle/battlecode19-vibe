@@ -70,6 +70,10 @@ export const CFG = {
                              // maps the peacetime army spent every 25 K and no church was ever built: seed 1755);
                              // 2: every castle, while no church stands and any castle planned one (castle.js pioneerDue)
   PIONEER_RESERVE_UNTIL: 100,  // ...mode 2 only before this round
+  FRONT_ROUND: 0,            // >0: from this round a structure with none of ours ahead in sight sends a pilgrim to build
+                             // a church FRONT_STEP rows toward the enemy (struct.js frontPioneer), at most every
+  FRONT_EVERY: 50,           // ...this many rounds (replica seed 2924: StoneT2000's church lines took our castles)
+  FRONT_STEP: 8,
   // lattice
   LATTICE_MIN_R2: 5,         // lattice tiles at least this far (r2) from the home structure
   KEEP_CLEAR: 0,             // 1: idle military units keep off depots, tiles next to our structures and chokepoints
