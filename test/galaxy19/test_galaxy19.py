@@ -232,6 +232,29 @@ class Spool(unittest.TestCase):
             t.join()
         self.assertEqual(sorted(got), sorted(ids))
 
+    def test_bump_moves_chosen_messages_ahead_in_order(self):
+        q = spool.Queue(os.path.join(TMP, 'q3')).ensure()
+        ids = [q.put({'i': i}) for i in range(5)]
+        moved = q.bump(lambda o: o['i'] in (3, 1))
+        self.assertEqual([m[0] for m in moved], [ids[1], ids[3]])
+        order = []
+        while (item := q.lease()) is not None:
+            order.append(item[1]['i'])
+        self.assertEqual(order, [1, 3, 0, 2, 4])
+        self.assertTrue(all(spool.ID_RE.match(m[1]) for m in moved))
+        self.assertEqual(q.bump(lambda o: True), [])   # nothing ready
+
+    def test_spool_bump_reads_match_and_teams(self):
+        import spool_bump
+        body = {'metadata': {'report-url': 'https://x/api/compete/bc19/match/199/report/', 'task-type': 'execute'},
+                'details': {'a': {'team-name': 'vibe19'}, 'b': {'team-name': 'StoneT2000.BC19-bot1v43'}}}
+        obj = {'attributes': {}, 'data': base64.b64encode(json.dumps(body).encode()).decode()}
+        self.assertEqual(spool_bump.describe(obj), (199, ['vibe19', 'StoneT2000.BC19-bot1v43']))
+        self.assertTrue(spool_bump.picker({199}, set())(obj))
+        self.assertTrue(spool_bump.picker(set(), {'vibe19'})(obj))
+        self.assertFalse(spool_bump.picker({5}, {'other'})(obj))
+        self.assertEqual(spool_bump.describe({'data': 'not base64 json'}), (None, []))
+
     def test_resource_ids(self):
         self.assertEqual(spool.resource_id('projects/p/topics/replica-siarnaq-compile', 'topics'),
                          'replica-siarnaq-compile')

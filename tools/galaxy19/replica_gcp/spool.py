@@ -144,6 +144,31 @@ class Queue:
     def counts(self):
         return {k: len(self._names(getattr(self, k))) for k in ('ready', 'leased', 'delayed', 'dead')}
 
+    def bump(self, pick):
+        """Move the ready messages for which pick(obj) is true ahead of every other ready message, keeping their
+        order: each is renamed to an id just older than the oldest ready one (same pid-counter suffix). A message a
+        consumer leases meanwhile is skipped. Returns [(old id, new id)]."""
+        names = self._names(self.ready)
+        chosen = []
+        for f in names:
+            try:
+                with open(os.path.join(self.ready, f)) as fh:
+                    if pick(json.load(fh)):
+                        chosen.append(f[:-5])
+            except (FileNotFoundError, ValueError):
+                continue
+        if not chosen:
+            return []
+        t0, moved = int(names[0][:20]), []
+        for i, old in enumerate(chosen):
+            new = f'{t0 - len(chosen) + i:020d}{old[20:]}'
+            try:
+                os.rename(os.path.join(self.ready, f'{old}.json'), os.path.join(self.ready, f'{new}.json'))
+            except FileNotFoundError:
+                continue
+            moved.append((old, new))
+        return moved
+
 
 def topic_queue(topic_id):
     return Queue(config.spool_dir('pubsub', check_resource(topic_id, 'topic')))

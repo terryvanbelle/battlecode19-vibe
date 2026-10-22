@@ -52,6 +52,9 @@ python3 tools/galaxy19/contest19.py matches
 python3 tools/galaxy19/contest19.py fetch --new  # match archives -> ~/projects/vibe/bc19-galaxy-replays/<id>/
 python3 tools/galaxy19/contest19.py results
 
+# our matches first (the field's matches against each other get the spare cycles); on the VM, as root
+sudo python3 -I tools/galaxy19/spool_bump.py --match 199,200 [--team vibe19] [--dry-run]
+
 # field (on the VM, where the bundles are rsynced; re-runnable)
 GALAXY19_CONNECT=127.0.0.1 GALAXY19_REPO=~/projects/vibe/2019 python3 ~/bc19-galaxy-stage/tools/galaxy19/field.py seed
 ```

@@ -372,3 +372,10 @@
   fuel mined by round 200 above h19's in the same game on 3 of 4; symcheck seeds 1-3. Gate h25 vs h19, 40 games
   (job ...4b01bb, after the turtle); falsifier net <= 0. If accepted, the march tweaks in ~/jobq/hold (h11r patience
   above all) are re-derived, since their thresholds were tuned against the artefact.
+
+## 2026-10-21 19:12 — replica: our scrims moved to the front of the execute queue
+- 40 replica matches were queued (ids 163-202; ~10-30 min each on 2 slots), our scrims vs StoneT2000 and
+  IvanGeffner (199-202) last: ~4-5 hours away. The charter gives field-vs-field matches the spare cycles, so
+  tools/galaxy19/spool_bump.py (new; Queue.bump in replica_gcp/spool.py, unit-tested) renamed those four messages to
+  ids just older than the oldest ready one; saturn takes them next. They still run v3 (a match keeps the submission
+  it was created with).
