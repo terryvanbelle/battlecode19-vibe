@@ -1224,6 +1224,12 @@ test('chain: a staged chainer waits for CHAIN_K and CHAIN_F, then builds the fir
     if (X.g.map[ey] && X.g.map[ey][ex]) {
       assert.strictEqual(run(X.farther, 60, 300, threat).act.u, S.CHURCH);
       assert.strictEqual(run(X.farther, 40, 300, threat).act, undefined, 'no church affordable: flee as a pilgrim');
+      const savedNear = CFG.CHAIN_FIRE_NEAR;
+      try {
+        CFG.CHAIN_FIRE_NEAR = 1;
+        assert.strictEqual(run(X.farther, 60, 300, threat).act, undefined, 'CHAIN_FIRE_NEAR: 20 steps out it flees instead');
+        assert.strictEqual(run(X.far, 60, 300, threat).act.u, S.CHURCH, 'CHAIN_FIRE_NEAR: near the line it still fires early');
+      } finally { CFG.CHAIN_FIRE_NEAR = savedNear; }
     }
   } finally { CFG.CHAIN_ROUND = saved; }
 });

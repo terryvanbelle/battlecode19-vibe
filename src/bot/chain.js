@@ -94,7 +94,10 @@ export function pilgrimChain(B, go) {
   if (!near && st.chainStill >= CFG.CHAIN_GIVEUP) { st.chain = null; st.chainer = false; w.talk(CT.UNIT + PILGRIM); return undefined; }
   const staged = f <= CFG.CHAIN_STAGE || (near && st.chainStill >= CFG.CHAIN_PATIENCE);
   const ready = w.karbonite >= CFG.CHAIN_K && w.fuel >= CFG.CHAIN_F;
-  if ((staged && ready) || (threatened && w.karbonite >= church.costK && w.fuel >= church.costF + 2)) {
+  // CFG.CHAIN_FIRE_NEAR: a threatened chainer fires early only near the stage line (h55's delivery, 2924: one born
+  // beside its castle under attack built four churches at home three turns later, 26 steps from any enemy castle).
+  const early = threatened && (!CFG.CHAIN_FIRE_NEAR || near) && w.karbonite >= church.costK && w.fuel >= church.costF + 2;
+  if ((staged && ready) || early) {
     const a = link(B, CHURCH);
     if (a) { st.chain = null; st.chainer = false; w.talk(CT.UNIT + PILGRIM); return a; }
   }

@@ -82,6 +82,7 @@ export const CFG = {
   CHAIN_PATIENCE: 10,        // a chainer that got no nearer for this many turns counts as staged within
   CHAIN_SLACK: 6,            // ...CHAIN_STAGE + this king steps of the target; farther out it quits after
   CHAIN_GIVEUP: 30,          // ...this many such turns
+  CHAIN_FIRE_NEAR: 0,        // 1: a threatened chainer starts its line early only within that band too (else it flees)
   HUNT: 0,                   // >0: a pilgrim radios an enemy pilgrim that has stood this many turns on one tile in
                              // our half off any depot (a church-chain builder waiting for its bank; pilgrim.js
                              // huntSpot), every HUNT_EVERY turns while it sees it and the bank holds HUNT_FUEL; idle
