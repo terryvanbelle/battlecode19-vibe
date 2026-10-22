@@ -12,9 +12,9 @@
   Candidates are switches on h19, gated against h19 with `--timescale 2 --init-ms 1000 --fast-turn`.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/): h31 (church density:
-  SERVE_MOVES 2 + PLAN_CONTEST_FIRST 6, TRAINING_LOG 21:20; running since 22:00), h24x (20 more cells for h24,
-  economy first: INCONCLUSIVE at 20 cells, 26-14, net +6, t 1.50; read both blocks pooled), h35 (stack of every
-  delivered switch: h31 + h21 + h29 + h33; 21:59), h33 (PILGRIM_SAFE_STEP; delivery passed 21:59), h29 (NAV_FIT +
+  SERVE_MOVES 2 + PLAN_CONTEST_FIRST 6, TRAINING_LOG 21:20; running since 22:00), h35 (stack of every delivered
+  switch: h31 + h21 + h29 + h33; 21:59; delivery passed 22:14, K+F +39%), h24x (20 more cells for h24, economy
+  first: INCONCLUSIVE at 20 cells, 26-14, net +6, t 1.50; read both blocks pooled), h33 (PILGRIM_SAFE_STEP; delivery passed 21:59), h29 (NAV_FIT +
   LATTICE_STICKY 2), h28 (LATTICE_STICKY 2 alone), h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b vs h19; then the reference jobs v4 vs v0
   and v4 vs rush (main tree). Built, not queued: h32 (contest-first alone) and h34 (SERVE_MOVES 1 dose), both wait
   on h31's gate; h37 (h31 + CLAIM_MARGIN 4: claim past the midline; TRAINING_LOG 22:06) has its driver delivery
