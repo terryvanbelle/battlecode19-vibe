@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-21 22:40 PDT)
+## State (2026-10-21 23:00 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v4** (`bots/v4` = h19, ROSTER.tsv); frozen history v0-v4, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -18,7 +18,8 @@
   first: INCONCLUSIVE at 20 cells, 26-14, net +6, t 1.50; read both blocks pooled), h33 (PILGRIM_SAFE_STEP; delivery passed 21:59), h29 (NAV_FIT +
   LATTICE_STICKY 2), h28 (LATTICE_STICKY 2 alone), h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b vs h19; then the reference jobs v4 vs v0
   and v4 vs rush (main tree). Built, not queued: h32 (contest-first alone), waits on h31's gate; h34 (SERVE_MOVES 1)
-  failed its delivery (dose stays at 2); h37 (CLAIM_MARGIN 4) failed its delivery (inert) and is closed. h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
+  failed its delivery (dose stays at 2); h37 (CLAIM_MARGIN 4) failed its delivery (inert) and is closed. h39 (h35 +
+  PIONEER_RESERVE 2, TRAINING_LOG 22:47): delivery running on the driver (`out/dlv39/run.sh`), gate vs h35 if it passes. h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
   ~/jobq/hold. Withdrawn before their gates: h22, h23 and h27 (deliveries failed; h36 = h22 + h23 doses in the extra lane), h25s and h26 (replaced by h29, h28), h30 (by h31).
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
@@ -26,7 +27,8 @@
   `out/dlv_chain4.sh` (h24's 200-round games vs h19, h24 vs rush, sym_h24), `out/dlv_chain8.sh` (h31 vs rush;
   sym_h31 clean), `out/dlv_chain9.sh` (h36 vs rush, sym_h36), `out/dlv_chain10.sh` (sym_h38). Symmetry checks stop only at axis-tile contests or
   combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
-  Kill chain processes by PID (LEARNINGS 14). Parked: h11, h12
+  Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new
+  chain scripts) so the replica's games get whole cores (LEARNINGS 17). Parked: h11, h12
   (waves), h13 (keep clear), h14 (detour), h17 (karbonite stop).
 - Main finding: after the attack call at round 450 the army burns the fuel bank in ~50 rounds (8 sampled games:
   7,000-9,000 fuel at 450, under 100 by 500), then cannot shoot or move: 85-90% of it stays within 12 king steps of

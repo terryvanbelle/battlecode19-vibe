@@ -20,7 +20,9 @@ case "${1:-}" in
       if [ -z "$next" ] || pgrep -f "tools/batch[.]js" >/dev/null; then sleep 20; continue; fi
       mv "$Q/pending/$next" "$Q/running/$next"
       id=${next%.sh}; echo "$(date -u +%FT%TZ) start $id: $(cat "$Q/running/$next")"
-      (cd "$ROOT" && bash "$Q/running/$next") > "$Q/done/$id.log" 2>&1
+      # nice 10: the replica's games (saturn, nice 0) get whole cores; the engine fails any robot whose bundle takes
+      # over 100 ms of wall clock to load, so a saturated VM handicaps the field's big bundles (LEARNINGS 17)
+      (cd "$ROOT" && nice -n 10 bash "$Q/running/$next") > "$Q/done/$id.log" 2>&1
       echo "$(date -u +%FT%TZ) end $id rc=$?"; mv "$Q/running/$next" "$Q/done/$next"
     done;;
   status)
