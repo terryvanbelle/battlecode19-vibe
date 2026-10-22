@@ -5,7 +5,7 @@ import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './s
 import { d2, king, rng } from './util.js';
 import { fuelStep } from './nav.js';
 import { SIG, CT, FAR, dec, encXY, decFarRobot } from './comms.js';
-import { isAttacker, pickTarget, preacherTarget, retreatStep, THREAT_R2 } from './combat.js';
+import { isAttacker, pickTarget, preacherTarget, retreatStep, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
 import { learnRound } from './chain.js';
 
 function init(B) {
@@ -294,6 +294,7 @@ export function militaryTurn(B) {
   listen(B);
   const enemies = w.enemies;
   const canShoot = w.fuel >= S.atkFuel + (u === PROPHET ? CFG.PROPHET_FLOOR : CFG.SHOOT_FLOOR);   // pilgrims must still mine
+  const cf = churchFirst(st.home, CFG.CHURCH_FIRST_R2);
 
   // Prophets: step away from melee attackers that are (or will be) inside the dead zone.
   if (u === PROPHET) {
@@ -310,10 +311,11 @@ export function militaryTurn(B) {
 
   if (canShoot) {
     if (u === PREACHER) {
-      const t = preacherTarget(me.x, me.y, w.robots, me.team, (x, y) => w.occ(x, y) >= 0, CFG.PREACHER_SELF, CFG.PREACHER_MIL);
+      const t = preacherTarget(me.x, me.y, w.robots, me.team, (x, y) => w.occ(x, y) >= 0, CFG.PREACHER_SELF, CFG.PREACHER_MIL,
+        cf && (r => cf(r) ? CFG.CHURCH_FIRST_V : undefined));
       if (t) return w.attack(t.dx, t.dy);
     } else {
-      const t = pickTarget(u, me.x, me.y, enemies, w.n, CFG.FOCUS ? w.friends : null);
+      const t = pickTarget(u, me.x, me.y, enemies, w.n, CFG.FOCUS ? w.friends : null, cf && (e => cf(e) ? 7 : PRIORITY[e.unit]));
       if (t) { if (CFG.SPOT && u === PROPHET) spot(B, t); return w.attack(t.x - me.x, t.y - me.y); }
     }
   }
@@ -326,7 +328,7 @@ export function militaryTurn(B) {
     for (const x of enemies) {
       const near = marching ? d2(x.x, x.y, me.x, me.y) <= 64 : d2(x.x, x.y, c.x, c.y) <= 196;
       if (!near) continue;
-      const r = d2(me.x, me.y, x.x, x.y); if (r < ed) { ed = r; e = x; }
+      const r = d2(me.x, me.y, x.x, x.y) - (cf && cf(x) ? 1e6 : 0); if (r < ed) { ed = r; e = x; }
     }
     const sp = CFG.SPOT && st.spot;
     if (!e && sp && me.turn - sp.t <= 1 && d2(sp.x, sp.y, marching ? me.x : c.x, marching ? me.y : c.y) <= 196) e = sp;

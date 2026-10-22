@@ -4,7 +4,7 @@ import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './s
 import { d2, ADJ, offsets } from './util.js';
 import { bfs, econ } from './mapinfo.js';
 import { SIG, encXY, encNum } from './comms.js';
-import { isAttacker, pickTarget, THREAT_R2 } from './combat.js';
+import { isAttacker, pickTarget, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
 import { watchDeaths } from './military.js';
 
 const PILGRIM_OFFS = offsets(4);
@@ -189,7 +189,8 @@ function structAct(B, allIds, extra) {
     }
   }
   if (me.unit === CASTLE && w.enemies.length && w.fuel >= STATS[CASTLE].atkFuel) {
-    const t = pickTarget(CASTLE, me.x, me.y, w.enemies, w.n, CFG.FOCUS ? w.friends : null);
+    const cf = churchFirst(me, CFG.CHURCH_FIRST_R2);
+    const t = pickTarget(CASTLE, me.x, me.y, w.enemies, w.n, CFG.FOCUS ? w.friends : null, cf && (e => cf(e) ? 7 : PRIORITY[e.unit]));
     if (t) return w.attack(t.x - me.x, t.y - me.y);
   }
   if (CFG.STRIKE_R2 && !attackers.length) { const a = strike(B); if (a) return a; }

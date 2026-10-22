@@ -15,7 +15,7 @@ import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, huntSpot } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
-import { pickTarget, preacherTarget, retreatStep, cover } from '../src/bot/combat.js';
+import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, PRIORITY } from '../src/bot/combat.js';
 import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch } from '../src/bot/chain.js';
 const require = createRequire(import.meta.url);
 const SPECS = require('../engine/node_modules/bc19/specs.json');
@@ -832,6 +832,31 @@ test('military: LATTICE_STICKY 2 remembers lattice tiles seen taken, so two take
     assert.deepStrictEqual(run(1), [Bt, A]);   // B seen taken: back to A, which it saw taken a turn ago
     assert.deepStrictEqual(run(2), [Bt, C]);   // remembers A
   } finally { CFG.LATTICE_STICKY = saved; }
+});
+
+test('combat: CHURCH_FIRST: an enemy church near home outranks units for every shooter; off, nothing changes', () => {
+  const home = { x: 10, y: 5 };
+  assert.strictEqual(churchFirst(home, 0), null);
+  const cf = churchFirst(home, 100);
+  assert.ok(cf({ unit: S.CHURCH, x: 16, y: 12 }));            // r2 85
+  assert.ok(!cf({ unit: S.CHURCH, x: 18, y: 12 }));           // r2 113
+  assert.ok(!cf({ unit: S.PROPHET, x: 12, y: 6 }));
+  const prio = e => cf(e) ? 7 : PRIORITY[e.unit];
+  const enemies = [{ unit: S.PROPHET, x: 12, y: 10, team: 1 }, { unit: S.CHURCH, x: 14, y: 11, team: 1 }];
+  assert.strictEqual(pickTarget(S.PROPHET, 10, 6, enemies, 32).unit, S.PROPHET);
+  assert.strictEqual(pickTarget(S.PROPHET, 10, 6, enemies, 32, null, prio).unit, S.CHURCH);
+  assert.strictEqual(pickTarget(S.CASTLE, 10, 5, enemies, 32, null, prio).unit, S.CHURCH);
+  const far = [{ unit: S.PROPHET, x: 12, y: 10, team: 1 }, { unit: S.CHURCH, x: 18, y: 12, team: 1 }];   // r2 113 to home: outside
+  assert.strictEqual(pickTarget(S.PROPHET, 13, 6, far, 32, null, prio).unit, S.PROPHET);
+  // A preacher at (10, 8): a crusader 3 below, a church 3 to the right; the church counts CHURCH_FIRST_V instead of 1.
+  const robots = [{ team: 0, unit: S.PREACHER, x: 10, y: 8, seen: 1 }, { team: 1, unit: S.CRUSADER, x: 10, y: 11, seen: 1 },
+    { team: 1, unit: S.CHURCH, x: 13, y: 8, seen: 1 }];
+  const hits = (t, r) => Math.abs(10 + t.dx - r.x) <= 1 && Math.abs(8 + t.dy - r.y) <= 1;
+  const t0 = preacherTarget(10, 8, robots, 0, () => true, 4, 2.5);
+  assert.ok(hits(t0, robots[1]) && !hits(t0, robots[2]));
+  assert.deepStrictEqual(preacherTarget(10, 8, robots, 0, () => true, 4, 2.5, null), t0);   // off: military passes null
+  const t1 = preacherTarget(10, 8, robots, 0, () => true, 4, 2.5, r => cf(r) ? 3 : undefined);
+  assert.ok(hits(t1, robots[2]) && !hits(t1, robots[1]));
 });
 
 test('combat: FOCUS prefers the target more of our attackers can hit; priority still comes first', () => {

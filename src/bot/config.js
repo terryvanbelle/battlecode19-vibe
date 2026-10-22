@@ -83,6 +83,8 @@ export const CFG = {
   CHAIN_SLACK: 6,            // ...CHAIN_STAGE + this king steps of the target; farther out it quits after
   CHAIN_GIVEUP: 30,          // ...this many such turns
   CHAIN_FIRE_NEAR: 0,        // 1: a threatened chainer starts its line early only within that band too (else it flees)
+  CHURCH_FIRST_R2: 0,        // >0: an enemy church within this r2 of a unit's home structure is its first target
+  CHURCH_FIRST_V: 3,         // (military.js churchFirst); preachers count it this much in the splash
   HUNT: 0,                   // >0: a pilgrim radios an enemy pilgrim that has stood this many turns on one tile in
                              // our half off any depot (a church-chain builder waiting for its bank; pilgrim.js
                              // huntSpot), every HUNT_EVERY turns while it sees it and the bank holds HUNT_FUEL; idle
