@@ -227,3 +227,25 @@ test('run_game: --fast-turn replays byte for byte the game the engine path plays
     assert.ok(bs.equals(bf), 'same replay');
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
+
+test('dlv: delivery numbers agree with the replay analysis and with each other', () => {
+  const dlv = require('../tools/dlv');
+  const buf = fs.readFileSync(path.join(FIX, 'rush_s2908_r80.bc19'));
+  const an = replay.analyze(buf), r = dlv.stats(buf, { from: 20, to: 60 });
+  for (const t of [0, 1]) {
+    const T = r.teams[t], A = an.tally[t], o = r.teams[1 - t];
+    assert.strictEqual(T.milBuilt, A.built[3] + A.built[4] + A.built[5]);
+    assert.strictEqual(T.milLost, A.lost[3] + A.lost[4] + A.lost[5]);
+    assert.strictEqual(T.castlesLost, A.lost[0]);
+    assert.strictEqual(T.shots, A.attacks);
+    assert.strictEqual(T.atkFuel, A.fuel_attack);
+    assert.strictEqual(T.dmgDealt, A.dmg_dealt);
+    assert.ok(T.milLostUnfired <= T.milLost && T.meleeLostUnfired <= T.meleeLost && T.meleeLost <= T.milLost);
+    assert.ok(T.killsByMelee + T.killsByProphet <= o.milLost);
+    assert.ok(T.shotsW <= T.shots && T.moveMilW <= T.moveW);
+  }
+  assert.ok(r.teams[0].shots + r.teams[1].shots > 0);
+  assert.deepStrictEqual(dlv.labels('/x/ab_cd_905_blue.bc19'), ['b', 'a']);
+  assert.deepStrictEqual(dlv.labels('game-01-seed616.bc19'), ['red', 'blue']);
+  assert.match(dlv.main([path.join(FIX, 'rush_s2908_r80.bc19')]), /\nSUM\t\tblue\t/);
+});
