@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 09:30 PDT)
+## State (2026-10-22 09:00 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -14,7 +14,7 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 09:30:
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 09:00:
   h8v5's gate (...a3d577, ENDGAME_FUEL 900 vs h35, running: a read under way when v6 was accepted finishes against
   v5; a pass is stacked onto v6 and gated vs v6); **h63** (PILGRIM_HERE, ...a3d5771) and **h64** (PIONEER_FAST,
   ...a3d57715) gates vs h50; the **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each vs h55v6); h55's
