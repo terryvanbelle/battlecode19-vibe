@@ -10,7 +10,7 @@ import { structInit, structTurn, buildToward } from './struct.js';
 
 const KING = offsets(2), PILGRIM_OFFS = offsets(4);
 
-export { callDue, planClusters, expandPlan, nextPioneer };
+export { callDue, planClusters, expandPlan, nextPioneer, pioneerDue };
 
 export function castleTurn(B) {
   const w = B.w, me = w.me, st = B.st;
@@ -62,7 +62,7 @@ export function castleTurn(B) {
   });
   st.nStructs = () => st.castles.size + st.churched.size;
   callAttack(B);
-  st.pioneerDue = !!nextPioneer(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
+  st.pioneerDue = pioneerDue(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
   return structTurn(B, allIds, () => pioneer(B));
 }
 
@@ -76,7 +76,7 @@ function planClusters(B) {
   const reach = d => ownP.some(f => { const v = f[d.y * n + d.x]; return v >= 0 && v <= CFG.SERVE_MOVES; });
   const enemyF = own.map(c => bfs(w, [w.mirror(c.x, c.y)], KING));
   const myIdx = own.findIndex(c => c.x === me.x && c.y === me.y);
-  st.plan = [];
+  st.plan = []; st.planAll = 0;   // planAll: clusters planned by any of our castles
   for (const c of B.clusters) {
     const [sx, sy] = c.site, k = sy * n + sx;
     const dOwn = ownF.map(f => f[k] < 0 ? 999 : f[k]);
@@ -85,6 +85,7 @@ function planClusters(B) {
     const served = ownP ? unserved < Math.min(2, c.depots.length)
       : c.depots.some(d => ownF.some(f => { const v = f[d.y * n + d.x]; return v >= 0 && v <= CFG.SERVE_MOVES * 2; }));
     if (served || dUs > dThem + CFG.CLAIM_MARGIN) continue;
+    st.planAll++;
     let owner = 0; for (let i = 1; i < own.length; i++) if (dOwn[i] < dOwn[owner]) owner = i;
     if (owner === myIdx) st.plan.push({ cluster: c.i, d: dUs, m: dThem - dUs, value: c.nk * 2 + c.nf });
   }
@@ -126,6 +127,16 @@ function nextPioneer(B) {
   return st.plan.find(p => !st.churched.has(p.cluster) && !st.pioneers.some(q => q.cluster === p.cluster) &&
     !(st.lost.has(p.cluster) && w.me.turn - st.lost.get(p.cluster) < 100) &&
     !(st.taken.has(p.cluster) && w.me.turn - st.taken.get(p.cluster) < 200)) || null;
+}
+
+// Whether this castle's peacetime army should leave a pioneer's karbonite in the bank (CFG.PIONEER_RESERVE): 1 while
+// this castle has a pioneer due; 2 also while no church stands yet and any castle planned one, before
+// PIONEER_RESERVE_UNTIL (the bank is shared: replica seed 2965, the other castle's guard spent it and the centre church
+// came at round 30-41; StoneT2000's at 12).
+function pioneerDue(B) {
+  const st = B.st;
+  if (nextPioneer(B)) return true;
+  return CFG.PIONEER_RESERVE >= 2 && st.planAll > 0 && !st.churched.size && B.round < CFG.PIONEER_RESERVE_UNTIL;
 }
 
 function pioneer(B) {

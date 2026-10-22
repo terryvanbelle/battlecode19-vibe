@@ -707,3 +707,21 @@
   of h19's in the same games; mean team fuel over 500-700 >= 1,000; the creep reaches the enemy: at least one enemy
   structure destroyed by h38 in the 6 games. Gate 40 games vs h19, falsifier t <= 0. Dose ladder: CREEP_EVERY 8,
   then 4 (faster) if it delivers.
+
+## 2026-10-21 22:47 — h39 pre-registered: every castle keeps the pioneer's karbonite until a church stands (PIONEER_RESERVE 2)
+- Source: replica scrims 199 and 200, seed 2965 (40x40, 6 karbonite tiles on the whole map, lost both): StoneT2000's
+  castles build two pilgrims each and nothing else; the second walks to the centre cluster and churches it at round
+  12. Ours: guard prophets from round 3 at both castles, centre pioneer at round 53 (v3), church at 60; StoneT2000
+  ended with 17% more karbonite mined and won both. Self-play diagnostic (h35 vs h19, 200 rounds): church still at
+  round 41, pioneer at 34; PIONEER_RESERVE 1 (h35 + it): 30, because only the castle that owns the cluster
+  reserved and the other castle's guard spent the shared bank (prophet r3, crusader r9).
+- Mechanism: PIONEER_RESERVE 2 (castle.js pioneerDue): until the first church stands and before round
+  PIONEER_RESERVE_UNTIL (100), every castle's peacetime army keeps pilgrim + church karbonite (60) whenever any castle
+  planned a cluster at turn 3. Threat responses are not held back. Unit test on seed 2965: mode 1 holds at the
+  owner only, mode 2 at both, released by a church or the round limit, mirror-identical.
+- Diagnostic (driver, 200 rounds, h39 vs h35 on 2965): church round 20 vs 41, K mined 1002 vs 958.
+- h39 = h35 + PIONEER_RESERVE=2. Delivery (driver, one 200-round game at a time): vs h35 on 2965, 1828, 826, 2202,
+  both sides: mean first church round at least 5 rounds earlier than h35's in the same games, and karbonite mined
+  by round 200 at least h35's (sum of the 8); vs bots/rush on seeds 1337, 1879, 2544, 2908 (200 rounds): castles
+  lost no more than h35's in the same seeds. Gate 40 games vs h35, falsifier t <= 0. Dose: PIONEER_RESERVE_UNTIL
+  100, then 50 if the rush item fails.

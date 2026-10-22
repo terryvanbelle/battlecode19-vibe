@@ -67,7 +67,9 @@ export const CFG = {
                              // churches a cluster with >= 2 unserved depots (or all, if smaller); 0: any depot within
                              // 2*SERVE_MOVES king steps marks the whole cluster served (seed 1755: never staffed)
   PIONEER_RESERVE: 0,        // 1: ...and pilgrim + church karbonite (60) while a castle has a pioneer due (on poor
-                             // maps the peacetime army spent every 25 K and no church was ever built: seed 1755)
+                             // maps the peacetime army spent every 25 K and no church was ever built: seed 1755);
+                             // 2: every castle, while no church stands and any castle planned one (castle.js pioneerDue)
+  PIONEER_RESERVE_UNTIL: 100,  // ...mode 2 only before this round
   // lattice
   LATTICE_MIN_R2: 5,         // lattice tiles at least this far (r2) from the home structure
   KEEP_CLEAR: 0,             // 1: idle military units keep off depots, tiles next to our structures and chokepoints

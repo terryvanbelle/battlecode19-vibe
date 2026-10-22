@@ -8,7 +8,7 @@ import { depots, clusters, bfs, costField } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
 import { nextTarget, isChoke, militaryTurn, holdTarget } from '../src/bot/military.js';
-import { callDue, castleTurn, nextPioneer } from '../src/bot/castle.js';
+import { callDue, castleTurn, nextPioneer, pioneerDue } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { minesNow, pilgrimTurn, stepAvoid } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -542,6 +542,35 @@ test('castle: PLAN_CONTEST_FIRST plans the clusters the enemy nearly reaches bef
     assert.notDeepStrictEqual(on.map(p => p.site), off.map(p => p.site));             // and it changes the order here
     assert.deepStrictEqual(plan(1, 6), on);                                           // both teams alike
   } finally { CFG.PLAN_CONTEST_FIRST = saved; }
+});
+
+test('castle: PIONEER_RESERVE 2 holds the pioneer karbonite at every castle until a church stands (seed 2965)', () => {
+  const saved = CFG.PIONEER_RESERVE;
+  try {
+    const run = team => {
+      const g = new Game(2965, 100, 20, false, false);   // two castles a side, one remote cluster (the centre)
+      const cs = g.robots.filter(r => r.team === team && r.unit === S.CASTLE);
+      const Bs = cs.map(() => ({ st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 }));
+      for (const t of [1, 2, 3]) cs.forEach((c, i) => {
+        c.turn = t; const w = worldFor(g, c), B = Bs[i]; B.w = w; B.api = w.api; w.karbonite = 0;
+        if (t === 3) cs.forEach((o, j) => { if (j !== i) { o.turn = 1; const wo = worldFor(g, o); o.turn = t; B.st.castles.set(o.id, { x: wo.me.x, y: wo.me.y }); } });
+        castleTurn(B);
+      });
+      return Bs;
+    };
+    const Bs = run(0), owner = Bs.find(B => B.st.plan.length), other = Bs.find(B => !B.st.plan.length);
+    assert.ok(owner && other, 'one castle owns the centre cluster');
+    assert.strictEqual(owner.st.planAll, 1); assert.strictEqual(other.st.planAll, 1);
+    CFG.PIONEER_RESERVE = 1;
+    assert.ok(pioneerDue(owner) && !pioneerDue(other));   // mode 1: the other castle's guard spends the shared bank
+    CFG.PIONEER_RESERVE = 2;
+    assert.ok(pioneerDue(owner) && pioneerDue(other));
+    other.round = CFG.PIONEER_RESERVE_UNTIL; assert.ok(!pioneerDue(other)); other.round = 3;
+    for (const B of Bs) B.st.churched.add(owner.st.plan[0].cluster);
+    assert.ok(!pioneerDue(owner) && !pioneerDue(other));   // the church stands
+    const mirror = run(1);
+    assert.deepStrictEqual(mirror.map(B => [B.st.plan.length, B.st.planAll]), run(0).map(B => [B.st.plan.length, B.st.planAll]));
+  } finally { CFG.PIONEER_RESERVE = saved; }
 });
 
 test('pilgrim: PILGRIM_SAFE_STEP keeps steps out of a visible attacker\'s threat range (scrim 199, seed 1915)', () => {
