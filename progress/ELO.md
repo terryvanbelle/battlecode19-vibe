@@ -33,7 +33,7 @@ Our builds (accepted = bots/ROSTER.tsv v*, candidate = a dist/ bundle, sparring 
 Sources (`tools/progress/games.py`):
 
 - local: 511 games from 23 batch files (skipped: 23 init failure, 98 load (robot init failures))
-- replica: 499 games (11 archive games skipped, 53 matches from archives, 103 matches from scores), fetched 2026-10-22T07:42:29+00:00
+- replica: 499 games (11 archive games skipped, 53 matches from archives, 103 matches from scores), fetched 2026-10-22T07:47:35+00:00
 
 ![ratings](elo.png)
 

@@ -932,3 +932,18 @@
   never break a line, so castles fall only to the late push). Dose ladder: EDGE 1.5 -> 1 -> 2.
 - No-op of the new defaults (h35e, defaults-only build, vs h35, --det --timescale 10) and sym_h45 queued in the
   VM extra lane (2019-next/out/dlv_chain14.sh); sym_h44 in chain13.
+
+## 2026-10-22 00:47 — h45 WITHDRAWN before its delivery: EDGE is inert against prophets
+- Driver diagnostic h45 vs h35 on 905 (700 rounds): replay identical turn for turn (35,904 turns, to the end at 503)
+  to the h43 vs h35 diagnostic, whose recall never fired: EDGE changed no move. A prophet's vision (r2 64) is
+  the reach THREAT_R2 gives an enemy prophet or castle, so any one it sees already reaches its tile and the edge
+  rule lets it go on; it can only hold against crusaders (49) or preachers (36) seen farther out. The first
+  volley at contact comes from prophets the marcher could not see before its step. Job ...a39 moved to
+  ~/jobq/superseded; the switch stays (default 0) for a version that knows enemies beyond sight (radioed
+  sightings or memory). sym_h45 and the h35e no-op still run in the extra lane (the no-op covers the new code).
+- Replica 199 (v3 vs botfinalsafe) read: on 616 (57x57) botfinalsafe built 48 churches to our 4 and 63 pilgrims
+  to 32, spent 32,650 fuel on builds to our 17,650 and 14,554 on moves to our 39,886 (rounds 401-500: our 13,145;
+  2,466 of 5,560 in rounds 301-400 were A->B->A oscillation, fixed since v4's LATTICE_STICKY 2). v5 in its gate
+  (2202 vs h19): oscillation ~5% of move fuel; the round-401-500 attack wave 9,509 fuel (prophets 4,318,
+  preachers 3,024, crusaders 2,089), ~2,300 per 100 rounds after. On 1915 v3 dealt 170 damage in 386 rounds (F
+  12,203 unspent): v3's setup exceptions, not tactics.

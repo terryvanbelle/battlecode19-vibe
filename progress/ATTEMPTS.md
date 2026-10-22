@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 26 other, 18 queued, 11 in progress, 8 accepted, 3 dropped, 3 rejected, 1 sparring partners (70 rows).
+Totals: 27 other, 18 queued, 10 in progress, 8 accepted, 3 dropped, 3 rejected, 1 sparring partners (70 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -79,7 +79,7 @@ Totals: 26 other, 18 queued, 11 in progress, 8 accepted, 3 dropped, 3 rejected, 
 | `h42` | 2026-10-22 | h35 | h35 + unit mix by the binding resource: crusaders while bank fuel / karbonite >= 10, preachers while <= 1, else the rotation (MIX_BY_STOCK [10, 1]) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
 | `h43` | 2026-10-22 | h35 | v5 + castle recall: a castle whose visible attackers outnumber half its defenders radios its position (50 tiles) every 10 rounds; units that hear it come home for 30 rounds (RECALL=30) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
 | `h44` | 2026-10-22 | h35 | v5 + only crusaders obey attack orders before round 900; prophets and preachers hold the lattice (MARCH_MASK=8) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
-| `h45` | 2026-10-22 | h35 | v5 + marching units that see enemy attackers do not step into their reach unless ours in sight outnumber them 1.5 to 1 (EDGE=1.5) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
+| `h45` | 2026-10-22 | h35 | v5 + marching units that see enemy attackers do not step into their reach unless ours in sight outnumber them 1.5 to 1 (EDGE=1.5) |  |  |  |  | WITHDRAWN: inert against prophets (vision = reach); 905 diagnostic replay identical to h35 behaviour |
 | `h7v5` | 2026-10-22 | h35 | v5 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | QUEUED: 40 games vs h35 |
 | `h8v5` | 2026-10-22 | h35 | v5 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8r |  |  |  |  | QUEUED: 40 games vs h35 |
 | `h9v5` | 2026-10-22 | h35 | v5 + church planning counts depots served by pilgrim moves (PLAN_SERVE_PILGRIM=1); rebased from h9r |  |  |  |  | QUEUED: 40 games vs h35 |

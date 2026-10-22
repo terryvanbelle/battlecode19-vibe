@@ -15,12 +15,11 @@
   bots/dist linked to the main tree, outputs in the main tree's out/): h41's delivery (kill zones KILL_ZONE 50 on h35, 23:53; driver diagnostic on 1915 clean, 17 ZONE signals),
   h42's delivery (MIX_BY_STOCK [10, 1] on h35: crusaders when karbonite binds, preachers when fuel binds; 00:02), h43's delivery (castle recall RECALL 30: a castle under attack calls far
   guards home; 00:27; 2855 diagnostic: the recall brought the army inside the attack call's reach and it then died
-  in h35's held line), h44's delivery (MARCH_MASK 8: only crusaders march before round 900; 00:37), h45's delivery
-  (EDGE 1.5: marchers hold at the edge of enemy reach until they outnumber what they see; 00:42),
+  in h35's held line), h44's delivery (MARCH_MASK 8: only crusaders march before round 900; 00:37); h45 (EDGE 1.5) withdrawn before its delivery: inert against prophets, whose vision equals their reach,
   h39 vs h35 (PIONEER_RESERVE 2; delivery passed 23:46), then the old candidates rebased onto v5 (v5 + their own
   switch, 40 games vs h35): h24v5 (ECON_UNTIL 100), h20v5 (DEF_RESERVE_K 30), h15v5 (MIL_ROTATION null), h8v5,
-  h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Gates for h41-h45
-  go in right after h39's (job names ...4b01b1a41 to ...a45) when their deliveries pass. Superseded at v5: h31x, h33,
+  h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Gates for h41-h44
+  go in right after h39's (job names ...4b01b1a41 to ...a44) when their deliveries pass. Superseded at v5: h31x, h33,
   h29, h28, h21 (their switches are in v5). Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
   their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
