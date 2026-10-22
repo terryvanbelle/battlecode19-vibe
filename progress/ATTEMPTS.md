@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 24 other, 10 in progress, 9 queued, 6 accepted, 3 dropped, 3 rejected, 1 sparring partners (56 rows).
+Totals: 25 other, 9 in progress, 9 queued, 6 accepted, 3 dropped, 3 rejected, 1 sparring partners (56 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -45,7 +45,7 @@ Totals: 24 other, 10 in progress, 9 queued, 6 accepted, 3 dropped, 3 rejected, 1
 | `h33` | 2026-10-21 | h19 | h19 + pilgrims never step into a visible enemy attacker's threat range (PILGRIM_SAFE_STEP=1) |  |  |  |  | in progress: delivery PASSED (pilgrims lost 5 vs 46, K+F +11%); gate QUEUED: 40 games vs h19 |
 | `h34` | 2026-10-21 | h19 | h19 + church density, next dose: a church for every depot more than one pilgrim move from a structure (SERVE_MOVES=1, PLAN_CONTEST_FIRST=6) |  |  |  |  | DELIVERY FAILED (2 of 3): churches 19 vs 21 needed, K+F 48426 vs 53846 (h31); dose stays at SERVE_MOVES 2; not gated |
 | `h35` | 2026-10-21 | h19 | h19 + every delivered switch: church density and contested clusters first, cargo relay, nav fit and lattice memory, safe pilgrim steps (SERVE_MOVES=2, PLAN_CONTEST_FIRST=6, RELAY=1, NAV_FIT=1, LATTICE_STICKY=2, PILGRIM_SAFE_STEP=1) |  |  |  |  | in progress: delivery PASSED (K+F +39%, pilgrims lost 2 vs 74); gate QUEUED: 40 games vs h19 |
-| `h36` | 2026-10-21 | h19 | h19 + preachers in place of prophets and a prophet fuel floor (MIL_ROTATION [5,3,5,3,4], PROPHET_FLOOR=200) |  |  |  |  | in progress: delivery vs bots/rush (extra lane) |
+| `h36` | 2026-10-21 | h19 | h19 + preachers in place of prophets and a prophet fuel floor (MIL_ROTATION [5,3,5,3,4], PROPHET_FLOOR=200) |  |  |  |  | DELIVERY FAILED (2 of 3): vs rush fuel per damage 1.30 (PASS), fuel at 500 92 (> 134 needed: FAIL), castles lost 1 (PASS); 5 of 8 won (h19 0); gate not queued |
 | `h37` | 2026-10-21 | h19 | h31 + claim past the midline: clusters up to 4 moves nearer the enemy are planned (CLAIM_MARGIN=4) |  |  |  |  | DELIVERY FAILED: inert on 826/1828 (no cluster within 2-4 of the midline; churches 20 vs 20); not gated, closed |
 | `h38` | 2026-10-21 | h19 | h19 + creep instead of march: the lattice centre advances 1 tile per 8 rounds from round 450, no general march (ATTACK_ROUND=1001, CREEP_ROUND=450, CREEP_EVERY=8) |  |  |  |  | FAIL: delivery (move fuel 401-700 at most half of h19's in 1 of 6 games, fuel 500-700 >= 1,000 in 2 of 6; enemy structures destroyed in 4 of 6). Not gated |
 | `h39` | 2026-10-21 | h35 | h35 + every castle keeps the pioneer's karbonite until the first church stands (PIONEER_RESERVE=2) |  |  |  |  | in progress: delivery passed (first church 20.3 vs 30.8, K by 200 +29%, no castles lost to rush); gate vs h35 queued |
