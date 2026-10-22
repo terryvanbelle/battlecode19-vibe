@@ -9,6 +9,9 @@ export const CFG = {
                              // our 2 pioneers went to contested sites 34 and 47 steps out and the castle built nothing
                              // from round 5 to 67 with 90 karbonite reserved; StoneT2000 had 8 churches at 80 to our 3)
   PLAN_CONTEST_FIRST: 6,     // >0: planned clusters the enemy reaches within this many moves of us are pioneered first
+  PLAN_VALUE: 0,             // >0: within those classes, fewest (king steps + this) per depot first, not nearest first
+                             // (replica 403, seed 1375: wololo churched the two 7-depot clusters at 42 steps at r32
+                             // and r49; we planned them 6th and 7th behind 3-depot ones)
   PIONEER_MIN_ROUND: 2,
   EXPAND_ROUND: 0,           // >0: from this round castles re-plan every 50 rounds, adding remote clusters on either half
                              // more than EXPAND_KEEP king steps from every enemy castle (castle.js expandPlan; h19's

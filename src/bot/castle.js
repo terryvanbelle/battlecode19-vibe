@@ -116,7 +116,10 @@ function planClusters(B) {
   // CFG.PLAN_CONTEST_FIRST: clusters the enemy reaches within that many moves of us go first; the middle is a race
   // (seed 1828 with SERVE_MOVES 2: the near clusters delayed the centre pioneers from round 27 to 48-67 and h19 won it).
   const cf = CFG.PLAN_CONTEST_FIRST, hot = p => (cf && p.m <= cf ? 0 : 1);
-  st.plan.sort((a, b) => hot(a) - hot(b) || a.d - b.d || b.value - a.value || a.cluster - b.cluster);
+  // CFG.PLAN_VALUE: steps per depot, (d + PLAN_VALUE) / n, compared as cross products (integers, both teams alike).
+  const pv = CFG.PLAN_VALUE, nd = p => B.clusters[p.cluster].depots.length;
+  const byValue = (a, b) => pv ? (a.d + pv) * nd(b) - (b.d + pv) * nd(a) : 0;
+  st.plan.sort((a, b) => hot(a) - hot(b) || byValue(a, b) || a.d - b.d || b.value - a.value || a.cluster - b.cluster);
 }
 
 // CFG.EXPAND_ROUND: append to the plan the clusters it left out (nearer the enemy, or owned by a castle since lost),

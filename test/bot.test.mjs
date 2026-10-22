@@ -1221,6 +1221,20 @@ test('tools/plan.mjs: both teams get the same plan; seed 2924 orphans no own-sid
   } finally { [CFG.SERVE_MOVES, CFG.PLAN_CONTEST_FIRST] = saved; }
 });
 
+test('castle: PLAN_VALUE orders each class by steps per depot (seed 1375: the 7-depot clusters at 42 steps come sooner)', () => {
+  const saved = CFG.PLAN_VALUE;
+  const order = (team) => planReport(1375, team).text.split('\n')[1].match(/c\d+@/g).join(' ');
+  try {
+    CFG.PLAN_VALUE = 0;
+    assert.ok(order(1).startsWith('c8@ c9@ c5@ c4@ c13@ c7@ c10@ c3@'), order(1));
+    CFG.PLAN_VALUE = 10;
+    assert.ok(order(1).startsWith('c8@ c9@ c7@ c10@ c4@ c13@ c5@ c1@'), order(1));
+    CFG.PLAN_VALUE = 20;
+    assert.ok(order(1).startsWith('c7@ c10@ c8@ c9@'), order(1));
+    assert.strictEqual(planReport(1375, 0).text.replace(/team \d/, ''), planReport(1375, 1).text.replace(/team \d/, ''));
+  } finally { CFG.PLAN_VALUE = saved; }
+});
+
 test('struct: FRONT_ROUND sends a pilgrim to build a church FRONT_STEP rows ahead, which finds the same site; mirror-identical', () => {
   const saved = CFG.FRONT_ROUND;
   try {
