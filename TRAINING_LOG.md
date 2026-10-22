@@ -877,3 +877,16 @@
   military units lost at most 110% of h35's. Gate 40 games vs h35, falsifier t <= 0 (a recall pulls the army off
   winning attacks). Dose ladder: RECALL 30 -> 60; the radius 50 tiles -> map-wide. Diagnostics: driver 905 (600
   rounds), VM extra lane 2855 both sides (out/diag_h43_2855.jsonl).
+
+## 2026-10-22 00:29 — h40 delivery FAILED (2 of 3, castles lost); gate not queued
+- h40 (FRONT_ROUND 200 on h19) vs h19, 8 games of 1000 rounds on 2924/2202/1828/826 both sides
+  (out/dlv_h40_h19.jsonl, rp_dlv_h40), against the items of 23:30:
+  (1) churches built after round 200: 13/16/12/12/15/7/10/24 (h19 0 each); at least 2 in 8 of 8: PASS.
+  (2) units built by round 600 vs h19's: 109/119/105/105/158/88/98/141%; at least 90% in 7 of 8: PASS.
+  (3) castles lost: h40 4, h19 3 (no more than h19's needed): FAIL. 2924 red lost all three (499, 661, 784):
+  by round 600 it had a handful of military units against h19's army in our half; 826 blue lost one.
+- Outcome 6 wins in 8; 0 exceptions. Gate not queued (pre-registered rule); dist/h40v5 (v5 + FRONT_ROUND 200)
+  stays built. The creep works as a mechanism (7-24 forward churches a game) but on 2924 the army it feeds
+  lost; a new arm would need a delivery on castle safety first.
+- Driver diagnostic h43 vs h35 on 905 (600 rounds): h43 won by castles at 503, 0 exceptions, but sent no recall
+  (its castle was never threatened); the 2855 pair runs in the VM extra lane.

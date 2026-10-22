@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 25 other, 18 queued, 10 in progress, 8 accepted, 3 dropped, 3 rejected, 1 sparring partners (68 rows).
+Totals: 26 other, 18 queued, 9 in progress, 8 accepted, 3 dropped, 3 rejected, 1 sparring partners (68 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -49,7 +49,7 @@ Totals: 25 other, 18 queued, 10 in progress, 8 accepted, 3 dropped, 3 rejected, 
 | `h37` | 2026-10-21 | h19 | h31 + claim past the midline: clusters up to 4 moves nearer the enemy are planned (CLAIM_MARGIN=4) |  |  |  |  | DELIVERY FAILED: inert on 826/1828 (no cluster within 2-4 of the midline; churches 20 vs 20); not gated, closed |
 | `h38` | 2026-10-21 | h19 | h19 + creep instead of march: the lattice centre advances 1 tile per 8 rounds from round 450, no general march (ATTACK_ROUND=1001, CREEP_ROUND=450, CREEP_EVERY=8) |  |  |  | vs v4 4-2 | FAIL: delivery (move fuel 401-700 at most half of h19's in 1 of 6 games, fuel 500-700 >= 1,000 in 2 of 6; enemy structures destroyed in 4 of 6). Not gated |
 | `h39` | 2026-10-21 | h35 | h35 + every castle keeps the pioneer's karbonite until the first church stands (PIONEER_RESERVE=2) |  |  |  |  | in progress: delivery passed (first church 20.3 vs 30.8, K by 200 +29%, no castles lost to rush); gate vs h35 queued |
-| `h40` | 2026-10-21 | h19 | h19 + forward churches: from round 200 a structure with nothing of ours ahead in sight sends a pilgrim to build a church 8 rows toward the enemy, every 50 rounds at most (FRONT_ROUND=200) |  |  |  | vs v4 5-1 | in progress: delivery queued (8 games of 1000 rounds vs h19) \| gate if delivery passes: as h40v5 (v5 + FRONT_ROUND=200) vs h35 |
+| `h40` | 2026-10-21 | h19 | h19 + forward churches: from round 200 a structure with nothing of ours ahead in sight sends a pilgrim to build a church 8 rows toward the enemy, every 50 rounds at most (FRONT_ROUND=200) |  |  |  | vs v4 5-1 | DELIVERY FAILED (2 of 3): churches after r200 in 8/8 (PASS), units by 600 >= 90% in 7/8 (PASS), castles lost 4 vs h19 3 (FAIL); 6 of 8 won; gate not queued |
 | `h41` | 2026-10-21 | h35 | h35 + kill zones: a unit of ours gone where it could not walk out of sight marks a zone; idle units hold no lattice tile in it for 50 turns (KILL_ZONE=50) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
 | `h7r` | 2026-10-21 | h19 | h19 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7 |  |  |  |  | QUEUED: 40 games vs h19 \| REBASED onto v5 as h7v5 (gate vs h19 withdrawn) |
 | `h8r` | 2026-10-21 | h19 | h19 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8 |  |  |  |  | QUEUED: 40 games vs h19 \| REBASED onto v5 as h8v5 (gate vs h19 withdrawn) |
