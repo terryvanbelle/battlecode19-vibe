@@ -16,6 +16,9 @@ const CrossVM = require(path.join(ENGINE, 'vm'));
 const ActionRecord = require(path.join(ENGINE, 'action_record'));
 const SPECS = require(path.join(ENGINE, 'specs'));
 const { symmetry } = require('./maps');
+// The check is about decisions, not time: vm2's per-run wall-clock cut (TURN_MAX_TIME, read when a sandbox is made)
+// would otherwise end it on a loaded host (the driver tripped it creating robots at round 171).
+SPECS.TURN_MAX_TIME = 10000;
 
 function compile(dir) {
   return new Promise((res, rej) => {
@@ -81,15 +84,23 @@ async function check(code, seed, rounds) {
     // tile), so conflicts between same-team actions computed from one state resolve identically on both sides.
     // Moves/attacks resolve against the state as it is applied, as in the engine.
     const n = g.map.length, key = r => { const [x, y] = r.team === 0 ? [r.x, r.y] : mir(r.x, r.y); return y * n + x; };
-    const order = actors.map((r, i) => i).sort((a, b) => key(actors[a]) - key(actors[b]) || actors[a].team - actors[b].team);
+    const key0 = actors.map(key), order = actors.map((r, i) => i).sort((a, b) => key0[a] - key0[b] || actors[a].team - actors[b].team);
     const errs = [];
     const pre = actors.map(r => [r.x, r.y]), spent = [];
     if (!firstAttack && acts.some(a => a && a.action === 'attack')) firstAttack = round;
-    order.forEach(i => { const r = actors[i];
-      if (!g.robots.includes(r)) return; // killed earlier this round
-      const rec = new ActionRecord(g, r), k0 = g.karbonite.slice(), f0 = g.fuel.slice();
-      try { g.processAction(r, acts[i], 0, rec); rec.enact(g, r); } catch (e) { errs[i] = String(e); /* invalid: does nothing */ }
-      spent[i] = `K${g.karbonite[r.team] - k0[r.team]} F${g.fuel[r.team] - f0[r.team]}` + (g.karbonite[1 - r.team] !== k0[1 - r.team] || g.fuel[1 - r.team] !== f0[1 - r.team] ? ' +other' : '');
+    // mid: the first twin pair (one key) after whose actions the board stops being a mirror image.
+    let mid = null;
+    order.forEach((i, idx) => { const r = actors[i];
+      if (g.robots.includes(r)) {   // else killed earlier this round
+        const rec = new ActionRecord(g, r), k0 = g.karbonite.slice(), f0 = g.fuel.slice();
+        try { g.processAction(r, acts[i], 0, rec); rec.enact(g, r); } catch (e) { errs[i] = String(e); /* invalid: does nothing */ }
+        spent[i] = `K${g.karbonite[r.team] - k0[r.team]} F${g.fuel[r.team] - f0[r.team]}` + (g.karbonite[1 - r.team] !== k0[1 - r.team] || g.fuel[1 - r.team] !== f0[1 - r.team] ? ' +other' : '');
+      }
+      const nx = order[idx + 1];
+      if (!mid && (nx === undefined || key0[nx] !== key0[i])) {
+        const d = diff(g, mir);
+        if (d) mid = { why: d, pair: order.filter(q => key0[q] === key0[i]).map(q => ({ id: actors[q].id, unit: actors[q].unit, at: pre[q], spent: spent[q], err: errs[q], act: acts[q] && { ...acts[q], logs: undefined } })) };
+      }
     });
     ensure();
     const d = diff(g, mir);
@@ -111,7 +122,7 @@ async function check(code, seed, rounds) {
       const detail = {}; for (const id of ids) { const i = actors.findIndex(r => r.id === id); if (i >= 0) detail[id] = { unit: actors[i].unit, at: pre[i], spent: spent[i], act: acts[i] && { ...acts[i], logs: undefined }, logs: acts[i] && acts[i].logs, err: errs[i] }; }
       // Both twins aimed at the same tile (a build or move onto the mirror axis): the engine's order decides.
       const occErr = Object.values(detail).filter(v => /occupied/i.test(v.err || '')).length === 1;
-      return { seed, ok: ok === false && occErr ? 'contest' : ok, round, why: d + st, firstAttack, detail };
+      return { seed, ok: ok === false && occErr ? 'contest' : ok, round, why: d + st, firstAttack, detail, mid };
     }
   }
   return { seed, ok: true, round: rounds, robots: g.robots.length };
