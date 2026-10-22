@@ -102,3 +102,11 @@
    driver's and the operator's runs passed because neither sandbox restricts address families. Test with
    `systemd-run --wait --pipe` and the unit's properties (README: deploying), then restart, then watch the first
    minute of the journal. (2026-10-22)
+22. **Find out how the strongest opponent actually takes castles before you tune anything else.** A robot built in a
+   round acts in that round, so a church can build a pilgrim that builds the next church, and a whole line of up to
+   16 churches appears in a single round, ending 1-2 tiles from a castle and building preachers there at once.
+   StoneT2000 (the field's best, BT ~2,050) does this in 28 of its 33 replica games against us. About 20 of those
+   lines end within 4 king steps of one of our castles, and we lose that castle within 25 rounds; we never chain.
+   It banks for the chain (1,345-1,555 K just before, against our 55-213) and keeps a smaller army (46 against our
+   94 at round 250 of 407-3). No shooter can stop a line while it is being built; only units already beside the
+   castle, or the bank, can answer it. Census: scratch chains.js over replica matches 199-407. (2026-10-22)
