@@ -73,6 +73,11 @@
   (1250, 1635, 1862, 357 both sides, vs h35) runs on the extra lane (out/dlv_chain27.sh, out/stall_dlv_h60.txt).
   If it passes, the gate is h60v6 (built) vs h50. Pilgrims that know a structure but whose depots sit under an enemy
   army (seed 1250 #4088: 423 turns beside (24,29), castle in sight) are not orphans: h59 (PILGRIM_HOT) failed there.
+- Pioneers (TRAINING_LOG 08:16, scratch pioneers.js in VM 2019-next/out): in h50's gate v6 left 40 pioneers stuck
+  (7,874 turns to round 450) beside contested sites on 7 maps, and castles re-send to the same site every 81 rounds;
+  vs StoneT2000 our pioneers are mostly killed en route (25 of 46) and re-sent every ~105 rounds. CFG.PIONEER_GIVEUP
+  (h61 = 20; h61b = 50 built) gives the site up: chain29 (no-op v6e, symcheck), then chain30 (delivery vs h50 on
+  418, 1325, 2542, 2072; out/pioneers_dlv_h61.txt). A longer rest after a pioneer is killed is not built yet.
 - tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
   cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were
   started without it, our own builds only). Not yet synced to the VM trees (they start games under unshare anyway).

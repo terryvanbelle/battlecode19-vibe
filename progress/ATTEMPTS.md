@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 50 other, 17 queued, 11 in progress, 10 accepted, 3 dropped, 3 rejected, 1 sparring partners (95 rows).
+Totals: 50 other, 17 queued, 12 in progress, 10 accepted, 3 dropped, 3 rejected, 1 sparring partners (96 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -102,6 +102,7 @@ Totals: 50 other, 17 queued, 11 in progress, 10 accepted, 3 dropped, 3 rejected,
 | `h58` | 2026-10-22 | h35 | v5 + CHURCH_FIRST_R2=144: enemy churches within r2 144 of home outrank units as targets (anti-chain) |  |  |  | vs h55 3-5 | DELIVERY FAILED 1 of 3 vs h55: castles lost 11 (bar 8), wins 3/8 (bar 4); h55 churches lost 89 (bar 70) passes |
 | `h59` | 2026-10-22 | h35 | v5 + PILGRIM_HOT=10: a pilgrim stuck 10 turns at the edge of an enemy attacker's range gives its depot up for another |  |  |  | vs v5 4-4 | DELIVERY FAILED 0 of 3 vs h35: stalled turns 99% of h35 (bar 40%), mines 101% (bar 110%), wins 4/8 (bar 5); the diagnostic compared sides, not builds |
 | `h60` | 2026-10-22 | h35 | v5 + PILGRIM_ORPHAN=1: a pilgrim that knows no living structure (its church fell) walks to our half's unseen cluster sites until it sees a castle or church, instead of standing still with its load |  |  |  | vs v5 1-1 | in progress: no-op IDENTICAL, symcheck clean (axis contest, combat); driver diagnostic 1250 (its side stalled 447 turns vs 849 for h35 on that side); delivery running (8 games vs h35); h60v6 built for the gate |
+| `h61` | 2026-10-22 | h50 | v6 + a pioneer 20 turns no nearer its site with an enemy attacker in sight gives the site up, reports it taken (castles rest it 200 rounds, free its slot) and mines (PIONEER_GIVEUP=20) |  |  |  |  | in progress: no-op + symcheck on the extra lane, then delivery vs h50 (418, 1325, 2542, 2072 both sides) |
 | `h7v5` | 2026-10-22 | h35 | v5 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | REBASED onto v6 as h7v6 (gate vs h35 withdrawn) |
 | `h7v6` | 2026-10-22 | h50 | v6 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | QUEUED: 40 games vs h50 |
 | `h8v5` | 2026-10-22 | h35 | v5 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8r |  |  |  | vs v5 9-2 | DELIVERY PASSED 3 of 3 vs h35: preachers built r900-1000 377 vs 9 (bar 3x), final health 136% (bar 120%), wins 7/8 (bar 5); gate moved up (par 2); in flight vs v5 when v6 was accepted: a pass is stacked onto v6 and gated vs v6 |
