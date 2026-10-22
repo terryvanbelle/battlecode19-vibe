@@ -324,7 +324,7 @@
   enemy damage per fuel, prophets 85% of it at 0.40; the rush spent 33,265 at 0.95 (crusaders 88%). A rush
   crusader costs 50 fuel to build and ~100 fuel of prophet shots to kill: h22 and h23 are aimed at exactly this.
 
-## 2026-10-21 19:20 — field study: how the strong replica bots spend fuel; queue reordered
+## 2026-10-21 18:53 — field study: how the strong replica bots spend fuel; queue reordered
 - Replays of the three finished field matches with IvanGeffner/StoneT2000 (replica storage, matches 151, 155, 157;
   games, not source). eigthbot vs CometsTech (#2 on the ladder), 3-0: seed 1036 by castles at 526 (6 churches, 76
   pilgrims built, 139 prophets); seed 1828 by health at 1000 (6 churches, 70 pilgrims, 56 prophets, 9 preachers;
@@ -341,7 +341,7 @@
   h8r/h9r. The four gates that tune the march (h7r persistence, h11r cruise patience, h10r call interval, h18b cruise
   reserve) moved to ~/jobq/hold: if turtle is accepted they are moot; if rejected they go back.
 
-## 2026-10-21 19:45 — h24 (economy first), pre-registered
+## 2026-10-21 19:00 — h24 (economy first), pre-registered
 - Same map, same side, same opponent (seed 826, red, vs CometsTech): eigthbot (match 151) at round 100 had 8
   churches, 47 pilgrims and no military; at 150, 17 churches, 65 pilgrims, 44 prophets; it stopped at ~64 pilgrims
   and 220 prophets and banked 44,544 fuel by 500. v3 (match 107): 3 churches, 21 pilgrims, 19 military at 100; 8
@@ -357,7 +357,7 @@
   not lower; vs bots/rush on 1337/1879/2544/2908 both sides: no more castles lost than h19's control games (the rush
   arrives before round 100). Gate h24 vs h19, 40 games; falsifier net <= 0. Dose ladder 100 -> 150 (h24a, built) / 60.
 
-## 2026-10-21 20:10 — a movement bug: capped steps on a full-speed field (h25 pre-registered); LATTICE_R switch
+## 2026-10-21 19:07 — a movement bug: capped steps on a full-speed field (h25 pre-registered); LATTICE_R switch
 - Writing a unit test for a lattice radius switch (LATTICE_R, default 12 = unchanged; the dead LATTICE_ADVANCE entry
   removed from config.js) showed a prophet 14 king steps out not moving on its first turn. Cause: Nav fields count
   full-speed moves (r2 4 for prophets, preachers and pilgrims, r2 9 for crusaders), but cruise moves are capped at r2

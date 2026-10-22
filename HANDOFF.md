@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-21 20:10 PDT)
+## State (2026-10-21 19:07 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v3** (`bots/v3`, ROSTER.tsv); frozen history v0-v3, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -11,8 +11,8 @@
   setup that re-runs until complete, LEARNINGS 10), measured vs h6 next; candidates from now on are switches on h19,
   gated against h19 with `--timescale 2 --init-ms 1000` (TRAINING_LOG 17:40).
 - VM queue (`~/jobq`, in order): h19 vs h6 (running since 18:40); gates run from the shadow tree ~/projects/vibe/2019-next (new tools incl. `--init-ms`; engine/maps/bots/dist link to the main tree;
-  outputs in the main tree's out/): h19 vs h6, then h16r (turtle, moved up 19:20 after the field study, TRAINING_LOG),
-  h25 (NAV_FIT movement fix, 20:10), h24 (economy first, 19:45), h21, h20, h22, h23, h15r, h8r, h9r vs h19; then the reference jobs v3 vs v0
+  outputs in the main tree's out/): h19 vs h6, then h16r (turtle, moved up 18:53 after the field study, TRAINING_LOG),
+  h25 (NAV_FIT movement fix, 19:07), h24 (economy first, 19:00), h21, h20, h22, h23, h15r, h8r, h9r vs h19; then the reference jobs v3 vs v0
   and v3 vs rush (main tree, synced 18:50 except engine/maps/bots/dist). The h6-based h15, h16, h7-h10 jobs are in ~/jobq/superseded. Deliveries in
   the extra lane (`out/dlv_chain2.sh` in the shadow tree, via `tools/xbatch.js` so they do not hold the queue,
   LEARNINGS 11): h20 and h19 vs bots/rush on h6's four rush-losing maps, h21 vs h19 on 2202/1635/2296, h22 vs
