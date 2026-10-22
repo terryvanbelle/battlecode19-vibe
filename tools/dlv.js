@@ -11,7 +11,9 @@
 // shotsW / moveW / moveMilW (shots, all move fuel, military move fuel in rounds from..to), castlesLost, churchesBuilt,
 // spots (prophet radio at r2 99), recalls (castle radio at r2 2501), fuel500 / fuelTo (bank at round 500 / to),
 // karbEnd / fuelEnd, win; idleContact / idleContactP (military / prophet turns in from..to with no action while an
-// enemy attacker within r2 196, out of the unit's own attack range, has a friend of the unit in its attack range).
+// enemy attacker within r2 196, out of the unit's own attack range, has a friend of the unit in its attack range);
+// atCastle450 (military units whose nearest own structure, in king steps, is a castle within 6, at round 450),
+// churchesLost.
 'use strict';
 const fs = require('fs'), path = require('path');
 const R = require('./replay');
@@ -19,6 +21,19 @@ const R = require('./replay');
 const ATK = [10, 0, 0, 10, 25, 15], MOVE = [0, 0, 1, 1, 2, 3];
 const RNG = [[1, 64], null, null, [1, 16], [16, 64], [1, 16]];
 const d2 = (ax, ay, b) => (ax - b.x) ** 2 + (ay - b.y) ** 2;
+
+// Military units of team t whose nearest own structure (king steps; castle first on ties) is a castle within k.
+function atCastle(g, t, k) {
+  const st = g.robots.filter(r => r.team === t && r.unit <= 1);
+  let c = 0;
+  for (const u of g.robots) {
+    if (u.team !== t || u.unit < 3) continue;
+    let bd = 1e9, bu = -1;
+    for (const s of st) { const d = Math.max(Math.abs(s.x - u.x), Math.abs(s.y - u.y)); if (d < bd || (d === bd && s.unit < bu)) { bd = d; bu = s.unit; } }
+    if (bd <= k && bu === 0) c++;
+  }
+  return c;
+}
 
 // A fight this unit (at its tile before the turn) could join but cannot reach: see idleContact above.
 function contact(g, r) {
@@ -35,7 +50,7 @@ function contact(g, r) {
 }
 const COLS = ['milBuilt', 'milLost', 'milLostUnfired', 'meleeLost', 'meleeLostUnfired', 'deathsOn3', 'killsByMelee',
   'killsByProphet', 'shots', 'atkFuel', 'dmgDealt', 'shotsW', 'moveW', 'moveMilW', 'castlesLost', 'churchesBuilt', 'spots',
-  'recalls', 'fuel500', 'fuelTo', 'karbEnd', 'fuelEnd', 'win', 'idleContact', 'idleContactP'];
+  'recalls', 'fuel500', 'fuelTo', 'karbEnd', 'fuelEnd', 'win', 'idleContact', 'idleContactP', 'atCastle450', 'churchesLost'];
 
 function stats(buf, { from = 0, to = 1000 } = {}) {
   const s = [0, 1].map(() => Object.fromEntries(COLS.map(c => [c, 0])));
@@ -62,6 +77,7 @@ function stats(buf, { from = 0, to = 1000 } = {}) {
       for (const d of died) {
         const T = s[d.team];
         if (d.unit === 0) T.castlesLost++;
+        if (d.unit === 1) T.churchesLost++;
         if (d.unit < 3) continue;
         T.milLost++;
         if (!fired.has(d.id)) T.milLostUnfired++;
@@ -75,6 +91,7 @@ function stats(buf, { from = 0, to = 1000 } = {}) {
     },
     onRoundEnd(round, g) {
       if (round === 500) for (const t of [0, 1]) s[t].fuel500 = g.fuel[t];
+      if (round === 450) for (const t of [0, 1]) s[t].atCastle450 = atCastle(g, t, 6);
       if (round === to) for (const t of [0, 1]) s[t].fuelTo = g.fuel[t];
     },
   });
@@ -116,4 +133,4 @@ function main(argv) {
 }
 
 if (require.main === module) console.log(main(process.argv.slice(2)));
-module.exports = { stats, labels, main, contact, COLS };
+module.exports = { stats, labels, main, contact, atCastle, COLS };

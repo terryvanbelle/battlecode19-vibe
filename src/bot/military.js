@@ -237,11 +237,14 @@ function latticeCentre(B) {
   return { x: h.x, y: Math.min(B.w.n - 1, h.y + Math.floor((B.round - CFG.CREEP_ROUND) / CFG.CREEP_EVERY)) };
 }
 
+// King steps from the lattice centre within which a unit holds the lattice (CFG.CASTLE_POST: a castle post is tighter).
+function latticeR(B) { return B.st.post ? CFG.CASTLE_POST_R : CFG.LATTICE_R; }
+
 // The free lattice tile nearest an anchor ahead of the lattice centre (toward the enemy), within CFG.LATTICE_R king
 // steps of the centre (home, unless CFG.CREEP_ROUND).
 // CFG.LATTICE_STICKY >= 2: a tile out of sight that this unit saw taken in the last LATTICE_MEMORY turns is not free.
 function latticeTarget(B) {
-  const w = B.w, me = w.me, h = latticeCentre(B), n = w.n, LATTICE_R = CFG.LATTICE_R;
+  const w = B.w, me = w.me, h = latticeCentre(B), n = w.n, LATTICE_R = latticeR(B);
   const ay = h.y + (B.st.home.y < n / 2 ? 2 : 0);
   const mem = CFG.LATTICE_STICKY >= 2 ? (B.st.ltSeen || (B.st.ltSeen = new Int16Array(n * n))) : null;
   let best = null, bd = 1e9;
@@ -267,7 +270,7 @@ function holdTarget(B) {
   const w = B.w, st = B.st, h = latticeCentre(B), me = w.me;
   if (CFG.LATTICE_STICKY && st.lt) {
     const [x, y] = st.lt, occ = w.occ(x, y);
-    if (latticeOk(B, x, y) && king(x, y, h.x, h.y) <= CFG.LATTICE_R && !(occ > 0 && occ !== me.id)) return st.lt;
+    if (latticeOk(B, x, y) && king(x, y, h.x, h.y) <= latticeR(B) && !(occ > 0 && occ !== me.id)) return st.lt;
   }
   return (st.lt = latticeTarget(B));
 }
@@ -343,7 +346,7 @@ export function militaryTurn(B) {
     CFG.EDGE ? edgeAvoid(B) : undefined);
 
   // Hold the lattice.
-  if (latticeOk(B, me.x, me.y) && king(me.x, me.y, c.x, c.y) <= CFG.LATTICE_R) return null;
+  if (latticeOk(B, me.x, me.y) && king(me.x, me.y, c.x, c.y) <= latticeR(B)) return null;
   const t = holdTarget(B);
   if (!t) return CFG.KEEP_CLEAR ? stepClear(B) : null;
   const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);

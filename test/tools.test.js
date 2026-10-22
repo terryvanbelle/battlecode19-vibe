@@ -259,4 +259,11 @@ test('dlv: delivery numbers agree with the replay analysis and with each other',
   assert.strictEqual(dlv.contact({ robots: [R(2, 1, 4, 10, 17), R(3, 0, 2, 10, 23)] }, me), false);   // the unit can fire itself
   assert.strictEqual(dlv.contact({ robots: [R(2, 1, 2, 10, 20), R(3, 0, 2, 10, 21)] }, me), false);   // pilgrims do not attack
   assert.strictEqual(dlv.contact({ robots: [R(2, 1, 5, 10, 25), R(3, 0, 2, 10, 23)] }, me), false);   // r2 225: too far
+
+  // atCastle: nearest own structure a castle within k (a church as near loses the tie to the castle)
+  const g = { robots: [R(1, 0, 0, 10, 10), R(2, 0, 1, 20, 10), R(3, 0, 4, 13, 10), R(4, 0, 4, 15, 10), R(5, 0, 3, 18, 10),
+    R(6, 0, 5, 10, 17), R(7, 1, 4, 11, 11), R(8, 0, 2, 11, 10)] };
+  assert.strictEqual(dlv.atCastle(g, 0, 6), 2);   // ids 3 and 4 (5 is nearer the church, 6 is 7 steps out)
+  assert.strictEqual(dlv.atCastle(g, 0, 3), 1);
+  assert.strictEqual(dlv.atCastle(g, 1, 6), 0);
 });

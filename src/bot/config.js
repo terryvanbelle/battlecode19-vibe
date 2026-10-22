@@ -133,6 +133,8 @@ export const CFG = {
                              // nearest castle it hears instead (h43 delivery: every castle that fell had 0-2 of its
                              // own units within 10 tiles; 2299 at round 300: 3 near the castle, 67 near churches)
   CASTLE_POST_EVERY: 20,
+  CASTLE_POST_R: 6,          // ...and holds lattice tiles within this many king steps of it (LATTICE_R 12 left units
+                             // by churches within 12 of the castle where they stood: diagnostic 2299, 11 by the castle)
   // endgame
   ENDGAME_MARGIN: 6,
   ENDGAME_FUEL: 0,           // >0: from this round all fuel goes into preachers (health breaks round-1000 ties; a

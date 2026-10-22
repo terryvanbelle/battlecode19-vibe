@@ -465,7 +465,7 @@ test('military: CASTLE_POST: a church-born unit that drew a post takes the neare
     };
     const on = run(1), off = run(0);
     assert.deepStrictEqual(on.B.st.home, { x: cw.me.x, y: cw.me.y });
-    assert.ok(on.a && on.a.action === 'move' && on.B.st.lt && king(on.B.st.lt[0], on.B.st.lt[1], cw.me.x, cw.me.y) <= CFG.LATTICE_R);
+    assert.ok(on.a && on.a.action === 'move' && on.B.st.lt && king(on.B.st.lt[0], on.B.st.lt[1], cw.me.x, cw.me.y) <= CFG.CASTLE_POST_R);
     assert.notDeepStrictEqual(off.B.st.home, { x: cw.me.x, y: cw.me.y });
     assert.strictEqual(off.B.st.toCastle, 0);
   } finally { CFG.CASTLE_POST = saved; }
