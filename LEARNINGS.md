@@ -72,7 +72,10 @@
    one game we took from it (scrim 200, seed 520). Across our 201 replica games, 57 had more than 50 opponent clock
    failures and we won 49 of those, on a VM running 7 engine processes on 8 vCPUs. Our 33 KB bundle loads in a few
    ms. Read replica wins over a bot with clock failures as inflated; our own VM games run at nice 10
-   (`tools/jobq.sh`, the extra lane) so the replica's games get whole cores. (2026-10-21)
+   (`tools/jobq.sh`, the extra lane) so the replica's games get whole cores. (2026-10-21) The same holds for the
+   2-vCPU driver: replay analyses run beside a diagnostic game left 466 "not initialized" and 342 overdrawn-clock
+   turns in it (h69, 2026-10-22), so the game measured the host, not the bot. While the driver plays, it does
+   nothing else heavy.
 18. **Stack independent switches that passed their deliveries; do not wait for each single gate.** A switch whose
    effect is a few percent needs far more than 40 games to show alone (h31, church density: 25-15, t 1.67 at 20
    cells, inconclusive), and a queue of single gates takes a day. h35, the stack of every delivered switch on
