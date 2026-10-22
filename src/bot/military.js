@@ -12,10 +12,10 @@ function init(B) {
   st.home = null;
   for (const r of w.friends) if ((r.unit === CASTLE || r.unit === CHURCH) && king(r.x, r.y, me.x, me.y) <= 1) {
     st.home = { x: r.x, y: r.y };
-    if (r.unit === CASTLE) B.birthRound = r.turn;
-    if (r.signal > 0) { const m = dec(r.signal); if (m.type === SIG.ROUND) B.birthRound = m.v; }
+    if (r.unit === CASTLE) B.birthRound = r.turn - me.turn + 1;
+    if (r.signal > 0 && me.turn === 1) { const m = dec(r.signal); if (m.type === SIG.ROUND) B.birthRound = m.v; }
   }
-  if (B.birthRound) B.round = B.birthRound;
+  if (B.birthRound) B.round = B.birthRound + me.turn - 1;
   if (!st.home) st.home = { x: me.x, y: me.y };
   st.target = null;   // [x, y] enemy structure to attack
   st.tIdx = -1;       // its enemy castle index from the ATTACK message (-1: unknown)
@@ -27,6 +27,7 @@ function init(B) {
   B.rnd = rng(((B.birthRound || 0) * 4096 + me.y * 64 + me.x) * 8 + me.unit); B.nav.rnd = B.rnd;
   st.guard = B.rnd() < CFG.HOME_GUARD_FRAC;   // stays home through general attacks (until the last rounds)
   if (CFG.RUSH) st.target = w.mirror(st.home.x, st.home.y);   // sparring mode: march at once
+  st.ready = true;
 }
 
 // ATTACK orders: far messages (comms.decFarRobot authenticates them by radius); targets must lie in the enemy half.
@@ -114,8 +115,9 @@ function isChoke(w, x, y) {
 function keepClear(B, x, y) {
   const w = B.w, st = B.st;
   if (!st.choke) {
-    st.choke = new Uint8Array(w.n * w.n);
-    for (let yy = 0; yy < w.n; yy++) for (let xx = 0; xx < w.n; xx++) if (w.passable(xx, yy) && isChoke(w, xx, yy)) st.choke[yy * w.n + xx] = 1;
+    const c = new Uint8Array(w.n * w.n);
+    for (let yy = 0; yy < w.n; yy++) for (let xx = 0; xx < w.n; xx++) if (w.passable(xx, yy) && isChoke(w, xx, yy)) c[yy * w.n + xx] = 1;
+    st.choke = c;
   }
   if (st.structsAt !== w.me.turn) {
     st.structsAt = w.me.turn; st.structs = [st.home];
@@ -156,7 +158,7 @@ function latticeTarget(B) {
 
 export function militaryTurn(B) {
   const w = B.w, me = w.me, st = B.st, u = me.unit, S = STATS[u];
-  if (me.turn === 1) init(B);
+  if (!st.ready) init(B);   // until it completes: a turn killed mid-init (200 ms) leaves it half done
   listen(B);
   const enemies = w.enemies;
   const canShoot = w.fuel >= S.atkFuel + CFG.SHOOT_FLOOR;   // keep a little fuel so pilgrims can still mine

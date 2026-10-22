@@ -7,9 +7,10 @@ import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
-import { nextTarget, isChoke } from '../src/bot/military.js';
-import { callDue } from '../src/bot/castle.js';
-import { minesNow } from '../src/bot/pilgrim.js';
+import { nextTarget, isChoke, militaryTurn } from '../src/bot/military.js';
+import { callDue, castleTurn } from '../src/bot/castle.js';
+import { churchTurn } from '../src/bot/church.js';
+import { minesNow, pilgrimTurn } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep } from '../src/bot/combat.js';
@@ -237,6 +238,47 @@ test('military: chokepoints are tiles whose passable neighbours fall apart witho
   assert.ok(!isChoke(w, 1, 1));   // its dead end
   assert.ok(!isChoke(w, 3, 3));   // 2-wide open edge
   assert.ok(!isChoke(w, 3, 4));   // map edge with open ground above
+});
+
+// The engine kills a turn that runs past 200 ms wherever it is (a GC pause can do it on a light turn), keeping whatever
+// the robot wrote so far. Kill each role's first turn after its k-th write to B or B.st, for every k: the next turns
+// must not throw and must finish the setup, with the birth round still right.
+test('roles: a first turn killed at any point is recovered on the next turn', () => {
+  const g = new Game(3, 100, 20, false, false), n = g.map.length;
+  const castle = g.robots.find(r => r.team === 0);
+  const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+  const near = () => { for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]) if (free(castle.x + dx, castle.y + dy)) return [castle.x + dx, castle.y + dy]; };
+  const play = (unit, turnFn) => {
+    let writes = 0;
+    for (let k = 1; ; k++) {
+      castle.turn = 10;
+      let me = castle;
+      if (unit !== S.CASTLE) {
+        const [x, y] = near();
+        me = { id: 4000 + unit, team: 0, unit, x, y, turn: 1, health: S.STATS[unit].hp, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+        g.robots.push(me);
+      } else me.turn = 1;
+      const w = worldFor(g, me), raw = { api: w.api, w, round: 0, birthRound: unit === S.CASTLE ? 1 : 0, st: {}, deps: null, clusters: null };
+      raw.rnd = rng(7); if (S.STATS[unit].speed) { raw.offs = offsets(S.STATS[unit].speed); raw.nav = new Nav(w, raw.offs, raw.rnd); }
+      let count = 0, killed = false;
+      const trap = o => new Proxy(o, { set(t, p, v) { if (++count === k) throw new Error('killed'); t[p] = v; return true; } });
+      const st = raw.st; raw.st = trap(st); const B = trap(raw);
+      try { turnFn(B); } catch (e) { if (e.message !== 'killed') throw e; killed = true; }
+      raw.st = st;
+      if (!killed) { writes = count; break; }
+      for (let t = 2; t <= 4; t++) {
+        me.turn = t; castle.turn = 9 + t; w.update();
+        if (raw.birthRound) raw.round = raw.birthRound + t - 1;
+        assert.doesNotThrow(() => turnFn(raw), 'unit ' + unit + ' killed after write ' + k + ', turn ' + t);
+      }
+      assert.ok(st.ready, 'unit ' + unit + ' k ' + k);
+      if (unit !== S.CASTLE && unit !== S.CHURCH) assert.strictEqual(raw.birthRound, 10, 'unit ' + unit + ' k ' + k);
+      if (me !== castle) g.robots.pop();
+    }
+    assert.ok(writes >= 3, 'unit ' + unit + ' setup writes ' + writes);
+  };
+  play(S.CASTLE, castleTurn); play(S.CHURCH, churchTurn); play(S.PILGRIM, pilgrimTurn);
+  for (const u of [S.CRUSADER, S.PROPHET, S.PREACHER]) play(u, militaryTurn);
 });
 
 test('combat: target choice, preacher splash avoids friends, retreat', () => {

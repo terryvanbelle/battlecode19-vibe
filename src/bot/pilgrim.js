@@ -14,17 +14,18 @@ function init(B) {
   st.structs = [];  // known friendly castles/churches {x, y}
   for (const r of w.friends) {
     if (king(r.x, r.y, me.x, me.y) > 1 || (r.unit !== CASTLE && r.unit !== CHURCH)) continue;
-    if (r.unit === CASTLE) B.birthRound = r.turn; // castles act every round from round 1 and have acted this round
-    if (r.signal > 0) {
+    if (r.unit === CASTLE) B.birthRound = r.turn - me.turn + 1; // castles act every round from round 1 and have acted this round
+    if (r.signal > 0 && me.turn === 1) {   // the builder's radio is fresh only on our first turn
       const m = dec(r.signal);
       if (m.type === SIG.MINE) st.target = depotAt(B, m.x, m.y);
       else if (m.type === SIG.CHURCH) { st.site = [m.x, m.y]; st.cluster = B.clusters.findIndex(c => c.site[0] === m.x && c.site[1] === m.y); }
       else if (m.type === SIG.ROUND) B.birthRound = m.v;
     }
   }
-  if (B.birthRound) B.round = B.birthRound;
+  if (B.birthRound) B.round = B.birthRound + me.turn - 1;
   B.rnd = rng(((B.birthRound || 0) * 4096 + me.y * 64 + me.x) * 8 + me.unit); B.nav.rnd = B.rnd;
   if (!st.target && !st.site) st.target = freeDepotNear(B, me.x, me.y, null);
+  st.ready = true;
 }
 
 function depotAt(B, x, y) { for (const d of B.deps) if (d.x === x && d.y === y) return d; return null; }
@@ -54,7 +55,7 @@ function go(B, key, sources) {
 
 export function pilgrimTurn(B) {
   const w = B.w, me = w.me, st = B.st;
-  if (me.turn === 1) init(B);
+  if (!st.ready) init(B);   // until it completes (see militaryTurn)
   // Learn structures in sight; forget ones whose tile we see empty.
   for (const r of w.friends) if ((r.unit === CASTLE || r.unit === CHURCH) && !st.structs.some(s => s.x === r.x && s.y === r.y)) { st.structs.push({ x: r.x, y: r.y }); st.depKey = null; }
   st.structs = st.structs.filter(s => { if (w.occ(s.x, s.y) === 0) { st.depKey = null; return false; } return true; });

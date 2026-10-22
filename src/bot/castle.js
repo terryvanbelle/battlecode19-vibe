@@ -15,7 +15,7 @@ export { callDue };
 export function castleTurn(B) {
   const w = B.w, me = w.me, st = B.st;
   B.round = me.turn;
-  if (me.turn === 1) {
+  if (!st.ready) {   // until it completes: a turn killed mid-init (200 ms) leaves it half done
     structInit(B);
     st.castles = new Map([[me.id, { x: me.x, y: me.y }]]);
     st.partial = new Map();
@@ -24,6 +24,7 @@ export function castleTurn(B) {
     st.attackUntil = 0;
     st.deadE = new Set();   // indices (into st.order) of enemy castles reported destroyed
     st.lastT = -1;
+    st.ready = true;
   }
   if (me.turn === 1) w.talk(me.x + 1);
   else if (me.turn === 2) w.talk(me.y + 1);

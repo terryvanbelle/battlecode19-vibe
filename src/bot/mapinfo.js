@@ -79,8 +79,9 @@ export function costField(w, sources, offs, cost) {
   return d;
 }
 
-// Map analysis shared by economic roles, computed once per robot when first needed.
+// Map analysis shared by economic roles, computed once per robot when first needed. Both results are assigned at
+// once: the engine can kill a turn at any point (200 ms), and the next turn must then start over, not crash.
 export function econ(B) {
-  if (!B.deps) { B.deps = depots(B.w); B.clusters = clusters(B.w, B.deps, CFG.CLUSTER_LINK_R2); }
+  if (!B.deps || !B.clusters) { const d = depots(B.w), c = clusters(B.w, d, CFG.CLUSTER_LINK_R2); B.deps = d; B.clusters = c; }
   return B;
 }
