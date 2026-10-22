@@ -616,6 +616,11 @@ test('struct: FRONT_ROUND sends a pilgrim to build a church FRONT_STEP rows ahea
     [ch.x, ch.y] = b2.w.T.toE(site[0], site[1]);   // on the front site, in engine coordinates
     const w2 = worldFor(b2.g, b2.castle); Object.assign(b2.B, { w: w2, api: w2.api, round: 300 }); w2.karbonite = 500; w2.fuel = 2000;
     assert.strictEqual(frontPioneer(b2.B), null);
+    // An enemy attacker in sight: no pioneer.
+    const b3 = setup(0), [qx, qy] = b3.w.T.toE(b3.w.me.x, b3.w.me.y + 6);
+    b3.g.robots.push({ id: 4400, team: 1, unit: S.PROPHET, x: qx, y: qy, turn: 9, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const w3 = worldFor(b3.g, b3.castle); Object.assign(b3.B, { w: w3, api: w3.api, round: 300 }); w3.karbonite = 500; w3.fuel = 2000;
+    assert.strictEqual(frontPioneer(b3.B), null);
     // Both teams choose the same canonical site.
     const c = setup(1); assert.deepStrictEqual(frontSite(c.w, c.w.me.x, c.w.me.y), site);
   } finally { CFG.FRONT_ROUND = saved; }

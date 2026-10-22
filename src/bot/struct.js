@@ -4,7 +4,7 @@ import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './s
 import { d2, ADJ, offsets } from './util.js';
 import { bfs, econ } from './mapinfo.js';
 import { SIG, encXY, encNum } from './comms.js';
-import { isAttacker, pickTarget } from './combat.js';
+import { isAttacker, pickTarget, THREAT_R2 } from './combat.js';
 
 const PILGRIM_OFFS = offsets(4);
 
@@ -116,6 +116,8 @@ export function frontPioneer(B) {
   if (w.friends.some(r => (r.unit === CASTLE || r.unit === CHURCH) && r.y > me.y + 2)) return null;
   const site = frontSite(w, me.x, me.y);
   if (!site || !(st.pf[site[1] * w.n + site[0]] >= 0)) return null;
+  // A mobile attacker in sight, or a site in an enemy castle's range: the pioneer would walk into fire.
+  if (w.enemies.some(e => isAttacker(e.unit) && (e.unit !== CASTLE || d2(site[0], site[1], e.x, e.y) <= THREAT_R2[CASTLE]))) return null;
   if (!w.canAfford(PILGRIM, STATS[CHURCH].costK + CFG.DEF_RESERVE_K, STATS[CHURCH].costF + 2)) return null;
   const b = buildToward(B, PILGRIM, site[0], site[1], encNum(SIG.FRONT, B.round));
   if (!b) return null;

@@ -745,3 +745,34 @@
   bot of ours has won a game against bots/rush yet (h19 0/8, h24 0/8, h31 0/5 so far; h22 4/8): each loses one
   castle and never takes one of the rusher's, so it loses on castles at round 1000. h24's gate extension (h24x)
   stays queued.
+
+## 2026-10-21 23:23 — h38 delivery FAILS (creep instead of march); no gate
+- 6 games of 1000 rounds vs h19 on 2202/1828/826 both sides (VM, out/dlv_h38_h19.jsonl, out/rp_dlv_h38).
+  Move fuel over rounds 401-700 (replay.js moves), h38 vs h19: 6,046 vs 4,714; 6,104 vs 6,389; 10,893 vs 13,556;
+  10,919 vs 13,550; 5,140 vs 18,004; 18,749 vs 6,610. Bar "at most half of h19's": 1 of 6. FAIL.
+- Mean team fuel over 500-700: 162, 86, 3,200, 3,203, 64, 203 (bar >= 1,000: 2 of 6, both on 2202). FAIL.
+- Enemy structures destroyed: 2 on 1828 (blue side), 1 on 2202 (red), 3 on 826 (blue), 6 on 826 (red). PASS.
+- Not gated (two of three items fail). Games 4-2 for h38 (both sides of 2202, where h19's march at 450 emptied
+  its bank to 40 while h38 held 3,200), noted only: 6 games are not evidence.
+- Lesson for the next movement candidate: without a march, h38's army still spent as much fuel moving as h19's
+  did with one. The creep shifts every unit's lattice target a tile every 8 rounds, and lattice wandering already
+  dominates (self-play seed 1205: 1,800-3,900 preacher move fuel per 100 rounds with no enemy in sight). The fuel
+  leak is in holding, not marching; h35's LATTICE_STICKY 2 is the candidate on that; a creep would need
+  stationary units that move only when their tile is no longer on the lattice.
+
+## 2026-10-21 23:30 — h40 pre-registered: forward churches (FRONT_ROUND)
+- Source: replica seed 2924 (scrim vs StoneT2000): 35 churches and 58 pilgrims to our 2.2-2.6x smaller mining;
+  its church lines went up at round 235 (x 34-42, y 0-1), 341-343 (33-42, 20-22) and 541-543 (35-40, 32-34),
+  5-13 tiles from our castles, and our castles died at 272, 401 and 588. Each line is a spawn point and drop-off
+  ahead of its army; we never build a structure that is not on a resource cluster.
+- Mechanism: new switch CFG.FRONT_ROUND (default 0). From that round, a castle or church that sees no friendly
+  structure more than 2 rows ahead, no mobile enemy attacker, and has the karbonite for a church on top of the
+  defence reserve, builds a pilgrim with SIG.FRONT (at most every FRONT_EVERY = 50 rounds); the pilgrim
+  recomputes the builder's front site (struct.frontSite: nearest odd-parity, passable, non-depot tile within 3
+  of FRONT_STEP = 8 rows ahead, outside visible enemy castle range) and builds a church there. The new church
+  has nothing ahead, so the line creeps. Units built there anchor their lattice on it. Unit test (62/62).
+- h40 = h19 + FRONT_ROUND=200. Delivery (VM queue, ahead of h31x: 8 games of 1000 rounds vs h19 on
+  2924/2202/1828/826 both sides): (1) at least 2 churches built after round 200 in 6 of 8 games; (2) units built
+  by round 600 at least 90% of h19's in the same game, in 6 of 8 (the churches do not starve the army); (3)
+  castles lost in total no more than h19's. Gate 40 games vs h19, falsifier t <= 0. Dose ladder: FRONT_EVERY 50
+  -> 25 (faster creep), FRONT_ROUND 200 -> 100.
