@@ -2055,3 +2055,35 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   churches sending pioneers of their own.
 - VM order: h72's gate (now ...a3d57710056) runs after the h70 and h71 deliveries, so h76's delivery is read before
   either chain gate starts. Driver: h50 vs h50 on 1375 to 200 (our economy without wololo's pressure) running.
+
+## 2026-10-22 16:12 — h68 delivery FAILED (its switch never fired); h77 economy stack: wololo's numbers on 1375; queued
+- h68 (PIONEER_GIVEUP 20 + PIONEER_STALL_ANY 40) delivery vs h50 on 418, 1325, 2542, 2072 both sides: no-op v6j
+  IDENTICAL; symcheck seed 2 clean, 1/3/418 the known engine-order divergences. (1) stuck-pioneer turns 3,128 vs
+  7,787, ratio 0.40 against the 0.30 bar, FAIL; (2) churches by 450 38 vs 32, pass; (3) wins 6 of 8, pass. **h68 is
+  falsified, no gate.** All 8 replays are byte-identical to h61's (cmp): STALL_ANY never fired on these cells, and
+  the run broke LEARNINGS 19 (no driver game proved the switch moves anything first). Seed 418's #1936 (canonical
+  site (9,32)) wanders 2-6 tiles from where its site lies in the real frame, not 16-22 steps off as the 11:52 entry
+  read it (canonical site against real positions): the site was occupied (h50's own church), so after 5 turns it
+  dropped the site (pilgrim.js siteWait) and, with no free depot, has no target. The stuck pioneers are ex-pioneers
+  without a depot, which no site-stall rule reaches. Not queued yet: an ex-pioneer of a taken site reports it so the
+  castle stops re-sending there, and mines or goes home.
+- Replica churches whose builder died before the church's first turn: 0 of our 625 pilgrim-built churches in 258
+  replica games (9 of 822 for opponents; scratch orphanch.sh). The dead-builder case is the chainer's alone.
+- h50 vs h50 on 1375 (driver, 200 rounds): red 11 pilgrims and 1 church at r100, K mined 1,356 by r200 (wololo: 36,
+  6 and 4,202): both sides race the two 3-depot centre clusters, red's centre church dies at r26 and its second
+  pioneer wanders r17-62.
+- PLAN_VALUE (new, default 0; castle.js planClusters): within the contested and the other class, fewest (king
+  steps + PLAN_VALUE) per depot first, compared as integer cross products. 1375 with 10: c8 c9 c7 c10 c4 c13 c5 c1;
+  with 20: c7 c10 c8 c9. Unit test (orders, both teams identical). Node 106 pass.
+- **h77** = v6 + ECON_UNTIL 100 + PIONEERS_TEAM 6 + PEACE_RESERVE_K 60 + PLAN_VALUE 10 (d8ca9e7dfa69). Driver vs h50
+  on 1375 to 200: pilgrims at r100 33 vs 12, churches 6 vs 2 (9 vs 5 at r200), K mined by r200 3,940 vs 1,864, army
+  0 until r100 and then 109 vs 50 at r200; churches at the rich top clusters (27,2) r52 and (33,2) r68, the clusters
+  wololo took at r32 and r49. Two early pioneers still die in the centre (r22-23).
+- h77 delivery pre-registered (VM job ...a3d57710001, right after h76's delivery, which is running): no-op v6o
+  (defaults, 5ccc66eaa73a) vs h50 --det on 1828 byte-identical; symcheck h77 on 1, 2, 3, 1375 to 250; h77 vs h50 on
+  1375, 826, 1706, 70 both sides (full games; the wololo and awesomelemonade maps); h50 and h77 vs bots/rush4 on
+  h20v6's 20 poor one-castle maps both sides at 200 rounds (h50's half moved here from job ...a3d577101). PASS needs
+  all 4: (1) h77's pilgrims at r100 summed over the 8 games >= 150% of h50's (replay.js timeline); (2) its K mined
+  by r200 >= 130% of h50's; (3) h77 wins >= 5 of 8; (4) vs rush4, games h77 loses <= h50's + 2 (of 40). Falsifier:
+  (4), the early army ECON_UNTIL removes is what holds off a rush. On PASS: gate h77 vs h50, 20 random cells from
+  seed0 5000, ahead of the other gates.
