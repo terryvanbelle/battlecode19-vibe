@@ -19,6 +19,11 @@ is not handled here: tools/galaxy19/contest19.py submits and plays for it.
         team instead challenges one of the 3 closest below it, unranked, on 3 random maps. Any team can be the
         opponent, ours included. A 429 (hourly limit) rests the challenger for an hour, a 409 for 10 minutes.
         saturn runs at most GALAXY_EXECUTE_SLOTS (4) games at once whatever the queue holds.
+  python3 tools/galaxy19/field.py boost --teams A,B [--n 5] [--dry-run]
+        extra ranked matches for chosen field teams whose rating has not settled (owner request, PROMPTS 15): each
+        team challenges --n opponents that have played, at or above its rating, spread from the top of the ladder
+        down (boost_opponents). Then move their matches up the execute queue on the VM:
+        sudo python3 -I tools/galaxy19/spool_bump.py --team A,B
 
 External bots: compiled by tools/bench/compile_field.py into $BENCH_ROOT/compiled/<name>/bot.js (one JavaScript
 bundle each; Java/Python were transpiled locally). The roster is tools/bench/roster.tsv (compile == ok and smoke not
@@ -203,6 +208,47 @@ def pick_challenge(ladder, ids, rnd, band=3):
     return None
 
 
+def boost_opponents(ladder, my_id, n):
+    """n opponents for a team that needs games: active teams that have played (rating above 0) and are rated at
+    least as high as it (galaxy: ranked only upward), spread evenly over that list from the top down, the top team
+    first; repeated in turn when there are fewer than n."""
+    me = next((t for t in ladder if t['id'] == my_id), None)
+    if me is None:
+        return []
+    mine = me['rating'] or 0
+    pool = sorted((t for t in ladder if t['id'] != my_id and t['active'] and t['status'] == 'R'
+                   and (t['rating'] or 0) > 0 and t['rating'] >= mine), key=lambda t: (-t['rating'], t['id']))
+    if not pool:
+        return []
+    return [pool[i * len(pool) // n] if n <= len(pool) else pool[i % len(pool)] for i in range(n)]
+
+
+def boost(c, acc, names, n, dry_run=False):
+    """Ranked requests: each named team (galaxy name) challenges boost_opponents. Returns the requests made."""
+    ladder = cl.rankings(c)
+    by_name = {t['name']: t for t in ladder}
+    by_id = {a['team_id']: (t, a) for t, a in acc.items() if a.get('team_id')}
+    made = 0
+    for name in names:
+        t = by_name.get(name)
+        if t is None or t['id'] not in by_id or by_id[t['id']][0] in OUR_TEAMS:
+            log(f'boost: {name}: not a field team of ours on the ladder; skipped')
+            continue
+        s = None if dry_run else cl.Session(c, by_id[t['id']][1]['user'], by_id[t['id']][1]['password'])
+        for opp in boost_opponents(ladder, t['id'], n):
+            if dry_run:
+                log(f'boost (dry run): {name} -> {opp["name"]} (rating {opp["rating"]:.0f})')
+                continue
+            try:
+                r = cl.request(s, opp['id'], True, [], '?', c.episode)
+                made += 1
+                log(f'boost: request {r["id"]}: {name} -> {opp["name"]} (ranked)')
+            except cl.ApiError as e:
+                log(f'boost: refused: {name} -> {opp["name"]}: {e}')
+                break
+    return made
+
+
 def activity(c, acc, poll=60, once=False, seed_=None, n_maps=3, low=2):
     rnd = random.Random(seed_)
     ids, sess, rest, stop = {}, {}, {}, {'now': False}
@@ -267,6 +313,8 @@ def main(argv=None):
     sub.add_parser('status')
     p = sub.add_parser('activity'); p.add_argument('--once', action='store_true')
     p.add_argument('--poll', type=int, default=60); p.add_argument('--low', type=int, default=2)
+    p = sub.add_parser('boost'); p.add_argument('--teams', required=True); p.add_argument('--n', type=int, default=5)
+    p.add_argument('--dry-run', action='store_true')
     a = ap.parse_args(argv)
     if a.cmd == 'plan':
         rows = entrants()
@@ -284,6 +332,8 @@ def main(argv=None):
         status(c, acc)
     elif a.cmd == 'activity':
         activity(c, acc, a.poll, a.once, low=a.low)
+    elif a.cmd == 'boost':
+        log(f'boost: {boost(c, acc, [x for x in a.teams.split(",") if x], a.n, a.dry_run)} request(s)')
     return 0
 
 

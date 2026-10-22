@@ -71,3 +71,12 @@ If 30 smoke test games are complete, that suggests that there are 30 bots you ca
 
 ## 14. 2026-10-21 19:23 PDT
 I approve that kind of edit to tools/run_game.js
+
+## 15. 2026-10-22 06:20 PDT
+Good morning!  It sounds like you've made a lot of progress on bot quality overnight.  But I'm also seeing a lot of benchmark bots who haven't gotten to their full ranking yet, so it's hard to tell how good we actually are.  Can you find a few bots in the benchmark whose authors have done well in the past, and get them queued for extra games?
+
+## 16. 2026-10-22 06:25 PDT
+One more bot that I'd like to test against is m-schier.battlecode-2019-wololo
+
+## 17. 2026-10-22 06:27 PDT
+For the future, I'd like you to always keep an eye on queue length.  If it gets too long, then clearing it becomes the priority

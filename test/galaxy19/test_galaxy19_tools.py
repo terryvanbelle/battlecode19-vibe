@@ -178,6 +178,19 @@ class Field(unittest.TestCase):
         self.assertIsNone(field.pick_challenge(ladder, {'z': 5}, rnd))
         self.assertIsNone(field.pick_challenge(ladder, {}, rnd))
 
+    def test_boost_opponents(self):
+        ladder = [team(1, 1700), team(2, 1500), team(3, 900), team(4, 700), team(5, 0), team(6, 0),
+                  team(7, 1200, active=False), team(8, 600)]
+        ids = lambda xs: [t['id'] for t in xs]  # noqa: E731
+        # Unrated team: anyone who has played, spread from the top; never itself, an inactive team or an unrated one.
+        self.assertEqual(ids(field.boost_opponents(ladder, 5, 2)), [1, 3])
+        self.assertEqual(ids(field.boost_opponents(ladder, 5, 5)), [1, 2, 3, 4, 8])
+        self.assertEqual(ids(field.boost_opponents(ladder, 5, 7)), [1, 2, 3, 4, 8, 1, 2])
+        # Rated team: only at or above it (galaxy's ranked rule).
+        self.assertEqual(ids(field.boost_opponents(ladder, 4, 4)), [1, 2, 3, 1])
+        self.assertEqual(field.boost_opponents(ladder, 1, 3), [])
+        self.assertEqual(field.boost_opponents(ladder, 99, 3), [])
+
     def test_trickle_order(self):
         with tempfile.TemporaryDirectory() as bench:
             g = lambda n, side, reason='castles', init=0: json.dumps(  # noqa: E731
