@@ -1356,3 +1356,14 @@
   obey the attack call, so prophets and preachers stay on the lattice; gate extension ...a3d576) and h51's
   CASTLE_POST 0.5 (half the church-born army guards the nearest castle; delivery ...a3e). Recorded before either
   is read; their bars stand as pre-registered.
+
+## 2026-10-22 05:55 — gate power simulated (tools/gatesim.js); defaults set to looks at D 12 / 24 / 48, at most 200 cells
+- tools/gatesim.js (unit-tested): cells discordant with probability q, a discordant cell a gain with probability p,
+  20-cell blocks, a look at the first block boundary where D reaches the next target; accept t >= 2, reject t <= 0.
+  20,000 gates per row, looks 12 / 24 / 48, at most 200 cells:
+  q 0.15: p 0.5 accept 3.9% (reject 69.8%), p 0.6 23.1%, p 0.65 41.2%, p 0.7 62.9%, p 0.8 93.5%; mean 123-156 cells.
+  q 0.55: p 0.5 accept 4.6% (reject 72.1%), p 0.6 34.2%, p 0.65 61.1%, p 0.7 84.0%, p 0.8 99.2%; mean 41-68 cells.
+  The rule used until 05:08 (one look at 20 cells, one 20-cell extension read pooled) has power 9.9% / 22.4% at p
+  0.65 (q 0.15 / 0.55) and leaves ~60% open. Capped at 80 cells (h54's pre-registered cap), q 0.15, p 0.7: 27%.
+- TRAINING_ALGORITHM §4 and §8 now name looks at D 12 / 24 / 48 with at most 200 cells as the default; LEARNINGS
+  20. Gates already running keep their pre-registered rules (h54: read at 80 cells at the latest; h55: D >= 12, 24).

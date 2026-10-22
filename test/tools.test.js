@@ -308,3 +308,18 @@ test('symcheck: verdicts; v5 stays a mirror image for 12 rounds (run without net
   assert.strictEqual(r.status, 0, r.stderr);
   assert.deepStrictEqual(JSON.parse(r.stdout.trim()), { seed: 2, ok: true, round: 12, robots: JSON.parse(r.stdout.trim()).robots });
 });
+
+test('gatesim: certain outcomes decide at the first look; no discordance stays open; p 0.5 rarely accepts', () => {
+  const { simulate, gate, rng } = require('../tools/gatesim');
+  const o = { looks: [12, 24, 48], block: 20, maxCells: 200, accept: 2, reject: 0 };
+  assert.deepStrictEqual(gate({ ...o, q: 1, p: 1 }, rng(1)), { result: 'accept', cells: 20, D: 20, t: 20 / Math.sqrt(20) });
+  assert.strictEqual(gate({ ...o, q: 1, p: 0 }, rng(1)).result, 'reject');
+  assert.deepStrictEqual(gate({ ...o, q: 0, p: 1 }, rng(1)), { result: 'open', cells: 200, D: 0, t: 0 });
+  // q 0.5: D reaches 12 within one block about half the time; a look only on block boundaries
+  const x = gate({ ...o, q: 0.5, p: 0.5 }, rng(7));
+  assert.strictEqual(x.cells % 20, 0);
+  const s = simulate({ q: 0.5, p: 0.5, trials: 4000, seed: 3 });
+  assert.ok(s.accept > 0.01 && s.accept < 0.08, JSON.stringify(s));
+  assert.ok(Math.abs(s.accept + s.reject + s.open - 1) < 1e-9);
+  assert.deepStrictEqual(simulate({ q: 0.3, p: 0.7, trials: 500, seed: 9 }), simulate({ q: 0.3, p: 0.7, trials: 500, seed: 9 }));
+});

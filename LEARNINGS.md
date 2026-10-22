@@ -84,3 +84,12 @@
    enemy prophet's reach, so the edge it was to hold never existed in its own view. Withdrawn before it spent a
    queue slot; h47 (FOCUS) first diverged at round 469 and went on. A switch keyed on what a unit "sees beyond"
    needs information from outside its own vision (radio, memory). (2026-10-22)
+20. **A gate's power is set by its discordant cells, not its games; simulate it (tools/gatesim.js).** On this
+   deterministic engine a switch that never fires on a map plays byte-identical games there (h54's first 20 cells:
+   17 identical, D 3; h55's: 0 identical, D 11), so 40 games can hold almost no evidence. Simulated (20,000 gates,
+   looks at the block boundaries where D first reaches 12, 24, 48; accept t >= 2, reject t <= 0; at most 200
+   cells): false accept 4-5% at no effect; power 41% / 61% (switch live on 15% / 55% of cells) when the candidate
+   wins 65% of discordant cells, 63% / 84% at 70%, at a mean cost of ~150 / ~65 cells. The old rule (20 cells,
+   one 20-cell extension) had 10-22% power at 65%: most real gains ended "inconclusive". Rank queued candidates by
+   how often their switch fires as well as by their prior; a rarely-firing switch costs a day of gate time.
+   (2026-10-22)

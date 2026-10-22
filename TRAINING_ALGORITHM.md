@@ -116,13 +116,13 @@ its trigger fires elsewhere.
   basics failure may be accepted at net ≥ 0.
 - Where the season has a graded objective (score margin, structures killed, resources at the end), test the per-pair
   difference in that objective alongside wins: it carries several times more information per game.
-- Local paired gate: sequential looks (e.g. 96, 192, 384 pairs), stop early only when decisive. Size looks by
-  discordant cells, not games: with a deterministic engine, a switch that never changes a decision on a map gives
-  byte-identical games there, a split by construction. Count them (compare the two replays of each cell) and keep
-  adding cells until D reaches the look's target (e.g. 12, then 24), then read t. Stopping on D, which says nothing
-  about who won, does not bias t; a switch that fires on few maps otherwise passes no gate at any real effect. Simulate every gate's
-  false-accept rate and its power at a realistic effect before relying on it; a gate that cannot pass a real gain is a
-  defect.
+- Local paired gate: sequential looks, stop early only when decisive. Size looks by discordant cells, not games:
+  with a deterministic engine, a switch that never changes a decision on a map gives byte-identical games there, a
+  split by construction. Count them (compare the two replays of each cell) and keep adding cells until D reaches the
+  look's target (e.g. 12, then 24, then 48), then read t. Stopping on D, which says nothing about who won, does not
+  bias t; a switch that fires on few maps otherwise passes no gate at any real effect, and costs many cells to pass
+  one. Simulate every gate's false-accept rate and its power at a realistic effect before relying on it; a gate that
+  cannot pass a real gain is a defect.
 - Rating: batch Bradley-Terry over all ladder games, each build its own player, a weak prior, repeated cells counted
   once, a cap per pair. Report rating with interval, rank, and expected score against the whole field. The contest
   site's own sequential rating is for seeding only.
@@ -179,7 +179,7 @@ A closure says an implementation failed; only a ceiling (arithmetic, engine) lic
 | Parameter | Value |
 |---|---|
 | Delivery block | 24 paired cells, extend to 48 |
-| Local paired gate | looks at 96 / 192 / 384 pairs; accept t ≥ 2.0, reject t ≤ 0 |
+| Local paired gate | looks when D first reaches 12 / 24 / 48 discordant cells (at most 200 cells); accept t ≥ 2.0, reject t ≤ 0 |
 | Ladder panel block | 100 cells (10 field bots near our rating × 10 maps), two-block rule of §4 |
 | Rating pair cap | 200 games per pair |
 | Area switch | 3 consecutive rejects |
