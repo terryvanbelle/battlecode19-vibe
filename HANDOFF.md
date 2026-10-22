@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 04:42 PDT)
+## State (2026-10-22 05:05 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -43,7 +43,9 @@
   (no-op h35j IDENTICAL; sym_h54 clean), `out/dlv_chain22.sh` (no-op h35k IDENTICAL; sym_h55: seed 2 split on the
   stores alone at round 215), `out/dlv_chain23.sh` (no-op h35l IDENTICAL; sym_h56 clean), `out/dlv_chain24.sh`
   (started 04:38: no-op h35m vs h35 for CHURCH_FIRST code; sym_h55 seed 2 rerun with the pair-naming symcheck;
-  sym_h58; h58's delivery vs h55, pre-registered TRAINING_LOG 04:40). h51's second driver diagnostic
+  sym_h58 clean; h58's delivery vs h55, pre-registered TRAINING_LOG 04:40; no-op h35m IDENTICAL), `out/dlv_chain25.sh`
+  (queued 05:04 behind it: no-op h35n, sym_h59, h59's delivery vs h35 and the stall census of its replays;
+  pre-registered TRAINING_LOG 05:03). h51's second driver diagnostic
   (2299): 33 units by the castle at 450 against h35's 3, yet h51 lost that castle at 562 (TRAINING_LOG 02:33). Symmetry checks stop only at axis-tile contests or
   combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new
@@ -64,6 +66,9 @@
   04:17), not ones whose bank is ready on arrival; a line's churches then survive as factories because shooters
   rank churches last (combat.js PRIORITY). Not queued. CFG.CHURCH_FIRST_R2 (h58 = 144): enemy churches near home
   outrank units for every shooter; delivery vs h55 on the extra lane.
+- Pilgrim stalls (TRAINING_LOG 05:03): on 7 of 20 maps pilgrims wait for good at the edge of an enemy attacker's
+  range (PILGRIM_SAFE_STEP keeps them out, nothing gives the target up) and that side mines 17-63% less.
+  CFG.PILGRIM_HOT (h59 = 10) gives the depot up; scratch stall.js / stallwhy.js measure it (copies in 2019-next/out).
 - tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
   cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were
   started without it, our own builds only). Not yet synced to the VM trees (they start games under unshare anyway).
