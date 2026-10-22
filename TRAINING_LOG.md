@@ -690,3 +690,20 @@
   needed >= 21: FAIL; K+F 48,426 vs needed >= 53,846: FAIL; pilgrims lost 9 vs <= 12: PASS.
 - One-step service spreads the plan over more, smaller clusters; on 1828 the first church slips 11 rounds and
   the centre race goes back to h19's pace. The church-density dose ladder ends at SERVE_MOVES 2 (h31). Not gated.
+
+## 2026-10-21 22:38 — h38 pre-registered: creep instead of march (CREEP_ROUND)
+- Source: the round-450 march loses the army against an equal defence (replica scrim 200 seed 2965: 29 units vs
+  33, gone by 700, castle lost) or burns the bank (scrim 199 seed 616: 10,670 -> 10 fuel in 50 rounds while
+  leading 171 units to 94; self-play: under 100 fuel by 500 in 8 of 8 sampled games). The turtle (h16r, no march)
+  lost castle races to h19's march (rejected 21:13). A march spends ~8 fuel per prophet move every turn; holding
+  costs nothing and the defender shoots first.
+- Mechanism: new switch CFG.CREEP_ROUND (default 0): from that round the centre of the lattice each unit holds
+  moves 1 tile toward the enemy (canonical +y) every CREEP_EVERY rounds (military.js latticeCentre; also the
+  centre for melee engagement), so the army advances as a formation and keeps the defender's first shot at every
+  step; home guards keep theirs. Unit test: target 10 tiles ahead after 80 rounds at 8 per tile, guard and switch
+  off unchanged, clamped at the board edge. Default build unchanged.
+- h38 = h19 + ATTACK_ROUND=1001 (no march) + CREEP_ROUND=450 + CREEP_EVERY=8. Delivery (VM queue, 6 games of 1000
+  rounds vs h19 on 2202/1828/826 both sides, job before h35's gate): move fuel over rounds 450-700 at most half
+  of h19's in the same games; mean team fuel over 500-700 >= 1,000; the creep reaches the enemy: at least one enemy
+  structure destroyed by h38 in the 6 games. Gate 40 games vs h19, falsifier t <= 0. Dose ladder: CREEP_EVERY 8,
+  then 4 (faster) if it delivers.

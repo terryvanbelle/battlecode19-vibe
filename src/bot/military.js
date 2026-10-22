@@ -139,11 +139,21 @@ function stepClear(B) {
   return best ? w.move(best[0], best[1]) : null;
 }
 
-// The free lattice tile nearest an anchor ahead of home (toward the enemy), within CFG.LATTICE_R king steps of home.
+// The centre of the lattice a unit holds: its home, or with CFG.CREEP_ROUND, from that round, a point that moves one
+// tile toward the enemy (canonical +y) every CREEP_EVERY rounds, so the army advances as a formation at a few fuel a
+// round instead of marching (home guards stay).
+function latticeCentre(B) {
+  const h = B.st.home;
+  if (!CFG.CREEP_ROUND || !(B.round >= CFG.CREEP_ROUND) || B.st.guard) return h;
+  return { x: h.x, y: Math.min(B.w.n - 1, h.y + Math.floor((B.round - CFG.CREEP_ROUND) / CFG.CREEP_EVERY)) };
+}
+
+// The free lattice tile nearest an anchor ahead of the lattice centre (toward the enemy), within CFG.LATTICE_R king
+// steps of the centre (home, unless CFG.CREEP_ROUND).
 // CFG.LATTICE_STICKY >= 2: a tile out of sight that this unit saw taken in the last LATTICE_MEMORY turns is not free.
 function latticeTarget(B) {
-  const w = B.w, me = w.me, h = B.st.home, n = w.n, LATTICE_R = CFG.LATTICE_R;
-  const ay = h.y + (h.y < n / 2 ? 2 : 0);
+  const w = B.w, me = w.me, h = latticeCentre(B), n = w.n, LATTICE_R = CFG.LATTICE_R;
+  const ay = h.y + (B.st.home.y < n / 2 ? 2 : 0);
   const mem = CFG.LATTICE_STICKY >= 2 ? (B.st.ltSeen || (B.st.ltSeen = new Int16Array(n * n))) : null;
   let best = null, bd = 1e9;
   for (let dy = -LATTICE_R; dy <= LATTICE_R; dy++) for (let dx = -LATTICE_R; dx <= LATTICE_R; dx++) {
@@ -165,7 +175,7 @@ function latticeTarget(B) {
 // only from the other's side (seed 2202, preacher, vision r2 16: from (15,4) it sees (18,2) taken and picks (11,3),
 // from (14,5) the reverse, 36-74 turns in a row): LATTICE_STICKY 2 also remembers tiles seen taken (latticeTarget).
 function holdTarget(B) {
-  const w = B.w, st = B.st, h = st.home, me = w.me;
+  const w = B.w, st = B.st, h = latticeCentre(B), me = w.me;
   if (CFG.LATTICE_STICKY && st.lt) {
     const [x, y] = st.lt, occ = w.occ(x, y);
     if (latticeOk(B, x, y) && king(x, y, h.x, h.y) <= CFG.LATTICE_R && !(occ > 0 && occ !== me.id)) return st.lt;
@@ -204,11 +214,11 @@ export function militaryTurn(B) {
   }
 
   // Engage visible enemies near home (or anywhere when marching): melee closes in; prophets hold.
-  const h = st.home, waiting = !st.target && B.round < st.waitUntil, marching = !!st.target || waiting;
+  const h = st.home, c = latticeCentre(B), waiting = !st.target && B.round < st.waitUntil, marching = !!st.target || waiting;
   if (u !== PROPHET) {
     let e = null, ed = 1e9;
     for (const x of enemies) {
-      const near = marching ? d2(x.x, x.y, me.x, me.y) <= 64 : d2(x.x, x.y, h.x, h.y) <= 196;
+      const near = marching ? d2(x.x, x.y, me.x, me.y) <= 64 : d2(x.x, x.y, c.x, c.y) <= 196;
       if (!near) continue;
       const r = d2(me.x, me.y, x.x, x.y); if (r < ed) { ed = r; e = x; }
     }
@@ -228,7 +238,7 @@ export function militaryTurn(B) {
   if (marching) return go(B, 'A' + st.target[0] + ',' + st.target[1], () => bandSources(B, st.target[0], st.target[1]), CFG.CRUISE_R2);
 
   // Hold the lattice.
-  if (latticeOk(B, me.x, me.y) && king(me.x, me.y, h.x, h.y) <= CFG.LATTICE_R) return null;
+  if (latticeOk(B, me.x, me.y) && king(me.x, me.y, c.x, c.y) <= CFG.LATTICE_R) return null;
   const t = holdTarget(B);
   if (!t) return CFG.KEEP_CLEAR ? stepClear(B) : null;
   const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);

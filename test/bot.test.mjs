@@ -566,3 +566,19 @@ test('pilgrim: PILGRIM_SAFE_STEP keeps steps out of a visible attacker\'s threat
     assert.strictEqual(stepAvoid({ enemies: [{ unit: S.PILGRIM, x: 1, y: 1 }, { unit: S.CHURCH, x: 2, y: 2 }] }), null);
   } finally { CFG.PILGRIM_SAFE_STEP = saved; }
 });
+
+test('military: CREEP_ROUND moves the lattice a unit holds toward the enemy over time; guards and the default stay', () => {
+  const saved = { R: CFG.CREEP_ROUND, E: CFG.CREEP_EVERY };
+  try {
+    const w = { n: 40, me: { id: 5, x: 20, y: 6, turn: 50 }, friends: [], passable: () => true, isDepot: () => false, occ: () => 0 };
+    const target = (round, guard) => holdTarget({ w, round, st: { home: { x: 20, y: 2 }, guard } });
+    CFG.CREEP_ROUND = 450; CFG.CREEP_EVERY = 8;
+    const before = target(449, false), after = target(530, false);   // 80 rounds in: centre 10 tiles ahead
+    assert.ok(before[1] <= 6, 'before the creep: ' + before);
+    assert.deepStrictEqual(after, [20, 14]);                        // anchor = centre (20,12) + 2
+    assert.ok(target(530, true)[1] <= 6);                           // a home guard keeps its lattice
+    assert.ok(target(5000, false)[1] <= 39);                        // the centre stops at the board edge
+    CFG.CREEP_ROUND = 0;
+    assert.deepStrictEqual(target(530, false), before);             // off: as before
+  } finally { CFG.CREEP_ROUND = saved.R; CFG.CREEP_EVERY = saved.E; }
+});

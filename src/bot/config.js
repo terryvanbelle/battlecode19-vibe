@@ -78,6 +78,8 @@ export const CFG = {
                              // afresh each turn flips between tiles out of sight, seed 2202: military.js holdTarget);
                              // 2: ...and a tile it saw taken in the last LATTICE_MEMORY turns does not count as free
   LATTICE_MEMORY: 20,
+  CREEP_ROUND: 0,            // >0: from this round each unit's lattice moves 1 tile toward the enemy every CREEP_EVERY
+  CREEP_EVERY: 8,            // rounds (military.js latticeCentre): the army advances as a formation
   // attack
   ATTACK_ROUND: 450,         // castles call a general attack from this round when the army is big
   ATTACK_MIN_ARMY: 20,
