@@ -967,3 +967,19 @@
   sym_h46 in the VM extra lane (dlv_chain15.sh).
 - h41 interim (6 of 8 games): units lost unfired 400 vs h35's 393 (needs <= 85%), deaths on tiles with 3+ deaths
   449 vs 437 (needs <= 80%), castles 4 vs 4; the side decided every pair (blue won all six).
+
+## 2026-10-22 01:00 — h41 delivery FAILED (0 of 3); gate not queued
+- h41 (KILL_ZONE 50 on h35) vs h35, 8 games of 1000 rounds on 1915/2924/2202/826 both sides
+  (out/dlv_h41_h35.jsonl, rp_dlv_h41; scratchpad dlv41.js), against the items of 23:53, summed:
+  (1) military units lost without ever firing: h41 755, h35 605 (125%; at most 85% needed): FAIL;
+  (2) military deaths on tiles where the same team lost 3 or more: h41 804, h35 614 (131%; at most 80%): FAIL;
+  (3) castles lost: h41 7, h35 4: FAIL. Outcome 3 wins in 8 (the side decided 1915, 2924 and 2202, blue each
+  time; h41 lost both 826 games, 706 military lost to h35's 506). 0 exceptions.
+- Holding no lattice tile near fresh deaths pulls idle units back toward home; it did not keep them from dying
+  where others died. KILL_ZONE stays at 0; no gate.
+- Driver diagnostic h46 vs h35 on 1915 (650 rounds, h46 red): h35 won by castles at 507 (blue took 1915 in all
+  of h41's games too); 0 exceptions; h46's prophets radioed 112 spots; kills by crusaders and preachers 13 each
+  side, melee lost unfired 37 each side: no visible effect in one game (evidence is the delivery). h35's 3 frozen
+  robots coincided with a replay analysis I ran on the driver during the game: driver load, not a bot fault.
+- Extra lane: sym_h45 clean (axis-tile contest at round 45 in seed 1, combat after the first attack in seed 3);
+  no-op h35f (defaults-only build with SPOT's code) vs h35 IDENTICAL.
