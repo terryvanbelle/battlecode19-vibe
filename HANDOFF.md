@@ -13,17 +13,16 @@
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/): h24 (economy first; running since 21:02), h31
   (church density: SERVE_MOVES 2 + PLAN_CONTEST_FIRST 6; TRAINING_LOG 21:20; h32 = contest-first alone, built, gated
-  only if h31 passes; h33 = PILGRIM_SAFE_STEP, delivery on the driver, TRAINING_LOG 21:30), h22
-  (preachers: prophets lose the fuel exchange vs a rush), h29 (NAV_FIT + LATTICE_STICKY 2: lattice memory), h28
+  only if h31 passes; h34 = SERVE_MOVES 1 dose, built, waits on h31; h33 = PILGRIM_SAFE_STEP, delivery on the driver, TRAINING_LOG 21:30), h29 (NAV_FIT + LATTICE_STICKY 2: lattice memory), h28
   (LATTICE_STICKY 2 alone), h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b vs h19; then the reference jobs v4 vs v0
   and v4 vs rush (main tree). h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
-  ~/jobq/hold. Withdrawn before their gates: h23 and h27 (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31).
+  ~/jobq/hold. Withdrawn before their gates: h22, h23 and h27 (deliveries failed; h36 = h22 + h23 doses in the extra lane), h25s and h26 (replaced by h29, h28), h30 (by h31).
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
-  at a time under `flock ~/.bc-extra.lock`): `out/dlv_chain2.sh` (h21 vs h19 on 2202/1635/2296 running, then h22 vs
-  rush and sym_h22), `out/dlv_chain3.sh` (sym_h23), `out/dlv_chain4.sh` (h24's 200-round games vs h19, h24 vs rush,
-  sym_h24), `out/dlv_chain8.sh` (sym_h31, h31 vs rush). Done: chain7 (sym_h28, sym_h29) and chain3 (sym_h23),
-  stopping only at axis-tile contests or combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
+  at a time under `flock ~/.bc-extra.lock`): `out/dlv_chain2.sh` (sym_h22 last; h21 and h22 deliveries read),
+  `out/dlv_chain4.sh` (h24's 200-round games vs h19, h24 vs rush, sym_h24), `out/dlv_chain8.sh` (h31 vs rush;
+  sym_h31 clean), `out/dlv_chain9.sh` (h36 vs rush, sym_h36). Symmetry checks stop only at axis-tile contests or
+  combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Parked: h11, h12
   (waves), h13 (keep clear), h14 (detour), h17 (karbonite stop).
 - Main finding: after the attack call at round 450 the army burns the fuel bank in ~50 rounds (8 sampled games:
