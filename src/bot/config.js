@@ -46,6 +46,10 @@ export const CFG = {
   DETOUR_EVERY: 10,          // costing this many extra moves: traffic spills onto other routes instead of queueing
   DETOUR_MEMORY: 30,         // in one corridor
   PILGRIM_FAST_FUEL: 1000,  // pilgrims take full r2 4 steps only above this fuel
+  PIONEER_FAST: 0,           // 1: pioneers take full r2 4 steps whatever the fuel (replica 407-2, seed 1706: our pioneer
+                             // to the contested five-karbonite cluster crawled one tile a turn from round 4 and was
+                             // killed at 29, 5 king steps short; botfinalsafe held the cluster all game; 2 tiles a turn
+                             // costs ~1 more fuel a tile)
   PILGRIM_SAFE_STEP: 1,      // 1: pilgrims never step into a visible enemy attacker's threat range (pilgrim.js stepAvoid)
   PILGRIM_HOT: 0,            // >0: a pilgrim whose target depot sat in a visible attacker's threat range this many turns
   PILGRIM_HOT_MEM: 50,       // in a row retargets to a free depot not threatened and not given up in this many turns

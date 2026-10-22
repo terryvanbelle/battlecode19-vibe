@@ -53,10 +53,11 @@ function freeDepotNear(B, x, y, cluster, kind, maxKing, skip) {
 
 function adjSources(x, y) { return ADJ.map(([dx, dy]) => [x + dx, y + dy]); }
 
-function go(B, key, sources) {
+// fast: full r2 4 steps whatever the bank (CFG.PIONEER_FAST); otherwise only above PILGRIM_FAST_FUEL.
+function go(B, key, sources, fast) {
   const w = B.w;
   const r = fuelStep(w.fuel, 4, 1, w.fuel > 300 ? 0 : 40);
-  const s = B.nav.step(key, sources, w.fuel > CFG.PILGRIM_FAST_FUEL ? r : Math.min(r, 2), stepAvoid(w));
+  const s = B.nav.step(key, sources, fast || w.fuel > CFG.PILGRIM_FAST_FUEL ? r : Math.min(r, 2), stepAvoid(w));
   return s ? w.move(s[0], s[1]) : null;
 }
 
@@ -146,7 +147,7 @@ function pilgrimAct(B) {
         if ((w.karb[i] && me.karbonite < KARB_CAP) || (w.fuelD[i] && me.fuel < FUEL_CAP)) return w.fuel >= 1 ? w.mine() : null;
         return null;
       }
-    } else if (!(CFG.PIONEER_GIVEUP && siteStalled(B))) return go(B, 'site', adjSources(sx, sy));
+    } else if (!(CFG.PIONEER_GIVEUP && siteStalled(B))) return go(B, 'site', adjSources(sx, sy), CFG.PIONEER_FAST);
   }
 
   if (CFG.PILGRIM_ORPHAN && !st.structs.length && !st.site) { const a = orphanStep(B); if (a !== undefined) return a; }

@@ -768,6 +768,36 @@ test('pilgrim: PILGRIM_ORPHAN walks a full pilgrim that knows no living structur
   } finally { CFG.PILGRIM_ORPHAN = saved; }
 });
 
+test('pilgrim: PIONEER_FAST pioneers take full r2 4 steps on a short bank', () => {
+  const saved = CFG.PIONEER_FAST;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    g.robots = g.robots.filter(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let P = null;
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]]) if (!P && free(castle.x + dx, castle.y + dy)) P = [castle.x + dx, castle.y + dy];
+    const pil = { id: 4001, team: 0, unit: S.PILGRIM, x: P[0], y: P[1], turn: 20, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    g.robots.push(pil);
+    const step = on => {
+      CFG.PIONEER_FAST = on;
+      const w = worldFor(g, pil), B = { api: w.api, w, round: 30, birthRound: 11, st: {}, deps: null, clusters: null, rnd: rng(2) };
+      B.offs = offsets(4); B.nav = new Nav(w, B.offs, B.rnd);
+      w.fuel = 500;                                             // below PILGRIM_FAST_FUEL
+      pilgrimTurn(B);                                           // setup
+      // the site most off the diagonal: full steps there cover 2 tiles a move (on a diagonal, (1,1) steps tie them)
+      const skew = c => Math.abs(Math.abs(c.site[0] - w.me.x) - Math.abs(c.site[1] - w.me.y));
+      const far = B.clusters.map((c, i) => [skew(c), i]).sort((a, b) => b[0] - a[0])[0][1];
+      B.st.site = B.clusters[far].site.slice(); B.st.cluster = far; B.st.target = null;
+      const a = pilgrimTurn(B);
+      return { r2: a && a.action === 'move' ? a.dx * a.dx + a.dy * a.dy : 0, info: JSON.stringify({ a, me: [w.me.x, w.me.y], site: B.st.site, fuel: w.fuel }) };
+    };
+    const off = step(0), on = step(1);
+    assert.ok(off.r2 > 0 && off.r2 <= 2, off.info);
+    assert.strictEqual(on.r2, 4, on.info);
+  } finally { CFG.PIONEER_FAST = saved; }
+});
+
 test('pilgrim: PIONEER_GIVEUP drops a site it gets no nearer to under enemy eyes, reports it taken, and mines', () => {
   const saved = CFG.PIONEER_GIVEUP;
   try {
