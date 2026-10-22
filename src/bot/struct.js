@@ -186,10 +186,14 @@ function structAct(B, allIds, extra) {
     let closest = attackers[0], cd = 1e9;
     for (const e of attackers) { const r = d2(me.x, me.y, e.x, e.y); if (r < cd) { cd = r; closest = e; } }
     const ours = defenders(B, 100);
+    // CFG.CHAIN_HOLD_R2: from CHAIN_ROUND a church answers attackers farther than this out of what exceeds the chain's
+    // bank (seed 799: a front church's answers took 136 of 211 military builds in r200-400 and no line ever fired).
+    const hold = CFG.CHAIN_HOLD_R2 && me.unit === CHURCH && CFG.CHAIN_ROUND && B.round >= CFG.CHAIN_ROUND &&
+      cd > CFG.CHAIN_HOLD_R2 ? CFG.CHAIN_K : 0;
     if (ours < attackers.length * 2 + 1) {
       const unit = cd <= 36 || closest.unit === CRUSADER ? PREACHER : PROPHET;
-      if (w.canAfford(unit)) { const b = buildToward(B, unit, closest.x, closest.y); if (b) return b.act; }
-      if (unit === PREACHER && w.canAfford(PROPHET)) { const b = buildToward(B, PROPHET, closest.x, closest.y); if (b) return b.act; }
+      if (w.canAfford(unit, hold)) { const b = buildToward(B, unit, closest.x, closest.y); if (b) return b.act; }
+      if (unit === PREACHER && w.canAfford(PROPHET, hold)) { const b = buildToward(B, PROPHET, closest.x, closest.y); if (b) return b.act; }
     }
   }
   if (me.unit === CASTLE && w.enemies.length && w.fuel >= STATS[CASTLE].atkFuel) {

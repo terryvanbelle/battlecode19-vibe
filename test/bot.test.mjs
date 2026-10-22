@@ -1418,6 +1418,38 @@ test('struct: CHURCH_GUARD_D: a church near its mirror image builds the guard un
   } finally { [CFG.CHURCH_GUARD_D, CFG.CHURCH_GUARD_UNIT, CFG.ECON_UNTIL] = saved; }
 });
 
+test('struct: CHAIN_HOLD_R2: from CHAIN_ROUND a church answers a far attacker only above the chain bank, a near one always', () => {
+  const saved = [CFG.CHAIN_HOLD_R2, CFG.CHAIN_ROUND, CFG.CHAIN_K, CFG.ECON_UNTIL];
+  try {
+    CFG.ECON_UNTIL = 1000; CFG.CHAIN_K = 1000;
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const pass = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x];
+    let at = null;   // a church tile with free tiles 2 and 7 rows toward the enemy (canonical +y), away from the castles
+    for (let y = 2; y < n - 9 && !at; y++) for (let x = 2; x < n - 2 && !at; x++)
+      if (pass(x, y) && pass(x, y + 2) && pass(x, y + 7) && offsets(2).every(([dx, dy]) => pass(x + dx, y + dy)) &&
+        g.robots.every(r => king(r.x, r.y, x, y) > 10)) at = [x, y];
+    assert.ok(at, 'site');
+    const run = (hold, chainRound, round, dy, k) => {
+      CFG.CHAIN_HOLD_R2 = hold; CFG.CHAIN_ROUND = chainRound;
+      const church = { id: 4100, team: 0, unit: S.CHURCH, x: at[0], y: at[1], turn: 5, health: 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      const enemy = { id: 4999, team: 1, unit: S.PROPHET, x: at[0], y: at[1] + dy, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 };
+      const all = g.robots;
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, church.x, church.y) <= 100).concat([church, enemy]);
+      const w = worldFor(g, church); g.robots = all;
+      const B = { api: w.api, w, round, birthRound: round - 4, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = k; w.fuel = 5000;
+      return (churchTurn(B) || {}).u;
+    };
+    const mil = u => [S.CRUSADER, S.PROPHET, S.PREACHER].includes(u);
+    assert.ok(mil(run(0, 200, 300, 7, 500)), 'off: a far prophet is answered');
+    assert.ok(!mil(run(16, 200, 300, 7, 500)), 'hold: a far prophet below the chain bank is not');
+    assert.ok(mil(run(16, 200, 300, 7, 1100)), 'hold: above the bank it is');
+    assert.ok(mil(run(16, 200, 300, 2, 500)), 'hold: a near prophet always is');
+    assert.ok(mil(run(16, 200, 150, 7, 500)), 'hold: before CHAIN_ROUND it is');
+    assert.ok(mil(run(16, 0, 300, 7, 500)), 'hold: without chains it is');
+  } finally { [CFG.CHAIN_HOLD_R2, CFG.CHAIN_ROUND, CFG.CHAIN_K, CFG.ECON_UNTIL] = saved; }
+});
+
 test('combat: preacherTarget selfCost (PREACHER_SELF): the 1915 duel, a splash on the shooter is taken only when worth it', () => {
   // Shooter at (33,26); enemy preacher (33,27), enemy church (32,26)... seen in canonical coordinates as in the replay.
   const R = (team, unit, x, y) => ({ team, unit, x, y, seen: true });
