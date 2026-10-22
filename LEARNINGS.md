@@ -78,3 +78,9 @@
    (t 3.44) and became v5 55 minutes after its gate started. Keep the stack to switches whose deliveries
    passed and whose mechanisms do not overlap, and keep the single gates queued for attribution only if the queue
    has room. (2026-10-22)
+19. **Before queueing a delivery, prove the switch changes a move.** One driver diagnostic, then diff its replay
+   against a game of the base on the same seed and side (first differing turn; scratch rdiff.js): h45 (EDGE, hold
+   at the edge of enemy reach) played 35,904 turns identical to the base, because a prophet's vision equals an
+   enemy prophet's reach, so the edge it was to hold never existed in its own view. Withdrawn before it spent a
+   queue slot; h47 (FOCUS) first diverged at round 469 and went on. A switch keyed on what a unit "sees beyond"
+   needs information from outside its own vision (radio, memory). (2026-10-22)
