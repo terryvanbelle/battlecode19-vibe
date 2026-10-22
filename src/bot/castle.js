@@ -10,7 +10,7 @@ import { structInit, structTurn, buildToward } from './struct.js';
 
 const KING = offsets(2), PILGRIM_OFFS = offsets(4);
 
-export { callDue };
+export { callDue, planClusters, expandPlan, nextPioneer };
 
 export function castleTurn(B) {
   const w = B.w, me = w.me, st = B.st;
@@ -21,6 +21,7 @@ export function castleTurn(B) {
     st.partial = new Map();
     st.churched = new Set();
     st.lost = new Map();   // cluster -> round a pioneer for it died
+    st.taken = new Map();  // cluster -> round a pioneer saw an enemy structure there (CFG.EXPAND_ROUND)
     st.attackUntil = 0;
     st.deadE = new Set();   // indices (into st.order) of enemy castles reported destroyed
     st.lastT = -1;
@@ -46,12 +47,14 @@ export function castleTurn(B) {
       if (p.x !== undefined && p.y !== undefined) st.castles.set(r.id, { x: p.x, y: p.y });
     } else if (me.turn > 3 && r.castle_talk >= CT.CHURCH) st.churched.add(r.castle_talk - CT.CHURCH);
     else if (me.turn > 3 && r.castle_talk >= CT.DEAD && r.castle_talk < CT.DEAD + 4) st.deadE.add(r.castle_talk - CT.DEAD);
+    else if (me.turn > 3 && ct >= CT.TAKEN && ct < CT.TAKEN + 40) st.taken.set(ct - CT.TAKEN, me.turn);
   }
   // Our castles in canonical order (fixed at turn 3): enemy castle i is the mirror of st.order[i].
   if (me.turn === 3) st.order = [...st.castles.values()].sort((a, b) => (a.y * w.n + a.x) - (b.y * w.n + b.x));
   if (me.turn === 3) planClusters(B);
   // A castle that disappeared from the id list is dead.
   if (me.turn > 3) for (const id of [...st.castles.keys()]) if (id !== me.id && !allIds.has(id)) st.castles.delete(id);
+  if (CFG.EXPAND_ROUND && st.plan && me.turn >= CFG.EXPAND_ROUND && (me.turn - CFG.EXPAND_ROUND) % 50 === 0) expandPlan(B);
   // Pioneers: one that disappeared frees its cluster for a later retry; one that built its church or is overdue is done.
   st.pioneers = st.pioneers.filter(p => {
     if (p.id > 0 && !allIds.has(p.id)) { st.lost.set(p.cluster, me.turn); return false; }
@@ -88,12 +91,38 @@ function planClusters(B) {
   st.plan.sort((a, b) => a.d - b.d || b.value - a.value || a.cluster - b.cluster);
 }
 
+// CFG.EXPAND_ROUND: append to the plan the clusters it left out (nearer the enemy, or owned by a castle since lost),
+// nearest first, unless an enemy castle stands within EXPAND_KEEP king steps of the site or a depot lies within
+// 2*SERVE_MOVES of one of our castles or churched sites. Pioneers that find an enemy structure there report it
+// (CT.TAKEN) and the cluster rests for 200 rounds.
+function expandPlan(B) {
+  const w = B.w, st = B.st, n = w.n, me = w.me;
+  const own = [...st.castles.values()].sort((a, b) => (a.y * n + a.x) - (b.y * n + b.x));
+  const ownF = own.map(c => bfs(w, [[c.x, c.y]], KING));
+  const servedF = bfs(w, own.map(c => [c.x, c.y]).concat([...st.churched].map(i => B.clusters[i].site)), KING);
+  const enemyF = st.order.filter((c, i) => !st.deadE.has(i)).map(c => bfs(w, [w.mirror(c.x, c.y)], KING));
+  const myIdx = own.findIndex(c => c.x === me.x && c.y === me.y), add = [];
+  for (const c of B.clusters) {
+    if (st.plan.some(p => p.cluster === c.i)) continue;
+    const k = c.site[1] * n + c.site[0];
+    const dOwn = ownF.map(f => f[k] < 0 ? 999 : f[k]), dUs = Math.min(...dOwn);
+    const dThem = Math.min(999, ...enemyF.map(f => f[k] < 0 ? 999 : f[k]));
+    if (dUs >= 999 || dThem <= CFG.EXPAND_KEEP) continue;
+    if (c.depots.some(d => { const v = servedF[d.y * n + d.x]; return v >= 0 && v <= CFG.SERVE_MOVES * 2; })) continue;
+    let owner = 0; for (let i = 1; i < own.length; i++) if (dOwn[i] < dOwn[owner]) owner = i;
+    if (owner === myIdx) add.push({ cluster: c.i, d: dUs, value: c.nk * 2 + c.nf });
+  }
+  add.sort((a, b) => a.d - b.d || b.value - a.value || a.cluster - b.cluster);
+  st.plan.push(...add);
+}
+
 // The next cluster this castle should send a pioneer to now, if any.
 function nextPioneer(B) {
   const w = B.w, st = B.st;
   if (!st.plan || st.pioneers.length >= CFG.MAX_PIONEERS || w.me.turn < CFG.PIONEER_MIN_ROUND) return null;
   return st.plan.find(p => !st.churched.has(p.cluster) && !st.pioneers.some(q => q.cluster === p.cluster) &&
-    !(st.lost.has(p.cluster) && w.me.turn - st.lost.get(p.cluster) < 100)) || null;
+    !(st.lost.has(p.cluster) && w.me.turn - st.lost.get(p.cluster) < 100) &&
+    !(st.taken.has(p.cluster) && w.me.turn - st.taken.get(p.cluster) < 200)) || null;
 }
 
 function pioneer(B) {

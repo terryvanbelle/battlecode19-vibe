@@ -476,3 +476,30 @@
   checks for both join the VM extra lane. Queue: h16r (running), h24, h22, h25s, h26, h21, h20, h23, ...
 - Fast-turn: h16r's first 10 games averaged 286 s wall vs 388 s for the same seeds and sides in h19 vs h6
   (0.377 vs 0.435 s a round; different bots, so only indicative). The flag stays.
+
+## 2026-10-21 20:23 — replica scrims 199-200 (v3 vs StoneT2000): out-expanded; h27 EXPAND pre-registered
+- Scrim 199, v3 vs botfinalsafe 0-3; scrim 200, v3 vs bot1v43 1-2 (replays in ~/projects/vibe/bc19-galaxy-replays/).
+  Both StoneT2000 bots log thousands of exceptions and still win.
+- Seed 2924 (bot1v43 won by castles at round 588): it had 7 churches / 25 pilgrims at round 100 and 30 churches by
+  588, three of them on our half (top centre, rounds 69-105); we had 2 churches and 15 pilgrims. Our pioneer to that
+  centre cluster died at round 50 at (30,2) and the cluster then waited out the 100-round retry.
+- Seed 1915 (botfinalsafe won by castles at round 386): a sparse map whose centre cluster (2 K + 2 F) straddles the
+  axis. Our first pioneer there died at round 13 to an early red unit; red churched it at round 24 and ended with
+  11 churches / 17 pilgrims to our 2 / 6. We died with 12,203 fuel banked and 0 karbonite.
+- Seed 2965 (lost both times, 40x40, few depots): economies level (mined K 4,300 vs 4,994), both armies prophets
+  at 0.40 damage a fuel; theirs fired 464 shots to our 250. After the round-450 attack call our army fell from 23
+  to 13 and to 2 by round 700, then church, pilgrims and a castle went; we finished with 24-29k fuel unspent.
+  This is the turtle question (h16r, running).
+- Self-play (h19 vs h6 gate replays): church counts stop growing by round 200 on every sampled seed (1205: 4;
+  1325: 3; 1635: 0-1), so the turn-3 plan is the limit there as well.
+- **h27 (EXPAND_ROUND=100)**, switch on h19. Mechanism: from round 100, every 50 rounds, castles append to their
+  plan the clusters it left out (either half) whose site is more than EXPAND_KEEP=12 king steps from every enemy
+  castle and not within 2*SERVE_MOVES of our castles or churched sites; nearest first, after the turn-3 plan. A
+  pioneer sent from round 100 that sees an enemy church or castle within 5 king steps of its site reports it
+  (castle talk CT.TAKEN = 88 + cluster) and mines near home; the castle rests that cluster for 200 rounds. Unit
+  test on seed 1205: plan 4 -> 7 (3 clusters on the enemy half, 18-26 steps from its castle), both teams plan the
+  same canonical sites, a reported cluster is skipped. The default build plays v4's game byte for byte (seed 826,
+  150 rounds, --det).
+- Delivery (pre-registered, 300-round games vs h19, driver): seed 826 both sides and 1205: at round 300 more
+  churches and pilgrims than h19 and K+F mined >= h19's; 0 exceptions. Falsifier: gate t <= 0. Dose: the switch
+  only (EXPAND_ROUND 100); stacking on h24 waits for h24's gate.

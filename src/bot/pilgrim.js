@@ -60,6 +60,15 @@ export function pilgrimTurn(B) {
   for (const r of w.friends) if ((r.unit === CASTLE || r.unit === CHURCH) && !st.structs.some(s => s.x === r.x && s.y === r.y)) { st.structs.push({ x: r.x, y: r.y }); st.depKey = null; }
   st.structs = st.structs.filter(s => { if (w.occ(s.x, s.y) === 0) { st.depKey = null; return false; } return true; });
 
+  // CFG.EXPAND_ROUND: a pioneer sent from that round that sees an enemy church or castle near its site reports the
+  // cluster taken (CT.TAKEN; the castle rests it) and mines near home instead.
+  if (st.site && CFG.EXPAND_ROUND && B.round >= CFG.EXPAND_ROUND && w.enemies.some(e => (e.unit === CASTLE || e.unit === CHURCH) &&
+      king(e.x, e.y, st.site[0], st.site[1]) <= CFG.EXPAND_SEEN)) {
+    if (st.cluster >= 0 && st.cluster < 40) w.talk(CT.TAKEN + st.cluster);
+    const h = st.structs[0] || me;
+    st.site = null; st.target = freeDepotNear(B, h.x, h.y, null);
+  }
+
   // Flee attackers that can reach us next turn.
   const threats = w.enemies.filter(e => isAttacker(e.unit) && d2(me.x, me.y, e.x, e.y) <= THREAT_R2[e.unit]);
   if (threats.length && w.fuel >= 4) {

@@ -8,7 +8,7 @@ import { depots, clusters, bfs, costField } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
 import { nextTarget, isChoke, militaryTurn, holdTarget } from '../src/bot/military.js';
-import { callDue, castleTurn } from '../src/bot/castle.js';
+import { callDue, castleTurn, nextPioneer } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { minesNow, pilgrimTurn } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -203,8 +203,8 @@ test('comms: encode/decode', () => {
   const g = decFarRobot({ signal: encXY(3, 7, 50), signal_radius: FAR.WIDE });   // map-wide ATTACK, castle index 2
   assert.deepStrictEqual([g.type, g.x, g.y, g.extra], [SIG.ATTACK, 7, 50, 3]);
   assert.ok(FAR.WIDE <= 2 * 63 * 63 && Math.ceil(Math.sqrt(FAR.WIDE)) === 90);
-  // castle talk ranges never overlap: unit status 64..69, kill reports 72..75, churches 128+
-  assert.ok(CT.UNIT + 5 < CT.DEAD && CT.DEAD + 3 < CT.CHURCH);
+  // castle talk ranges never overlap: unit status 64..69, kill reports 72..75, march 80..85, taken 88..127, churches 128+
+  assert.ok(CT.UNIT + 5 < CT.DEAD && CT.DEAD + 3 < CT.MARCH && CT.MARCH + 5 < CT.TAKEN && CT.TAKEN + 39 < CT.CHURCH);
 });
 
 test('world: a signal lowers the fuel that later affordability checks see', () => {
@@ -467,4 +467,37 @@ test('combat: target choice, preacher splash avoids friends, retreat', () => {
   assert.ok(t); assert.ok(d2(t.dx, t.dy, 3, 0) <= 3); assert.ok(d2(t.dx, t.dy, 2, 1) > 3);
   const s = retreatStep(5, 5, [{ unit: 3, x: 7, y: 5 }], offsets(4), 4, () => true);
   assert.ok(s && s[0] < 0);
+});
+
+test('castle: EXPAND_ROUND adds remote clusters on either half away from enemy castles, mirror-identical; CT.TAKEN rests one', () => {
+  const saved = CFG.EXPAND_ROUND, KING = offsets(2);
+  try {
+    const run = (team, er) => {
+      CFG.EXPAND_ROUND = er;
+      const g = new Game(1205, 100, 20, false, false);   // one castle a side, 12 clusters
+      const castle = g.robots.find(r => r.team === team);
+      const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+      const at = t => { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; w.karbonite = 0; castleTurn(B); };
+      for (const t of [1, 2, 3]) at(t);
+      const before = B.st.plan.length;
+      at(100);
+      return { g, castle, B, at, before, sites: B.st.plan.map(p => B.clusters[p.cluster].site.join(',')) };
+    };
+    const off = run(0, 0), on = run(0, 100), on1 = run(1, 100);
+    assert.strictEqual(off.sites.length, off.before);                   // default: the turn-3 plan only
+    assert.ok(on.sites.length > on.before, 'nothing added');
+    assert.deepStrictEqual(on1.sites, on.sites);                       // both teams plan the same canonical clusters
+    const { B, at, g, castle } = on, w = B.w, n = w.n;
+    const usF = bfs(w, [[w.me.x, w.me.y]], KING), themF = bfs(w, [w.mirror(w.me.x, w.me.y)], KING);
+    const added = B.st.plan.slice(on.before), d = (f, p) => f[B.clusters[p.cluster].site[1] * n + B.clusters[p.cluster].site[0]];
+    for (const p of added) assert.ok(d(themF, p) > CFG.EXPAND_KEEP, 'too near the enemy castle');
+    assert.ok(added.some(p => d(usF, p) > d(themF, p)), 'none on the enemy half');
+    // With the turn-3 plan churched, the first added cluster is next; reported taken, the one after it.
+    for (const p of B.st.plan.slice(0, on.before)) B.st.churched.add(p.cluster);
+    assert.strictEqual(nextPioneer(B).cluster, added[0].cluster);
+    g.robots.push({ id: 4300, team: 0, unit: S.PILGRIM, x: castle.x + 1, y: castle.y, turn: 50, health: 10, karbonite: 0, fuel: 0,
+      signal: 0, signal_radius: 0, castle_talk: CT.TAKEN + added[0].cluster });
+    at(101);
+    assert.strictEqual((nextPioneer(B) || {}).cluster, added[1] ? added[1].cluster : undefined);
+  } finally { CFG.EXPAND_ROUND = saved; }
 });

@@ -6,6 +6,12 @@ export const CFG = {
   CLAIM_MARGIN: 1,           // church a remote cluster if our distance <= enemy's + margin (moves)
   MAX_PIONEERS: 2,           // church pioneers in flight per castle
   PIONEER_MIN_ROUND: 2,
+  EXPAND_ROUND: 0,           // >0: from this round castles re-plan every 50 rounds, adding remote clusters on either half
+                             // more than EXPAND_KEEP king steps from every enemy castle (castle.js expandPlan; h19's
+                             // turn-3 plan is used up by round ~200 in self-play, while StoneT2000's bot1v43 churched
+                             // 30 clusters on replica seed 2924, three on our half)
+  EXPAND_KEEP: 12,
+  EXPAND_SEEN: 5,            // ...and a pioneer that sees an enemy structure this near its site reports it taken (CT.TAKEN)
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short

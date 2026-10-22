@@ -19,6 +19,7 @@ export const CT = {
   UNIT: 64,      // + unit type: the default status byte of every robot from round 4 (castles count the army)
   DEAD: 72,      // + enemy castle index (< 4, see castle.js): a unit saw that enemy castle gone
   MARCH: 80,     // + unit type: status byte of a military unit not free for a wave: marching, or home guard (CFG.WAVE)
+  TAKEN: 88,     // + cluster index (< 40): a pioneer saw an enemy structure at that cluster's site (CFG.EXPAND_ROUND)
 };
 
 // Far messages (to robots that may not see the sender, so cannot check its team): the message type is the exact
