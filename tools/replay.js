@@ -13,6 +13,7 @@
 //   node tools/replay.js threat   <replay> [--json]        # each structure's first enemy combat unit in view: stores, response
 //   node tools/replay.js fire     <replay> [--from R --to R]  # per team and shooter type: shots, fuel, damage per fuel
 //   node tools/replay.js timeline <replay> [--at 25,50,...]   # per team at checkpoints: structures, pilgrims, army, mined, bank
+//   node tools/replay.js moves    <replay> [--every N]     # per team and window of rounds: movement fuel by unit type
 // Teams: 0 red, 1 blue. Unit codes: 0 castle, 1 church, 2 pilgrim, 3 crusader, 4 prophet, 5 preacher.
 'use strict';
 const fs = require('fs');
@@ -301,6 +302,25 @@ function fireText(rows) {
     ...rows.map(a => [['red', 'blue'][a.team], UNIT[a.unit], a.shots, a.fuel, a.enemy, a.friendly, a.kills, (a.enemy / a.fuel).toFixed(2)].join('\t'))].join('\n');
 }
 
+// Movement fuel per team, window of rounds and unit type: where the fuel goes.
+function moves(buf, every = 100) {
+  const rows = new Map();
+  simulate(buf, { onTurn(ev) {
+    if (ev.rec.action !== 1 || ev.error) return;
+    const r = ev.robot, from = Math.floor((ev.round - 1) / every) * every + 1, k = r.team + ':' + from;
+    const a = rows.get(k) || rows.set(k, { team: r.team, from, fuel: [0, 0, 0, 0, 0, 0], n: [0, 0, 0, 0, 0, 0] }).get(k);
+    a.fuel[r.unit] += (ev.rec.dx * ev.rec.dx + ev.rec.dy * ev.rec.dy) * SPECS.UNITS[r.unit].FUEL_PER_MOVE; a.n[r.unit]++;
+  } });
+  return [...rows.values()].sort((a, b) => a.team - b.team || a.from - b.from);
+}
+
+function movesText(rows) {
+  const out = ['team\tfrom\ttotal\tpilgrim\tcrusader\tprophet\tpreacher\tmoves'];
+  for (const a of rows) out.push([['red', 'blue'][a.team], a.from, a.fuel.reduce((x, y) => x + y, 0), ...a.fuel.slice(2),
+    a.n.reduce((x, y) => x + y, 0)].join('\t'));
+  return out.join('\n');
+}
+
 // Economy and army at checkpoint rounds (and the last round): what to compare between two bots' openings.
 function timeline(buf, at = [25, 50, 75, 100, 150, 200, 300, 500, 700, 1000]) {
   const mined = [[0, 0], [0, 0]], moveF = [0, 0], rows = [];
@@ -334,12 +354,12 @@ function timelineText(rows) {
   return out.join('\n');
 }
 
-module.exports = { timeline, timelineText, fire, fireText, threats, threatText, parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
+module.exports = { timeline, timelineText, fire, fireText, moves, movesText, threats, threatText, parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
 
 if (require.main === module) {
   const argv = process.argv.slice(2), cmd = argv[0], file = argv[1];
   const opt = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
-  if (!cmd || !file) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 18).join('\n')); process.exit(1); }
+  if (!cmd || !file) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 19).join('\n')); process.exit(1); }
   const buf = fs.readFileSync(file);
   if (cmd === 'summary') console.log(summaryText(analyze(buf)));
   else if (cmd === 'json') console.log(JSON.stringify(analyze(buf)));
@@ -350,6 +370,7 @@ if (require.main === module) {
   else if (cmd === 'nav') console.log(nav(buf));
   else if (cmd === 'talk') console.log(events(buf, 0, Infinity, ['signal', 'talk']).split('\n').filter(l => !opt('--team') || l.includes(' ' + 'RB'[+opt('--team')])).join('\n'));
   else if (cmd === 'fire') console.log(fireText(fire(buf, parseInt(opt('--from', '0'), 10), parseFloat(opt('--to', 'Infinity')))));
+  else if (cmd === 'moves') console.log(movesText(moves(buf, parseInt(opt('--every', '100'), 10))));
   else if (cmd === 'timeline') { const at = opt('--at'); console.log(timelineText(at ? timeline(buf, at.split(',').map(Number)) : timeline(buf))); }
   else if (cmd === 'threat') { const t = threats(buf); console.log(argv.includes('--json') ? JSON.stringify(t) : threatText(t)); }
   else { console.error('unknown command ' + cmd); process.exit(1); }
