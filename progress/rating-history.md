@@ -1,6 +1,6 @@
 # Rating history (replica)
 
-The replica's Team page Rating History for vibe19: the displayed rating (siarnaq's penalized Elo) after each rated (ranked, non-tournament) match, with each submission's first completed rated match marked. Written by `tools/progress/rating_history.py` from data fetched 2026-10-22 09:31 PDT; regenerate, do not edit.
+The replica's Team page Rating History for vibe19: the displayed rating (siarnaq's penalized Elo) after each rated (ranked, non-tournament) match, with each submission's first completed rated match marked. Written by `tools/progress/rating_history.py` from data fetched 2026-10-22 09:42 PDT; regenerate, do not edit.
 
 ![rating history](rating-history.png)
 
