@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 12 other, 11 queued, 4 accepted, 2 dropped, 1 in progress, 1 rejected, 1 sparring partners (32 rows).
+Totals: 12 other, 12 queued, 4 accepted, 2 dropped, 1 in progress, 1 rejected, 1 sparring partners (33 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -28,6 +28,7 @@ Totals: 12 other, 11 queued, 4 accepted, 2 dropped, 1 in progress, 1 rejected, 1
 | `h18` | 2026-10-21 | h6 | cruise fuel reserve: marching and lattice moves leave 1,500 team fuel for shots (CRUISE_FUEL_RESERVE=1500) |  |  |  |  | in progress: delivery PASS (fuel 500-700 mean 1,376 vs h6 49; attack fuel 12,085 vs 5,245); gate queued |
 | `h19` | 2026-10-21 | h6 | src defaults: h6 behaviour + World.signal fuel fix (0cc66c6) + setup re-runs until complete (d2c02a2: a turn killed mid-setup no longer bricks a robot) |  |  |  |  | QUEUED: 40 games vs h6; becomes the incumbent unless t <= -2 |
 | `h20` | 2026-10-21 | h19 | h19 + standing defence reserve: every karbonite spend but a threat response (pilgrims, pioneers, churches, peacetime army) leaves 30 K in the bank, so a castle that spots attackers can afford a preacher (DEF_RESERVE_K=30) |  |  |  |  | QUEUED: delivery vs bots/rush, then 40 games vs h19 |
+| `h21` | 2026-10-21 | h19 | h19 + cargo relay: a full pilgrim not next to a structure hands its load to a friend next to one, and military units deposit cargo at an adjacent structure (RELAY=1) |  |  |  |  | QUEUED: delivery seed 2202 (+1635, 2296), then 40 games vs h19 |
 | `h7r` | 2026-10-21 | h19 | h19 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7 |  |  |  |  | QUEUED: 40 games vs h19 |
 | `h8r` | 2026-10-21 | h19 | h19 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8 |  |  |  |  | QUEUED: 40 games vs h19 |
 | `h9r` | 2026-10-21 | h19 | h19 + church planning counts depots served by pilgrim moves (PLAN_SERVE_PILGRIM=1); rebased from h9 |  |  |  |  | QUEUED: 40 games vs h19 |

@@ -302,6 +302,37 @@ test('struct: DEF_RESERVE_K holds karbonite back from pilgrims and the guard, no
   } finally { CFG.DEF_RESERVE_K = saved; }
 });
 
+test('relay: a full pilgrim not next to a structure hands its load to a unit next to one, which deposits it', () => {
+  const saved = CFG.RELAY;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let P = null, R = null;   // P two king steps from the castle, R next to both
+    for (let dy = -2; dy <= 2 && !P; dy++) for (let dx = -2; dx <= 2 && !P; dx++) {
+      if (Math.max(Math.abs(dx), Math.abs(dy)) !== 2 || !free(castle.x + dx, castle.y + dy)) continue;
+      const px = castle.x + dx, py = castle.y + dy;
+      for (const [ex, ey] of [[Math.sign(dx), Math.sign(dy)], [Math.sign(dx), 0], [0, Math.sign(dy)]])
+        if (!R && free(castle.x + ex, castle.y + ey) && king(px, py, castle.x + ex, castle.y + ey) === 1) { R = [castle.x + ex, castle.y + ey]; P = [px, py]; }
+    }
+    assert.ok(P && R);
+    const unit = (id, u, [x, y], fuel) => ({ id, team: 0, unit: u, x, y, turn: 3, health: S.STATS[u].hp, karbonite: 0, fuel, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const pil = unit(4001, S.PILGRIM, P, 100), cru = unit(4002, S.CRUSADER, R, 100);
+    g.robots.push(pil, cru);
+    const turn = (me, fn) => {
+      const w = worldFor(g, me), B = { api: w.api, w, round: 20, birthRound: 18, st: {}, deps: null, clusters: null, rnd: rng(2) };
+      B.offs = offsets(S.STATS[me.unit].speed); B.nav = new Nav(w, B.offs, B.rnd);
+      return fn(B);
+    };
+    CFG.RELAY = 1;
+    assert.deepStrictEqual(turn(pil, pilgrimTurn), { action: 'give', dx: R[0] - P[0], dy: R[1] - P[1] });
+    assert.deepStrictEqual(turn(cru, militaryTurn), { action: 'give', dx: castle.x - R[0], dy: castle.y - R[1] });
+    CFG.RELAY = 0;
+    assert.notStrictEqual((turn(pil, pilgrimTurn) || {}).action, 'give');
+    assert.notStrictEqual((turn(cru, militaryTurn) || {}).action, 'give');
+  } finally { CFG.RELAY = saved; }
+});
+
 test('combat: target choice, preacher splash avoids friends, retreat', () => {
   const es = [{ id: 9, unit: 2, x: 5, y: 0, team: 1 }, { id: 4, unit: 5, x: 0, y: 3, team: 1 }, { id: 3, unit: 5, x: 3, y: 0, team: 1 }];
   assert.strictEqual(pickTarget(3, 0, 0, es, 64).id, 3); // preachers first, then closer

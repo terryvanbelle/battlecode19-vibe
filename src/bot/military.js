@@ -198,6 +198,12 @@ export function militaryTurn(B) {
     if (e) return go(B, 'e' + e.x + ',' + e.y, [[e.x + 1, e.y], [e.x - 1, e.y], [e.x, e.y + 1], [e.x, e.y - 1]]);
   }
 
+  // Cargo (reclaimed from kills, or relayed by a pilgrim, CFG.RELAY) goes into an adjacent structure of ours.
+  if (CFG.RELAY && (me.karbonite || me.fuel)) {
+    for (const r of w.friends) if ((r.unit === CASTLE || r.unit === CHURCH) && king(r.x, r.y, me.x, me.y) === 1)
+      return w.give(r.x - me.x, r.y - me.y, me.karbonite, me.fuel);
+  }
+
   // Fuel per move is proportional to r2, so short steps cover distance cheapest: unhurried moves use r2 <= 2.
   if (waiting) return null;
   // Endgame fuel: units away from home stand still so the fuel goes into preachers (newborns still clear the exits).

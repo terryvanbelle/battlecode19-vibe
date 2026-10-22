@@ -34,6 +34,10 @@ export const CFG = {
   SWITCH_KARB_LOW: 30,       // ...and a fuel miner moves to karbonite when karbonite < this and fuel >= ...
   SWITCH_FUEL_HIGH: 3000,
   SWITCH_KING: 8,            // only to depots within this many king steps
+  RELAY: 0,                  // 1: a full pilgrim not next to our structure hands its cargo to a friend next to one (a
+                             // military unit, or a pilgrim mining the other resource), and military units deposit
+                             // cargo at an adjacent structure (seed 2202: a fuel miner boxed in by a parked crusader
+                             // sat full for 824 turns, a quarter of that map's fuel depots)
   KARB_STOP: 0,              // >0: karbonite miners stop mining while the team holds this much karbonite
   SHOOT_FLOOR: 30,           // military units do not shoot the team's fuel below this
   PREACHER_EVERY: 4,         // every Nth peacetime defender is a preacher (when MIL_ROTATION is null)

@@ -250,3 +250,23 @@
 - Gate: h20 (DEF_RESERVE_K=30) vs h19, 40 games, seed0 5000, --timescale 2 --init-ms 1000. Falsifier: net <= 0
   (the reserve's cost in slower expansion outweighs the defence). Dose ladder: 30 then 60 (one preacher's worth,
   then two).
+
+## 2026-10-21 18:10 — h21 pre-registered: cargo relay
+- Source: seed 2202 (h18 vs h6 replay, red), census per fuel depot: (3,47) is mined on 12% of rounds and (1,27) on
+  45%, against 91% for depots next to a structure. Pilgrim 188 mines (3,47), two steps from castle (5,47); from round
+  176 to 1000 it stands full (100 fuel) doing nothing, because the only tile between it and the castle, (4,47), holds
+  a crusader that is still parked there at round 400 (the other neighbours are a wall and a karbonite miner). That
+  is a quarter of the map's fuel depots on our half, idle for 824 rounds, with fuel the binding resource. The earlier
+  clog census found the same full-idle pilgrims on seeds 1635 and 2296; moving lattice posts (h13) did not free the
+  tiles because the base is packed.
+- Mechanism: CFG.RELAY=1. A full pilgrim that is not next to any of our structures gives its cargo to a friend next
+  to it that is next to one: a military unit, or a pilgrim standing on a depot of the resource it does not carry.
+  Of two full pilgrims next to the same friend, the first in canonical (y, x) order relays (cargo past a robot's
+  capacity is lost). Military units give any cargo they carry (relayed, or reclaimed from kills, which they kept
+  until now) to an adjacent structure of ours when they neither shoot nor engage. Unit test: pilgrim -> crusader ->
+  castle with RELAY=1, neither give with RELAY=0.
+- Delivery: h21 vs h19, seed 2202 (driver diagnostic) then seeds 1635 and 2296 both sides (VM): h21's full-idle
+  pilgrim turns (full cargo, no action, not next to a structure) at most half of h19's in the same games, and its
+  fuel mined at least 5% higher; zero exceptions.
+- Gate: h21 (RELAY=1) vs h19, 40 games, seed0 5000, --timescale 2 --init-ms 1000. Falsifier: net <= 0. No dose
+  ladder (one setting); if it passes, a follow-up may relay only when the pilgrim is blocked.

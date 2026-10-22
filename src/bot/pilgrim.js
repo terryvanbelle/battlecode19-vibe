@@ -1,7 +1,7 @@
 // Pilgrim: mines its assigned depot and deposits at the nearest friendly structure; a pioneer first builds a church at
 // its cluster's site. Flees attackers that could hit it next turn.
 import { CFG } from './config.js';
-import { STATS, CASTLE, CHURCH, KARB_CAP, FUEL_CAP } from './specs.js';
+import { STATS, CASTLE, CHURCH, PILGRIM, KARB_CAP, FUEL_CAP } from './specs.js';
 import { d2, king, ADJ, rng } from './util.js';
 import { SIG, dec, encNum, CT } from './comms.js';
 import { econ } from './mapinfo.js';
@@ -97,6 +97,7 @@ export function pilgrimTurn(B) {
   // Deposit when full.
   if (me.karbonite >= KARB_CAP || me.fuel >= FUEL_CAP) {
     for (const s of st.structs) if (king(me.x, me.y, s.x, s.y) === 1) return w.give(s.x - me.x, s.y - me.y, me.karbonite, me.fuel);
+    if (CFG.RELAY) { const r = relayTo(B); if (r) return w.give(r.x - me.x, r.y - me.y, me.karbonite, me.fuel); }
     if (!st.structs.length) return null;
     if (!st.depKey) st.depKey = 'dep:' + st.structs.map(s => s.x + ',' + s.y).join(';');
     const src = []; for (const s of st.structs) src.push(...adjSources(s.x, s.y));
@@ -119,6 +120,26 @@ export function pilgrimTurn(B) {
     if (alt && alt !== t) st.target = alt;
   }
   return go(B, 'd' + st.target.i, [[st.target.x, st.target.y]]);
+}
+
+// Relay (CFG.RELAY): a friend next to us that stands next to one of our structures and will deposit what we give it:
+// a military unit, or a pilgrim on a depot of the resource we do not carry (its own cargo is the other kind, so ours
+// fits). Two full pilgrims next to the same friend: the first in canonical (y, x) order relays, so the friend is
+// not handed two loads (cargo past its capacity is lost).
+function relayTo(B) {
+  const w = B.w, me = w.me, st = B.st;
+  const nextToStruct = r => st.structs.some(s => king(r.x, r.y, s.x, s.y) === 1);
+  for (const r of w.friends) {
+    if (r.unit === CASTLE || r.unit === CHURCH || king(r.x, r.y, me.x, me.y) !== 1 || !nextToStruct(r)) continue;
+    if (r.unit === PILGRIM) {
+      const i = r.y * w.n + r.x;
+      if (!(me.karbonite === 0 ? w.karb[i] : me.fuel === 0 ? w.fuelD[i] : 0)) continue;
+    }
+    const rival = w.friends.some(o => o !== r && o.unit === PILGRIM && king(o.x, o.y, r.x, r.y) === 1 && !nextToStruct(o) &&
+      (o.y < me.y || (o.y === me.y && o.x < me.x)));
+    if (!rival) return r;
+  }
+  return null;
 }
 
 // Karbonite nobody will spend (CFG.KARB_STOP): while the team holds that much, a karbonite miner on its depot waits
