@@ -807,6 +807,9 @@ galaxy-184,3,RyanSharafuddin.Battlecode_2019,SethKitchen.examplefuncsplayer,,B,,
 galaxy-185,1,TestSubjector.BattleCode2~e6de74,bc19-starter,,A,,score,,,2026-10-22T00:00:01Z
 galaxy-185,2,TestSubjector.BattleCode2~e6de74,bc19-starter,,A,,score,,,2026-10-22T00:00:01Z
 galaxy-185,3,TestSubjector.BattleCode2~e6de74,bc19-starter,,B,,score,,,2026-10-22T00:00:01Z
+galaxy-186,1,TestSubjector.BattleCode2~fb22c7,RyanSharafuddin.Battlecode_2019,,A,,score,,,2026-10-22T00:00:01Z
+galaxy-186,2,TestSubjector.BattleCode2~fb22c7,RyanSharafuddin.Battlecode_2019,,A,,score,,,2026-10-22T00:00:01Z
+galaxy-186,3,TestSubjector.BattleCode2~fb22c7,RyanSharafuddin.Battlecode_2019,,A,,score,,,2026-10-22T00:00:01Z
 batch-out/h11c_h6,34,cand:h11c,cand:h6,seed-2927,A,1000,health,2927,red,2026-10-22T00:05:13Z
 batch-out/h11c_h6,36,cand:h11c,cand:h6,seed-2927,B,513,castles,2927,blue,2026-10-22T00:07:18Z
 batch-out/h11c_h6,37,cand:h11c,cand:h6,seed-1862,A,1000,health,1862,red,2026-10-22T00:08:09Z
@@ -1203,3 +1206,14 @@ batch-out/h54_h35,7,cand:h54,us:v5,seed-1250,A,456,castles,1250,red,2026-10-22T1
 batch-out/h54_h35,8,cand:h54,us:v5,seed-1250,B,456,castles,1250,blue,2026-10-22T11:20:29Z
 batch-out/h54_h35,9,cand:h54,us:v5,seed-418,A,497,castles,418,red,2026-10-22T11:21:23Z
 batch-out/h54_h35,10,cand:h54,us:v5,seed-418,B,497,castles,418,blue,2026-10-22T11:21:24Z
+batch-out/h54_h35,11,cand:h54,us:v5,seed-2296,B,1000,health,2296,red,2026-10-22T11:24:24Z
+batch-out/h54_h35,12,cand:h54,us:v5,seed-2296,A,1000,health,2296,blue,2026-10-22T11:24:30Z
+batch-out/h54_h35,13,cand:h54,us:v5,seed-2633,A,1000,health,2633,red,2026-10-22T11:26:23Z
+batch-out/h54_h35,14,cand:h54,us:v5,seed-2633,B,1000,health,2633,blue,2026-10-22T11:26:28Z
+batch-out/h54_h35,15,cand:h54,us:v5,seed-2855,B,667,castles,2855,red,2026-10-22T11:30:36Z
+batch-out/h54_h35,16,cand:h54,us:v5,seed-2855,A,667,castles,2855,blue,2026-10-22T11:30:39Z
+batch-out/h54_h35,17,cand:h54,us:v5,seed-357,A,1000,castles,357,blue,2026-10-22T11:31:03Z
+batch-out/h54_h35,18,cand:h54,us:v5,seed-357,A,1000,castles,357,red,2026-10-22T11:31:50Z
+batch-out/h54_h35,19,cand:h54,us:v5,seed-1635,B,514,castles,1635,red,2026-10-22T11:34:27Z
+batch-out/h54_h35,20,cand:h54,us:v5,seed-1635,B,1000,health,1635,blue,2026-10-22T11:36:51Z
+batch-out/h54_h35,21,cand:h54,us:v5,seed-2299,B,830,castles,2299,red,2026-10-22T11:37:43Z
