@@ -281,3 +281,19 @@ test('dlv: delivery numbers agree with the replay analysis and with each other',
   assert.strictEqual(dlv.atCastle(g, 0, 3), 1);
   assert.strictEqual(dlv.atCastle(g, 1, 6), 0);
 });
+
+test('symcheck: verdicts; v5 stays a mirror image for 12 rounds (run without network)', () => {
+  const { verdict } = require('../tools/symcheck');
+  const duel = { pair: [{ id: 1, spent: 'K0 F-25' }, { id: 2 }] };
+  assert.strictEqual(verdict('CONTEST red 2#5 took axis tile (3,4)', 9, 0, {}, null), 'contest');
+  assert.strictEqual(verdict('red #5 (1,2) vs blue #6: health 40 vs 60', 50, 40, {}, null), 'combat');
+  assert.strictEqual(verdict('red #5 (1,2) vs blue #6: health 40 vs 60', 50, 0, {}, null), false);   // no attack yet
+  assert.strictEqual(verdict('red 3#5 at (1,2) has no blue twin at (8,2)', 9, 0, { 5: { err: 'Error: occupied' } }, null), 'contest');
+  assert.strictEqual(verdict('stores red K0 F580 vs blue K0 F605', 215, 131, {}, duel), 'combat');
+  assert.strictEqual(verdict('stores red K0 F580 vs blue K0 F605', 215, 0, {}, duel), false);
+  assert.strictEqual(verdict('stores red K0 F580 vs blue K0 F605', 215, 131, {}, { pair: [{ spent: 'K0 F0' }, { spent: 'K0 F-25' }] }), false);
+  const r = require('child_process').spawnSync('unshare', ['-rn', process.execPath, path.join(__dirname, '..', 'tools', 'symcheck.js'),
+    '--bot', path.join(__dirname, '..', 'bots', 'v5'), '--seeds', '2', '--rounds', '12'], { encoding: 'utf8', timeout: 120000 });
+  assert.strictEqual(r.status, 0, r.stderr);
+  assert.deepStrictEqual(JSON.parse(r.stdout.trim()), { seed: 2, ok: true, round: 12, robots: JSON.parse(r.stdout.trim()).robots });
+});

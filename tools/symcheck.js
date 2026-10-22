@@ -55,6 +55,19 @@ function diff(g, mir) {
   return null;
 }
 
+// How a split at the end of a round counts: 'contest' and 'combat' are decided by the engine's order, not the bot.
+// d: diff's message; detail: the robots it names; mid: the first twin pair after which the board stopped mirroring.
+function verdict(d, round, firstAttack, detail, mid) {
+  if (d.startsWith('CONTEST')) return 'contest';
+  if (firstAttack && firstAttack <= round && /health|karbonite|fuel|no (blue|red) twin|robot count/.test(d)) return 'combat';
+  // Both twins aimed at the same tile (a build or move onto the mirror axis): the engine's order decides.
+  if (Object.values(detail).filter(v => /occupied/i.test(v.err || '')).length === 1) return 'contest';
+  // A twin pair that shoot each other: the first to resolve kills the other before it acts (h55 seed 2, round 215:
+  // the board stays a mirror, the dead twin's unspent shot splits the stores).
+  if (firstAttack && mid && mid.pair.some(p => p.spent === undefined)) return 'combat';
+  return false;
+}
+
 async function check(code, seed, rounds) {
   const g = new Game(seed, 1e9, 1e9, false, false);
   const mir = mirrorFn(g);
@@ -106,23 +119,9 @@ async function check(code, seed, rounds) {
     const d = diff(g, mir);
     if (d) {
       const st = ` [stores K${g.karbonite[0]}/${g.karbonite[1]} F${g.fuel[0]}/${g.fuel[1]}]`;
-      const ok = d.startsWith('CONTEST') ? 'contest' : (firstAttack && firstAttack <= round && /health|karbonite|fuel|no (blue|red) twin|robot count/.test(d)) ? 'combat' : false;
       const ids = (d.match(/#(\d+)/g) || []).map(t => +t.slice(1));
-      // Stores only: the first twin pair (by the start-of-round tiles) whose actions spent differently this round.
-      if (!ids.length) for (const i of order) {
-        if (actors[i].team !== 0) continue;
-        const [mx, my] = mir(pre[i][0], pre[i][1]), j = actors.findIndex((q, k) => q.team === 1 && pre[k][0] === mx && pre[k][1] === my);
-        const sig = k => { const a = acts[k]; if (k < 0) return 'none';
-          // The action's offset in red's frame: blue's mirrored back about its own start tile.
-          let d = a && a.dx !== undefined ? [a.dx, a.dy] : null;
-          if (d && actors[k].team === 1) { const [px, py] = mir(pre[k][0], pre[k][1]), [qx, qy] = mir(pre[k][0] + d[0], pre[k][1] + d[1]); d = [qx - px, qy - py]; }
-          return [a ? a.action : '-', d, a ? a.signal_radius : 0, errs[k] ? 'err' : 'ok', g.robots.includes(actors[k]), spent[k] || 'skipped'].join(' '); };
-        if (sig(i) !== sig(j)) { ids.push(actors[i].id); if (j >= 0) ids.push(actors[j].id); break; }
-      }
       const detail = {}; for (const id of ids) { const i = actors.findIndex(r => r.id === id); if (i >= 0) detail[id] = { unit: actors[i].unit, at: pre[i], spent: spent[i], act: acts[i] && { ...acts[i], logs: undefined }, logs: acts[i] && acts[i].logs, err: errs[i] }; }
-      // Both twins aimed at the same tile (a build or move onto the mirror axis): the engine's order decides.
-      const occErr = Object.values(detail).filter(v => /occupied/i.test(v.err || '')).length === 1;
-      return { seed, ok: ok === false && occErr ? 'contest' : ok, round, why: d + st, firstAttack, detail, mid };
+      return { seed, ok: verdict(d, round, firstAttack, detail, mid), round, why: d + st, firstAttack, detail, mid };
     }
   }
   return { seed, ok: true, round: rounds, robots: g.robots.length };
@@ -136,5 +135,5 @@ async function main() {
   for (const s of seeds) { const r = await check(code, s, rounds); if (r.ok === false) bad++; console.log(JSON.stringify(r)); }
   process.exit(bad ? 1 : 0);
 }
-module.exports = { check, compile };
+module.exports = { check, compile, verdict };
 if (require.main === module) main().catch(e => { console.error(e.stack || e); process.exit(2); });
