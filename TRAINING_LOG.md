@@ -1502,3 +1502,33 @@
   running on the extra lane (out/dlv_chain27.sh: 1250, 1635, 1862, 357 both sides vs h35; bars pre-registered 07:49).
 - Slip: an attempts.csv rewrite opened the file before a malformed-row error and truncated it; restored from git and
   redone through a temporary file. Three rows (h41, h54, h55) had unquoted commas in the outcome field; now quoted.
+
+## 2026-10-22 08:16 — pioneers that never arrive; h61 (PIONEER_GIVEUP) pre-registered; replica queue reordered
+- Replica match 206 (v5 vs StoneT2000 bot1v43, 0-3): on 2321 (we blue) and 1884 (we red) our side built no church
+  at all. 2321: castle (33,9) sent pioneers at rounds 19-20 (sites: the centre, and the mirror of red's church
+  cluster); both stood 4-6 king steps out under red's church prophets (21,14), (18,15) and died there at 156 and
+  190; the castle re-sent two at 100-101 that died likewise; K 165-260 sat in the bank to round 200.
+- Scratch pioneers.js (VM out/; a pioneer = a pilgrim its castle built with SIG.CHURCH on that turn; its phase ends
+  at a church, a first mine, or death; stuck = 40+ turns without either): our 12 games vs StoneT2000 (matches 200,
+  203, 204, 206, to round 450): 46 pioneers, 20 churches, 25 killed, 1 stuck. The killed ones die 2-20 king steps
+  from home to prophets, and the castle re-sends to the same cluster every ~105 rounds (lost-cluster rest 100):
+  203 game 3 (2518) lost 7 pioneers that way, 204 game 2 five. h50's gate (40 cells, 80 games, to 450): h50 263
+  pioneers, 172 churches, 18 killed, **40 stuck (7,874 turns) on 7 maps** (418 2,548 turns, 1325 2,544, 2542 1,076,
+  2072 687, 67 474, 499 426, 2166 119); h35 349, 152, 37, 120 stuck (25,117 turns) on 15 maps. A stuck pioneer
+  waits beside a contested site under enemy eyes for the rest of the game, and its castle sends another to the same
+  site every 81 rounds (the 80-round overdue rule): 418 red r28, 109, 190, 271, 352.
+- h61 = v6 + PIONEER_GIVEUP 20 (pilgrim.js siteStalled): a pioneer that goes 20 turns with an enemy attacker in
+  sight and no nearer its site (king steps) than its best reports the cluster taken (CT.TAKEN + cluster: castles
+  rest it 200 rounds and drop that pioneer from their in-flight list) and mines the nearest free depot. Displaces:
+  the wait (and, after 80 rounds, the re-send). Reachable: the stuck pioneers above stand 1-6 steps out with enemy
+  units in sight. Dose ladder 0 (identity: v6e vs h50 under --det, chain29), 20 (h61), 50 (h61b, built).
+  Unit test 92/92. Checks on the extra lane: out/dlv_chain29.sh (no-op, symcheck), then the delivery.
+- Delivery (out/dlv_chain30.sh): h61 vs h50 on 418, 1325, 2542, 2072 both sides (8 games), read with pioneers.js and
+  stall.js to round 450. PASS needs all 3: (1) stuck-pioneer turns on h61's side <= 30% of h50's side in the same
+  games; (2) churches by round 450, h61's side >= h50's (sum); (3) h61 wins >= 4 of 8. Falsifier: (1) fails, i.e.
+  the giving up does not fire or the castle refills the wait.
+- Not addressed: pioneers killed en route (castles re-send into the same prophets; a longer rest after a loss is a
+  separate switch, not yet built). Against StoneT2000 that, not the wait, is the common case.
+- Replica queue (203 waiting at 08:12, 4 slots): 17 waiting matches involve the four slow bots (IvanGeffner bot6b,
+  eigthbot, Nydroam, 18dcb01 robot2: 31.6 of 41.6 slot-hours so far); spool_bump moved the other 186 ahead of them
+  and our 13 (v6 vs StoneT2000 bot1v43 and botfinalsafe, requests 179-180, first) ahead of all. Nothing dropped.
