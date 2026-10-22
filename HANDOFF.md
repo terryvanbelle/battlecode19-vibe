@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-21 21:12 PDT)
+## State (2026-10-21 21:25 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v4** (`bots/v4` = h19, ROSTER.tsv); frozen history v0-v4, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -11,16 +11,19 @@
   setup that re-runs until complete, LEARNINGS 10): 21-19 vs h6 (t 0.58), ACCEPTED 20:04 and frozen as v4.
   Candidates are switches on h19, gated against h19 with `--timescale 2 --init-ms 1000 --fast-turn`.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
-  bots/dist linked to the main tree, outputs in the main tree's out/): h24 (economy first; running since 21:02), h22
+  bots/dist linked to the main tree, outputs in the main tree's out/): h24 (economy first; running since 21:02), h31
+  (church density: SERVE_MOVES 2 + PLAN_CONTEST_FIRST 6; TRAINING_LOG 21:20; h32 = contest-first alone, built, gated
+  only if h31 passes), h22
   (preachers: prophets lose the fuel exchange vs a rush), h29 (NAV_FIT + LATTICE_STICKY 2: lattice memory), h28
   (LATTICE_STICKY 2 alone), h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b vs h19; then the reference jobs v4 vs v0
   and v4 vs rush (main tree). h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
-  ~/jobq/hold. Withdrawn before their gates: h23 and h27 (deliveries failed), h25s and h26 (replaced by h29, h28).
+  ~/jobq/hold. Withdrawn before their gates: h23 and h27 (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31).
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
   at a time under `flock ~/.bc-extra.lock`): `out/dlv_chain2.sh` (h21 vs h19 on 2202/1635/2296 running, then h22 vs
   rush and sym_h22), `out/dlv_chain3.sh` (sym_h23), `out/dlv_chain4.sh` (h24's 200-round games vs h19, h24 vs rush,
-  sym_h24), `out/dlv_chain7.sh` (sym_h28, sym_h29). A failed delivery: move that gate's job to ~/jobq/superseded.
+  sym_h24), `out/dlv_chain8.sh` (sym_h31, h31 vs rush). Done: chain7 (sym_h28, sym_h29) and chain3 (sym_h23),
+  stopping only at axis-tile contests or combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Parked: h11, h12
   (waves), h13 (keep clear), h14 (detour), h17 (karbonite stop).
 - Main finding: after the attack call at round 450 the army burns the fuel bank in ~50 rounds (8 sampled games:
