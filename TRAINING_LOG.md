@@ -404,7 +404,7 @@
 - A harness option that would run one precompiled script per turn (same view, same vm2 timeout) was not applied:
   it changes how turns enter the sandbox, so it waits for the owner's decision. Gates continue at the current rate.
 
-## 2026-10-21 19:25 — h19's control games vs bots/rush complete; h20 delivery confirmed
+## 2026-10-21 19:23 — h19's control games vs bots/rush complete; h20 delivery confirmed
 - h19 vs bots/rush, seeds 1337/1879/2544/2908 both sides (shadow tree out/dlv_h19_rush.jsonl): 0-8, 8 castles lost
   (both on 2908 by rounds 597/651); h20 there: 0-8, 6 lost (2908 keeps one castle to round 1000). The reserve does
   not lose more, so h20's delivery stands and its gate stays queued.
