@@ -12,7 +12,7 @@ import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, openEscort, esc
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
-import { minesNow, pilgrimTurn, stepAvoid, huntSpot, hotRetarget, hereRetarget, siteStalled } from '../src/bot/pilgrim.js';
+import { minesNow, pilgrimTurn, stepAvoid, huntSpot, hotRetarget, hereRetarget, siteStalled, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, canHit, PRIORITY } from '../src/bot/combat.js';
@@ -859,7 +859,17 @@ test('pilgrim: PIONEER_GIVEUP drops a site it gets no nearer to under enemy eyes
     const B3 = { ...B2, st: { site: B.clusters[far].site.slice(), cluster: far } };
     assert.deepStrictEqual([1, 2, 3, 4, 5].map(() => siteStalled(B3)), [false, false, false, false, true]);
     assert.strictEqual(B3.st.site, null); assert.strictEqual(talked, CT.TAKEN + far); assert.ok(B3.st.target);
-  } finally { CFG.PIONEER_GIVEUP = saved; CFG.PIONEER_STALL_ANY = savedAny; }
+    // CFG.PIONEER_HOME: the depot it then takes is the free one nearest its nearest structure, not nearest itself
+    // (a structure of ours known at the far site, the castle beside us left out of the list).
+    const [hx, hy] = B.clusters[far].site, kh = d => king(d.x, d.y, hx, hy);
+    const best = Math.min(...B.deps.filter(d => w2.occ(d.x, d.y) <= 0).map(kh));
+    for (const ph of [0, 1]) {
+      CFG.PIONEER_HOME = ph;
+      const B4 = { ...B2, st: { site: B.clusters[far].site.slice(), cluster: far, structs: [{ x: hx, y: hy }] } };
+      assert.deepStrictEqual([1, 2, 3, 4, 5].map(() => siteStalled(B4)), [false, false, false, false, true]);
+      if (ph) assert.strictEqual(kh(B4.st.target), best); else assert.ok(kh(B4.st.target) > best + 3);
+    }
+  } finally { CFG.PIONEER_GIVEUP = saved; CFG.PIONEER_STALL_ANY = savedAny; CFG.PIONEER_HOME = 0; }
 });
 
 test('military: PROPHET_FLOOR keeps prophets from shooting a short bank that other shooters can use', () => {
@@ -1695,6 +1705,28 @@ test('pilgrim: PILGRIM_HERE takes the depot it stands on when its target is take
   assert.strictEqual(turn(1, 2, 13, prophet), 1);                  // on its target: kept
   const everywhere = [{ unit: S.PREACHER, x: 2, y: 13 }, { unit: S.PROPHET, x: 9, y: 15 }];
   assert.strictEqual(turn(0, 3, 13, everywhere), 0);               // every free depot hot: kept
+});
+
+test('pilgrim: PILGRIM_STALL gives up a depot it gets no nearer to, for the free one nearest home, and remembers it', () => {
+  const saved = [CFG.PILGRIM_STALL, CFG.PILGRIM_HOT_MEM];
+  try {
+    CFG.PILGRIM_STALL = 3; CFG.PILGRIM_HOT_MEM = 50;
+    const deps = [{ i: 0, x: 20, y: 20, k: true }, { i: 1, x: 3, y: 3, k: true }, { i: 2, x: 9, y: 9, k: false }];
+    const B = { deps, st: { target: deps[0], structs: [{ x: 2, y: 2 }] } };
+    const turn = (t, x = 10, y = 10) => { B.w = { me: { id: 9, x, y, turn: t }, occ: () => -1 }; stallRetarget(B); return B.st.target.i; };
+    // Best set at turn 1; no nearer through turn 4: given up for depot 1, nearest the structure (depot 2 is nearer us).
+    assert.deepStrictEqual([1, 2, 3, 4].map(t => turn(t)), [0, 0, 0, 1]);
+    // Getting nearer resets the count; standing on the target is not a stall.
+    assert.deepStrictEqual([5, 6, 7, 8, 9].map(t => turn(t, 10 - (t - 5), 10 - (t - 5))), [1, 1, 1, 1, 1]);
+    assert.deepStrictEqual([10, 11, 12, 13, 14].map(t => turn(t, 3, 3)), [1, 1, 1, 1, 1]);
+    // Depot 0 stays given up for PILGRIM_HOT_MEM turns: the next stall takes depot 2; past the memory, 0 counts again.
+    assert.deepStrictEqual([20, 21, 22, 23].map(t => turn(t, 30, 30)), [1, 1, 1, 2]);
+    B.st.target = deps[2]; B.st.stallFor = null;
+    assert.deepStrictEqual([60, 61, 62, 63].map(t => turn(t, 30, 30)), [2, 2, 2, 0]);
+    // Every free depot given up: it keeps its target.
+    B.st.target = deps[0]; B.st.stallFor = null; B.st.stallGave = new Map([[1, 70], [2, 70]]);
+    assert.deepStrictEqual([70, 71, 72, 73, 74].map(t => turn(t, 30, 30)), [0, 0, 0, 0, 0]);
+  } finally { [CFG.PILGRIM_STALL, CFG.PILGRIM_HOT_MEM] = saved; }
 });
 
 test('pilgrim: PILGRIM_HOT gives up a depot under a visible attacker for one that is not, and remembers it', () => {

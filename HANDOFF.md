@@ -91,9 +91,10 @@
   vs StoneT2000 our pioneers are mostly killed en route (25 of 46) and re-sent every ~105 rounds. CFG.PIONEER_GIVEUP
   (h61 = 20) gives the site up when an attacker is in sight: its delivery FAILED (stuck turns 0.40 of h50's, bar
   0.30; TRAINING_LOG 11:52) because most stalls see no enemy. h68 (+ CFG.PIONEER_STALL_ANY 40) FAILED the same
-  way at 16:12: its replays are byte-identical to h61's. The stuck pioneers are ex-pioneers: their site was taken
-  (our own church, on 418), they drop it after 5 turns (pilgrim.js siteWait) and, with no free depot, wander near it.
-  Next (not built): an ex-pioneer of a taken site reports it so castles stop re-sending, then mines or goes home.
+  way at 16:12: its replays are byte-identical to h61's. Cause (debug build, TRAINING_LOG 16:29; LEARNINGS 24): the
+  pioneer does give its site up, then takes the free depot nearest itself, under the same enemy guards, and hovers
+  short of it for good. h78 = h68 + CFG.PIONEER_HOME 1 (that depot is chosen near its nearest structure) +
+  CFG.PILGRIM_STALL 25 (any pilgrim 25 turns no nearer its target gives it up for 50 turns): driver check running.
   The longer rest after a pioneer is killed is h62 (above).
 - tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
   cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were

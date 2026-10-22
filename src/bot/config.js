@@ -24,8 +24,10 @@ export const CFG = {
                              // rounds and free its pioneer slot) and mines (replica seed 1325 self-play: pioneers waited
                              // 105-375 turns beside contested sites; castles re-sent one every ~100 rounds)
   PIONEER_STALL_ANY: 0,      // >0: ...and one that goes this many turns no nearer its site than its best gives it up the
-                             // same way whatever it sees (h61's delivery, seed 418: pioneer #1936 wandered 349 turns 16-22
-                             // king steps from a site its own team had churched, no enemy in sight, so h61 never fired)
+                             // same way whatever it sees (h68: never fired before PIONEER_GIVEUP 20 in its delivery)
+  PIONEER_HOME: 0,           // 1: a pioneer that gives its site up (_GIVEUP, _STALL_ANY) takes the free depot nearest its
+                             // nearest structure, not nearest itself (h68, seed 418: #1936 gave its site up at round 79 and
+                             // took a depot 11 king steps on, under the enemy's guards, and never mined to round 300)
   PIONEER_LOST_REST: 100,    // rounds a castle waits before re-sending a pioneer to a cluster where the last one died
   PIONEER_LOST_DOUBLE: 0,    // 1: ...doubled per pioneer lost there (replica scrims vs StoneT2000: 25 of 46 pioneers killed,
                              // castles re-sent one into the same prophets every ~105 rounds)
@@ -69,6 +71,9 @@ export const CFG = {
   PILGRIM_SAFE_STEP: 1,      // 1: pilgrims never step into a visible enemy attacker's threat range (pilgrim.js stepAvoid)
   PILGRIM_HOT: 0,            // >0: a pilgrim whose target depot sat in a visible attacker's threat range this many turns
   PILGRIM_HOT_MEM: 50,       // in a row retargets to a free depot not threatened and not given up in this many turns
+  PILGRIM_STALL: 0,          // >0: a pilgrim this many turns no nearer its target depot (king steps) than its best, whatever
+                             // it sees, gives it up for PILGRIM_HOT_MEM turns (no depot search returns it) for the free depot
+                             // nearest its nearest structure (pilgrim.js stallRetarget)
   PILGRIM_HERE: 0,           // 1: a pilgrim whose target depot is taken or hot takes the depot it stands on, else the
                              // nearest free one not hot (pilgrim.js hereRetarget)
   PILGRIM_ORPHAN: 0,         // 1: a pilgrim that knows no living structure of ours walks to our half's unseen cluster

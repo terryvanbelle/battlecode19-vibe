@@ -2087,3 +2087,22 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   by r200 >= 130% of h50's; (3) h77 wins >= 5 of 8; (4) vs rush4, games h77 loses <= h50's + 2 (of 40). Falsifier:
   (4), the early army ECON_UNTIL removes is what holds off a rush. On PASS: gate h77 vs h50, 20 random cells from
   seed0 5000, ahead of the other gates.
+
+## 2026-10-22 16:29 — correction: why pioneers stay stuck (debug build, seed 418); PIONEER_HOME and PILGRIM_STALL; h78
+- The 16:12 cause is wrong (LEARNINGS 24). A scratch copy of src/bot logging every empty-handed pilgrim's site,
+  target (and its occupancy) and action every 5 turns after turn 40, driver games on seed 418 --det to 300:
+  - h50 self-play: red pioneer #218 holds site (9,32) (cluster 5, canonical) from round 72 to 300 at 8-11 king steps,
+    first standing still 35 turns (act null), then oscillating at (10-11, 20-22): the path runs into a visible enemy
+    attacker's threat range, which PILGRIM_SAFE_STEP never steps into; h50 has no give-up rule, so it waits for good.
+  - h50 vs the h68 config (blue): #1936 gives site (9,32) up at round ~79 (PIONEER_GIVEUP 20, an attacker in sight;
+    STALL_ANY 40 never gets there first, hence h68 = h61 byte for byte) and takes freeDepotNear(itself): (29,26), 11
+    king steps on, under the same guards. It hovers at (28-31, 11-16) for 140 turns, then the fuel-to-karbonite
+    switch (karbonite < SWITCH_KARB_LOW, fuel > 3000) points it at (28,22) and (35,13) by turns; it never mines.
+  So giving the site up works; where it then goes does not.
+- New switches (defaults 0; unit tests, Node 107 pass, Python 54 OK): CFG.PIONEER_HOME 1: a pioneer that gives its
+  site up takes the free depot nearest its nearest structure. CFG.PILGRIM_STALL N: a pilgrim off its target that has
+  gone N turns (flight included) no nearer it than its best gives it up for PILGRIM_HOT_MEM (50) turns, during which
+  no depot search returns it (the switch rule included), for the free depot nearest its nearest structure.
+- h78 = v6 + PIONEER_GIVEUP 20 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PILGRIM_STALL 25 (6a97e5086e05); defaults
+  build v6p (c8cbc062db75). Driver check running (h78 and h68 as blue vs h50 on 418 to 450, census stuck): the
+  delivery is pre-registered once it shows the switches change moves (LEARNINGS 19).

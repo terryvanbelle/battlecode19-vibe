@@ -36,12 +36,13 @@ function init(B) {
 function depotAt(B, x, y) { for (const d of B.deps) if (d.x === x && d.y === y) return d; return null; }
 
 // Nearest depot (king distance) that no robot is seen on, optionally restricted to a cluster; karbonite first on ties.
-// skip(d): true for depots to leave out (CFG.PILGRIM_HOT).
+// skip(d): true for depots to leave out (CFG.PILGRIM_HOT). Depots given up by CFG.PILGRIM_STALL are always left out.
 function freeDepotNear(B, x, y, cluster, kind, maxKing, skip) {
-  const w = B.w, list = cluster ? cluster.depots : B.deps; let best = null, bd = 1e9;
+  const w = B.w, list = cluster ? cluster.depots : B.deps, gave = CFG.PILGRIM_STALL && B.st.stallGave; let best = null, bd = 1e9;
   for (const d of list) {
     if (kind !== undefined && d.k !== kind) continue;
     if (skip && skip(d)) continue;
+    if (gave && gave.has(d.i) && w.me.turn - gave.get(d.i) <= CFG.PILGRIM_HOT_MEM) continue;
     if (maxKing && king(x, y, d.x, d.y) > maxKing) continue;
     const occ = w.occ(d.x, d.y);
     if (occ > 0 && occ !== w.me.id) continue;
@@ -173,6 +174,7 @@ function pilgrimAct(B) {
   if (!st.target) st.target = freeDepotNear(B, me.x, me.y, null);
   if (CFG.PILGRIM_HOT && st.target) hotRetarget(B);
   if (CFG.PILGRIM_HERE && st.target) hereRetarget(B);
+  if (CFG.PILGRIM_STALL && st.target) stallRetarget(B);
   const t = st.target; if (!t) return null;
   if (me.x === t.x && me.y === t.y) return w.fuel >= 1 && minesNow(w, t) ? w.mine() : null;
   const occ = w.occ(t.x, t.y);
@@ -194,8 +196,31 @@ export function siteStalled(B) {
     if (++st.siteStall < CFG.PIONEER_GIVEUP) return false;
   }
   if (st.cluster >= 0 && st.cluster < 40) w.talk(CT.TAKEN + st.cluster);
-  st.site = null; st.target = freeDepotNear(B, me.x, me.y, null);
+  const h = CFG.PIONEER_HOME && nearestStruct(st.structs, me) || me;
+  st.site = null; st.target = freeDepotNear(B, h.x, h.y, null);
   return true;
+}
+
+function nearestStruct(structs, me) {
+  let best = null, bd = 1e9;
+  for (const s of structs) { const k = king(s.x, s.y, me.x, me.y); if (k < bd) { bd = k; best = s; } }
+  return best;
+}
+
+// CFG.PILGRIM_STALL: a pilgrim off its target depot that has gone PILGRIM_STALL turns (flight included) no nearer it
+// (king steps) than its best since taking it gives it up for PILGRIM_HOT_MEM turns, for the free depot nearest its
+// nearest structure. h68 on seed 418: #1936 hovered 11 king steps short of a depot under the enemy's guards for 140
+// turns, then the fuel-to-karbonite switch sent it back to the same ground; it never mined.
+export function stallRetarget(B) {
+  const w = B.w, me = w.me, st = B.st, t = st.target;
+  if (me.x === t.x && me.y === t.y) { st.stallFor = null; return; }
+  const k = king(me.x, me.y, t.x, t.y);
+  if (st.stallFor !== t || k < st.stallBest) { st.stallFor = t; st.stallBest = k; st.stallT = me.turn; return; }
+  if (me.turn - st.stallT < CFG.PILGRIM_STALL) return;
+  (st.stallGave || (st.stallGave = new Map())).set(t.i, me.turn); st.stallFor = null;
+  const h = nearestStruct(st.structs, me) || me;
+  const alt = freeDepotNear(B, h.x, h.y, null);
+  if (alt) st.target = alt;
 }
 
 // CFG.PILGRIM_HOT: a pilgrim stuck PILGRIM_HOT turns in a row gives its target depot up for PILGRIM_HOT_MEM turns,

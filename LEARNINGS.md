@@ -121,3 +121,10 @@
    threat-response grinder from build counts by kind; then "a line church hears only SIG.CHAIN"); the event order of
    the one round (build, kill, newborn's turn) settled it. When a change adds a way to be born, list what a newborn
    learns on its first turn on each path, including a dead builder, and unit-test it. (2026-10-22)
+24. **A replay shows where a robot stood, not what it was after: log its state before naming why it idles.** h68's
+   failed delivery was read twice from positions (11:52: "16-22 steps off a site its team churched"; 16:12: "its site
+   was taken, it dropped it and has no free depot") and both were wrong. One driver game with a debug build that logs
+   each idle pilgrim's site, target, occupancy and action (a scratch copy of src/bot with one w.log) showed it in a
+   page: #1936 gave its site up under enemy eyes, took the free depot nearest itself, 11 king steps on under the
+   enemy's guards, and hovered short of it for 220 turns. A replay re-simulates actions; the decision behind them is
+   only in the bot. (TRAINING_LOG 2026-10-22 16:29)
