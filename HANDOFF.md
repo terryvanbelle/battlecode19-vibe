@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-21 19:18 PDT)
+## State (2026-10-21 19:40 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v3** (`bots/v3`, ROSTER.tsv); frozen history v0-v3, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -39,6 +39,9 @@
   before that 11 of 14 field entrants lost robots to load-driven init failures. vibe19 (v3) leads at 1704, 46-2 in
   games; scrims (matches 199-202, queued behind ranked 162-181) challenge StoneT2000 (botfinalsafe, bot1v43) and IvanGeffner (bot6b, eigthbot), which had
   not played (`contest19.py scrim --vs NAME,...`).
+- Gate jobs from h16r on run with `--fast-turn` (run_game/batch: one precompiled turn script per sandbox, same view
+  and kill; replays identical under --det; TRAINING_LOG 19:39). Its saving is judged on the VM by per-game wall time
+  vs h19 vs h6 (425 s at par 4); time audits and the replica use the engine path. Never time on the driver (LEARNINGS 13).
 - VM work goes through the sequential job queue `tools/jobq.sh` (add/start/status) so batches never overlap. Beside
   a batch, at most one extra game process, under `flock ~/.bc-extra.lock` (LEARNINGS 8).
 
