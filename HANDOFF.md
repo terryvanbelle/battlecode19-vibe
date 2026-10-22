@@ -23,6 +23,10 @@
   (smoke-tested first, duplicates by bundle digest skipped; log bc19-benchmarks/trickle.log): 15 new teams on at
   16:40 PDT 2026-10-21, the rest by ~21:00. Replica games are the smoke test; the separate smoke harness is stopped.
   Sisyphus192 is byte-identical to SethKitchen: team status X. Remove the cron line once `seed --next` finds none.
+  Since 2026-10-22 00:45 UTC the replica gives a robot 1000 ms to create its sandbox (GALAXY_INIT_MS; README):
+  before that 11 of 14 field entrants lost robots to load-driven init failures. vibe19 (v3) leads at 1704, 46-2 in
+  games; scrims 150-153 challenge StoneT2000 (botfinalsafe, bot1v43) and IvanGeffner (bot6b, eigthbot), which had
+  not played (`contest19.py scrim --vs NAME,...`).
 - VM work goes through the sequential job queue `tools/jobq.sh` (add/start/status) so batches never overlap. Beside
   a batch, at most one extra game process, under `flock ~/.bc-extra.lock` (LEARNINGS 8).
 
