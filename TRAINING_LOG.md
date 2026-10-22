@@ -1810,7 +1810,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   peacetime army leaves 60 K banked; threat responses and pilgrims unaffected). sha 3152d53d8a59. Diagnostic vs h50
   on seed 70 to 300 rounds running on the driver.
 
-## 2026-10-22 13:20 — h70 (peacetime reserve 60): driver diagnostic positive; delivery pre-registered
+## 2026-10-22 13:04 — h70 (peacetime reserve 60): driver diagnostic positive; delivery pre-registered
 - Driver diagnostic, seed 70 to 300, h70 red vs h50 blue: churches by 50, 4 vs 3 (all 4 planned sites); pilgrims 25
   vs 16; mine actions 5,526 vs 3,465 (+59%); army 206 vs 132. No exception from our code. One red robot failed
   creation (init 1,308 ms, then 168 "not initialized"); 69 and 97 frozen turns: the driver's load, both sides.
@@ -1823,7 +1823,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   Falsifier: (1) fails, i.e. in self-play the bank is not what holds the pioneers back (seed 70's gain was one
   church). On PASS: gate h70 vs h50, 20 random cells from seed0 5000, accept t >= 2, reject t <= 0.
 
-## 2026-10-22 13:45 — replica 391-1 (uvafan, seed 2591): the centre race lost by a crawling pioneer; h64 moved up
+## 2026-10-22 13:08 — replica 391-1 (uvafan, seed 2591): the centre race lost by a crawling pioneer; h64 moved up
 - Seed 2591, 32x32, one castle a side, 14 depots in 3 clusters: 2 by each castle and 10 in the centre (x 13-18,
   y 3-7), reached through a 2-wide corridor (x 15-16, y 9-12). uvafan's 4th pilgrim (built r4) churched (16,5) at
   r13 and built a prophet and a crusader there at once; its church staffed 8 pilgrims by r56. Our pioneer #977
@@ -1834,11 +1834,11 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - Second replica case for h64 (PIONEER_FAST: 2 tiles a turn would have reached the site about r12, before uvafan's
   r13), after 407-2 (seed 1706). Its gate job moves up to ...a3d5771006, right after h70's delivery. h68 (stall
   give-up) would free such a pioneer after 40 turns, but there is no other depot to mine on this map.
-- Replica queue at 13:40: 165 waiting (127 TRY, 5 RUN); about 63 slot-hours by each match's slower team's mean
+- Replica queue at 13:07: 165 waiting (127 TRY, 5 RUN); about 63 slot-hours by each match's slower team's mean
   match time from the saturn journal (229 acked matches, mean 649 s), 12.7 h on 5 slots. No team holds more than 5%
   of it (top: NielsKornerup 3.2 slot-h, awesomelemonade 2.9, bovard 2.8), so no drop; the replica keeps 5 slots.
 
-## 2026-10-22 14:25 — h71 (a contested church builds a preacher first, preachers spare themselves): delivery pre-registered
+## 2026-10-22 13:20 — h71 (a contested church builds a preacher first, preachers spare themselves): delivery pre-registered
 - Self-play on seed 2591 (200 rounds, driver) after 391-1: h64 (blue) churched the centre (16,5) at r12, h50's
   pioneer built the mirror church adjacent at (15,5) at r18; blue's church built 7 pilgrims first, red's preacher
   (r39) killed 4 of them, a crusader and the church; blue's prophet then killed red's church. No church stood by
