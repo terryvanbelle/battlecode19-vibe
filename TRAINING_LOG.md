@@ -738,3 +738,10 @@
   window), banked 9,184 by round 950 and took two castles at 965 and 974. h38 (creep, no march) and h18b (cruise
   reserve 500) are the queued answers. Preachers spent 3,537 moving in 301-400, before any march (engagement chases
   within r2 196 of home at 12 fuel a step).
+
+## 2026-10-21 23:05 — h24 delivery, rush half: PASS
+- h24 (ECON_UNTIL=100) vs bots/rush, seeds 1337/1879/2544/2908 both sides, 1000 rounds (VM extra lane, chain4,
+  out/dlv_h24_rush.jsonl): 7 castles lost in 8 games, pre-registered bar <= h19's 8 in the same games: PASS. No
+  bot of ours has won a game against bots/rush yet (h19 0/8, h24 0/8, h31 0/5 so far; h22 4/8): each loses one
+  castle and never takes one of the rusher's, so it loses on castles at round 1000. h24's gate extension (h24x)
+  stays queued.
