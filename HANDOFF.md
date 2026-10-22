@@ -26,8 +26,9 @@
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
   at a time under `flock ~/.bc-extra.lock`): `out/dlv_chain2.sh` (sym_h22 last; h21 and h22 deliveries read),
-  `out/dlv_chain4.sh` (h24's 200-round games vs h19, h24 vs rush, sym_h24), `out/dlv_chain8.sh` (h31 vs rush;
-  sym_h31 clean), `out/dlv_chain9.sh` (h36 vs rush read; sym_h36 left). Symmetry checks stop only at axis-tile contests or
+  `out/dlv_chain4.sh` (h24's 200-round games vs h19, h24 vs rush; sym_h24 clean), `out/dlv_chain8.sh` (h31 vs rush;
+  sym_h31 clean), `out/dlv_chain9.sh` (h36 vs rush read; sym_h36 clean), `out/dlv_chain11.sh` (sym_h41, sym_h42;
+  started 00:06). The h41/h42 deliveries (jobs ...a35, ...a36) run before h39's gate (...a4). Symmetry checks stop only at axis-tile contests or
   combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new
   chain scripts) so the replica's games get whole cores (LEARNINGS 17). Parked: h11, h12
