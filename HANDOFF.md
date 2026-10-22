@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 05:10 PDT)
+## State (2026-10-22 05:47 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -15,16 +15,18 @@
   bots/dist linked to the main tree, outputs in the main tree's out/):
   h54's gate vs h35 (STRIKE_R2 36 + PREACHER_SELF 4 + PREACHER_MIL 2.5: win the knife fight at mirror churches
   that decides which side wins self-play; delivery PASSED 3 of 3 at 03:55, 8-0, castles lost 1 vs 12): block 1
-  (...a3d56) read 05:08 D 3 of 20 cells (+2 -1, t 0.58, 17 byte-identical), so the chains gate (...a3d57, running)
-  took its h55-vs-h35 branch (h55's delivery PASSED 3 of 3 at 04:21, chains in 8 of 8, castles 13 vs 2); then h54's
-  extension ...a3d58, a3d59, a3d595 (seed0 6000, 7000, 9000, appended to out/h54_h35.jsonl; first look at the first
-  job boundary with D >= 12, rules in TRAINING_LOG 05:08), the extension of h50's gate (stack
+  (...a3d56) read 05:08 D 3 of 20 cells (+2 -1, t 0.58, 17 byte-identical), so the chains gate (...a3d57) took its
+  h55-vs-h35 branch (h55's delivery PASSED 3 of 3 at 04:21): block 1 read 05:45 D 11 (+6 -5, t 0.30). Now, in
+  order: h24v5's gate (...a3d575, running since 05:40; moved up 05:45), h50's extension (...a3d576, the stack below),
+  h54's extension blocks ...a3d58, then h55's (...a3d585, seed0 6000), then h54's ...a3d59, a3d595 (seed0 6000,
+  7000, 9000, appended to out/h54_h35.jsonl; first look at the first job boundary with D >= 12, rules in
+  TRAINING_LOG 05:08; h55's the same, 05:45). The extension of h50's gate (stack
   PIONEER_RESERVE 2 + MARCH_MASK 8, LEARNINGS 18: 27-13, t 1.70 at 40 games, inconclusive; 20 more cells at seed0
-  6000, ...a3d6, out/h50x_h35.jsonl, read pooled with out/h50_h35.jsonl), h51's delivery (CASTLE_POST 0.5: half the church-born army guards the nearest
+  6000, ...a3d576, out/h50x_h35.jsonl, read pooled with out/h50_h35.jsonl), h51's delivery (CASTLE_POST 0.5: half the church-born army guards the nearest
   castle; ...a3e; pre-registered TRAINING_LOG 02:33), h43's gate vs h35 (castle recall RECALL 30; delivery passed 3 of
   3 at 01:18, but h43 lost 4 of the 5 games in which it recalled; ...a43), then the old candidates rebased onto v5 (v5 + their own
   switch, 40 games vs h35): h15v5 (MIL_ROTATION null: no crusaders; moved first at 01:15, job ...a5, as crusaders
-  died unfired in h41's games and lost h42's karbonite-bound ones), h24v5 (ECON_UNTIL 100), h20v5 (DEF_RESERVE_K 30), h8v5,
+  died unfired in h41's games and lost h42's karbonite-bound ones), h20v5 (DEF_RESERVE_K 30), h8v5,
   h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Held in ~/jobq/hold
   until h50's pooled gate reads: the single gates h39 (PIONEER_RESERVE 2, ...a4) and h44 (MARCH_MASK 8, ...a44),
   needed for attribution only if the stack fails. Gates of passed deliveries go in after h43's (job names
