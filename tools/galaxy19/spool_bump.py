@@ -48,7 +48,7 @@ def main(argv=None):
     ap.add_argument('--match', default='', help='comma-separated match ids')
     ap.add_argument('--team', default='', help='comma-separated team names')
     ap.add_argument('--drop', action='store_true', help='move them to dead/ instead (never played); then mark the '
-                    'matches ERR in siarnaq (README: dropping a team)')
+                    'matches CAN in siarnaq (README: dropping a team)')
     ap.add_argument('--dry-run', action='store_true')
     a = ap.parse_args(argv)
     matches = {int(x) for x in a.match.split(',') if x.strip()}

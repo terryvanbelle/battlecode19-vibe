@@ -58,7 +58,9 @@ sudo python3 -I tools/galaxy19/spool_bump.py --match 199,200 [--team vibe19] [--
 # dropping a team from the ladder (a bot whose games hold the slots): its waiting matches go to dead/, are marked
 # CAN (cancelled) in siarnaq, and the team becomes inactive (status X: no autoscrim, no ranking)
 sudo python3 -I /opt/bc19-galaxy/galaxy19/spool_bump.py --team NAME --drop
-sudo bc19-galaxy-manage shell -c '...Match.objects.filter(pk__in=IDS).update(status="CAN"); team.status = "X"...'
+sudo bc19-galaxy-manage shell -c 'from siarnaq.api.compete.models import Match; from siarnaq.api.teams.models import Team
+Match.objects.filter(pk__in=[IDS], status="QUE").update(status="CAN")
+t = Team.objects.get(name="NAME"); t.status = "X"; t.save(update_fields=["status"])'
 
 # field (on the VM, where the bundles are rsynced; re-runnable)
 GALAXY19_CONNECT=127.0.0.1 GALAXY19_REPO=~/projects/vibe/2019 python3 ~/bc19-galaxy-stage/tools/galaxy19/field.py seed
