@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-21 23:47 PDT)
+## State (2026-10-22 00:05 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v4** (`bots/v4` = h19, ROSTER.tsv); frozen history v0-v4, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -12,20 +12,22 @@
   Candidates are switches on h19, gated against h19 with `--timescale 2 --init-ms 1000 --fast-turn`.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/): h35 (running since ~23:15; stack of every delivered
-  switch: h31 + h21 + h29 + h33; 21:59; delivery passed 22:14, K+F +39%), h40's delivery (8 games of 1000 rounds vs
+  switch: h31 + h21 + h29 + h33; 21:59; delivery passed 22:14, K+F +39%; 28 of 32 won, t 3.0 at 00:00), h40's delivery (8 games of 1000 rounds vs
   h19, forward churches FRONT_ROUND 200, TRAINING_LOG 23:30; gate vs h19 if it passes), h39 vs h35 (PIONEER_RESERVE 2;
-  delivery passed 23:46; re-gate vs h19 if h35 fails), h31x (20 more cells for h31, church density: INCONCLUSIVE at 20 cells, 25-15,
+  delivery passed 23:46; re-gate vs h19 if h35 fails), h41's delivery (kill zones KILL_ZONE 50 on h35, 23:53; driver
+  diagnostic on 1915 clean, 17 ZONE signals), h42's delivery (MIX_BY_STOCK [10, 1] on h35: crusaders when karbonite
+  binds, preachers when fuel binds; 00:02), h31x (20 more cells for h31, church density: INCONCLUSIVE at 20 cells, 25-15,
   net +5, t 1.67; read pooled), h24x (20 more cells for h24, economy
   first: INCONCLUSIVE at 20 cells, 26-14, net +6, t 1.50; read both blocks pooled), h33 (PILGRIM_SAFE_STEP; delivery passed 21:59), h29 (NAV_FIT +
   LATTICE_STICKY 2), h28 (LATTICE_STICKY 2 alone), h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b vs h19; then the reference jobs v4 vs v0
   and v4 vs rush (main tree). Built, not queued: h32 (contest-first alone), waits on h31x; h34 (SERVE_MOVES 1)
   failed its delivery (dose stays at 2); h37 (CLAIM_MARGIN 4) failed its delivery (inert) and is closed. h38 (creep instead of march) failed its delivery 23:23: its army moved as much without a march. h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
-  ~/jobq/hold. Withdrawn before their gates: h22, h23 and h27 (deliveries failed; h36 = h22 + h23 doses in the extra lane), h25s and h26 (replaced by h29, h28), h30 (by h31).
+  ~/jobq/hold. Withdrawn before their gates: h22, h23 and h27 (deliveries failed), h36 (h22 + h23 doses: delivery failed 23:59 on fuel at round 500, 92 vs > 134), h25s and h26 (replaced by h29, h28), h30 (by h31).
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
   at a time under `flock ~/.bc-extra.lock`): `out/dlv_chain2.sh` (sym_h22 last; h21 and h22 deliveries read),
   `out/dlv_chain4.sh` (h24's 200-round games vs h19, h24 vs rush, sym_h24), `out/dlv_chain8.sh` (h31 vs rush;
-  sym_h31 clean), `out/dlv_chain9.sh` (h36 vs rush, sym_h36). Symmetry checks stop only at axis-tile contests or
+  sym_h31 clean), `out/dlv_chain9.sh` (h36 vs rush read; sym_h36 left). Symmetry checks stop only at axis-tile contests or
   combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new
   chain scripts) so the replica's games get whole cores (LEARNINGS 17). Parked: h11, h12
