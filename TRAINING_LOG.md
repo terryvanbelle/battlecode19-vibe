@@ -1951,7 +1951,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - So h72's lines need a quiet front. If the delivery shows lines failing to fire on such maps, the variant is a
   church's threat response that leaves CHAIN_K unless an attacker is close (not built yet).
 
-## 2026-10-22 14:27 — replica: no ack since 13:12 because all five slots hold slow bots' matches; queue ~14 h
+## 2026-10-22 14:23 — replica: no ack since 13:12 because all five slots hold slow bots' matches; queue ~14 h
 - saturn (bc19-galaxy-saturn) is healthy: last ack 13:12 PDT, and its five games (28-90 min old at 14:20) are
   matches 304 and 314 (uvafan.bc2019), 339 and 342 (m-schier wololo) and ours, 403 (wololo). Mean match wall time
   per bot from 231 acks in the last 30 h (journal "starting execute" -> "acked"; scratch saturn_acks.log): overall
