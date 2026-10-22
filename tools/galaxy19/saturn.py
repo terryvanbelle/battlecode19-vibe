@@ -61,6 +61,11 @@ MAX_EXECUTE_SLOTS = 4
 # V8 heap cap per game process (both bots share it: the engine's own memory check is disabled). A runaway bot then
 # ends its game (the match retries, then errors) instead of driving the VM into reclaim thrash.
 GAME_HEAP_MB = int(os.environ.get('GALAXY_GAME_HEAP_MB', '2048'))
+# Wall-clock limit for creating a robot's sandbox (run_game.js --init-ms; 0 = the engine's rule, the 100 ms clock
+# bank). This shared VM is slower and busier than the official servers: under the batches' load most field bots lost
+# robots to init failures (replica-health 2026-10-21: 11 of 14 entrants, IvanGeffner eigthbot in 3 of 3 games). The
+# per-turn clock keeps the contest rule.
+INIT_MS = int(os.environ.get('GALAXY_INIT_MS', '1000'))
 # per-team stats copied from run_game.js into match.json: errors and clock health (timeouts = vm2 script timeouts,
 # frozen = out of chess-clock time, slow_turns = turns over 20 ms of wall time) to watch CPU contention
 TEAM_KEYS = ('team', 'errors', 'frozen', 'timeouts', 'init_fail', 'exceptions', 'units', 'health', 'turns', 'ms_mean',
@@ -355,7 +360,7 @@ class Runtime:
 
     def game_argv(self, red, blue, seed, replay, out_json):
         return [self.node, f'--max-old-space-size={GAME_HEAP_MB}', self.run_game, '--red', red, '--blue', blue,
-                '--seed', str(seed), '--replay', replay, '--json', out_json]
+                '--seed', str(seed), '--replay', replay, '--json', out_json] + (['--init-ms', str(INIT_MS)] if INIT_MS else [])
 
     def cmd(self, workdir, argv):
         return [*self.sandbox, workdir, *argv] if self.sandbox else list(argv)
