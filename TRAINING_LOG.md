@@ -1225,3 +1225,14 @@
   on replica 200-2). In h52's 8 delivery games our own pilgrims show the same signature in h35's half (10-61 turns,
   1915, 241, 2924), so the hunt fires in self-play too. Sparring partner h55w = h55 with CHAIN_K 400, CHAIN_F
   2,500 (its chainer waits, as bot1v43's did). Queued only if h55's delivery shows chains take h35's castles.
+
+## 2026-10-22 04:17 — hunt diagnostics (driver, 2924, 400 rounds, h55w red = chains with a 400 K / 2,500 F bank)
+- vs h56 (HUNT 5): 3 chains fired (199, 269, 304), blue castle (47,22) lost at 386. The radio went out once per
+  chain, one turn before it fired (the chainers waited 6-10 turns); no loiterer was killed (scratch loiter.js).
+- vs h56b (HUNT 2; enemy pilgrims within 2 king steps of their own structure skipped as depositing): 14 radios, 2
+  loiterers killed (by a preacher at 200, a crusader at 303), 2 chains fired (199, 301), blue kept 3 castles to 400.
+  The 199 chainer fired 2 turns after arriving: a chainer whose bank is ready on arrival cannot be hunted. After a
+  chain its link pilgrims (now ordinary) stand around the line's churches deep in our half and count as loiterers.
+- The line's churches survive as factories (h55w vs h56: two of three alive 96 turns after 304) because shooters
+  rank churches last (combat.js PRIORITY: church 1, military 5-6) and the line keeps spawning military beside them.
+- h55's delivery so far: 4 of 5 won, 11 of h35's castles destroyed for 1 lost. Chains take h35's castles.
