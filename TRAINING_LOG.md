@@ -1865,3 +1865,22 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   sides, census to 450. PASS needs all 3: (1) h71's mine actions to 450 >= 115% of h50's; (2) h71 wins >= 5 of 8;
   (3) guard_first on h71's side exceeds h50's by >= 3 (the switch fires). Falsifier: (1) fails, i.e. a guarded
   church does not hold a contested cluster in general. On PASS: gate h71 vs h50, 20 random cells from seed0 5000.
+
+## 2026-10-22 13:23 — replica 394-3 (awesomelemonade, seed 1592) and the record by end reason; matches 385-400 were v5
+- Matches 385-400 were created 06:28 PDT, before submission 96 (v6, ~08:00): they played v5, which marches every
+  unit at 450. 406-407 (08:08) are the first v6 matches of ours analysed. The seed-70 starvation (394-2) was also
+  v5's; h70's driver diagnostic was against h50 (v6) and still showed +59% mine actions, so h70 stands.
+- 394-3, seed 1592 (43x43, two castles a side), lost on health at 1000 with castles 2-2: economies equal (8
+  pilgrims and one church each; K mined 7,192 vs 5,228 at 1000). Our army 114 vs 98 at r450; the attack call sent it
+  into awesomelemonade's static prophet lattice (their prophets idle 64,512 of 66,278 turns, crusaders 13,642 of
+  14,001): r400-650 we lost 80 prophets, 79 crusaders and 34 preachers, they lost 45 prophets. Their prophets fired
+  672 shots (191 kills), ours 105 (48); our crusaders fired once and our preachers never. Army 14 vs 81 at r600,
+  6 vs 127 at r1000. v6's MARCH_MASK 8 keeps prophets and preachers home; its crusaders (40% of the rotation) still
+  march at 450 and would die the same way against such a lattice.
+- vibe19's 258 replica games by end: wins 147 castles early, 39 castles at 1000, 14 health, 11 opponent init
+  failure; losses 25 castles early, 13 castles at 1000, 7 health, 2 init failure. 25 of the 47 losses are to
+  StoneT2000, 10 to CS554 (rush), 4 IanCoolidge, 3 uvafan, 2 awesomelemonade.
+- Self-play cannot rank attack against hold: h16r (never attack) lost castles 23 to 6 vs h19 (TRAINING_LOG
+  2026-10-21 17:40), so our own march breaks our own defence, while awesomelemonade's lattice breaks our march. The
+  lever is our lattice (density, prophets' share: h15v6 queued) more than the attack timing (h52 at 350 and h53 at
+  550 failed). Not queued yet: a crusader march gated on what the first wave achieves.

@@ -90,9 +90,9 @@
 - tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
   cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were
   started without it, our own builds only). Not yet synced to the VM trees (they start games under unshare anyway).
-- Replica ladder (ACCESS.md, tools/galaxy19, `tools/galaxy19/contest19.py`): team vibe19 runs v4 since submission
-  89 (20:05 PDT); v3 threw 31,098 exceptions in 40 of its 192 replica games (the setup bug v4 fixes). Matches
-  created before 89, including scrims 199-202, still play v3. Benchmark field:
+- Replica ladder (ACCESS.md, tools/galaxy19, `tools/galaxy19/contest19.py`): team vibe19 runs v6 since submission
+  96 (2026-10-22 ~08:00 PDT); matches created before it played v5 or older (385-400, created 06:28 PDT, are v5:
+  prophets still march at 450). v3 threw 31,098 exceptions in 40 of its 192 replica games (fixed in v4). Benchmark field:
   92 entrants, 89 compiled (BENCHMARK.md). Entry trickled in by VM cron (`field.py seed --next 6` every 20 minutes,
   smoke-tested first, duplicates by bundle digest skipped; log bc19-benchmarks/trickle.log) until the last uploads at
   03:20 UTC 2026-10-22; the cron line was removed at 23:10 PDT when it had found none for 2.5 hours. Replica games
