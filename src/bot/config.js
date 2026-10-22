@@ -15,6 +15,9 @@ export const CFG = {
   GUARD_BASE: 2,             // peacetime prophets wanted per structure at round 0
   GUARD_ROUNDS: 40,          // one more wanted per this many rounds
   GUARD_MAX: 25,
+  ECON_UNTIL: 0,             // >0: no peacetime army before this round (threat responses still build), so karbonite goes
+                             // to pilgrims and church pioneers (replica seed 826 vs CometsTech, round 100: eigthbot 8
+                             // churches, 47 pilgrims, no military; v3 3 churches, 21 pilgrims, 19 military)
   MIL_FUEL_RESERVE: 300,     // peacetime military builds keep this much fuel back (movement and mining need it)
   MIL_FUEL_PER_UNIT: 10,     // ...plus this much per military unit we have (each needs fuel to shoot and move)
   FUEL_PER_KARB: 2.5,        // staff fuel depots while fuel < this x karbonite (and below FUEL_HIGH)

@@ -164,6 +164,7 @@ export function structTurn(B, allIds, extra) {
   if (extra) { const a = extra(); if (a) return a; }
 
   // 4. Peacetime army: a growing guard (prophets, every Nth a preacher), spending what the economy leaves.
+  if ((B.round || 0) < CFG.ECON_UNTIL) return null;
   const want = Math.min(CFG.GUARD_MAX, CFG.GUARD_BASE + Math.floor((B.round || 0) / CFG.GUARD_ROUNDS));
   const have = defenders(B, 100);
   if (have < want || w.karbonite > 200 + reserveK) {

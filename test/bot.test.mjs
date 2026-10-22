@@ -302,6 +302,32 @@ test('struct: DEF_RESERVE_K holds karbonite back from pilgrims and the guard, no
   } finally { CFG.DEF_RESERVE_K = saved; }
 });
 
+test('struct: ECON_UNTIL keeps the peacetime army out before that round, not a threat response', () => {
+  const saved = [CFG.ECON_UNTIL, CFG.SERVE_MOVES];
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    CFG.SERVE_MOVES = 1;   // every served depot is in sight and staffed below: the economy has nothing to build
+    let id = 4100;
+    for (let y = castle.y - 2; y <= castle.y + 2; y++) for (let x = castle.x - 2; x <= castle.x + 2; x++)
+      if (x >= 0 && y >= 0 && x < n && y < n && (g.karbonite_map[y][x] || g.fuel_map[y][x]) && !g.robots.some(q => q.x === x && q.y === y))
+        g.robots.push({ id: id++, team: 0, unit: S.PILGRIM, x, y, turn: 3, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const turn1 = (until, enemy) => {
+      CFG.ECON_UNTIL = until; castle.turn = 1;
+      const extra = enemy ? [{ id: 4999, team: 1, unit: S.CRUSADER, x: castle.x, y: castle.y + 3, turn: 5, health: 40, signal: 0, signal_radius: 0, castle_talk: 0 }] : [];
+      const all = g.robots;
+      g.robots = all.filter(r => d2(r.x, r.y, castle.x, castle.y) <= 100).concat(extra);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round: 1, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 100;
+      return castleTurn(B);
+    };
+    assert.ok([S.CRUSADER, S.PROPHET, S.PREACHER].includes((turn1(0) || {}).u));   // the peacetime guard
+    assert.strictEqual(turn1(100), null);                                          // round 1 < 100: nothing
+    assert.strictEqual((turn1(100, true) || {}).u, S.PREACHER);                    // a crusader 3 tiles away: answered
+  } finally { [CFG.ECON_UNTIL, CFG.SERVE_MOVES] = saved; }
+});
+
 test('relay: a full pilgrim not next to a structure hands its load to a unit next to one, which deposits it', () => {
   const saved = CFG.RELAY;
   try {
