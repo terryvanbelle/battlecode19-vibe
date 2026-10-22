@@ -414,3 +414,16 @@
   92%). h19's bank at round 500: mean 134 fuel (2-522) beside 595-4,205 karbonite. h22 passes its delivery with
   attack fuel per enemy damage <= 1.37 (30% below 1.96), mean fuel at 500 above 134, castles lost <= 8; h23 with a
   prophet share <= 60%, damage per fuel >= 0.66, castles lost <= 8.
+
+## 2026-10-21 19:39 — run_game --fast-turn (owner approval, PROMPTS 14); gates switched to it
+- tools/run_game.js --fast-turn (batch.js passes it through): every sandbox runs one precompiled script,
+  robot._do_turn(JSON.parse(view)), with the view's JSON text as a sandbox global, in place of compiling
+  'robot._do_turn(' + JSON + ');' anew each turn. Same view, same vm2 kill; the result line says fast_turn. Unit test:
+  a --det 40-round v3 vs v2 game replays byte for byte with and without it, and a stub check that the precompiled
+  route is taken. On the 200-round h19 self-play game (seed 2202, --det) the replays were identical as well.
+- How much it saves is not known yet: driver timings swung 4x between identical runs (LEARNINGS 13). Every pending
+  and held gate job now carries --fast-turn; the yardstick is h19 vs h6's mean of 425 s wall per game at par 4.
+  If h16r's games are not faster, the flag comes out of the jobs.
+- Tried and dropped: also caching each bundle's compiled script across the robots of a game (to skip vm2's acorn
+  pass per robot built). In the one back-to-back pair it used 2.7x the CPU and its replay parted: plausibly V8
+  sharing the bot's functions across ~300 contexts and giving up optimising them. Not committed.

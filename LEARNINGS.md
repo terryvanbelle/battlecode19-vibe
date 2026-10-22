@@ -44,3 +44,7 @@
    so the robot counted itself blocked and waited two turns before sliding on: 24 tiles took 36 turns (46 for a
    crusader). Read "slides" and "blocked" counts as jams only after ruling this out. `CFG.NAV_FIT`; unit test 'nav:
    NAV_FIT'. (2026-10-21)
+13. **Never time anything on the driver.** It is an e2-small (shared core, bursts then throttles): the same 100-round
+   self-play game used 12 s of CPU once and 50 s the next, and under that load robots overran their clocks so even
+   `--det` replays parted. Speed comparisons run on the VM, over many games (a gate's per-game wall time), never as a
+   driver pair. Profiles are still useful for where time goes (the shares), not for how much. (2026-10-21)
