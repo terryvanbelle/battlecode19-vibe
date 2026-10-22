@@ -785,3 +785,21 @@
   (3) Castles lost to bots/rush in 200 rounds (1337/1879/2544/2908): 0 and 0 (bar: no more than h35). PASS.
 - Gate: h39 vs h35, 40 games (seed0 5000), queued after h40's delivery; falsifier t <= 0. If h35 fails its own
   gate against h19, h39 is re-gated against h19 instead.
+
+## 2026-10-21 23:53 — h41 pre-registered: kill zones (KILL_ZONE), on h35
+- Source: replica scrim 199 seed 1915 (v3 vs StoneT2000, lost at round 386, one castle each). From round 128,
+  every ~5 rounds a unit of ours built by the church at (30,39) walked to its lattice tile (30,35) and died there,
+  shot by a prophet at (33,28) (r2 58) before its next turn: from (30,36) that prophet is at r2 73, outside every
+  military unit's sight (prophet vision = range, 64). 43 of our 53 military deaths were on such repeated tiles; we
+  fired 10 shots all game; 39 of 40 prophets and 11 of 13 preachers died without firing (1,305 of 1,390 K).
+  Across scrims 199/200 our preachers die without firing 70-90% of the time (StoneT2000's 15-65%).
+- Mechanism: new switch CFG.KILL_ZONE (default 0; turns a zone lasts). Structures and military units infer a
+  death when a military unit of ours seen last turn is gone from where it could not have walked out of sight
+  (3 tiles of margin); idle units hold no lattice tile within KZ_R2 (64) of a fresh zone beyond 2 tiles short of
+  its distance from home (they fall back toward home; shooting and engaging unchanged). Structures radio the latest
+  zone (SIG.ZONE, r2 25) the first free turn within 3 after building a military unit, so newborns know it.
+  Unit tests 66/66.
+- h41 = h35 + KILL_ZONE=50. Delivery (VM queue, 8 games of 1000 rounds vs h35 on 1915/2924/2202/826 both
+  sides): (1) military units lost without ever firing at most 85% of h35's, summed; (2) military deaths on
+  tiles where the same team lost 3 or more at most 80% of h35's; (3) castles lost no more than h35's. Gate 40
+  games vs h35 (or the base in force), falsifier t <= 0. Dose ladder: KILL_ZONE 50 -> 100; KZ_R2 64 -> 36.
