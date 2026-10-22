@@ -388,6 +388,39 @@ test('military: PROPHET_FLOOR keeps prophets from shooting a short bank that oth
   } finally { CFG.PROPHET_FLOOR = saved; }
 });
 
+test('military: LATTICE_R bounds how far from home an idle unit holds a lattice tile', () => {
+  const saved = CFG.LATTICE_R;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    const pro = { id: 4001, team: 0, unit: S.PROPHET, x: 0, y: 0, turn: 3, health: 20, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    g.robots.push(pro);
+    const world = () => { const w = worldFor(g, pro); w.fuel = 1000; return w; };
+    let home = null;   // a passable, even (canonical frame), non-depot tile with no enemy near, 14 rows from "home"
+    for (let k = 1; k < n * n && !home; k++) {
+      const x = k % n, y = Math.floor(k / n);
+      if (!free(x, y) || d2(x, y, castle.x, castle.y) > 400) continue;
+      pro.x = x; pro.y = y;
+      const w = world(), m = w.me;
+      if (((m.x + m.y) & 1) || w.isDepot(m.x, m.y) || w.enemies.some(e => d2(e.x, e.y, m.x, m.y) <= 196)) continue;
+      const hy = m.y + 14 < n ? m.y + 14 : m.y - 14;
+      if (hy >= 0 && hy < n) home = { x: m.x, y: hy };
+    }
+    assert.ok(home);
+    const turns = (r) => {   // the first action in three turns (a cruise step may wait a turn or two first)
+      CFG.LATTICE_R = r;
+      const w = world(), B = { api: w.api, w, round: 20, birthRound: 18, rnd: rng(2), deps: null, clusters: null,
+        st: { ready: true, home, target: null, tIdx: -1, known: [], dead: new Set(), reports: [], waitUntil: 0, guard: false } };
+      B.offs = offsets(S.STATS[S.PROPHET].speed); B.nav = new Nav(w, B.offs, B.rnd);
+      for (let i = 0; i < 3; i++) { const a = militaryTurn(B); if (a) return a; }
+      return null;
+    };
+    assert.strictEqual(turns(16), null);                    // 14 king steps out, inside 16: holds
+    assert.strictEqual((turns(12) || {}).action, 'move');   // outside 12: heads back toward home
+  } finally { CFG.LATTICE_R = saved; }
+});
+
 test('combat: target choice, preacher splash avoids friends, retreat', () => {
   const es = [{ id: 9, unit: 2, x: 5, y: 0, team: 1 }, { id: 4, unit: 5, x: 0, y: 3, team: 1 }, { id: 3, unit: 5, x: 3, y: 0, team: 1 }];
   assert.strictEqual(pickTarget(3, 0, 0, es, 64).id, 3); // preachers first, then closer

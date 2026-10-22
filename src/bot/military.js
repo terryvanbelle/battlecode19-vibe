@@ -139,10 +139,9 @@ function stepClear(B) {
   return best ? w.move(best[0], best[1]) : null;
 }
 
-// The free lattice tile nearest an anchor ahead of home (toward the enemy), within LATTICE_R king steps of home.
-const LATTICE_R = 12;
+// The free lattice tile nearest an anchor ahead of home (toward the enemy), within CFG.LATTICE_R king steps of home.
 function latticeTarget(B) {
-  const w = B.w, me = w.me, h = B.st.home, n = w.n;
+  const w = B.w, me = w.me, h = B.st.home, n = w.n, LATTICE_R = CFG.LATTICE_R;
   const ay = h.y + (h.y < n / 2 ? 2 : 0);
   let best = null, bd = 1e9;
   for (let dy = -LATTICE_R; dy <= LATTICE_R; dy++) for (let dx = -LATTICE_R; dx <= LATTICE_R; dx++) {
@@ -211,7 +210,7 @@ export function militaryTurn(B) {
   if (marching) return go(B, 'A' + st.target[0] + ',' + st.target[1], () => bandSources(B, st.target[0], st.target[1]), CFG.CRUISE_R2);
 
   // Hold the lattice.
-  if (latticeOk(B, me.x, me.y) && king(me.x, me.y, h.x, h.y) <= LATTICE_R) return null;
+  if (latticeOk(B, me.x, me.y) && king(me.x, me.y, h.x, h.y) <= CFG.LATTICE_R) return null;
   const t = latticeTarget(B);
   if (!t) return CFG.KEEP_CLEAR ? stepClear(B) : null;
   const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);
