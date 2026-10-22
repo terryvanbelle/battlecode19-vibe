@@ -7,7 +7,7 @@ import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
-import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones } from '../src/bot/military.js';
+import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid } from '../src/bot/military.js';
 import { callDue, castleTurn, nextPioneer, pioneerDue } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
@@ -434,6 +434,26 @@ test('military: RECALL sends a unit that hears it toward the castle, holding 2-3
     assert.strictEqual(run(near, 30).a, null);       // already 2 king steps out: holds
     assert.strictEqual(run(far, 0).B.st.recall, undefined);
   } finally { CFG.RECALL = saved; }
+});
+
+test('military: EDGE keeps a marching unit out of reach of enemy attackers until ours outnumber them', () => {
+  const saved = CFG.EDGE;
+  try {
+    const B = (enemies, friends) => ({ w: { me: { x: 10, y: 10, unit: S.PROPHET }, enemies, friends } });
+    const P = (x, y, unit = S.PROPHET) => ({ x, y, unit });
+    CFG.EDGE = 1.5;
+    const hot = edgeAvoid(B([P(10, 19)], []));
+    assert.strictEqual(hot(10, 11), true);    // r2 64 from the enemy prophet
+    assert.strictEqual(hot(11, 11), false);   // r2 65
+    assert.strictEqual(hot(10, 9), false);
+    assert.strictEqual(edgeAvoid(B([P(10, 19)], [P(9, 9, S.CRUSADER)])), undefined);           // 2 to 1
+    assert.strictEqual(typeof edgeAvoid(B([P(10, 19), P(12, 19)], [P(9, 9, S.CRUSADER)])), 'function');   // 2 to 2
+    assert.strictEqual(typeof edgeAvoid(B([P(10, 19)], [P(9, 9, S.PILGRIM)])), 'function');    // pilgrims do not count
+    assert.strictEqual(edgeAvoid(B([P(10, 17)], [])), undefined);           // already in reach (r2 49): no edge to keep
+    assert.strictEqual(edgeAvoid(B([P(10, 19, S.PILGRIM)], [])), undefined);   // harmless enemies
+    CFG.EDGE = 2;
+    assert.strictEqual(edgeAvoid(B([P(10, 19)], [P(9, 9, S.PREACHER)])), undefined);
+  } finally { CFG.EDGE = saved; }
 });
 
 test('military: MARCH_MASK lets only the masked unit types take attack orders before round 900', () => {

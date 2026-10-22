@@ -103,6 +103,9 @@ export const CFG = {
   MARCH_MASK: 56,            // unit types (bit 3 crusader, 4 prophet, 5 preacher) that obey attack orders before round
                              // 900; the others hold the lattice (replica 616: 160 marching prophets burned 8,700 fuel in
                              // 40 rounds and the team sat at fuel 10-257 from 500 to the end, K 3,800 unspent)
+  EDGE: 0,                   // >0: a marching unit that sees enemy attackers does not step into their reach (combat
+                             // THREAT_R2) unless our military in its sight, itself included, outnumber them EDGE to 1
+                             // (replica 2965: 131 of 132 prophets lost walking into a held line, 106 kills)
   WAVE: 0,                   // >0: after the first attack call, call again only once this many military units are
   WAVE_GAP: 15,              // idle (units report marching over castle talk), on 3 rounds, then wait this many rounds
   ATTACK_EVERY: 5,           // castles repeat the attack call (20 fuel) every this many rounds (5: ~4,400 fuel a game)

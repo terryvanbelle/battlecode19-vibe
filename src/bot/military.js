@@ -5,7 +5,7 @@ import { STATS, CASTLE, CHURCH, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, king, rng } from './util.js';
 import { fuelStep } from './nav.js';
 import { SIG, CT, dec, decFarRobot } from './comms.js';
-import { isAttacker, pickTarget, preacherTarget, retreatStep } from './combat.js';
+import { isAttacker, pickTarget, preacherTarget, retreatStep, THREAT_R2 } from './combat.js';
 
 function init(B) {
   const w = B.w, me = w.me, st = B.st;
@@ -85,13 +85,26 @@ function recallRing(x, y) {
   return out;
 }
 
-function go(B, key, sources, cap) {
+function go(B, key, sources, cap, avoid) {
   const w = B.w, S = STATS[w.me.unit];
   const r = fuelStep(w.fuel, Math.min(S.speed, cap || S.speed), S.fuelPerMove, cap ? CFG.CRUISE_FUEL_RESERVE : 60);
   // Unhurried (cruise) moves wait longer in a jam before sliding sideways or stepping back: each costs fuel.
-  const s = B.nav.step(key, sources, r, undefined, cap ? [CFG.CRUISE_SLIDE_AFTER, CFG.CRUISE_ESCAPE_AFTER, !!CFG.CRUISE_RESET] : undefined,
+  const s = B.nav.step(key, sources, r, avoid, cap ? [CFG.CRUISE_SLIDE_AFTER, CFG.CRUISE_ESCAPE_AFTER, !!CFG.CRUISE_RESET] : undefined,
     cap && CFG.DETOUR ? [CFG.DETOUR_AFTER, CFG.DETOUR, CFG.DETOUR_EVERY, CFG.DETOUR_MEMORY] : null);
   return s ? w.move(s[0], s[1]) : null;
+}
+
+// CFG.EDGE: tiles in reach of the enemy attackers in sight, while ours in sight (and this unit) do not outnumber them
+// EDGE to 1 and this unit is not in reach already; undefined when nothing is to be avoided. The army gathers at the
+// edge of a held line and steps in together instead of one by one.
+function edgeAvoid(B) {
+  const w = B.w, me = w.me, th = w.enemies.filter(e => THREAT_R2[e.unit] > 0);
+  if (!th.length) return undefined;
+  let f = 1;
+  for (const r of w.friends) if (r.unit >= CRUSADER) f++;
+  if (f >= CFG.EDGE * th.length) return undefined;
+  const hot = (x, y) => th.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]);
+  return hot(me.x, me.y) ? undefined : hot;
 }
 
 // A lattice tile: (x + y) even, passable, not a depot, not adjacent to the home structure (CFG.KEEP_CLEAR: and not
@@ -288,7 +301,8 @@ export function militaryTurn(B) {
   if (waiting) return null;
   // Endgame fuel: units away from home stand still so the fuel goes into preachers (newborns still clear the exits).
   if (CFG.ENDGAME_FUEL && B.round >= CFG.ENDGAME_FUEL && king(me.x, me.y, h.x, h.y) > 3) return null;
-  if (marching) return go(B, 'A' + st.target[0] + ',' + st.target[1], () => bandSources(B, st.target[0], st.target[1]), CFG.CRUISE_R2);
+  if (marching) return go(B, 'A' + st.target[0] + ',' + st.target[1], () => bandSources(B, st.target[0], st.target[1]), CFG.CRUISE_R2,
+    CFG.EDGE ? edgeAvoid(B) : undefined);
 
   // Hold the lattice.
   if (latticeOk(B, me.x, me.y) && king(me.x, me.y, c.x, c.y) <= CFG.LATTICE_R) return null;
@@ -297,4 +311,4 @@ export function militaryTurn(B) {
   const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);
   return a || (CFG.KEEP_CLEAR ? stepClear(B) : null);
 }
-export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke, holdTarget, latticeOk };
+export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke, holdTarget, latticeOk, edgeAvoid };
