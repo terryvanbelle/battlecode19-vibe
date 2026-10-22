@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 25 other, 9 in progress, 9 queued, 6 accepted, 3 dropped, 3 rejected, 1 sparring partners (56 rows).
+Totals: 25 other, 10 in progress, 9 queued, 6 accepted, 3 dropped, 3 rejected, 1 sparring partners (57 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -70,3 +70,4 @@ Totals: 25 other, 9 in progress, 9 queued, 6 accepted, 3 dropped, 3 rejected, 1 
 | `h10` | 2026-10-21 14:55 | h6 | h6 + ATTACK_EVERY=20: castles repeat the 20-fuel attack call every 20 rounds instead of 5 (~3,300 fuel a game saved). | queued: 40 games vs h6 (seeds 5000+) |  |  |  | SUPERSEDED by h10r (rebased on h19 before its gate ran) |
 | `h11` | 2026-10-21 15:15 | h6 | h6 + cruise nav patience: unhurried moves slide after 6 blocked turns (was 2), step back after 15 (was 4), and each slide restarts the count (CRUISE_RESET); slides and step-backs were 11.5k of 19.4k move fuel on seed 2202. | queued: 40 games vs h6 (seeds 5000+) |  |  |  | queued |
 | `v4` | 2026-10-21 20:05 | v3 | Frozen snapshot of h19 (bots/v4): h6 behaviour + World.signal fuel fix + setup that re-runs until complete; the replica build since submission 89 |  |  |  | vs h16r 24-16; vs h24 14-26; vs h6 21-19 | ACCEPTED 20:05 as v4 (h19 row: gate vs h6) |
+| `h42` | 2026-10-22 | h35 | h35 + unit mix by the binding resource: crusaders while bank fuel / karbonite >= 10, preachers while <= 1, else the rotation (MIX_BY_STOCK [10, 1]) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |

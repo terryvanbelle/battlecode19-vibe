@@ -226,8 +226,8 @@ function structAct(B, allIds, extra) {
   const want = Math.min(CFG.GUARD_MAX, CFG.GUARD_BASE + Math.floor((B.round || 0) / CFG.GUARD_ROUNDS));
   const have = defenders(B, 100);
   if (have < want || w.karbonite > 200 + reserveK) {
-    const unit = CFG.MIL_ROTATION ? CFG.MIL_ROTATION[st.nDef % CFG.MIL_ROTATION.length]
-      : (st.nDef % CFG.PREACHER_EVERY === CFG.PREACHER_EVERY - 1) ? PREACHER : PROPHET;
+    const unit = mixByStock(w) || (CFG.MIL_ROTATION ? CFG.MIL_ROTATION[st.nDef % CFG.MIL_ROTATION.length]
+      : (st.nDef % CFG.PREACHER_EVERY === CFG.PREACHER_EVERY - 1) ? PREACHER : PROPHET);
     const army = st.count ? st.count[3] + st.count[4] + st.count[5] : have;
     if (w.canAfford(unit, reserveK, CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army)) {
       const [ex, ey] = w.mirror(me.x, me.y);
@@ -236,6 +236,13 @@ function structAct(B, allIds, extra) {
     }
   }
   return null;
+}
+
+// CFG.MIX_BY_STOCK: the unit the binding resource asks for, or 0 (use the rotation).
+export function mixByStock(w) {
+  if (!CFG.MIX_BY_STOCK) return 0;
+  const r = w.fuel / Math.max(1, w.karbonite);
+  return r >= CFG.MIX_BY_STOCK[0] ? CRUSADER : r <= CFG.MIX_BY_STOCK[1] ? PREACHER : 0;
 }
 
 export { CASTLE, CHURCH };

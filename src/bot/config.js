@@ -58,6 +58,10 @@ export const CFG = {
   PREACHER_EVERY: 4,         // every Nth peacetime defender is a preacher (when MIL_ROTATION is null)
   // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
   MIL_ROTATION: [4, 3, 4, 3, 5],   // peacetime build order by unit type (prophet 4, crusader 3, preacher 5)
+  MIX_BY_STOCK: null,        // [hi, lo]: a peacetime unit is a crusader while fuel / karbonite in the bank >= hi
+                             // (karbonite binds: most HP per K) and a preacher while <= lo (fuel binds: most damage
+                             // per fuel); the rotation between (h35 lost gate seeds 905 and 2855 with K 0 and F
+                             // 12,540 / 13,916 unspent; it won 2202, 241, 357 with K 3,000-8,700 and F ~60)
   RESERVE_CHURCH_K: 50,      // karbonite kept back while a pioneer is out
   DEF_RESERVE_K: 0,          // >0: every karbonite spend but a threat response (pilgrims, pioneers, churches, the
                              // peacetime army) leaves this much in the bank, so a structure that sees attackers can

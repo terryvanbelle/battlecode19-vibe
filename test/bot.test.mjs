@@ -347,6 +347,34 @@ test('struct: ECON_UNTIL keeps the peacetime army out before that round, not a t
   } finally { [CFG.ECON_UNTIL, CFG.SERVE_MOVES] = saved; }
 });
 
+test('struct: MIX_BY_STOCK builds crusaders when karbonite binds, preachers when fuel binds, else the rotation', () => {
+  const saved = [CFG.MIX_BY_STOCK, CFG.SERVE_MOVES];
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    CFG.SERVE_MOVES = 1;   // as above: the economy has nothing to build, so the peacetime guard decides
+    let id = 4100;
+    for (let y = castle.y - 2; y <= castle.y + 2; y++) for (let x = castle.x - 2; x <= castle.x + 2; x++)
+      if (x >= 0 && y >= 0 && x < n && y < n && (g.karbonite_map[y][x] || g.fuel_map[y][x]) && !g.robots.some(q => q.x === x && q.y === y))
+        g.robots.push({ id: id++, team: 0, unit: S.PILGRIM, x, y, turn: 3, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const build = (mix, k, f) => {
+      CFG.MIX_BY_STOCK = mix; castle.turn = 1;
+      const all = g.robots;
+      g.robots = all.filter(r => d2(r.x, r.y, castle.x, castle.y) <= 100);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round: 1, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = k; w.fuel = f;
+      return (castleTurn(B) || {}).u;
+    };
+    const first = CFG.MIL_ROTATION[0];
+    assert.strictEqual(build([10, 1], 100, 2000), S.CRUSADER);    // fuel / K = 20
+    assert.strictEqual(build([10, 1], 3000, 1000), S.PREACHER);   // 0.33
+    assert.strictEqual(build([10, 1], 100, 500), first);          // 5: the rotation
+    assert.strictEqual(build(null, 100, 2000), first);            // off
+    assert.strictEqual(build(null, 3000, 1000), first);
+  } finally { [CFG.MIX_BY_STOCK, CFG.SERVE_MOVES] = saved; }
+});
+
 test('relay: a full pilgrim not next to a structure hands its load to a unit next to one, which deposits it', () => {
   const saved = CFG.RELAY;
   try {
