@@ -1532,3 +1532,13 @@
 - Replica queue (203 waiting at 08:12, 4 slots): 17 waiting matches involve the four slow bots (IvanGeffner bot6b,
   eigthbot, Nydroam, 18dcb01 robot2: 31.6 of 41.6 slot-hours so far); spool_bump moved the other 186 ahead of them
   and our 13 (v6 vs StoneT2000 bot1v43 and botfinalsafe, requests 179-180, first) ahead of all. Nothing dropped.
+
+## 2026-10-22 08:25 — replica: three slow bots dropped (owner, PROMPTS 21)
+
+Saturn journal since the replica started (305 execute runs, 42.6 slot-hours; acked 200, nacked 105): Nydroam.BatteredCod
+9.9 h (18 runs, 14 nacked), IvanGeffner.BC19-bot6b 9.1 h (19, 15 nacked), IvanGeffner.BC19-eigthbot 8.5 h (12, 8
+nacked): 27.5 slot-hours for 12 results, ladder 416 / 425 / 593. All three dropped: `spool_bump.py --team ... --drop`
+(13 ready messages to dead/), matches 196 207 213 214 222 238 249 250 291 315 316 328 371 CAN, teams status X. Match
+190 (bot6b vs CometsTech~187e8c, running 45 min) left to finish. Kept: 18dcb01 robot2 (4.1 h, 6 of 11 acked) and
+CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s limit, match 244 took 2700 s and 206
+1414 s. Queue 189 waiting, 4 running (205 and 406 are ours).

@@ -99,9 +99,10 @@
   208 waiting. **Watch the queue every check-in** (`python3 tools/galaxy19/field.py queue`: matches NEW/QUE/TRY,
   and what runs); while it is long, clearing it comes before local work (gates at par 2). The seven boosted field
   bots (StoneT2000 x2, uvafan, awesomelemonade, nthistle, jamesrayman HCN-bot, m-schier wololo; requests 158-178)
-  were bumped to the front. Dropping Nydroam.BatteredCod (slowest bot; owner allowed it) was refused by the
-  auto-mode classifier; not done. After the queue drains: request IvanGeffner's two bots against vibe19 and the
-  boosted set (their games now fit the limit). Scrims 203 (vs botfinalsafe) and 204 (vs
+  were bumped to the front. **Dropped 08:25 PDT (owner, PROMPTS 21):** Nydroam.BatteredCod, IvanGeffner.BC19-bot6b and
+  IvanGeffner.BC19-eigthbot (team status X, 13 waiting matches CAN, spool messages to dead/): 27.5 of 42.6
+  slot-hours for 12 results (37 of 49 runs nacked), ratings 416/425/593. 18dcb01 robot2 and CometsTech~187e8c
+  stay (most of their nacks were against those three); drop them too if their games keep failing at 5400 s. Scrims 203 (vs botfinalsafe) and 204 (vs
   bot1v43), requested 22:04 PDT, play v4; 205/206 (v5 vs botfinalsafe, bot1v43) are queued; fetch and compare with
   199/200. Replica 200-3 (2965, lost): three karbonite depots a side, K mined alike, our 132 prophets lost 131
   walking into their held line (TRAINING_LOG, h45).
