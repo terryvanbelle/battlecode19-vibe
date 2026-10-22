@@ -50,7 +50,7 @@
   1800 s (exit 124, 03:52 UTC); match 202 (vs eigthbot) did the same at 04:09 UTC and both retry, each holding a
   replica execute slot for ~30 min per attempt. Raising the limit (env file + saturn restart) was blocked by the
   auto-mode classifier (Modify Shared Resources): asked the owner 21:32 PDT, waiting.
-  Scrims 203 (vs botfinalsafe) and 204 (vs bot1v43), requested 22:10 PDT, are v4's first games against the strong
+  Scrims 203 (vs botfinalsafe) and 204 (vs bot1v43), requested 22:04 PDT, are v4's first games against the strong
   field; fetch and compare with 199/200 (v3).
 - Gate jobs from h16r on run with `--fast-turn` (run_game/batch: one precompiled turn script per sandbox, same view
   and kill; replays identical under --det; TRAINING_LOG 19:39). Its saving is judged on the VM by per-game wall time
