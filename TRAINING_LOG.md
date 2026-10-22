@@ -676,3 +676,10 @@
   initialise at round 547, not from a midline band.
 - Closed: margin doses below the next cluster gap are inert. Re-open if a map census shows clusters within 2-6 of
   the midline that h31 leaves out (corpus check: plancensus over maps/corpus.tsv).
+
+## 2026-10-21 22:26 — h34 pre-registered: church density, next dose (SERVE_MOVES 1)
+- h34 = h19 + SERVE_MOVES=1 + PLAN_CONTEST_FIRST=6: a depot more than one pilgrim move (2 tiles) from a structure
+  gets a church of its own; one-step trips. Cost: 50 K + 200 F a church, and a pioneer each.
+- Delivery (driver, 200 rounds vs h19, the h31 games: 1828 red, 826 red, 826 blue): churches built >= h31's +1
+  summed (h31 20), mined K+F >= h31's summed (53,846), pilgrims lost <= 2x h31's (12). Gate only if h31 passes and
+  h34 delivers; then h34 vs h31 decides the dose (falsifier t <= 0).
