@@ -1962,3 +1962,22 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   (owner rule, PROMPTS 20). A 6th slot (8 games on 8 vCPUs, the README limit; MAX_EXECUTE_SLOTS, CPUQuota, MemoryMax)
   needs a saturn restart, which kills the running games (KillMode=mixed): ~5 slot-hours lost now for +20%. Not now;
   revisit when the slots hold young games.
+
+## 2026-10-22 14:36 — seed 799's drain was h72's own chainer; CHAIN_HOLD_R2 inert there; CHAIN_KEEP; h74 on the driver
+- h73 (h72 + CHAIN_HOLD_R2 36, sha 8d50488463c8) on 799 played h72's game exactly (every timeline figure and build
+  count equal): the hold never engaged. Cause: the 136 "other" builds came from church #505 at (37,42), which h72's
+  chainer #1453 (castle-born r200) built at r246 when threatened deep in blue's half (CHAIN_FIRE_NEAR 0 lets a
+  threatened chainer fire anywhere): a one-church line. A line church hears SIG.CHAIN, not SIG.ROUND, and sees no
+  castle, so it never learns the round; after its 40-turn burst (SIG.CHAIN builds) its peacetime army saw no
+  CHAIN_K reserve (B.round undefined) and spent every karbonite above 200 (40 crusaders among its builds: the
+  rotation, which the threat response never builds). The earlier entry's reading (a threat-response grinder) was
+  wrong. No ordinary v6 church misses the round: castle-born pilgrims learn it from the castle's turn count, pioneers
+  radio it, front pioneers carry it.
+- CHAIN_KEEP (new, default off; church.js marks a church that heard SIG.CHAIN on its first turn, struct.js counts it
+  as past CHAIN_ROUND, so its peacetime army and CHAIN_HOLD_R2 leave CHAIN_K). Unit tests: a line church holds the
+  bank with the switch and answers from any bank without it; an ordinary church that missed the round still
+  answers; the mark is set by SIG.CHAIN, not SIG.MINE. Node 105 pass.
+- h74 = h72 + CHAIN_FIRE_NEAR 1 + CHAIN_KEEP 1 (sha b935c13a04e9): a threatened chainer flees unless near its stage
+  line, and line churches keep the bank. Driver diagnostic on 799 (h74 red, 450) running.
+- h72's delivery after 4 of 8 (2013 both sides, 2924 both sides): h72 won 3; lines of >= 5 churches on h72's side in
+  all 4 (7, 5, 7, 6 churches), 2 of them followed by a castle kill within 25 rounds.
