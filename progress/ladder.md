@@ -1,6 +1,6 @@
 # Galaxy replica ladder
 
-Snapshot of the Rankings page of our private galaxy replica (https://galaxy19.136-86-167-127.sslip.io/bc19/rankings), taken Oct 22 00:47 PDT. Written by `tools/progress/ladder.py` (`tools/progress-refresh.sh`): regenerate it, do not edit it. How to open the live site, with replays: `ACCESS.md`.
+Snapshot of the Rankings page of our private galaxy replica (https://galaxy19.136-86-167-127.sslip.io/bc19/rankings), taken Oct 22 00:54 PDT. Written by `tools/progress/ladder.py` (`tools/progress-refresh.sh`): regenerate it, do not edit it. How to open the live site, with replays: `ACCESS.md`.
 
 **Rating is the replica's displayed rating**: siarnaq's penalized Elo, mean − 1500·0.85^n after n rated matches, so every team starts at 0 and climbs over its first ~20 ranked matches. **BT** is the Bradley-Terry rating of `progress/ELO.md` (± 95%; for our team, the build of our latest submission). Games W-L counts the replica games in `progress/games.csv`. 89 teams; our team is **vibe19**. The field of public 2019 bots is still being compiled, so the ladder is small.
 
@@ -8,15 +8,15 @@ Snapshot of the Rankings page of our private galaxy replica (https://galaxy19.13
 
 | # | Team | Rating | BT | Games W-L | Submission |
 |---:|---|---:|---:|---|---|
-| 1 | **vibe19** (v5) | 1711.7 | 1991 ± 249 | 176-14 | accepted |
+| 1 | **vibe19** (v5) | 1711.7 | 1992 ± 248 | 176-14 | accepted |
 | 2 | CometsTech.battlecode2019 | 1548.2 | 1147 ± 190 | 86-79 | accepted |
 | 3 | CS554-software-engineerin\~a575dc | 1523.8 | 1163 ± 188 | 129-74 | accepted |
 | 4 | bc19-starter | 1380.5 | 344 ± 345 | 43-196 | accepted |
-| 5 | IanCoolidge0.battlecode20\~69ce88 | 747.8 | 1632 ± 457 | 10-2 | accepted |
+| 5 | IanCoolidge0.battlecode20\~69ce88 | 747.8 | 1632 ± 456 | 10-2 | accepted |
 | 6 | IanCoolidge0.battlecode20\~f649f3 | 597.9 | 1631 ± 452 | 7-2 | accepted |
-| 7 | JasonLarson44.2019-Battle\~1c7639 | 590.4 | 1228 ± 366 | 5-4 | accepted |
+| 7 | JasonLarson44.2019-Battle\~1c7639 | 590.4 | 1229 ± 366 | 5-4 | accepted |
 | 8 | 18dcb01.Battlecode19-prea\~fb5c48 | 577.0 | 1443 ± 419 | 4-5 | accepted |
-| 9 | TestSubjector.BattleCode2\~e6de74 | 566.3 | 1205 ± 849 | 3-6 | accepted |
+| 9 | TestSubjector.BattleCode2\~e6de74 | 566.3 | 1206 ± 848 | 3-6 | accepted |
 | 10 | TheRobotCarlson.battlehac\~323871 | 543.6 | 454 ± 1319 | 0-9 | accepted |
 | 11 | StoneT2000.BC19-botfinalsafe | 436.4 | 2239 ± 1077 | 9-0 | accepted |
 | 12 | IvanGeffner.BC19-eigthbot | 434.1 | 1745 ± 820 | 5-1 | accepted |
@@ -24,7 +24,7 @@ Snapshot of the Rankings page of our private galaxy replica (https://galaxy19.13
 | 14 | OmarTahoun.battle-code | 415.8 | 1064 ± 889 | 3-3 | accepted |
 | 15 | NielsKornerup.Battlecode-2019 | 409.9 | 1232 ± 370 | 2-4 | accepted |
 | 16 | 18dcb01.Battlecode19-robot2 | 400.5 | 1360 ± 491 | 1-5 | accepted |
-| 17 | DivyanshuSaxena.Battlecode | 392.7 | 507 ± 1162 | 0-6 | accepted |
+| 17 | DivyanshuSaxena.Battlecode | 392.7 | 508 ± 1162 | 0-6 | accepted |
 | 18 | StoneT2000.BC19-bot1v43 | 237.4 | 1767 ± 415 | 5-1 | accepted |
 | 19 | SethKitchen.examplefuncsplayer | 237.0 | 1522 ± 1432 | 3-0 | accepted |
 | 20 | Tom-CCS.BC19 | 236.6 | 1522 ± 1432 | 3-0 | accepted |

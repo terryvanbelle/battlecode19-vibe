@@ -947,3 +947,23 @@
   (2202 vs h19): oscillation ~5% of move fuel; the round-401-500 attack wave 9,509 fuel (prophets 4,318,
   preachers 3,024, crusaders 2,089), ~2,300 per 100 rounds after. On 1915 v3 dealt 170 damage in 386 rounds (F
   12,203 unspent): v3's setup exceptions, not tactics.
+
+## 2026-10-22 00:53 — h46 pre-registered: prophets spot targets for melee units (SPOT)
+- Source: h41's delivery games (v5 vs h41, nearly the same bot): about 40% of military deaths are units that
+  never fired (400 of 1,035 summed over 6 games). In 2924 (v5 red, lost 3 castles) 79 of 115 crusader deaths and
+  65 of 83 preacher deaths never fired, against 22 of 131 prophets. Melee units see 7 (crusader) and 4 (preacher)
+  tiles, a prophet line shoots from 8: they walk at cruise speed into fire they cannot see, and engage only what
+  they see.
+- Mechanism: new switch CFG.SPOT (default 0). A prophet firing at a non-pilgrim radios its target (FAR.ENEMY, r2
+  99, 10 fuel; with fuel for the shot, its floor and the radio) at most every SPOT turns, only while a crusader or
+  preacher of ours is in its sight. Crusaders and preachers keep the nearest spot heard; with no visible enemy to
+  engage, a spot heard this turn or last within r2 196 of them (marching) or of their lattice centre (holding) is
+  engaged like a seen enemy (full speed). Unit tests 72/72.
+- h46 = v5 + SPOT 3. Delivery (VM queue, 8 games of 1000 rounds vs h35 on 2924, 2202, 1915, 826 both sides),
+  whole game, summed: (1) h46's crusaders and preachers lost without ever firing at most 75% of h35's; (2) enemy
+  military units killed by h46's crusaders and preachers at least 125% of h35's; (3) castles lost no more than
+  h35's. Gate 40 games vs h35, falsifier t <= 0 (charging melee units die faster, or the radio fuel costs shots).
+  Dose ladder: SPOT 3 -> 1; spot range r2 196 -> 100. Driver diagnostic on 1915 (650 rounds); no-op h35f and
+  sym_h46 in the VM extra lane (dlv_chain15.sh).
+- h41 interim (6 of 8 games): units lost unfired 400 vs h35's 393 (needs <= 85%), deaths on tiles with 3+ deaths
+  449 vs 437 (needs <= 80%), castles 4 vs 4; the side decided every pair (blue won all six).

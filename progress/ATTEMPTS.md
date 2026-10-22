@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 27 other, 18 queued, 10 in progress, 8 accepted, 3 dropped, 3 rejected, 1 sparring partners (70 rows).
+Totals: 27 other, 18 queued, 11 in progress, 8 accepted, 3 dropped, 3 rejected, 1 sparring partners (71 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -50,7 +50,7 @@ Totals: 27 other, 18 queued, 10 in progress, 8 accepted, 3 dropped, 3 rejected, 
 | `h38` | 2026-10-21 | h19 | h19 + creep instead of march: the lattice centre advances 1 tile per 8 rounds from round 450, no general march (ATTACK_ROUND=1001, CREEP_ROUND=450, CREEP_EVERY=8) |  |  |  | vs v4 4-2 | FAIL: delivery (move fuel 401-700 at most half of h19's in 1 of 6 games, fuel 500-700 >= 1,000 in 2 of 6; enemy structures destroyed in 4 of 6). Not gated |
 | `h39` | 2026-10-21 | h35 | h35 + every castle keeps the pioneer's karbonite until the first church stands (PIONEER_RESERVE=2) |  |  |  |  | in progress: delivery passed (first church 20.3 vs 30.8, K by 200 +29%, no castles lost to rush); gate vs h35 queued |
 | `h40` | 2026-10-21 | h19 | h19 + forward churches: from round 200 a structure with nothing of ours ahead in sight sends a pilgrim to build a church 8 rows toward the enemy, every 50 rounds at most (FRONT_ROUND=200) |  |  |  | vs v4 6-2 | DELIVERY FAILED (2 of 3): churches after r200 in 8/8 (PASS), units by 600 >= 90% in 7/8 (PASS), castles lost 4 vs h19 3 (FAIL); 6 of 8 won; gate not queued |
-| `h41` | 2026-10-21 | h35 | h35 + kill zones: a unit of ours gone where it could not walk out of sight marks a zone; idle units hold no lattice tile in it for 50 turns (KILL_ZONE=50) |  |  |  | vs v5 3-3 | in progress: delivery queued (8 games of 1000 rounds vs h35) |
+| `h41` | 2026-10-21 | h35 | h35 + kill zones: a unit of ours gone where it could not walk out of sight marks a zone; idle units hold no lattice tile in it for 50 turns (KILL_ZONE=50) |  |  |  | vs v5 3-4 | in progress: delivery queued (8 games of 1000 rounds vs h35) |
 | `h7r` | 2026-10-21 | h19 | h19 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7 |  |  |  |  | QUEUED: 40 games vs h19 \| REBASED onto v5 as h7v5 (gate vs h19 withdrawn) |
 | `h8r` | 2026-10-21 | h19 | h19 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8 |  |  |  |  | QUEUED: 40 games vs h19 \| REBASED onto v5 as h8v5 (gate vs h19 withdrawn) |
 | `h9r` | 2026-10-21 | h19 | h19 + church planning counts depots served by pilgrim moves (PLAN_SERVE_PILGRIM=1); rebased from h9 |  |  |  |  | QUEUED: 40 games vs h19 \| REBASED onto v5 as h9v5 (gate vs h19 withdrawn) |
@@ -80,7 +80,8 @@ Totals: 27 other, 18 queued, 10 in progress, 8 accepted, 3 dropped, 3 rejected, 
 | `h43` | 2026-10-22 | h35 | v5 + castle recall: a castle whose visible attackers outnumber half its defenders radios its position (50 tiles) every 10 rounds; units that hear it come home for 30 rounds (RECALL=30) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
 | `h44` | 2026-10-22 | h35 | v5 + only crusaders obey attack orders before round 900; prophets and preachers hold the lattice (MARCH_MASK=8) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
 | `h45` | 2026-10-22 | h35 | v5 + marching units that see enemy attackers do not step into their reach unless ours in sight outnumber them 1.5 to 1 (EDGE=1.5) |  |  |  |  | WITHDRAWN: inert against prophets (vision = reach); 905 diagnostic replay identical to h35 behaviour |
+| `h46` | 2026-10-22 | h35 | v5 + firing prophets radio their target (10 fuel, every 3 turns at most, while a melee unit of ours is in sight); crusaders and preachers engage spots they hear (SPOT=3) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
 | `h7v5` | 2026-10-22 | h35 | v5 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | QUEUED: 40 games vs h35 |
 | `h8v5` | 2026-10-22 | h35 | v5 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8r |  |  |  |  | QUEUED: 40 games vs h35 |
 | `h9v5` | 2026-10-22 | h35 | v5 + church planning counts depots served by pilgrim moves (PLAN_SERVE_PILGRIM=1); rebased from h9r |  |  |  |  | QUEUED: 40 games vs h35 |
-| `v5` | 2026-10-22 00:08 | v4 | Frozen snapshot of h35 (bots/v5): v4 + church density with contested clusters first, cargo relay, nav fit, lattice memory, safe pilgrim steps; the replica build since submission 95 |  |  | submission 95 | vs v4 35-5; vs h41 3-3 | ACCEPTED 00:08 as v5 (h35 row: gate vs h19) |
+| `v5` | 2026-10-22 00:08 | v4 | Frozen snapshot of h35 (bots/v5): v4 + church density with contested clusters first, cargo relay, nav fit, lattice memory, safe pilgrim steps; the replica build since submission 95 |  |  | submission 95 | vs v4 35-5; vs h41 4-3 | ACCEPTED 00:08 as v5 (h35 row: gate vs h19) |
