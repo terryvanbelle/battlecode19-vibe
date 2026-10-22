@@ -22,6 +22,7 @@ export function castleTurn(B) {
     st.partial = new Map();
     st.churched = new Set();
     st.lost = new Map();   // cluster -> round a pioneer for it died
+    st.lostN = new Map();  // cluster -> pioneers lost there (CFG.PIONEER_LOST_DOUBLE)
     st.taken = new Map();  // cluster -> round a pioneer saw an enemy structure there (CFG.EXPAND_ROUND) or gave up (PIONEER_GIVEUP)
     st.attackUntil = 0;
     st.deadE = new Set();   // indices (into st.order) of enemy castles reported destroyed
@@ -60,7 +61,10 @@ export function castleTurn(B) {
   if (CFG.EXPAND_ROUND && st.plan && me.turn >= CFG.EXPAND_ROUND && (me.turn - CFG.EXPAND_ROUND) % 50 === 0) expandPlan(B);
   // Pioneers: one that disappeared frees its cluster for a later retry; one that built its church or is overdue is done.
   st.pioneers = st.pioneers.filter(p => {
-    if (p.id > 0 && !allIds.has(p.id)) { st.lost.set(p.cluster, me.turn); return false; }
+    if (p.id > 0 && !allIds.has(p.id)) {
+      st.lost.set(p.cluster, me.turn); st.lostN.set(p.cluster, (st.lostN.get(p.cluster) || 0) + 1);
+      return false;
+    }
     if (CFG.PIONEER_GIVEUP && st.taken.has(p.cluster) && st.taken.get(p.cluster) >= p.since) return false;   // it gave up
     return !st.churched.has(p.cluster) && me.turn - p.since <= 80;
   });
@@ -141,8 +145,13 @@ function nextPioneer(B) {
   const w = B.w, st = B.st;
   if (!st.plan || st.pioneers.length >= CFG.MAX_PIONEERS || w.me.turn < CFG.PIONEER_MIN_ROUND) return null;
   return st.plan.find(p => !st.churched.has(p.cluster) && !st.pioneers.some(q => q.cluster === p.cluster) &&
-    !(st.lost.has(p.cluster) && w.me.turn - st.lost.get(p.cluster) < 100) &&
+    !(st.lost.has(p.cluster) && w.me.turn - st.lost.get(p.cluster) < lostRest(st, p.cluster)) &&
     !(st.taken.has(p.cluster) && w.me.turn - st.taken.get(p.cluster) < 200)) || null;
+}
+
+// Rounds to wait before re-sending a pioneer to a cluster where one died (CFG.PIONEER_LOST_REST, _DOUBLE).
+export function lostRest(st, cluster) {
+  return CFG.PIONEER_LOST_DOUBLE ? CFG.PIONEER_LOST_REST << Math.min(4, (st.lostN.get(cluster) || 1) - 1) : CFG.PIONEER_LOST_REST;
 }
 
 // Whether this castle's peacetime army should leave a pioneer's karbonite in the bank (CFG.PIONEER_RESERVE): 1 while

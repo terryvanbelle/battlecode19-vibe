@@ -8,7 +8,7 @@ import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost } from '../src/bot/military.js';
-import { callDue, castleTurn, nextPioneer, pioneerDue } from '../src/bot/castle.js';
+import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
@@ -980,6 +980,31 @@ test('castle: EXPAND_ROUND adds remote clusters on either half away from enemy c
     at(101);
     assert.strictEqual((nextPioneer(B) || {}).cluster, added[1] ? added[1].cluster : undefined);
   } finally { CFG.EXPAND_ROUND = saved; }
+});
+
+test('castle: PIONEER_LOST_DOUBLE doubles the rest before re-sending a pioneer where one died', () => {
+  const saved = { ...CFG };
+  try {
+    const g = new Game(1205, 100, 20, false, false);   // one castle a side, 12 clusters
+    const castle = g.robots.find(r => r.team === 0);
+    const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    for (const t of [1, 2, 3]) { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; castleTurn(B); }
+    const st = B.st, c = st.plan[0].cluster;
+    st.pioneers = [];
+    const next = t => { B.w.me.turn = t; return (nextPioneer(B) || {}).cluster; };
+    st.lost.set(c, 10); st.lostN.set(c, 2);
+    assert.strictEqual(lostRest(st, c), 100);                      // default: 100 rounds whatever the losses
+    assert.notStrictEqual(next(109), c);
+    assert.strictEqual(next(110), c);
+    CFG.PIONEER_LOST_DOUBLE = 1;
+    assert.strictEqual(lostRest(st, c), 200);
+    assert.notStrictEqual(next(209), c);
+    assert.strictEqual(next(210), c);
+    st.lostN.set(c, 1);
+    assert.strictEqual(lostRest(st, c), 100);
+    st.lostN.set(c, 40);
+    assert.strictEqual(lostRest(st, c), 1600);                     // capped at 16x
+  } finally { Object.assign(CFG, saved); }
 });
 
 test('castle: PLAN_CONTEST_FIRST plans the clusters the enemy nearly reaches before nearer safe ones, mirror-identical', () => {
