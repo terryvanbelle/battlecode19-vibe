@@ -1618,3 +1618,35 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   (1) mean pioneer phase to its church (born to build) on h64's side at most 85% of h50's; (2) churches built by
   round 150 at least 105% of h50's. Accept per the gate (t >= 2). Extra lane chain32: no-op v6g (defaults with
   h62-h64 code) vs h50 --det, symcheck h64 (1, 2, 3, 1706). chain28's no-op v6d vs h50: IDENTICAL.
+
+## 2026-10-22 09:30 — replica: 5th execute slot planned, error census; scrims 287/385/388; h65 (ESCORT) pre-registered
+- Replica queue 181 waiting, finishing about 5 matches an hour (saturn log since 11:00 UTC; the field's strong bots
+  play 15-75 minute matches on the contest clock): about 1.5 days at 4 slots. No single team dominates any more
+  (most waiting: RyanSharafuddin, NielsKornerup 9 each). Committed: MAX_EXECUTE_SLOTS 5 (unit MemoryMax 12G, CPUQuota
+  600%); the 5th slot is the extra lane's core, deployed when chains 30-32 finish (the restart re-runs the matches
+  in flight). VM game count stays 7 (5 replica + 2 gate games).
+- run_game.js now reports per team init_robots (robots whose sandbox failed to start) and err_kinds (the five
+  commonest error kinds, first line, numbers as #); saturn keeps both in match.json. Why: StoneT2000's replica games
+  show 1,434-2,262 "initialize" errors and 2,000-4,000 exceptions in a long game, 60-355 frozen. A 100-round driver
+  game of h50 vs h50 without --init-ms shows the pattern: 8 robots a side "Took too long to initialize", each then
+  logging "Robot is not initialized." and "TypeError: robot.hook is not a function" every turn. The replica's
+  init_ms_max for StoneT2000 stays under its 1,000 ms limit, so its failures are another kind; the census will say.
+  unit-tests.sh now also runs the galaxy19 Python tests (54).
+- Scrims 287 (autoscrim, created 01:00 PDT) and 385/388 (created 06:28 PDT, before v6): vs botfinalsafe 2-1 and 1-2,
+  vs bot1v43 0-3. Churches at round 200, us/them: 388 2/9, 0/3 (three castles, none all game), 9/9; 385 4/11. Pioneer
+  census to round 500 (scratch pioneers.js): ours 70, churches 28, died 23, stuck 30+ turns 14.
+- Self-play baseline (h50 vs h35 gate replays, 40 games, to round 300): pioneers 266, churches 164, died 8, stuck 62
+  (23%). Against StoneT2000 (24 games): 114, 62, 34, 12. Replica 206-2 (seed 2321, v5 blue, 0 churches all game):
+  the first pioneer reached the edge of two bot1v43 prophets' range beside its site (they guarded bot1v43's church
+  on the mirror cluster, 7 tiles across the axis) at round 24 and waited there until killed at 156; the castle
+  re-sent pioneers at 100 and 181, 3 of 6 died, 3 stalled.
+- **h65 = v6 + ESCORT 2** (castle.js openEscort/escort, military.js init): a castle whose pioneer is ESCORT_SLACK = 10
+  turns past its king-step distance to the site, or was lost on the way, owes that cluster 2 prophets; it builds
+  them after depot pilgrims and pioneers (karbonite reserve as the peacetime army's, fuel MIL_FUEL_RESERVE), radioing
+  SIG.GUARD (12) with the site, and a unit born hearing it takes the site as its home (lattice, engage radius).
+  No-op: v6h (defaults) vs h50 --det must replay h50 vs h50 byte for byte; symcheck h65 on 1, 2, 3, 2321 (VM job
+  ...a3d577158, before the gate). Gate: h65 vs h50, 20 random cells, par 2 (...a3d57716, after h64's).
+  Delivery on its gate replays (pioneers.js --to 300 --stuck 30; h65's side from the file name): (1) escorts built
+  (castle builds radioing type 12) in at least 5 of the 40 games; (2) stuck pioneers on h65's side at most 75% of
+  h50's in the same games; (3) churches built by round 300 on h65's side at least h50's. Accept per the gate
+  (t >= 2); as a basics fix (pioneers that never arrive) at net >= 0 if (1)-(3) pass. Falsifier: t <= 0 or (2) fails.
