@@ -57,3 +57,8 @@
    (vision r2 16) traded two taken tiles for 36-74 turns, each seen taken only from the other's side; keeping the
    choice (sticky) cannot help when it really is taken. Remembering what was seen taken for 20 turns brought preacher
    oscillations on seed 2202 from 50 (h19) / 185 (NAV_FIT) to 3-4. `CFG.LATTICE_STICKY` 2. (2026-10-21)
+16. **A flee rule that starts inside the enemy's range lets a unit walk into range itself.** The unit that steps in
+   is shot before its next turn, so it never gets to flee. Two replica pioneers died this way (scrim 199 seed 1915:
+   r2 65 -> 61 of a prophet; scrim 200 seed 2924: 81 -> 49). Keeping every step out of visible attackers' threat
+   range (`CFG.PILGRIM_SAFE_STEP`, pilgrim.js stepAvoid) cut pilgrims lost in four 200-round self-play games from
+   46 to 5 and mined 11% more. Check moves, not only positions. (2026-10-21)
