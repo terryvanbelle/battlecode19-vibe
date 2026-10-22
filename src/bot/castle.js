@@ -147,10 +147,15 @@ function expandPlan(B) {
 // The next cluster this castle should send a pioneer to now, if any.
 function nextPioneer(B) {
   const w = B.w, st = B.st;
-  if (!st.plan || st.pioneers.length >= CFG.MAX_PIONEERS || w.me.turn < CFG.PIONEER_MIN_ROUND) return null;
+  if (!st.plan || st.pioneers.length >= maxPioneers(st) || w.me.turn < CFG.PIONEER_MIN_ROUND) return null;
   return st.plan.find(p => !st.churched.has(p.cluster) && !st.pioneers.some(q => q.cluster === p.cluster) &&
     !(st.lost.has(p.cluster) && w.me.turn - st.lost.get(p.cluster) < lostRest(st, p.cluster)) &&
     !(st.taken.has(p.cluster) && w.me.turn - st.taken.get(p.cluster) < 200)) || null;
+}
+
+// Pioneers this castle keeps in flight: MAX_PIONEERS, or a share of CFG.PIONEERS_TEAM among our living castles.
+export function maxPioneers(st) {
+  return CFG.PIONEERS_TEAM ? Math.max(CFG.MAX_PIONEERS, Math.ceil(CFG.PIONEERS_TEAM / st.castles.size)) : CFG.MAX_PIONEERS;
 }
 
 // Rounds to wait before re-sending a pioneer to a cluster where one died (CFG.PIONEER_LOST_REST, _DOUBLE).

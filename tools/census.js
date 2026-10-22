@@ -9,10 +9,11 @@
 //   escorts      castle and church builds radioing SIG.GUARD (type 12, CFG.ESCORT)
 //   chainers     castle builds radioing SIG.CHAIN (type 10, CFG.CHAIN_ROUND); recalls: castle radios at FAR.RECALL
 //                (r2 2501, CFG.RECALL); late_preachers: preachers built from round --late (default 900, CFG.ENDGAME_FUEL)
+// --castles N keeps only the games where each team started with N castles.
 // Gate replays are named <a>_<b>_<seed>_<side>.bc19 with <side> the colour of build A (the candidate): the TOTAL
 // line then sums by role, cand and ctrl; other names sum by colour.
 //
-//   node tools/census.js [--to 450] [--stuck 30] [--by 150,300] [--late 900] [--json] <replay...>
+//   node tools/census.js [--to 450] [--stuck 30] [--by 150,300] [--late 900] [--castles N] [--json] <replay...>
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -21,7 +22,7 @@ const { simulate } = require('./replay');
 const SIG_CHURCH = 2, SIG_CHAIN = 10, SIG_GUARD = 12, FAR_RECALL = 2501;
 
 function newTeam(by) {
-  return { pioneers: 0, pioneer_churches: 0, phase_sum: 0, pioneers_died: 0, stuck: 0, churches: 0,
+  return { castles: 0, pioneers: 0, pioneer_churches: 0, phase_sum: 0, pioneers_died: 0, stuck: 0, churches: 0,
     churches_by: Object.fromEntries(by.map(r => [r, 0])), depot_idle: 0, mines: 0, escorts: 0, chainers: 0, recalls: 0, late_preachers: 0 };
 }
 
@@ -29,7 +30,8 @@ function newTeam(by) {
 function census(buf, { to = 1000, stuck = 30, by = [], late = 900 } = {}) {
   const T = [newTeam(by), newTeam(by)], P = new Map();
   let last = 0;
-  simulate(buf, { onTurn({ round, robot, rec, error, born, died, game }) {
+  simulate(buf, { onStart(g) { for (const r of g.robots) if (r.unit === 0) T[r.team].castles++; },
+  onTurn({ round, robot, rec, error, born, died, game }) {
     last = Math.max(last, round);
     if (round > to) return;
     const t = T[robot.team], a = error ? 0 : rec.action;
@@ -89,7 +91,7 @@ function summarize(rows) {
 
 function line(t) {
   const by = Object.entries(t.churches_by).map(([r, n]) => ` by${r} ${n}`).join('');
-  return `pioneers ${t.pioneers} (church ${t.pioneer_churches}, phase ${t.pioneer_churches ? (t.phase_sum / t.pioneer_churches).toFixed(1) : '-'}, ` +
+  return `castles ${t.castles} pioneers ${t.pioneers} (church ${t.pioneer_churches}, phase ${t.pioneer_churches ? (t.phase_sum / t.pioneer_churches).toFixed(1) : '-'}, ` +
     `died ${t.pioneers_died}, stuck ${t.stuck}) churches ${t.churches}${by} depot-idle ${t.depot_idle} mines ${t.mines} escorts ${t.escorts} chainers ${t.chainers} recalls ${t.recalls}` +
     ` late-preachers ${t.late_preachers}`;
 }
@@ -101,9 +103,10 @@ if (require.main === module) {
   const opt = (k, d) => { const i = argv.indexOf(k); if (i < 0) return d; const v = argv[i + 1]; argv.splice(i, 2); return v; };
   const to = +opt('--to', '1000'), stuck = +opt('--stuck', '30'), late = +opt('--late', '900');
   const by = opt('--by', '').split(',').filter(Boolean).map(Number);
-  const json = argv.includes('--json'); argv = argv.filter(a => a !== '--json');
-  if (!argv.length) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 15).join('\n')); process.exit(1); }
-  const rows = argv.map(f => ({ file: path.basename(f), cand: candSide(f), teams: census(fs.readFileSync(f), { to, stuck, by, late }) }));
+  const nc = opt('--castles', null), json = argv.includes('--json'); argv = argv.filter(a => a !== '--json');
+  if (!argv.length) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 16).join('\n')); process.exit(1); }
+  const rows = argv.map(f => ({ file: path.basename(f), cand: candSide(f), teams: census(fs.readFileSync(f), { to, stuck, by, late }) }))
+    .filter(r => nc === null || r.teams.every(t => t.castles === +nc));
   if (!json) for (const r of rows) console.log(r.file, '| red', line(r.teams[0]), '| blue', line(r.teams[1]));
   const tot = summarize(rows);
   console.log(json ? JSON.stringify({ to, stuck, by, late, rows, total: tot }) : 'TOTAL ' + JSON.stringify(tot));

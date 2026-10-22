@@ -8,7 +8,7 @@ import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost } from '../src/bot/military.js';
-import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, openEscort, escort } from '../src/bot/castle.js';
+import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
@@ -1034,6 +1034,30 @@ test('castle: PIONEER_LOST_DOUBLE doubles the rest before re-sending a pioneer w
     assert.strictEqual(lostRest(st, c), 100);
     st.lostN.set(c, 40);
     assert.strictEqual(lostRest(st, c), 1600);                     // capped at 16x
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('castle: PIONEERS_TEAM lets a lone castle keep more pioneers in flight; off, MAX_PIONEERS per castle', () => {
+  const saved = { ...CFG };
+  try {
+    const g = new Game(1205, 100, 20, false, false);   // one castle a side, 12 clusters
+    const castle = g.robots.find(r => r.team === 0);
+    const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    for (const t of [1, 2, 3]) { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; castleTurn(B); }
+    const st = B.st;
+    assert.ok(st.plan.length >= 4, 'plan too short for the test');
+    st.pioneers = st.plan.slice(0, 2).map((p, i) => ({ id: 900 + i, cluster: p.cluster, since: 3, d: p.d }));
+    assert.strictEqual(maxPioneers(st), 2);
+    assert.strictEqual(nextPioneer(B), null);                       // default: two in flight is the cap
+    CFG.PIONEERS_TEAM = 4;
+    assert.strictEqual(maxPioneers(st), 4);
+    assert.strictEqual(nextPioneer(B).cluster, st.plan[2].cluster);  // the next planned cluster goes out now
+    st.castles.set(7001, { x: 0, y: 0 }); st.castles.set(7002, { x: 1, y: 1 });
+    assert.strictEqual(maxPioneers(st), 2);                         // three castles: ceil(4 / 3) = 2, MAX_PIONEERS is the floor
+    CFG.PIONEERS_TEAM = 6;
+    assert.strictEqual(maxPioneers(st), 2);
+    st.castles.delete(7002);
+    assert.strictEqual(maxPioneers(st), 3);
   } finally { Object.assign(CFG, saved); }
 });
 

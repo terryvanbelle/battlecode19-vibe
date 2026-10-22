@@ -340,6 +340,7 @@ test('census: pioneers, churches by round, mines; gate replay names sum by role'
   assert.deepStrictEqual([T[0].pioneers, T[0].pioneer_churches, T[0].phase_sum, T[0].churches_by[40], T[0].depot_idle],
     [3, 2, 35, 1, 13]);
   assert.strictEqual(T[1].pioneers, 0);                     // the rush sends no pioneers
+  assert.deepStrictEqual([T[0].castles, T[1].castles], [an.final[0].units[0] + an.tally[1].killed[0], 2]);
   const all = census(buf, { late: 0 });                       // every preacher is a late one from round 0
   for (const team of [0, 1]) assert.strictEqual(all[team].late_preachers, an.tally[team].built[5]);
   assert.ok(an.tally[0].built[5] > 0 && T[0].late_preachers === 0);

@@ -5,6 +5,9 @@ export const CFG = {
   CLUSTER_LINK_R2: 10,       // depots within this r2 of each other form one cluster
   CLAIM_MARGIN: 1,           // church a remote cluster if our distance <= enemy's + margin (moves)
   MAX_PIONEERS: 2,           // church pioneers in flight per castle
+  PIONEERS_TEAM: 0,          // >0: ...at least ceil(this / our castles) per castle (replica 406-3, seed 53, one castle a side:
+                             // our 2 pioneers went to contested sites 34 and 47 steps out and the castle built nothing
+                             // from round 5 to 67 with 90 karbonite reserved; StoneT2000 had 8 churches at 80 to our 3)
   PLAN_CONTEST_FIRST: 6,     // >0: planned clusters the enemy reaches within this many moves of us are pioneered first
   PIONEER_MIN_ROUND: 2,
   EXPAND_ROUND: 0,           // >0: from this round castles re-plan every 50 rounds, adding remote clusters on either half

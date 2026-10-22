@@ -1698,3 +1698,30 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   5000, par 2. Delivery (census.js --to 1000 on its replays): (1) chainers on h66's side in at least 20 of 40 games;
   (2) late preachers on h66's side at least 3x h50's. Accept at t >= 2 (looks at D 12 / 24 / 48); reject at t <= 0.
   If h66 is accepted, h8v6's single gate (...a3d5775) is withdrawn.
+
+## 2026-10-22 10:30 — StoneT2000 out-churches us 3:1; a lone castle's pioneer cap; h67 pre-registered
+- Census check: tools/census.js on the 40 h50-vs-h35 gate replays reproduces the scratch scripts exactly (both sides
+  summed: pioneers 266, pioneer churches 164, died 8, stuck 62, depot-idle 1,076, mines 209,785).
+- Where churches stand by round 300 vs StoneT2000 (33 replica games; king distance to own nearest castle minus the
+  enemy's: own < -4, mid, enemy > 4): ours 97 (own 73, mid 24, enemy half 0), theirs 295 (own 149, mid 56, our
+  half 90); 8 and 9 died. Depot coverage (own half = nearer own castles): we mined 68% of our half's depots by round
+  100 and 81% by 200-300; StoneT2000 83%, 91%, 96% of its half, plus 3% / 8% / 13% of ours.
+- Our plan is not the limit: statically (scratch plancover.mjs, the 24 maps of those games) castles plus planned
+  church sites reach 383 of 386 own-half depots within SERVE_MOVES; a greedy cover needs 76 sites to the plan's 94.
+  Execution is: v6's replica 406-3 (seed 53, 58x58, one castle a side) ended 6 churches to StoneT2000's 24 by round
+  300. Our castle's two pioneers (MAX_PIONEERS 2) went to the contested clusters first (PLAN_CONTEST_FIRST: 34 and 47
+  king steps out, churches at 32 and 44), then the castle built nothing from round 5 to 67 with 90 karbonite in
+  reserve; the near clusters (10 and 12 steps) were churched at 75 and 97. Mined K by round 30: 56 vs 154. The cap is
+  per castle: a lone castle keeps 2 pioneers in flight where three castles keep 6. 42% of corpus maps (1,211 of
+  2,895) have one castle a side; on the 10 one-castle maps among the StoneT2000 games our plan has 1-11 sites (6 with
+  >= 4). Self-play has the same cap on both sides, so the gate measures the rate, not the race.
+- **h67 = v6 + PIONEERS_TEAM 4** (castle.js maxPioneers: a castle keeps max(MAX_PIONEERS, ceil(4 / our castles))
+  pioneers in flight; sha 4800c4217fc9). Changes only one-castle maps (and multi-castle maps after castles die).
+  Displaces the early guard (PIONEER_RESERVE holds 60 karbonite while a pioneer is due) and depot pilgrims.
+  VM job ...a3d57711 (next after h63): no-op v6i (defaults, sha face45178704) vs h50 --det, symcheck h67 on 266,
+  2009, 53 to 250; gate h67 vs h50 on 20 one-castle cells (corpus castles = 1, LCG from 5000: 266, 2009, 275, 567,
+  2611, 47, 1873, 1764, 948, 1996, 2542, 1178, 85, 2746, 2581, 27, 119, 602, 1073, 1442; both sides), par 2.
+  Delivery on its replays (`census.js --castles 1 --by 100,200`): (1) churches by round 100 on h67's side at least
+  125% of h50's; (2) by round 200 at least 110%; (3) pioneers died at most 150% of h50's + 2. Accept at t >= 2
+  (looks D 12 / 24 / 48), reject at t <= 0; falsifier t <= 0 or (1) fails. Dose ladder: 4, then 6 (three per castle
+  on two-castle maps).
