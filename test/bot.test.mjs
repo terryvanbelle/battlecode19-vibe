@@ -574,6 +574,7 @@ test('hunt: a pilgrim radios an enemy pilgrim that stood HUNT turns still in our
     quiet([P(14, 9)], 1000);                           // on a depot: a miner
     quiet([{ id: 5, unit: S.CRUSADER, x: 12, y: 12 }], 1000);   // not a pilgrim
     quiet([P(12, 12)], 100);                           // bank under HUNT_FUEL
+    quiet([P(12, 12), { id: 6, unit: S.CHURCH, x: 13, y: 10 }], 1000);   // next to its church: depositing
     assert.strictEqual(sent.length, 0);
 
     // A crusader that hears the hunt radio (sent here by the castle, a seen friend) walks toward it; off, it does not.

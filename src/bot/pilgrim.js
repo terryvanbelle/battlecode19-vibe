@@ -67,8 +67,8 @@ export function stepAvoid(w) {
   return threats.length ? (x, y) => threats.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]) : null;
 }
 
-// CFG.HUNT: an enemy pilgrim that has stood HUNT turns on one tile in our half (canonical y < n/2), off any depot, is
-// radioed to our melee units (FAR.HUNT, 20 tiles, 21 fuel) every HUNT_EVERY turns while in sight. Replica scrim 200,
+// CFG.HUNT: an enemy pilgrim that has stood HUNT turns on one tile in our half (canonical y < n/2), off any depot and
+// more than 2 king steps from every enemy structure in sight (not one waiting to deposit), is radioed to our melee units (FAR.HUNT, 20 tiles, 21 fuel) every HUNT_EVERY turns while in sight. Replica scrim 200,
 // seed 2924: bot1v43's chain builders stood 29-253 turns 9-14 king steps from our castles, seen only by our pilgrims.
 export function huntSpot(B) {
   const w = B.w, me = w.me, st = B.st, n = w.n, now = new Map();
@@ -78,6 +78,7 @@ export function huntSpot(B) {
     const p = st.loit && st.loit.get(e.id), t0 = p && p.x === e.x && p.y === e.y ? p.t : me.turn;
     now.set(e.id, { x: e.x, y: e.y, t: t0 });
     if (me.turn - t0 < CFG.HUNT || e.y >= n / 2 || w.isDepot(e.x, e.y)) continue;
+    if (w.enemies.some(s => (s.unit === CASTLE || s.unit === CHURCH) && king(s.x, s.y, e.x, e.y) <= 2)) continue;
     const d = d2(e.x, e.y, me.x, me.y);
     if (d < bd || (d === bd && e.y * n + e.x < best.y * n + best.x)) { bd = d; best = e; }
   }
