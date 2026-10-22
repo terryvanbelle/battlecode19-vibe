@@ -49,8 +49,17 @@ function adjSources(x, y) { return ADJ.map(([dx, dy]) => [x + dx, y + dy]); }
 function go(B, key, sources) {
   const w = B.w;
   const r = fuelStep(w.fuel, 4, 1, w.fuel > 300 ? 0 : 40);
-  const s = B.nav.step(key, sources, w.fuel > CFG.PILGRIM_FAST_FUEL ? r : Math.min(r, 2));
+  const s = B.nav.step(key, sources, w.fuel > CFG.PILGRIM_FAST_FUEL ? r : Math.min(r, 2), stepAvoid(w));
   return s ? w.move(s[0], s[1]) : null;
+}
+
+// CFG.PILGRIM_SAFE_STEP: never step into the threat range of a visible enemy attacker. Fleeing starts only inside
+// that range, and a robot that steps in itself is shot before its next turn (replica scrim 199, seed 1915: a pioneer
+// moved from r2 65 to 61 of a prophet at round 12 and died at 13).
+export function stepAvoid(w) {
+  if (!CFG.PILGRIM_SAFE_STEP) return null;
+  const threats = w.enemies.filter(e => isAttacker(e.unit));
+  return threats.length ? (x, y) => threats.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]) : null;
 }
 
 export function pilgrimTurn(B) {

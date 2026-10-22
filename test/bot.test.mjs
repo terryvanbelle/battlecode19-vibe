@@ -10,7 +10,7 @@ import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.
 import { nextTarget, isChoke, militaryTurn, holdTarget } from '../src/bot/military.js';
 import { callDue, castleTurn, nextPioneer } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
-import { minesNow, pilgrimTurn } from '../src/bot/pilgrim.js';
+import { minesNow, pilgrimTurn, stepAvoid } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep } from '../src/bot/combat.js';
@@ -542,4 +542,27 @@ test('castle: PLAN_CONTEST_FIRST plans the clusters the enemy nearly reaches bef
     assert.notDeepStrictEqual(on.map(p => p.site), off.map(p => p.site));             // and it changes the order here
     assert.deepStrictEqual(plan(1, 6), on);                                           // both teams alike
   } finally { CFG.PLAN_CONTEST_FIRST = saved; }
+});
+
+test('pilgrim: PILGRIM_SAFE_STEP keeps steps out of a visible attacker\'s threat range (scrim 199, seed 1915)', () => {
+  const saved = CFG.PILGRIM_SAFE_STEP;
+  try {
+    // The replica case: pioneer at (34,32) heading for (31,29); an enemy prophet at (38,25) (r2 65, out of range).
+    const run = safe => {
+      CFG.PILGRIM_SAFE_STEP = safe;
+      const w = stubWorld(64, [], []); w.me = { x: 34, y: 32 };
+      w.enemies = [{ unit: S.PROPHET, x: 38, y: 25 }, { unit: S.PILGRIM, x: 33, y: 33 }];
+      const nav = new Nav(w, offsets(4), rng(7)), avoid = stepAvoid(w);
+      const s = nav.step('site', [[31, 29]], 4, avoid);
+      return { avoid, to: [34 + s[0], 32 + s[1]] };
+    };
+    const off = run(0);
+    assert.strictEqual(off.avoid, null);
+    assert.ok((off.to[0] - 38) ** 2 + (off.to[1] - 25) ** 2 <= 64, 'the default step walks into range: ' + off.to);
+    const on = run(1);
+    assert.ok(on.avoid(33, 31) && !on.avoid(34, 32) && !on.avoid(33, 33));   // r2 61 in, r2 65 out; pilgrims harmless
+    assert.ok((on.to[0] - 38) ** 2 + (on.to[1] - 25) ** 2 > 64, 'safe step stays out: ' + on.to);
+    CFG.PILGRIM_SAFE_STEP = 1;
+    assert.strictEqual(stepAvoid({ enemies: [{ unit: S.PILGRIM, x: 1, y: 1 }, { unit: S.CHURCH, x: 2, y: 2 }] }), null);
+  } finally { CFG.PILGRIM_SAFE_STEP = saved; }
 });

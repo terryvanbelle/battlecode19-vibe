@@ -586,3 +586,17 @@
   2,197, where one of the two games goes the other way (h21 blue 832 vs h19 red 147). Fuel mine actions h21 17,809
   vs h19 13,218 (+35%; pre-registered >= +5%). Exceptions 0 on both sides. h21 won 5 of 6 (all on health).
 - Gate h21 stays in the queue (job ...4b02).
+
+## 2026-10-21 21:30 — h33 pre-registered: pilgrims never step into enemy range (PILGRIM_SAFE_STEP)
+- Source: replica scrim 199 game 2 (seed 1915, our team blue). Pioneer #2733 walks diagonally toward the centre
+  cluster; enemy prophet #962 at (38,25) moves 2 tiles per turn toward it. Round 12 the pioneer steps from (34,32)
+  (r2 65 from the prophet: out of range) to (33,31) (r2 61: in range), and the prophet, which acts first, kills it at
+  round 13. Our flee rule starts only inside THREAT_R2, so a pilgrim that walks in itself never gets a turn to flee.
+- Mechanism: CFG.PILGRIM_SAFE_STEP=1 passes nav.step an avoid predicate (pilgrim.js stepAvoid): no step onto a
+  tile within THREAT_R2 of a visible enemy attacker. With either turn order a robot standing out of range always
+  gets a turn to flee before a prophet or castle that moved in can shoot. Unit test: the replica position, default
+  step lands at r2 <= 64, safe step stays out; pilgrims and churches are not threats. Default build unchanged.
+- h33 = h19 + PILGRIM_SAFE_STEP=1. Delivery (driver, 200 rounds vs h19, seeds 1828 and 826 both sides): h33's
+  pilgrims lost at most 70% of h19's in the same games, mined K+F within 5% of h19's or better. Falsifier: gate
+  t <= 0. Dose: one setting. Its real test is the replica field (pioneers shot by roaming prophets); the
+  self-play gate guards against harm.

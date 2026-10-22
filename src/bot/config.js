@@ -39,6 +39,7 @@ export const CFG = {
   DETOUR_EVERY: 10,          // costing this many extra moves: traffic spills onto other routes instead of queueing
   DETOUR_MEMORY: 30,         // in one corridor
   PILGRIM_FAST_FUEL: 1000,  // pilgrims take full r2 4 steps only above this fuel
+  PILGRIM_SAFE_STEP: 0,      // 1: pilgrims never step into a visible enemy attacker's threat range (pilgrim.js stepAvoid)
   NAV_FIT: 0,                // 1: steps capped below full speed (cruise r2 2, slow pilgrims) follow a field counted in
                              // such steps; 0: the full-speed field, on which they lose a turn every other tile
   SWITCH_FUEL_LOW: 150,      // an empty-handed karbonite miner moves to fuel when fuel < this and karbonite >= ...
