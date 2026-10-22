@@ -1598,3 +1598,23 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   h50's own record vs h55v6 says how much the chain costs v6 today; if v6 wins nearly all of them the panel is void.
 - h54's three gate-extension jobs vs h35 (...a3d58, a3d59, a3d595) moved to ~/jobq/superseded: 17 of its first 20
   cells were byte-identical, so D 12 needed ~80 more cells; the panel rates h54v6 where it fires.
+
+## 2026-10-22 09:00 — all 24 StoneT2000 games tabulated; one-castle maps lost 10 of 10; h64 (PIONEER_FAST) pre-registered
+
+- v6's scrims: 406 vs bot1v43 1-2 (won 203; lost 705 at 1000 on castles, 53 at 301), 407 vs botfinalsafe 0-3 (lost
+  at 597, 316, 282). Over the 24 replica games vs StoneT2000 (199-206, 406-407; scratch stonet_table.sh, bombs.js)
+  we won 4. A one-round church bomb (>= 4 churches in a round, most within r2 100 of our castle) appears in 21 of
+  24 and ends 10 games within ~10 rounds of it. **On one-castle maps we lost all 10**, mostly on economy first: at
+  round 200 pilgrims 3-7 vs 13-29 in five of them (203-2, 203-3, 204-1, 206-2, 407-2), karbonite mined 364-706 vs
+  1,432-2,446.
+- 407-2 (v6 red, seed 1706): five-karbonite cluster at (5-8,16-20) on the midline, equidistant. Our castle sent a
+  pioneer there at round 4 (radio 8657 = SIG.CHURCH (7,17), PLAN_CONTEST_FIRST working); it walked one tile a turn
+  (fuel 244-520 < PILGRIM_FAST_FUEL 1000 caps pilgrims at r2 2) and was killed at round 29 at (10,12), 5 king steps
+  short; botfinalsafe churched it at ~30 and mined it all game (we: 2 karbonite depots, pilgrims 5-7, K 342 by 100,
+  F 4,841 banked unused). 203-2 (seed 2644) is the same story on a midline cluster of 8 karbonite depots.
+- **h64 = v6 + PIONEER_FAST 1** (pilgrim.js go(..., fast)): pioneers take full r2 4 steps whatever the bank (on a
+  straight path 2 tiles a turn instead of 1; ~1 more fuel a tile; on a diagonal (1,1) steps already tie). Gate: h64
+  vs h50, 20 random cells, par 2 (VM job ...a3d57715, after h63's). Delivery on its replays (pioneers.js to 450):
+  (1) mean pioneer phase to its church (born to build) on h64's side at most 85% of h50's; (2) churches built by
+  round 150 at least 105% of h50's. Accept per the gate (t >= 2). Extra lane chain32: no-op v6g (defaults with
+  h62-h64 code) vs h50 --det, symcheck h64 (1, 2, 3, 1706). chain28's no-op v6d vs h50: IDENTICAL.
