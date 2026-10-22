@@ -106,6 +106,9 @@ export const CFG = {
   EDGE: 0,                   // >0: a marching unit that sees enemy attackers does not step into their reach (combat
                              // THREAT_R2) unless our military in its sight, itself included, outnumber them EDGE to 1
                              // (replica 2965: 131 of 132 prophets lost walking into a held line, 106 kills)
+  FOCUS: 0,                  // 1: shooters pick, among targets of the best priority, the one most of our attackers in
+                             // sight can also hit (enemy HP is never visible; nearest-first spreads fire: a prophet
+                             // dies to 2 shots, 4 shots on 4 prophets kill none)
   SPOT: 0,                   // >0: a prophet firing at a non-pilgrim radios its target (FAR.ENEMY, ~10 tiles, 10 fuel)
                              // at most every SPOT turns while a crusader or preacher of ours is in its sight; melee
                              // units that hear it engage it as if seen (gate 2924: 79 of 115 crusaders and 65 of 83

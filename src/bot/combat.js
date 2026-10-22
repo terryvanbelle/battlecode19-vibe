@@ -12,14 +12,24 @@ export const THREAT_R2 = [64, 0, 0, 49, 64, 36];
 export function isAttacker(u) { return u === CASTLE || u === CRUSADER || u === PROPHET || u === PREACHER; }
 
 // Best single target in the attack band of a unit at (x, y). n: board size, for the positional tie-break.
-export function pickTarget(unit, x, y, enemies, n) {
-  const s = STATS[unit]; let best = null, bp = -1, bd = 1e9, bk = 1e9;
+// friends (CFG.FOCUS): our robots in sight; among targets of the best priority, the one most of our attackers there
+// can also hit comes first (they choose by the same rule, so fire converges: enemy HP is never visible), then nearer.
+export function pickTarget(unit, x, y, enemies, n, friends) {
+  const s = STATS[unit]; let best = null, bp = -1, bc = -1, bd = 1e9, bk = 1e9;
   for (const e of enemies) {
     const r = d2(x, y, e.x, e.y); if (r < s.atkMin || r > s.atkMax) continue;
     const p = PRIORITY[e.unit], k = e.y * n + e.x;
-    if (p > bp || (p === bp && (r < bd || (r === bd && k < bk)))) { best = e; bp = p; bd = r; bk = k; }
+    if (p < bp) continue;
+    const c = friends ? cover(e, friends) : 0;
+    if (p > bp || c > bc || (c === bc && (r < bd || (r === bd && k < bk)))) { best = e; bp = p; bc = c; bd = r; bk = k; }
   }
   return best;
+}
+// How many of these robots can hit e where they stand.
+export function cover(e, robots) {
+  let c = 0;
+  for (const f of robots) { const S = STATS[f.unit], r = d2(f.x, f.y, e.x, e.y); if (S.damage && r >= S.atkMin && r <= S.atkMax) c++; }
+  return c;
 }
 
 // Preacher: the visible tile in the attack band with the best splash value. Friendly hits weigh 1.5x an enemy hit,

@@ -281,7 +281,7 @@ export function militaryTurn(B) {
       const t = preacherTarget(me.x, me.y, w.robots, me.team, (x, y) => w.occ(x, y) >= 0);
       if (t) return w.attack(t.dx, t.dy);
     } else {
-      const t = pickTarget(u, me.x, me.y, enemies, w.n);
+      const t = pickTarget(u, me.x, me.y, enemies, w.n, CFG.FOCUS ? w.friends : null);
       if (t) { if (CFG.SPOT && u === PROPHET) spot(B, t); return w.attack(t.x - me.x, t.y - me.y); }
     }
   }

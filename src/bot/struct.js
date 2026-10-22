@@ -187,7 +187,7 @@ function structAct(B, allIds, extra) {
     }
   }
   if (me.unit === CASTLE && w.enemies.length && w.fuel >= STATS[CASTLE].atkFuel) {
-    const t = pickTarget(CASTLE, me.x, me.y, w.enemies, w.n);
+    const t = pickTarget(CASTLE, me.x, me.y, w.enemies, w.n, CFG.FOCUS ? w.friends : null);
     if (t) return w.attack(t.x - me.x, t.y - me.y);
   }
 

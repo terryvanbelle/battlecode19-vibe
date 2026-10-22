@@ -15,7 +15,7 @@ import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
-import { pickTarget, preacherTarget, retreatStep } from '../src/bot/combat.js';
+import { pickTarget, preacherTarget, retreatStep, cover } from '../src/bot/combat.js';
 const require = createRequire(import.meta.url);
 const SPECS = require('../engine/node_modules/bc19/specs.json');
 const Game = require('../engine/node_modules/bc19/game.js');
@@ -662,6 +662,17 @@ test('military: LATTICE_STICKY 2 remembers lattice tiles seen taken, so two take
     assert.deepStrictEqual(run(1), [Bt, A]);   // B seen taken: back to A, which it saw taken a turn ago
     assert.deepStrictEqual(run(2), [Bt, C]);   // remembers A
   } finally { CFG.LATTICE_STICKY = saved; }
+});
+
+test('combat: FOCUS prefers the target more of our attackers can hit; priority still comes first', () => {
+  const A = { id: 21, unit: 4, x: 0, y: 5, team: 1 }, Bp = { id: 22, unit: 4, x: 0, y: 7, team: 1 }, C = { id: 23, unit: 3, x: 5, y: 0, team: 1 };
+  const friends = [{ unit: 4, x: 0, y: 14 }, { unit: 3, x: 1, y: 9 }, { unit: 2, x: 0, y: 8 }];   // 2 attackers reach B, none A (the pilgrim cannot shoot)
+  assert.strictEqual(pickTarget(4, 0, 0, [A, Bp], 64).id, 21);            // nearest without FOCUS
+  assert.strictEqual(pickTarget(4, 0, 0, [A, Bp], 64, friends).id, 22);
+  assert.strictEqual(pickTarget(4, 0, 0, [A, Bp], 64, []).id, 21);        // nobody else: nearest
+  const many = [{ unit: 4, x: 5, y: 8 }, { unit: 4, x: 9, y: 0 }, { unit: 3, x: 6, y: 1 }];
+  assert.strictEqual(pickTarget(4, 0, 0, [C, Bp], 64, many).id, 22);      // a prophet before a crusader however covered
+  assert.strictEqual(cover(Bp, friends), 2);
 });
 
 test('combat: target choice, preacher splash avoids friends, retreat', () => {
