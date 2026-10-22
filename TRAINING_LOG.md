@@ -1699,7 +1699,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   (2) late preachers on h66's side at least 3x h50's. Accept at t >= 2 (looks at D 12 / 24 / 48); reject at t <= 0.
   If h66 is accepted, h8v6's single gate (...a3d5775) is withdrawn.
 
-## 2026-10-22 10:30 — StoneT2000 out-churches us 3:1; a lone castle's pioneer cap; h67 pre-registered
+## 2026-10-22 10:15 — StoneT2000 out-churches us 3:1; a lone castle's pioneer cap; h67 pre-registered
 - Census check: tools/census.js on the 40 h50-vs-h35 gate replays reproduces the scratch scripts exactly (both sides
   summed: pioneers 266, pioneer churches 164, died 8, stuck 62, depot-idle 1,076, mines 209,785).
 - Where churches stand by round 300 vs StoneT2000 (33 replica games; king distance to own nearest castle minus the
