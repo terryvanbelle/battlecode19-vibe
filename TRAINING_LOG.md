@@ -1837,3 +1837,31 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - Replica queue at 13:40: 165 waiting (127 TRY, 5 RUN); about 63 slot-hours by each match's slower team's mean
   match time from the saturn journal (229 acked matches, mean 649 s), 12.7 h on 5 slots. No team holds more than 5%
   of it (top: NielsKornerup 3.2 slot-h, awesomelemonade 2.9, bovard 2.8), so no drop; the replica keeps 5 slots.
+
+## 2026-10-22 14:25 — h71 (a contested church builds a preacher first, preachers spare themselves): delivery pre-registered
+- Self-play on seed 2591 (200 rounds, driver) after 391-1: h64 (blue) churched the centre (16,5) at r12, h50's
+  pioneer built the mirror church adjacent at (15,5) at r18; blue's church built 7 pilgrims first, red's preacher
+  (r39) killed 4 of them, a crusader and the church; blue's prophet then killed red's church. No church stood by
+  r100 and both sides mined 380-516 times to r200. That is the mirror-church duel of STRIKE_R2's notes (1915, 2030,
+  2924).
+- CHURCH_GUARD_D (new, struct.js; config CHURCH_GUARD_UNIT): a church within D king steps of its own mirror image
+  builds the guard unit before its first pilgrim, whenever the bank affords it. Driver diagnostics vs h50 on 2591 to
+  200, both pioneers crawling (church r18 each side):
+  - guard prophet: as blue h71 held the centre (prophet killed red's pilgrims r19-20; K mined 1,286 vs 308); as red
+    it lost: red's prophet acts first, h50's church answers the attacker with a preacher, which kills the prophet
+    (a prophet cannot hit within r2 16), the pioneer and the church.
+  - guard preacher: as blue held (1,442 vs 308); as red lost again: its preacher struck first but aimed at (17,5),
+    splashing itself for 20 to add a pilgrim and the church (PREACHER_SELF 1.5), and died a shot before h50's.
+  - guard preacher + PREACHER_SELF 4 + PREACHER_MIL 2.5 (h54's preacher half, delivered with h54 at 03:55 and never
+    gated on v6): held the centre from both sides, K mined 1,446 vs 308 (red) and 1,442 vs 308 (blue); army at r200
+    39 and 44 against 7 and 6.
+- **h71 = v6 + CHURCH_GUARD_D 8 + CHURCH_GUARD_UNIT 5 + PREACHER_SELF 4 + PREACHER_MIL 2.5**, sha 001f1dfe01a2;
+  identity build v6l (defaults, a078aa74c007). Unit tests: a church 3 king steps from its mirror builds the prophet
+  (or preacher) first with D 8; with D 0 or 12+ steps away it does not (ECON_UNTIL keeps the peacetime army out).
+  tools/census.js counts guard_first (churches whose first build is a combat unit; fixture guard_s2591_r25: h50's
+  church 0, h71's 1). Node 103, Python 54 pass.
+- Delivery, VM job ...a3d57710055 (after h70's delivery, before h64's gate): no-op v6l vs h50 --det on 1828 must replay
+  noop_h50_h50 byte-identical; symcheck h71 on 1, 2, 3, 2591 to 250; h71 vs h50 on 2591, 1915, 2030, 2924 both
+  sides, census to 450. PASS needs all 3: (1) h71's mine actions to 450 >= 115% of h50's; (2) h71 wins >= 5 of 8;
+  (3) guard_first on h71's side exceeds h50's by >= 3 (the switch fires). Falsifier: (1) fails, i.e. a guarded
+  church does not hold a contested cluster in general. On PASS: gate h71 vs h50, 20 random cells from seed0 5000.
