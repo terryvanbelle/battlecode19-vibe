@@ -1885,7 +1885,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   lever is our lattice (density, prophets' share: h15v6 queued) more than the attack timing (h52 at 350 and h53 at
   550 failed). Not queued yet: a crusader march gated on what the first wave achieves.
 
-## 2026-10-22 13:40 — h71: the switch fires on the delivery seeds; criterion (3) amended before the delivery runs
+## 2026-10-22 13:24 — h71: the switch fires on the delivery seeds; criterion (3) amended before the delivery runs
 - Driver, h71 red vs h50 blue to 150 rounds (LEARNINGS 19): mine actions 944 vs 485 (1915), 1,673 vs 1,180 (2030),
   2,534 vs 2,016 (2924); guard_first 2-2, 1-1, 0-0. h50's churches answer our guard with a threat response, which
   census counts as guard_first too, so the pre-registered (3) "h71's guard_first exceeds h50's by >= 3" can fail
