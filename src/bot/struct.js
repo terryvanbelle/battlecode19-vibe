@@ -5,6 +5,7 @@ import { d2, ADJ, offsets } from './util.js';
 import { bfs, econ } from './mapinfo.js';
 import { SIG, encXY, encNum } from './comms.js';
 import { isAttacker, pickTarget, THREAT_R2 } from './combat.js';
+import { watchDeaths } from './military.js';
 
 const PILGRIM_OFFS = offsets(4);
 
@@ -87,7 +88,7 @@ export function buildToward(B, unit, tx, ty, signal) {
   }
   if (!best) return null;
   if (signal !== undefined && !w.sentR2 && w.fuel >= STATS[unit].costF + 2) w.signal(signal, 2);
-  B.st.pending = null;
+  B.st.pending = null; B.st.built = unit;
   return { act: w.build(unit, best[0], best[1]), x: me.x + best[0], y: me.y + best[1] };
 }
 
@@ -145,6 +146,27 @@ function defenders(B, r2) {
 
 // The structure's turn after role bookkeeping. extra(): castle-only builds (pioneers). Returns an action or null.
 export function structTurn(B, allIds, extra) {
+  if (!CFG.KILL_ZONE) return structAct(B, allIds, extra);
+  watchDeaths(B);
+  B.st.built = -1;
+  const a = structAct(B, allIds, extra);
+  sayZone(B);
+  return a;
+}
+
+// CFG.KILL_ZONE: the turn after building a military unit (that turn's radio carries its birth round), tell it, and
+// whoever else is near, the latest fresh kill zone; within 3 turns, on a turn with the radio free.
+export function sayZone(B) {
+  const st = B.st, w = B.w, t = w.me.turn;
+  if (st.built >= CRUSADER) { st.zoneSay = 3; return; }
+  if (!(st.zoneSay > 0)) return;
+  st.zoneSay--;
+  const z = (st.zones || []).filter(q => t - q.t <= CFG.KILL_ZONE).pop();
+  if (!z || w.sentR2 || w.fuel < 10) return;
+  w.signal(encXY(SIG.ZONE, z.x, z.y), 25); st.zoneSay = 0;
+}
+
+function structAct(B, allIds, extra) {
   const st = B.st, w = B.w, me = w.me;
   resolvePending(B);
   refreshAssign(B, allIds);

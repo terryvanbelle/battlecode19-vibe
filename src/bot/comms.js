@@ -8,6 +8,7 @@ export const SIG = {
   ENEMY: 5,   // any -> nearby army: enemy attackers seen at (x, y)
   POST: 6,    // structure -> newborn military: hold lattice near (x, y) (the structure)
   FRONT: 7,   // structure -> newborn pilgrim: build a church at the builder's front site (struct.js frontSite); v = round
+  ZONE: 8,    // structure -> newborn military (r2 25, the turn after the build): a unit of ours died at (x, y) (CFG.KILL_ZONE)
 };
 export function encXY(type, x, y) { return (type << 12) | (x << 6) | y; }
 export function encNum(type, v) { return (type << 12) | (v & 4095); }

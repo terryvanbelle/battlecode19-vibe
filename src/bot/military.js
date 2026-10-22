@@ -33,6 +33,7 @@ function init(B) {
 // ATTACK orders: far messages (comms.decFarRobot authenticates them by radius); targets must lie in the enemy half.
 function listen(B) {
   const w = B.w, st = B.st, me = w.me, n = w.n;
+  if (CFG.KILL_ZONE) hearZones(B);
   for (const r of w.robots) {
     if (r.id === me.id || (r.seen && r.team !== me.team)) continue;
     const m = decFarRobot(r);
@@ -86,11 +87,47 @@ function go(B, key, sources, cap) {
 }
 
 // A lattice tile: (x + y) even, passable, not a depot, not adjacent to the home structure (CFG.KEEP_CLEAR: and not
-// kept clear).
+// kept clear; CFG.KILL_ZONE: and not in a kill zone).
 function latticeOk(B, x, y) {
   const w = B.w, h = B.st.home;
   return ((x + y) & 1) === 0 && w.passable(x, y) && !w.isDepot(x, y) && d2(x, y, h.x, h.y) >= CFG.LATTICE_MIN_R2 &&
-    !(CFG.KEEP_CLEAR && keepClear(B, x, y));
+    !(CFG.KEEP_CLEAR && keepClear(B, x, y)) && !(CFG.KILL_ZONE && inZone(B, x, y));
+}
+
+// CFG.KILL_ZONE. A military unit of ours seen last turn that is gone now, from where it could not have walked out of
+// sight (3 tiles: the fastest unit's move), died there: a kill zone, kept KILL_ZONE turns of this robot's clock.
+// Structures and military units watch (struct.js passes zones on to newborns, SIG.ZONE).
+export function watchDeaths(B) {
+  const w = B.w, me = w.me, st = B.st, R = Math.sqrt(STATS[me.unit].vision) - 3, now = new Map();
+  for (const r of w.friends) if (r.unit >= CRUSADER) now.set(r.id, r.y * 64 + r.x);
+  if (st.seenMil && R > 0) for (const [id, p] of st.seenMil) {
+    const x = p & 63, y = p >> 6;
+    if (!now.has(id) && d2(x, y, me.x, me.y) <= R * R) addZone(B, x, y);
+  }
+  st.seenMil = now;
+}
+export function addZone(B, x, y) {
+  const st = B.st, t = B.w.me.turn, z = st.zones || (st.zones = []);
+  for (let i = z.length - 1; i >= 0; i--) if (t - z[i].t > CFG.KILL_ZONE || (z[i].x === x && z[i].y === y)) z.splice(i, 1);
+  z.push({ x, y, t });
+}
+// Zones radioed by structures of ours in sight (SIG.ZONE, short range).
+export function hearZones(B) {
+  const w = B.w, me = w.me;
+  for (const r of w.robots) if (r.seen && r.team === me.team && r.id !== me.id && r.signal > 0 && r.signal_radius <= 25) {
+    const m = dec(r.signal); if (m.type === SIG.ZONE) addZone(B, m.x, m.y);
+  }
+}
+// Tiles near a fresh zone, except those well inside its distance from home (the enemy is beyond it, unseen).
+export function inZone(B, x, y) {
+  const st = B.st, h = st.home, t = B.w.me.turn;
+  if (!st.zones) return false;
+  for (const z of st.zones) {
+    if (t - z.t > CFG.KILL_ZONE || d2(x, y, z.x, z.y) > CFG.KZ_R2) continue;
+    const r = Math.sqrt(d2(z.x, z.y, h.x, h.y)) - 2;
+    if (r <= 0 || d2(x, y, h.x, h.y) >= r * r) return true;
+  }
+  return false;
 }
 
 // Tiles idle units keep clear (CFG.KEEP_CLEAR): depots, tiles next to our structures (pilgrims deliver and new units
@@ -186,6 +223,7 @@ function holdTarget(B) {
 export function militaryTurn(B) {
   const w = B.w, me = w.me, st = B.st, u = me.unit, S = STATS[u];
   if (!st.ready) init(B);   // until it completes: a turn killed mid-init (200 ms) leaves it half done
+  if (CFG.KILL_ZONE) watchDeaths(B);
   listen(B);
   const enemies = w.enemies;
   const canShoot = w.fuel >= S.atkFuel + (u === PROPHET ? CFG.PROPHET_FLOOR : CFG.SHOOT_FLOOR);   // pilgrims must still mine
@@ -244,4 +282,4 @@ export function militaryTurn(B) {
   const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);
   return a || (CFG.KEEP_CLEAR ? stepClear(B) : null);
 }
-export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke, holdTarget };
+export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke, holdTarget, latticeOk };

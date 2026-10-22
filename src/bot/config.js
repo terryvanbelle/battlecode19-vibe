@@ -84,6 +84,11 @@ export const CFG = {
                              // afresh each turn flips between tiles out of sight, seed 2202: military.js holdTarget);
                              // 2: ...and a tile it saw taken in the last LATTICE_MEMORY turns does not count as free
   LATTICE_MEMORY: 20,
+  KILL_ZONE: 0,              // >0: a military unit of ours that vanishes where it could not have walked out of sight died
+                             // there; for this many turns idle units hold no lattice tile within KZ_R2 of that tile
+                             // beyond 2 tiles short of its distance from home (military.js inZone; replica scrim 199
+                             // seed 1915: 40 prophets walked one by one onto a tile an unseen prophet covered)
+  KZ_R2: 64,
   CREEP_ROUND: 0,            // >0: from this round each unit's lattice moves 1 tile toward the enemy every CREEP_EVERY
   CREEP_EVERY: 8,            // rounds (military.js latticeCentre): the army advances as a formation
   // attack

@@ -7,10 +7,10 @@ import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
-import { nextTarget, isChoke, militaryTurn, holdTarget } from '../src/bot/military.js';
+import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones } from '../src/bot/military.js';
 import { callDue, castleTurn, nextPioneer, pioneerDue } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
-import { structInit, frontSite, frontPioneer } from '../src/bot/struct.js';
+import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -659,6 +659,48 @@ test('pilgrim: PILGRIM_SAFE_STEP keeps steps out of a visible attacker\'s threat
     CFG.PILGRIM_SAFE_STEP = 1;
     assert.strictEqual(stepAvoid({ enemies: [{ unit: S.PILGRIM, x: 1, y: 1 }, { unit: S.CHURCH, x: 2, y: 2 }] }), null);
   } finally { CFG.PILGRIM_SAFE_STEP = saved; }
+});
+
+test('military: KILL_ZONE: a unit of ours gone from where it could not walk out of sight marks a zone; idle units hold no lattice tile in it', () => {
+  const saved = CFG.KILL_ZONE;
+  try {
+    CFG.KILL_ZONE = 50;
+    const P = (id, x, y) => ({ id, team: 0, unit: S.PROPHET, x, y, seen: true });
+    const w = { n: 24, me: { id: 5, team: 0, unit: S.PROPHET, x: 10, y: 6, turn: 10 }, robots: [], passable: () => true, isDepot: () => false, occ: () => 0,
+      friends: [P(7, 10, 9), P(8, 10, 13)] };
+    const B = { w, st: { home: { x: 10, y: 2 } } };
+    watchDeaths(B);
+    w.me = { ...w.me, turn: 11 }; w.friends = [];
+    watchDeaths(B);   // 7 (r2 9) could not have left our sight (r2 64, 3 tiles of margin): dead; 8 (r2 49) could have
+    assert.deepStrictEqual(B.st.zones.map(z => [z.x, z.y]), [[10, 9]]);
+    // Beyond 2 tiles short of the zone's distance from home (7), within r2 64 of it.
+    assert.ok(inZone(B, 10, 8) && inZone(B, 14, 9) && !inZone(B, 10, 6) && !inZone(B, 10, 18));
+    w.me = { ...w.me, turn: 11 + 51 }; assert.ok(!inZone(B, 10, 8));   // expired
+    // A zone next to the lattice anchor: the unit holds a tile out of it.
+    const H = { w: { ...w, me: { ...w.me, turn: 20 } }, st: { home: { x: 10, y: 2 }, zones: [{ x: 10, y: 6, t: 20 }] } };
+    const near = holdTarget({ w: H.w, st: { home: { x: 10, y: 2 } } });
+    assert.ok(inZone(H, near[0], near[1]), 'without the zone the unit would hold ' + near);
+    const t = holdTarget(H); assert.ok(t && !inZone(H, t[0], t[1]), 'holds ' + t);
+    CFG.KILL_ZONE = 0; assert.deepStrictEqual(holdTarget({ w: H.w, st: { home: { x: 10, y: 2 }, zones: H.st.zones } }), near);   // off: as before
+  } finally { CFG.KILL_ZONE = saved; }
+});
+
+test('struct/military: KILL_ZONE: the turn after a military build the structure radios the zone (r2 25), and units in reach take it', () => {
+  const saved = CFG.KILL_ZONE;
+  try {
+    CFG.KILL_ZONE = 50;
+    const sent = [], w = { me: { turn: 30 }, sentR2: 0, fuel: 500, signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; } };
+    const B = { w, st: { zones: [{ x: 4, y: 9, t: 28 }], built: S.PROPHET } };
+    sayZone(B); assert.deepStrictEqual(sent, []);                      // the build turn: the radio carries the round
+    w.me = { turn: 31 }; B.st.built = -1; w.sentR2 = 2;
+    sayZone(B); assert.deepStrictEqual(sent, []);                      // radio busy
+    w.me = { turn: 32 }; w.sentR2 = 0;
+    sayZone(B); assert.deepStrictEqual(sent, [[encXY(SIG.ZONE, 4, 9), 25]]);
+    w.me = { turn: 33 }; w.sentR2 = 0; sayZone(B); assert.strictEqual(sent.length, 1);   // once
+    const U = { w: { me: { id: 9, team: 0, turn: 2 }, robots: [{ id: 3, team: 0, seen: true, signal: encXY(SIG.ZONE, 4, 9), signal_radius: 25 },
+      { id: 4, team: 1, seen: true, signal: encXY(SIG.ZONE, 7, 7), signal_radius: 25 }] }, st: {} };
+    hearZones(U); assert.deepStrictEqual(U.st.zones.map(z => [z.x, z.y, z.t]), [[4, 9, 2]]);   // ours only, on our clock
+  } finally { CFG.KILL_ZONE = saved; }
 });
 
 test('military: CREEP_ROUND moves the lattice a unit holds toward the enemy over time; guards and the default stay', () => {
