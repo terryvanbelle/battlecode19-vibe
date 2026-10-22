@@ -1916,3 +1916,6 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   h72's side >= 3 across the 8; (3) h72 wins >= 5 of 8. Falsifier: (2) fails, i.e. lines against our own lattice do
   not take castles. On PASS: gate h72 vs h50, 20 random cells from seed0 5000, and h66's chain half is replaced by
   h72's settings.
+- 13:47: h72's delivery moved to ...a3d57700, first after the tools swap (before h68, h70, h71): it copies the field
+  leader's main weapon, fires on most maps (any map where the bank reaches 1000 K), and its result decides the
+  anti-chain panel's bomber and h66's chain half.
