@@ -1809,3 +1809,16 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   their bank is what the churches' peacetime army left the round before, and a pioneer needs 60 K. **h70** = v6 + PEACE_RESERVE_K 60 (new, struct.js: every structure's
   peacetime army leaves 60 K banked; threat responses and pilgrims unaffected). sha 3152d53d8a59. Diagnostic vs h50
   on seed 70 to 300 rounds running on the driver.
+
+## 2026-10-22 13:20 — h70 (peacetime reserve 60): driver diagnostic positive; delivery pre-registered
+- Driver diagnostic, seed 70 to 300, h70 red vs h50 blue: churches by 50, 4 vs 3 (all 4 planned sites); pilgrims 25
+  vs 16; mine actions 5,526 vs 3,465 (+59%); army 206 vs 132. No exception from our code. One red robot failed
+  creation (init 1,308 ms, then 168 "not initialized"); 69 and 97 frozen turns: the driver's load, both sides.
+- Unit test (PEACE_RESERVE_K 30 at 35 K: the castle still builds the economy pilgrim; staffed depots, 100 K: a guard
+  at 0, nothing at 90, a preacher at 90 with a crusader 3 tiles away). Node 102, Python 54 pass.
+- Delivery, VM job ...a3d5771005 (right after h68's delivery): no-op v6k (defaults, cc7eb1289e51) vs h50 --det on
+  1828 must replay noop_h50_h50 byte-identical; symcheck h70 (3152d53d8a59) on 1, 2, 3, 70 to 250; h70 vs h50 on 70,
+  520, 2591, 1592 (the uvafan and awesomelemonade maps) both sides, census to 450 by 100,200. PASS needs all 3:
+  (1) h70's churches by 200 >= 120% of h50's; (2) its mine actions to 450 >= 110% of h50's; (3) h70 wins >= 4 of 8.
+  Falsifier: (1) fails, i.e. in self-play the bank is not what holds the pioneers back (seed 70's gain was one
+  church). On PASS: gate h70 vs h50, 20 random cells from seed0 5000, accept t >= 2, reject t <= 0.
