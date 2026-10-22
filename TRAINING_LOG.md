@@ -1268,7 +1268,7 @@
   least 70 (h35 killed 58). Then a gate vs h35 (40 games, falsifier t <= 0): the defence must not cost the mirror
   games, where enemy churches near our churches sit beside enemy military (h54's knife fight).
 
-## 2026-10-22 04:58 — symmetry of h55 holds (a twin duel); gates of conditional switches have few live cells
+## 2026-10-22 04:47 — symmetry of h55 holds (a twin duel); gates of conditional switches have few live cells
 - h55 seed 2, round 215, resolved with symcheck's new per-pair mirror check (`mid`): red prophet 1924 at (25,15)
   and its blue twin 845 at (20,15) shot each other; within a pair red resolves first, so 845 died before acting and
   1924 died later to another shot: the board stays a mirror and the stores differ by 845's unspent 25 fuel.
