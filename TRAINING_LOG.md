@@ -983,3 +983,19 @@
   robots coincided with a replay analysis I ran on the driver during the game: driver load, not a bot fault.
 - Extra lane: sym_h45 clean (axis-tile contest at round 45 in seed 1, combat after the first attack in seed 3);
   no-op h35f (defaults-only build with SPOT's code) vs h35 IDENTICAL.
+
+## 2026-10-22 01:04 — h47 pre-registered: focus fire by a shared rule (FOCUS)
+- Source: target choice is priority, then nearest, then canonical position. Allies at different places pick
+  different nearest targets, and enemy HP is never visible (RULES 7). A prophet (20 HP) dies to two prophet shots
+  and a crusader (40) to four, so fire spread one shot per target kills nothing while the same shots focused kill
+  half. Replica 200-3 (2965): 132 prophets built, 106 enemy prophets killed for 131 lost.
+- Mechanism: new switch CFG.FOCUS (default 0). Shooters (crusaders, prophets, castles; preachers keep their splash
+  choice) pick, among targets of the best priority in their band, the one the most of our attackers in their
+  sight can also hit where they stand (combat.cover), then the nearest, then canonical position: every shooter
+  applying the rule converges on the same target. Unit tests 73/73.
+- h47 = v5 + FOCUS 1. Delivery (VM queue, 8 games of 1000 rounds vs h35 on 2924, 2202, 1915, 905 both sides),
+  whole game, summed (scratchpad dlvstats.js; two-team games, so a team's kills are the other's losses):
+  (1) enemy military units killed per shot fired: h47 at least 115% of h35's; (2) h47's military units lost at
+  most 95% of h35's; (3) castles lost no more than h35's. Gate 40 games vs h35, falsifier t <= 0 (overkill: six
+  shots on a 20-HP prophet waste four). Dose ladder: a shot budget per target (the k-th shooter in canonical order
+  past the shots needed picks the next target). No-op h35g and sym_h47 in the VM extra lane (dlv_chain16.sh).

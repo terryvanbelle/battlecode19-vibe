@@ -1015,3 +1015,7 @@ batch-out/dlv_h42_h35,1,cand:h42,us:v5,seed-905,B,490,castles,905,red,2026-10-22
 batch-out/dlv_h42_h35,2,cand:h42,us:v5,seed-905,B,491,castles,905,blue,2026-10-22T07:55:57Z
 batch-out/dlv_h42_h35,3,cand:h42,us:v5,seed-2855,B,493,castles,2855,blue,2026-10-22T07:58:12Z
 batch-out/dlv_h42_h35,4,cand:h42,us:v5,seed-2855,B,493,castles,2855,red,2026-10-22T07:58:14Z
+batch-out/dlv_h42_h35,5,cand:h42,us:v5,seed-2202,A,1000,castles,2202,red,2026-10-22T08:02:50Z
+batch-out/dlv_h42_h35,6,cand:h42,us:v5,seed-2202,A,1000,castles,2202,blue,2026-10-22T08:02:59Z
+batch-out/dlv_h42_h35,7,cand:h42,us:v5,seed-241,A,1000,castles,241,red,2026-10-22T08:04:29Z
+batch-out/dlv_h42_h35,8,cand:h42,us:v5,seed-241,B,1000,health,241,blue,2026-10-22T08:05:07Z
