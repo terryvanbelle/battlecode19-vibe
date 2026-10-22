@@ -4,3 +4,4 @@ v1	d3ea4d79f2c3	2026-10-21 09:00	v0 + guard prophets grow with round, surplus cr
 v2	5459fd274318	2026-10-21 12:06	rewrite in a canonical frame (side-symmetric), minified build; beats example 20/20
 v3	5ad87538e6af	2026-10-21 12:06	v2 + r2<=2 cruise steps, fuel-aware depot choice, military fuel reserve 300+10/unit; 27/36 vs v2
 rush	960255eed61e	2026-10-21 12:19	sparring partner: src/bot built with --cfg RUSH=4 (crusader stream at the mirror castle from round 5)
+v4	bd4e961ec728	2026-10-21 20:04	h6 (v3 + RNG reseed, depot cooldown, crusader/preacher rotation, miner switching, shooting fuel floor) + World.signal fuel fix + setup re-run until complete; 21-19 vs h6, 0 exceptions
