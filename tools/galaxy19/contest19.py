@@ -8,10 +8,11 @@ as a team on the official site would act. Standard library only; run on the driv
         bundle BOT (default src/bot) with tools/compile_bot.js (local, offline) and upload the bundle; waits for the
         replica's compile (accepted / rejected) unless --no-wait
   python3 tools/galaxy19/contest19.py ladder               rankings, our team marked
-  python3 tools/galaxy19/contest19.py scrim [--n 1] [--band 3] [--maps 3] [--dry-run]
+  python3 tools/galaxy19/contest19.py scrim [--n 1] [--band 3] [--maps 3] [--vs NAME,...] [--dry-run]
         request N scrimmages against teams rated just above us (ranked: galaxy picks 3 random maps, alternating
         order) and just below us (unranked on --maps random maps: galaxy refuses ranked requests downward),
-        alternating above/below, nearest first; skips opponents we already have a match waiting against
+        alternating above/below, nearest first; skips opponents we already have a match waiting against.
+        --vs: one scrimmage against each named team instead (exact name or a unique substring)
   python3 tools/galaxy19/contest19.py matches [--pages 1] [--all]   our scrimmages (or everyone's), newest first
   python3 tools/galaxy19/contest19.py fetch [ID ...] [--new] [--out DIR]
         download match archives and unpack their .bc19 replays + match.json into DIR/<id>/ (default
@@ -66,6 +67,20 @@ def plan_scrims(ladder, my_id, n, band, waiting_ids=()):
     return out
 
 
+def named(ladder, my_id, names):
+    """[(team, ranked)] for the teams named (exact name, else a unique substring); ranked only when rated above us."""
+    me = next(t for t in ladder if t['id'] == my_id)
+    mine = me['rating'] or 0
+    out = []
+    for n in names:
+        hits = [t for t in ladder if t['name'] == n] or [t for t in ladder if n in t['name'] and t['id'] != my_id]
+        if len(hits) != 1:
+            raise SystemExit(f'--vs {n!r}: {len(hits)} teams match')
+        t = hits[0]
+        out.append((t, (t['rating'] or 0) > mine))
+    return out
+
+
 def opponent(m, my_id):
     ps = m.get('participants') or []
     me = next((p for p in ps if p.get('team') == my_id), None)
@@ -83,6 +98,7 @@ def main(argv=None):
     sub.add_parser('ladder')
     p = sub.add_parser('scrim'); p.add_argument('--n', type=int, default=1); p.add_argument('--band', type=int, default=3)
     p.add_argument('--maps', type=int, default=3); p.add_argument('--dry-run', action='store_true')
+    p.add_argument('--vs', default='')
     p = sub.add_parser('matches'); p.add_argument('--pages', type=int, default=1); p.add_argument('--all', action='store_true')
     p = sub.add_parser('fetch'); p.add_argument('ids', type=int, nargs='*'); p.add_argument('--new', action='store_true')
     p.add_argument('--out', default=REPLAYS); p.add_argument('--pages', type=int, default=3)
@@ -126,7 +142,8 @@ def main(argv=None):
                 _, o = opponent(m, my_id)
                 if o:
                     waiting.add(o.get('team'))
-        plan = plan_scrims(cl.rankings(c), my_id, a.n, a.band, waiting)
+        ladder = cl.rankings(c)
+        plan = named(ladder, my_id, a.vs.split(',')) if a.vs else plan_scrims(ladder, my_id, a.n, a.band, waiting)
         if not plan:
             print('no rated opponent near us (or all have a match waiting)')
             return 1
@@ -136,11 +153,11 @@ def main(argv=None):
         for t, ranked in plan:
             mp = [] if ranked else rnd.sample(maps, a.maps)
             if a.dry_run:
-                print(f'would request {"ranked" if ranked else "unranked"} vs {t["name"]} (rated {t["rating"]:.0f}) {mp}')
+                print(f'would request {"ranked" if ranked else "unranked"} vs {t["name"]} (rated {t["rating"] or 0:.0f}) {mp}')
                 continue
             try:
                 r = cl.request(s, t['id'], ranked, mp, '?', ep)
-                print(f'request {r["id"]}: vs {t["name"]} ({"ranked" if ranked else "unranked"}, rated {t["rating"]:.0f})')
+                print(f'request {r["id"]}: vs {t["name"]} ({"ranked" if ranked else "unranked"}, rated {t["rating"] or 0:.0f})')
             except cl.ApiError as e:
                 print(f'refused: vs {t["name"]}: {e}')
     elif a.cmd == 'matches':

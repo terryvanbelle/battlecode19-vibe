@@ -215,6 +215,14 @@ class Contest(unittest.TestCase):
         self.assertEqual([t['id'] for t, r in contest19.plan_scrims(ladder, 7, 2, 3)], [6, 5])
         self.assertEqual(contest19.plan_scrims(ladder, 99, 3, 3), [])
 
+    def test_named(self):
+        ladder = [team(i, 100 + 10 * i) for i in range(1, 8)]
+        ladder[0]['rating'] = None   # never played
+        got = contest19.named(ladder, 4, [ladder[5]['name'], ladder[0]['name']])
+        self.assertEqual([(t['id'], r) for t, r in got], [(6, True), (1, False)])   # ranked only upward
+        with self.assertRaises(SystemExit):
+            contest19.named(ladder, 4, ['no such team'])
+
     def test_opponent(self):
         m = {'participants': [{'team': 1, 'score': 2}, {'team': 2, 'score': 1}]}
         self.assertEqual(contest19.opponent(m, 2), ({'team': 2, 'score': 1}, {'team': 1, 'score': 2}))
