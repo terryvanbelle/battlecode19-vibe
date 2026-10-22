@@ -49,6 +49,7 @@ function listen(B) {
     if (m && m.type === SIG.RECALL && CFG.RECALL && w.passable(m.x, m.y)) { st.recall = { x: m.x, y: m.y, until: me.turn + CFG.RECALL }; st.target = null; continue; }
     if (m && m.type === SIG.POST) { if (st.toCastle && w.passable(m.x, m.y)) hearPost(B, m.x, m.y); continue; }
     if (m && m.type === SIG.ENEMY) { if (CFG.SPOT && (CFG.SPOT_MASK >> me.unit & 1)) hearSpot(B, m.x, m.y); continue; }
+    if (m && m.type === SIG.HUNT) { if (CFG.HUNT && me.unit !== PROPHET) hearHunt(B, m.x, m.y); continue; }
     if (CFG.RECALL && st.recall && me.turn <= st.recall.until) continue;   // recalled: attack orders wait
     if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || ((st.guard || !(CFG.MARCH_MASK >> me.unit & 1)) && B.round < 900)) continue;
     const i = CFG.ATTACK_PERSIST && m.extra >= 1 && m.extra <= 4 ? m.extra - 1 : -1;
@@ -99,6 +100,11 @@ function hearPost(B, x, y) {
 function hearSpot(B, x, y) {
   const st = B.st, me = B.w.me, d = d2(x, y, me.x, me.y);
   if (!st.spot || st.spot.t !== me.turn || d < st.spot.d) st.spot = { x, y, t: me.turn, d };
+}
+// CFG.HUNT: the nearest loitering enemy pilgrim a pilgrim of ours radioed this turn (pilgrim.js huntSpot).
+function hearHunt(B, x, y) {
+  const st = B.st, me = B.w.me, d = d2(x, y, me.x, me.y);
+  if (!st.hunt || st.hunt.t !== me.turn || d < st.hunt.d) st.hunt = { x, y, t: me.turn, d };
 }
 function spot(B, t) {
   const w = B.w, st = B.st, me = w.me;
@@ -324,6 +330,8 @@ export function militaryTurn(B) {
     }
     const sp = CFG.SPOT && st.spot;
     if (!e && sp && me.turn - sp.t <= 1 && d2(sp.x, sp.y, marching ? me.x : c.x, marching ? me.y : c.y) <= 196) e = sp;
+    const hu = CFG.HUNT && st.hunt;
+    if (!e && hu && !marching && me.turn - hu.t <= CFG.HUNT_EVERY && d2(hu.x, hu.y, me.x, me.y) <= CFG.HUNT_R2) e = hu;
     if (e) return go(B, 'e' + e.x + ',' + e.y, [[e.x + 1, e.y], [e.x - 1, e.y], [e.x, e.y + 1], [e.x, e.y - 1]]);
   } else if (CFG.SPOT && (CFG.SPOT_MASK >> PROPHET & 1)) {
     // A prophet that heard a spot near its post (or itself, marching) walks into the band it can fire from, then holds.

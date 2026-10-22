@@ -3,7 +3,7 @@
 import { CFG } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, KARB_CAP, FUEL_CAP } from './specs.js';
 import { d2, king, ADJ, rng } from './util.js';
-import { SIG, dec, encNum, CT } from './comms.js';
+import { SIG, FAR, dec, encNum, encXY, CT } from './comms.js';
 import { econ } from './mapinfo.js';
 import { fuelStep } from './nav.js';
 import { isAttacker, retreatStep, THREAT_R2 } from './combat.js';
@@ -67,7 +67,33 @@ export function stepAvoid(w) {
   return threats.length ? (x, y) => threats.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]) : null;
 }
 
+// CFG.HUNT: an enemy pilgrim that has stood HUNT turns on one tile in our half (canonical y < n/2), off any depot, is
+// radioed to our melee units (FAR.HUNT, 20 tiles, 21 fuel) every HUNT_EVERY turns while in sight. Replica scrim 200,
+// seed 2924: bot1v43's chain builders stood 29-253 turns 9-14 king steps from our castles, seen only by our pilgrims.
+export function huntSpot(B) {
+  const w = B.w, me = w.me, st = B.st, n = w.n, now = new Map();
+  let best = null, bd = 1e9;
+  for (const e of w.enemies) {
+    if (e.unit !== PILGRIM) continue;
+    const p = st.loit && st.loit.get(e.id), t0 = p && p.x === e.x && p.y === e.y ? p.t : me.turn;
+    now.set(e.id, { x: e.x, y: e.y, t: t0 });
+    if (me.turn - t0 < CFG.HUNT || e.y >= n / 2 || w.isDepot(e.x, e.y)) continue;
+    const d = d2(e.x, e.y, me.x, me.y);
+    if (d < bd || (d === bd && e.y * n + e.x < best.y * n + best.x)) { bd = d; best = e; }
+  }
+  st.loit = now;
+  if (!best || w.sentR2 || me.turn - (st.huntAt || -99) < CFG.HUNT_EVERY || w.fuel < CFG.HUNT_FUEL) return;
+  st.huntAt = me.turn;
+  w.signal(encXY(0, best.x, best.y), FAR.HUNT);
+}
+
 export function pilgrimTurn(B) {
+  const a = pilgrimAct(B);
+  if (CFG.HUNT) huntSpot(B);
+  return a;
+}
+
+function pilgrimAct(B) {
   const w = B.w, me = w.me, st = B.st;
   if (!st.ready) init(B);   // until it completes (see militaryTurn)
   // Learn structures in sight; forget ones whose tile we see empty.

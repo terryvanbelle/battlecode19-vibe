@@ -12,7 +12,7 @@ import { callDue, castleTurn, nextPioneer, pioneerDue } from '../src/bot/castle.
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
-import { minesNow, pilgrimTurn, stepAvoid } from '../src/bot/pilgrim.js';
+import { minesNow, pilgrimTurn, stepAvoid, huntSpot } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover } from '../src/bot/combat.js';
@@ -547,6 +547,63 @@ test('military: SPOT: a firing prophet radios its target for melee units in sigh
     assert.ok(e2(at[0] + on.a.dx, at[1] + on.a.dy) < e2(at[0], at[1]));
     assert.strictEqual(run(0).B.st.spot, undefined);
   } finally { CFG.SPOT = saved; }
+});
+
+test('hunt: a pilgrim radios an enemy pilgrim that stood HUNT turns still in our half off depots; melee units go for it', () => {
+  const saved = [CFG.HUNT, CFG.HUNT_EVERY];
+  try {
+    CFG.HUNT = 5; CFG.HUNT_EVERY = 3;
+    const sent = [], st = {};
+    const look = (turn, enemies, fuel = 1000) => {
+      const w = { me: { x: 10, y: 10, turn, unit: S.PILGRIM }, n: 32, enemies, fuel, sentR2: 0, isDepot: (x, y) => x === 14 && y === 9,
+        signal(v, r2) { sent.push([turn, v, r2]); this.sentR2 = r2; } };
+      huntSpot({ w, st });
+    };
+    const P = (x, y, id = 77) => ({ id, unit: S.PILGRIM, x, y });
+    for (let t = 10; t <= 19; t++) look(t, [P(13, 12)]);
+    // first seen at 10: radioed at 15 and every 3 turns after, as canonical (x, y)
+    assert.deepStrictEqual(sent, [[15, encXY(0, 13, 12), FAR.HUNT], [18, encXY(0, 13, 12), FAR.HUNT]]);
+    look(20, [P(13, 13)]); look(24, [P(13, 13)]);   // it moved: the count restarts
+    assert.strictEqual(sent.length, 2);
+    look(25, [P(13, 13)]);
+    assert.strictEqual(sent.length, 3);
+    sent.length = 0;
+    const quiet = (enemies, fuel) => { const s0 = {}; for (let t = 1; t <= 12; t++) { const w = { me: { x: 10, y: 14, turn: t }, n: 32, enemies, fuel, sentR2: 0,
+      isDepot: (x, y) => x === 14 && y === 9, signal(v, r2) { sent.push([t, v, r2]); } }; huntSpot({ w, st: s0 }); } };
+    quiet([P(12, 16)], 1000);                          // the enemy half (y >= n/2)
+    quiet([P(14, 9)], 1000);                           // on a depot: a miner
+    quiet([{ id: 5, unit: S.CRUSADER, x: 12, y: 12 }], 1000);   // not a pilgrim
+    quiet([P(12, 12)], 100);                           // bank under HUNT_FUEL
+    assert.strictEqual(sent.length, 0);
+
+    // A crusader that hears the hunt radio (sent here by the castle, a seen friend) walks toward it; off, it does not.
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    const ring = (cx, cy, lo, hi) => { for (let r = lo; r <= hi; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++)
+      if (Math.max(Math.abs(dx), Math.abs(dy)) === r && free(cx + dx, cy + dy)) return [cx + dx, cy + dy]; return null; };
+    const at = ring(castle.x, castle.y, 4, 5), tgt = at && ring(at[0], at[1], 8, 9);
+    assert.ok(at && tgt);
+    const run = (on) => {
+      CFG.HUNT = on;
+      const cru = { id: 4004, team: 0, unit: S.CRUSADER, x: at[0], y: at[1], turn: 3, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      g.robots.push(cru);
+      try {
+        const cw = worldFor(g, castle), [sx, sy] = cw.T.toC(tgt[0], tgt[1]);
+        castle.signal = encXY(0, sx, sy); castle.signal_radius = FAR.HUNT;
+        const w = worldFor(g, cru), B = { api: w.api, w, round: 20, birthRound: 18, st: {}, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        return { a: militaryTurn(B), B };
+      } finally { g.robots.pop(); castle.signal = 0; castle.signal_radius = 0; }
+    };
+    const on = run(5), e2 = (x, y) => (x - tgt[0]) ** 2 + (y - tgt[1]) ** 2;
+    assert.ok(on.B.st.hunt && on.a && on.a.action === 'move');
+    assert.ok(e2(at[0] + on.a.dx, at[1] + on.a.dy) < e2(at[0], at[1]));
+    const off = run(0);
+    assert.strictEqual(off.B.st.hunt, undefined);
+    assert.ok(!off.a || off.a.action !== 'move' || e2(at[0] + off.a.dx, at[1] + off.a.dy) >= e2(at[0], at[1]) || off.a.dx !== on.a.dx || off.a.dy !== on.a.dy,
+      'off, the crusader goes about its own business');
+  } finally { [CFG.HUNT, CFG.HUNT_EVERY] = saved; }
 });
 
 test('military: SPOT_MASK 16: prophets radio with only prophets in sight and walk into the band of a heard spot', () => {

@@ -82,6 +82,12 @@ export const CFG = {
   CHAIN_PATIENCE: 10,        // a chainer that got no nearer for this many turns counts as staged within
   CHAIN_SLACK: 6,            // ...CHAIN_STAGE + this king steps of the target; farther out it quits after
   CHAIN_GIVEUP: 30,          // ...this many such turns
+  HUNT: 0,                   // >0: a pilgrim radios an enemy pilgrim that has stood this many turns on one tile in
+                             // our half off any depot (a church-chain builder waiting for its bank; pilgrim.js
+                             // huntSpot), every HUNT_EVERY turns while it sees it and the bank holds HUNT_FUEL; idle
+  HUNT_EVERY: 3,             // crusaders and preachers within r2 HUNT_R2 of it go for it
+  HUNT_FUEL: 150,
+  HUNT_R2: 400,
   // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
   MIL_ROTATION: [4, 3, 4, 3, 5],   // peacetime build order by unit type (prophet 4, crusader 3, preacher 5)
   MIX_BY_STOCK: null,        // [hi, lo]: a peacetime unit is a crusader while fuel / karbonite in the bank >= hi
