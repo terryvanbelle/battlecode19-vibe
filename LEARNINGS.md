@@ -33,3 +33,9 @@
    never finishes: one prophet threw on all of its 392 remaining turns. Lazy state must be built in locals and
    committed in one assignment, and setup must re-run until a flag set last says it finished. On the loaded driver
    this took caught exceptions from 789 to 0 in 300 rounds. (2026-10-21)
+11. **The driver cannot host a full game, and the extra lane can stall the queue.** A 1000-round game's heap grows
+   lazily to several GB; with `--max-old-space-size=1400` beside the 400 MB agent on the 2 GB driver, the host ran
+   short of memory and every background shell of the session was killed (two VM waiters with it). Full-length
+   diagnostics go to the VM's extra lane; the driver re-simulates replays only. On the VM, `jobq.sh` starts a gate
+   only when no `tools/batch.js` runs, so extra-lane batches go through the link `tools/xbatch.js` in the shadow
+   tree ~/projects/vibe/2019-next (new tools, the main tree's engine/maps/bots/dist linked) so as not to hold the queue. (2026-10-21)
