@@ -10,21 +10,41 @@
 // (enemy military killed by our crusaders and preachers / prophets), shots, atkFuel, dmgDealt (to the other team),
 // shotsW / moveW / moveMilW (shots, all move fuel, military move fuel in rounds from..to), castlesLost, churchesBuilt,
 // spots (prophet radio at r2 99), recalls (castle radio at r2 2501), fuel500 / fuelTo (bank at round 500 / to),
-// karbEnd / fuelEnd, win.
+// karbEnd / fuelEnd, win; idleContact / idleContactP (military / prophet turns in from..to with no action while an
+// enemy attacker within r2 196, out of the unit's own attack range, has a friend of the unit in its attack range).
 'use strict';
 const fs = require('fs'), path = require('path');
 const R = require('./replay');
 
 const ATK = [10, 0, 0, 10, 25, 15], MOVE = [0, 0, 1, 1, 2, 3];
+const RNG = [[1, 64], null, null, [1, 16], [16, 64], [1, 16]];
+const d2 = (ax, ay, b) => (ax - b.x) ** 2 + (ay - b.y) ** 2;
+
+// A fight this unit (at its tile before the turn) could join but cannot reach: see idleContact above.
+function contact(g, r) {
+  for (const e of g.robots) {
+    if (e.team === r.team || !RNG[e.unit]) continue;
+    const q = d2(r.x0, r.y0, e);
+    if (q > 196 || (q >= RNG[r.unit][0] && q <= RNG[r.unit][1])) continue;
+    for (const f of g.robots) {
+      if (f.team !== r.team || f.id === r.id) continue;
+      const k = d2(f.x, f.y, e); if (k >= RNG[e.unit][0] && k <= RNG[e.unit][1]) return true;
+    }
+  }
+  return false;
+}
 const COLS = ['milBuilt', 'milLost', 'milLostUnfired', 'meleeLost', 'meleeLostUnfired', 'deathsOn3', 'killsByMelee',
   'killsByProphet', 'shots', 'atkFuel', 'dmgDealt', 'shotsW', 'moveW', 'moveMilW', 'castlesLost', 'churchesBuilt', 'spots',
-  'recalls', 'fuel500', 'fuelTo', 'karbEnd', 'fuelEnd', 'win'];
+  'recalls', 'fuel500', 'fuelTo', 'karbEnd', 'fuelEnd', 'win', 'idleContact', 'idleContactP'];
 
 function stats(buf, { from = 0, to = 1000 } = {}) {
   const s = [0, 1].map(() => Object.fromEntries(COLS.map(c => [c, 0])));
   const fired = new Set(), tiles = [new Map(), new Map()];
   const res = R.simulate(buf, {
-    onTurn({ round, robot, rec, born, died, damage, error }) {
+    onTurn({ round, robot, rec, born, died, damage, error, game }) {
+      if (robot.unit >= 3 && round >= from && round <= to && (error || !rec.action) && contact(game, robot)) {
+        s[robot.team].idleContact++; if (robot.unit === 4) s[robot.team].idleContactP++;
+      }
       for (const b of born) { if (b.unit >= 3) s[b.team].milBuilt++; if (b.unit === 1) s[b.team].churchesBuilt++; }
       if (!error && rec.action === 2) {
         fired.add(robot.id);
@@ -96,4 +116,4 @@ function main(argv) {
 }
 
 if (require.main === module) console.log(main(process.argv.slice(2)));
-module.exports = { stats, labels, main, COLS };
+module.exports = { stats, labels, main, contact, COLS };

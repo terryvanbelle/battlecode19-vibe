@@ -248,4 +248,15 @@ test('dlv: delivery numbers agree with the replay analysis and with each other',
   assert.deepStrictEqual(dlv.labels('/x/ab_cd_905_blue.bc19'), ['b', 'a']);
   assert.deepStrictEqual(dlv.labels('game-01-seed616.bc19'), ['red', 'blue']);
   assert.match(dlv.main([path.join(FIX, 'rush_s2908_r80.bc19')]), /\nSUM\t\tblue\t/);
+  for (const t of [0, 1]) assert.ok(r.teams[t].idleContactP <= r.teams[t].idleContact);
+
+  // contact: an enemy attacker near the unit but out of its reach has a friend of the unit in its own reach.
+  const me = { id: 1, team: 0, unit: 4, x0: 10, y0: 10 };
+  const R = (id, team, unit, x, y) => ({ id, team, unit, x, y });
+  assert.strictEqual(dlv.contact({ robots: [R(2, 1, 4, 10, 20), R(3, 0, 2, 10, 25)] }, me), true);    // r2 100; friend r2 25
+  assert.strictEqual(dlv.contact({ robots: [R(2, 1, 4, 10, 20), R(3, 0, 2, 10, 22)] }, me), false);   // friend in the dead zone
+  assert.strictEqual(dlv.contact({ robots: [R(2, 1, 4, 10, 20)] }, me), false);                       // nobody of ours in reach
+  assert.strictEqual(dlv.contact({ robots: [R(2, 1, 4, 10, 17), R(3, 0, 2, 10, 23)] }, me), false);   // the unit can fire itself
+  assert.strictEqual(dlv.contact({ robots: [R(2, 1, 2, 10, 20), R(3, 0, 2, 10, 21)] }, me), false);   // pilgrims do not attack
+  assert.strictEqual(dlv.contact({ robots: [R(2, 1, 5, 10, 25), R(3, 0, 2, 10, 23)] }, me), false);   // r2 225: too far
 });

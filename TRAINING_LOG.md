@@ -1038,3 +1038,49 @@
   is not initialized.", counted as init_fail): 27 matches, all v3 games before match 141 (the setup bug v4 fixes);
   none since, and no timeouts or frozen robots. Opponents still lose robots at creation (LEARNINGS 17): bot1v43
   4,509 of 41,551 turns in 200-1, botfinalsafe 1,107 in 199-1, CometsTech 511 in 141-2.
+
+## 2026-10-22 01:52 — h44 delivery PASSED (3 of 3), gate queued; h46 delivery FAILED (1 of 3)
+- h44 (MARCH_MASK 8: only crusaders obey attack orders before round 900) vs h35, 8 games of 1000 rounds on 616,
+  2202, 241, 1915 both sides (out/dlv_h44_h35.jsonl, rp_dlv_h44; `tools/dlv.js --from 450 --to 650`, run on the
+  VM), against the items of 00:37: (1) move fuel in rounds 450-650: h44 46,516, h35 79,115 (59%; at most 60%):
+  PASS; (2) shots in 450-650: h44 3,710, h35 2,735 (136%; at least 100%): PASS; (3) castles lost: h44 3, h35 6:
+  PASS. Outcome 6 wins in 8 (all four on 616 and 2202); military lost 1,453 vs 1,945; 0 exceptions. Gate h44 vs
+  h35 queued (job ...4b01b1a44).
+- h46 (SPOT 3: firing prophets radio their target, crusaders and preachers engage it) vs h35 on 2924, 2202, 1915,
+  826 both sides, against the items of 00:53: (1) melee units lost unfired: h46 649, h35 589 (110%; at most 75%):
+  FAIL; (2) enemy military killed by our melee: h46 297, h35 318 (93%; at least 125%): FAIL; (3) castles lost 5
+  and 5: PASS. 2,250 spots radioed; 3 wins in 8. Melee units that walk to a heard target die about as often
+  unfired as those that do not. No gate. SPOT stays as the radio for h49, which points it at prophets alone:
+  SPOT_PROPHET became SPOT_MASK (unit types that hear; default 40 = h46's crusaders and preachers).
+- Stack per LEARNINGS 18: h50 = v5 + PIONEER_RESERVE 2 (h39, delivery passed 23:46) + MARCH_MASK 8 (h44): economy
+  and army orders, mechanisms apart. Gate 40 games vs h35, falsifier t <= 0, queued ahead of the single gates
+  (job ...a3d); h39, h43 and h44's single gates stay queued for attribution. h43 (recall) is left out: it also moves
+  the army, and h44 already keeps prophets and preachers home.
+
+## 2026-10-22 02:00 — h49 pre-registered: prophets converge on radioed sightings (SPOT 3 + SPOT_MASK 16)
+- Source: replica losses to StoneT2000. 199-1 (616): we traded 249 military lost for 266 killed and still lost on
+  castles: at r444 27 of theirs and 2 of ours stood within 10 tiles of the castle that fell, while our 168-unit army
+  stood 12 king steps from home on average (31 vs 60 within 20 tiles). 200-2 (2924, r240-272): bot1v43 built six
+  churches in a row 7-12 tiles off our castle (47,0) and pushed preachers and prophets out of them; our prophets held
+  lattice tiles r2 72-100 from the fight, out of sight (prophet vision r2 64 = its reach), and the castle fell at 272.
+  Prophets never move toward what they cannot see; SPOT (h46) radios a firing prophet's target to melee units only.
+- h49 = v5 + SPOT 3 + SPOT_MASK 16: firing prophets radio their target (FAR.ENEMY, 10 fuel, at most every 3 turns)
+  while another prophet of ours is in sight; prophets that heard a spot within 14 tiles of their post (of
+  themselves, marching) step to the tiles r2 16-64 from it and hold there. Melee units do not listen (h46 failed).
+- Driver diagnostic (first build, melee listening too; h49 red vs h35 on 2924, 800 rounds): 0 exceptions or clock
+  faults; 229 spots; prophet turns idle near a fight out of reach 3,190 vs h35's 5,078. h49 lost 296 military to
+  195 and 2 castles (561, 621) to h35's push of 90 units within 20 tiles; one mirror-ish game, the side may decide.
+- Delivery (VM queue, 8 games of 1000 rounds vs h35 on 2924, 2965, 616, 1250 both sides), summed, `tools/dlv.js`:
+  (1) prophet turns idle near a fight out of reach (idleContactP): h49 at most 70% of h35's; (2) military units
+  lost: h49 at most 95% of h35's; (3) castles lost no more than h35's. Gate 40 games vs h35, falsifier t <= 0
+  (prophets that leave their lattice tiles open gaps; newcomers walk into reach one at a time). Dose ladder: spot
+  reach 196 -> 400; SPOT 3 -> 1.
+
+## 2026-10-22 02:04 — h47 delivery FAILED (1 of 3): focus fire by a shared rule changes nothing measurable
+- h47 (FOCUS 1) vs h35, 8 games of 1000 rounds on 2924, 2202, 1915, 905 both sides (out/dlv_h47_h35.jsonl,
+  rp_dlv_h47; `tools/dlv.js` on the VM), against the items of 01:04: (1) enemy military killed per shot: h47 1,182 /
+  4,253 = 0.278, h35 1,148 / 4,190 = 0.274 (102%; at least 115%): FAIL; (2) military lost: h47 1,148, h35 1,182
+  (97%; at most 95%): FAIL; (3) castles lost 5 and 5: PASS. 4 wins in 8, each seed won once by each side but 2924
+  (h47 won both). No gate. Our shooters already converge: nearest-first with a positional tie-break picks the same
+  front unit for neighbours. The dose step (a shot budget per target, overkill) stays unqueued: kills per shot
+  0.27 with 2 shots needed per prophet leaves little to win.

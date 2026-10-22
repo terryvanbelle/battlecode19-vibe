@@ -481,10 +481,10 @@ test('military: SPOT: a firing prophet radios its target for melee units in sigh
   } finally { CFG.SPOT = saved; }
 });
 
-test('military: SPOT_PROPHET: prophets radio with only prophets in sight and walk into the band of a heard spot', () => {
-  const saved = [CFG.SPOT, CFG.SPOT_PROPHET];
+test('military: SPOT_MASK 16: prophets radio with only prophets in sight and walk into the band of a heard spot', () => {
+  const saved = [CFG.SPOT, CFG.SPOT_MASK];
   try {
-    CFG.SPOT = 3; CFG.SPOT_PROPHET = 1;
+    CFG.SPOT = 3; CFG.SPOT_MASK = 16;
     const sent = [];
     const w0 = { me: { x: 10, y: 10, turn: 20, unit: S.PROPHET }, friends: [{ x: 9, y: 9, unit: S.PROPHET }], fuel: 1000, sentR2: 0,
       signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; } };
@@ -505,7 +505,7 @@ test('military: SPOT_PROPHET: prophets radio with only prophets in sight and wal
     }
     assert.ok(at && tgt);
     const run = (on) => {
-      CFG.SPOT_PROPHET = on;
+      CFG.SPOT_MASK = on;
       const pro = { id: 4005, team: 0, unit: S.PROPHET, x: at[0], y: at[1], turn: 3, health: 20, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
       g.robots.push(pro);
       try {
@@ -516,13 +516,13 @@ test('military: SPOT_PROPHET: prophets radio with only prophets in sight and wal
         return { a: militaryTurn(B), B };
       } finally { g.robots.pop(); castle.signal = 0; castle.signal_radius = 0; }
     };
-    const on = run(1), e2 = (x, y) => d2(x, y, tgt[0], tgt[1]);
+    const on = run(16), e2 = (x, y) => d2(x, y, tgt[0], tgt[1]);
     assert.ok(on.B.st.spot && on.a && on.a.action === 'move' && on.B.nav.lastKey.startsWith('S'));
     assert.ok(e2(at[0] + on.a.dx, at[1] + on.a.dy) < e2(at[0], at[1]));
-    const off = run(0);
+    const off = run(40);
     assert.strictEqual(off.B.st.spot, undefined);
     assert.ok(!(off.B.nav.lastKey || '').startsWith('S'));
-  } finally { [CFG.SPOT, CFG.SPOT_PROPHET] = saved; }
+  } finally { [CFG.SPOT, CFG.SPOT_MASK] = saved; }
 });
 
 test('military: EDGE keeps a marching unit out of reach of enemy attackers until ours outnumber them', () => {
