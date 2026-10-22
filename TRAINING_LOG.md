@@ -1950,3 +1950,15 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   (h63 3 of 832 military builds, h50 85 of 708; scratch builds.js), so the grinder is a map trait, not the norm.
 - So h72's lines need a quiet front. If the delivery shows lines failing to fire on such maps, the variant is a
   church's threat response that leaves CHAIN_K unless an attacker is close (not built yet).
+
+## 2026-10-22 14:27 — replica: no ack since 13:12 because all five slots hold slow bots' matches; queue ~14 h
+- saturn (bc19-galaxy-saturn) is healthy: last ack 13:12 PDT, and its five games (28-90 min old at 14:20) are
+  matches 304 and 314 (uvafan.bc2019), 339 and 342 (m-schier wololo) and ours, 403 (wololo). Mean match wall time
+  per bot from 231 acks in the last 30 h (journal "starting execute" -> "acked"; scratch saturn_acks.log): overall
+  11.2 min; awesomelemonade 88, uvafan 52, wololo 47, nthistle 41, CometsTech~187e8c 38, NielsKornerup 33.
+- The games are not starved: each replica game holds a core (98-116% CPU, GC threads), the VM has 18 GB free and no
+  swap, our two gate games run at nice 10. The queue (163 incl. running) is ~69 slot-hours at those means, ~14 h on
+  5 slots; no bot holds more than 10% of it (NielsKornerup 6.6 slot-h, awesomelemonade 5.9), so no drop helps
+  (owner rule, PROMPTS 20). A 6th slot (8 games on 8 vCPUs, the README limit; MAX_EXECUTE_SLOTS, CPUQuota, MemoryMax)
+  needs a saturn restart, which kills the running games (KillMode=mixed): ~5 slot-hours lost now for +20%. Not now;
+  revisit when the slots hold young games.
