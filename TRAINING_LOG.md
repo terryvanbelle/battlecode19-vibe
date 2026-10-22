@@ -301,3 +301,18 @@
   fuel down by >= 25 points, enemy damage per attack fuel up >= 30%, no more castles lost. Gate: h23 vs h19, 40
   games; falsifier net <= 0 (range fire that wins prophet duels matters more than fuel). Dose ladder 200 -> 500.
   Independent of h22 (build mix): they could stack.
+
+## 2026-10-21 18:50 — h18 REJECTED; queue from the shadow tree
+- h18 (cruise fuel reserve 1,500) vs h6, 40 games (out/h18_h6.jsonl, old harness: no --init-ms): raw 15-25 (wins
+  8 health 7 castles; losses 17 castles 8 health); 15 games skipped for init failures; clean head-to-head: 8 cells,
+  gained 1, lost 6, split 1, net -5, t -1.89. REJECTED. Keeping 1,500 fuel back from marching and lattice moves
+  loses castle races: the delivery showed the bank kept (1,376 vs 49 over rounds 500-700), the gate says it costs
+  more than it saves. h18r (the same on h19) dropped; the pre-registered dose 500 runs last in the queue as h18b
+  (h19 + CRUISE_FUEL_RESERVE=500, vs h19); 3,000 is not run.
+- The driver ran short of memory at 18:10 (a 1000-round diagnostic game beside the agent) and the session's
+  background shells were killed, including the waiter that was to sync the VM and queue the gates (LEARNINGS 11).
+  The gates were queued by hand instead and run from the shadow tree ~/projects/vibe/2019-next (h19 vs h6 started
+  18:40). The main tree's src/tools/test/build were synced at 18:50 (engine/maps/bots/dist left alone while a batch
+  reads them); the reference jobs v3 vs v0 and v3 vs rush, now with --init-ms 1000, run after the gates.
+- h20 symcheck (seeds 1-3, 200 rounds): seed 2 exact; seed 1 parts at round 111 over a contested axis tile, seed 3
+  at 115 in combat: the known, expected kinds.
