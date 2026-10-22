@@ -1651,7 +1651,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   h50's in the same games; (3) churches built by round 300 on h65's side at least h50's. Accept per the gate
   (t >= 2); as a basics fix (pioneers that never arrive) at net >= 0 if (1)-(3) pass. Falsifier: t <= 0 or (2) fails.
 
-## 2026-10-22 09:45 — 5th replica slot live (after a failed first deploy); h8v5 rebased as h8v6
+## 2026-10-22 09:40 — 5th replica slot live (after a failed first deploy); h8v5 rebased as h8v6
 - Deployed the 5th execute slot and the error census at 09:32 (16:32 UTC). Every game then exited 1 within a second
   (218 nacks in 10 s; 152 matches back to TRY, none to ERR). Cause: the census build also shipped run_game.js's
   netIsolated(), which calls os.networkInterfaces(); saturn's unit sets RestrictAddressFamilies, so the netlink
