@@ -11,6 +11,7 @@ import { nextTarget, isChoke, militaryTurn, holdTarget } from '../src/bot/milita
 import { callDue, castleTurn, nextPioneer, pioneerDue } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer } from '../src/bot/struct.js';
+import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
@@ -572,6 +573,17 @@ test('castle: PIONEER_RESERVE 2 holds the pioneer karbonite at every castle unti
     const mirror = run(1);
     assert.deepStrictEqual(mirror.map(B => [B.st.plan.length, B.st.planAll]), run(0).map(B => [B.st.plan.length, B.st.planAll]));
   } finally { CFG.PIONEER_RESERVE = saved; }
+});
+
+test('tools/plan.mjs: both teams get the same plan; seed 2924 orphans 3 own-side depots, none with SERVE_MOVES 2 + PLAN_CONTEST_FIRST 6', () => {
+  const saved = [CFG.SERVE_MOVES, CFG.PLAN_CONTEST_FIRST];
+  try {
+    const a = planReport(2924, 0), b = planReport(2924, 1);
+    assert.strictEqual(a.text.replace(/team \d/, ''), b.text.replace(/team \d/, ''));
+    assert.strictEqual(a.side, 23); assert.strictEqual(a.orphans, 3);
+    CFG.SERVE_MOVES = 2; CFG.PLAN_CONTEST_FIRST = 6;
+    assert.strictEqual(planReport(2924, 0).orphans, 0);
+  } finally { [CFG.SERVE_MOVES, CFG.PLAN_CONTEST_FIRST] = saved; }
 });
 
 test('struct: FRONT_ROUND sends a pilgrim to build a church FRONT_STEP rows ahead, which finds the same site; mirror-identical', () => {
