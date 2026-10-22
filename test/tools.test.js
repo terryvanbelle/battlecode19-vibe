@@ -175,3 +175,19 @@ test('replay: fire efficiency per shooter type adds up to the fuel tally', () =>
   assert.match(replay.fireText(rows), /red\tpreacher\t3\t45\t50\t0\t2\t1\.11/);
   assert.strictEqual(replay.fire(buf, 0, 20).length, 0);   // the rush arrives at round 30
 });
+
+test('replay: timeline snapshots match the tally and the final state', () => {
+  const buf = fs.readFileSync(path.join(FIX, 'rush_s2908_r80.bc19'));
+  const rows = replay.timeline(buf, [25, 50]), an = replay.analyze(buf);
+  assert.deepStrictEqual(rows.map(r => r.round), [25, 25, 50, 50, 80, 80]);   // checkpoints, then the last round
+  for (const team of [0, 1]) {
+    const last = rows.filter(r => r.team === team).pop(), T = an.tally[team], F = an.final[team];
+    assert.strictEqual(last.mined_k, T.mined_k); assert.strictEqual(last.mined_f, T.mined_f);
+    assert.strictEqual(last.move_fuel, T.fuel_move);
+    assert.deepStrictEqual([last.castle, last.church, last.pilgrim, last.army, last.karbonite, last.fuel],
+      [F.units[0], F.units[1], F.units[2], F.units[3] + F.units[4] + F.units[5], F.karbonite, F.fuel]);
+    const r25 = rows.find(r => r.team === team && r.round === 25);
+    assert.ok(r25.mined_k <= last.mined_k && r25.mined_f <= last.mined_f);
+  }
+  assert.match(replay.timelineText(rows), /^== RED\nround\tcastle\tchurch\tpilgrim\tarmy/);
+});

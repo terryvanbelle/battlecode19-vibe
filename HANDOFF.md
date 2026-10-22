@@ -47,7 +47,7 @@ tools/unit-tests.sh                                   # after every change
 node tools/build_bot.js src/bot dist/dev              # minified single-file bundle that games run
 node tools/symcheck.js --bot dist/dev --seeds 1,2,3 --rounds 200   # side-symmetry check (VM)
 node tools/run_game.js --red src/bot --blue bots/v0 --seed 2 --replay r.bc19 --logs l.jsonl   # one game
-node tools/replay.js summary r.bc19                  # also: rounds, unit --id, board --round, events, nav, talk, threat, fire
+node tools/replay.js summary r.bc19                  # also: rounds, unit --id, board --round, events, nav, talk, threat, fire, timeline
 node tools/basics.js --team red r.bc19               # basics battery
 source tools/vm.sh && ensure_vm && vm_sync           # push code to the VM
 gssh 'cd ~/projects/vibe/2019 && ~/bin/node tools/batch.js --a dist/dev --b bots/v1 --random 24 --par 6 --timescale 2 --out ~/runs/results.jsonl --replays ~/runs/replays --tag X'

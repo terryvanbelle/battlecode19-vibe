@@ -12,6 +12,7 @@
 //   node tools/replay.js talk     <replay> [--team T]      # castle-talk and radio telemetry per turn
 //   node tools/replay.js threat   <replay> [--json]        # each structure's first enemy combat unit in view: stores, response
 //   node tools/replay.js fire     <replay> [--from R --to R]  # per team and shooter type: shots, fuel, damage per fuel
+//   node tools/replay.js timeline <replay> [--at 25,50,...]   # per team at checkpoints: structures, pilgrims, army, mined, bank
 // Teams: 0 red, 1 blue. Unit codes: 0 castle, 1 church, 2 pilgrim, 3 crusader, 4 prophet, 5 preacher.
 'use strict';
 const fs = require('fs');
@@ -300,12 +301,45 @@ function fireText(rows) {
     ...rows.map(a => [['red', 'blue'][a.team], UNIT[a.unit], a.shots, a.fuel, a.enemy, a.friendly, a.kills, (a.enemy / a.fuel).toFixed(2)].join('\t'))].join('\n');
 }
 
-module.exports = { fire, fireText, threats, threatText, parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
+// Economy and army at checkpoint rounds (and the last round): what to compare between two bots' openings.
+function timeline(buf, at = [25, 50, 75, 100, 150, 200, 300, 500, 700, 1000]) {
+  const mined = [[0, 0], [0, 0]], moveF = [0, 0], rows = [];
+  const snap = (round, g) => {
+    for (const team of [0, 1]) {
+      const s = teamState(g, team), u = s.units;
+      rows.push({ round, team, castle: u[0], church: u[1], pilgrim: u[2], army: u[3] + u[4] + u[5], mined_k: mined[team][0],
+        mined_f: mined[team][1], karbonite: s.karbonite, fuel: s.fuel, move_fuel: moveF[team] });
+    }
+  };
+  let last = 0;
+  const res = simulate(buf, {
+    onTurn({ robot, rec, game, error }) {
+      if (error) return;
+      if (rec.action === 4) mined[robot.team][game.karbonite_map[robot.y][robot.x] ? 0 : 1] += game.karbonite_map[robot.y][robot.x] ? SPECS.KARBONITE_YIELD : SPECS.FUEL_YIELD;
+      if (rec.action === 1) moveF[robot.team] += (rec.dx * rec.dx + rec.dy * rec.dy) * SPECS.UNITS[robot.unit].FUEL_PER_MOVE;
+    },
+    onRoundEnd(round, g) { if (at.includes(round)) { snap(round, g); last = round; } },
+  });
+  if (last !== res.game.round) snap(res.game.round, res.game);
+  return rows;
+}
+
+function timelineText(rows) {
+  const cols = ['round', 'castle', 'church', 'pilgrim', 'army', 'mined_k', 'mined_f', 'karbonite', 'fuel', 'move_fuel'];
+  const out = [];
+  for (const team of [0, 1]) {
+    out.push(`== ${['RED', 'BLUE'][team]}`, cols.join('\t'));
+    for (const r of rows) if (r.team === team) out.push(cols.map(c => r[c]).join('\t'));
+  }
+  return out.join('\n');
+}
+
+module.exports = { timeline, timelineText, fire, fireText, threats, threatText, parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
 
 if (require.main === module) {
   const argv = process.argv.slice(2), cmd = argv[0], file = argv[1];
   const opt = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
-  if (!cmd || !file) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 17).join('\n')); process.exit(1); }
+  if (!cmd || !file) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 18).join('\n')); process.exit(1); }
   const buf = fs.readFileSync(file);
   if (cmd === 'summary') console.log(summaryText(analyze(buf)));
   else if (cmd === 'json') console.log(JSON.stringify(analyze(buf)));
@@ -316,6 +350,7 @@ if (require.main === module) {
   else if (cmd === 'nav') console.log(nav(buf));
   else if (cmd === 'talk') console.log(events(buf, 0, Infinity, ['signal', 'talk']).split('\n').filter(l => !opt('--team') || l.includes(' ' + 'RB'[+opt('--team')])).join('\n'));
   else if (cmd === 'fire') console.log(fireText(fire(buf, parseInt(opt('--from', '0'), 10), parseFloat(opt('--to', 'Infinity')))));
+  else if (cmd === 'timeline') { const at = opt('--at'); console.log(timelineText(at ? timeline(buf, at.split(',').map(Number)) : timeline(buf))); }
   else if (cmd === 'threat') { const t = threats(buf); console.log(argv.includes('--json') ? JSON.stringify(t) : threatText(t)); }
   else { console.error('unknown command ' + cmd); process.exit(1); }
 }
