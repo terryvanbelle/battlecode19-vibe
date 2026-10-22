@@ -11,11 +11,12 @@
   setup that re-runs until complete, LEARNINGS 10): 21-19 vs h6 (t 0.58), ACCEPTED 20:04 and frozen as v4.
   Candidates are switches on h19, gated against h19 with `--timescale 2 --init-ms 1000 --fast-turn`.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
-  bots/dist linked to the main tree, outputs in the main tree's out/): h24 (economy first; running since 21:02), h31
-  (church density: SERVE_MOVES 2 + PLAN_CONTEST_FIRST 6; TRAINING_LOG 21:20; h32 = contest-first alone, built, gated
-  only if h31 passes; h34 = SERVE_MOVES 1 dose, built, waits on h31; h33 = PILGRIM_SAFE_STEP, delivery on the driver, TRAINING_LOG 21:30), h29 (NAV_FIT + LATTICE_STICKY 2: lattice memory), h28
+  bots/dist linked to the main tree, outputs in the main tree's out/): h24 (economy first; running since 21:02),
+  h31 (church density: SERVE_MOVES 2 + PLAN_CONTEST_FIRST 6; TRAINING_LOG 21:20), h35 (stack of every delivered
+  switch: h31 + h21 + h29 + h33; 21:59), h33 (PILGRIM_SAFE_STEP; delivery passed 21:59), h29 (NAV_FIT + LATTICE_STICKY 2: lattice memory), h28
   (LATTICE_STICKY 2 alone), h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b vs h19; then the reference jobs v4 vs v0
-  and v4 vs rush (main tree). h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
+  and v4 vs rush (main tree). Built, not queued: h32 (contest-first alone) and h34 (SERVE_MOVES 1 dose), both wait
+  on h31's gate. h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
   ~/jobq/hold. Withdrawn before their gates: h22, h23 and h27 (deliveries failed; h36 = h22 + h23 doses in the extra lane), h25s and h26 (replaced by h29, h28), h30 (by h31).
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game

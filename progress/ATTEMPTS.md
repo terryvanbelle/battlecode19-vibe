@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 19 other, 9 queued, 8 in progress, 5 accepted, 3 dropped, 3 rejected, 1 sparring partners (48 rows).
+Totals: 19 other, 9 in progress, 9 queued, 5 accepted, 3 dropped, 3 rejected, 1 sparring partners (49 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -42,7 +42,8 @@ Totals: 19 other, 9 queued, 8 in progress, 5 accepted, 3 dropped, 3 rejected, 1 
 | `h29` | 2026-10-21 | h19 | h19 + nav fit + lattice memory (NAV_FIT=1, LATTICE_STICKY=2) |  |  |  |  | in progress: delivery on 2202 preacher oscillations 3, K+F 8024 vs 7944, move fuel 1858 vs 1846; gate QUEUED: 40 games vs h19 |
 | `h30` | 2026-10-21 | h19 | h19 + church density: a depot more than 2 pilgrim moves from a structure gets its own church (SERVE_MOVES=2) |  |  |  |  | WITHDRAWN before its gate: 826 +65% K+F but 1828 lost the centre race (centre pioneers sent at r48/67 vs r27/28); superseded by h31 |
 | `h31` | 2026-10-21 | h19 | h19 + church density with contested clusters planned first (SERVE_MOVES=2, PLAN_CONTEST_FIRST=6) |  |  |  |  | in progress: delivery PASSED (K+F +31-34% on 826/1828, churches >= h19); gate QUEUED: 40 games vs h19 |
-| `h33` | 2026-10-21 | h19 | h19 + pilgrims never step into a visible enemy attacker's threat range (PILGRIM_SAFE_STEP=1) |  |  |  |  | in progress: delivery on driver (1828, 826) |
+| `h33` | 2026-10-21 | h19 | h19 + pilgrims never step into a visible enemy attacker's threat range (PILGRIM_SAFE_STEP=1) |  |  |  |  | in progress: delivery PASSED (pilgrims lost 5 vs 46, K+F +11%); gate QUEUED: 40 games vs h19 |
+| `h35` | 2026-10-21 | h19 | h19 + every delivered switch: church density and contested clusters first, cargo relay, nav fit and lattice memory, safe pilgrim steps (SERVE_MOVES=2, PLAN_CONTEST_FIRST=6, RELAY=1, NAV_FIT=1, LATTICE_STICKY=2, PILGRIM_SAFE_STEP=1) |  |  |  |  | in progress: delivery on driver; gate QUEUED after h31: 40 games vs h19 |
 | `h36` | 2026-10-21 | h19 | h19 + preachers in place of prophets and a prophet fuel floor (MIL_ROTATION [5,3,5,3,4], PROPHET_FLOOR=200) |  |  |  |  | in progress: delivery vs bots/rush (extra lane) |
 | `h7r` | 2026-10-21 | h19 | h19 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7 |  |  |  |  | QUEUED: 40 games vs h19 |
 | `h8r` | 2026-10-21 | h19 | h19 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8 |  |  |  |  | QUEUED: 40 games vs h19 |
