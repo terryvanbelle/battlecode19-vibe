@@ -13,7 +13,7 @@
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/): h24 (economy first; running since 21:02), h31
   (church density: SERVE_MOVES 2 + PLAN_CONTEST_FIRST 6; TRAINING_LOG 21:20; h32 = contest-first alone, built, gated
-  only if h31 passes), h22
+  only if h31 passes; h33 = PILGRIM_SAFE_STEP, delivery on the driver, TRAINING_LOG 21:30), h22
   (preachers: prophets lose the fuel exchange vs a rush), h29 (NAV_FIT + LATTICE_STICKY 2: lattice memory), h28
   (LATTICE_STICKY 2 alone), h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b vs h19; then the reference jobs v4 vs v0
   and v4 vs rush (main tree). h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
@@ -45,8 +45,9 @@
   games; scrims (matches 199-202) challenge StoneT2000 (botfinalsafe, bot1v43) and IvanGeffner (bot6b, eigthbot),
   which had not played (`contest19.py scrim --vs NAME,...`). 199 lost 0-3 and 200 lost 1-2 (TRAINING_LOG 20:23).
   Match 201 (vs bot6b) is in TRY: game 2 (seed 616, 57x57) passed saturn's per-game wall limit GALAXY_GAME_TIMEOUT
-  1800 s (exit 124, 03:52 UTC). Raising it (env file + saturn restart) was blocked by the auto-mode classifier
-  (Modify Shared Resources): waiting on the owner.
+  1800 s (exit 124, 03:52 UTC); match 202 (vs eigthbot) did the same at 04:09 UTC and both retry, each holding a
+  replica execute slot for ~30 min per attempt. Raising the limit (env file + saturn restart) was blocked by the
+  auto-mode classifier (Modify Shared Resources): asked the owner 21:40 PDT, waiting.
 - Gate jobs from h16r on run with `--fast-turn` (run_game/batch: one precompiled turn script per sandbox, same view
   and kill; replays identical under --det; TRAINING_LOG 19:39). Its saving is judged on the VM by per-game wall time
   vs h19 vs h6 (425 s at par 4); time audits and the replica use the engine path. Never time on the driver (LEARNINGS 13).
