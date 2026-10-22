@@ -57,7 +57,7 @@ from replica_gcp import config, spool, storage  # noqa: E402
 
 MAX_EXTRACTED = 64 * 1024 * 1024
 MAX_BUNDLE = 16 * 1024 * 1024
-MAX_EXECUTE_SLOTS = 4
+MAX_EXECUTE_SLOTS = 5
 # V8 heap cap per game process (both bots share it: the engine's own memory check is disabled). A runaway bot then
 # ends its game (the match retries, then errors) instead of driving the VM into reclaim thrash.
 GAME_HEAP_MB = int(os.environ.get('GALAXY_GAME_HEAP_MB', '2048'))
@@ -67,9 +67,10 @@ GAME_HEAP_MB = int(os.environ.get('GALAXY_GAME_HEAP_MB', '2048'))
 # per-turn clock keeps the contest rule.
 INIT_MS = int(os.environ.get('GALAXY_INIT_MS', '1000'))
 # per-team stats copied from run_game.js into match.json: errors and clock health (timeouts = vm2 script timeouts,
-# frozen = out of chess-clock time, slow_turns = turns over 20 ms of wall time) to watch CPU contention
-TEAM_KEYS = ('team', 'errors', 'frozen', 'timeouts', 'init_fail', 'exceptions', 'units', 'health', 'turns', 'ms_mean',
-             'ms_max', 'init_ms_max', 'slow_turns')
+# frozen = out of chess-clock time, slow_turns = turns over 20 ms of wall time) to watch CPU contention; init_robots
+# (robots whose sandbox failed to start) and err_kinds (the five commonest error kinds) tell a replica fault from a bot's
+TEAM_KEYS = ('team', 'errors', 'frozen', 'timeouts', 'init_fail', 'init_robots', 'exceptions', 'err_kinds', 'units',
+             'health', 'turns', 'ms_mean', 'ms_max', 'init_ms_max', 'slow_turns')
 REVISION = 'bc19-replica tools/galaxy19/saturn.py'
 MAP_RE = re.compile(r'^seed-([1-9][0-9]{0,9})$')
 

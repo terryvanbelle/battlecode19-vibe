@@ -133,6 +133,7 @@ async function main() {
   // Logs: g.logs[team] = [{type:'log'|'error', message, robot, timestamp}]
   const counts = [0, 1].map(team => {
     let logs = 0, errors = 0, frozen = 0, init_fail = 0, exceptions = 0, timeouts = 0, exc_caught = 0, slow_logged = 0;
+    const kinds = new Map(), failed = new Set();   // error kinds (first line, numbers as #); robots whose init failed
     for (const e of g.logs[team]) {
       if (e.type === 'log') {
         logs++;
@@ -145,11 +146,16 @@ async function main() {
         const m = String(e.message);
         if (m.includes('frozen due to clock')) frozen++;
         else if (m.includes('Script execution timed out')) timeouts++;
-        else if (m.includes('initialize')) init_fail++;
+        else if (m.includes('initialize')) { init_fail++; failed.add(e.robot); }
         else exceptions++;
+        const k = m.split('\n')[0].slice(0, 90).replace(/[0-9]+(\.[0-9]+)?/g, '#');
+        kinds.set(k, (kinds.get(k) || 0) + 1);
       }
     }
-    return { logs, errors, frozen, timeouts, init_fail, exceptions, exc_caught, slow_logged };
+    // The five commonest error kinds: engine messages (frozen, not initialized, invalid actions) or a thrown error's
+    // first line. Replica health: a robot whose sandbox failed to start repeats "not initialized" every turn.
+    const err_kinds = Object.fromEntries([...kinds].sort((a, b) => b[1] - a[1]).slice(0, 5));
+    return { logs, errors, frozen, timeouts, init_fail, init_robots: failed.size, exceptions, exc_caught, slow_logged, err_kinds };
   });
   if (a.logs) {
     const out = [];

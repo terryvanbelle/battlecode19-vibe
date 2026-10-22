@@ -126,11 +126,11 @@ class Games(unittest.TestCase):
         self.assertEqual(rt.cmd('/w', ['node', 'x']), ['/bin/sh', 'sb.sh', '/w', 'node', 'x'])
         self.assertEqual(saturn.Runtime(root='/r', sandbox=[]).cmd('/w', ['node']), ['node'])
         self.assertTrue(saturn.Runtime(root='/r').sandbox[-1].endswith('sandbox.sh'))
-        self.assertLessEqual(saturn.MAX_EXECUTE_SLOTS, 4)
+        self.assertLessEqual(saturn.MAX_EXECUTE_SLOTS, 5)
         argv = rt.game_argv('/w/a.js', '/w/b.js', 7, '/w/r.bc19', '/w/o.json')
         self.assertEqual(argv[0], '/r/bin/node')
         self.assertEqual(argv[1], f'--max-old-space-size={saturn.GAME_HEAP_MB}')   # bounded memory per game
-        self.assertLessEqual(saturn.GAME_HEAP_MB * saturn.MAX_EXECUTE_SLOTS, 10 * 1024)  # within the unit's MemoryMax
+        self.assertLessEqual(saturn.GAME_HEAP_MB * saturn.MAX_EXECUTE_SLOTS, 11 * 1024)  # within the unit's MemoryMax (12G)
         self.assertEqual(argv[2:], ['/r/tools/run_game.js', '--red', '/w/a.js', '--blue', '/w/b.js', '--seed', '7',
                                     '--replay', '/w/r.bc19', '--json', '/w/o.json', '--init-ms', str(saturn.INIT_MS)])
         self.assertGreaterEqual(saturn.INIT_MS, 100)   # never stricter than the engine's own rule

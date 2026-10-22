@@ -139,7 +139,7 @@ IPAddressAllow=localhost
 EOF
   # replica games keep their CPU when the main session's batches (timescale 2, user.slice, weight 100) load the VM: a
   # robot's code load has a wall-clock budget, and big transpiled bundles fail it on a contended VM. The weight sits on
-  # the parent bc19.slice, the level that competes with user.slice; saturn's CPUQuota still caps games at 5 cores.
+  # the parent bc19.slice, the level that competes with user.slice; saturn's CPUQuota still caps games at 6 cores.
   install -d -m 0755 /etc/systemd/system/bc19.slice.d
   printf '[Slice]\nCPUWeight=400\n' > /etc/systemd/system/bc19.slice.d/cpu-weight.conf
   systemctl daemon-reload
@@ -266,7 +266,7 @@ DJANGO_SETTINGS_MODULE=replica_settings
 DJANGO_CONFIGURATION=Replica
 SIARNAQ_REVISION=galaxy-f343088-bc19-replica
 GALAXY_COMPILE_SLOTS=1
-GALAXY_EXECUTE_SLOTS=4
+GALAXY_EXECUTE_SLOTS=5
 GALAXY_INIT_MS=1000
 GALAXY_GAME_TIMEOUT=5400
 GALAXY_SCHED_MAX_WAITING=30
@@ -346,7 +346,7 @@ WantedBy=multi-user.target
 EOF
   cat > "/etc/systemd/system/$U_SATURN" <<EOF
 [Unit]
-Description=bc19 galaxy replica: saturn (compile submissions, run matches with the bc19 engine; no network; at most 4 games)
+Description=bc19 galaxy replica: saturn (compile submissions, run matches with the bc19 engine; no network; at most 5 games)
 $head $U_RELAY
 Wants=$U_RELAY
 
@@ -359,11 +359,12 @@ PrivateNetwork=yes
 ExecStart=/usr/bin/python3 $OPT/galaxy19/saturn.py run
 KillMode=mixed
 TimeoutStopSec=60
-# 4 games + 1 compile at most (GALAXY_EXECUTE_SLOTS; saturn caps it at 4; owner, PROMPTS 18): the main session's A/B
-# batches (--par 2 while the replica queue is long) share the VM. The CPU cap is a backstop above 4 single-threaded games (node's GC/JIT threads add bursts): a tighter quota would
-# throttle in 100 ms periods and turn into chess-clock timeouts.
-MemoryMax=10G
-CPUQuota=500%
+# 5 games + 1 compile at most (GALAXY_EXECUTE_SLOTS; saturn caps it at 5): the main session's A/B batches (--par 2
+# while the replica queue is long; owner, PROMPTS 18) share the VM, and the 5th slot is the session's extra lane,
+# paused while the queue is long (PROMPTS 17). The CPU cap is a backstop above 5 single-threaded games (node's GC/JIT
+# threads add bursts): a tighter quota would throttle in 100 ms periods and turn into chess-clock timeouts.
+MemoryMax=12G
+CPUQuota=600%
 Restart=on-failure
 RestartSec=30s
 
