@@ -128,6 +128,10 @@ export const CFG = {
                              // per fuel); the rotation between (h35 lost gate seeds 905 and 2855 with K 0 and F
                              // 12,540 / 13,916 unspent; it won 2202, 241, 357 with K 3,000-8,700 and F ~60)
   RESERVE_CHURCH_K: 50,      // karbonite kept back while a pioneer is out
+  PEACE_RESERVE_K: 0,        // >0: every structure's peacetime army leaves this much karbonite in the bank (castles act
+                             // first in a round, so the churches' army had spent it before a castle's turn: replica
+                             // 394-2, seed 70: after round 24 neither castle afforded a pioneer (60 K), bank 0-40, 2 of 4
+                             // planned sites never churched, 2.7x fewer mines than awesomelemonade by round 450)
   DEF_RESERVE_K: 0,          // >0: every karbonite spend but a threat response (pilgrims, pioneers, churches, the
                              // peacetime army) leaves this much in the bank, so a structure that sees attackers can
                              // build a preacher (30 K) at once (replica seed 1915: the castle had spent its karbonite
