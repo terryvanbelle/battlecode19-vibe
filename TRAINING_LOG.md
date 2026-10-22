@@ -1891,3 +1891,28 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   census counts as guard_first too, so the pre-registered (3) "h71's guard_first exceeds h50's by >= 3" can fail
   while the switch works. **Amended before the delivery runs** (it has not started; seen here are 150-round driver
   games, not delivery games): (3) guard_first on h71's side >= 4 across the 8 games. (1) and (2) unchanged.
+
+## 2026-10-22 13:43 — h72 (StoneT2000's long church line): the line fires and kills; delivery pre-registered
+- Replica 407-3 (StoneT2000 red vs v6, seed 2013) is now a test fixture (test/fixtures/chain_s2013_407-3.bc19, the
+  whole 282-round game): census counts red's 12-church line at r274 (chain_near 1, chain_kills 1) and a 4-church one.
+  How it went: two red pilgrims that had mined at red's own lower cluster ((10,26), (11,25), 13-14 king steps from
+  our castle (15,39)) each started a line at r274, 16 churches between them, the longer ending at (17,37), 2 steps
+  from the castle. Our units killed 6 link pilgrims at r275; 11 churches built a preacher each that round and 8 the
+  next; the castle died at r282. Our army stood around our churches in the centre and east (x 22-45), not on the
+  line's side. StoneT stages nowhere near us: the line starts from its own miners and is long.
+- Our chain.js already builds such lines; h69 failed because its chainer walked to 12 steps and died, and CHAIN_K
+  300 pays for ~5 links. **h72 = v6 + CHAIN_ROUND 200 + CHAIN_STAGE 15 + CHAIN_END_R2 2 + CHAIN_K 1000 + CHAIN_F 3500
+  + CHAIN_MIX [5]** (sha f5824cc1f880): the chainer waits 15 king steps out (our own half on most maps), the bank
+  pays for ~15 links, and every church of the line builds preachers. Driver diagnostics vs h50 on 2013 (LEARNINGS 19):
+  - h72 red to 380: no use; seed 2013 goes to blue in self-play before any line (red lost its church at (5,25) at
+    r29 and the (39-41, 22-30) fight; army 3 vs 49 at r150), and one 3-church line fired far out.
+  - h72 blue to 420: the chainer staged at (16,29), 15 steps from red's castle (15,14); at r236 a 7-church line
+    (15,28) -> (13,16) in one round, 7 preachers at r237, red's castle dead at r239 (game over). Blue was far ahead
+    already (army 80 vs 4 at r200), so the game shows the mechanism, not a gain.
+- Delivery, VM job ...a3d57710056 (after h71's delivery, before h64's gate). No no-op of its own: a pure --cfg build
+  on the source that h71's no-op (v6l) checks. Symcheck h72 on 1, 2, 3, 2013 to 300; h72 vs h50 on 2013, 2924, 705,
+  1706 (replica seeds where StoneT2000 lines took our castles) both sides, full games; census to 1000. PASS needs
+  all 3: (1) a line of >= 5 churches on h72's side (census chains, chain-min 5) in >= 4 of 8 games; (2) chain_kills on
+  h72's side >= 3 across the 8; (3) h72 wins >= 5 of 8. Falsifier: (2) fails, i.e. lines against our own lattice do
+  not take castles. On PASS: gate h72 vs h50, 20 random cells from seed0 5000, and h66's chain half is replaced by
+  h72's settings.
