@@ -1379,3 +1379,23 @@
   null simulation and identity control first. No decision rule changes.
 - Slip: the run also read out/h24v5_h35.jsonl while that gate was running (6 cells). Nothing is taken from it; the
   gate runs to completion under its pre-registered rule (accept t >= 2, reject t <= 0, otherwise D-sized looks).
+
+## 2026-10-22 05:59 — late game: fuel binds, karbonite floats; h8v5 (ENDGAME_FUEL 900) pre-registered, moved up
+- Census (scratch latebuild.js, VM) of the pure h35-vs-h35 games of h54's gate that reached round 1000 (2202, 2296,
+  241, 2633, 2642, 2904, 499): at round 850 the bank held K 2,752-4,805 on at least one side in 5 of 7 (2633 and
+  2904: K under 230, fuel 7,710-8,224 in 2633) with fuel 28-460; 2,700-5,700 K ended unspent. From 850 on the
+  structures built mostly crusaders (endgame dump; 40 HP per 50 fuel) and prophets / preachers. Health margins of
+  the round-1000 health finishes in h54's gate (near-mirror): 70-510 on totals of 740-3,130.
+- Per 50 fuel (every unit costs 50): preacher 60 HP, crusader 40, prophet 20. When fuel binds and karbonite
+  floats, the most tiebreak health per fuel is a preacher.
+- **h8v5 = v5 + ENDGAME_FUEL 900** (built 00:16 from v5, code unchanged since): from round 900 every structure
+  builds a preacher whenever it can afford one (a crusader if K < 30), no pilgrims, churches or reserves; military
+  units more than 3 king steps from home stop cruising (they still shoot and engage). Trigger: games reaching round
+  900, 14-25 of 40 in the last three gates. Decision counter: preachers built in rounds 900-1000 (latebuild.js).
+  Displaces: late pilgrims and churches, late crusader dump, late cruising.
+- Delivery (gate lane, job ...a3d5755 after h24v5's gate; 8 games vs h35 on 2202, 2296, 499, 2633 both sides,
+  maps whose mirror games went to round 1000 on health): (1) preachers built in rounds 900-1000: h8v5 at least 3x
+  h35's in the same games; (2) final total health, summed over games that reach round 1000: h8v5 at least 120% of
+  h35's; (3) h8v5 wins at least 5 of 8. Then a gate of 40 games vs h35 (its job ...4b06 moves up behind the delivery
+  if it passes), D-sized looks 12 / 24 / 48, at most 200 cells, accept t >= 2, reject t <= 0. Dose ladder 900 ->
+  850 / 950; zero arm h35. Driver diagnostic h8v5 red vs h35 on 2202 (1000 rounds) running.
