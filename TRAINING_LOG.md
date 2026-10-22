@@ -1725,3 +1725,39 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   125% of h50's; (2) by round 200 at least 110%; (3) pioneers died at most 150% of h50's + 2. Accept at t >= 2
   (looks D 12 / 24 / 48), reject at t <= 0; falsifier t <= 0 or (1) fails. Dose ladder: 4, then 6 (three per castle
   on two-castle maps).
+
+## 2026-10-22 10:47 — the CS554 rush reproduced locally (bots/rush4); h20v6 delivery pre-registered and moved up
+- All three early castle losses in the replica (of 37 losses in 235 games) are to CS554 on one-castle maps: 1375
+  (round 53, v1), 1915 (29, v3), 1706 (28, v5). In 235-2 (seed 1706, 37x37, poor: 8 karbonite tiles) CS554 built 3
+  pilgrims, crusaders at rounds 4, 6, 7, 14 and a prophet at 5; first damage at round 20. v5 built 5 pilgrims, a
+  pioneer church at round 10 (50 karbonite) and its 2 pilgrims, held 0 karbonite from round 10 to 22 and lost its
+  castle at 28 without building a defender.
+- Our sparring partner bots/rush (built 2026-10-21 from v2-era source) never tested this: its crusaders cruise at r2
+  <= 2 and pause, first damage at round 31 on 1706; v6 kills 14 crusaders for 1 in 120 rounds, both sides.
+- **bots/rush4** = current src with `--cfg RUSH=3 --cfg CRUISE_R2=4` (sha 47751d295347): three pilgrims, then
+  crusaders at two tiles a turn, first damage at round 15 on 1706. v6 (h50) loses its castle to it at round 27 on
+  1706 as red and as blue (mirror-exact: same rounds, same tiles). At r2 9 (first damage round 11) the crusaders
+  arrive before the church is paid for and v6's castle builds preachers at 10 and 12 and holds: the danger is a rush
+  that lands just after the pioneer church has emptied the bank.
+- DEF_RESERVE_K 30 (h20v6, sha 3101261a8d9c) holds 1706 vs rush4 on both sides (preachers at 13 and 14; 60 adds a
+  third). Driver diagnostics, 200 rounds, h50 and h20v6 vs rush4 on 1706/1915/1375 both sides: h50 loses only 1706
+  (both sides), h20v6 loses none. A driver panel of 21 random one-castle cells (cdist 14-32) shows h50 losing no
+  castle so far: the exposure is poor maps, not short ones.
+- **h20v6 delivery (pre-registered before any game on this panel):** h50 and h20v6 each vs bots/rush4 on 20 poor
+  one-castle maps, both sides, 200 rounds (`batch.js --max-rounds 200`, new): 1706 plus 19 drawn from the corpus
+  (castles 1, karbonite tiles <= 10, cdist 18-34, kn <= 1; 291 qualify): 477, 1755, 2633, 1087, 1272, 1756, 470,
+  1699, 1804, 1406, 2532, 1722, 1921, 2992, 207, 1652, 932, 2909, 2277. Castles lost counted from the replays.
+  (1) h20v6 loses at most half as many castles as h50; (2) none on 1706. If h50 loses fewer than 2 the panel is
+  uninformative and the gate decides alone at t >= 2.
+- Gate unchanged (h20v6 vs h50, 20 random cells from seed0 5000, par 2). A basics fix: accept at net >= 0 at the
+  last look if the delivery passes; else accept t >= 2, reject t <= 0. Moved from 4b03 (15th) to ...a3d577112, right
+  after h67, with the delivery games first. Note the interaction: h67 sends more pioneers from a lone castle, which
+  is the rush exposure; the reserve covers pioneers too, so the two compose.
+- Replica health: match 306 (StoneT2000 bot1v43 vs botfinalsafe, no vibe19) lost 16 robots to sandbox-creation
+  timeouts at the 1000 ms limit (init_ms_max up to 937 ms; "Robot is not initialized" every turn after). Since the
+  5th slot the p90 sandbox time of fetched matches is 800-1000 ms (36-250 ms on the first 200 matches). Every
+  failure is "Failed to initialize: Error: Script execution timed out": vm2's 200 ms kill on running the bundle
+  (LEARNINGS 17), not GALAXY_INIT_MS, so the 2000 ms limit committed in 9076772 would have changed nothing and is
+  reverted. Instead run_game.js --init-ms now also bounds that bundle run (loadLimit; each sandbox returns to the
+  per-turn kill at its first turn; unit test with a bundle that loads for 300 ms). A runtime-only deploy: new games
+  pick it up, games in flight keep their loaded code, no saturn restart.

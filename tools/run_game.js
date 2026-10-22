@@ -12,7 +12,8 @@
 //              every turn), for a slow or loaded machine (strategy batches on the shared VM use 2; the contest clock is
 //              100 ms + 20 ms/turn, and time robustness is measured at 1).
 // --init-ms    wall-clock limit for creating a robot's sandbox (the engine uses the clock's initial value, which
-//              VM load alone overruns; LEARNINGS 3). The robot's clock still starts at the scaled initial value.
+//              VM load alone overruns; LEARNINGS 3), and for vm2's run of the bundle inside it (see loadLimit). The
+//              robot's clock still starts at the scaled initial value; its turns keep vm2's per-turn kill.
 // --fast-turn  hand each turn to the sandbox through one precompiled script instead of fresh source text (see
 //              fastTurn): same view, same vm2 kill. Turns then cost less than in the official engine, so time audits
 //              run without it (owner approval, PROMPTS 14).
@@ -89,15 +90,16 @@ async function main() {
   // initialisation limit and lose the game for a harness reason. Create and discard sandboxes for both bundles first.
   const CrossVM = require(path.join(ENGINE, 'vm'));
   if (a.fastTurn) fastTurn(CrossVM);
+  const create = a.initMs ? loadLimit(CrossVM, a.initMs) : fn => fn();
   // A bundle that throws (or times out) while loading is the engine's business (initializeRobot catches it and the
   // robot fails to initialise), so the warm-up must not let it crash the whole game.
-  for (let i = 0; i < 3; i++) for (const code of [red, blue]) { try { new CrossVM(code); } catch (e) { /* engine decides */ } }
+  for (let i = 0; i < 3; i++) for (const code of [red, blue]) { try { create(() => new CrossVM(code)); } catch (e) { /* engine decides */ } }
   const c = new Coldbrew(g, null, null, null);
   c.player_one = red; c.player_two = blue; c.round = 0;
   const initMs = [0, 0], origInit = c.initializeRobot.bind(c);
   c.initializeRobot = function () {
     const s = process.hrtime.bigint(); const before = new Set(g.robots.filter(r => r.initialized).map(r => r.id));
-    origInit();
+    create(origInit);
     const ms = Number(process.hrtime.bigint() - s) / 1e6;
     const r = g.robots.find(r => r.initialized && !before.has(r.id));
     if (r && ms > initMs[r.team]) initMs[r.team] = ms;
@@ -210,6 +212,23 @@ function setLimits(g, a) {
   return { init_ms: g.chess_initial, turn_kill_ms: SPECS.TURN_MAX_TIME };
 }
 
+// --init-ms also bounds vm2's run of the bundle while a sandbox is created: the engine runs it under the per-turn kill
+// (200 ms x timescale, vm.js), which a loaded VM overruns for a big bundle (replica match 306, 2026-10-22: StoneT2000
+// lost 16 robots to "Failed to initialize: Error: Script execution timed out"). Each sandbox goes back to the per-turn
+// kill at its first turn. Returns create(fn), which runs fn (a sandbox creation) under the limit of ms.
+function loadLimit(CrossVM, ms) {
+  const turn = CrossVM.prototype.turn;
+  CrossVM.prototype.turn = function (message) {
+    if (this.vm.timeout !== SPECS.TURN_MAX_TIME) this.vm.timeout = SPECS.TURN_MAX_TIME;
+    return turn.call(this, message);
+  };
+  return fn => {
+    const kill = SPECS.TURN_MAX_TIME;
+    SPECS.TURN_MAX_TIME = Math.max(kill, ms);
+    try { return fn(); } finally { SPECS.TURN_MAX_TIME = kill; }
+  };
+}
+
 // The engine hands a robot its turn as source text, 'robot._do_turn(' + JSON of its view + ');', which vm2 parses
 // (acorn) and V8 compiles anew on every turn: about half of a game's wall time (profile of a 200-round h19 self-play
 // game: vm.Script 23%, runInContext 20%, acorn 7%; our bot's own functions a few percent each). fastTurn makes every
@@ -248,4 +267,4 @@ if (require.main === module) {
   }
   main().catch(e => { console.error(String(e && e.stack || e)); process.exit(2); });
 }
-module.exports = { setLimits, parseArgs, fastTurn, netIsolated };
+module.exports = { setLimits, parseArgs, fastTurn, loadLimit, netIsolated };

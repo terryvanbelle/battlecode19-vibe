@@ -65,7 +65,9 @@
 17. **Creating a robot has wall-clock limits, so host load decides whether a big bundle's robots run at all.** The
    engine runs the bundle in a fresh vm2 sandbox under vm2's 200 ms timeout (vm.js, TURN_MAX_TIME), then fails the
    robot if creation took longer than `chess_initial` (runtime.js; the replica raises that one to 1000 ms,
-   GALAXY_INIT_MS, but not vm2's). A robot that fails stays on its tile and throws "Robot is not initialized." every
+   GALAXY_INIT_MS, and from 2026-10-22 vm2's run of the bundle too: run_game.js loadLimit; match 306 had lost 16
+   StoneT2000 robots to the 200 ms one at init_ms_max 937 ms, so raising GALAXY_INIT_MS alone would have changed
+   nothing). A robot that fails stays on its tile and throws "Robot is not initialized." every
    turn, which run_game.js counts as init_fail: StoneT2000's bot1v43 logged 4,509 of them (and 35 timeouts) in the
    one game we took from it (scrim 200, seed 520). Across our 201 replica games, 57 had more than 50 opponent clock
    failures and we won 49 of those, on a VM running 7 engine processes on 8 vCPUs. Our 33 KB bundle loads in a few

@@ -14,16 +14,17 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 09:40:
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 10:47:
   **h63** (PILGRIM_HERE, ...a3d5771, running), **h67** (PIONEERS_TEAM 4: a lone castle keeps 4 pioneers in flight;
-  no-op v6i, symcheck, then gate vs h50 on 20 one-castle cells, ...a3d57711; TRAINING_LOG 10:15), **h64** (PIONEER_FAST,
+  no-op v6i, symcheck, then gate vs h50 on 20 one-castle cells, ...a3d57711; TRAINING_LOG 10:15), **h20v6**
+  (DEF_RESERVE_K 30, the answer to CS554's rush: delivery h50 and h20v6 vs bots/rush4 on 20 poor one-castle maps at
+  200 rounds, then its gate vs h50, ...a3d577112; TRAINING_LOG 10:47), **h64** (PIONEER_FAST,
   ...a3d57715) and **h65** (ESCORT 2, ...a3d57716, after its no-op/symcheck job ...a3d577158) gates vs h50; **h66** (stack: v6 +
   ENDGAME_FUEL 900 + CHAIN_ROUND 150, symcheck then gate vs h50, ...a3d57717; TRAINING_LOG 09:55); the
   **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each vs h55v6); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775; h8v5 vs h35 ended at D 4, below the first
   look, TRAINING_LOG 09:40); h55's extension vs h35 (...a3d585, seed0 6000) and h24v5's (...a3d597, look 1 D 13 t 0.83, next look D >= 24); then
   the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50, outputs out/<name>_h50.jsonl): h51v6's
-  delivery (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h15v6 (MIL_ROTATION null, ...a5), h20v6
-  (DEF_RESERVE_K 30), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6 vs v0 and v6 vs rush. Gates of
+  delivery (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h15v6 (MIL_ROTATION null, ...a5), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6 vs v0 and v6 vs rush. Gates of
   passed deliveries go in after h43v6's (job names ...4b01b1a45 onward). h54's h2h extensions were withdrawn (the
   panel rates it). Extra lane: chain29 (no-op v6e, sym_h61) -> chain30 (h61 delivery) -> chain31 (no-op v6f,
   sym_h63, sym_h62) -> chain32 (no-op v6g, sym_h64). **When chain32 is done the extra lane retires** while the

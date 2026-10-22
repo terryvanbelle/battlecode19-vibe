@@ -3,7 +3,7 @@
 //
 //   node tools/batch.js --a <bot dir> --b <bot dir> --seeds 1,2,3 | --seed-file f | --random N [--seed0 S]
 //        [--sides both|a-red] [--par 6] [--timescale K] [--init-ms MS] [--fast-turn] --out results.jsonl [--replays dir]
-//        [--tag name]
+//        [--tag name] [--max-rounds N]
 //
 // One JSON row per game: {tag, a, b, a_hash, b_hash, seed, a_side, winner_is_a, reason, rounds, ...runner fields}.
 // Rows are keyed by (a_hash, b_hash, seed, a_side): the same cell is never played twice into one file.
@@ -40,6 +40,7 @@ function parse(argv) {
     else if (k === '--timescale') a.timescale = v();
     else if (k === '--init-ms') a.initMs = v();
     else if (k === '--fast-turn') a.fastTurn = true;
+    else if (k === '--max-rounds') a.maxRounds = v();
     else throw new Error('unknown ' + k);
   }
   if (!a.a || !a.b || !a.out) throw new Error('need --a --b --out');
@@ -82,6 +83,7 @@ async function main() {
       if (o.timescale) args.push('--timescale', o.timescale);
       if (o.initMs) args.push('--init-ms', o.initMs);
       if (o.fastTurn) args.push('--fast-turn');
+      if (o.maxRounds) args.push('--max-rounds', o.maxRounds);
       const p = spawn('unshare', args, { stdio: ['ignore', 'pipe', 'pipe'] });
       let so = '', se = '';
       p.stdout.on('data', d => { so += d; }); p.stderr.on('data', d => { se += d; });
@@ -112,5 +114,5 @@ async function main() {
   fs.closeSync(out);
   console.error('batch done');
 }
-module.exports = { codeHash };
+module.exports = { codeHash, parse };
 if (require.main === module) main().catch(e => { console.error(e.stack || e); process.exit(2); });

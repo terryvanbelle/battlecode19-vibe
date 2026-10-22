@@ -147,6 +147,35 @@ test('run_game: --timescale stretches the vm2 kill, --init-ms only the sandbox-c
   } finally { SPECS.TURN_MAX_TIME = base; }
 });
 
+test('run_game: --init-ms bounds the bundle\'s load under vm2; turns keep the per-turn kill', () => {
+  const SPECS = require('../engine/node_modules/bc19/specs.json'), { loadLimit } = require('../tools/run_game.js');
+  const base = SPECS.TURN_MAX_TIME;
+  function Stub() { this.vm = { timeout: SPECS.TURN_MAX_TIME, run: () => this.vm.timeout }; }
+  Stub.prototype.turn = function () { return this.vm.run(); };
+  const create = loadLimit(Stub, 1000);
+  const s = create(() => new Stub());
+  assert.deepStrictEqual([s.vm.timeout, SPECS.TURN_MAX_TIME], [1000, base]);
+  assert.strictEqual(s.turn(), base);
+  assert.throws(() => create(() => { throw new Error('load'); }), /load/);
+  assert.strictEqual(SPECS.TURN_MAX_TIME, base);
+  // A bundle that spends 300 ms loading: killed by vm2's 200 ms without --init-ms, alive with --init-ms.
+  const { execFileSync } = require('child_process'), os = require('os');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'slow-'));
+  try {
+    fs.writeFileSync(path.join(dir, 'robot.js'), "import {BCAbstractRobot} from 'battlecode';\n" +
+      'class MyRobot extends BCAbstractRobot {\n' +
+      '  constructor() { super(); const t0 = Date.now(); this.n = 0; while (Date.now() - t0 < 300) this.n++; }\n' +
+      '  turn() { return null; }\n}\n');
+    const play = (...x) => JSON.parse(execFileSync(process.execPath, ['tools/run_game.js', '--red', dir, '--blue', 'bots/v6',
+      '--seed', '2202', '--max-rounds', '3', ...x], { cwd: path.join(__dirname, '..'), encoding: 'utf8' }).trim().split('\n').pop());
+    const slow = play('--init-ms', '5000'), killed = play('--chi', '5000');   // 5000: the suite runs files in parallel
+    const initErr = t => Object.keys(t.err_kinds).some(k => /^Failed to initialize: .*timed out/.test(k));
+    assert.deepStrictEqual([initErr(slow.teams[0]), slow.teams[0].turns > 0, slow.turn_kill_ms], [false, true, base]);
+    assert.strictEqual(killed.reason, 'init_failure');   // the 200 ms kill applies without --init-ms
+    assert.ok(initErr(killed.teams[0]));
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('jobq: add and status list pending jobs in order', () => {
   const { execFileSync } = require('child_process');
   const os = require('os');
@@ -167,6 +196,14 @@ test('build_bot: --cfg overrides land in the bundle; unknown keys are refused', 
   assert.ok(/Object\.assign\(CFG,\s*\{\s*RUSH:\s*7\s*\}\)/.test(fs.readFileSync(path.join(out, 'robot.js'), 'utf8')));
   await assert.rejects(build(path.join(__dirname, '..', 'src', 'bot'), out, { cfg: { NO_SUCH_KEY: 1 } }), /unknown CFG key/);
   fs.rmSync(out, { recursive: true, force: true });
+});
+
+test('batch: --max-rounds passes through to the runner; absent, games run to the engine limit', () => {
+  const { parse } = require('../tools/batch.js');
+  const base = ['node', 'batch.js', '--a', 'x', '--b', 'y', '--out', 'o.jsonl', '--seeds', '1706,53'];
+  assert.strictEqual(parse([...base, '--max-rounds', '150']).maxRounds, '150');
+  assert.strictEqual(parse(base).maxRounds, undefined);
+  assert.deepStrictEqual(parse(base).seeds, [1706, 53]);
 });
 
 test('basics: --team auto reads team A side from a batch replay name', () => {

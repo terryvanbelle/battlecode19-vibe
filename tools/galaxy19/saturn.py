@@ -63,10 +63,9 @@ MAX_EXECUTE_SLOTS = 5
 GAME_HEAP_MB = int(os.environ.get('GALAXY_GAME_HEAP_MB', '2048'))
 # Wall-clock limit for creating a robot's sandbox (run_game.js --init-ms; 0 = the engine's rule, the 100 ms clock
 # bank). This shared VM is slower and busier than the official servers: under the batches' load most field bots lost
-# robots to init failures (replica-health 2026-10-21: 11 of 14 entrants, IvanGeffner eigthbot in 3 of 3 games). With
-# 5 slots the p90 sandbox time rose to about 1000 ms (match 306, StoneT2000 vs StoneT2000: 16 robots failed at 1000
-# ms, 2026-10-22), hence 2000. The per-turn clock keeps the contest rule.
-INIT_MS = int(os.environ.get('GALAXY_INIT_MS', '2000'))
+# robots to init failures (replica-health 2026-10-21: 11 of 14 entrants, IvanGeffner eigthbot in 3 of 3 games). The
+# per-turn clock keeps the contest rule.
+INIT_MS = int(os.environ.get('GALAXY_INIT_MS', '1000'))
 # per-team stats copied from run_game.js into match.json: errors and clock health (timeouts = vm2 script timeouts,
 # frozen = out of chess-clock time, slow_turns = turns over 20 ms of wall time) to watch CPU contention; init_robots
 # (robots whose sandbox failed to start) and err_kinds (the five commonest error kinds) tell a replica fault from a bot's

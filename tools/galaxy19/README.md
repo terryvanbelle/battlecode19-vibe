@@ -76,11 +76,13 @@ games on the 8-vCPU VM, 637k robot turns, 0 timeouts, 0 frozen robots, 0.07% of 
 4 from 2026-10-22 07:30 PDT with the batches at `--par 2` (owner, PROMPTS 18), 5 once the extra lane paused. On 2026-10-21 the VM hung (load about 21) while the replica's 4 games ran alongside those batches and the
 bench smoke runner (`PAR=6`); it was reset. Keep the VM's total game count at or below its 8 vCPUs.
 
-One deliberate deviation: a robot gets 2000 ms of wall clock to create its sandbox (`GALAXY_INIT_MS`, passed as
+One deliberate deviation: a robot gets 1000 ms of wall clock to create its sandbox (`GALAXY_INIT_MS`, passed as
 `run_game.js --init-ms`) instead of the 100 ms bank. Sharing the VM with the batches (load about 10 on 8 vCPUs),
 11 of the 14 field entrants that had played lost robots to init failures (2026-10-21), a machine effect that the
-official servers did not impose; the limit was 1000 ms until 5 slots pushed the p90 sandbox time to about 1000 ms
-and StoneT2000's bots lost 16 robots in match 306 (2026-10-22). The robot's clock still starts at 100 ms and gains 20 ms a turn.
+official servers did not impose. The same 1000 ms bounds vm2's run of the bundle during creation (run_game.js
+loadLimit; the engine runs it under the 200 ms per-turn kill, which cost StoneT2000 16 robots in match 306 once 5
+slots ran, 2026-10-22). The robot's clock still starts at 100 ms and gains 20 ms a turn; its turns keep the 200 ms
+kill.
 
 ## Deploying a change to saturn or the runtime
 
