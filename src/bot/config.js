@@ -106,6 +106,10 @@ export const CFG = {
   EDGE: 0,                   // >0: a marching unit that sees enemy attackers does not step into their reach (combat
                              // THREAT_R2) unless our military in its sight, itself included, outnumber them EDGE to 1
                              // (replica 2965: 131 of 132 prophets lost walking into a held line, 106 kills)
+  SPOT: 0,                   // >0: a prophet firing at a non-pilgrim radios its target (FAR.ENEMY, ~10 tiles, 10 fuel)
+                             // at most every SPOT turns while a crusader or preacher of ours is in its sight; melee
+                             // units that hear it engage it as if seen (gate 2924: 79 of 115 crusaders and 65 of 83
+                             // preachers lost never fired; they see 7 and 4 tiles, prophets reach 8)
   WAVE: 0,                   // >0: after the first attack call, call again only once this many military units are
   WAVE_GAP: 15,              // idle (units report marching over castle talk), on 3 rounds, then wait this many rounds
   ATTACK_EVERY: 5,           // castles repeat the attack call (20 fuel) every this many rounds (5: ~4,400 fuel a game)

@@ -1,10 +1,10 @@
 // Crusaders, prophets, preachers: shoot the best target; prophets keep melee out of their dead zone; engage enemies
 // near home; march on ATTACK orders; otherwise hold a checkerboard lattice that grows from home toward the enemy.
 import { CFG } from './config.js';
-import { STATS, CASTLE, CHURCH, CRUSADER, PROPHET, PREACHER } from './specs.js';
+import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, king, rng } from './util.js';
 import { fuelStep } from './nav.js';
-import { SIG, CT, dec, decFarRobot } from './comms.js';
+import { SIG, CT, FAR, dec, encXY, decFarRobot } from './comms.js';
 import { isAttacker, pickTarget, preacherTarget, retreatStep, THREAT_R2 } from './combat.js';
 
 function init(B) {
@@ -38,6 +38,7 @@ function listen(B) {
     if (r.id === me.id || (r.seen && r.team !== me.team)) continue;
     const m = decFarRobot(r);
     if (m && m.type === SIG.RECALL && CFG.RECALL && w.passable(m.x, m.y)) { st.recall = { x: m.x, y: m.y, until: me.turn + CFG.RECALL }; st.target = null; continue; }
+    if (m && m.type === SIG.ENEMY) { if (CFG.SPOT && me.unit !== PROPHET) hearSpot(B, m.x, m.y); continue; }
     if (CFG.RECALL && st.recall && me.turn <= st.recall.until) continue;   // recalled: attack orders wait
     if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || ((st.guard || !(CFG.MARCH_MASK >> me.unit & 1)) && B.round < 900)) continue;
     const i = CFG.ATTACK_PERSIST && m.extra >= 1 && m.extra <= 4 ? m.extra - 1 : -1;
@@ -69,6 +70,19 @@ function nextTarget(B) {
     if (d < bd) { bd = d; st.target = p; st.tIdx = i; }
   });
   if (!st.target) st.waitUntil = B.round + CFG.ATTACK_WAIT;
+}
+
+// CFG.SPOT. The nearest spotted enemy heard this turn (prophets radio their targets for melee units, which see less).
+function hearSpot(B, x, y) {
+  const st = B.st, me = B.w.me, d = d2(x, y, me.x, me.y);
+  if (!st.spot || st.spot.t !== me.turn || d < st.spot.d) st.spot = { x, y, t: me.turn, d };
+}
+function spot(B, t) {
+  const w = B.w, st = B.st, me = w.me;
+  if (t.unit === PILGRIM || w.sentR2 || me.turn - (st.spotAt || -99) < CFG.SPOT) return;
+  if (w.fuel < STATS[PROPHET].atkFuel + CFG.PROPHET_FLOOR + 10) return;
+  if (!w.friends.some(r => r.unit === CRUSADER || r.unit === PREACHER)) return;
+  st.spotAt = me.turn; w.signal(encXY(0, t.x, t.y), FAR.ENEMY);
 }
 
 function bandSources(B, tx, ty) {
@@ -268,7 +282,7 @@ export function militaryTurn(B) {
       if (t) return w.attack(t.dx, t.dy);
     } else {
       const t = pickTarget(u, me.x, me.y, enemies, w.n);
-      if (t) return w.attack(t.x - me.x, t.y - me.y);
+      if (t) { if (CFG.SPOT && u === PROPHET) spot(B, t); return w.attack(t.x - me.x, t.y - me.y); }
     }
   }
 
@@ -282,6 +296,8 @@ export function militaryTurn(B) {
       if (!near) continue;
       const r = d2(me.x, me.y, x.x, x.y); if (r < ed) { ed = r; e = x; }
     }
+    const sp = CFG.SPOT && st.spot;
+    if (!e && sp && me.turn - sp.t <= 1 && d2(sp.x, sp.y, marching ? me.x : c.x, marching ? me.y : c.y) <= 196) e = sp;
     if (e) return go(B, 'e' + e.x + ',' + e.y, [[e.x + 1, e.y], [e.x - 1, e.y], [e.x, e.y + 1], [e.x, e.y - 1]]);
   }
 
@@ -311,4 +327,4 @@ export function militaryTurn(B) {
   const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);
   return a || (CFG.KEEP_CLEAR ? stepClear(B) : null);
 }
-export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke, holdTarget, latticeOk, edgeAvoid };
+export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke, holdTarget, latticeOk, edgeAvoid, spot };

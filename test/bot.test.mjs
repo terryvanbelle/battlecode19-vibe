@@ -7,7 +7,7 @@ import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
-import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid } from '../src/bot/military.js';
+import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot } from '../src/bot/military.js';
 import { callDue, castleTurn, nextPioneer, pioneerDue } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
@@ -434,6 +434,51 @@ test('military: RECALL sends a unit that hears it toward the castle, holding 2-3
     assert.strictEqual(run(near, 30).a, null);       // already 2 king steps out: holds
     assert.strictEqual(run(far, 0).B.st.recall, undefined);
   } finally { CFG.RECALL = saved; }
+});
+
+test('military: SPOT: a firing prophet radios its target for melee units in sight, which engage what they hear', () => {
+  const saved = CFG.SPOT;
+  try {
+    CFG.SPOT = 3;
+    const sent = [];
+    const pw = (friends, fuel = 1000) => ({ me: { x: 10, y: 10, turn: 20, unit: S.PROPHET }, friends, fuel, sentR2: 0,
+      signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; } });
+    const B = { w: pw([{ x: 9, y: 9, unit: S.CRUSADER }]), st: {} };
+    spot(B, { x: 12, y: 17, unit: S.PROPHET });
+    assert.deepStrictEqual(sent, [[encXY(0, 12, 17), FAR.ENEMY]]);
+    B.w.sentR2 = 0; B.w.me.turn = 22; spot(B, { x: 12, y: 17, unit: S.PROPHET });   // within SPOT turns
+    B.w.me.turn = 23; spot(B, { x: 12, y: 17, unit: S.PILGRIM });                    // pilgrims are not worth it
+    spot({ w: pw([{ x: 9, y: 9, unit: S.PROPHET }]), st: {} }, { x: 12, y: 17, unit: S.CRUSADER });   // no melee in sight
+    spot({ w: pw([{ x: 9, y: 9, unit: S.PREACHER }], 60), st: {} }, { x: 12, y: 17, unit: S.CRUSADER });   // fuel
+    assert.strictEqual(sent.length, 1);
+    B.w.me.turn = 23; spot(B, { x: 12, y: 18, unit: S.CASTLE });
+    assert.deepStrictEqual(sent[1], [encXY(0, 12, 18), FAR.ENEMY]);
+
+    // A crusader that hears a spot (sent here by the castle, a seen friend) walks toward it; off, it does not hear.
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    const ring = (cx, cy, lo, hi) => { for (let r = lo; r <= hi; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++)
+      if (Math.max(Math.abs(dx), Math.abs(dy)) === r && free(cx + dx, cy + dy)) return [cx + dx, cy + dy]; return null; };
+    const at = ring(castle.x, castle.y, 4, 5), tgt = at && ring(at[0], at[1], 5, 6);
+    assert.ok(at && tgt);
+    const run = (on) => {
+      CFG.SPOT = on;
+      const cru = { id: 4004, team: 0, unit: S.CRUSADER, x: at[0], y: at[1], turn: 3, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      g.robots.push(cru);
+      try {
+        const cw = worldFor(g, castle), [sx, sy] = cw.T.toC(tgt[0], tgt[1]);
+        castle.signal = encXY(0, sx, sy); castle.signal_radius = FAR.ENEMY;
+        const w = worldFor(g, cru), B = { api: w.api, w, round: 20, birthRound: 18, st: {}, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        return { a: militaryTurn(B), B };
+      } finally { g.robots.pop(); castle.signal = 0; castle.signal_radius = 0; }
+    };
+    const on = run(3), e2 = (x, y) => (x - tgt[0]) ** 2 + (y - tgt[1]) ** 2;
+    assert.ok(on.B.st.spot && on.a && on.a.action === 'move');
+    assert.ok(e2(at[0] + on.a.dx, at[1] + on.a.dy) < e2(at[0], at[1]));
+    assert.strictEqual(run(0).B.st.spot, undefined);
+  } finally { CFG.SPOT = saved; }
 });
 
 test('military: EDGE keeps a marching unit out of reach of enemy attackers until ours outnumber them', () => {
