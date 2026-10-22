@@ -139,7 +139,7 @@ IPAddressAllow=localhost
 EOF
   # replica games keep their CPU when the main session's batches (timescale 2, user.slice, weight 100) load the VM: a
   # robot's code load has a wall-clock budget, and big transpiled bundles fail it on a contended VM. The weight sits on
-  # the parent bc19.slice, the level that competes with user.slice; saturn's CPUQuota still caps games at 3 cores.
+  # the parent bc19.slice, the level that competes with user.slice; saturn's CPUQuota still caps games at 5 cores.
   install -d -m 0755 /etc/systemd/system/bc19.slice.d
   printf '[Slice]\nCPUWeight=400\n' > /etc/systemd/system/bc19.slice.d/cpu-weight.conf
   systemctl daemon-reload
@@ -266,9 +266,11 @@ DJANGO_SETTINGS_MODULE=replica_settings
 DJANGO_CONFIGURATION=Replica
 SIARNAQ_REVISION=galaxy-f343088-bc19-replica
 GALAXY_COMPILE_SLOTS=1
-GALAXY_EXECUTE_SLOTS=2
+GALAXY_EXECUTE_SLOTS=4
 GALAXY_INIT_MS=1000
-GALAXY_GAME_TIMEOUT=1800
+GALAXY_GAME_TIMEOUT=5400
+GALAXY_SCHED_MAX_WAITING=30
+GALAXY_SCHED_MIN_HOURS=24
 GALAXY_NACK_DELAY=10
 GALAXY_GUNICORN_WORKERS=2
 PYTHONDONTWRITEBYTECODE=1
@@ -357,11 +359,11 @@ PrivateNetwork=yes
 ExecStart=/usr/bin/python3 $OPT/galaxy19/saturn.py run
 KillMode=mixed
 TimeoutStopSec=60
-# 2 games + 1 compile at most (GALAXY_EXECUTE_SLOTS; saturn caps it at 4): the main session's A/B batches (--par 4) share the VM.
-# The CPU cap is a backstop above 2 single-threaded games (node's GC/JIT threads add bursts): a tighter quota would
+# 4 games + 1 compile at most (GALAXY_EXECUTE_SLOTS; saturn caps it at 4; owner, PROMPTS 18): the main session's A/B
+# batches (--par 2 while the replica queue is long) share the VM. The CPU cap is a backstop above 4 single-threaded games (node's GC/JIT threads add bursts): a tighter quota would
 # throttle in 100 ms periods and turn into chess-clock timeouts.
 MemoryMax=10G
-CPUQuota=300%
+CPUQuota=500%
 Restart=on-failure
 RestartSec=30s
 

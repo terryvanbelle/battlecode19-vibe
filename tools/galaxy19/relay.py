@@ -18,6 +18,8 @@ port 8019 only). It does three jobs, each with the identity siarnaq expects from
 3. `relay.py fire-jobs` (run each minute by bc19-galaxy-scheduler.timer, installed disabled): Cloud Scheduler for
    the jobs siarnaq recorded (the autoscrim job): a job fires when its cron schedule matches the current minute in
    its time zone, with User-Agent Google-Cloud-Scheduler and an ID token; no retry (Cloud Scheduler's default).
+   Replica-only throttle (owner, PROMPTS 18): a due job is held while the execute queue holds
+   GALAXY_SCHED_MAX_WAITING matches or more, or until GALAXY_SCHED_MIN_HOURS have passed since it last fired.
 
 Every request goes to 127.0.0.1:8019 only, whatever host the URL names; the Host header is the galaxy site's name
 (siarnaq's ALLOWED_HOSTS). Only paths under /api/ are relayed.
@@ -310,9 +312,43 @@ def fire_job(job_id, job, send=siarnaq_request):
     return status
 
 
-def fire_jobs(now=None, only=None, force=False, send=siarnaq_request):
-    """Fire every recorded job whose schedule matches this minute (once per minute: a state file remembers)."""
+def env_number(name):
+    try:
+        return float(os.environ.get(name) or 0)
+    except ValueError:
+        return 0.0
+
+
+def held(state, now, max_waiting, min_hours, waiting):
+    """Why a due job waits (a replica-only throttle, not Cloud Scheduler's), or None: the execute queue holds
+    max_waiting matches or more (waiting() counts them), or the job fired less than min_hours ago (its state file's
+    stamp). 0 turns either check off."""
+    n = waiting() if max_waiting else 0
+    if max_waiting and n >= max_waiting:
+        return f'{n} matches waiting (cap {max_waiting:g})'
+    if min_hours:
+        try:
+            with open(state) as fh:
+                last = datetime.datetime.fromisoformat(fh.read().strip())
+        except (FileNotFoundError, ValueError):
+            return None
+        if now - last < datetime.timedelta(hours=min_hours):
+            return f'fired {last.isoformat()}, under {min_hours:g} h ago'
+    return None
+
+
+def execute_waiting():
+    c = spool.topic_queue(config.TOPIC_EXECUTE).counts()
+    return c['ready'] + c['leased'] + c['delayed']
+
+
+def fire_jobs(now=None, only=None, force=False, send=siarnaq_request, max_waiting=None, min_hours=None,
+              waiting=execute_waiting):
+    """Fire every recorded job whose schedule matches this minute (once per minute: a state file remembers), unless
+    held (GALAXY_SCHED_MAX_WAITING, GALAXY_SCHED_MIN_HOURS: see held(); --force ignores both)."""
     now = now or datetime.datetime.now(datetime.timezone.utc)
+    max_waiting = env_number('GALAXY_SCHED_MAX_WAITING') if max_waiting is None else max_waiting
+    min_hours = env_number('GALAXY_SCHED_MIN_HOURS') if min_hours is None else min_hours
     fired = []
     for job_id, job in load_jobs():
         if only and job_id != only:
@@ -334,6 +370,10 @@ def fire_jobs(now=None, only=None, force=False, send=siarnaq_request):
                     continue
         except FileNotFoundError:
             pass
+        why = None if force else held(state, local, max_waiting, min_hours, waiting)
+        if why:
+            log.info('job %s held: %s', job_id, why)
+            continue
         fsutil.atomic_write_bytes(state, (stamp + '\n').encode())
         try:
             fired.append((job_id, fire_job(job_id, job, send)))

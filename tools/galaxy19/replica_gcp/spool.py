@@ -169,6 +169,27 @@ class Queue:
             moved.append((old, new))
         return moved
 
+    def drop(self, pick):
+        """Move the ready and delayed messages for which pick(obj) is true to dead/ (never delivered). A message a
+        consumer leases meanwhile is skipped. Returns the dropped ids."""
+        dropped = []
+        for d in (self.ready, self.delayed):
+            for f in self._names(d):
+                try:
+                    with open(os.path.join(d, f)) as fh:
+                        if not pick(json.load(fh)):
+                            continue
+                except (FileNotFoundError, ValueError):
+                    continue
+                name = f.partition('--')[2] if d == self.delayed else f
+                os.makedirs(self.dead, exist_ok=True)
+                try:
+                    os.rename(os.path.join(d, f), os.path.join(self.dead, name))
+                except FileNotFoundError:
+                    continue
+                dropped.append(name[:-5])
+        return dropped
+
 
 def topic_queue(topic_id):
     return Queue(config.spool_dir('pubsub', check_resource(topic_id, 'topic')))

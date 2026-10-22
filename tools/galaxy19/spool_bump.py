@@ -3,7 +3,9 @@
 match of the given teams, ahead of the rest (saturn takes the oldest ready message). The charter gives the field's
 matches against each other the spare cycles. On the VM, as root (the spool belongs to bc19replica):
 
-  sudo python3 -I tools/galaxy19/spool_bump.py [--match 199,200] [--team vibe19] [--dry-run]
+  sudo python3 -I tools/galaxy19/spool_bump.py [--match 199,200] [--team vibe19] [--drop] [--dry-run]
+
+--drop moves them to dead/ instead: never played (a team dropped from the ladder; README).
 """
 import argparse
 import base64
@@ -45,6 +47,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
     ap.add_argument('--match', default='', help='comma-separated match ids')
     ap.add_argument('--team', default='', help='comma-separated team names')
+    ap.add_argument('--drop', action='store_true', help='move them to dead/ instead (never played); then mark the '
+                    'matches ERR in siarnaq (README: dropping a team)')
     ap.add_argument('--dry-run', action='store_true')
     a = ap.parse_args(argv)
     matches = {int(x) for x in a.match.split(',') if x.strip()}
@@ -59,6 +63,10 @@ def main(argv=None):
                 obj = json.load(fh)
             if pick(obj):
                 print(f[:-5], *describe(obj))
+        return 0
+    if a.drop:
+        for msg in q.drop(pick):
+            print('dropped', msg)
         return 0
     for old, new in q.bump(pick):
         print(f'{old} -> {new}')

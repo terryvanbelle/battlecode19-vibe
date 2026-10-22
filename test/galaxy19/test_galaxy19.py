@@ -244,6 +244,18 @@ class Spool(unittest.TestCase):
         self.assertTrue(all(spool.ID_RE.match(m[1]) for m in moved))
         self.assertEqual(q.bump(lambda o: True), [])   # nothing ready
 
+    def test_drop_moves_chosen_ready_and_delayed_messages_to_dead(self):
+        q = spool.Queue(os.path.join(TMP, 'q4')).ensure()
+        ids = [q.put({'i': i}) for i in range(4)]
+        late = q.put({'i': 9}, delay=3600)
+        self.assertEqual(sorted(q.drop(lambda o: o['i'] in (2, 9))), sorted([ids[2], late]))
+        self.assertEqual(q.counts(), {'ready': 3, 'leased': 0, 'delayed': 0, 'dead': 2})
+        self.assertEqual(sorted(os.listdir(q.dead)), sorted([f'{ids[2]}.json', f'{late}.json']))
+        order = []
+        while (item := q.lease()) is not None:
+            order.append(item[1]['i'])
+        self.assertEqual(order, [0, 1, 3])
+
     def test_spool_bump_reads_match_and_teams(self):
         import spool_bump
         body = {'metadata': {'report-url': 'https://x/api/compete/bc19/match/199/report/', 'task-type': 'execute'},
@@ -575,6 +587,30 @@ class Relay(unittest.TestCase):
         self.assertEqual((path, body, headers['User-Agent']), ('/api/episode/e/bc23/autoscrim/', b'{"best_of": 3}',
                                                                'Google-Cloud-Scheduler'))
         self.assertEqual(tokens.verify(headers['Authorization'][7:])['email'], config.SERVICE_EMAIL)
+
+    def test_scheduler_holds_while_queue_long_or_too_soon(self):
+        parent = f'projects/{config.PROJECT}/locations/{config.LOCATION}'
+        scheduler.CloudSchedulerClient().create_job(request=dict(parent=parent, job=scheduler.Job(
+            name=f'{parent}/jobs/replica-autoscrim-hold', schedule='0 */8 * * *', time_zone='UTC',
+            http_target=scheduler.HttpTarget(uri='https://galaxy.x/api/episode/e/bc23/autoscrim/', body=b'{}',
+                                             oidc_token=scheduler.OidcToken(service_account_email=config.SERVICE_EMAIL)))))
+        fake, n = FakeSiarnaq(), [30]
+        job = 'replica-autoscrim-hold'
+        fire = lambda at, **kw: relay.fire_jobs(now=at, only=job, send=fake, max_waiting=30, min_hours=24,
+                                                waiting=lambda: n[0], **kw)
+        t0 = datetime.datetime(2026, 10, 8, 0, 0, 5, tzinfo=datetime.timezone.utc)
+        h = lambda k: t0 + datetime.timedelta(hours=k)
+        self.assertEqual(fire(t0), [])                         # 30 waiting: held
+        n[0] = 29
+        self.assertEqual(fire(h(8)), [(job, 204)])             # under the cap, never fired: fires
+        n[0] = 0
+        self.assertEqual(fire(h(16)), [])                      # 8 h after the last fire: held
+        self.assertEqual(fire(h(16), force=True), [(job, 204)])  # --force ignores both checks
+        self.assertEqual(fire(h(40)), [(job, 204)])            # 24 h after the forced fire
+        n[0] = 99
+        self.assertEqual(relay.fire_jobs(now=h(64), only=job, send=fake, max_waiting=0, min_hours=0,
+                                         waiting=lambda: n[0]), [(job, 204)])   # 0 turns both off
+        self.assertEqual(len(fake.calls), 4)
 
 
 # ------------------------------------------------------------------------------------------------ deploy renderers
