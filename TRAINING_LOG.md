@@ -2033,3 +2033,25 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   fails, i.e. waiting out of reach costs more lines than it saves. On PASS: h76 replaces h72 as the chain
   candidate: its gate vs h50 (20 random cells, seed0 5000) takes the place of h72's, and it becomes the panel's
   bomber. On FAIL: h72's gate runs as queued.
+
+## 2026-10-22 15:46 — replica 403 (m-schier wololo 3-0): out-expanded on every map; h72's gate moved behind h70/h71
+- Wololo's economy against ours (replay.js timeline; wololo first): seed 1375 (61x61, one castle each, our castle
+  dead at r200): pilgrims at r100 36 vs 16, churches 6 vs 4, K mined by r200 4,202 vs 1,424. Seed 826 (two castles
+  each, lost on castles at 1000): r100 41 pilgrims and 9 churches vs 18 and 2; K mined by r300 9,814 vs 3,942.
+  Seed 1706 (37x37, one castle each, castle dead at r351): we held 6-8 pilgrims and 1 church for 300 rounds.
+- How wololo expands (1375): its castle builds a prophet and 4 pilgrims (r2-6), then nothing until r37; its 4th
+  pilgrim walks 42 king steps to the richest clusters (our c7 and c10, 7 depots each, on the mirror line), churches
+  at r32, and that church builds 7 pilgrims in 14 rounds, one of which churches the twin cluster 6 tiles off at r49
+  (6 more pilgrims). Its army stays at 1-7 to r100. tools/plan.mjs (now prints margin m and depots n per planned
+  cluster) for our castle: c8 d12 n3, c9 d12 n3, c5 d28 n3, c4 d40 n4, c13 d40 n4, c7 d42 n7, c10 d42 n7, c3 d13 n2,
+  c1 d21 n4, c2 d30 n3, c0 d36 n4: contested clusters first, then nearest; value only breaks ties.
+- Ours on 1375: pioneers r4 and r5 (c9 churched r17, c8 r40), then none until r62/63 (bank 0-30 through r50: 5+4
+  pilgrims, two churches, and 4 guards by r30, GUARD_BASE 2 per structure). On 1706: the pioneer for the 7-depot
+  contested cluster (c2, the only other planned) stood outside a wololo prophet and crusader's reach at (6-8,26)
+  from r29 to r77, then died at r82; PIONEER_LOST_REST kept the castle from re-sending until r183.
+- Candidates already queued that touch this: h70 (PEACE_RESERVE_K 60, delivery), h67 (PIONEERS_TEAM 4: a lone
+  castle keeps 4 pioneers in flight), h65 (ESCORT 2: prophets hold an overdue pioneer's site; 1706 is its case),
+  h68 (pioneer gives up; delivery running), h64 (PIONEER_FAST). Not yet tried: cluster order by value per distance;
+  churches sending pioneers of their own.
+- VM order: h72's gate (now ...a3d57710056) runs after the h70 and h71 deliveries, so h76's delivery is read before
+  either chain gate starts. Driver: h50 vs h50 on 1375 to 200 (our economy without wololo's pressure) running.
