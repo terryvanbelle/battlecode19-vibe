@@ -192,6 +192,7 @@ test('replay: timeline snapshots match the tally and the final state', () => {
   assert.match(replay.timelineText(rows), /^== RED\nround\tcastle\tchurch\tpilgrim\tarmy/);
 });
 
+// A generous clock (timescale 20): on a throttled machine a frozen robot would part the two games for clock reasons.
 test('run_game: --fast-turn replays byte for byte the game the engine path plays (--det, 40 rounds)', () => {
   const { execFileSync } = require('child_process'), os = require('os');
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fastturn-'));
@@ -199,8 +200,8 @@ test('run_game: --fast-turn replays byte for byte the game the engine path plays
     const play = (...x) => {
       const out = path.join(dir, (x.length ? 'fast' : 'slow') + '.bc19');
       const line = execFileSync('unshare', ['-rn', process.execPath, path.join(__dirname, '..', 'tools', 'run_game.js'),
-        '--red', 'bots/v3', '--blue', 'bots/v2', '--seed', '2202', '--max-rounds', '40', '--det', '--timescale', '4',
-        '--init-ms', '2000', '--replay', out, ...x], { cwd: path.join(__dirname, '..'), encoding: 'utf8' });
+        '--red', 'bots/v3', '--blue', 'bots/v2', '--seed', '2202', '--max-rounds', '40', '--det', '--timescale', '20',
+        '--init-ms', '10000', '--replay', out, ...x], { cwd: path.join(__dirname, '..'), encoding: 'utf8' });
       return [JSON.parse(line), fs.readFileSync(out)];
     };
     const { fastTurn } = require('../tools/run_game.js'), calls = [];
