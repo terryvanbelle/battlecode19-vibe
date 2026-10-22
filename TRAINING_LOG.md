@@ -1367,3 +1367,15 @@
   0.65 (q 0.15 / 0.55) and leaves ~60% open. Capped at 80 cells (h54's pre-registered cap), q 0.15, p 0.7: 27%.
 - TRAINING_ALGORITHM §4 and §8 now name looks at D 12 / 24 / 48 with at most 200 cells as the default; LEARNINGS
   20. Gates already running keep their pre-registered rules (h54: read at 80 cells at the latest; h55: D >= 12, 24).
+
+## 2026-10-22 05:55 — castle margin as a graded read: agrees with wins on 6 of 8 finished gates, stronger on 4; not a decision rule
+- Scratch graded.js (VM): per cell, the candidate's castles alive minus the control's at each game's end, summed
+  over its two games (identical cells give exactly 0); one-sample t over cells, beside the win read.
+  h35 vs h19 4.27 (wins 3.44); h31 2.77 (1.67); h24 2.57 (1.50); h16r -3.49 (-1.07); h18 -1.53 (-1.89); h54 0.57
+  (0.58); h55 0.55 (0.30); **h50 0.44 (wins 1.70)** and **h11c -2.40 (wins +0.71)** disagree: their wins come at
+  round 1000 on health, not on castles. h19 vs h6: margin 0 in all 20 cells.
+- The win is the objective and health breaks round-1000 ties, so castle margin alone would have rejected h50, our
+  best open candidate. It stays a secondary read; a lexicographic (castles, then health) score would need its own
+  null simulation and identity control first. No decision rule changes.
+- Slip: the run also read out/h24v5_h35.jsonl while that gate was running (6 cells). Nothing is taken from it; the
+  gate runs to completion under its pre-registered rule (accept t >= 2, reject t <= 0, otherwise D-sized looks).
