@@ -665,3 +665,14 @@
   needed >= +10%); pilgrims lost 2 vs 74 (needed <= 70%); churches 5 vs 3 (1828) and 8 vs 6 (826) per game; first
   church round 22 vs 40 on 1828. On 826 h19 lost 27 of 49 pilgrims in each game, h35 none. The side-swapped games
   match each other to the unit up to combat (mirror play). Gate moved ahead of h24x (job ...4b01b1a; h24x is ...4b01b1b).
+
+## 2026-10-21 22:26 — h37 (CLAIM_MARGIN 4) delivery FAILED: inert on the delivery maps; closed
+- Driver, 200 rounds vs h19: 1828 red identical to h31 (4 churches, K+F 15,694); 826 red 8 churches, K+F 19,060
+  (h31 19,080); 826 blue 8, 19,080 (h31 19,072). Churches 20 vs h31's 20 (needed >= 21): FAIL; K+F level.
+- Why: the plan census (scratch plancensus.mjs, round-0 view) gives the unserved clusters' (our distance - enemy's)
+  as 826: -30 -21 -13 -11 -8 -5 -1 | 1 5 8 11 13 21 27 27 29 37; 1828: -12 -4 -2 | 12 31 31 37 38 43. Clusters
+  come in mirror pairs well apart; a margin of 4 adds none on either map (8 would add the one at +5 on 826). The
+  extra pilgrims eigthbot had on 826 (match 151) came from churches on the far half of an opponent that failed to
+  initialise at round 547, not from a midline band.
+- Closed: margin doses below the next cluster gap are inert. Re-open if a map census shows clusters within 2-6 of
+  the midline that h31 leaves out (corpus check: plancensus over maps/corpus.tsv).

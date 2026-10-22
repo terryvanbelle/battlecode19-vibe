@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 20 other, 9 queued, 8 in progress, 6 accepted, 3 dropped, 3 rejected, 1 sparring partners (50 rows).
+Totals: 21 other, 9 queued, 8 in progress, 6 accepted, 3 dropped, 3 rejected, 1 sparring partners (51 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -45,6 +45,7 @@ Totals: 20 other, 9 queued, 8 in progress, 6 accepted, 3 dropped, 3 rejected, 1 
 | `h33` | 2026-10-21 | h19 | h19 + pilgrims never step into a visible enemy attacker's threat range (PILGRIM_SAFE_STEP=1) |  |  |  |  | in progress: delivery PASSED (pilgrims lost 5 vs 46, K+F +11%); gate QUEUED: 40 games vs h19 |
 | `h35` | 2026-10-21 | h19 | h19 + every delivered switch: church density and contested clusters first, cargo relay, nav fit and lattice memory, safe pilgrim steps (SERVE_MOVES=2, PLAN_CONTEST_FIRST=6, RELAY=1, NAV_FIT=1, LATTICE_STICKY=2, PILGRIM_SAFE_STEP=1) |  |  |  |  | in progress: delivery PASSED (K+F +39%, pilgrims lost 2 vs 74); gate QUEUED: 40 games vs h19 |
 | `h36` | 2026-10-21 | h19 | h19 + preachers in place of prophets and a prophet fuel floor (MIL_ROTATION [5,3,5,3,4], PROPHET_FLOOR=200) |  |  |  |  | in progress: delivery vs bots/rush (extra lane) |
+| `h37` | 2026-10-21 | h19 | h31 + claim past the midline: clusters up to 4 moves nearer the enemy are planned (CLAIM_MARGIN=4) |  |  |  |  | DELIVERY FAILED: inert on 826/1828 (no cluster within 2-4 of the midline; churches 20 vs 20); not gated, closed |
 | `h7r` | 2026-10-21 | h19 | h19 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7 |  |  |  |  | QUEUED: 40 games vs h19 |
 | `h8r` | 2026-10-21 | h19 | h19 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8 |  |  |  |  | QUEUED: 40 games vs h19 |
 | `h9r` | 2026-10-21 | h19 | h19 + church planning counts depots served by pilgrim moves (PLAN_SERVE_PILGRIM=1); rebased from h9 |  |  |  |  | QUEUED: 40 games vs h19 |

@@ -17,8 +17,7 @@
   first: INCONCLUSIVE at 20 cells, 26-14, net +6, t 1.50; read both blocks pooled), h33 (PILGRIM_SAFE_STEP; delivery passed 21:59), h29 (NAV_FIT +
   LATTICE_STICKY 2), h28 (LATTICE_STICKY 2 alone), h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b vs h19; then the reference jobs v4 vs v0
   and v4 vs rush (main tree). Built, not queued: h32 (contest-first alone) and h34 (SERVE_MOVES 1 dose), both wait
-  on h31's gate; h37 (h31 + CLAIM_MARGIN 4: claim past the midline; TRAINING_LOG 22:06) has its driver delivery
-  queued behind h35's. h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
+  on h31's gate; h37 (CLAIM_MARGIN 4) failed its delivery (inert) and is closed. h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
   ~/jobq/hold. Withdrawn before their gates: h22, h23 and h27 (deliveries failed; h36 = h22 + h23 doses in the extra lane), h25s and h26 (replaced by h29, h28), h30 (by h31).
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
