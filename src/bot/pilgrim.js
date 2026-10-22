@@ -171,6 +171,7 @@ function pilgrimAct(B) {
   }
   if (!st.target) st.target = freeDepotNear(B, me.x, me.y, null);
   if (CFG.PILGRIM_HOT && st.target) hotRetarget(B);
+  if (CFG.PILGRIM_HERE && st.target) hereRetarget(B);
   const t = st.target; if (!t) return null;
   if (me.x === t.x && me.y === t.y) return w.fuel >= 1 && minesNow(w, t) ? w.mine() : null;
   const occ = w.occ(t.x, t.y);
@@ -215,6 +216,25 @@ export function hotRetarget(B) {
   const gave = st.gaveUp || (st.gaveUp = new Map());
   gave.set(t.i, me.turn); st.hotN = 0;
   const alt = freeDepotNear(B, me.x, me.y, null, undefined, 0, d => hot(d.x, d.y) || (gave.has(d.i) && me.turn - gave.get(d.i) <= CFG.PILGRIM_HOT_MEM));
+  if (alt) st.target = alt;
+}
+
+// CFG.PILGRIM_HERE: a pilgrim whose target depot is taken (a robot stands on it) or hot (in a visible enemy attacker's
+// threat range) takes the depot it stands on, if any, else the nearest free depot that is not hot; with none, it keeps
+// its target. Before this, pilgrims stood on safe depots without mining while their targets were the cluster's hot
+// ones (replica 206-3, seed 1884, castle (0,14): its five depots were mined 54% of rounds 1-99 and 0% of 100-300
+// while seven pilgrims shuffled among them, two depots in reach of enemy prophets; StoneT2000 mined 5,004 karbonite
+// to our 2,080).
+export function hereRetarget(B) {
+  const w = B.w, me = w.me, st = B.st, t = st.target;
+  if (me.x === t.x && me.y === t.y) return;
+  const threats = w.enemies.filter(e => isAttacker(e.unit));
+  const hot = (x, y) => threats.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]);
+  const occ = w.occ(t.x, t.y);
+  if (!(occ > 0 && occ !== me.id) && !hot(t.x, t.y)) return;
+  const here = depotAt(B, me.x, me.y);
+  if (here && !hot(me.x, me.y)) { st.target = here; return; }
+  const alt = freeDepotNear(B, me.x, me.y, null, undefined, 0, d => hot(d.x, d.y));
   if (alt) st.target = alt;
 }
 

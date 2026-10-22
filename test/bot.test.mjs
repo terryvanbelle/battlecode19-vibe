@@ -12,7 +12,7 @@ import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue } from '../src/b
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
-import { minesNow, pilgrimTurn, stepAvoid, huntSpot, hotRetarget, siteStalled } from '../src/bot/pilgrim.js';
+import { minesNow, pilgrimTurn, stepAvoid, huntSpot, hotRetarget, hereRetarget, siteStalled } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, PRIORITY } from '../src/bot/combat.js';
@@ -1411,6 +1411,26 @@ test('chain: with CHAIN_ROUND 0 castles never launch a chainer and the peacetime
     const B = { w: { me: { x: 0, y: 0 } }, st: { order: [{ x: 0, y: 0 }] }, round: 500 };
     assert.strictEqual(chainLaunch(B, () => { throw new Error('built'); }), null);
   } finally { CFG.CHAIN_ROUND = saved; }
+});
+
+test('pilgrim: PILGRIM_HERE takes the depot it stands on when its target is taken or hot, else a cold free one', () => {
+  const deps = [{ i: 0, x: 2, y: 15, k: true }, { i: 1, x: 2, y: 13, k: false }, { i: 2, x: 1, y: 12, k: true }, { i: 3, x: 9, y: 9, k: false }];
+  const B = { deps, st: {} };
+  const occAt = taken => (x, y) => { const r = taken.find(([tx, ty]) => tx === x && ty === y); return r ? r[2] : 0; };
+  const turn = (target, x, y, enemies, taken = []) => {
+    B.st.target = deps[target]; B.w = { me: { id: 9, x, y, turn: 1 }, enemies, occ: occAt([[x, y, 9], ...taken]) };
+    hereRetarget(B); return B.st.target.i;
+  };
+  const prophet = [{ unit: S.PROPHET, x: 1, y: 22 }];   // covers (2,15) (r2 50), not (2,13) (82) or (1,12) (100)
+  assert.strictEqual(turn(0, 2, 13, prophet), 1);                  // hot target, standing on a cold depot: mine it
+  assert.strictEqual(turn(0, 3, 13, prophet), 1);                  // off any depot: the nearest cold free one
+  assert.strictEqual(turn(0, 3, 13, prophet, [[2, 13, 7]]), 2);    // ...not one a robot stands on
+  assert.strictEqual(turn(2, 2, 13, [], [[1, 12, 7]]), 1);         // target taken: the depot it stands on
+  assert.strictEqual(turn(2, 3, 13, []), 2);                       // free and cold: kept
+  assert.strictEqual(turn(2, 2, 13, [{ unit: S.PILGRIM, x: 1, y: 13 }]), 2);   // a pilgrim threatens nothing
+  assert.strictEqual(turn(1, 2, 13, prophet), 1);                  // on its target: kept
+  const everywhere = [{ unit: S.PREACHER, x: 2, y: 13 }, { unit: S.PROPHET, x: 9, y: 15 }];
+  assert.strictEqual(turn(0, 3, 13, everywhere), 0);               // every free depot hot: kept
 });
 
 test('pilgrim: PILGRIM_HOT gives up a depot under a visible attacker for one that is not, and remembers it', () => {

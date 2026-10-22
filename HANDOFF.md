@@ -70,14 +70,20 @@
   structure (their church fell; pilgrim.js then returned null for good). CFG.PILGRIM_ORPHAN (h60 = 1) walks them to
   our half's cluster sites until a structure is in sight: no-op IDENTICAL, symcheck clean (out/dlv_chain26.sh);
   driver diagnostic on 1250 (h60's side stalled 447 turns, h35's 849 on that side); the pre-registered delivery
-  (1250, 1635, 1862, 357 both sides, vs h35) runs on the extra lane (out/dlv_chain27.sh, out/stall_dlv_h60.txt).
-  If it passes, the gate is h60v6 (built) vs h50. Pilgrims that know a structure but whose depots sit under an enemy
+  (1250, 1635, 1862, 357 both sides, vs h35) failed 1 of 3 (stalls 80% of h35's, bar 70%; TRAINING_LOG 08:43):
+  closed, no gate. Pilgrims that know a structure but whose depots sit under an enemy
   army (seed 1250 #4088: 423 turns beside (24,29), castle in sight) are not orphans: h59 (PILGRIM_HOT) failed there.
+- Idle on safe depots (TRAINING_LOG 08:43, replica 206-3): a pilgrim mines only on its target; when the target is
+  taken or under an enemy attacker it never takes the depot it stands on, so seven pilgrims of castle (0,14) mined
+  nothing for 200+ rounds beside StoneT2000's prophets. CFG.PILGRIM_HERE (h63 = 1): gate vs h50 is next in the job
+  queue (...a3d5771), delivery = scratch depotidle.js on its replays (copy in 2019-next/out); chain31 runs its no-op
+  (v6f) and symchecks. h62 (PIONEER_LOST_DOUBLE 1, the longer rest after a pioneer dies) is built and waits for a
+  replica panel vs StoneT2000.
 - Pioneers (TRAINING_LOG 08:16, scratch pioneers.js in VM 2019-next/out): in h50's gate v6 left 40 pioneers stuck
   (7,874 turns to round 450) beside contested sites on 7 maps, and castles re-send to the same site every 81 rounds;
   vs StoneT2000 our pioneers are mostly killed en route (25 of 46) and re-sent every ~105 rounds. CFG.PIONEER_GIVEUP
   (h61 = 20; h61b = 50 built) gives the site up: chain29 (no-op v6e, symcheck), then chain30 (delivery vs h50 on
-  418, 1325, 2542, 2072; out/pioneers_dlv_h61.txt). A longer rest after a pioneer is killed is not built yet.
+  418, 1325, 2542, 2072; out/pioneers_dlv_h61.txt). The longer rest after a pioneer is killed is h62 (above).
 - tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
   cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were
   started without it, our own builds only). Not yet synced to the VM trees (they start games under unshare anyway).

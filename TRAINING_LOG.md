@@ -1542,3 +1542,33 @@ nacked): 27.5 slot-hours for 12 results, ladder 416 / 425 / 593. All three dropp
 190 (bot6b vs CometsTech~187e8c, running 45 min) left to finish. Kept: 18dcb01 robot2 (4.1 h, 6 of 11 acked) and
 CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s limit, match 244 took 2700 s and 206
 1414 s. Queue 189 waiting, 4 running (205 and 406 are ours).
+
+## 2026-10-22 08:43 — h60 delivery fails; replica 206-3 diagnosed (pilgrims idle on safe depots); h63 pre-registered
+
+- **h60 (PILGRIM_ORPHAN 1) delivery, 8 games vs h35 on 1250, 1635, 1862, 357 (out/rp_dlv_h60, out/stall_dlv_h60.txt):**
+  (1) stalled cargo turns to 450: h60 3,583, h35 4,460 (80%; bar at most 70%): **fails**; (2) mine actions to 450:
+  24,909 vs 24,892 (100.1%; bar 100%): passes; (3) wins 4 of 8 (bar 4): passes. Closed (DELIVERY FAILED 1 of 3). It
+  did cut its side's stall on 1250 (447 vs 849), 1862 (523 vs 736) and 357 (1,108 vs 1,455); 1635 is the same game
+  either way (835 / 490 by side). The same side won both games in all 4 cells. No gate.
+- **Replica 206-3 (v5 red vs StoneT2000 bot1v43, seed 1884, lost at 611):** 4 karbonite depots a side; StoneT mined
+  5,004 K to our 2,080. Per-depot use (scratch depotuse.js): our castle (0,14)'s five depots were mined 38-78% of
+  rounds 1-99 and 0-1% of rounds 100-300, while StoneT's pilgrims mined two of them 25-31%. Seven of our pilgrims
+  shuffled among them for 200+ rounds empty-handed (#2645 mined (1,12) to round 104, then never again); at round 140
+  three stood on the cold depots (1,12), (2,13), (2,14) without mining; the free ones, (2,15) and (1,16), lay in
+  range of StoneT prophets at (1,22) / (0,23) (r2 50 and 36). A pilgrim mines only on its target; a target taken by
+  a friend passing through is swapped for the nearest free one, which here was hot, and nothing ever gives a hot
+  target up for the tile the pilgrim stands on. Fuel was never short (16,097 banked at the end): fuel miners came
+  from (4,4) on SWITCH (karbonite < 30, fuel >= 3000) and crowded the cluster.
+- Census (scratch depotidle.js, pilgrim turns on a depot with room that neither mine, give nor build, to 450):
+  replica 206-3 red 335 vs StoneT 42; h50's gate (80 games, out/depotidle_h50.txt) 1,831 / 2,252 a side, at most 228
+  in one game (241 red). Self-play rarely triggers it; StoneT2000's prophets parked beside our clusters do.
+- **h63 = v6 + PILGRIM_HERE 1** (pilgrim.js hereRetarget, commit after this entry): a pilgrim whose target depot is
+  taken or hot takes the depot it stands on (if not hot), else the nearest free depot that is not hot; with none it
+  keeps its target. A basics fix (pilgrims idle on free depots). Gate: h63 vs h50, `--random 20 --seed0 5000 --par 2`
+  (VM job ...a3d5771, next in line; replays out/rp_h63h50). Pre-registered delivery on that gate's replays
+  (depotidle.js to 450): h63's side's depot-idle turns at most 50% of h50's, and mine actions at least 100%. Accept
+  per the gate (t >= 2); as a basics fix, also at net >= 0 with D >= 12 if the delivery passes. Extra lane chain31:
+  no-op v6f (defaults, h62/h63 code) vs h50 --det, symcheck h63 (1, 2, 3, 1884) and h62.
+- **h62 = v6 + PIONEER_LOST_DOUBLE 1** (castle.js lostRest): the rest before re-sending a pioneer where one died
+  doubles per loss (100, 200, 400 ... capped at 1,600). Built, not queued: in h50's gate only 18 of 263 pioneers died,
+  so a local gate cannot see it; it waits for a replica panel against StoneT2000 (25 of 46 killed).
