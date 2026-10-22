@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 11:52 PDT)
+## State (2026-10-22 13:00 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -14,40 +14,29 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 11:52:
-  **h63** (PILGRIM_HERE, ...a3d5771, running), **h67** (PIONEERS_TEAM 4: a lone castle keeps 4 pioneers in flight;
-  no-op v6i, symcheck, then gate vs h50 on 20 one-castle cells, ...a3d57711; TRAINING_LOG 10:15), **h20v6**
-  (DEF_RESERVE_K 30, the answer to CS554's rush: delivery h50 and h20v6 vs bots/rush4 on 20 poor one-castle maps at
-  200 rounds, then its gate vs h50, ...a3d577112; TRAINING_LOG 10:47), **h68** (PIONEER_GIVEUP 20 + PIONEER_STALL_ANY 40:
-  no-op v6j, symcheck, delivery vs h50 on h61's 8 cells, ...a3d577113; TRAINING_LOG 11:52), **h64** (PIONEER_FAST,
-  ...a3d57715) and **h65** (ESCORT 2, ...a3d57716, after its no-op/symcheck job ...a3d577158) gates vs h50; **h66** (stack: v6 +
-  ENDGAME_FUEL 900 + CHAIN_ROUND 150, symcheck then gate vs h50, ...a3d57717; TRAINING_LOG 09:55); the
-  **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each vs h55v6); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775; h8v5 vs h35 ended at D 4, below the first
-  look, TRAINING_LOG 09:40); h55's extension vs h35 (...a3d585, seed0 6000) and h24v5's (...a3d597, look 1 D 13 t 0.83, next look D >= 24); then
-  the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50, outputs out/<name>_h50.jsonl): h51v6's
-  delivery (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h15v6 (MIL_ROTATION null, ...a5), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6 vs v0 and v6 vs rush. Gates of
-  passed deliveries go in after h43v6's (job names ...4b01b1a45 onward). h54's h2h extensions were withdrawn (the
-  panel rates it). The extra lane is retired (chain32 done: no-ops v6f, v6g identical; sym_h62-h64 diverge only at
-  accepted classes); deliveries and no-op checks go into the jobq as their own jobs.
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 13:00:
+  **h63** (PILGRIM_HERE, ...a3d5771, running: 30/40 games D 6 net +2 t 0.82), **h68** delivery (PIONEER_GIVEUP 20 +
+  PIONEER_STALL_ANY 40: no-op v6j, symcheck, 8 games vs h50 on h61's cells, ...a3d577100; TRAINING_LOG 11:52),
+  **h20v6** (DEF_RESERVE_K 30, the answer to CS554's rush: delivery h50 and h20v6 vs bots/rush4 on 20 poor one-castle
+  maps at 200 rounds, then its gate vs h50, ...a3d577101; TRAINING_LOG 10:47), **h15v6** (MIL_ROTATION null, ~75%
+  prophets: the replica's prophet-lattice duels, TRAINING_LOG 12:50; ...a3d577102), **h67** (PIONEERS_TEAM 4: a lone
+  castle keeps 4 pioneers in flight; no-op v6i, symcheck, then gate vs h50 on 20 one-castle cells, ...a3d57711;
+  TRAINING_LOG 10:15), **h64** (PIONEER_FAST, ...a3d57715) and **h65** (ESCORT 2, ...a3d57716, after its
+  no-op/symcheck job ...a3d577158) gates vs h50; **h66** (stack: v6 + ENDGAME_FUEL 900 + CHAIN_ROUND 150, symcheck
+  then gate vs h50, ...a3d57717; TRAINING_LOG 09:55); the **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each
+  vs h55v6); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775); h55's extension vs h35 (...a3d585) and h24v5's
+  (...a3d597); then the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50): h51v6's delivery
+  (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6
+  vs v0 and v6 vs rush. Gates of passed deliveries go in after h43v6's (job names ...4b01b1a45 onward). The extra
+  lane is retired; deliveries and no-op checks go into the jobq as their own jobs. Parked: h69 (CHAIN_ROUND 150 +
+  CHAIN_END_R2 2; TRAINING_LOG 12:50).
   Superseded at v5: h31x, h33, h29, h28, h21. Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
   their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h46 (SPOT for melee) failed 1 of 3 at 01:52; h47 (FOCUS 1) failed 1 of 3 at 02:04; h48 (preachers when fuel binds) failed 1 of 3 at 02:20; h49 (SPOT for prophets) failed 0 of 3 at 02:32; h58 (CHURCH_FIRST_R2) failed 1 of 3 and h59 (PILGRIM_HOT) 0 of 3 at 06:13; h45 (EDGE 1.5) withdrawn before its delivery (inert: prophet vision equals reach); h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
   Superseded job files are in ~/jobq/superseded.
-- Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
-  at a time under `flock ~/.bc-extra.lock`): `out/dlv_chain2.sh` (sym_h22 last; h21 and h22 deliveries read),
-  `out/dlv_chain4.sh` (h24's 200-round games vs h19, h24 vs rush; sym_h24 clean), `out/dlv_chain8.sh` (h31 vs rush;
-  sym_h31 clean), `out/dlv_chain9.sh` (h36 vs rush read; sym_h36 clean), `out/dlv_chain11.sh` (sym_h41, sym_h42; clean), `out/dlv_chain12.sh` (h43 vs h35
-  on 2855 both sides; read), `out/dlv_chain13.sh` (sym_h44), `out/dlv_chain14.sh` (no-op h35e vs h35: IDENTICAL; sym_h45 clean),
-  `out/dlv_chain15.sh` (no-op h35f vs h35: IDENTICAL; sym_h46),
-  `out/dlv_chain16.sh` (no-op h35g vs h35: IDENTICAL; sym_h47 clean), `out/dlv_chain17.sh` (sym_h48 clean), `out/dlv_chain18.sh` (no-op h35h vs h35 IDENTICAL; sym_h49, sym_h50 clean), `out/dlv_chain19.sh` (no-op h35i,
-  sym_h51; rerun at 02:15 on the CASTLE_POST_R builds: no-op IDENTICAL, sym_h51 clean), `out/dlv_chain20.sh`
-  (deliveries of h52 and h53, attack timing 350 / 550: failed 0 and 2 of 3, ATTACK_ROUND stays 450), `out/dlv_chain21.sh`
-  (no-op h35j IDENTICAL; sym_h54 clean), `out/dlv_chain22.sh` (no-op h35k IDENTICAL; sym_h55: seed 2 split on the
-  stores alone at round 215), `out/dlv_chain23.sh` (no-op h35l IDENTICAL; sym_h56 clean), `out/dlv_chain24.sh`
-  (no-op h35m IDENTICAL; sym_h58 clean; h58's delivery vs h55 FAILED 1 of 3, TRAINING_LOG 06:13), `out/dlv_chain25.sh`
-  (no-op h35n IDENTICAL; sym_h59 clean; h59's delivery FAILED 0 of 3, TRAINING_LOG 06:13). The extra lane is idle. h51's second driver diagnostic
-  (2299): 33 units by the castle at 450 against h35's 3, yet h51 lost that castle at 562 (TRAINING_LOG 02:33). Symmetry checks stop only at axis-tile contests or
-  combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
+- The extra lane (retired 11:52; `tools/xbatch.js`, out/dlv_chain*.sh) ran the no-op checks, symchecks and
+  deliveries of h21-h62; each result is in TRAINING_LOG. A failed delivery: move that gate's job to ~/jobq/superseded.
+  Symmetry checks stop only at axis-tile contests or combat after the first attack, as accepted.
   Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new
   chain scripts) so the replica's games get whole cores (LEARNINGS 17). Parked: h11, h12
   (waves), h13 (keep clear), h14 (detour), h17 (karbonite stop).
