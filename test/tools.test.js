@@ -118,6 +118,17 @@ test('paired: --h2h pairs the two sides of a seed; load-contaminated rows are sk
   const p = [{ a_hash: 'c', b_hash: 'o', seed: 1, a_side: 'red', winner_is_a: 1, rounds: 400, a_team: { init_fail: 2 } },
     { a_hash: 'k', b_hash: 'o', seed: 1, a_side: 'red', winner_is_a: 0, rounds: 400 }];
   assert.strictEqual(pairedRead(p, 'c', 'k').cells, 0);
+  // --replays: cells whose two games are one game; unknown (no replays) counts as not identical.
+  assert.strictEqual(r.identical, undefined);
+  assert.strictEqual(h2hRead(rows, (a, b, seed) => a === 'c' && b === 'k' && seed === 2 ? true : seed === 3 ? null : false).identical, 1);
+  const os = require('os'), dir = fs.mkdtempSync(path.join(os.tmpdir(), 'paired-'));
+  for (const [seed, red, blue] of [[1, 'x', 'y'], [2, 'same', 'same']]) {
+    fs.writeFileSync(path.join(dir, `c_k_${seed}_red.bc19`), red); fs.writeFileSync(path.join(dir, `c_k_${seed}_blue.bc19`), blue);
+  }
+  const f = path.join(dir, 'rows.jsonl'); fs.writeFileSync(f, rows.map(x => JSON.stringify(x)).join('\n') + '\n');
+  const out = JSON.parse(require('child_process').execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'paired.js'), f, '--h2h', '--replays', dir], { encoding: 'utf8' }));
+  assert.deepStrictEqual([out.identical, out.cells, out.D], [1, 4, 3]);
+  fs.rmSync(dir, { recursive: true });
 });
 
 test('run_game: --timescale stretches the vm2 kill, --init-ms only the sandbox-creation limit', () => {
