@@ -333,6 +333,35 @@ test('relay: a full pilgrim not next to a structure hands its load to a unit nex
   } finally { CFG.RELAY = saved; }
 });
 
+test('military: PROPHET_FLOOR keeps prophets from shooting a short bank that other shooters can use', () => {
+  const saved = CFG.PROPHET_FLOOR;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let P = null, E = null;
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]]) {
+      const px = castle.x + dx, py = castle.y + dy; if (P || !free(px, py)) continue;
+      for (const [ex, ey] of [[5, 0], [-5, 0], [0, 5], [0, -5], [4, 3], [-4, -3], [3, -4], [-3, 4]])
+        if (!E && free(px + ex, py + ey)) { P = [px, py]; E = [px + ex, py + ey]; }
+    }
+    assert.ok(P && E);
+    const mk = (id, team, u, [x, y]) => ({ id, team, unit: u, x, y, turn: 3, health: S.STATS[u].hp, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const pro = mk(4001, 0, S.PROPHET, P);
+    g.robots.push(pro, mk(4002, 1, S.PROPHET, E));
+    const turn = (fuel) => {
+      const w = worldFor(g, pro), B = { api: w.api, w, round: 20, birthRound: 18, st: {}, deps: null, clusters: null, rnd: rng(2) };
+      w.fuel = fuel; B.offs = offsets(S.STATS[S.PROPHET].speed); B.nav = new Nav(w, B.offs, B.rnd);
+      return militaryTurn(B) || {};
+    };
+    CFG.PROPHET_FLOOR = 30;
+    assert.strictEqual(turn(100).action, 'attack');
+    CFG.PROPHET_FLOOR = 200;
+    assert.notStrictEqual(turn(100).action, 'attack');
+    assert.strictEqual(turn(300).action, 'attack');
+  } finally { CFG.PROPHET_FLOOR = saved; }
+});
+
 test('combat: target choice, preacher splash avoids friends, retreat', () => {
   const es = [{ id: 9, unit: 2, x: 5, y: 0, team: 1 }, { id: 4, unit: 5, x: 0, y: 3, team: 1 }, { id: 3, unit: 5, x: 3, y: 0, team: 1 }];
   assert.strictEqual(pickTarget(3, 0, 0, es, 64).id, 3); // preachers first, then closer

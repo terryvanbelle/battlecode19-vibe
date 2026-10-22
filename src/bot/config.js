@@ -40,6 +40,8 @@ export const CFG = {
                              // sat full for 824 turns, a quarter of that map's fuel depots)
   KARB_STOP: 0,              // >0: karbonite miners stop mining while the team holds this much karbonite
   SHOOT_FLOOR: 30,           // military units do not shoot the team's fuel below this
+  PROPHET_FLOOR: 30,         // ...prophets below this (they deal 0.4 damage per fuel, castles and crusaders 1.0,
+                             // preachers 1.33: when fuel is short it goes to the efficient shooters first)
   PREACHER_EVERY: 4,         // every Nth peacetime defender is a preacher (when MIL_ROTATION is null)
   // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
   MIL_ROTATION: [4, 3, 4, 3, 5],   // peacetime build order by unit type (prophet 4, crusader 3, preacher 5)

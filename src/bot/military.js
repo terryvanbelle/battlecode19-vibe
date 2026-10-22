@@ -161,7 +161,7 @@ export function militaryTurn(B) {
   if (!st.ready) init(B);   // until it completes: a turn killed mid-init (200 ms) leaves it half done
   listen(B);
   const enemies = w.enemies;
-  const canShoot = w.fuel >= S.atkFuel + CFG.SHOOT_FLOOR;   // keep a little fuel so pilgrims can still mine
+  const canShoot = w.fuel >= S.atkFuel + (u === PROPHET ? CFG.PROPHET_FLOOR : CFG.SHOOT_FLOOR);   // pilgrims must still mine
 
   // Prophets: step away from melee attackers that are (or will be) inside the dead zone.
   if (u === PROPHET) {
