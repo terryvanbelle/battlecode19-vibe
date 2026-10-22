@@ -47,7 +47,7 @@
   Match 201 (vs bot6b) is in TRY: game 2 (seed 616, 57x57) passed saturn's per-game wall limit GALAXY_GAME_TIMEOUT
   1800 s (exit 124, 03:52 UTC); match 202 (vs eigthbot) did the same at 04:09 UTC and both retry, each holding a
   replica execute slot for ~30 min per attempt. Raising the limit (env file + saturn restart) was blocked by the
-  auto-mode classifier (Modify Shared Resources): asked the owner 21:40 PDT, waiting.
+  auto-mode classifier (Modify Shared Resources): asked the owner 21:32 PDT, waiting.
 - Gate jobs from h16r on run with `--fast-turn` (run_game/batch: one precompiled turn script per sandbox, same view
   and kill; replays identical under --det; TRAINING_LOG 19:39). Its saving is judged on the VM by per-game wall time
   vs h19 vs h6 (425 s at par 4); time audits and the replica use the engine path. Never time on the driver (LEARNINGS 13).
