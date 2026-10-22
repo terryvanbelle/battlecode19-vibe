@@ -1236,3 +1236,14 @@
 - The line's churches survive as factories (h55w vs h56: two of three alive 96 turns after 304) because shooters
   rank churches last (combat.js PRIORITY: church 1, military 5-6) and the line keeps spawning military beside them.
 - h55's delivery so far: 4 of 5 won, 11 of h35's castles destroyed for 1 lost. Chains take h35's castles.
+
+## 2026-10-22 04:21 — h55 delivery PASSED 3 of 3 (church chains); chains gate queued, conditional on h54's gate
+- 8 games vs h35 (2924, 616, 2202, 357 both sides): (1) chains fired in 8 of 8 games (scratch chainev.js: lines of
+  2-6 churches in one round, ending 5-9 king steps from an enemy castle, the first at 169-210; 1-4 per game);
+  (2) h35 lost 13 castles, h55 2 (`tools/dlv.js` SUM; bar at least 2.5 and 4); (3) h55 won 6 of 8 (bar 5); the
+  two losses are 2924 red on health (castles 2-2) and 357 red (castles 1-2). 0 exceptions. Wasted: on 2924 red three
+  late lines (654, 759, 859) ended 26-28 steps from any enemy castle (chainers that met a threat fired early).
+- Driver diagnostic h57 (h54 + CHAIN_ROUND 150) red vs h54 on 1915: lines at 164 and 260, 4 churches each 5 steps
+  from blue's only castle; it fell at 460 (0 exceptions): the two mechanisms work together.
+- Gate job ...a3d57, after h54's (pre-registered here): if h54's gate accepts (t >= 2, h54 becomes the incumbent)
+  it plays h57 vs h54, 40 games, seed0 5000; otherwise h55 vs h35. Accept t >= 2, reject t <= 0.
