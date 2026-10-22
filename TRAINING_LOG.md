@@ -1282,7 +1282,7 @@
   live cells per 20, and a 40-game gate cannot resolve it. When this gate ends: count identical cells in every
   gate since v5 (`cmp` per seed pair) to measure the live fraction before choosing the next gate's size.
 
-## 2026-10-22 05:22 — pilgrims stall at the edge of enemy range (7 of 20 maps); h59 pre-registered; h58 diagnostic
+## 2026-10-22 05:03 — pilgrims stall at the edge of enemy range (7 of 20 maps); h59 pre-registered; h58 diagnostic
 - Census of h50's 40 gate games to round 450 (scratch stall.js: pilgrim turns with cargo, not mining or giving, off
   any depot, not next to an own structure; stallwhy.js: the state at a streak's 25th turn). 17 streaks of 50-435
   turns on 7 of 20 maps (1250, 1325, 1635, 1862, 2872, 418, 241), by h35 and h50 alike, the same numbers in both
