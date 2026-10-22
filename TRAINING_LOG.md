@@ -1781,3 +1781,31 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   (3) wins >= 4 of 8. Falsifier: (1) fails again, i.e. the stalls are not monotone-distance stalls (a pioneer that
   creeps nearer one step every 40 turns resets the count) or castles refill the same sites. On PASS: gate h68 vs
   h50, 20 random cells from seed0 5000, accept t >= 2, reject t <= 0.
+
+## 2026-10-22 12:50 — replica: per-game wall limit 10800 s, heap stays 2 GB; StoneT2000's church lines counted; h69 parked
+- Match 403 (wololo vs vibe19): game 2, seed 826 (64x64), ran over the 5400 s per-game limit twice (nacked after
+  5,554 s and 5,559 s); wololo has no finished match (319, 339, 342, 403, 404, 405 all TRY). GALAXY_GAME_TIMEOUT is
+  now 10800 s (galaxy-setup.sh, deploy.sh env); saturn restarted 12:48 PDT, right after 403's nack, which re-ran 4
+  matches 1-26 minutes in. Journal clean: 5 slots started, env shows 10800.
+- Heap A/B (v6 vs v6, seed 826, 600 rounds, one game alone on the VM): 2048 MB heap 880 s, peak 2,064 MB; 4096 MB
+  heap 819 s, peak 4,036 MB. 7% faster for twice the memory: the heap stays at 2048 MB (5 slots x 4 GB would not fit).
+- tools/census.js counts one-round church lines (chains, chain_churches, chain_near, chain_kills; LEARNINGS 22).
+  StoneT2000 in the replica: lines in 28 of 33 games, about 20 of them ending 1-4 king steps from a castle of ours,
+  which falls within 25 rounds. 407-3: 12 churches at r274 from (10,24) to (17,37), preachers from r275, our castle
+  dead at r282 with our army 108 to their 74 (spread over the line's length). StoneT banks 1,345-1,555 K before a
+  line; we bank 55-213.
+- h69 (CHAIN_ROUND 150, CHAIN_END_R2 2: our own line to adjacency) diagnostic vs h50, seed 2013: chainer #3333 (born
+  r159) died to a prophet at (39,22) at r236 before staging; no line fired. Game also compromised (replay analysis on
+  the 2-vCPU driver during the game: 466 not-initialized, 342 overdrawn). **Parked**: a line must stage outside the
+  enemy lattice and needs StoneT's bank. Lesson: no analysis on the driver while it plays a diagnostic.
+- uvafan (391, 0-3) and awesomelemonade (394, 1-2): no lines; decided at round 1000. Seed 70: they mine about 2x our
+  karbonite (2.7x mine actions by r450), 27-29 pilgrims and 5-6 churches against our 8-17 and 2. After r400 our army
+  collapses and fuel runs out: 394-1 blue (us) spent 7,618 movement fuel in r401-500. Their prophets fired 726 shots,
+  195 kills; ours 304 and 96. Awesomelemonade holds a dense prophet checkerboard; our MIL_ROTATION [4,3,4,3,5] is 40%
+  prophets. VM queue reordered: h68 delivery (...a3d577100), h20v6 rush4 delivery (...101), h15v6 (MIL_ROTATION
+  null, ~75% prophets; ...102), then h67.
+- Seed-70 starvation (394-2, us red): 4 planned sites; pioneers churched c1 at r34 and c3 at r78, the third (sent
+  r23) never built. The castles built no pilgrim after r24; the bank stayed 0-40. Castles act first in a round, so
+  their bank is what the churches' peacetime army left the round before, and a pioneer needs 60 K. **h70** = v6 + PEACE_RESERVE_K 60 (new, struct.js: every structure's
+  peacetime army leaves 60 K banked; threat responses and pilgrims unaffected). sha 3152d53d8a59. Diagnostic vs h50
+  on seed 70 to 300 rounds running on the driver.
