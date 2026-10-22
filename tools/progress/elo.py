@@ -99,9 +99,10 @@ def render_md(rows, a, bundle=None, summary=()):
         f"within this fit.", '',
         f"**Thin field.** {len(fld)} rated field bots ({', '.join(fld) or 'none'})"
         + (f" out of the replica's {nteams} teams" if nteams else '')
-        + ": the field of public 2019 bots is still being compiled, so the field score below is an expected score "
-        "against these few bots only, one of them the starter. With so few games the 95% intervals are wide, and "
-        "ratings will move as the field grows. Round-0 init failures (a bot that never started: machine load or a "
+        + ": the whole public field is entered (BENCHMARK.md), but the replica plays a few matches an hour, so only "
+        "these have rated games against our builds and the field score below is an expected score against them "
+        "alone, one of them the starter. With so few games the 95% intervals are wide, and ratings will move as the "
+        "replica's games accumulate. Round-0 init failures (a bot that never started: machine load or a "
         "broken bot) are not games and are left out.", '',
         f"Our builds (accepted = bots/ROSTER.tsv v*, candidate = a dist/ bundle, sparring = a training partner). "
         f"Field score = expected score against every rated field bot ({len(fld)}), one game each; vs higher = the "

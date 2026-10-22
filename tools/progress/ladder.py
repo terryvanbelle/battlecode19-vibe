@@ -82,7 +82,8 @@ def render_md(d, image='ladder.png'):
         "matches, so every team starts at 0 and climbs over its first ~20 ranked matches. **BT** is the Bradley-Terry "
         "rating of `progress/ELO.md` (± 95%; for our team, the build of our latest submission). Games W-L counts the "
         f"replica games in `progress/games.csv`. {len(lad)} teams; our team is **{md_escape(d['ours'])}**. The field "
-        "of public 2019 bots is still being compiled, so the ladder is small.", '',
+        "of public 2019 bots is entered (BENCHMARK.md); the replica plays a few matches an hour, so most teams have "
+        "played few games yet and their ratings are still rising toward their level.", '',
         f'![Galaxy replica ladder]({image})', '',
         '| # | Team | Rating | BT | Games W-L | Submission |', '|---:|---|---:|---:|---|---|']
     for t in lad:
