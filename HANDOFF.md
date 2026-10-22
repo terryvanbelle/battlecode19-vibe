@@ -20,7 +20,7 @@
   h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Gates for h41/h42
   go in right after h39's (job names ...4b01b1a41, ...a42) when their deliveries pass. Superseded at v5: h31x, h33,
   h29, h28, h21 (their switches are in v5). Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
-  their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:35 on castles lost (4 vs 3; dist/h40v5 built, not queued); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
+  their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
