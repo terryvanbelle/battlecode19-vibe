@@ -2106,3 +2106,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - h78 = v6 + PIONEER_GIVEUP 20 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PILGRIM_STALL 25 (6a97e5086e05); defaults
   build v6p (c8cbc062db75). Driver check running (h78 and h68 as blue vs h50 on 418 to 450, census stuck): the
   delivery is pre-registered once it shows the switches change moves (LEARNINGS 19).
+
+## 2026-10-22 16:52 — h76 delivery PASSED 3 of 3; its gate replaces h72's; h79 replaces h75; replica 406, 407
+- h76 (h72 + CHAIN_KEEP 1 + CHAIN_SAFE 1) vs h50 on 799, 1706, 2013, 2924 both sides (out/rp_dlv_h76): no-op v6n
+  IDENTICAL; symcheck 2 and 799 clean, 1 and 3 the known engine-order cases (axis tile at 43, a same-round kill at
+  29). (1) no line's first church lost its builder that round (scratch firsts.sh over the 8 replays: 0 of 31 pilgrim
+  church groups from round 200; h72's delivery had 3): pass. (2) a line of >= 5 churches in 7 of 8 games (all but
+  1706 as blue, which built pairs at 400-810): pass. (3) h76 wins 6 of 8 (loses 1706 blue at 914, 2013 red at 968):
+  pass. Census, h76's side: chains of 7, 7, 11, 19 (three lines), 7, 7, 7 churches, each within 4 king steps of a
+  castle, 6 castle kills in 7 lines.
+- Queue: job ...a3d57710056 is now h76's gate vs h50 (20 random cells, seed0 5000); the anti-chain panel
+  (...a3d5773-4) is h54v6 and h56v6 vs h76 (out/panel_chain76_*); h75's job ...a3d57717 now runs h79 = v6 +
+  ENDGAME_FUEL 900 + h76's chain (7265d5f3f823): symcheck, then gate vs h50. h72's gate is not run (h76 contains it).
+- Replica 406 (vibe19 1-2 StoneT2000 bot1v43, seeds 53, 203, 705) and 407 (botfinalsafe 3-0, seeds 799, 1706,
+  2013, unranked: the chain maps) fetched; vibe19 is still submission 96 (v6, no chain). Study below when read.

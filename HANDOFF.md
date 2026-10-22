@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 16:12 PDT)
+## State (2026-10-22 16:52 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -14,27 +14,24 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 16:12:
-  **h76**'s delivery running (...a3d5771000: h72 + CHAIN_SAFE 1 + CHAIN_KEEP 1, the fix for a chainer shot before
-  its first church acts; vs h50 on 799, 1706, 2013, 2924 both sides; TRAINING_LOG 15:17); then **h77**'s delivery
-  (...a3d57710001: v6 + ECON_UNTIL 100 + PIONEERS_TEAM 6 + PEACE_RESERVE_K 60 + PLAN_VALUE 10, wololo's expansion;
-  no-op v6o, symcheck, vs h50 on 1375, 826, 1706, 70 both sides, h50 and h77 vs rush4 on 20 one-castle maps;
-  TRAINING_LOG 16:12; on PASS its gate goes first), **h70** delivery
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 16:52:
+  **h77**'s delivery running (...a3d57710001: v6 + ECON_UNTIL 100 + PIONEERS_TEAM 6 + PEACE_RESERVE_K 60 +
+  PLAN_VALUE 10, wololo's expansion; no-op v6o, symcheck, vs h50 on 1375, 826, 1706, 70 both sides, h50 and h77 vs
+  rush4 on 20 one-castle maps, then timelines; TRAINING_LOG 16:12; on PASS its gate goes first), **h70** delivery
   (PEACE_RESERVE_K 60: no-op v6k, symcheck, 8 games vs h50 on 70, 520, 2591, 1592, ...a3d5771005; TRAINING_LOG 13:04),
   **h71** delivery (CHURCH_GUARD_D 8 preacher + PREACHER_SELF 4 + PREACHER_MIL 2.5: no-op v6l, symcheck, 8 games vs
-  h50 on 2591, 1915, 2030, 2924, ...a3d57710055; TRAINING_LOG 13:20), then **h72**'s gate vs h50 (StoneT2000's long
-  church line, CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5]; delivery PASSED 3/3 at 14:41; 20 random
-  cells, ...a3d57710056, moved behind h71 at 15:46): if h76's delivery passes, this job becomes h76's gate vs h50 and
-  h76 the panel's bomber,
+  h50 on 2591, 1915, 2030, 2924, ...a3d57710055; TRAINING_LOG 13:20), then **h76**'s gate vs h50 (StoneT2000's long
+  church line: h72 = CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5], delivery PASSED 14:41; h76 = h72 +
+  CHAIN_KEEP 1 + CHAIN_SAFE 1, delivery PASSED 3/3 at 16:52; 20 random cells, ...a3d57710056, h72's gate not run),
   **h64** (PIONEER_FAST, gate vs h50, ...a3d5771006: moved up 13:08, replica 391-1 is a second case, TRAINING_LOG 13:08),
   **h20v6** (DEF_RESERVE_K 30, the answer to CS554's rush: delivery h20v6 vs bots/rush4 on 20 poor one-castle
   maps at 200 rounds against h50's line from h77's job, then its gate vs h50, ...a3d577101; TRAINING_LOG 10:47), **h15v6** (MIL_ROTATION null, ~75%
   prophets: the replica's prophet-lattice duels, TRAINING_LOG 12:50; ...a3d577102), **h67** (PIONEERS_TEAM 4: a lone
   castle keeps 4 pioneers in flight; no-op v6i, symcheck, then gate vs h50 on 20 one-castle cells, ...a3d57711;
   TRAINING_LOG 10:15), **h65** (ESCORT 2, ...a3d57716, after its
-  no-op/symcheck job ...a3d577158) gate vs h50; **h75** (stack: v6 + ENDGAME_FUEL 900 + h72's chain settings,
-  replacing h66 at 15:02; symcheck then gate vs h50, ...a3d57717); the **anti-chain panel** (...a3d5773-4: h54v6 and h56v6 each
-  vs h72, out/panel_chain72_*; the h50 cell is h72's gate, so ...a3d5772 was dropped at 14:41); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775); h55's extension vs h35 (...a3d585) and h24v5's
+  no-op/symcheck job ...a3d577158) gate vs h50; **h79** (stack: v6 + ENDGAME_FUEL 900 + h76's chain,
+  replacing h75 at 16:52; symcheck then gate vs h50, ...a3d57717); the **anti-chain panel** (...a3d5773-4: h54v6 and h56v6 each
+  vs h76, out/panel_chain76_*; the h50 cell is h76's gate); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775); h55's extension vs h35 (...a3d585) and h24v5's
   (...a3d597); then the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50): h51v6's delivery
   (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6
   vs v0 and v6 vs rush. Gates of passed deliveries go in after h43v6's (job names ...4b01b1a45 onward). The extra
