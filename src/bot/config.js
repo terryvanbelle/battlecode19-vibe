@@ -109,7 +109,7 @@ export const CFG = {
   PLAN_SERVE_PILGRIM: 0,     // 1: church planning counts a depot as served by pilgrim moves (as staffing does), and
                              // churches a cluster with >= 2 unserved depots (or all, if smaller); 0: any depot within
                              // 2*SERVE_MOVES king steps marks the whole cluster served (seed 1755: never staffed)
-  PIONEER_RESERVE: 0,        // 1: ...and pilgrim + church karbonite (60) while a castle has a pioneer due (on poor
+  PIONEER_RESERVE: 2,        // 1: ...and pilgrim + church karbonite (60) while a castle has a pioneer due (on poor
                              // maps the peacetime army spent every 25 K and no church was ever built: seed 1755);
                              // 2: every castle, while no church stands and any castle planned one (castle.js pioneerDue)
   PIONEER_RESERVE_UNTIL: 100,  // ...mode 2 only before this round
@@ -139,7 +139,7 @@ export const CFG = {
   ATTACK_MIN_ARMY: 20,
   ATTACK_FUEL_PER_UNIT: 0,   // attack orders need this much fuel per military unit (30 in h2: rejected, 17/40 vs h1)
   HOME_GUARD_FRAC: 0,        // military units that ignore attack orders before round 900 (0.3 in h2: rejected)
-  MARCH_MASK: 56,            // unit types (bit 3 crusader, 4 prophet, 5 preacher) that obey attack orders before round
+  MARCH_MASK: 8,             // unit types (bit 3 crusader, 4 prophet, 5 preacher) that obey attack orders before round
                              // 900; the others hold the lattice (replica 616: 160 marching prophets burned 8,700 fuel in
                              // 40 rounds and the team sat at fuel 10-257 from 500 to the end, K 3,800 unspent)
   EDGE: 0,                   // >0: a marching unit that sees enemy attackers does not step into their reach (combat

@@ -1480,3 +1480,25 @@
   4 of 8. Then a gate of 40 games vs h35 (seed0 5000, par 2), D looks 12 / 24 / 48, accept t >= 2, reject t <= 0.
   A repair of a basics failure: the ladder rule's net >= 0 applies. Falsifier: (1) fails (orphans are not where the
   stalled turns go, or they do not find home). Zero arm h35; no dose (a switch).
+
+## 2026-10-22 08:00 — h50 ACCEPTED (pooled 40 cells +24 -11, t 2.20): frozen as v6, now the src defaults; queue rebased
+- Gate h50 (v5 + PIONEER_RESERVE 2 + MARCH_MASK 8) vs h35, read pooled as pre-registered 03:39: block 1 (seed0
+  5000, out/h50_h35.jsonl) 20 cells +12 -5; extension (seed0 6000, out/h50x_h35.jsonl, finished 07:45) alone 20
+  cells D 18, +12 -6, t 1.41; pooled 40 cells, 80 games, 53 wins: gained 24, lost 11, split 5, net +13, t 2.20
+  (accept bar 2). Castle margin read 05:55 was 0.44 on block 1: its wins come at round 1000 on health.
+- bots/v6 = dist/h50 (hash 9d787196f941; ROSTER.tsv). Replica submission 96 ("v6 (h50): ..."), accepted: matches
+  created from now on play v6; the waiting backlog (about 200) was created with v4/v5.
+- src defaults now PIONEER_RESERVE 2, MARCH_MASK 8; unit tests 91/91. The defaults-only build dist/v6d is not
+  byte-identical to dist/h50 (without --cfg overrides the minifier drops dead branches), so the identity check is a
+  game: v6d vs h50 and h50 vs h50 under --det, plus symcheck of v6d, on the extra lane (out/dlv_chain28.sh).
+- Queue: reads under way finish against v5, since pooling needs one control: h8v5's gate (running), the h54, h55 and
+  h24v5 extensions; a pass is stacked onto v6 and gated vs v6 (40 games). Not yet started, rebased onto v6 in place
+  (same job names, v6 + own switch vs dist/h50): h51v6 delivery, h43v6, h15v6, h20v6, h7v6, h10v6, h11v6, h9v6, h18v6;
+  the reference jobs now play bots/v6. h39's and h44's held single gates are superseded (~/jobq/superseded).
+- h60 (PILGRIM_ORPHAN 1): no-op h35o IDENTICAL; symcheck seeds 1 (axis contest r45), 2 clean, 3 and 1250 (combat
+  after the first attack). Driver diagnostic h35 red vs h60 blue on 1250 (to 450): blue stalled 447 turns (h35 on
+  blue in the mirror diagnostic: 849); the 423-turn streak of #4088 remains in both: it is not an orphan (castle
+  (24,20) in sight from (24,29)) but waits beside depots under red's army at (13-17, 29-32), the h59 case. Delivery
+  running on the extra lane (out/dlv_chain27.sh: 1250, 1635, 1862, 357 both sides vs h35; bars pre-registered 07:49).
+- Slip: an attempts.csv rewrite opened the file before a malformed-row error and truncated it; restored from git and
+  redone through a temporary file. Three rows (h41, h54, h55) had unquoted commas in the outcome field; now quoted.

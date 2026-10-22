@@ -1,39 +1,32 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 07:40 PDT)
+## State (2026-10-22 08:00 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
-  teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
-  `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
-  a CFG switch whose default is the incumbent; candidates are built with `--cfg KEY=JSON` into `dist/hN`.
-- v5 = h35 = v4 (h19) + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6 (church density, contested clusters first), RELAY 1
-  (cargo relay), NAV_FIT 1 + LATTICE_STICKY 2 (movement fit, lattice memory), PILGRIM_SAFE_STEP 1: 35-5 vs h19
-  (t 3.44), ACCEPTED 00:08 2026-10-22; these are the src defaults now. Replica submission 95. Candidates are
-  switches on v5, gated against dist/h35 (= bots/v5) with `--timescale 2 --init-ms 1000 --fast-turn`; its two
-  lost cells (905, 2855) are karbonite-bound maps (K 0, F 12,500+ unspent). Clean no-op check of the new defaults
-  (h35d vs h35, --det, VM extra lane): out/noop_v5.cmp in 2019-next.
+  teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
+  partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
+  change is a CFG switch whose default is the incumbent; candidates are built with `--cfg KEY=JSON` into `dist/hN`.
+- v6 = h50 = v5 (h35) + PIONEER_RESERVE 2 (every castle keeps the pioneer's karbonite until the first church
+  stands) + MARCH_MASK 8 (only crusaders obey attack orders before round 900; prophets and preachers hold the
+  lattice): pooled 40 cells vs h35 +24 -11 (t 2.20), 53-27, ACCEPTED 08:00 2026-10-22; these are the src defaults
+  now. Replica submission 96. Candidates are switches on v6, gated against dist/h50 (= bots/v6) with `--timescale 2
+  --init-ms 1000 --fast-turn`. The defaults-only build dist/v6d is not byte-identical to h50 (a defaults build
+  drops dead branches): no-op check v6d vs h50 (--det) and symcheck on the extra lane, out/dlv_chain28.sh.
+  v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
-  bots/dist linked to the main tree, outputs in the main tree's out/):
-  h54's gate vs h35 (STRIKE_R2 36 + PREACHER_SELF 4 + PREACHER_MIL 2.5: win the knife fight at mirror churches
-  that decides which side wins self-play; delivery PASSED 3 of 3 at 03:55, 8-0, castles lost 1 vs 12): block 1
-  (...a3d56) read 05:08 D 3 of 20 cells (+2 -1, t 0.58, 17 byte-identical), so the chains gate (...a3d57) took its
-  h55-vs-h35 branch (h55's delivery PASSED 3 of 3 at 04:21): block 1 read 05:45 D 11 (+6 -5, t 0.30). Now, in
-  order: h50's extension (...a3d576, the stack below, running), h8v5's gate (...a3d577: its delivery PASSED 3 of 3
-  at 07:40), h54's extension blocks ...a3d58, then h55's (...a3d585, seed0 6000), then h54's ...a3d59, a3d595
-  (seed0 6000, 7000, 9000, appended to out/h54_h35.jsonl; first look at the first job boundary with D >= 12, rules in
-  TRAINING_LOG 05:08; h55's the same, 05:45), then h24v5's extension (...a3d597: look 1 at 07:40 was D 13, t 0.83,
-  no decision; next look D >= 24). **Every gate job runs at par 2 while the replica queue is long** (owner, PROMPTS
-  18; back to par 4 when fewer than 30 replica matches wait). The extension of h50's gate (stack
-  PIONEER_RESERVE 2 + MARCH_MASK 8, LEARNINGS 18: 27-13, t 1.70 at 40 games, inconclusive; 20 more cells at seed0
-  6000, ...a3d576, out/h50x_h35.jsonl, read pooled with out/h50_h35.jsonl), h51's delivery (CASTLE_POST 0.5: half the church-born army guards the nearest
-  castle; ...a3e; pre-registered TRAINING_LOG 02:33), h43's gate vs h35 (castle recall RECALL 30; delivery passed 3 of
-  3 at 01:18, but h43 lost 4 of the 5 games in which it recalled; ...a43), then the old candidates rebased onto v5 (v5 + their own
-  switch, 40 games vs h35): h15v5 (MIL_ROTATION null: no crusaders; moved first at 01:15, job ...a5, as crusaders
-  died unfired in h41's games and lost h42's karbonite-bound ones), h20v5 (DEF_RESERVE_K 30),
-  h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Held in ~/jobq/hold
-  until h50's pooled gate reads: the single gates h39 (PIONEER_RESERVE 2, ...a4) and h44 (MARCH_MASK 8, ...a44),
-  needed for attribution only if the stack fails. Gates of passed deliveries go in after h43's (job names
-  ...4b01b1a45 onward, so they run before h15v5's ...a5). Superseded at v5: h31x, h33,
-  h29, h28, h21 (their switches are in v5). Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
+  bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait).
+  Reads already under way when v6 was accepted finish against v5 (pooling needs the same control); a pass is then
+  stacked onto v6 and gated vs v6: h8v5's gate (...a3d577, ENDGAME_FUEL 900, running), h54's extension blocks
+  ...a3d58, then h55's (...a3d585, seed0 6000), then h54's ...a3d59, a3d595 (seed0 6000, 7000, 9000, appended to
+  out/h54_h35.jsonl; first look at the first job boundary with D >= 12, rules in TRAINING_LOG 05:08; h55's the same,
+  05:45), then h24v5's extension (...a3d597: look 1 at 07:40 was D 13, t 0.83, no decision; next look D >= 24).
+  h54 = STRIKE_R2 36 + PREACHER_SELF 4 + PREACHER_MIL 2.5 (block 1 D 3, +2 -1); h55 = CHAIN_ROUND 150 (block 1 D 11,
+  +6 -5). Then the jobs rebased onto v6 at 08:00 (same job names, v6 + their own switch vs dist/h50, outputs
+  out/<name>_h50.jsonl): h51v6's delivery (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h15v6
+  (MIL_ROTATION null, ...a5), h20v6 (DEF_RESERVE_K 30), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6
+  vs v0 and v6 vs rush (main tree). Gates of passed deliveries go in after h43v6's (job names ...4b01b1a45 onward,
+  so they run before h15v6's ...a5). h39 and h44's single gates (held) are superseded by v6 (~/jobq/superseded).
+  Superseded at v5: h31x, h33, h29, h28, h21. Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
   their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h46 (SPOT for melee) failed 1 of 3 at 01:52; h47 (FOCUS 1) failed 1 of 3 at 02:04; h48 (preachers when fuel binds) failed 1 of 3 at 02:20; h49 (SPOT for prophets) failed 0 of 3 at 02:32; h58 (CHURCH_FIRST_R2) failed 1 of 3 and h59 (PILGRIM_HOT) 0 of 3 at 06:13; h45 (EDGE 1.5) withdrawn before its delivery (inert: prophet vision equals reach); h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
   Superseded job files are in ~/jobq/superseded.
@@ -75,8 +68,11 @@
   CFG.PILGRIM_HOT (h59 = 10) gives the depot up; scratch stall.js / stallwhy.js measure it (copies in 2019-next/out).
   Orphans (TRAINING_LOG 07:49): 56 of 165 long stall streaks (39% of the turns) were pilgrims that knew no living
   structure (their church fell; pilgrim.js then returned null for good). CFG.PILGRIM_ORPHAN (h60 = 1) walks them to
-  our half's cluster sites until a structure is in sight: no-op + symcheck on the extra lane (out/dlv_chain26.sh),
-  driver diagnostic on 1250, then the pre-registered delivery (1250, 1635, 1862, 357 both sides).
+  our half's cluster sites until a structure is in sight: no-op IDENTICAL, symcheck clean (out/dlv_chain26.sh);
+  driver diagnostic on 1250 (h60's side stalled 447 turns, h35's 849 on that side); the pre-registered delivery
+  (1250, 1635, 1862, 357 both sides, vs h35) runs on the extra lane (out/dlv_chain27.sh, out/stall_dlv_h60.txt).
+  If it passes, the gate is h60v6 (built) vs h50. Pilgrims that know a structure but whose depots sit under an enemy
+  army (seed 1250 #4088: 423 turns beside (24,29), castle in sight) are not orphans: h59 (PILGRIM_HOT) failed there.
 - tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
   cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were
   started without it, our own builds only). Not yet synced to the VM trees (they start games under unshare anyway).
