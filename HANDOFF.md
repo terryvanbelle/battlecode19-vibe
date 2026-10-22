@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 02:35 PDT)
+## State (2026-10-22 02:46 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -15,14 +15,14 @@
   bots/dist linked to the main tree, outputs in the main tree's out/):
   the stack h50 vs h35 (PIONEER_RESERVE 2 + MARCH_MASK
   8, LEARNINGS 18; ...a3d, running), h51's delivery (CASTLE_POST 0.5: half the church-born army guards the nearest
-  castle; ...a3e; pre-registered TRAINING_LOG 02:33), then the single gates for attribution: h39 vs h35 (PIONEER_RESERVE 2; delivery passed
-  23:46), h43 vs h35 (castle recall RECALL 30; delivery passed 3 of
-  3 at 01:18, but h43 lost 4 of the 5 games in which it recalled; job ...a43), h44 vs h35 (MARCH_MASK 8; delivery
-  passed 3 of 3 at 01:52, 6 wins in 8; ...a44), then the old candidates rebased onto v5 (v5 + their own
+  castle; ...a3e; pre-registered TRAINING_LOG 02:33), h43's gate vs h35 (castle recall RECALL 30; delivery passed 3 of
+  3 at 01:18, but h43 lost 4 of the 5 games in which it recalled; ...a43), then the old candidates rebased onto v5 (v5 + their own
   switch, 40 games vs h35): h15v5 (MIL_ROTATION null: no crusaders; moved first at 01:15, job ...a5, as crusaders
   died unfired in h41's games and lost h42's karbonite-bound ones), h24v5 (ECON_UNTIL 100), h20v5 (DEF_RESERVE_K 30), h8v5,
-  h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Gates of passed
-  deliveries go in after h44's (job names ...4b01b1a45 onward, so they run before h15v5's ...a5). Superseded at v5: h31x, h33,
+  h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Held in ~/jobq/hold
+  until h50's gate reads (02:45): the single gates h39 (PIONEER_RESERVE 2, ...a4) and h44 (MARCH_MASK 8, ...a44),
+  needed for attribution only if the stack fails. Gates of passed deliveries go in after h43's (job names
+  ...4b01b1a45 onward, so they run before h15v5's ...a5). Superseded at v5: h31x, h33,
   h29, h28, h21 (their switches are in v5). Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
   their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h46 (SPOT for melee) failed 1 of 3 at 01:52; h47 (FOCUS 1) failed 1 of 3 at 02:04; h48 (preachers when fuel binds) failed 1 of 3 at 02:20; h49 (SPOT for prophets) failed 0 of 3 at 02:32; h45 (EDGE 1.5) withdrawn before its delivery (inert: prophet vision equals reach); h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
@@ -34,7 +34,8 @@
   on 2855 both sides; read), `out/dlv_chain13.sh` (sym_h44), `out/dlv_chain14.sh` (no-op h35e vs h35: IDENTICAL; sym_h45 clean),
   `out/dlv_chain15.sh` (no-op h35f vs h35: IDENTICAL; sym_h46),
   `out/dlv_chain16.sh` (no-op h35g vs h35: IDENTICAL; sym_h47 clean), `out/dlv_chain17.sh` (sym_h48 clean), `out/dlv_chain18.sh` (no-op h35h vs h35 IDENTICAL; sym_h49, sym_h50 clean), `out/dlv_chain19.sh` (no-op h35i,
-  sym_h51; rerun at 02:15 on the CASTLE_POST_R builds: no-op IDENTICAL, sym_h51 clean). h51's second driver diagnostic
+  sym_h51; rerun at 02:15 on the CASTLE_POST_R builds: no-op IDENTICAL, sym_h51 clean), `out/dlv_chain20.sh`
+  (deliveries of h52 and h53, attack timing 350 / 550, started 02:44; TRAINING_LOG 02:40). h51's second driver diagnostic
   (2299): 33 units by the castle at 450 against h35's 3, yet h51 lost that castle at 562 (TRAINING_LOG 02:33). Symmetry checks stop only at axis-tile contests or
   combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new

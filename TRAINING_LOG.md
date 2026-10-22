@@ -1132,3 +1132,21 @@
   churches 35 / 60 / 81 against 47 / 72 / 88. But h35 won on castles at 562: a fight at 450-480 cost h51 86 of 117
   military (h35 32 of 96), and h51's castle (32,3) fell to prophets with 0 of its 9 survivors within 20 tiles and
   26 of h35's; h51 also lost 2 churches (h35 0). One game; the delivery decides.
+
+## 2026-10-22 02:40 — fuel decides the round-450 fight; h52 / h53 pre-registered (march at 350 / 550)
+- h51's driver diagnostic (2299, one castle a side, 10 depots each half, all staffed by round 100): h51 met the
+  round-450 march with 7,425 fuel to h35's 12,805, ran dry at 470 (h35 still 4,523) and lost 86 of 117 military
+  to 32, 110 of the deaths on its own half while it outnumbered the enemy within 10 tiles about 2 to 1 (deathmap
+  scratch tool): units that cannot shoot do not count. Its 5,400 deficit (fuel flows per 50 rounds to 449): radio
+  +1,390 (the post, 61 fuel every 20 rounds), military moves +2,110, shots before 450 +2,280, builds -250; mined the
+  same (+170). Its pilgrims idled 89 turns before 450 (h35 0) next to a castle crowded by 33 guards.
+- Attack timing has never been tested: only the turtle (no march, h16r, 16-24 vs h19, castles lost 23 to 6) and
+  the creep (h38). The turtle's loss says the march wins against a standing lattice; the castle falls above say the
+  defender's army stands spread by its churches while the attacker's comes together. Two doses, both ways:
+  h52 = v5 + ATTACK_ROUND 350 (attack first, with ~80 units instead of ~110, into a lattice that has not marched);
+  h53 = v5 + ATTACK_ROUND 550 (meet h35's march at home with a full bank, then march into a spent army).
+- Deliveries (VM extra lane, `tools/xbatch.js`, 8 games of 1000 rounds each vs h35 on 2924, 2202, 241, 1915 both
+  sides), summed, `tools/dlv.js`: (1) enemy castles destroyed (h35's castlesLost) at least 1.25x the candidate's
+  own castlesLost and at least 2 more; (2) wins at least 5 of 8; (3) enemy military killed at least 95% of the
+  military it lost. Gate 40 games vs h35, falsifier t <= 0. Dose ladder: h52 350 -> 300 -> 250; h53 550 -> 650.
+  No symmetry check: the switch changes one round threshold, past the 200 rounds symcheck plays.
