@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 08:00 PDT)
+## State (2026-10-22 09:30 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -14,18 +14,17 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait).
-  Reads already under way when v6 was accepted finish against v5 (pooling needs the same control); a pass is then
-  stacked onto v6 and gated vs v6: h8v5's gate (...a3d577, ENDGAME_FUEL 900, running), h54's extension blocks
-  ...a3d58, then h55's (...a3d585, seed0 6000), then h54's ...a3d59, a3d595 (seed0 6000, 7000, 9000, appended to
-  out/h54_h35.jsonl; first look at the first job boundary with D >= 12, rules in TRAINING_LOG 05:08; h55's the same,
-  05:45), then h24v5's extension (...a3d597: look 1 at 07:40 was D 13, t 0.83, no decision; next look D >= 24).
-  h54 = STRIKE_R2 36 + PREACHER_SELF 4 + PREACHER_MIL 2.5 (block 1 D 3, +2 -1); h55 = CHAIN_ROUND 150 (block 1 D 11,
-  +6 -5). Then the jobs rebased onto v6 at 08:00 (same job names, v6 + their own switch vs dist/h50, outputs
-  out/<name>_h50.jsonl): h51v6's delivery (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h15v6
-  (MIL_ROTATION null, ...a5), h20v6 (DEF_RESERVE_K 30), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6
-  vs v0 and v6 vs rush (main tree). Gates of passed deliveries go in after h43v6's (job names ...4b01b1a45 onward,
-  so they run before h15v6's ...a5). h39 and h44's single gates (held) are superseded by v6 (~/jobq/superseded).
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 09:30:
+  h8v5's gate (...a3d577, ENDGAME_FUEL 900 vs h35, running: a read under way when v6 was accepted finishes against
+  v5; a pass is stacked onto v6 and gated vs v6); **h63** (PILGRIM_HERE, ...a3d5771) and **h64** (PIONEER_FAST,
+  ...a3d57715) gates vs h50; the **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each vs h55v6); h55's
+  extension vs h35 (...a3d585, seed0 6000) and h24v5's (...a3d597, look 1 D 13 t 0.83, next look D >= 24); then
+  the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50, outputs out/<name>_h50.jsonl): h51v6's
+  delivery (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h15v6 (MIL_ROTATION null, ...a5), h20v6
+  (DEF_RESERVE_K 30), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6 vs v0 and v6 vs rush. Gates of
+  passed deliveries go in after h43v6's (job names ...4b01b1a45 onward). h54's h2h extensions were withdrawn (the
+  panel rates it). Extra lane: chain29 (no-op v6e, sym_h61) -> chain30 (h61 delivery) -> chain31 (no-op v6f,
+  sym_h63, sym_h62) -> chain32 (no-op v6g, sym_h64).
   Superseded at v5: h31x, h33, h29, h28, h21. Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
   their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h46 (SPOT for melee) failed 1 of 3 at 01:52; h47 (FOCUS 1) failed 1 of 3 at 02:04; h48 (preachers when fuel binds) failed 1 of 3 at 02:20; h49 (SPOT for prophets) failed 0 of 3 at 02:32; h58 (CHURCH_FIRST_R2) failed 1 of 3 and h59 (PILGRIM_HOT) 0 of 3 at 06:13; h45 (EDGE 1.5) withdrawn before its delivery (inert: prophet vision equals reach); h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
