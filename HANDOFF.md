@@ -19,7 +19,8 @@
   their target, crusaders and preachers engage it; job ...a39), h47's delivery (FOCUS 1: focus fire by a shared rule; ...a3a), h48's delivery (preachers when fuel binds,
   MIX_BY_STOCK [1000000, 1]; ...a3b),
   h39 vs h35 (PIONEER_RESERVE 2; delivery passed 23:46), then the old candidates rebased onto v5 (v5 + their own
-  switch, 40 games vs h35): h24v5 (ECON_UNTIL 100), h20v5 (DEF_RESERVE_K 30), h15v5 (MIL_ROTATION null), h8v5,
+  switch, 40 games vs h35): h15v5 (MIL_ROTATION null: no crusaders; moved first at 01:15, job ...a5, as crusaders
+  died unfired in h41's games and lost h42's karbonite-bound ones), h24v5 (ECON_UNTIL 100), h20v5 (DEF_RESERVE_K 30), h8v5,
   h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Gates for h43-h48
   go in right after h39's (job names ...4b01b1a43 to ...a48) when their deliveries pass. Superseded at v5: h31x, h33,
   h29, h28, h21 (their switches are in v5). Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
