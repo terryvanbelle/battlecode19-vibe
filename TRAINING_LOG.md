@@ -2017,3 +2017,19 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   (symcheck, then gate vs h50; delivery as h66's, with lines >= 5 churches for chainers: census --chain-min 5 lines
   in >= 20 of 40 gate games, late preachers >= 3x h50's). h76 = h72 + CHAIN_KEEP 1 + CHAIN_SAFE 1 (e60bc7ffa84a);
   v6n = defaults (145f0efacd23), its no-op build. Driver diagnostic h76 red vs h50 on 799 to 450 running.
+
+## 2026-10-22 15:17 — h76 on 799: the chainer waits out of reach and fires a 7-church line; delivery pre-registered
+- Driver, h76 (e60bc7ffa84a) red vs h50 on 799 to 450 (LEARNINGS 19: the switch changes the move): chainer #1453,
+  staged at (36,41) as in h72 and h74, stepped to (34,41) at r246-247 instead of firing in the prophet's reach,
+  waited there, and at r269 (bank 915 K at r260) built a 7-church line; a 2-church line followed at r329. Census:
+  chainers 4, lines 2 (9 churches, 1 near a castle, 1 castle kill within 25 rounds); no first link whose builder
+  died that round (h72 and h74: the r246 one-church line). Red ended with 2 castles to blue's 1. Bank after the
+  line 9-24 K to r380 (spent on the line's preachers: 91 built, 59 lost), no 136-unit drain.
+- Delivery pre-registered (VM job ...a3d5771000, ahead of h72's gate): no-op v6n (defaults, 145f0efacd23) vs h50
+  --det on 1828 must replay noop_h50_h50 byte-identical; symcheck h76 on 1, 2, 3, 799 to 300; h76 vs h50 on 799,
+  1706, 2013, 2924 both sides (full games), census --chain-min 5. PASS needs all 3: (1) no first link on h76's
+  side whose builder died in the round it was built (scratch firsts.sh; h72: 3 in its delivery's 6 games on these
+  seeds, plus 799); (2) lines >= 5 churches on h76's side in >= 6 of 8; (3) h76 wins >= 5 of 8. Falsifier: (2)
+  fails, i.e. waiting out of reach costs more lines than it saves. On PASS: h76 replaces h72 as the chain
+  candidate: its gate vs h50 (20 random cells, seed0 5000) takes the place of h72's, and it becomes the panel's
+  bomber. On FAIL: h72's gate runs as queued.

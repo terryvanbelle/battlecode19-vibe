@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 15:02 PDT)
+## State (2026-10-22 15:17 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -19,8 +19,9 @@
   PIONEER_STALL_ANY 40: no-op v6j, symcheck, 8 games vs h50 on h61's cells, ...a3d577100; TRAINING_LOG 11:52); then
   **h72**'s gate vs h50 (StoneT2000's long church line, CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500,
   MIX [5]; delivery PASSED 3/3 at 14:41: wins 6/8, lines in 7/8, chain kills 3; 20 random cells, ...a3d5771001;
-  h76 = h72 + CHAIN_SAFE 1 + CHAIN_KEEP 1, the fix for a chainer shot before its first church acts, is on a driver
-  diagnostic, seed 799; TRAINING_LOG 15:02), **h70** delivery
+  **h76**'s delivery runs before it (...a3d5771000: h72 + CHAIN_SAFE 1 + CHAIN_KEEP 1, the fix for a chainer shot
+  before its first church acts; vs h50 on 799, 1706, 2013, 2924 both sides; TRAINING_LOG 15:17; on PASS its gate
+  vs h50 replaces h72's and it becomes the panel's bomber), **h70** delivery
   (PEACE_RESERVE_K 60: no-op v6k, symcheck, 8 games vs h50 on 70, 520, 2591, 1592, ...a3d5771005; TRAINING_LOG 13:04),
   **h71** delivery (CHURCH_GUARD_D 8 preacher + PREACHER_SELF 4 + PREACHER_MIL 2.5: no-op v6l, symcheck, 8 games vs
   h50 on 2591, 1915, 2030, 2924, ...a3d57710055; TRAINING_LOG 13:20),

@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 60 other, 27 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected, 1 sparring partners (114 rows).
+Totals: 59 other, 28 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected, 1 sparring partners (114 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -119,7 +119,7 @@ Totals: 60 other, 27 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected,
 | `h73` | 2026-10-22 | h50 | h72 + a church's threat response leaves the chain bank unless the attacker is within r2 36 (CHAIN_HOLD_R2=36) |  |  |  |  | WITHDRAWN: inert on seed 799 (the draining church never knew the round, so the hold never engaged); never queued |
 | `h74` | 2026-10-22 | h50 | h72 + a threatened chainer fires only near its stage line (CHAIN_FIRE_NEAR=1) + a line church keeps the chain bank (CHAIN_KEEP=1, first form: a mark set by SIG.CHAIN) |  |  |  |  | CLOSED: diagnostic only (seed 799): the chainer was shot before its church acted, so the church heard no SIG.CHAIN and the mark never set; superseded by h76 |
 | `h75` | 2026-10-22 | h50 | v6 + endgame fuel (ENDGAME_FUEL=900) + h72's church line (CHAIN_ROUND=200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5]): replaces h66 |  |  |  |  | QUEUED (...a3d57717, h66's slot): symcheck, then gate vs h50 (20 random cells, par 2); delivery: lines >= 5 churches in >= 20 of 40 gate games, late preachers >= 3x h50's |
-| `h76` | 2026-10-22 | h50 | h72 + a chainer within reach of a visible attacker neither starts its line nor waits (CHAIN_SAFE=1) + a church that does not know the round keeps the chain bank (CHAIN_KEEP=1) |  |  |  |  | DIAGNOSTIC: driver, seed 799 red vs h50 to 450 |
+| `h76` | 2026-10-22 | h50 | h72 + a chainer within reach of a visible attacker neither starts its line nor waits (CHAIN_SAFE=1) + a church that does not know the round keeps the chain bank (CHAIN_KEEP=1) |  |  |  |  | QUEUED (...a3d5771000, ahead of h72's gate): no-op v6n, symcheck, delivery vs h50 on 799, 1706, 2013, 2924 both sides (no broken first link; lines >= 5 churches in >= 6/8; wins >= 5/8). Driver 799: 7-church line at r269 and a castle kill where h72 drained |
 | `h7v5` | 2026-10-22 | h35 | v5 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | REBASED onto v6 as h7v6 (gate vs h35 withdrawn) |
 | `h7v6` | 2026-10-22 | h50 | v6 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | QUEUED: 40 games vs h50 |
 | `h8v5` | 2026-10-22 | h35 | v5 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8r |  |  |  | vs v5 31-17 | DELIVERY PASSED 3 of 3 vs h35: preachers built r900-1000 377 vs 9 (bar 3x), final health 136% (bar 120%), wins 7/8 (bar 5); gate moved up (par 2); gate vs h35: 20 cells D 4 net +4, below the first look (D 12): undecided; REBASED onto v6 as h8v6 |
