@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 14 other, 12 queued, 5 accepted, 5 in progress, 3 dropped, 2 rejected, 1 sparring partners (42 rows).
+Totals: 15 other, 12 queued, 5 accepted, 4 in progress, 3 dropped, 2 rejected, 1 sparring partners (42 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -37,7 +37,7 @@ Totals: 14 other, 12 queued, 5 accepted, 5 in progress, 3 dropped, 2 rejected, 1
 | `h25` | 2026-10-21 | h19 | h19 + nav fit: steps capped below full speed (cruise r2 2, pilgrims under 1000 fuel) follow a field counted in such steps (NAV_FIT=1) |  |  |  |  | WITHDRAWN before gate: preacher two-cycle (move fuel 3152 vs 1846 on 2202); replaced by h25s |
 | `h25s` | 2026-10-21 | h19 | h19 + nav fit + sticky lattice target (NAV_FIT=1, LATTICE_STICKY=1) |  |  |  |  | in progress: delivery on 2202 K+F 8024 vs 7944, preacher oscillations 86 (h25 185); gate QUEUED: 40 games vs h19 |
 | `h26` | 2026-10-21 | h19 | h19 + sticky lattice target: an idle unit keeps its lattice tile until it sees it taken (LATTICE_STICKY=1) |  |  |  |  | in progress: delivery on 2202 preacher oscillations 13 vs 50, mining level; gate QUEUED: 40 games vs h19 |
-| `h27` | 2026-10-21 | h19 | h19 + expansion: from round 100 castles re-plan every 50 rounds, adding remote clusters on either half away from enemy castles; pioneers report clusters an enemy holds (EXPAND_ROUND=100) |  |  |  |  | in progress: delivery (300-round games vs h19 on 826, 1205) running; then 40 games vs h19 |
+| `h27` | 2026-10-21 | h19 | h19 + expansion: from round 100 castles re-plan every 50 rounds, adding remote clusters on either half away from enemy castles; pioneers report clusters an enemy holds (EXPAND_ROUND=100) |  |  |  |  | DELIVERY FAILED: no added church by r300 on 826/1205 (re-plan picks the opponent's own corners; pioneers die); not gated |
 | `h7r` | 2026-10-21 | h19 | h19 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7 |  |  |  |  | QUEUED: 40 games vs h19 |
 | `h8r` | 2026-10-21 | h19 | h19 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8 |  |  |  |  | QUEUED: 40 games vs h19 |
 | `h9r` | 2026-10-21 | h19 | h19 + church planning counts depots served by pilgrim moves (PLAN_SERVE_PILGRIM=1); rebased from h9 |  |  |  |  | QUEUED: 40 games vs h19 |

@@ -511,3 +511,17 @@
   End-of-game bank still ~60 fuel: the floor keeps prophets off the last 225 fuel but the other shooters drain it.
 - Pre-registered rule: a failed delivery takes the gate out. Job moved to ~/jobq/superseded. The direction was right
   (85% -> 73%, 0.51 -> 0.60); a larger floor would be a new candidate with its own delivery.
+
+## 2026-10-21 20:46 — h27 (EXPAND) delivery FAILED; withdrawn before its gate
+- 300-round games vs h19 on the driver (0 exceptions, 0 frozen): seed 826 h27 red 8 churches / 30 pilgrims, mined
+  K+F 33,702 vs h19 red (mirror game) 8 / 32, 33,574; as blue 6 / 18 both. Seed 1205 h27 red 4 churches / 24
+  pilgrims vs h19 red's 4 at round 200 in the h19-h6 gate replay. No added church anywhere: FAIL on every item.
+- Debug build (castle log, seed 826, 250 rounds): at round 100 the re-plan adds clusters 13 (0,45), 18 (61,56) and
+  19 (1,62), the opponent's own corners (16-31 king steps from its castles, so outside EXPAND_KEEP=12). All three
+  pioneers died on the way without seeing a structure (no CT.TAKEN), and the 100-round retry sends two more at
+  rounds 230 and 246. In self-play what the turn-3 plan leaves out is the opponent's plan; eigthbot's enemy-half
+  churches on replica 826 were clusters CometsTech never claimed, which an equal opponent does claim.
+- The same log shows the real limit on 826: castle (16,6) had clusters 0 and 5 planned but sent their pioneers only
+  at rounds 118-119, with 25 karbonite banked at round 100 while the army grew to 19. That is h24's question
+  (economy first, gate next in the queue).
+- EXPAND stays in src as a default-off switch (unit-tested). Not gated.
