@@ -639,3 +639,12 @@
   +10% summed, pilgrims lost <= 70% of h19's, 0 exceptions. Gate right after h31 (job ...4b01b2), 40 games vs
   h19; accept t >= 2, reject t <= 0. If it fails delivery, the job is withdrawn.
 - Queue now: h24 (running), h31, h35, h33, h29, h28, h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b, refs.
+
+## 2026-10-21 22:01 — h24 (economy first) gate INCONCLUSIVE; extended by 20 cells
+- h24 (ECON_UNTIL=100) vs h19, 40 games (out/h24_h19.jsonl, seed0 5000, --timescale 2 --init-ms 1000
+  --fast-turn): raw 26-14 (wins 16 castles, 10 health; losses 11 health, 3 castles); head-to-head 20 cells: gained
+  11, lost 5, split 4, net +6, t 1.50. Between reject (t <= 0) and accept (t >= 2): INCONCLUSIVE.
+- 0 exceptions on both sides; mean wall 345 s a game with --fast-turn.
+- Per the algorithm's look schedule, 20 more cells (seed0 6000, out/h24_h19x.jsonl, job ...4b01b1a) run right
+  after h31; the read pools both blocks (40 cells), same thresholds. h24's delivery passed its economy half on the
+  driver (19:00 entry's items); the rush half (extra lane chain4) still waits for the lock and is read when it lands.
