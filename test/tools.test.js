@@ -392,4 +392,13 @@ test('census: pioneers, churches by round, mines; gate replay names sum by role'
   // red's church builds a pilgrim first, blue's a preacher
   const g = census(fs.readFileSync(path.join(FIX, 'guard_s2591_r25.bc19')));
   assert.deepStrictEqual([g[0].churches, g[0].guard_first, g[1].churches, g[1].guard_first], [1, 0, 1, 1]);
+  // replica 407-3 (StoneT2000 red vs vibe19 v6, seed 2013, the whole game): a 12-church line at r274 ends near our
+  // castle, which dies at r282 (LEARNINGS 22); red's other line has 4 churches
+  const cb = fs.readFileSync(path.join(FIX, 'chain_s2013_407-3.bc19'));
+  const chains = o => census(cb, o).map(t => [t.chains, t.chain_churches, t.chain_near, t.chain_kills]);
+  assert.deepStrictEqual(chains({}), [[2, 16, 1, 1], [0, 0, 0, 0]]);
+  assert.deepStrictEqual(chains({ chainMin: 12 }), [[1, 12, 1, 1], [0, 0, 0, 0]]);
+  assert.deepStrictEqual(chains({ chainMin: 13 })[0], [0, 0, 0, 0]);
+  assert.deepStrictEqual(chains({ chainNear: 1 })[0], [2, 16, 0, 0]);
+  assert.deepStrictEqual(chains({ to: 270 })[0], [0, 0, 0, 0]);
 });
