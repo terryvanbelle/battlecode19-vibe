@@ -78,6 +78,17 @@ test('replay: rounds csv, board, unit life, nav', () => {
   assert.match(replay.unitLife(buf, id), /^robot \d+: blue crusader/);
 });
 
+test('replay: moves per 100 rounds add up to the move fuel; back-and-forth fuel is part of it', () => {
+  const buf = fs.readFileSync(path.join(FIX, 'example_s2.bc19'));
+  const rows = replay.moves(buf, 100), tl = replay.timeline(buf, []);
+  for (const team of [0, 1]) {
+    const mine = rows.filter(a => a.team === team), total = mine.reduce((s, a) => s + a.fuel.reduce((x, y) => x + y, 0), 0);
+    assert.strictEqual(total, tl.find(r => r.team === team).move_fuel);
+    assert.ok(mine.every(a => a.back >= 0 && a.back <= a.fuel.reduce((x, y) => x + y, 0)));
+  }
+  assert.ok(/\tback$/.test(replay.movesText(rows).split('\n')[0]));
+});
+
 test('paired: discordant cells, net and t; mismatched cells ignored', () => {
   const { pairedRead } = require('../tools/paired');
   const row = (a, seed, side, w, b = 'o') => ({ a_hash: a, b_hash: b, seed, a_side: side, winner_is_a: w });

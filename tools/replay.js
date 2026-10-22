@@ -303,21 +303,25 @@ function fireText(rows) {
 }
 
 // Movement fuel per team, window of rounds and unit type: where the fuel goes.
+// back: fuel of moves that return a robot to the tile its previous move left (A -> B -> A: oscillation).
 function moves(buf, every = 100) {
-  const rows = new Map();
+  const rows = new Map(), prev = new Map();
   simulate(buf, { onTurn(ev) {
     if (ev.rec.action !== 1 || ev.error) return;
     const r = ev.robot, from = Math.floor((ev.round - 1) / every) * every + 1, k = r.team + ':' + from;
-    const a = rows.get(k) || rows.set(k, { team: r.team, from, fuel: [0, 0, 0, 0, 0, 0], n: [0, 0, 0, 0, 0, 0] }).get(k);
-    a.fuel[r.unit] += (ev.rec.dx * ev.rec.dx + ev.rec.dy * ev.rec.dy) * SPECS.UNITS[r.unit].FUEL_PER_MOVE; a.n[r.unit]++;
+    const a = rows.get(k) || rows.set(k, { team: r.team, from, fuel: [0, 0, 0, 0, 0, 0], n: [0, 0, 0, 0, 0, 0], back: 0 }).get(k);
+    const f = (ev.rec.dx * ev.rec.dx + ev.rec.dy * ev.rec.dy) * SPECS.UNITS[r.unit].FUEL_PER_MOVE, p = prev.get(r.id);
+    a.fuel[r.unit] += f; a.n[r.unit]++;
+    if (p && p[0] === r.x && p[1] === r.y) a.back += f;
+    prev.set(r.id, [r.x0, r.y0]);
   } });
   return [...rows.values()].sort((a, b) => a.team - b.team || a.from - b.from);
 }
 
 function movesText(rows) {
-  const out = ['team\tfrom\ttotal\tpilgrim\tcrusader\tprophet\tpreacher\tmoves'];
+  const out = ['team\tfrom\ttotal\tpilgrim\tcrusader\tprophet\tpreacher\tmoves\tback'];
   for (const a of rows) out.push([['red', 'blue'][a.team], a.from, a.fuel.reduce((x, y) => x + y, 0), ...a.fuel.slice(2),
-    a.n.reduce((x, y) => x + y, 0)].join('\t'));
+    a.n.reduce((x, y) => x + y, 0), a.back].join('\t'));
   return out.join('\n');
 }
 
