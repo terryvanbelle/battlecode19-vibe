@@ -1348,10 +1348,10 @@
 
 ## 2026-10-22 05:52 — how castles fall in v5 mirror games: undefended while the army marches
 - Census (scratch castlefall.js, VM) of the 17 cells of h54's gate whose two games are byte-identical, i.e. pure
-  h35-vs-h35 games: 19 castle deaths in 12 games, 15 of them between rounds 456 and 667 (the march). In 11 of the
-  19 the dying castle had **no unit of its own within r2 100** (1205, 1250, 1862, 2299, 2855, 418, 905: victim
-  armies of 0-92 units standing a mean 21-38 king steps from their own castles); in 4 more it had 1-5. Killers:
-  prophet 9, crusader 7, preacher 2 (and one other). Castles fell 2-30 rounds after the first hit in 12 of 19.
+  h35-vs-h35 games: 16 castle deaths in 13 games, 12 of them between rounds 456 and 667 (the march). In 7 of the
+  16 the dying castle had **no unit of its own within r2 100** (1205, 1250, 1862, 2299, 2855, 418, 905; where the
+  victim had an army, 15-92 units stood a mean 21-38 king steps from their own castles); in 5 more it had 1-5.
+  Killers: prophet 8, crusader 6, preacher 2. 11 of 16 fell within 30 rounds of the first hit.
 - Consistent with the two defence candidates already queued, not a new one: h50's MARCH_MASK 8 (crusaders alone
   obey the attack call, so prophets and preachers stay on the lattice; gate extension ...a3d576) and h51's
   CASTLE_POST 0.5 (half the church-born army guards the nearest castle; delivery ...a3e). Recorded before either
