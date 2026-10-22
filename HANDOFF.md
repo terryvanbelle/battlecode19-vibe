@@ -1,20 +1,23 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-21 15:30 PDT)
+## State (2026-10-21 17:45 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v3** (`bots/v3`, ROSTER.tsv); frozen history v0-v3, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
   a CFG switch whose default is the incumbent; candidates are built with `--cfg KEY=JSON` into `dist/hN`.
 - Dev line h6 (v3 + RNG reseed, depot cooldown, crusader/preacher rotation, miner switching, shooting fuel floor) is
   level with v3 (23-17, t 0.7; 7-7 without load-contaminated games): it loses every single-castle map on castles
-  near round 500 and wins the multi-castle ones. Candidates are switches on h6, gated against h6 (ATTEMPTS.md).
-- VM queue (`~/jobq`, in order): h11c (cruise patience, running), h18 (cruise fuel reserve: delivery passed, the
-  strongest lead), h15 (ablation: no build rotation), h16 (turtle: never attack), h7, h8, h9, h10, v3 vs v0, v3 vs
-  rush. Parked (delivery failed or superseded): h11, h12 (waves), h13 (keep clear), h14 (detour), h17 (karbonite
-  stop), v3 vs v1, v3 vs example.
-- Main finding: armies jam in their own base. On seed 2202 85-90% of h6's army is within 12 king steps of home
-  through round 700 although every unit has a target; the attack that does get out loses. h11c's patient army
-  stays home and wins on health.
+  near round 500 and wins the multi-castle ones. h19 = src defaults = h6 + two bug fixes (World.signal fuel;
+  setup that re-runs until complete, LEARNINGS 10), measured vs h6 next; candidates from now on are switches on h19,
+  gated against h19 with `--timescale 2 --init-ms 1000` (TRAINING_LOG 17:40).
+- VM queue (`~/jobq`, in order): h18 vs h6 (cruise fuel reserve, running, 15/40 at 17:40); then, once tools and
+  dist are synced (the new `--init-ms` flag), h19 vs h6, h15r, h16r, h7r, h8r, h9r, h10r, h11r vs h19; then the
+  held reference jobs in ~/jobq/hold (v3 vs v0, v3 vs rush). The h6-based h15, h16, h7-h10 jobs are in
+  ~/jobq/superseded. Parked: h11, h12 (waves), h13 (keep clear), h14 (detour), h17 (karbonite stop).
+- Main finding: after the attack call at round 450 the army burns the fuel bank in ~50 rounds (8 sampled games:
+  7,000-9,000 fuel at 450, under 100 by 500), then cannot shoot or move: 85-90% of it stays within 12 king steps of
+  home through round 700 (seed 2202). A fuel freeze more than a traffic jam (detour h14 freed nobody); h18's cruise
+  fuel reserve keeps the bank (delivery passed) and is the lead under test.
 - Replica ladder (ACCESS.md, tools/galaxy19, `tools/galaxy19/contest19.py`): team vibe19 runs v3. Benchmark field:
   92 entrants, 89 compiled (BENCHMARK.md). Entry trickles in by VM cron, `field.py seed --next 6` every 20 minutes
   (smoke-tested first, duplicates by bundle digest skipped; log bc19-benchmarks/trickle.log): 15 new teams on at

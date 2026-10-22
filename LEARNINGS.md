@@ -28,3 +28,8 @@
 9. **A remote `pgrep -f PATTERN` matches the ssh shell that runs it.** `gssh 'pgrep -f "dist/h14 "'` always
    succeeds, because the remote `bash -c` command line contains the pattern, so a wait-until-gone loop never ends (three
    delivery reads hung an hour). Bracket one character (`pgrep -f "dist/h1[4] "`) or wait on an output file.
+10. **A killed turn keeps whatever it wrote.** vm2 stops a turn at its wall-clock limit wherever it is (a GC pause
+   on a loaded machine is enough), and the robot's objects stay half-updated. Setup guarded by `turn === 1` then
+   never finishes: one prophet threw on all of its 392 remaining turns. Lazy state must be built in locals and
+   committed in one assignment, and setup must re-run until a flag set last says it finished. On the loaded driver
+   this took caught exceptions from 789 to 0 in 300 rounds. (2026-10-21)

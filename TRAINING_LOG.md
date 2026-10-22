@@ -202,3 +202,33 @@
 - Sparring, h6 vs bots/rush (out/ref.jsonl tag h6rush, 15 maps x 2 sides, seed0 9000): h6 wins 22 of 30 and loses
   both sides on 4 maps: 1337 and 1879 (castles at round 1000), 2544 (health), 2908 (all castles gone by 597/747).
   A rush beats the incumbent on 4 maps in 15: a basics gap (defence), now being replayed (seed 2908).
+
+## 2026-10-21 17:40 — half-finished setup bug; harness limits; candidates rebased on h19
+- h11c (cruise patience) gate vs h6, 40 games (out/h11c_h6.jsonl): raw 26 of 40 (wins 24 on health, losses 12 on
+  castles); 15 games skipped for init failures; clean head-to-head: 9 cells, gained 5, lost 3, split 1, net +2,
+  t 0.71. INCONCLUSIVE on 25 usable games; re-gated as h11r on h19 below.
+- Bug: a prophet in h11c's game 2299 (blue, id 3709) threw on every turn for 392 turns ("Cannot read properties of
+  undefined (reading 'length')"). Retraced with the same build it moves normally: vm2 had killed its first turn
+  (200 ms wall clock, a GC pause) after setup wrote st.home and before st.reports, and setup ran only on turn 1.
+  Fix d2c02a2: every role's setup runs until it sets st.ready (last); econ() assigns depots and clusters together;
+  a retried setup takes the birth round from the castle's turn and ignores stale radio. Test: each role's first turn
+  is killed after every possible write and must recover. On the loaded driver (seed 2202, 300 rounds, timescale 4)
+  the old build logged 789 caught exceptions, the fixed one 0. Batches: 17 of the 40 h11c games had caught
+  exceptions (386 on h11c's side), 23 of 40 in h6 vs v3.
+- "Cannot afford to build specified unit." (35 in the h11c batch, 48 in h6 vs v3) is h6's castles building after an
+  attack call: retraced to rounds 565/575 of h6 vs v3 seed 1325. Already fixed in src by 0cc66c6 (World.signal),
+  which every candidate since h7 carries and h6 lacks.
+- Memory: a game's heap grows to ~4 GB by round 700 (default limit) or 4.7 GB (8 GB limit) without failures in
+  either; it is lazy collection of per-turn compiled state messages, not a leak. Slowest robot init was 192-199 ms
+  in rounds 0-50 at the default heap against a 200 ms limit, 53-80 ms with a 64 MB semi-space: one game each, read
+  as a hint only.
+- Harness 7ca717b: --timescale now also scales vm2's per-turn kill (200 ms -> 400 at timescale 2), and --init-ms
+  sets the sandbox-creation limit apart from the robot's clock. Strategy gates from now on: --timescale 2
+  --init-ms 1000. The replica keeps contest limits.
+- h19 = src defaults (h6 behaviour + signal-fuel fix + setup fix), built with a no-op --cfg so its bundle (29.7 KB)
+  matches the candidates' (a plain build drops dead switch code: 26.3 KB; h6 is 23.8 KB). Measured vs h6, 40 games:
+  it becomes the incumbent unless it loses (t <= -2 means something besides the fixes changed: investigate).
+- The queued candidates are rebuilt on h19 with their pre-registered switch, mechanism, delivery and falsifier
+  unchanged, and gated against h19 (40 games, seed0 5000): h15r (no build rotation), h16r (turtle), h7r (attack
+  persistence, now without the bundled fuel fix), h8r (endgame fuel), h9r (church reach), h10r (attack cadence),
+  h11r (cruise patience 20/50/reset). h18r (cruise fuel reserve) waits for h18's gate vs h6.
