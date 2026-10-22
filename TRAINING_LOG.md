@@ -1084,3 +1084,18 @@
   (h47 won both). No gate. Our shooters already converge: nearest-first with a positional tie-break picks the same
   front unit for neighbours. The dose step (a shot budget per target, overkill) stays unqueued: kills per shot
   0.27 with 2 shots needed per prophet leaves little to win.
+
+## 2026-10-22 02:20 — h48 delivery FAILED (1 of 3); chain18 clean; h51 first diagnostic: posts heard, nobody moved
+- h48 (MIX_BY_STOCK [1000000, 1]: preachers while bank fuel <= karbonite) vs h35, 8 games of 1000 rounds on 357,
+  2030, 2924, 1915 both sides (out/dlv_h48_h35.jsonl, rp_dlv_h48; `tools/dlv.js` on the VM), against the items of
+  01:09: (1) attack fuel per enemy damage: h48 115,275 / 55,050 = 2.09, h35 133,225 / 61,540 = 2.16 (97%; at most
+  90%): FAIL; (2) enemy military killed: h48 1,398, h35 1,485: FAIL; (3) castles lost 7 and 7: PASS. Red won all 8;
+  on 1915 and 2030 the two games are the same game (the preacher branch never fired). No gate.
+- Extra lane chain18: no-op h35h vs h35 IDENTICAL; sym_h49 and sym_h50 clean (axis contest, combat after the first
+  attack).
+- h51 (CASTLE_POST 0.5) driver diagnostic, h51 red vs h35 on 2299, 700 rounds: 0 exceptions or clock faults; the
+  castle radioed its post 29 times (every 20 rounds, fuel 1,200-11,300 banked until round 450); h51 won on
+  castles at 591. But the army hardly moved: by a castle (guards.js, within 6) at 450 h51 11, h35 4, by churches 79
+  and 100. Units that took the castle as home already stood on lattice tiles within LATTICE_R 12 of it (the churches
+  are within 12) and held. Fix CASTLE_POST_R 6: a unit with a castle post holds within 6 king steps of it. h51
+  rebuilt; the first build's no-op and symmetry checks (chain19) rerun on the new builds.
