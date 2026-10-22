@@ -176,10 +176,13 @@ function structAct(B, allIds, extra) {
   resolvePending(B);
   refreshAssign(B, allIds);
   const attackers = w.enemies.filter(e => isAttacker(e.unit));
+  // Past CHAIN_ROUND, or (CFG.CHAIN_KEEP) a church of a line: it never learns the round, and its army spent the bank
+  // the next line needs (seed 799: one such church built 136 units in r246-450 and no line fired).
+  const chainOn = CFG.CHAIN_ROUND && (B.round >= CFG.CHAIN_ROUND || (CFG.CHAIN_KEEP && st.chainBorn));
   const reserveK = CFG.DEF_RESERVE_K + CFG.PEACE_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
     (CFG.FRONT_ROUND && st.frontAt !== undefined && B.round - st.frontAt < 40 ? STATS[CHURCH].costK : 0) +
     (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0) +
-    (CFG.CHAIN_ROUND && B.round >= CFG.CHAIN_ROUND ? CFG.CHAIN_K : 0);   // peacetime army only
+    (chainOn ? CFG.CHAIN_K : 0);   // peacetime army only
 
   // 1. Defence: answer visible attackers with a defender while they outnumber ours; otherwise shoot.
   if (attackers.length) {
@@ -188,8 +191,7 @@ function structAct(B, allIds, extra) {
     const ours = defenders(B, 100);
     // CFG.CHAIN_HOLD_R2: from CHAIN_ROUND a church answers attackers farther than this out of what exceeds the chain's
     // bank (seed 799: a front church's answers took 136 of 211 military builds in r200-400 and no line ever fired).
-    const hold = CFG.CHAIN_HOLD_R2 && me.unit === CHURCH && CFG.CHAIN_ROUND && B.round >= CFG.CHAIN_ROUND &&
-      cd > CFG.CHAIN_HOLD_R2 ? CFG.CHAIN_K : 0;
+    const hold = CFG.CHAIN_HOLD_R2 && me.unit === CHURCH && chainOn && cd > CFG.CHAIN_HOLD_R2 ? CFG.CHAIN_K : 0;
     if (ours < attackers.length * 2 + 1) {
       const unit = cd <= 36 || closest.unit === CRUSADER ? PREACHER : PROPHET;
       if (w.canAfford(unit, hold)) { const b = buildToward(B, unit, closest.x, closest.y); if (b) return b.act; }

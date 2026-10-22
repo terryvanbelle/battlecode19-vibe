@@ -1419,7 +1419,7 @@ test('struct: CHURCH_GUARD_D: a church near its mirror image builds the guard un
 });
 
 test('struct: CHAIN_HOLD_R2: from CHAIN_ROUND a church answers a far attacker only above the chain bank, a near one always', () => {
-  const saved = [CFG.CHAIN_HOLD_R2, CFG.CHAIN_ROUND, CFG.CHAIN_K, CFG.ECON_UNTIL];
+  const saved = [CFG.CHAIN_HOLD_R2, CFG.CHAIN_ROUND, CFG.CHAIN_K, CFG.ECON_UNTIL, CFG.CHAIN_KEEP, CFG.SERVE_MOVES];
   try {
     CFG.ECON_UNTIL = 1000; CFG.CHAIN_K = 1000;
     const g = new Game(3, 100, 20, false, false), n = g.map.length;
@@ -1429,14 +1429,14 @@ test('struct: CHAIN_HOLD_R2: from CHAIN_ROUND a church answers a far attacker on
       if (pass(x, y) && pass(x, y + 2) && pass(x, y + 7) && offsets(2).every(([dx, dy]) => pass(x + dx, y + dy)) &&
         g.robots.every(r => king(r.x, r.y, x, y) > 10)) at = [x, y];
     assert.ok(at, 'site');
-    const run = (hold, chainRound, round, dy, k) => {
+    const run = (hold, chainRound, round, dy, k, st = {}) => {
       CFG.CHAIN_HOLD_R2 = hold; CFG.CHAIN_ROUND = chainRound;
       const church = { id: 4100, team: 0, unit: S.CHURCH, x: at[0], y: at[1], turn: 5, health: 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
-      const enemy = { id: 4999, team: 1, unit: S.PROPHET, x: at[0], y: at[1] + dy, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 };
+      const enemy = dy ? [{ id: 4999, team: 1, unit: S.PROPHET, x: at[0], y: at[1] + dy, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 }] : [];
       const all = g.robots;
-      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, church.x, church.y) <= 100).concat([church, enemy]);
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, church.x, church.y) <= 100).concat([church], enemy);
       const w = worldFor(g, church); g.robots = all;
-      const B = { api: w.api, w, round, birthRound: round - 4, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      const B = { api: w.api, w, round, birthRound: round && round - 4, st, deps: null, clusters: null, rnd: rng(1) };
       w.karbonite = k; w.fuel = 5000;
       return (churchTurn(B) || {}).u;
     };
@@ -1447,7 +1447,43 @@ test('struct: CHAIN_HOLD_R2: from CHAIN_ROUND a church answers a far attacker on
     assert.ok(mil(run(16, 200, 300, 2, 500)), 'hold: a near prophet always is');
     assert.ok(mil(run(16, 200, 150, 7, 500)), 'hold: before CHAIN_ROUND it is');
     assert.ok(mil(run(16, 0, 300, 7, 500)), 'hold: without chains it is');
-  } finally { [CFG.CHAIN_HOLD_R2, CFG.CHAIN_ROUND, CFG.CHAIN_K, CFG.ECON_UNTIL] = saved; }
+    // CHAIN_KEEP: a church of a line never learns the round; with the switch it counts as past CHAIN_ROUND
+    CFG.CHAIN_KEEP = 0;
+    assert.ok(mil(run(16, 200, undefined, 7, 500, { chainBorn: true })), 'keep off: a line church answers from any bank');
+    CFG.CHAIN_KEEP = 1;
+    assert.ok(!mil(run(16, 200, undefined, 7, 500, { chainBorn: true })), 'keep: a line church holds the bank');
+    assert.ok(mil(run(16, 200, undefined, 7, 500)), 'keep: an ordinary church that missed the round answers');
+    CFG.ECON_UNTIL = 0; CFG.SERVE_MOVES = 0;   // the peacetime army decides: no depots to staff
+    assert.ok(!mil(run(0, 200, undefined, 0, 500, { chainBorn: true })), 'keep: no peacetime unit below the bank');
+    assert.ok(mil(run(0, 200, undefined, 0, 1300, { chainBorn: true })), 'keep: above it, one');
+    CFG.CHAIN_KEEP = 0;
+    assert.ok(mil(run(0, 200, undefined, 0, 500, { chainBorn: true })), 'keep off: one at 500');
+  } finally { [CFG.CHAIN_HOLD_R2, CFG.CHAIN_ROUND, CFG.CHAIN_K, CFG.ECON_UNTIL, CFG.CHAIN_KEEP, CFG.SERVE_MOVES] = saved; }
+});
+
+test('church: a church whose builder radios SIG.CHAIN on its first turn is marked chain-born (CFG.CHAIN_KEEP)', () => {
+  const saved = CFG.CHAIN_ROUND;
+  try {
+    CFG.CHAIN_ROUND = 200;
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const pass = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x];
+    let at = null;
+    for (let y = 2; y < n - 2 && !at; y++) for (let x = 2; x < n - 2 && !at; x++)
+      if (pass(x, y) && offsets(2).every(([dx, dy]) => pass(x + dx, y + dy)) && g.robots.every(r => king(r.x, r.y, x, y) > 10)) at = [x, y];
+    const turn1 = sig => {
+      const church = { id: 4100, team: 0, unit: S.CHURCH, x: at[0], y: at[1], turn: 1, health: 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      const builder = { id: 4101, team: 0, unit: S.PILGRIM, x: at[0] + 1, y: at[1], turn: 9, health: 10, karbonite: 0, fuel: 0, signal: sig, signal_radius: sig ? 2 : 0, castle_talk: 0 };
+      const all = g.robots;
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, church.x, church.y) <= 100).concat([church, builder]);
+      const w = worldFor(g, church); g.robots = all;
+      const B = { api: w.api, w, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 500; w.fuel = 5000;
+      churchTurn(B);
+      return !!B.st.chainBorn;
+    };
+    assert.strictEqual(turn1(encXY(SIG.CHAIN, 5, n - 6)), true);
+    assert.strictEqual(turn1(encXY(SIG.MINE, 5, n - 6)), false);
+  } finally { CFG.CHAIN_ROUND = saved; }
 });
 
 test('combat: preacherTarget selfCost (PREACHER_SELF): the 1915 duel, a splash on the shooter is taken only when worth it', () => {
