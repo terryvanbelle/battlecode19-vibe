@@ -1932,7 +1932,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   h72's delivery is running (...a3d57700). Its symcheck: seed 2 clean to 300; seeds 1, 3 and 2013 end at the known
   engine-order divergences (an axis tile contest r43, combat order r29 and r53), all before lines can fire (r200).
 
-## 2026-10-22 13:59 — our pilgrims mine 69-78% of their turns: the economy gap is pilgrim and church count
+## 2026-10-22 13:58 — our pilgrims mine 69-78% of their turns: the economy gap is pilgrim and church count
 - Pilgrim turns to round 450 in six h63-vs-h50 gate replays (1205, 2030, 418, 2633, 905, 1862; h63 red; scratch
   pturns.js): h50 mines 69.3% (fuel 36.6, karbonite 32.8), walks empty 11.0%, gives 6.8%, walks part-loaded 4.3%,
   idles empty 3.6%, idles carrying 3.1%; h63 mines 77.9% (its retarget removes most carrying idles: 0.0% vs 3.1%).
