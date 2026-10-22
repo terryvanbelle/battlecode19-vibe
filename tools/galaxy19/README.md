@@ -81,6 +81,26 @@ One deliberate deviation: a robot gets 1000 ms of wall clock to create its sandb
 11 of the 14 field entrants that had played lost robots to init failures (2026-10-21), a machine effect that the
 official servers did not impose. The robot's clock still starts at 100 ms and gains 20 ms a turn.
 
+## Deploying a change to saturn or the runtime
+
+`deploy.sh app`, `runtime`, `env`, `units` swap files under the running services; saturn picks them up only on
+`sudo systemctl restart bc19-galaxy-saturn`, which re-runs the matches in flight (their messages return to ready/).
+Before the restart, play one short game under the unit's own restrictions (LEARNINGS 21: the operator's shell and
+`unshare -rn` allow netlink, the unit does not), with a bundle compiled by the runtime's compile19.js:
+
+```
+G=$(sudo -u bc19replica mktemp -d -p /home/bc19replica/galaxy/run)   # holds bundle.js (owner bc19replica)
+sudo systemd-run --quiet --wait --pipe -p User=bc19replica -p Slice=bc19-replica.slice \
+  -p "RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6" -p PrivateNetwork=yes -p NoNewPrivileges=yes \
+  -p ProtectSystem=strict -p ProtectHome=read-only -p ReadWritePaths=/home/bc19replica/galaxy -p PrivateTmp=yes \
+  /usr/bin/env -i PATH=/usr/bin:/bin LANG=C.UTF-8 HOME=/nonexistent /bin/sh /opt/bc19-galaxy/galaxy19/sandbox.sh $G \
+  /opt/bc19-galaxy/runtime/bin/node /opt/bc19-galaxy/runtime/tools/run_game.js --red $G/bundle.js --blue $G/bundle.js \
+  --seed 5 --max-rounds 5 --replay $G/r.bc19 --json $G/o.json --init-ms 1000
+```
+
+After the restart, watch the first minute of `journalctl -u bc19-galaxy-saturn` for nacks; stop saturn at once if
+games fail (a failed match goes to TRY and retries; nothing is lost but attempts).
+
 ## Units on battlecode-dev
 
 `bc19-galaxy-web` (gunicorn, 127.0.0.1:8019), `bc19-galaxy-relay`, `bc19-galaxy-saturn`, `bc19-galaxy-egress`,

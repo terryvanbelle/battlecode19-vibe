@@ -229,8 +229,14 @@ function fastTurn(CrossVM) {
 
 // Bot code runs only without network (CLAUDE.md rule 6). batch.js starts every game inside `unshare -rn`; a direct
 // call outside a network namespace re-runs itself there, and refuses to run if it cannot.
+// A sandbox that forbids netlink sockets cannot list addresses (systemd RestrictAddressFamilies, the replica's saturn
+// unit: EAFNOSUPPORT); /proc/net/dev names the interfaces of this process's network namespace instead.
 function netIsolated() {
-  const ifs = require('os').networkInterfaces();
+  let ifs;
+  try { ifs = require('os').networkInterfaces(); } catch (e) {
+    try { return fs.readFileSync('/proc/net/dev', 'utf8').split('\n').slice(2).every(l => !l.trim() || l.trim().startsWith('lo:')); }
+    catch (e2) { return false; }
+  }
   return Object.keys(ifs).every(k => ifs[k].every(x => x.internal));
 }
 

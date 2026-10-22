@@ -220,6 +220,10 @@ test('run_game: bot code runs only without network; a direct call re-runs itself
   const probe = 'process.stdout.write(String(require("./tools/run_game.js").netIsolated()))';
   const cwd = path.join(__dirname, '..');
   assert.strictEqual(execFileSync('unshare', ['-rn', process.execPath, '-e', probe], { cwd, encoding: 'utf8' }), 'true');
+  // Where netlink is forbidden (the replica's saturn unit), the check reads /proc/net/dev: lo alone inside unshare -rn.
+  const noNetlink = 'require("os").networkInterfaces = () => { throw new Error("EAFNOSUPPORT"); };' + probe;
+  assert.strictEqual(execFileSync('unshare', ['-rn', process.execPath, '-e', noNetlink], { cwd, encoding: 'utf8' }), 'true');
+  assert.strictEqual(execFileSync(process.execPath, ['-e', noNetlink], { cwd, encoding: 'utf8' }), 'false');
   // A 2-round game started without unshare reports that it ran isolated.
   const line = execFileSync(process.execPath, ['tools/run_game.js', '--red', 'bots/v3', '--blue', 'bots/v2', '--seed', '2202',
     '--max-rounds', '2', '--timescale', '20', '--init-ms', '10000'], { cwd, encoding: 'utf8' });

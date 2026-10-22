@@ -93,3 +93,10 @@
    one 20-cell extension) had 10-22% power at 65%: most real gains ended "inconclusive". Rank queued candidates by
    how often their switch fires as well as by their prior; a rarely-firing switch costs a day of gate time.
    (2026-10-22)
+21. **A replica deploy ships every tool change since the last one; run one game under the unit's own sandbox before
+   restarting.** Deploying saturn's 5th slot (2026-10-22 09:32 PDT) also shipped run_game.js's network check
+   (os.networkInterfaces), which the saturn unit forbids (RestrictAddressFamilies: no netlink, EAFNOSUPPORT): every
+   game exited 1 at once, 218 nacks in 10 s, 152 matches to TRY (retryable, so nothing was lost but attempts). The
+   driver's and the operator's runs passed because neither sandbox restricts address families. Test with
+   `systemd-run --wait --pipe` and the unit's properties (README: deploying), then restart, then watch the first
+   minute of the journal. (2026-10-22)
