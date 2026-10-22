@@ -1940,3 +1940,13 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   pilgrims at r300 to our 16, three churches to our one) is in how many depots we staff, i.e. churches and pioneers:
   h64, h67, h70, h71 (queued).
 - h72's delivery: game 1 (2013, h72 blue) won at r239 by a line, as on the driver.
+
+## 2026-10-22 14:15 — h72 on a 64x64 map: no line, the bank drains into a front church's threat response
+- Driver, h72 red vs h50 on 799 (64x64, two castles a side; replica 407-1's map) to 450: 3 chainers sent, no line;
+  red's bank stayed 185-220 K from r200 to r400 with castles even (army 105 vs 95 at r300). Red's church at (37,42),
+  in blue's half, built 106 military units in r200-400, 136 of red's 211 military builds being threat responses
+  (no SIG.ROUND; struct.js step 1 answers visible attackers whenever ours < 2x theirs + 1 and spends without
+  reserve). Blue's front church built 84. In six ordinary h63-vs-h50 gate games to 450 threat responses are rare
+  (h63 3 of 832 military builds, h50 85 of 708; scratch builds.js), so the grinder is a map trait, not the norm.
+- So h72's lines need a quiet front. If the delivery shows lines failing to fire on such maps, the variant is a
+  church's threat response that leaves CHAIN_K unless an attacker is close (not built yet).
