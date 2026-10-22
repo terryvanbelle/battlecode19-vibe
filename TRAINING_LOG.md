@@ -1281,3 +1281,27 @@
   2030 and 1635 differ. A switch that fires only on some maps (h54: the knife fight at mirror churches) gets a few
   live cells per 20, and a 40-game gate cannot resolve it. When this gate ends: count identical cells in every
   gate since v5 (`cmp` per seed pair) to measure the live fraction before choosing the next gate's size.
+
+## 2026-10-22 05:22 — pilgrims stall at the edge of enemy range (7 of 20 maps); h59 pre-registered; h58 diagnostic
+- Census of h50's 40 gate games to round 450 (scratch stall.js: pilgrim turns with cargo, not mining or giving, off
+  any depot, not next to an own structure; stallwhy.js: the state at a streak's 25th turn). 17 streaks of 50-435
+  turns on 7 of 20 maps (1250, 1325, 1635, 1862, 2872, 418, 241), by h35 and h50 alike, the same numbers in both
+  seatings (bot and map, not side). Every one has an enemy attacker in sight just outside its threat range (prophets
+  at r2 81-100, crusaders 53-65, preachers 61-68). The side that stalls mines far less: 1250 858 vs 2,297 mine
+  actions, 1635 2,651 vs 4,807, 1862 1,278 vs 1,895, 2872 3,891 vs 4,988, 1325 5,859 vs 7,083.
+- Seed 1250 (h35 red): its church at (11,31) fell by round 60; blue's church at (21,31) and prophets at (18,30),
+  (18,32) cover our depots (11,30) and (12,31) (r2 49, 37). Four pilgrims stood around (10,29) at r2 65 until 450:
+  PILGRIM_SAFE_STEP keeps them off threatened tiles, and nothing ever gives the target up. In other streaks the
+  depot is out of sight and the way to it is threatened.
+- CFG.PILGRIM_HOT (commit 8663fb1, off): stuck = off the target, and the target in a visible attacker's threat
+  range, or an attacker in sight and no nearer the target than the best since taking it; PILGRIM_HOT stuck turns in
+  a row give the depot up for PILGRIM_HOT_MEM (50) turns, for the nearest free depot neither threatened nor given up.
+- h59 = v5 + PILGRIM_HOT 10. Delivery (VM extra lane after h58's; 8 games of 1000 rounds vs h35 on 1250, 1862, 2872,
+  241 both sides, where h35 itself stalled 348-1,232 turns in h50's gate; stall.js to round 450 and `tools/dlv.js`):
+  (1) h59's stalled pilgrim turns at most 40% of h35's in the same games; (2) h59's pilgrim mine actions to 450 at
+  least 110% of h35's; (3) wins at least 5 of 8. Gate 40 games vs h35 (falsifier t <= 0), sized by discordant cells.
+  Dose ladder 10 -> 5 -> 20. No-op h35n (current source, defaults) vs h35 first.
+- h58 driver diagnostic (h55w red with chains vs h58 blue, 2924, 400 rounds; scratch chainlife.js): line at 199, 3
+  churches died +4, +20, +56 rounds (without CHURCH_FIRST, vs h56 / h56b: +18, +65-70, the third alive at 400 after
+  building 39-51 units); line at 307, 3 of 4 died +2, +5, +43, one 12 steps out lived (49 units). No castle lost by
+  400 (vs h56: one at 386); health 7,580 to 4,280. h58's delivery vs h55 is on the extra lane.
