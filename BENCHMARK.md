@@ -175,39 +175,41 @@ thrown exception on the replica; `timeouts`, script timeouts plus clock-frozen t
 
 `tools/bench/roster.tsv` holds the full columns (path, last commit, load, replica totals). Bundles are in
 `~/projects/vibe/bc19-benchmarks/compiled/<name>/bot.js` on the driver and on battlecode-dev; they are not in git.
-This is a snapshot as of 2026-10-21 23:45 UTC: 74 entrants were still `untested` and are waiting for the trickle to
-reach them. To refresh it, run `python3 -I tools/bench/replica_health.py` on the VM, copy `replica-health.tsv` to the
+This is a snapshot as of 2026-10-22 00:45 UTC (17:45 PDT): 71 entrants were still `untested` and are waiting for
+the trickle to reach them. Replica init failures up to this snapshot were mostly the shared VM's load (the
+replica then gave a robot 100 ms to create its sandbox); from 00:45 UTC it allows 1000 ms (tools/galaxy19/README.md),
+so an `errors (replica)` health from earlier games is not a verdict on the bot. To refresh it, run `python3 -I tools/bench/replica_health.py` on the VM, copy `replica-health.tsv` to the
 driver, then run `python3 -I tools/bench/report.py --md BENCHMARK.md`.
 
 <!-- roster:begin -->
 | # | name | repo @ commit | lang | kind | compile | smoke (wins/games) | smoke init/exc/timeouts | replica wins/games | replica init/exc/timeouts | health | note |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | 18dcb01.Battlecode19-preacherRushSomeEconomy | 18dcb01/Battlecode19 @ b43cf22 | py | dir | ok | inconclusive 2/2 | 0/1/1 | - |  | inconclusive | script timeout |
-| 2 | 18dcb01.Battlecode19-robot2 | 18dcb01/Battlecode19 @ b43cf22 | py | dir | ok | inconclusive 1/1 | 0/0/4 | - |  | inconclusive |  |
+| 1 | 18dcb01.Battlecode19-preacherRushSomeEconomy | 18dcb01/Battlecode19 @ b43cf22 | py | dir | ok | inconclusive 2/2 | 0/1/1 | 4/9 | 3996/7684/0 | errors (replica) | replica: init failures in 4/9 games; script timeout |
+| 2 | 18dcb01.Battlecode19-robot2 | 18dcb01/Battlecode19 @ b43cf22 | py | dir | ok | inconclusive 1/1 | 0/0/4 | 1/6 | 999/29023/4871 | errors (replica) | replica: init failures in 1/6 games |
 | 3 | ArtemUstilov.bc19_CrazyTapok | ArtemUstilov/bc19_CrazyTapok @ 0346c25 | js | dir | ok | inconclusive 0/2 | 5/0/0 | 0/90 | 178/0/0 | errors (replica) | replica: init failures in 90/90 games |
-| 4 | CS554-software-engineering-groupProject.battlecodeProject | CS554-software-engineering-groupProject/battlecodeProject @ 8f06bf5 | js | dir | ok | inconclusive 2/2 | 0/1/1 | 128/198 | 62506/67751/5821 | errors (replica) | replica: init failures in 49/198 games; script timeout |
-| 5 | CometsTech.battlecode2019-dev | CometsTech/battlecode2019 @ b77bffb | js | dir | ok | inconclusive 1/1 | 0/37/12 | 85/159 | 22963/127103/15017 | errors (replica) | replica: init failures in 43/159 games; other bot errors |
+| 4 | CS554-software-engineering-groupProject.battlecodeProject | CS554-software-engineering-groupProject/battlecodeProject @ 8f06bf5 | js | dir | ok | inconclusive 2/2 | 0/1/1 | 129/201 | 62506/67802/5845 | errors (replica) | replica: init failures in 49/201 games; script timeout |
+| 5 | CometsTech.battlecode2019-dev | CometsTech/battlecode2019 @ b77bffb | js | dir | ok | inconclusive 1/1 | 0/37/12 | 85/162 | 28038/140728/17461 | errors (replica) | replica: init failures in 46/162 games; other bot errors |
 | 6 | CometsTech.battlecode2019-example_js | CometsTech/battlecode2019 @ b77bffb | js | dir | ok | ok 2/2 | 0/0/0 | - |  | ok |  |
-| 7 | DivyanshuSaxena.Battlecode | DivyanshuSaxena/Battlecode @ 4e0d621 | java | dir | ok | ok 1/2 | 0/0/0 | - |  | ok |  |
-| 8 | IanCoolidge0.battlecode2019-quals | IanCoolidge0/battlecode2019 @ 0ca97ef | js | dir | ok | ok 2/2 | 0/0/0 | - |  | ok |  |
-| 9 | IanCoolidge0.battlecode2019-quals2 | IanCoolidge0/battlecode2019 @ 0ca97ef | js | dir | ok | inconclusive 2/2 | 0/225/0 | - |  | inconclusive | ReferenceError |
+| 7 | DivyanshuSaxena.Battlecode | DivyanshuSaxena/Battlecode @ 4e0d621 | java | dir | ok | ok 1/2 | 0/0/0 | 0/3 | 0/27/0 | ok |  |
+| 8 | IanCoolidge0.battlecode2019-quals | IanCoolidge0/battlecode2019 @ 0ca97ef | js | dir | ok | ok 2/2 | 0/0/0 | 5/6 | 23338/23300/26 | ok | replica: init failures in 6/6 games |
+| 9 | IanCoolidge0.battlecode2019-quals2 | IanCoolidge0/battlecode2019 @ 0ca97ef | js | dir | ok | inconclusive 2/2 | 0/225/0 | 7/9 | 12399/19595/1 | errors (replica) | replica: init failures in 5/9 games; ReferenceError |
 | 10 | IvanGeffner.BC19-bot6b | IvanGeffner/BC19 @ 8bac1fc | js | bundle | ok | ok 2/2 | 0/0/0 | - |  | ok |  |
-| 11 | IvanGeffner.BC19-eigthbot | IvanGeffner/BC19 @ 8bac1fc | java | dir | ok | inconclusive 0/2 | 6110/100/0 | - |  | inconclusive | no result: killed at the 1200 s game time limit (inferred: no stderr, exit status not reco |
-| 12 | JasonLarson44.2019-Battlecode-Bot | JasonLarson44/2019-Battlecode-Bot @ 6c649ea | js | dir | ok | ok 2/2 | 0/0/0 | - |  | ok |  |
-| 13 | NielsKornerup.Battlecode-2019 | NielsKornerup/Battlecode-2019 @ 319a9e0 | java | dir | ok | inconclusive 2/2 | 9112/193/0 | - |  | inconclusive | robot.hook is not a function (engine, after an init failure) |
+| 11 | IvanGeffner.BC19-eigthbot | IvanGeffner/BC19 @ 8bac1fc | java | dir | ok | inconclusive 0/2 | 6110/100/0 | 3/3 | 26350/27446/129 | errors (replica) | replica: init failures in 3/3 games; no result: killed at the 1200 s game time limit (infe |
+| 12 | JasonLarson44.2019-Battlecode-Bot | JasonLarson44/2019-Battlecode-Bot @ 6c649ea | js | dir | ok | ok 2/2 | 0/0/0 | 3/3 | 0/0/0 | ok |  |
+| 13 | NielsKornerup.Battlecode-2019 | NielsKornerup/Battlecode-2019 @ 319a9e0 | java | dir | ok | inconclusive 2/2 | 9112/193/0 | 0/3 | 9086/9068/1 | errors (replica) | replica: init failures in 3/3 games; robot.hook is not a function (engine, after an init f |
 | 14 | Nischay-Pro.BattleCode2019 | Nischay-Pro/BattleCode2019 @ 92193da | py | dir | ok | inconclusive 0/2 | 5/0/0 | - |  | inconclusive |  |
 | 15 | Nydroam.BatteredCod | Nydroam/BatteredCod @ 0a7cad7 | java | dir | ok | inconclusive 1/1 | 641/100/0 | - |  | inconclusive | robot.hook is not a function (engine, after an init failure) |
 | 16 | OmarTahoun.battle-code | OmarTahoun/battle-code @ 2d76b9c | py | dir | ok | - |  | - |  | untested |  |
 | 17 | RyanSharafuddin.Battlecode_2019 | RyanSharafuddin/Battlecode_2019 @ c56241b | js | dir | ok | - |  | - |  | untested |  |
-| 18 | SethKitchen.examplefuncsplayer | SethKitchen/examplefuncsplayer @ 5841c18 | js | dir | ok | - |  | - |  | untested |  |
+| 18 | SethKitchen.examplefuncsplayer | SethKitchen/examplefuncsplayer @ 5841c18 | js | dir | ok | - |  | 3/3 | 0/22415/0 | errors (replica) |  |
 | 19 | Sisyphus192.battlecode19 | Sisyphus192/battlecode19 @ 66cfa64 | js | dir | ok | - |  | - |  | untested |  |
 | 20 | StoneT2000.BC19-bot1v43 | StoneT2000/BC19 @ 4ee84cb | js | bundle | ok | - |  | - |  | untested |  |
 | 21 | StoneT2000.BC19-botfinalsafe | StoneT2000/BC19 @ 4ee84cb | js | bundle | ok | - |  | - |  | untested |  |
 | 22 | TestSubjector.BattleCode2019-12.FightingBot_Prophet | TestSubjector/BattleCode2019 @ 8237dbf | py | dir | ok | - |  | - |  | untested |  |
 | 23 | TestSubjector.BattleCode2019-13.FightingBot2 | TestSubjector/BattleCode2019 @ 8237dbf | py | dir | ok | - |  | - |  | untested |  |
 | 24 | TheRobotCarlson.battlehack-notes-ref-bot | TheRobotCarlson/battlehack-notes @ b64cd8e | js | dir | fail | - |  | - |  | compile fail | compile error: Error: Could not resolve './nav.js.js' from  virtual:/home/terryvanbelle/pr |
-| 25 | TheRobotCarlson.battlehack-notes-robot-kelsey | TheRobotCarlson/battlehack-notes @ b64cd8e | js | file | ok | - |  | - |  | untested |  |
-| 26 | Tom-CCS.BC19 | Tom-CCS/BC19 @ 4c5af4d | py | file | ok | - |  | - |  | untested |  |
+| 25 | TheRobotCarlson.battlehack-notes-robot-kelsey | TheRobotCarlson/battlehack-notes @ b64cd8e | js | file | ok | - |  | 0/6 | 0/3316/0 | errors (replica) |  |
+| 26 | Tom-CCS.BC19 | Tom-CCS/BC19 @ 4c5af4d | py | file | ok | - |  | 3/3 | 87/150/2 | errors (replica) | replica: init failures in 2/3 games |
 | 27 | UpperArlingtonHighSchool.BattlecodeBoatMormons-seedingRobot | UpperArlingtonHighSchool/BattlecodeBoatMormons @ 8545f62 | java | dir | ok | - |  | - |  | untested |  |
 | 28 | UpperArlingtonHighSchool.BattlecodeBoatMormons-zainsExperiments | UpperArlingtonHighSchool/BattlecodeBoatMormons @ 8545f62 | java | dir | ok | - |  | - |  | untested |  |
 | 29 | VictorButoi.BattleCode2019-bot_v1 | VictorButoi/BattleCode2019 @ 5df68b7 | java | dir | ok | - |  | - |  | untested |  |
