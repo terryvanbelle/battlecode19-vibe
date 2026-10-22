@@ -427,3 +427,22 @@
 - Tried and dropped: also caching each bundle's compiled script across the robots of a game (to skip vm2's acorn
   pass per robot built). In the one back-to-back pair it used 2.7x the CPU and its replay parted: plausibly V8
   sharing the bot's functions across ~300 contexts and giving up optimising them. Not committed.
+
+## 2026-10-21 20:03 — h24 and h25 deliveries (200-round games, run on the driver)
+- The VM's extra lane was busy with full-length rush deliveries, so the 200-round delivery games ran on the driver,
+  one at a time (--timescale 5 --init-ms 5000 --fast-turn against throttling; 1-3 frozen robots in the 1828 and one
+  826 game, none elsewhere). Games with the sides swapped come out as exact mirror images. Replays in the scratchpad.
+- **h24 (ECON_UNTIL=100) vs h19.** Seed 826: at round 100, 8 churches / 33 pilgrims vs 4 / 19; by round 200 mined
+  K 4,148 F 20,330 vs 2,724 / 12,130 and an army of 114 vs 63 (both sides). Seed 1828: 3 churches / 22 pilgrims vs
+  1 / 13 at round 200, mined F 9,650 vs 7,390. Seed 2202 (one remote cluster): mined K+F 7,978 vs 7,944, but 9
+  pilgrims to h19's 10 from round 50, so the pre-registered "not fewer on 2202" misses by one pilgrim while the
+  economy is level; karbonite then floats (665 at round 100) because the church plan is used up. Economy items:
+  PASS on 826 and 1828, level on 2202. The rush half (1337/1879/2544/2908 vs bots/rush, castles lost <= h19's 8)
+  runs on the VM (out/dlv_chain4.sh). On 826 all 8 planned churches stand by round 100 and none follow: the plan
+  (turn 3, our side of the map) is the next limit; eigthbot there churched 13 clusters by round 118, four of them
+  on the opponent's half.
+- **h25 (NAV_FIT=1) vs h19**, seeds 2202 and 826 both sides: K+F mined by round 200 above h19's in 4 of 4 (826:
+  17,208 vs 13,428; 2202: 8,020 vs 7,944): PASS. Side effect: on 2202 its move fuel was 3,152 vs 1,846 (bank 3,180
+  vs 4,232). replay.js nav: preacher moves 297 vs 122, oscillations 185 vs 50. Preacher 1623 (born r92 at the
+  castle) alternates (4,15)<->(5,14) for 20 rounds, then (5,14)<->(6,15)/(5,16): a two-cycle that the full-speed
+  field's lost turns used to damp. Being traced before the gate runs.

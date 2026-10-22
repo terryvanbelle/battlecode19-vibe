@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 16 queued, 12 other, 4 accepted, 3 dropped, 2 rejected, 1 in progress, 1 sparring partners (39 rows).
+Totals: 14 queued, 12 other, 4 accepted, 3 dropped, 3 in progress, 2 rejected, 1 sparring partners (39 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -29,12 +29,12 @@ Totals: 16 queued, 12 other, 4 accepted, 3 dropped, 2 rejected, 1 in progress, 1
 | `h18b` | 2026-10-21 | h19 | h19 + cruise fuel reserve 500 (CRUISE_FUEL_RESERVE=500): h18's pre-registered lower dose |  |  |  |  | QUEUED: 40 games vs h19 (last in the queue) |
 | `h18r` | 2026-10-21 | h19 | h19 + cruise fuel reserve 1,500 (CRUISE_FUEL_RESERVE=1500); rebased from h18 |  |  |  |  | DROPPED: h18 rejected before h18r ran |
 | `h19` | 2026-10-21 | h6 | src defaults: h6 behaviour + World.signal fuel fix (0cc66c6) + setup re-runs until complete (d2c02a2: a turn killed mid-setup no longer bricks a robot) |  |  |  |  | QUEUED: 40 games vs h6; becomes the incumbent unless t <= -2 |
-| `h20` | 2026-10-21 | h19 | h19 + standing defence reserve: every karbonite spend but a threat response (pilgrims, pioneers, churches, peacetime army) leaves 30 K in the bank, so a castle that spots attackers can afford a preacher (DEF_RESERVE_K=30) |  |  |  |  | in progress: delivery PASS (K >= 45 at first threat, 8/8; 0-8 vs rush as h6 there); gate queued (4b03) |
+| `h20` | 2026-10-21 | h19 | h19 + standing defence reserve: every karbonite spend but a threat response (pilgrims, pioneers, churches, peacetime army) leaves 30 K in the bank, so a castle that spots attackers can afford a preacher (DEF_RESERVE_K=30) |  |  |  |  | in progress: delivery PASS (K >= 45 at first threat, 8/8; 0-8 vs rush as h19 there, castles lost 6 vs h19's 8); gate queued (4b03) |
 | `h21` | 2026-10-21 | h19 | h19 + cargo relay: a full pilgrim not next to a structure hands its load to a friend next to one, and military units deposit cargo at an adjacent structure (RELAY=1) |  |  |  |  | QUEUED: delivery seed 2202 (+1635, 2296), then 40 games vs h19 |
 | `h22` | 2026-10-21 | h19 | h19 + preachers in place of prophets in the peacetime rotation: MIL_ROTATION [5,3,5,3,4] (prophets fire 0.40 damage per fuel, preachers 1.34) |  |  |  |  | QUEUED: delivery vs bots/rush, then 40 games vs h19 |
 | `h23` | 2026-10-21 | h19 | h19 + prophet fuel floor: prophets shoot only while team fuel >= 225, so a short bank goes to the 1.0-1.4 damage-per-fuel shooters (PROPHET_FLOOR=200) |  |  |  |  | QUEUED: delivery vs bots/rush, then 40 games vs h19 |
-| `h24` | 2026-10-21 | h19 | h19 + economy first: no peacetime army before round 100, threat responses still build (ECON_UNTIL=100) |  |  |  |  | QUEUED: delivery (200-round games vs h19; vs bots/rush), then 40 games vs h19 |
-| `h25` | 2026-10-21 | h19 | h19 + nav fit: steps capped below full speed (cruise r2 2, pilgrims under 1000 fuel) follow a field counted in such steps (NAV_FIT=1) |  |  |  |  | QUEUED: delivery (200-round games vs h19), then 40 games vs h19 |
+| `h24` | 2026-10-21 | h19 | h19 + economy first: no peacetime army before round 100, threat responses still build (ECON_UNTIL=100) |  |  |  |  | in progress: delivery economy PASS on 826/1828 (8 vs 4 churches at r100 on 826), level on 2202 (one pilgrim fewer); rush half pending; gate QUEUED: delivery (200-round games vs h19; vs bots/rush), then 40 games vs h19 |
+| `h25` | 2026-10-21 | h19 | h19 + nav fit: steps capped below full speed (cruise r2 2, pilgrims under 1000 fuel) follow a field counted in such steps (NAV_FIT=1) |  |  |  |  | in progress: delivery PASS (K+F mined by r200 above h19 in 4/4); preacher two-cycle found (move fuel 3152 vs 1846 on 2202); gate QUEUED: delivery (200-round games vs h19), then 40 games vs h19 |
 | `h7r` | 2026-10-21 | h19 | h19 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7 |  |  |  |  | QUEUED: 40 games vs h19 |
 | `h8r` | 2026-10-21 | h19 | h19 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8 |  |  |  |  | QUEUED: 40 games vs h19 |
 | `h9r` | 2026-10-21 | h19 | h19 + church planning counts depots served by pilgrim moves (PLAN_SERVE_PILGRIM=1); rebased from h9 |  |  |  |  | QUEUED: 40 games vs h19 |
