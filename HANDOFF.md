@@ -13,16 +13,17 @@
   (h35d vs h35, --det, VM extra lane): out/noop_v5.cmp in 2019-next.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/):
-  h42's delivery (MIX_BY_STOCK [10, 1] on h35: crusaders when karbonite binds, preachers when fuel binds; 00:02), h43's delivery (castle recall RECALL 30: a castle under attack calls far
+  h43's delivery (castle recall RECALL 30: a castle under attack calls far
   guards home; 00:27; 2855 diagnostic: the recall brought the army inside the attack call's reach and it then died
   in h35's held line), h44's delivery (MARCH_MASK 8: only crusaders march before round 900; 00:37); h45 (EDGE 1.5) withdrawn before its delivery: inert against prophets, whose vision equals their reach; h46's delivery (SPOT 3: firing prophets radio
-  their target, crusaders and preachers engage it; job ...a39), h47's delivery (FOCUS 1: focus fire by a shared rule; ...a3a),
+  their target, crusaders and preachers engage it; job ...a39), h47's delivery (FOCUS 1: focus fire by a shared rule; ...a3a), h48's delivery (preachers when fuel binds,
+  MIX_BY_STOCK [1000000, 1]; ...a3b),
   h39 vs h35 (PIONEER_RESERVE 2; delivery passed 23:46), then the old candidates rebased onto v5 (v5 + their own
   switch, 40 games vs h35): h24v5 (ECON_UNTIL 100), h20v5 (DEF_RESERVE_K 30), h15v5 (MIL_ROTATION null), h8v5,
-  h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Gates for h42-h47
-  go in right after h39's (job names ...4b01b1a42 to ...a47) when their deliveries pass. Superseded at v5: h31x, h33,
+  h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Gates for h43-h48
+  go in right after h39's (job names ...4b01b1a43 to ...a48) when their deliveries pass. Superseded at v5: h31x, h33,
   h29, h28, h21 (their switches are in v5). Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
-  their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
+  their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game

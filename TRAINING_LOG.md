@@ -999,3 +999,28 @@
   most 95% of h35's; (3) castles lost no more than h35's. Gate 40 games vs h35, falsifier t <= 0 (overkill: six
   shots on a 20-HP prophet waste four). Dose ladder: a shot budget per target (the k-th shooter in canonical order
   past the shots needed picks the next target). No-op h35g and sym_h47 in the VM extra lane (dlv_chain16.sh).
+
+## 2026-10-22 01:08 — h42 delivery FAILED (2 of 3, castles lost); gate not queued
+- h42 (MIX_BY_STOCK [10, 1] on h35) vs h35, 8 games of 1000 rounds on 905/2855/2202/241 both sides
+  (out/dlv_h42_h35.jsonl, rp_dlv_h42; scratchpad dlv42.js), against the items of 00:02:
+  (1) karbonite-bound 905 + 2855, military units built: h42 705, h35 480 (147%; at least 115%): PASS;
+  (2) fuel-bound 2202 + 241, attack fuel per enemy damage: h42 53,445 / 30,570 = 1.75, h35 88,795 / 43,280 =
+  2.05 (85%; at most 90%): PASS; (3) castles lost: h42 5, h35 4: FAIL. Outcome 3 wins in 8; 0 exceptions.
+- The two halves split. On 905 and 2855 the extra units were crusaders and h42 lost all four games: it fought
+  little (attack fuel 1,015-1,440 a game to h35's 6,035-6,295, damage dealt 820-1,260 to 3,720-3,970) and ended
+  with F 13,000+ and K ~15, the crusaders blind and stopped as in h41's unfired counts. On 2202 (preachers while
+  bank fuel <= karbonite) h42 won both, with half the attack fuel of h35. Next arm h48: the preacher half alone,
+  on other fuel-bound seeds.
+- Driver diagnostic h47 vs h35 on 905 (700 rounds, h47 red): 0 exceptions; FOCUS first changed a shot at round 469
+  (a different preacher killed), and red won by castles at 503 as in h35-vs-h35 behaviour on 905. sym_h46 clean;
+  no-op h35g vs h35 IDENTICAL.
+
+## 2026-10-22 01:09 — h48 pre-registered: preachers when fuel binds (the preacher half of MIX_BY_STOCK)
+- Source: h42's delivery (above): on 2202 the preacher branch (bank fuel / karbonite <= 1) won both games with
+  half the attack fuel; the crusader branch lost all four karbonite-bound games. Preachers deal 1.33 damage a fuel
+  with splash, prophets 0.40; when karbonite piles up and fuel does not, a preacher's 30 karbonite is free.
+- h48 = v5 + MIX_BY_STOCK [1000000, 1] (no crusader branch). No new code. Delivery on other seeds (VM queue, 8
+  games of 1000 rounds vs h35 on 357, 2030, 2924, 1915 both sides), summed: (1) h48's attack fuel per enemy
+  damage at most 90% of h35's; (2) enemy military units killed by h48 at least h35's (its kills at least its
+  losses); (3) castles lost no more than h35's. Gate 40 games vs h35, falsifier t <= 0 (preachers see 4 tiles and
+  walk at 3 fuel per r2). Dose ladder: lo 1 -> 2.
