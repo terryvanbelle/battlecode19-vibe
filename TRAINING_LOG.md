@@ -403,3 +403,14 @@
   that overhead (it counts on the official clock too).
 - A harness option that would run one precompiled script per turn (same view, same vm2 timeout) was not applied:
   it changes how turns enter the sandbox, so it waits for the owner's decision. Gates continue at the current rate.
+
+## 2026-10-21 19:25 — h19's control games vs bots/rush complete; h20 delivery confirmed
+- h19 vs bots/rush, seeds 1337/1879/2544/2908 both sides (shadow tree out/dlv_h19_rush.jsonl): 0-8, 8 castles lost
+  (both on 2908 by rounds 597/651); h20 there: 0-8, 6 lost (2908 keeps one castle to round 1000). The reserve does
+  not lose more, so h20's delivery stands and its gate stays queued.
+- Control figures for the h22 and h23 deliveries (fire census, scratch fireagg.js over the 8 replays): h19 spent
+  185,450 attack fuel (23,200 a game) for 93,800 enemy damage, 0.51 damage per fuel; prophets 85% of the fuel at
+  0.40, castles 9% at 1.00, preachers 5% at 1.33, crusaders 2% at 1.00. The rush: 29,605 fuel at 0.96 (crusaders
+  92%). h19's bank at round 500: mean 134 fuel (2-522) beside 595-4,205 karbonite. h22 passes its delivery with
+  attack fuel per enemy damage <= 1.37 (30% below 1.96), mean fuel at 500 above 134, castles lost <= 8; h23 with a
+  prophet share <= 60%, damage per fuel >= 0.66, castles lost <= 8.
