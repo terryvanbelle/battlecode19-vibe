@@ -481,6 +481,50 @@ test('military: SPOT: a firing prophet radios its target for melee units in sigh
   } finally { CFG.SPOT = saved; }
 });
 
+test('military: SPOT_PROPHET: prophets radio with only prophets in sight and walk into the band of a heard spot', () => {
+  const saved = [CFG.SPOT, CFG.SPOT_PROPHET];
+  try {
+    CFG.SPOT = 3; CFG.SPOT_PROPHET = 1;
+    const sent = [];
+    const w0 = { me: { x: 10, y: 10, turn: 20, unit: S.PROPHET }, friends: [{ x: 9, y: 9, unit: S.PROPHET }], fuel: 1000, sentR2: 0,
+      signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; } };
+    spot({ w: w0, st: {} }, { x: 12, y: 17, unit: S.CRUSADER });
+    assert.deepStrictEqual(sent, [[encXY(0, 12, 17), FAR.ENEMY]]);
+
+    // A prophet out of reach of the spot (r2 > 64) and near home steps toward its firing band; off, it does not hear.
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    const d2 = (a, b, x, y) => (a - x) ** 2 + (b - y) ** 2;
+    let at = null, tgt = null;
+    for (let r = 3; r <= 5 && !tgt; r++) for (let dy = -r; dy <= r && !tgt; dy++) for (let dx = -r; dx <= r && !tgt; dx++) {
+      const ax = castle.x + dx, ay = castle.y + dy;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) !== r || !free(ax, ay)) continue;
+      for (let ty = 0; ty < n && !tgt; ty++) for (let tx = 0; tx < n && !tgt; tx++)
+        if (free(tx, ty) && d2(tx, ty, ax, ay) > 100 && d2(tx, ty, ax, ay) <= 144 && d2(tx, ty, castle.x, castle.y) <= 150) { at = [ax, ay]; tgt = [tx, ty]; }
+    }
+    assert.ok(at && tgt);
+    const run = (on) => {
+      CFG.SPOT_PROPHET = on;
+      const pro = { id: 4005, team: 0, unit: S.PROPHET, x: at[0], y: at[1], turn: 3, health: 20, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      g.robots.push(pro);
+      try {
+        const cw = worldFor(g, castle), [sx, sy] = cw.T.toC(tgt[0], tgt[1]);
+        castle.signal = encXY(0, sx, sy); castle.signal_radius = FAR.ENEMY;
+        const w = worldFor(g, pro), B = { api: w.api, w, round: 20, birthRound: 18, st: {}, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[S.PROPHET].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        return { a: militaryTurn(B), B };
+      } finally { g.robots.pop(); castle.signal = 0; castle.signal_radius = 0; }
+    };
+    const on = run(1), e2 = (x, y) => d2(x, y, tgt[0], tgt[1]);
+    assert.ok(on.B.st.spot && on.a && on.a.action === 'move' && on.B.nav.lastKey.startsWith('S'));
+    assert.ok(e2(at[0] + on.a.dx, at[1] + on.a.dy) < e2(at[0], at[1]));
+    const off = run(0);
+    assert.strictEqual(off.B.st.spot, undefined);
+    assert.ok(!(off.B.nav.lastKey || '').startsWith('S'));
+  } finally { [CFG.SPOT, CFG.SPOT_PROPHET] = saved; }
+});
+
 test('military: EDGE keeps a marching unit out of reach of enemy attackers until ours outnumber them', () => {
   const saved = CFG.EDGE;
   try {

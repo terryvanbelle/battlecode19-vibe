@@ -113,6 +113,10 @@ export const CFG = {
                              // at most every SPOT turns while a crusader or preacher of ours is in its sight; melee
                              // units that hear it engage it as if seen (gate 2924: 79 of 115 crusaders and 65 of 83
                              // preachers lost never fired; they see 7 and 4 tiles, prophets reach 8)
+  SPOT_PROPHET: 0,           // 1 (with SPOT): prophets radio while any military unit of ours is in sight, and prophets
+                             // that hear a spot step to its firing band (r2 16-64) as melee units close in (replica
+                             // 2924 r240-272: bot1v43's preachers and prophets took a castle from 6 churches built
+                             // in a row 7-12 tiles off it; ours held lattice tiles r2 72-100 from the fight, unseen)
   WAVE: 0,                   // >0: after the first attack call, call again only once this many military units are
   WAVE_GAP: 15,              // idle (units report marching over castle talk), on 3 rounds, then wait this many rounds
   ATTACK_EVERY: 5,           // castles repeat the attack call (20 fuel) every this many rounds (5: ~4,400 fuel a game)

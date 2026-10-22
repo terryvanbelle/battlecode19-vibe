@@ -38,7 +38,7 @@ function listen(B) {
     if (r.id === me.id || (r.seen && r.team !== me.team)) continue;
     const m = decFarRobot(r);
     if (m && m.type === SIG.RECALL && CFG.RECALL && w.passable(m.x, m.y)) { st.recall = { x: m.x, y: m.y, until: me.turn + CFG.RECALL }; st.target = null; continue; }
-    if (m && m.type === SIG.ENEMY) { if (CFG.SPOT && me.unit !== PROPHET) hearSpot(B, m.x, m.y); continue; }
+    if (m && m.type === SIG.ENEMY) { if (CFG.SPOT && (me.unit !== PROPHET || CFG.SPOT_PROPHET)) hearSpot(B, m.x, m.y); continue; }
     if (CFG.RECALL && st.recall && me.turn <= st.recall.until) continue;   // recalled: attack orders wait
     if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || ((st.guard || !(CFG.MARCH_MASK >> me.unit & 1)) && B.round < 900)) continue;
     const i = CFG.ATTACK_PERSIST && m.extra >= 1 && m.extra <= 4 ? m.extra - 1 : -1;
@@ -81,7 +81,7 @@ function spot(B, t) {
   const w = B.w, st = B.st, me = w.me;
   if (t.unit === PILGRIM || w.sentR2 || me.turn - (st.spotAt || -99) < CFG.SPOT) return;
   if (w.fuel < STATS[PROPHET].atkFuel + CFG.PROPHET_FLOOR + 10) return;
-  if (!w.friends.some(r => r.unit === CRUSADER || r.unit === PREACHER)) return;
+  if (!w.friends.some(r => r.unit === CRUSADER || r.unit === PREACHER || (CFG.SPOT_PROPHET && r.unit === PROPHET))) return;
   st.spotAt = me.turn; w.signal(encXY(0, t.x, t.y), FAR.ENEMY);
 }
 
@@ -299,6 +299,11 @@ export function militaryTurn(B) {
     const sp = CFG.SPOT && st.spot;
     if (!e && sp && me.turn - sp.t <= 1 && d2(sp.x, sp.y, marching ? me.x : c.x, marching ? me.y : c.y) <= 196) e = sp;
     if (e) return go(B, 'e' + e.x + ',' + e.y, [[e.x + 1, e.y], [e.x - 1, e.y], [e.x, e.y + 1], [e.x, e.y - 1]]);
+  } else if (CFG.SPOT && CFG.SPOT_PROPHET) {
+    // A prophet that heard a spot near its post (or itself, marching) walks into the band it can fire from, then holds.
+    const sp = st.spot;
+    if (sp && me.turn - sp.t <= 1 && d2(sp.x, sp.y, marching ? me.x : c.x, marching ? me.y : c.y) <= 196)
+      return go(B, 'S' + sp.x + ',' + sp.y, () => bandSources(B, sp.x, sp.y));
   }
 
   // Cargo (reclaimed from kills, or relayed by a pilgrim, CFG.RELAY) goes into an adjacent structure of ours.
