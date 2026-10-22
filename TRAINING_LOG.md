@@ -393,7 +393,7 @@
   right after the turtle gate h16r (job ...4b04 renamed ...4b01ba). Order now h16r, h22, h25, h24, h21, h20, h23,
   h15r, h8r, h9r, then the v3 reference jobs.
 
-## 2026-10-21 19:33 — where a game's wall time goes (profile)
+## 2026-10-21 19:22 — where a game's wall time goes (profile)
 - node --cpu-prof of a 200-round h19 self-play game on the driver (seed 2202, 41 s wall, 15,800 robot turns at a
   mean 1.6 ms): vm.Script compilation 23%, runInContext 20%, acorn (vm2's transformer) 7%, the engine's
   getGameStateDump 10% + insulate 5% + getVisible 3%, GC 5%; our bot's own functions (bfs, latticeTarget, update,
