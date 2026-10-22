@@ -66,6 +66,8 @@ export const CFG = {
   LATTICE_R: 12,             // idle military units hold lattice tiles within this many king steps of their home
                              // structure (replica: eigthbot's lattice grows from every structure toward the middle,
                              // round 460 of seed 1036, and its front reaches the enemy castles)
+  LATTICE_STICKY: 0,         // 1: an idle unit keeps walking to its chosen lattice tile until it sees it taken (choosing
+                             // afresh each turn flips between tiles out of sight, seed 2202: military.js holdTarget)
   // attack
   ATTACK_ROUND: 450,         // castles call a general attack from this round when the army is big
   ATTACK_MIN_ARMY: 20,

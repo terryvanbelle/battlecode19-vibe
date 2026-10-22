@@ -155,6 +155,19 @@ function latticeTarget(B) {
   return best;
 }
 
+// The lattice tile an idle unit walks to. Tiles out of sight count as free, so choosing afresh every turn can flip
+// between two tiles that are each out of sight from where the other was chosen (seed 2202, preacher, vision r2 16:
+// (18,2) seen taken from (15,4) sends it toward (11,3); one step on, (18,2) is out of sight and wins again).
+// CFG.LATTICE_STICKY keeps the previous choice while it is still a lattice tile in range and not seen taken.
+function holdTarget(B) {
+  const w = B.w, st = B.st, h = st.home, me = w.me;
+  if (CFG.LATTICE_STICKY && st.lt) {
+    const [x, y] = st.lt, occ = w.occ(x, y);
+    if (latticeOk(B, x, y) && king(x, y, h.x, h.y) <= CFG.LATTICE_R && !(occ > 0 && occ !== me.id)) return st.lt;
+  }
+  return (st.lt = latticeTarget(B));
+}
+
 export function militaryTurn(B) {
   const w = B.w, me = w.me, st = B.st, u = me.unit, S = STATS[u];
   if (!st.ready) init(B);   // until it completes: a turn killed mid-init (200 ms) leaves it half done
@@ -211,9 +224,9 @@ export function militaryTurn(B) {
 
   // Hold the lattice.
   if (latticeOk(B, me.x, me.y) && king(me.x, me.y, h.x, h.y) <= CFG.LATTICE_R) return null;
-  const t = latticeTarget(B);
+  const t = holdTarget(B);
   if (!t) return CFG.KEEP_CLEAR ? stepClear(B) : null;
   const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);
   return a || (CFG.KEEP_CLEAR ? stepClear(B) : null);
 }
-export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke };
+export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke, holdTarget };

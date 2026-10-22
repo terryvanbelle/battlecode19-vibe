@@ -7,7 +7,7 @@ import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
-import { nextTarget, isChoke, militaryTurn } from '../src/bot/military.js';
+import { nextTarget, isChoke, militaryTurn, holdTarget } from '../src/bot/military.js';
 import { callDue, castleTurn } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { minesNow, pilgrimTurn } from '../src/bot/pilgrim.js';
@@ -436,6 +436,26 @@ test('military: LATTICE_R bounds how far from home an idle unit holds a lattice 
     assert.strictEqual(turns(16), null);                    // 14 king steps out, inside 16: holds
     assert.strictEqual((turns(12) || {}).action, 'move');   // outside 12: heads back toward home
   } finally { CFG.LATTICE_R = saved; }
+});
+
+test('military: LATTICE_STICKY keeps a lattice target that only looked worse from where it was chosen', () => {
+  // Two lattice tiles: A (12,2) next to the anchor (10,2), B (4,2) far. Row 4 is a depot corridor (no lattice).
+  // A preacher (vision r2 16) at (9,4) sees A taken and picks B; at (8,4) A is out of sight and counts as free.
+  const saved = CFG.LATTICE_STICKY, A = [12, 2], Bt = [4, 2];
+  try {
+    const w = { n: 24, me: { id: 5, x: 9, y: 4 },
+      passable: (x, y) => y === 4 || (x === A[0] && y === A[1]) || (x === Bt[0] && y === Bt[1]),
+      isDepot: (x, y) => y === 4,
+      occ(x, y) { return d2(x, y, this.me.x, this.me.y) > 16 ? -1 : x === A[0] && y === A[1] ? 77 : 0; } };
+    const run = sticky => {
+      CFG.LATTICE_STICKY = sticky; w.me = { id: 5, x: 9, y: 4 };
+      const B = { w, st: { home: { x: 10, y: 0 } } }, out = [holdTarget(B)];
+      w.me = { id: 5, x: 8, y: 4 }; out.push(holdTarget(B));
+      return out;
+    };
+    assert.deepStrictEqual(run(0), [Bt, A]);    // flips to A, which is taken
+    assert.deepStrictEqual(run(1), [Bt, Bt]);   // keeps B
+  } finally { CFG.LATTICE_STICKY = saved; }
 });
 
 test('combat: target choice, preacher splash avoids friends, retreat', () => {
