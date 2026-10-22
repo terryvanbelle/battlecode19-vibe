@@ -237,6 +237,8 @@ test('dlv: delivery numbers agree with the replay analysis and with each other',
     assert.strictEqual(T.milBuilt, A.built[3] + A.built[4] + A.built[5]);
     assert.strictEqual(T.milLost, A.lost[3] + A.lost[4] + A.lost[5]);
     assert.strictEqual(T.castlesLost, A.lost[0]);
+    assert.strictEqual(T.churchesLost100, A.lost[1]);    // an 80-round game: every loss is by round 100
+    assert.strictEqual(T.mines450, A.fuel_mine);         // one fuel a mine action
     assert.strictEqual(T.shots, A.attacks);
     assert.strictEqual(T.atkFuel, A.fuel_attack);
     assert.strictEqual(T.dmgDealt, A.dmg_dealt);

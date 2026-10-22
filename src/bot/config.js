@@ -56,6 +56,15 @@ export const CFG = {
   PROPHET_FLOOR: 30,         // ...prophets below this (they deal 0.4 damage per fuel, castles and crusaders 1.0,
                              // preachers 1.33: when fuel is short it goes to the efficient shooters first)
   PREACHER_EVERY: 4,         // every Nth peacetime defender is a preacher (when MIL_ROTATION is null)
+  PREACHER_SELF: 1.5,        // a preacher target whose splash includes the shooter counts this against it, as any
+                             // friend (diagnostic 1915: a newborn preacher splashed itself for 20 of its 60 HP to add a
+                             // church and a pilgrim, and lost the duel with the enemy's preacher by one shot)
+  PREACHER_MIL: 2,           // ...and an enemy crusader, prophet or preacher in the splash counts this (a pilgrim or a
+                             // church 1): above 2, one enemy preacher outweighs a church and a pilgrim (the same duel:
+                             // the first shot has to land on the other preacher)
+  STRIKE_R2: 0,              // >0: a structure that sees an enemy church within this r2 and no enemy attacker builds a
+                             // preacher toward it first (struct.js strike; seeds 1915, 2030, 2924: mirror churches 1-5
+                             // tiles apart, won by whichever side's preacher acted first)
   // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
   MIL_ROTATION: [4, 3, 4, 3, 5],   // peacetime build order by unit type (prophet 4, crusader 3, preacher 5)
   MIX_BY_STOCK: null,        // [hi, lo]: a peacetime unit is a crusader while fuel / karbonite in the bank >= hi

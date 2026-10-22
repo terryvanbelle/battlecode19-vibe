@@ -13,7 +13,7 @@
 // karbEnd / fuelEnd, win; idleContact / idleContactP (military / prophet turns in from..to with no action while an
 // enemy attacker within r2 196, out of the unit's own attack range, has a friend of the unit in its attack range);
 // atCastle450 (military units whose nearest own structure, in king steps, is a castle within 6, at round 450),
-// churchesLost.
+// churchesLost, churchesLost100 (by round 100), mines450 (pilgrim mine actions to round 450).
 'use strict';
 const fs = require('fs'), path = require('path');
 const R = require('./replay');
@@ -50,7 +50,8 @@ function contact(g, r) {
 }
 const COLS = ['milBuilt', 'milLost', 'milLostUnfired', 'meleeLost', 'meleeLostUnfired', 'deathsOn3', 'killsByMelee',
   'killsByProphet', 'shots', 'atkFuel', 'dmgDealt', 'shotsW', 'moveW', 'moveMilW', 'castlesLost', 'churchesBuilt', 'spots',
-  'recalls', 'fuel500', 'fuelTo', 'karbEnd', 'fuelEnd', 'win', 'idleContact', 'idleContactP', 'atCastle450', 'churchesLost'];
+  'recalls', 'fuel500', 'fuelTo', 'karbEnd', 'fuelEnd', 'win', 'idleContact', 'idleContactP', 'atCastle450', 'churchesLost',
+  'churchesLost100', 'mines450'];
 
 function stats(buf, { from = 0, to = 1000 } = {}) {
   const s = [0, 1].map(() => Object.fromEntries(COLS.map(c => [c, 0])));
@@ -72,12 +73,13 @@ function stats(buf, { from = 0, to = 1000 } = {}) {
         const f = (rec.dx * rec.dx + rec.dy * rec.dy) * MOVE[robot.unit];
         s[robot.team].moveW += f; if (robot.unit >= 3) s[robot.team].moveMilW += f;
       }
+      if (!error && rec.action === 4 && round <= 450) s[robot.team].mines450++;
       if (rec.signal_radius === 99 && robot.unit === 4) s[robot.team].spots++;
       if (rec.signal_radius === 2501 && robot.unit === 0) s[robot.team].recalls++;
       for (const d of died) {
         const T = s[d.team];
         if (d.unit === 0) T.castlesLost++;
-        if (d.unit === 1) T.churchesLost++;
+        if (d.unit === 1) { T.churchesLost++; if (round <= 100) T.churchesLost100++; }
         if (d.unit < 3) continue;
         T.milLost++;
         if (!fired.has(d.id)) T.milLostUnfired++;

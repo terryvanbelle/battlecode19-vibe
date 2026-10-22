@@ -34,7 +34,9 @@ export function cover(e, robots) {
 
 // Preacher: the visible tile in the attack band with the best splash value. Friendly hits weigh 1.5x an enemy hit,
 // our structures 3x. robots: all placed robots (canonical). Returns {dx, dy, value} or null.
-export function preacherTarget(x, y, robots, myTeam, visible) {
+// selfCost: what the shooter's own tile in the splash counts against a target (the default counts it as any friend);
+// milValue: what an enemy crusader, prophet or preacher in the splash counts for (a pilgrim or church 1, a castle 1.5).
+export function preacherTarget(x, y, robots, myTeam, visible, selfCost = 1.5, milValue = 2) {
   const s = STATS[PREACHER]; let best = null, bv = 0;
   const near = robots.filter(r => r.seen && d2(x, y, r.x, r.y) <= 36);
   for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) {
@@ -43,8 +45,8 @@ export function preacherTarget(x, y, robots, myTeam, visible) {
     let v = 0, hits = false;
     for (const r of near) {
       if (d2(tx, ty, r.x, r.y) > s.splash) continue;
-      if (r.team === myTeam) v -= (r.unit === CASTLE || r.unit === CHURCH) ? 3 : 1.5;
-      else { v += PRIORITY[r.unit] >= 5 ? 2 : r.unit === CASTLE ? 1.5 : 1; hits = true; }
+      if (r.team === myTeam) v -= r.x === x && r.y === y ? selfCost : (r.unit === CASTLE || r.unit === CHURCH) ? 3 : 1.5;
+      else { v += PRIORITY[r.unit] >= 5 ? milValue : r.unit === CASTLE ? 1.5 : 1; hits = true; }
     }
     if (hits && v > bv) { bv = v; best = { dx, dy, value: v }; }
   }

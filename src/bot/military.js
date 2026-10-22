@@ -298,7 +298,7 @@ export function militaryTurn(B) {
 
   if (canShoot) {
     if (u === PREACHER) {
-      const t = preacherTarget(me.x, me.y, w.robots, me.team, (x, y) => w.occ(x, y) >= 0);
+      const t = preacherTarget(me.x, me.y, w.robots, me.team, (x, y) => w.occ(x, y) >= 0, CFG.PREACHER_SELF, CFG.PREACHER_MIL);
       if (t) return w.attack(t.dx, t.dy);
     } else {
       const t = pickTarget(u, me.x, me.y, enemies, w.n, CFG.FOCUS ? w.friends : null);

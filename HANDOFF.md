@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 02:46 PDT)
+## State (2026-10-22 03:05 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -14,7 +14,8 @@
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/):
   the stack h50 vs h35 (PIONEER_RESERVE 2 + MARCH_MASK
-  8, LEARNINGS 18; ...a3d, running), h51's delivery (CASTLE_POST 0.5: half the church-born army guards the nearest
+  8, LEARNINGS 18; ...a3d, running), h54's delivery (STRIKE_R2 36 + PREACHER_SELF 4 + PREACHER_MIL 2.5: win the
+  knife fight at mirror churches that decides which side wins self-play; ...a3d5; TRAINING_LOG 03:02), h51's delivery (CASTLE_POST 0.5: half the church-born army guards the nearest
   castle; ...a3e; pre-registered TRAINING_LOG 02:33), h43's gate vs h35 (castle recall RECALL 30; delivery passed 3 of
   3 at 01:18, but h43 lost 4 of the 5 games in which it recalled; ...a43), then the old candidates rebased onto v5 (v5 + their own
   switch, 40 games vs h35): h15v5 (MIL_ROTATION null: no crusaders; moved first at 01:15, job ...a5, as crusaders
@@ -35,7 +36,8 @@
   `out/dlv_chain15.sh` (no-op h35f vs h35: IDENTICAL; sym_h46),
   `out/dlv_chain16.sh` (no-op h35g vs h35: IDENTICAL; sym_h47 clean), `out/dlv_chain17.sh` (sym_h48 clean), `out/dlv_chain18.sh` (no-op h35h vs h35 IDENTICAL; sym_h49, sym_h50 clean), `out/dlv_chain19.sh` (no-op h35i,
   sym_h51; rerun at 02:15 on the CASTLE_POST_R builds: no-op IDENTICAL, sym_h51 clean), `out/dlv_chain20.sh`
-  (deliveries of h52 and h53, attack timing 350 / 550, started 02:44; TRAINING_LOG 02:40). h51's second driver diagnostic
+  (deliveries of h52 and h53, attack timing 350 / 550, started 02:44; TRAINING_LOG 02:40), `out/dlv_chain21.sh`
+  (no-op h35j vs h35 for the new defaults PREACHER_SELF / PREACHER_MIL / STRIKE_R2; sym_h54). h51's second driver diagnostic
   (2299): 33 units by the castle at 450 against h35's 3, yet h51 lost that castle at 562 (TRAINING_LOG 02:33). Symmetry checks stop only at axis-tile contests or
   combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new

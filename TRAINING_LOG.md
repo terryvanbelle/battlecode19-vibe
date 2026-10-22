@@ -1150,3 +1150,33 @@
   own castlesLost and at least 2 more; (2) wins at least 5 of 8; (3) enemy military killed at least 95% of the
   military it lost. Gate 40 games vs h35, falsifier t <= 0. Dose ladder: h52 350 -> 300 -> 250; h53 550 -> 650.
   No symmetry check: the switch changes one round threshold, past the 200 rounds symcheck plays.
+
+## 2026-10-22 03:02 — why the side decides mirror games: the knife fight at mirror churches; h54 pre-registered
+- Fuel bank at round 449 in 24 near-mirror delivery games (h47, h48, h49 vs h35; scratch bank449.js): the same bot
+  on the two sides of one map banks very differently (2924: red 17,982, blue 29,869; 2030: 5,695 and 13,804; 1915:
+  54 and 117 military), and the richer side won. Pilgrim mine actions to 450 (stall.js): 2924 red 6,869, blue
+  8,220; 357 4,899 and 6,332; 2030 3,813 and 4,854; 1915 2,081 and 3,308; 1250 the reverse. In each such game the
+  poorer side had pilgrims stalled with cargo off any depot for 269-423 turns (2924: one K16 pilgrim from round 64
+  to 450 shuffled in a 2-wide edge corridor whose 1-wide neck our own military held), and the enemy camped on 2-5
+  depots of its half (depots.js census at 100/200/300).
+- Cause, from the build and death events: contested clusters on the axis get mirror churches 1-5 tiles apart
+  (1915: (32,25) and (32,26) at round 16; 2030: 4 apart at 37; 2924: 5 apart; 357: 4 apart at 77). The engine
+  moves red first. Red's church builds its next peacetime unit (the rotation: a prophet); blue's church, acting
+  next, sees that newborn attacker within r2 36 and answers with a preacher (struct.js defence), which acts in the
+  same round, kills the prophet (inside its dead zone) and then the church (1915: church dead at 33; 2030: at 41).
+  The side that loses the knife fight loses the cluster, its pilgrims stall, and the game. symcheck.js plays
+  simultaneous turns, so it shows the bot side-symmetric (2924: clean to round 51, first attack 42) while the
+  engine's order decides these fights.
+- h54 = v5 + STRIKE_R2 36 + PREACHER_SELF 4 + PREACHER_MIL 2.5: a structure that sees an enemy church within r2 36
+  and no enemy attacker builds a preacher toward it first (unless two of our military already stand that near it);
+  a preacher counts its own tile in the splash as 4 against a target (was 1.5, as any friend) and an enemy military
+  unit in the splash as 2.5 (was 2; a pilgrim or church 1). Driver diagnostics, h54 red vs h35 on 1915 (150
+  rounds): with STRIKE alone red's church built a preacher at 29 instead of a prophet, which shot a tile whose
+  splash included itself (-20 of its 60 HP, to add a church and a pilgrim) and lost the duel by one shot; with the
+  two preacher weights it hit only the enemy preacher, killed it at 31 and a prophet at 33, and red held the
+  cluster (0 exceptions, ms_max 28).
+- Delivery (VM queue ahead of h51's, 8 games of 1000 rounds vs h35 on 1915, 2030, 2924, 357 both sides), summed,
+  `tools/dlv.js` (new columns churchesLost100, mines450): (1) churches lost by round 100: h54 at most 50% of h35's;
+  (2) pilgrim mine actions to round 450: h54 at least 105% of h35's; (3) wins at least 6 of 8. Gate 40 games vs
+  h35, falsifier t <= 0 (30 K per strike taken from the first pilgrims and churches; preacher target weights change
+  mid-game fights). Attribution if it passes: STRIKE_R2 alone vs the preacher weights alone.

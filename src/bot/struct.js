@@ -190,6 +190,7 @@ function structAct(B, allIds, extra) {
     const t = pickTarget(CASTLE, me.x, me.y, w.enemies, w.n, CFG.FOCUS ? w.friends : null);
     if (t) return w.attack(t.x - me.x, t.y - me.y);
   }
+  if (CFG.STRIKE_R2 && !attackers.length) { const a = strike(B); if (a) return a; }
 
   // Endgame fuel (CFG.ENDGAME_FUEL): fuel is the binding resource late (karbonite floats), so it all becomes HP.
   if (CFG.ENDGAME_FUEL && B.round >= CFG.ENDGAME_FUEL) {
@@ -236,6 +237,27 @@ function structAct(B, allIds, extra) {
     }
   }
   return null;
+}
+
+// CFG.STRIKE_R2: an enemy church this near, with no enemy attacker in sight, gets a preacher built toward it unless
+// two military units of ours already stand that near it. A newborn acts in the round it is built, and a preacher
+// hits from 4 tiles: the side that builds first strikes first (seeds 1915, 2030, 2924: mirror churches 1-5 tiles
+// apart; the side the engine moves first built a peacetime prophet, the other side's church saw it and answered
+// with a preacher that killed it, then the church, and took the cluster).
+function strike(B) {
+  const w = B.w, me = w.me, n = w.n;
+  let c = null, cd = 1e9;
+  for (const e of w.enemies) {
+    if (e.unit !== CHURCH) continue;
+    const r = d2(me.x, me.y, e.x, e.y);
+    if (r <= CFG.STRIKE_R2 && (r < cd || (r === cd && e.y * n + e.x < c.y * n + c.x))) { cd = r; c = e; }
+  }
+  if (!c || !w.canAfford(PREACHER)) return null;
+  let near = 0;
+  for (const r of w.friends) if (r.unit >= CRUSADER && d2(r.x, r.y, c.x, c.y) <= CFG.STRIKE_R2) near++;
+  if (near >= 2) return null;
+  const b = buildToward(B, PREACHER, c.x, c.y);
+  return b ? b.act : null;
 }
 
 // CFG.MIX_BY_STOCK: the unit the binding resource asks for, or 0 (use the rotation).

@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 33 other, 18 queued, 12 in progress, 8 accepted, 3 dropped, 3 rejected, 1 sparring partners (78 rows).
+Totals: 33 other, 18 queued, 13 in progress, 8 accepted, 3 dropped, 3 rejected, 1 sparring partners (79 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -84,11 +84,12 @@ Totals: 33 other, 18 queued, 12 in progress, 8 accepted, 3 dropped, 3 rejected, 
 | `h47` | 2026-10-22 | h35 | v5 + focus fire: among targets of the best priority, shoot the one most of our attackers in sight can also hit (FOCUS=1) |  |  |  | vs v5 4-4 | DELIVERY FAILED 1 of 3 (kills per shot 102%, military lost 97%; castles 5 vs 5; 4 wins in 8); no gate |
 | `h48` | 2026-10-22 | h35 | v5 + peacetime units are preachers while bank fuel / karbonite <= 1 (MIX_BY_STOCK [1000000, 1], the preacher half of h42) |  |  |  | vs v5 4-4 | DELIVERY FAILED 1 of 3 (attack fuel per damage 97%, kills 1,398 vs 1,485; castles 7 vs 7; red won all 8); no gate |
 | `h49` | 2026-10-22 | h35 | v5 + firing prophets radio their target and prophets that hear it step into its firing band (SPOT=3, SPOT_MASK=16) |  |  |  | vs v5 4-4 | DELIVERY FAILED 0 of 3 (prophets idle near contact 90%, military lost 102%, castles 9 vs 5; 4 wins in 8); no gate |
-| `h50` | 2026-10-22 | h35 | stack: v5 + PIONEER_RESERVE=2 (h39) + MARCH_MASK=8 (h44), both deliveries passed |  |  |  | vs v5 8-2 | in progress: gate running (40 games vs h35) |
+| `h50` | 2026-10-22 | h35 | stack: v5 + PIONEER_RESERVE=2 (h39) + MARCH_MASK=8 (h44), both deliveries passed |  |  |  | vs v5 14-6 | in progress: gate running (40 games vs h35) |
 | `h51` | 2026-10-22 | h35 | v5 + castles radio their post and half the church-born army holds within 6 of the nearest castle (CASTLE_POST=0.5, CASTLE_POST_R=6) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
-| `h52` | 2026-10-22 | h35 | v5 + general attack from round 350 instead of 450 (ATTACK_ROUND=350): attack first, into a lattice that has not marched |  |  |  |  | in progress: delivery running (VM extra lane; 8 games of 1000 rounds vs h35) |
+| `h52` | 2026-10-22 | h35 | v5 + general attack from round 350 instead of 450 (ATTACK_ROUND=350): attack first, into a lattice that has not marched |  |  |  | vs v5 1-2 | in progress: delivery running (VM extra lane; 8 games of 1000 rounds vs h35) |
 | `h53` | 2026-10-22 | h35 | v5 + general attack from round 550 instead of 450 (ATTACK_ROUND=550): meet the enemy march at home with a full bank |  |  |  |  | in progress: delivery running (VM extra lane; 8 games of 1000 rounds vs h35) |
+| `h54` | 2026-10-22 | h35 | v5 + a structure that sees an enemy church within r2 36 strikes first with a preacher; preachers weigh their own tile in the splash 4 and enemy military 2.5 (STRIKE_R2=36, PREACHER_SELF=4, PREACHER_MIL=2.5) |  |  |  |  | in progress: delivery queued (8 games of 1000 rounds vs h35) |
 | `h7v5` | 2026-10-22 | h35 | v5 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | QUEUED: 40 games vs h35 |
 | `h8v5` | 2026-10-22 | h35 | v5 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8r |  |  |  |  | QUEUED: 40 games vs h35 |
 | `h9v5` | 2026-10-22 | h35 | v5 + church planning counts depots served by pilgrim moves (PLAN_SERVE_PILGRIM=1); rebased from h9r |  |  |  |  | QUEUED: 40 games vs h35 |
-| `v5` | 2026-10-22 00:08 | v4 | Frozen snapshot of h35 (bots/v5): v4 + church density with contested clusters first, cargo relay, nav fit, lattice memory, safe pilgrim steps; the replica build since submission 95 |  |  | submission 95 | vs v4 35-5; vs h50 2-8; vs h41 5-3; vs h42 5-3; vs h43 4-4; vs h44 2-6; vs h46 5-3; vs h47 4-4; vs h48 4-4; vs h49 4-4 | ACCEPTED 00:08 as v5 (h35 row: gate vs h19) |
+| `v5` | 2026-10-22 00:08 | v4 | Frozen snapshot of h35 (bots/v5): v4 + church density with contested clusters first, cargo relay, nav fit, lattice memory, safe pilgrim steps; the replica build since submission 95 |  |  | submission 95 | vs v4 35-5; vs h50 6-14; vs h41 5-3; vs h42 5-3; vs h43 4-4; vs h44 2-6; vs h46 5-3; vs h47 4-4; vs h48 4-4; vs h49 4-4; vs h52 2-1 | ACCEPTED 00:08 as v5 (h35 row: gate vs h19) |

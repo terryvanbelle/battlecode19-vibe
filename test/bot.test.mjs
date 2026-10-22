@@ -1023,3 +1023,53 @@ test('military: CREEP_ROUND moves the lattice a unit holds toward the enemy over
     assert.deepStrictEqual(target(530, false), before);             // off: as before
   } finally { CFG.CREEP_ROUND = saved.R; CFG.CREEP_EVERY = saved.E; }
 });
+
+test('struct: STRIKE_R2: a church that sees an enemy church 4 tiles off and no attacker builds a preacher toward it', () => {
+  const saved = CFG.STRIKE_R2;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const pass = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x];
+    let ours = null;   // a passable tile with a free ring, 4 rows from another passable tile, away from the castles
+    for (let y = 2; y < n - 6 && !ours; y++) for (let x = 2; x < n - 2 && !ours; x++)
+      if (pass(x, y) && pass(x, y + 4) && offsets(2).every(([dx, dy]) => pass(x + dx, y + dy)) && g.robots.every(r => king(r.x, r.y, x, y) > 12)) ours = [x, y];
+    assert.ok(ours, 'site');
+    const mk = (id, team, unit, x, y) => ({ id, team, unit, x, y, turn: 5, health: S.STATS[unit].hp || 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const run = (r2, theirs, extra = []) => {
+      CFG.STRIKE_R2 = r2;
+      const church = mk(4100, 0, S.CHURCH, ours[0], ours[1]);
+      const all = g.robots;
+      g.robots = all.filter(r => d2(r.x, r.y, church.x, church.y) <= 100).concat([church, mk(4101, 1, S.CHURCH, theirs[0], theirs[1]), ...extra]);
+      const w = worldFor(g, church); g.robots = all;
+      const B = { api: w.api, w, round: 50, birthRound: 46, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 100; w.fuel = 1000;
+      return { act: churchTurn(B), w };
+    };
+    const t4 = [ours[0], ours[1] + 4];
+    const on = run(36, t4), off = run(0, t4);
+    assert.strictEqual((on.act || {}).u, S.PREACHER);
+    const [bx, by] = [ours[0] + on.act.dx, ours[1] + on.act.dy];
+    assert.ok(d2(bx, by, t4[0], t4[1]) < d2(ours[0], ours[1], t4[0], t4[1]), 'toward it');
+    assert.notStrictEqual((off.act || {}).u, S.PREACHER);
+    // Two military units of ours already next to it: no strike.
+    const guards = [mk(4102, 0, S.CRUSADER, t4[0] - 1, t4[1]), mk(4103, 0, S.CRUSADER, t4[0] + 1, t4[1])].filter(r => pass(r.x, r.y));
+    if (guards.length === 2) assert.notStrictEqual((run(36, t4, guards).act || {}).u, S.PREACHER);
+  } finally { CFG.STRIKE_R2 = saved; }
+});
+
+test('combat: preacherTarget selfCost (PREACHER_SELF): the 1915 duel, a splash on the shooter is taken only when worth it', () => {
+  // Shooter at (33,26); enemy preacher (33,27), enemy church (32,26)... seen in canonical coordinates as in the replay.
+  const R = (team, unit, x, y) => ({ team, unit, x, y, seen: true });
+  const robots = [R(0, S.PREACHER, 33, 26), R(1, S.PREACHER, 33, 27), R(1, S.CHURCH, 32, 26), R(1, S.PILGRIM, 31, 26), R(0, S.CHURCH, 32, 25)];
+  const hitsSelf = t => (t.dx * t.dx + t.dy * t.dy) <= S.STATS[S.PREACHER].splash;
+  const d = (t, r) => (33 + t.dx - r.x) ** 2 + (26 + t.dy - r.y) ** 2;
+  const old = preacherTarget(33, 26, robots, 0, () => true);
+  assert.ok(old && hitsSelf(old), 'default counts the shooter as any friend: ' + JSON.stringify(old));
+  assert.ok(!(d((t => t)(preacherTarget(33, 26, robots, 0, () => true, 4)), robots[1]) <= 2), 'self cost alone: church and pilgrim');
+  const fixed = preacherTarget(33, 26, robots, 0, () => true, 4, 2.5);
+  assert.ok(fixed && !hitsSelf(fixed), JSON.stringify(fixed));
+  assert.ok(d(fixed, robots[1]) <= S.STATS[S.PREACHER].splash, 'still hits the enemy preacher');
+  // Three enemy military units around the shooter that only a splash on itself reaches together: worth the 20 HP.
+  const crowd = [R(0, S.PREACHER, 10, 10), R(1, S.CRUSADER, 9, 10), R(1, S.CRUSADER, 11, 10), R(1, S.PROPHET, 10, 11)];
+  const c = preacherTarget(10, 10, crowd, 0, () => true, 4, 2.5);
+  assert.ok(c && hitsSelf(c) && c.value === 3.5, JSON.stringify(c));
+});
