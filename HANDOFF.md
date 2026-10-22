@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 03:42 PDT)
+## State (2026-10-22 03:57 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -13,9 +13,9 @@
   (h35d vs h35, --det, VM extra lane): out/noop_v5.cmp in 2019-next.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/):
-  h54's delivery (STRIKE_R2 36 + PREACHER_SELF 4 + PREACHER_MIL 2.5: win the
-  knife fight at mirror churches that decides which side wins self-play; ...a3d5, running; TRAINING_LOG 03:02),
-  h55's delivery (CHAIN_ROUND 150, church chains; ...a3d55; TRAINING_LOG 03:39), the extension of h50's gate (stack
+  h55's delivery (CHAIN_ROUND 150, church chains; ...a3d55, running; TRAINING_LOG 03:39), h54's gate vs h35
+  (STRIKE_R2 36 + PREACHER_SELF 4 + PREACHER_MIL 2.5: win the knife fight at mirror churches that decides which side
+  wins self-play; delivery PASSED 3 of 3 at 03:55, 8-0, castles lost 1 vs 12; ...a3d56), the extension of h50's gate (stack
   PIONEER_RESERVE 2 + MARCH_MASK 8, LEARNINGS 18: 27-13, t 1.70 at 40 games, inconclusive; 20 more cells at seed0
   6000, ...a3d6, out/h50x_h35.jsonl, read pooled with out/h50_h35.jsonl), h51's delivery (CASTLE_POST 0.5: half the church-born army guards the nearest
   castle; ...a3e; pre-registered TRAINING_LOG 02:33), h43's gate vs h35 (castle recall RECALL 30; delivery passed 3 of
@@ -57,7 +57,8 @@
   driver diagnostic on 2924 fired one chain (3 churches 7 steps from a castle, 133 units, the castle fell at 400);
   its first chainer stood 250 turns beside corner castle (6,0), boxed in by our own military in the 1-wide top
   corridor. That jam is a movement lead for v5 itself (idle units on and next to a corridor by a corner castle).
-  Defence against chains is not built: chainers loiter 12 steps out for many turns (bot1v43: r200-235 at (34,0)).
+  Defence: CFG.HUNT (h56 = HUNT 5; sparring partner h55w waits for a bigger bank), built, not queued until h55's
+  delivery reads (TRAINING_LOG 03:55).
 - tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
   cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were
   started without it, our own builds only). Not yet synced to the VM trees (they start games under unshare anyway).

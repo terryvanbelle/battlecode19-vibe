@@ -1209,3 +1209,19 @@
   Doses: CHAIN_ROUND 150 -> 250 (a bigger bank and army first) or CHAIN_END_R2 49 -> 25 (StoneT ended 5 steps out).
   Symmetry: sym_h55 (seeds 1, 2, 3, 2924, 260 rounds) and a no-op check of the new defaults (h35k vs h35, --det) on
   the extra lane (`out/dlv_chain22.sh`).
+
+## 2026-10-22 03:55 — h54 delivery PASSED 3 of 3 (knife fight at mirror churches); gate queued next
+- 8 games vs h35 (1915, 2030, 2924, 357 both sides; `tools/dlv.js` on out/rp_dlv_h54, SUM rows): (1) churches lost
+  by round 100: h54 0, h35 8 (bar: at most 50%); (2) pilgrim mine actions to round 450: 47,226 vs 34,608 (136%,
+  bar 105%); (3) h54 won 8 of 8 (bar 6), from both sides of every map: castles lost 1 vs 12. 0 exceptions; ms_max
+  up to 244 (h35 337) on 2924 under VM load, while the bots' own turn timers peak at 54 ms there (TIME logs): the
+  excess is sandbox and GC time outside our code.
+- Gate h54 vs h35 (40 games, seed0 5000, job ...a3d56), ahead of h50's extension; falsifier t <= 0. If it passes,
+  attribution: h54s (STRIKE_R2 36 alone) and h54p (PREACHER_SELF 4 + PREACHER_MIL 2.5 alone), deliveries on the
+  same 8 games.
+- Also built (03:50): h56 = v5 + HUNT 5 (pilgrims radio an enemy pilgrim standing 5 turns on one tile in our half
+  off any depot, FAR.HUNT; idle crusaders and preachers within r2 400 go for it), the answer to bot1v43's chain
+  builders that waited 29-253 turns 9-14 king steps from our castles seen only by our pilgrims (scratch loiter.js
+  on replica 200-2). In h52's 8 delivery games our own pilgrims show the same signature in h35's half (10-61 turns,
+  1915, 241, 2924), so the hunt fires in self-play too. Sparring partner h55w = h55 with CHAIN_K 400, CHAIN_F
+  2,500 (its chainer waits, as bot1v43's did). Queued only if h55's delivery shows chains take h35's castles.
