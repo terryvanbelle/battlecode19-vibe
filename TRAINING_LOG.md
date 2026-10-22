@@ -1650,3 +1650,20 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   (castle builds radioing type 12) in at least 5 of the 40 games; (2) stuck pioneers on h65's side at most 75% of
   h50's in the same games; (3) churches built by round 300 on h65's side at least h50's. Accept per the gate
   (t >= 2); as a basics fix (pioneers that never arrive) at net >= 0 if (1)-(3) pass. Falsifier: t <= 0 or (2) fails.
+
+## 2026-10-22 09:45 — 5th replica slot live (after a failed first deploy); h8v5 rebased as h8v6
+- Deployed the 5th execute slot and the error census at 09:32 (16:32 UTC). Every game then exited 1 within a second
+  (218 nacks in 10 s; 152 matches back to TRY, none to ERR). Cause: the census build also shipped run_game.js's
+  netIsolated(), which calls os.networkInterfaces(); saturn's unit sets RestrictAddressFamilies, so the netlink
+  socket fails (uv_interface_addresses errno 97) and the game refuses to start. The driver and VM tests run outside
+  that unit and passed. Fix (98c6bfa): fall back to /proc/net/dev (interfaces of the process's own network
+  namespace); test added. Verified one game under the unit's own properties with systemd-run (and that the bare
+  restriction reproduces errno 97) before restarting at 09:36: 5 slots running, 0 nacks since. LEARNINGS 21.
+  The extra lane still runs until chain32 ends, so the VM carries 5 replica + 2 gate + 1 extra-lane game for now.
+- Replica 09:40: 180 waiting (147 TRY, 33 QUE), 5 running: all five are the strong-author challenges vs vibe19 (391
+  uvafan, 394 awesomelemonade, 397 nthistle, 400 jamesrayman, 403 m-schier wololo). ERR stays 15, all before 01:00.
+- **h8v5 gate vs h35** (ENDGAME_FUEL 900): 20 cells, 40 games, gained 4, lost 0, split 16: D 4, below the first
+  look (D 12), so undecided. v6 is the incumbent and a pass would have been re-gated on v6, so the switch is rebased
+  rather than extended against v5: **h8v6** = v6 + ENDGAME_FUEL 900 (sha a6865c24abac) vs h50, 20 random cells,
+  seed0 5000, par 2 (VM job ...a3d5775, after the anti-chain panel). Same bar: looks at D 12 / 24 / 48; accept
+  t >= 2, reject t <= 0. h8v5's delivery (3 of 3) stands; the switch acts only from round 900, so most cells split.

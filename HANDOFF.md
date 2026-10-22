@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 09:00 PDT)
+## State (2026-10-22 09:45 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -14,21 +14,19 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 09:00:
-  h8v5's gate (...a3d577, ENDGAME_FUEL 900 vs h35, running: a read under way when v6 was accepted finishes against
-  v5; a pass is stacked onto v6 and gated vs v6); **h63** (PILGRIM_HERE, ...a3d5771), **h64** (PIONEER_FAST,
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 09:45:
+  **h63** (PILGRIM_HERE, ...a3d5771, running), **h64** (PIONEER_FAST,
   ...a3d57715) and **h65** (ESCORT 2, ...a3d57716, after its no-op/symcheck job ...a3d577158) gates vs h50; the
-  **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each vs h55v6); h55's
-  extension vs h35 (...a3d585, seed0 6000) and h24v5's (...a3d597, look 1 D 13 t 0.83, next look D >= 24); then
+  **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each vs h55v6); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775; h8v5 vs h35 ended at D 4, below the first
+  look, TRAINING_LOG 09:45); h55's extension vs h35 (...a3d585, seed0 6000) and h24v5's (...a3d597, look 1 D 13 t 0.83, next look D >= 24); then
   the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50, outputs out/<name>_h50.jsonl): h51v6's
   delivery (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h15v6 (MIL_ROTATION null, ...a5), h20v6
   (DEF_RESERVE_K 30), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6 vs v0 and v6 vs rush. Gates of
   passed deliveries go in after h43v6's (job names ...4b01b1a45 onward). h54's h2h extensions were withdrawn (the
   panel rates it). Extra lane: chain29 (no-op v6e, sym_h61) -> chain30 (h61 delivery) -> chain31 (no-op v6f,
   sym_h63, sym_h62) -> chain32 (no-op v6g, sym_h64). **When chain32 is done the extra lane retires** while the
-  replica queue is long: deploy the 5th replica slot (commit fc49e73: `tools/galaxy19/deploy/deploy.sh app`, then
-  `runtime`, `env`, `units`, then `sudo systemctl restart bc19-galaxy-saturn`; the restart re-runs the matches in
-  flight), and later deliveries and no-op checks go into the jobq as their own jobs.
+  replica queue is long (the 5th replica slot, its core, has been live since 09:36: TRAINING_LOG 09:45); later
+  deliveries and no-op checks go into the jobq as their own jobs.
   Superseded at v5: h31x, h33, h29, h28, h21. Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
   their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h46 (SPOT for melee) failed 1 of 3 at 01:52; h47 (FOCUS 1) failed 1 of 3 at 02:04; h48 (preachers when fuel binds) failed 1 of 3 at 02:20; h49 (SPOT for prophets) failed 0 of 3 at 02:32; h58 (CHURCH_FIRST_R2) failed 1 of 3 and h59 (PILGRIM_HOT) 0 of 3 at 06:13; h45 (EDGE 1.5) withdrawn before its delivery (inert: prophet vision equals reach); h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
@@ -108,9 +106,9 @@
   games; scrims (matches 199-202) challenge StoneT2000 (botfinalsafe, bot1v43) and IvanGeffner (bot6b, eigthbot),
   which had not played (`contest19.py scrim --vs NAME,...`). 199 lost 0-3 and 200 lost 1-2 (TRAINING_LOG 20:23).
   Matches 201 and 202 ended ERR at the old 1800 s game limit (no replays). **Replica throughput (owner, PROMPTS
-  15-20; TRAINING_LOG 07:40):** saturn runs 4 execute slots with GALAXY_GAME_TIMEOUT 5400 s since 14:36 UTC; the
-  autoscrim is held while 30+ matches wait and fires at most once per 24 h (relay.py fire-jobs). Queue at 07:28 PDT:
-  208 waiting. **Watch the queue every check-in** (`python3 tools/galaxy19/field.py queue`: matches NEW/QUE/TRY,
+  15-20; TRAINING_LOG 07:40):** saturn runs 5 execute slots (5th since 16:36 UTC, TRAINING_LOG 09:45) with GALAXY_GAME_TIMEOUT 5400 s; the
+  autoscrim is held while 30+ matches wait and fires at most once per 24 h (relay.py fire-jobs). Queue at 09:40 PDT:
+  180 waiting. **Watch the queue every check-in** (`python3 tools/galaxy19/field.py queue`: matches NEW/QUE/TRY,
   and what runs); while it is long, clearing it comes before local work (gates at par 2). The seven boosted field
   bots (StoneT2000 x2, uvafan, awesomelemonade, nthistle, jamesrayman HCN-bot, m-schier wololo; requests 158-178)
   were bumped to the front. **Dropped 08:25 PDT (owner, PROMPTS 21):** Nydroam.BatteredCod, IvanGeffner.BC19-bot6b and
