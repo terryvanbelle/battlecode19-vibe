@@ -15,7 +15,7 @@ import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, huntSpot, hotRetarget, hereRetarget, siteStalled } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
-import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, PRIORITY } from '../src/bot/combat.js';
+import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, canHit, PRIORITY } from '../src/bot/combat.js';
 import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch } from '../src/bot/chain.js';
 const require = createRequire(import.meta.url);
 const SPECS = require('../engine/node_modules/bc19/specs.json');
@@ -1447,43 +1447,27 @@ test('struct: CHAIN_HOLD_R2: from CHAIN_ROUND a church answers a far attacker on
     assert.ok(mil(run(16, 200, 300, 2, 500)), 'hold: a near prophet always is');
     assert.ok(mil(run(16, 200, 150, 7, 500)), 'hold: before CHAIN_ROUND it is');
     assert.ok(mil(run(16, 0, 300, 7, 500)), 'hold: without chains it is');
-    // CHAIN_KEEP: a church of a line never learns the round; with the switch it counts as past CHAIN_ROUND
+    // CHAIN_KEEP: a church that never learned the round (a line church, or its builder shot before its first turn)
     CFG.CHAIN_KEEP = 0;
-    assert.ok(mil(run(16, 200, undefined, 7, 500, { chainBorn: true })), 'keep off: a line church answers from any bank');
+    assert.ok(mil(run(16, 200, undefined, 7, 500)), 'keep off: a church without the round answers from any bank');
     CFG.CHAIN_KEEP = 1;
-    assert.ok(!mil(run(16, 200, undefined, 7, 500, { chainBorn: true })), 'keep: a line church holds the bank');
-    assert.ok(mil(run(16, 200, undefined, 7, 500)), 'keep: an ordinary church that missed the round answers');
+    assert.ok(!mil(run(16, 200, undefined, 7, 500)), 'keep: a church without the round holds the bank');
+    assert.ok(mil(run(16, 200, 150, 7, 500)), 'keep: one that knows it is before CHAIN_ROUND answers');
+    assert.ok(mil(run(16, 0, undefined, 7, 500)), 'keep: without chains it answers');
     CFG.ECON_UNTIL = 0; CFG.SERVE_MOVES = 0;   // the peacetime army decides: no depots to staff
-    assert.ok(!mil(run(0, 200, undefined, 0, 500, { chainBorn: true })), 'keep: no peacetime unit below the bank');
-    assert.ok(mil(run(0, 200, undefined, 0, 1300, { chainBorn: true })), 'keep: above it, one');
+    assert.ok(!mil(run(0, 200, undefined, 0, 500)), 'keep: no peacetime unit below the bank');
+    assert.ok(mil(run(0, 200, undefined, 0, 1300)), 'keep: above it, one');
     CFG.CHAIN_KEEP = 0;
-    assert.ok(mil(run(0, 200, undefined, 0, 500, { chainBorn: true })), 'keep off: one at 500');
+    assert.ok(mil(run(0, 200, undefined, 0, 500)), 'keep off: one at 500');
   } finally { [CFG.CHAIN_HOLD_R2, CFG.CHAIN_ROUND, CFG.CHAIN_K, CFG.ECON_UNTIL, CFG.CHAIN_KEEP, CFG.SERVE_MOVES] = saved; }
 });
 
-test('church: a church whose builder radios SIG.CHAIN on its first turn is marked chain-born (CFG.CHAIN_KEEP)', () => {
-  const saved = CFG.CHAIN_ROUND;
-  try {
-    CFG.CHAIN_ROUND = 200;
-    const g = new Game(3, 100, 20, false, false), n = g.map.length;
-    const pass = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x];
-    let at = null;
-    for (let y = 2; y < n - 2 && !at; y++) for (let x = 2; x < n - 2 && !at; x++)
-      if (pass(x, y) && offsets(2).every(([dx, dy]) => pass(x + dx, y + dy)) && g.robots.every(r => king(r.x, r.y, x, y) > 10)) at = [x, y];
-    const turn1 = sig => {
-      const church = { id: 4100, team: 0, unit: S.CHURCH, x: at[0], y: at[1], turn: 1, health: 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
-      const builder = { id: 4101, team: 0, unit: S.PILGRIM, x: at[0] + 1, y: at[1], turn: 9, health: 10, karbonite: 0, fuel: 0, signal: sig, signal_radius: sig ? 2 : 0, castle_talk: 0 };
-      const all = g.robots;
-      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, church.x, church.y) <= 100).concat([church, builder]);
-      const w = worldFor(g, church); g.robots = all;
-      const B = { api: w.api, w, st: {}, deps: null, clusters: null, rnd: rng(1) };
-      w.karbonite = 500; w.fuel = 5000;
-      churchTurn(B);
-      return !!B.st.chainBorn;
-    };
-    assert.strictEqual(turn1(encXY(SIG.CHAIN, 5, n - 6)), true);
-    assert.strictEqual(turn1(encXY(SIG.MINE, 5, n - 6)), false);
-  } finally { CFG.CHAIN_ROUND = saved; }
+test('combat: canHit: the tiles an enemy can damage this turn without moving (CFG.CHAIN_SAFE)', () => {
+  const e = (unit, dx, dy) => canHit({ unit, x: 20 + dx, y: 20 + dy }, 20, 20);
+  assert.ok(e(S.PROPHET, 8, 0) && e(S.PROPHET, 4, 0) && !e(S.PROPHET, 3, 0) && !e(S.PROPHET, 8, 1), 'prophet r2 16-64');
+  assert.ok(e(S.CRUSADER, 4, 0) && !e(S.CRUSADER, 4, 1), 'crusader r2 16');
+  assert.ok(e(S.PREACHER, 5, 1) && e(S.PREACHER, 1, 0) && !e(S.PREACHER, 5, 2), 'preacher r2 16 plus its splash');
+  assert.ok(e(S.CASTLE, 8, 0) && !e(S.CASTLE, 8, 1) && !e(S.PILGRIM, 1, 0) && !e(S.CHURCH, 1, 0));
 });
 
 test('combat: preacherTarget selfCost (PREACHER_SELF): the 1915 duel, a splash on the shooter is taken only when worth it', () => {
@@ -1601,6 +1585,19 @@ test('chain: a staged chainer waits for CHAIN_K and CHAIN_F, then builds the fir
         assert.strictEqual(run(X.farther, 60, 300, threat).act, undefined, 'CHAIN_FIRE_NEAR: 20 steps out it flees instead');
         assert.strictEqual(run(X.far, 60, 300, threat).act.u, S.CHURCH, 'CHAIN_FIRE_NEAR: near the line it still fires early');
       } finally { CFG.CHAIN_FIRE_NEAR = savedNear; }
+      // CHAIN_SAFE: a prophet 5 tiles off can shoot it before the church acts: no line, staged and ready or early;
+      // a crusader there threatens (r2 49) but cannot hit (r2 16): the line starts.
+      const savedSafe = CFG.CHAIN_SAFE;
+      try {
+        CFG.CHAIN_SAFE = 1;
+        assert.strictEqual(run(X.far, 1000, CFG.CHAIN_F, threat).act, undefined, 'CHAIN_SAFE: in reach and ready, it flees');
+        assert.strictEqual(run(X.farther, 60, 300, threat).act, undefined, 'CHAIN_SAFE: no early line in reach');
+        const crus = [X.mk(4102, 1, S.CRUSADER, ex, ey)];
+        assert.strictEqual(run(X.far, 1000, CFG.CHAIN_F, crus).act.u, S.CHURCH, 'CHAIN_SAFE: out of reach, the line starts');
+        assert.strictEqual(run(X.farther, 60, 300, crus).act.u, S.CHURCH, 'CHAIN_SAFE: threatened out of reach, early');
+        CFG.CHAIN_SAFE = 0;
+        assert.strictEqual(run(X.far, 1000, CFG.CHAIN_F, threat).act.u, S.CHURCH, 'off: in reach and ready, it fires');
+      } finally { CFG.CHAIN_SAFE = savedSafe; }
     }
   } finally { CFG.CHAIN_ROUND = saved; }
 });

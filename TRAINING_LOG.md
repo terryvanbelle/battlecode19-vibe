@@ -1995,3 +1995,25 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   ...a3d5774 h56v6 vs h72, out/panel_chain72_*); the h50 cell comes from the gate itself, so ...a3d5772 (h50 vs
   h55v6) is dropped. h66's chain half becomes h72's (or h74's, if its 799 diagnostic shows the line church keeping
   the bank) once that diagnostic is read.
+
+## 2026-10-22 15:02 — h74 on 799: CHAIN_KEEP never engaged; the chainer was shot before its church acted; CHAIN_SAFE, h75, h76
+- h74 (h72 + CHAIN_FIRE_NEAR 1 + CHAIN_KEEP 1) on 799, red vs h50 to 450: the same r246 church as h72 (chainer
+  #1453 staged at (36,41) since ~r233 fired early when threatened; FIRE_NEAR allows that near the stage line), and
+  church #505 again built 136 units (52 crusaders, 53 prophets, 31 preachers) with the bank held near 200. Event
+  order: #1453 builds #505, blue prophet #1203 (r2 64) kills #1453, then #505 acts. A newborn acts after every robot
+  already in the round (game.js appends it), so #505 heard no SIG.CHAIN and was an ordinary church that never
+  learned the round. The 14:36 entry's "line church hears SIG.CHAIN, not SIG.ROUND" was wrong for #505; CHAIN_KEEP
+  as built (a mark set by SIG.CHAIN) could not engage. Census: chainers 3, lines 0; red won by castles at 450.
+- The same break in h72's delivery (scratch firsts.sh: pilgrim-built churches from r200 by side and round, and
+  whether the first builder died that round): 1706 blue r435, 2013 red r340, 2924 blue r357, each a one-church
+  "line" on h72's side. Lines beyond the first link cannot be cut: each newborn acts right after its builder.
+- CHAIN_KEEP redefined: a church that does not know the round (a line church, or one whose builder died before its
+  first turn) counts as past CHAIN_ROUND. New CHAIN_SAFE (default 0): a chainer within reach of a visible attacker
+  this turn (combat.js canHit: castle r2 64, prophet 16-64, crusader 16, preacher 26 with splash) neither starts
+  its line nor waits; it flees as a pilgrim and the chain resumes later. Unit tests updated (keep cases by round;
+  canHit; the staged chainer test: a prophet 5 tiles off blocks both the ready and the early line, a crusader there
+  does not). Node 105, Python 54 pass. h74 is closed (diagnostic only, never queued).
+- Builds: h75 = v6 + ENDGAME_FUEL 900 + h72's chain settings (94637bf19539) replaces h66 in VM job ...a3d57717
+  (symcheck, then gate vs h50; delivery as h66's, with lines >= 5 churches for chainers: census --chain-min 5 lines
+  in >= 20 of 40 gate games, late preachers >= 3x h50's). h76 = h72 + CHAIN_KEEP 1 + CHAIN_SAFE 1 (e60bc7ffa84a);
+  v6n = defaults (145f0efacd23), its no-op build. Driver diagnostic h76 red vs h50 on 799 to 450 running.

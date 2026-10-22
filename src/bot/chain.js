@@ -12,7 +12,7 @@ import { STATS, CASTLE, CHURCH, PILGRIM } from './specs.js';
 import { d2, ADJ, offsets } from './util.js';
 import { bfs } from './mapinfo.js';
 import { SIG, CT, encXY, dec } from './comms.js';
-import { isAttacker, THREAT_R2 } from './combat.js';
+import { isAttacker, canHit, THREAT_R2 } from './combat.js';
 
 const KING = offsets(2);
 
@@ -97,7 +97,11 @@ export function pilgrimChain(B, go) {
   // CFG.CHAIN_FIRE_NEAR: a threatened chainer fires early only near the stage line (h55's delivery, 2924: one born
   // beside its castle under attack built four churches at home three turns later, 26 steps from any enemy castle).
   const early = threatened && (!CFG.CHAIN_FIRE_NEAR || near) && w.karbonite >= church.costK && w.fuel >= church.costF + 2;
-  if ((staged && ready) || early) {
+  // CFG.CHAIN_SAFE: the first church acts after every robot already in the round (game.js appends newborns), so a
+  // chainer shot in between leaves it without the target: a one-church line in the enemy half that spends the bank
+  // (seed 799 r246, #1453 and #505; h72's delivery, 3 of 8 games). Exposed, it flees and the chain resumes later.
+  const exposed = CFG.CHAIN_SAFE && w.enemies.some(e => canHit(e, me.x, me.y));
+  if (!exposed && ((staged && ready) || early)) {
     const a = link(B, CHURCH);
     if (a) { st.chain = null; st.chainer = false; w.talk(CT.UNIT + PILGRIM); return a; }
   }

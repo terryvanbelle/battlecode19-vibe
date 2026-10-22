@@ -176,9 +176,10 @@ function structAct(B, allIds, extra) {
   resolvePending(B);
   refreshAssign(B, allIds);
   const attackers = w.enemies.filter(e => isAttacker(e.unit));
-  // Past CHAIN_ROUND, or (CFG.CHAIN_KEEP) a church of a line: it never learns the round, and its army spent the bank
-  // the next line needs (seed 799: one such church built 136 units in r246-450 and no line fired).
-  const chainOn = CFG.CHAIN_ROUND && (B.round >= CFG.CHAIN_ROUND || (CFG.CHAIN_KEEP && st.chainBorn));
+  // Past CHAIN_ROUND, or (CFG.CHAIN_KEEP) a church that never learned the round: a line church, or one whose builder
+  // was shot before the church's first turn. Its army spent the bank the next line needs (seed 799: church #505, its
+  // chainer killed in between, built 136 units in r246-450 and no line fired).
+  const chainOn = CFG.CHAIN_ROUND && (B.round >= CFG.CHAIN_ROUND || (CFG.CHAIN_KEEP && me.unit === CHURCH && !B.round));
   const reserveK = CFG.DEF_RESERVE_K + CFG.PEACE_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
     (CFG.FRONT_ROUND && st.frontAt !== undefined && B.round - st.frontAt < 40 ? STATS[CHURCH].costK : 0) +
     (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0) +

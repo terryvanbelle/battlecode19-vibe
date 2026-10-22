@@ -121,8 +121,11 @@ export const CFG = {
   CHAIN_FIRE_NEAR: 0,        // 1: a threatened chainer starts its line early only within that band too (else it flees)
   CHAIN_HOLD_R2: 0,          // >0: from CHAIN_ROUND a church's threat response leaves CHAIN_K in the bank unless the
                              // nearest attacker is within this r2 (struct.js; castles always answer)
-  CHAIN_KEEP: 0,             // 1: a church built by a chain line (it never learns the round) counts as past CHAIN_ROUND:
-                             // its peacetime army (and CHAIN_HOLD_R2) leaves CHAIN_K in the bank
+  CHAIN_KEEP: 0,             // 1: a church that never learned the round (a line church; one whose builder died before
+                             // its first turn) counts as past CHAIN_ROUND: its peacetime army (and CHAIN_HOLD_R2)
+                             // leaves CHAIN_K in the bank
+  CHAIN_SAFE: 0,             // 1: a chainer within a visible attacker's reach this turn neither starts its line nor
+                             // waits: it flees (chain.js; a church acts after every robot already in the round)
   CHURCH_FIRST_R2: 0,        // >0: an enemy church within this r2 of a unit's home structure is its first target
   CHURCH_FIRST_V: 3,         // (military.js churchFirst); preachers count it this much in the splash
   HUNT: 0,                   // >0: a pilgrim radios an enemy pilgrim that has stood this many turns on one tile in

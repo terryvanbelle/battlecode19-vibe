@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 14:41 PDT)
+## State (2026-10-22 15:02 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -19,7 +19,8 @@
   PIONEER_STALL_ANY 40: no-op v6j, symcheck, 8 games vs h50 on h61's cells, ...a3d577100; TRAINING_LOG 11:52); then
   **h72**'s gate vs h50 (StoneT2000's long church line, CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500,
   MIX [5]; delivery PASSED 3/3 at 14:41: wins 6/8, lines in 7/8, chain kills 3; 20 random cells, ...a3d5771001;
-  h66's chain half becomes h72's or h74's once h74's 799 diagnostic is read), **h70** delivery
+  h76 = h72 + CHAIN_SAFE 1 + CHAIN_KEEP 1, the fix for a chainer shot before its first church acts, is on a driver
+  diagnostic, seed 799; TRAINING_LOG 15:02), **h70** delivery
   (PEACE_RESERVE_K 60: no-op v6k, symcheck, 8 games vs h50 on 70, 520, 2591, 1592, ...a3d5771005; TRAINING_LOG 13:04),
   **h71** delivery (CHURCH_GUARD_D 8 preacher + PREACHER_SELF 4 + PREACHER_MIL 2.5: no-op v6l, symcheck, 8 games vs
   h50 on 2591, 1915, 2030, 2924, ...a3d57710055; TRAINING_LOG 13:20),
@@ -29,8 +30,8 @@
   prophets: the replica's prophet-lattice duels, TRAINING_LOG 12:50; ...a3d577102), **h67** (PIONEERS_TEAM 4: a lone
   castle keeps 4 pioneers in flight; no-op v6i, symcheck, then gate vs h50 on 20 one-castle cells, ...a3d57711;
   TRAINING_LOG 10:15), **h65** (ESCORT 2, ...a3d57716, after its
-  no-op/symcheck job ...a3d577158) gate vs h50; **h66** (stack: v6 + ENDGAME_FUEL 900 + CHAIN_ROUND 150, symcheck
-  then gate vs h50, ...a3d57717; TRAINING_LOG 09:55); the **anti-chain panel** (...a3d5773-4: h54v6 and h56v6 each
+  no-op/symcheck job ...a3d577158) gate vs h50; **h75** (stack: v6 + ENDGAME_FUEL 900 + h72's chain settings,
+  replacing h66 at 15:02; symcheck then gate vs h50, ...a3d57717); the **anti-chain panel** (...a3d5773-4: h54v6 and h56v6 each
   vs h72, out/panel_chain72_*; the h50 cell is h72's gate, so ...a3d5772 was dropped at 14:41); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775); h55's extension vs h35 (...a3d585) and h24v5's
   (...a3d597); then the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50): h51v6's delivery
   (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6

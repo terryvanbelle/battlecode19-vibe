@@ -13,7 +13,7 @@ export function churchTurn(B) {
         const m = dec(r.signal); if (m.type === SIG.ROUND) B.birthRound = m.v;
       }
     }
-    if (CFG.CHAIN_ROUND) { const t = heardChain(w); if (t) { chainStart(B, t); learnRound(B); st.chainBorn = true; } }
+    if (CFG.CHAIN_ROUND) { const t = heardChain(w); if (t) { chainStart(B, t); learnRound(B); } }
     if (B.birthRound) B.round = B.birthRound + me.turn - 1;
     st.ready = true;
   }

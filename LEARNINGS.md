@@ -114,9 +114,10 @@
    94 at round 250 of 407-3). No shooter can stop a line while it is being built; only units already beside the
    castle, or the bank, can answer it. Census: scratch chains.js over replica matches 199-407. (2026-10-22)
 23. **A new birth path needs every fact the old ones hand a newborn; trace the spender by id before naming a cause.**
-   Our robots learn the round from their builder (a castle's turn count, a pioneer's SIG.ROUND radio). A church
-   built inside a one-round chain line hears only SIG.CHAIN, so it never knew the round, and every round-gated rule
-   silently read "before round X": on seed 799 one such church spent the line's bank on 136 units (h72, TRAINING_LOG
-   2026-10-22 14:36). The first reading (a threat-response grinder) came from build counts by kind; listing builds by
-   builder id found the church in one query. When a change adds a way to be born, list what a newborn learns on its
-   first turn on each path and unit-test the new one. (2026-10-22)
+   Our robots learn the round from their builder's radio. A newborn acts after every robot already in the round (the
+   engine appends it), so an enemy can kill the builder in between: on seed 799 a chainer was shot before its first
+   church acted, the church heard nothing, never knew the round, and every round-gated rule read "before round X":
+   it spent the line's bank on 136 units (h72, h74; TRAINING_LOG 2026-10-22 15:02). Two readings were wrong first (a
+   threat-response grinder from build counts by kind; then "a line church hears only SIG.CHAIN"); the event order of
+   the one round (build, kill, newborn's turn) settled it. When a change adds a way to be born, list what a newborn
+   learns on its first turn on each path, including a dead builder, and unit-test it. (2026-10-22)

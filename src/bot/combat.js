@@ -9,6 +9,13 @@ export const PRIORITY = [2, 1, 3, 5, 6, 6];
 // r2 within which an enemy of this type can hit a tile next turn (attack range grown by one move); 0 = harmless.
 export const THREAT_R2 = [64, 0, 0, 49, 64, 36];
 
+// Whether enemy e can damage a robot at (x, y) this turn without moving (a preacher by its splash, from r2 26).
+export function canHit(e, x, y) {
+  const r = d2(e.x, e.y, x, y);
+  return e.unit === CASTLE ? r <= 64 : e.unit === PROPHET ? r >= 16 && r <= 64 : e.unit === CRUSADER ? r <= 16 :
+    e.unit === PREACHER ? r <= 26 : false;
+}
+
 export function isAttacker(u) { return u === CASTLE || u === CRUSADER || u === PROPHET || u === PREACHER; }
 
 // CFG.CHURCH_FIRST_R2 = R: an enemy church within r2 R of the home structure h (a church-chain line; a structure
