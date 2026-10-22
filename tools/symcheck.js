@@ -83,11 +83,13 @@ async function check(code, seed, rounds) {
     const n = g.map.length, key = r => { const [x, y] = r.team === 0 ? [r.x, r.y] : mir(r.x, r.y); return y * n + x; };
     const order = actors.map((r, i) => i).sort((a, b) => key(actors[a]) - key(actors[b]) || actors[a].team - actors[b].team);
     const errs = [];
+    const pre = actors.map(r => [r.x, r.y]), spent = [];
     if (!firstAttack && acts.some(a => a && a.action === 'attack')) firstAttack = round;
     order.forEach(i => { const r = actors[i];
       if (!g.robots.includes(r)) return; // killed earlier this round
-      const rec = new ActionRecord(g, r);
+      const rec = new ActionRecord(g, r), k0 = g.karbonite.slice(), f0 = g.fuel.slice();
       try { g.processAction(r, acts[i], 0, rec); rec.enact(g, r); } catch (e) { errs[i] = String(e); /* invalid: does nothing */ }
+      spent[i] = `K${g.karbonite[r.team] - k0[r.team]} F${g.fuel[r.team] - f0[r.team]}` + (g.karbonite[1 - r.team] !== k0[1 - r.team] || g.fuel[1 - r.team] !== f0[1 - r.team] ? ' +other' : '');
     });
     ensure();
     const d = diff(g, mir);
@@ -95,7 +97,18 @@ async function check(code, seed, rounds) {
       const st = ` [stores K${g.karbonite[0]}/${g.karbonite[1]} F${g.fuel[0]}/${g.fuel[1]}]`;
       const ok = d.startsWith('CONTEST') ? 'contest' : (firstAttack && firstAttack <= round && /health|karbonite|fuel|no (blue|red) twin|robot count/.test(d)) ? 'combat' : false;
       const ids = (d.match(/#(\d+)/g) || []).map(t => +t.slice(1));
-      const detail = {}; for (const id of ids) { const i = actors.findIndex(r => r.id === id); if (i >= 0) detail[id] = { act: acts[i] && { ...acts[i], logs: undefined }, logs: acts[i] && acts[i].logs, err: errs[i] }; }
+      // Stores only: the first twin pair (by the start-of-round tiles) whose actions spent differently this round.
+      if (!ids.length) for (const i of order) {
+        if (actors[i].team !== 0) continue;
+        const [mx, my] = mir(pre[i][0], pre[i][1]), j = actors.findIndex((q, k) => q.team === 1 && pre[k][0] === mx && pre[k][1] === my);
+        const sig = k => { const a = acts[k]; if (k < 0) return 'none';
+          // The action's offset in red's frame: blue's mirrored back about its own start tile.
+          let d = a && a.dx !== undefined ? [a.dx, a.dy] : null;
+          if (d && actors[k].team === 1) { const [px, py] = mir(pre[k][0], pre[k][1]), [qx, qy] = mir(pre[k][0] + d[0], pre[k][1] + d[1]); d = [qx - px, qy - py]; }
+          return [a ? a.action : '-', d, a ? a.signal_radius : 0, errs[k] ? 'err' : 'ok', g.robots.includes(actors[k]), spent[k] || 'skipped'].join(' '); };
+        if (sig(i) !== sig(j)) { ids.push(actors[i].id); if (j >= 0) ids.push(actors[j].id); break; }
+      }
+      const detail = {}; for (const id of ids) { const i = actors.findIndex(r => r.id === id); if (i >= 0) detail[id] = { unit: actors[i].unit, at: pre[i], spent: spent[i], act: acts[i] && { ...acts[i], logs: undefined }, logs: acts[i] && acts[i].logs, err: errs[i] }; }
       // Both twins aimed at the same tile (a build or move onto the mirror axis): the engine's order decides.
       const occErr = Object.values(detail).filter(v => /occupied/i.test(v.err || '')).length === 1;
       return { seed, ok: ok === false && occErr ? 'contest' : ok, round, why: d + st, firstAttack, detail };
