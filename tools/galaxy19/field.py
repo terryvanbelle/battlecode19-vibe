@@ -12,6 +12,7 @@ is not handled here: tools/galaxy19/contest19.py submits and plays for it.
                                                        the site yet, smoke-tested ones first (smoke_tier). Ladder games
                                                        are the smoke test of the rest.
   python3 tools/galaxy19/field.py status               one line per team: rating, latest submission status
+  python3 tools/galaxy19/field.py queue                the replica queue: matches waiting (NEW/QUE/TRY), by status, running
   python3 tools/galaxy19/field.py activity [--once] [--poll 60] [--low 2]
         spare-cycle play (bc19-galaxy-activity.service): while fewer than --low matches wait in the queue, a random
         field team challenges a team near its rating: one of the 3 active teams rated closest at or above it, as a
@@ -191,6 +192,28 @@ def queue_backlog(c, pages=5):
     return n
 
 
+def queue_census(matches):
+    """{status: n}, waiting (NEW/QUE/TRY), waiting ranked, and the (id, teams) of matches running or retrying."""
+    by = {}
+    for m in matches:
+        by[m['status']] = by.get(m['status'], 0) + 1
+    waiting = [m for m in matches if m['status'] in cl.WAITING]
+    live = [(m['id'], m['status'], [p['teamname'] for p in m['participants']])
+            for m in matches if m['status'] in ('RUN', 'TRY')]
+    return {'by_status': by, 'waiting': len(waiting), 'ranked': sum(1 for m in waiting if m.get('is_ranked')),
+            'live': sorted(live)}
+
+
+def all_matches(c):
+    ms, page = [], 1
+    while True:
+        r = c.request('GET', f'/api/compete/{c.episode}/match/?page={page}')
+        ms += r.get('results', [])
+        if not r.get('next'):
+            return ms
+        page += 1
+
+
 def pick_challenge(ladder, ids, rnd, band=3):
     """(challenger name, opponent team dict, ranked) or None. ids: {name: team id} of the teams that may challenge
     now. The challenger is uniform over them; the opponent is one of the `band` active teams rated closest at or above
@@ -311,6 +334,7 @@ def main(argv=None):
     sub.add_parser('plan')
     p = sub.add_parser('seed'); p.add_argument('--only'); p.add_argument('--next', type=int)
     sub.add_parser('status')
+    sub.add_parser('queue')
     p = sub.add_parser('activity'); p.add_argument('--once', action='store_true')
     p.add_argument('--poll', type=int, default=60); p.add_argument('--low', type=int, default=2)
     p = sub.add_parser('boost'); p.add_argument('--teams', required=True); p.add_argument('--n', type=int, default=5)
@@ -323,6 +347,12 @@ def main(argv=None):
         print(f'{len(rows)} entrants ({sum(1 for r in rows if r["path"])} uploadable)')
         return 0
     c = cl.Client(a.site)
+    if a.cmd == 'queue':
+        q = queue_census(all_matches(c))
+        print(f"waiting {q['waiting']} (ranked {q['ranked']}); by status {q['by_status']}")
+        for mid, st, teams in q['live']:
+            print(f'  {mid} {st} {" vs ".join(teams)}')
+        return 0
     acc = cl.load_accounts()
     if a.cmd == 'seed':
         rows = entrants(a.only)

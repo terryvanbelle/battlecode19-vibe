@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 06:15 PDT)
+## State (2026-10-22 07:55 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -17,16 +17,18 @@
   that decides which side wins self-play; delivery PASSED 3 of 3 at 03:55, 8-0, castles lost 1 vs 12): block 1
   (...a3d56) read 05:08 D 3 of 20 cells (+2 -1, t 0.58, 17 byte-identical), so the chains gate (...a3d57) took its
   h55-vs-h35 branch (h55's delivery PASSED 3 of 3 at 04:21): block 1 read 05:45 D 11 (+6 -5, t 0.30). Now, in
-  order: h24v5's gate (...a3d575, running since 05:40; moved up 05:45), h50's extension (...a3d576, the stack below),
-  h54's extension blocks ...a3d58, then h55's (...a3d585, seed0 6000), then h54's ...a3d59, a3d595 (seed0 6000,
-  7000, 9000, appended to out/h54_h35.jsonl; first look at the first job boundary with D >= 12, rules in
-  TRAINING_LOG 05:08; h55's the same, 05:45). The extension of h50's gate (stack
+  order: h50's extension (...a3d576, the stack below, running), h8v5's gate (...a3d577: its delivery PASSED 3 of 3
+  at 07:55), h54's extension blocks ...a3d58, then h55's (...a3d585, seed0 6000), then h54's ...a3d59, a3d595
+  (seed0 6000, 7000, 9000, appended to out/h54_h35.jsonl; first look at the first job boundary with D >= 12, rules in
+  TRAINING_LOG 05:08; h55's the same, 05:45), then h24v5's extension (...a3d597: look 1 at 07:55 was D 13, t 0.83,
+  no decision; next look D >= 24). **Every gate job runs at par 2 while the replica queue is long** (owner, PROMPTS
+  18; back to par 4 when fewer than 30 replica matches wait). The extension of h50's gate (stack
   PIONEER_RESERVE 2 + MARCH_MASK 8, LEARNINGS 18: 27-13, t 1.70 at 40 games, inconclusive; 20 more cells at seed0
   6000, ...a3d576, out/h50x_h35.jsonl, read pooled with out/h50_h35.jsonl), h51's delivery (CASTLE_POST 0.5: half the church-born army guards the nearest
   castle; ...a3e; pre-registered TRAINING_LOG 02:33), h43's gate vs h35 (castle recall RECALL 30; delivery passed 3 of
   3 at 01:18, but h43 lost 4 of the 5 games in which it recalled; ...a43), then the old candidates rebased onto v5 (v5 + their own
   switch, 40 games vs h35): h15v5 (MIL_ROTATION null: no crusaders; moved first at 01:15, job ...a5, as crusaders
-  died unfired in h41's games and lost h42's karbonite-bound ones), h20v5 (DEF_RESERVE_K 30), h8v5,
+  died unfired in h41's games and lost h42's karbonite-bound ones), h20v5 (DEF_RESERVE_K 30),
   h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Held in ~/jobq/hold
   until h50's pooled gate reads: the single gates h39 (PIONEER_RESERVE 2, ...a4) and h44 (MARCH_MASK 8, ...a44),
   needed for attribution only if the stack fails. Gates of passed deliveries go in after h43's (job names
@@ -86,15 +88,15 @@
   bundle still applies (LEARNINGS 17: bot1v43 lost 35 robots at creation in scrim 200's seed 520, the game we won). vibe19 (v3) leads at 1704, 46-2 in
   games; scrims (matches 199-202) challenge StoneT2000 (botfinalsafe, bot1v43) and IvanGeffner (bot6b, eigthbot),
   which had not played (`contest19.py scrim --vs NAME,...`). 199 lost 0-3 and 200 lost 1-2 (TRAINING_LOG 20:23).
-  Match 201 (vs bot6b) is in TRY: game 2 (seed 616, 57x57) passed saturn's per-game wall limit GALAXY_GAME_TIMEOUT
-  1800 s (exit 124, 03:52 UTC); match 202 (vs eigthbot) did the same at 04:09 UTC and both retry, each holding a
-  replica execute slot for ~30 min per attempt. Raising the limit (env file + saturn restart) was blocked by the
-  auto-mode classifier (Modify Shared Resources): asked the owner 21:32 PDT, waiting.
-  Matches 201 and 202 ended ERR (game time limit; no replays). Replica queue at 02:25 PDT: 207 waiting, 203 of them
-  ranked; 178 were created in one burst at ~04:00 UTC (galaxy's daily autoscrim, ~2 per team), and saturn plays
-  ~7 matches an hour on 2 slots, so the daily autoscrim alone about fills the replica. Scrims 203-206 wait behind
-  ~25 older matches (FIFO). Owner question pending with the time limit: thin the autoscrim (episode schedule) or
-  leave it. Scrims 203 (vs botfinalsafe) and 204 (vs
+  Matches 201 and 202 ended ERR at the old 1800 s game limit (no replays). **Replica throughput (owner, PROMPTS
+  15-20; TRAINING_LOG 07:55):** saturn runs 4 execute slots with GALAXY_GAME_TIMEOUT 5400 s since 14:36 UTC; the
+  autoscrim is held while 30+ matches wait and fires at most once per 24 h (relay.py fire-jobs). Queue at 07:28 PDT:
+  208 waiting. **Watch the queue every check-in** (`python3 tools/galaxy19/field.py queue`: matches NEW/QUE/TRY,
+  and what runs); while it is long, clearing it comes before local work (gates at par 2). The seven boosted field
+  bots (StoneT2000 x2, uvafan, awesomelemonade, nthistle, jamesrayman HCN-bot, m-schier wololo; requests 158-178)
+  were bumped to the front. Dropping Nydroam.BatteredCod (slowest bot; owner allowed it) was refused by the
+  auto-mode classifier; not done. After the queue drains: request IvanGeffner's two bots against vibe19 and the
+  boosted set (their games now fit the limit). Scrims 203 (vs botfinalsafe) and 204 (vs
   bot1v43), requested 22:04 PDT, play v4; 205/206 (v5 vs botfinalsafe, bot1v43) are queued; fetch and compare with
   199/200. Replica 200-3 (2965, lost): three karbonite depots a side, K mined alike, our 132 prophets lost 131
   walking into their held line (TRAINING_LOG, h45).

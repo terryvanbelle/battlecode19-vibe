@@ -191,6 +191,15 @@ class Field(unittest.TestCase):
         self.assertEqual(field.boost_opponents(ladder, 1, 3), [])
         self.assertEqual(field.boost_opponents(ladder, 99, 3), [])
 
+    def test_queue_census(self):
+        m = lambda i, st, ranked=True: {'id': i, 'status': st, 'is_ranked': ranked,  # noqa: E731
+                                        'participants': [{'teamname': f'a{i}'}, {'teamname': f'b{i}'}]}
+        q = field.queue_census([m(1, 'OK!'), m(2, 'QUE'), m(3, 'QUE', False), m(4, 'NEW'), m(5, 'TRY'), m(6, 'RUN'),
+                                m(7, 'ERR')])
+        self.assertEqual(q['by_status'], {'OK!': 1, 'QUE': 2, 'NEW': 1, 'TRY': 1, 'RUN': 1, 'ERR': 1})
+        self.assertEqual((q['waiting'], q['ranked']), (4, 3))
+        self.assertEqual(q['live'], [(5, 'TRY', ['a5', 'b5']), (6, 'RUN', ['a6', 'b6'])])
+
     def test_trickle_order(self):
         with tempfile.TemporaryDirectory() as bench:
             g = lambda n, side, reason='castles', init=0: json.dumps(  # noqa: E731

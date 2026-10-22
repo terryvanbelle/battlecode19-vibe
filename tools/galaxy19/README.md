@@ -27,8 +27,8 @@ venv, the built frontend, and the shared Caddy). How the owner opens it is in `A
 
 | file | role |
 |---|---|
-| `saturn.py` | saturn stand-in: leases compile/execute messages from the spool, with 1 compile slot and 2 execute slots (`GALAXY_EXECUTE_SLOTS`; hard cap 4), each game's V8 heap capped at 2 GB. For each match it runs one game per map, alternating sides, and writes a match archive (ZIP of `game-NN-seed<n>.bc19` plus `match.json` with per-team timeouts, frozen, slow turns and ms). It reports to galaxy through the relay. |
-| `relay.py` | relay between saturn and siarnaq, plus the Cloud Tasks / Scheduler stand-in (`fire-jobs`, run each minute by `bc19-galaxy-scheduler.timer`). |
+| `saturn.py` | saturn stand-in: leases compile/execute messages from the spool, with 1 compile slot and 4 execute slots (`GALAXY_EXECUTE_SLOTS`; hard cap 4; 2 until 2026-10-22), a wall limit per game of `GALAXY_GAME_TIMEOUT` 5400 s (1800 s until 2026-10-22: IvanGeffner's and Nydroam's games ran over it and retried 6 times), each game's V8 heap capped at 2 GB. For each match it runs one game per map, alternating sides, and writes a match archive (ZIP of `game-NN-seed<n>.bc19` plus `match.json` with per-team timeouts, frozen, slow turns and ms). It reports to galaxy through the relay. |
+| `relay.py` | relay between saturn and siarnaq, plus the Cloud Tasks / Scheduler stand-in (`fire-jobs`, run each minute by `bc19-galaxy-scheduler.timer`). Replica-only throttle: a due autoscrim is held while `GALAXY_SCHED_MAX_WAITING` (30) matches or more wait in the execute queue, or until `GALAXY_SCHED_MIN_HOURS` (24) have passed since it last fired. |
 | `bootstrap.py` | episode `bc19` (autoscrim `0 */8 * * *` UTC, ranked on, 20 ranked / 40 unranked requests per hour), the 40 maps of `maps.txt`, and the `owner` superuser. |
 | `maps.py`, `maps.txt` | maps are `seed-<n>`: 40 seeds stratified by size, castle count and symmetry from `maps/corpus.tsv`. |
 | `client.py` | API client library and CLI (accounts in `~/.bc19-galaxy/accounts.json`, site in `~/.bc19-galaxy/site`). |
@@ -41,7 +41,7 @@ venv, the built frontend, and the shared Caddy). How the owner opens it is in `A
 
 ```
 tools/galaxy19/deploy/deploy.sh                 # full (re)deploy; deploy.sh status | app | viewer | frontend | start | stop
-tools/galaxy19/deploy/deploy.sh scheduler on    # automatic ranked rounds (autoscrim every 8 h) + task firing
+tools/galaxy19/deploy/deploy.sh scheduler on    # automatic ranked rounds (autoscrim, at most daily, held while 30+ wait) + task firing
 tools/galaxy19/deploy/deploy.sh activity on     # spare-cycle challenges between field teams
 
 python3 tools/galaxy19/contest19.py register     # team vibe19 (credentials in ~/.bc19-galaxy-team, 600)
@@ -54,6 +54,11 @@ python3 tools/galaxy19/contest19.py results
 
 # our matches first (the field's matches against each other get the spare cycles); on the VM, as root
 sudo python3 -I tools/galaxy19/spool_bump.py --match 199,200 [--team vibe19] [--dry-run]
+
+# dropping a team from the ladder (a bot whose games hold the slots): its waiting matches go to dead/, are marked
+# CAN (cancelled) in siarnaq, and the team becomes inactive (status X: no autoscrim, no ranking)
+sudo python3 -I /opt/bc19-galaxy/galaxy19/spool_bump.py --team NAME --drop
+sudo bc19-galaxy-manage shell -c '...Match.objects.filter(pk__in=IDS).update(status="CAN"); team.status = "X"...'
 
 # field (on the VM, where the bundles are rsynced; re-runnable)
 GALAXY19_CONNECT=127.0.0.1 GALAXY19_REPO=~/projects/vibe/2019 python3 ~/bc19-galaxy-stage/tools/galaxy19/field.py seed

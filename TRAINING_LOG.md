@@ -1430,3 +1430,28 @@
   the corridor behind for 220-271 turns (round 250 board). A sealed producer, a basics failure (TRAINING_ALGORITHM
   1.11). Census of stall causes over h50/h54/h55's 120 gate replays running (VM out/stallwhy_census.txt) before
   any fix: jam (no foe, home <= 3) against threat stalls.
+
+## 2026-10-22 07:55 — replica throughput (owner PROMPTS 15-20); h8v5 delivery PASSED 3 of 3; h24v5 look 1 no decision
+- Replica queue at 07:28 PDT: 208 waiting (204 ranked), 2 running; 2 execute slots played ~5-7 matches an hour.
+  Slot time by team from saturn's log (302 runs, 41.6 slot-hours since 2026-10-21 16:21 PDT; a match counts for both
+  teams): Nydroam.BatteredCod 9.9 h (18 runs, 14 nacked, 4 finished, every finished match 38-53 min),
+  IvanGeffner bot6b 9.1 h and eigthbot 8.5 h (mostly retries: 201, 202 vs vibe19 failed 6 times each at ~40-57 min
+  per try), 18dcb01.Battlecode19-robot2 4.1 h (finished matches 1-48 min). Median finished match 190 s, mean 413 s.
+  Most of the slow bots' slot time was retries of games over the 1800 s per-game limit.
+- Applied (owner's choices, PROMPTS 18): saturn 4 execute slots (CPUQuota 500%), GALAXY_GAME_TIMEOUT 5400 s,
+  autoscrim held while 30+ matches wait and at most once per 24 h (relay.py fire-jobs; GALAXY_SCHED_MAX_WAITING 30,
+  GALAXY_SCHED_MIN_HOURS 24); saturn restarted 14:36 UTC (matches 205, 206 interrupted and requeued; 190, IvanGeffner
+  bot6b vs CometsTech, retries under the new limit). Pending gate jobs cut from par 4 to par 2 (the running h50x
+  extension keeps par 4 until it ends).
+- Boost (PROMPTS 15-16): 21 ranked requests 13:28 UTC (ids 158-178) for StoneT2000 botfinalsafe and bot1v43, uvafan,
+  awesomelemonade, nthistle, jamesrayman HCN-bot and m-schier wololo, each vs vibe19 and two rated teams; their 52
+  queued matches moved to the front (spool_bump).
+- Dropping Nydroam (owner allowed it, PROMPTS 20): spool_bump --drop plus a siarnaq update (its 4 waiting matches
+  CAN, team inactive) was refused by the auto-mode classifier (Modify Shared Resources); not done. Under the 5400 s
+  limit its matches finish (one try each, ~40-55 min), and autoscrim at most daily bounds its cost.
+- h8v5 (ENDGAME_FUEL 900) delivery vs h35 (out/dlv_h8v5_h35.jsonl, 2202 / 2296 / 499 / 2633 both sides; latebuild.js
+  900): (1) preachers built in rounds 900-1000 h8v5 377 vs h35 9 (bar 3x) PASS; (2) final health over games reaching
+  round 1000 h8v5 32,710 vs 24,040 = 136% (bar 120%) PASS; (3) wins 7 of 8 (bar 5) PASS (lost 499 as blue on
+  castles). PASSED 3 of 3: its gate (40 games vs h35, seed0 5000) moved up to run next (job ...a3d577, par 2).
+- h24v5 (ECON_UNTIL 100) gate, 20 cells: +8 -5, D 13, t 0.83: no decision at the D 12 look. 20 more cells (seed0
+  6000, appended to out/h24v5_h35.jsonl) queued as ...a3d597, after the h54 / h55 extensions; next look at D >= 24.
