@@ -64,7 +64,18 @@ export function castleTurn(B) {
   if (CFG.RECALL) callRecall(B);
   callAttack(B);
   st.pioneerDue = pioneerDue(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
-  return structTurn(B, allIds, () => pioneer(B));
+  const act = structTurn(B, allIds, () => pioneer(B));
+  if (CFG.CASTLE_POST) callPost(B);   // after the build, so a newborn's radio comes first
+  return act;
+}
+
+// CFG.CASTLE_POST: radio this castle's position far (FAR.POST, 60 tiles) every CASTLE_POST_EVERY rounds when the turn's
+// radio is free; military units born at churches that drew a castle post hold the lattice of the nearest castle heard.
+function callPost(B) {
+  const w = B.w, st = B.st, me = w.me;
+  if (w.sentR2 || B.round - (st.postAt || -999) < CFG.CASTLE_POST_EVERY || w.fuel < Math.ceil(Math.sqrt(FAR.POST)) + 50) return;
+  st.postAt = B.round;
+  w.signal(encXY(0, me.x, me.y), FAR.POST);
 }
 
 // Remote clusters (no depot served by any of our castles) that this castle should church, nearest first.

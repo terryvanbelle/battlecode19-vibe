@@ -7,7 +7,7 @@ import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
-import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot } from '../src/bot/military.js';
+import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost } from '../src/bot/military.js';
 import { callDue, castleTurn, nextPioneer, pioneerDue } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
@@ -402,6 +402,73 @@ test('castle: RECALL radios its position when attackers outnumber half its defen
     assert.strictEqual(turn(25).sent.length, 0);   // within 10 rounds
     assert.strictEqual(turn(30).sent.length, 1);
   } finally { CFG.RECALL = saved; }
+});
+
+test('castle: CASTLE_POST radios its position far every CASTLE_POST_EVERY rounds when the radio is free', () => {
+  const saved = [CFG.CASTLE_POST, CFG.CASTLE_POST_EVERY];
+  try {
+    const g = new Game(3, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    const turn = t => {
+      castle.turn = t; const w = worldFor(g, castle), sent = [];
+      w.api.signal = (v, r2) => sent.push([v, r2]);
+      w.karbonite = 0;   // no builds: their birth radio would take the turn's signal first
+      B.w = w; B.api = w.api; castleTurn(B);
+      return { sent: sent.filter(([, r2]) => r2 === FAR.POST), me: w.me };
+    };
+    CFG.CASTLE_POST = 0;
+    for (let t = 1; t <= 4; t++) assert.strictEqual(turn(t).sent.length, 0);
+    CFG.CASTLE_POST = 0.5; CFG.CASTLE_POST_EVERY = 20;
+    const rounds = [];
+    for (let t = 5; t <= 60; t++) { const a = turn(t); if (a.sent.length) { rounds.push(t); assert.deepStrictEqual(a.sent, [[encXY(0, a.me.x, a.me.y), FAR.POST]]); } }
+    assert.deepStrictEqual(rounds, [5, 25, 45]);
+    assert.deepStrictEqual(decFarRobot({ signal: encXY(0, 3, 4), signal_radius: FAR.POST }), { type: SIG.POST, x: 3, y: 4, extra: 0 });
+  } finally { [CFG.CASTLE_POST, CFG.CASTLE_POST_EVERY] = saved; }
+});
+
+test('military: CASTLE_POST: a church-born unit that drew a post takes the nearest castle heard as home; off, it keeps its church', () => {
+  // the rule: nearest to the birth church, ties by canonical order; a castle seen gone is replaced by the next heard
+  const B = { w: { n: 64 }, st: { home0: { x: 10, y: 10 }, home: { x: 10, y: 10 }, post: null, lt: [1, 1] } };
+  hearPost(B, 10, 20); assert.deepStrictEqual(B.st.home, { x: 10, y: 20 }); assert.strictEqual(B.st.lt, null);
+  hearPost(B, 10, 15); assert.deepStrictEqual(B.st.home, { x: 10, y: 15 });
+  hearPost(B, 10, 20); assert.deepStrictEqual(B.st.home, { x: 10, y: 15 });
+  hearPost(B, 10, 5); assert.deepStrictEqual(B.st.home, { x: 10, y: 5 });    // tie at r2 25: the earlier in canonical order
+  hearPost(B, 10, 15); assert.deepStrictEqual(B.st.home, { x: 10, y: 5 });
+  B.st.post = null; hearPost(B, 10, 20); assert.deepStrictEqual(B.st.home, { x: 10, y: 20 });
+
+  const saved = CFG.CASTLE_POST;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let ch = null, at = null;
+    for (let r = 14; r >= 9 && !at; r--) for (let dy = -r; dy <= r && !at; dy++) for (let dx = -r; dx <= r && !at; dx++) {
+      const x = castle.x + dx, y = castle.y + dy;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) !== r || !free(x, y)) continue;
+      for (const [ax, ay] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (!at && free(x + ax, y + ay)) { ch = [x, y]; at = [x + ax, y + ay]; }
+    }
+    assert.ok(at);
+    const church = { id: 4100, team: 0, unit: S.CHURCH, x: ch[0], y: ch[1], turn: 50, health: 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    g.robots.push(church);
+    const cw = worldFor(g, castle);
+    castle.signal = encXY(0, cw.me.x, cw.me.y); castle.signal_radius = FAR.POST;
+    const run = (on) => {
+      CFG.CASTLE_POST = on;
+      const pro = { id: 4101, team: 0, unit: S.PROPHET, x: at[0], y: at[1], turn: 1, health: 20, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      g.robots.push(pro);
+      try {
+        const w = worldFor(g, pro), B = { api: w.api, w, round: 60, st: {}, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[S.PROPHET].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        return { a: militaryTurn(B), B, w };
+      } finally { g.robots.pop(); }
+    };
+    const on = run(1), off = run(0);
+    assert.deepStrictEqual(on.B.st.home, { x: cw.me.x, y: cw.me.y });
+    assert.ok(on.a && on.a.action === 'move' && on.B.st.lt && king(on.B.st.lt[0], on.B.st.lt[1], cw.me.x, cw.me.y) <= CFG.LATTICE_R);
+    assert.notDeepStrictEqual(off.B.st.home, { x: cw.me.x, y: cw.me.y });
+    assert.strictEqual(off.B.st.toCastle, 0);
+  } finally { CFG.CASTLE_POST = saved; }
 });
 
 test('military: RECALL sends a unit that hears it toward the castle, holding 2-3 king steps out, and nothing changes when off', () => {

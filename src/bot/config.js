@@ -128,6 +128,11 @@ export const CFG = {
                              // recall (FAR.RECALL, 50 tiles, 51 fuel) at most every 10 rounds; units that hear it drop
                              // attack orders and go to 2-3 king steps from that castle for this many rounds (gate seed
                              // 2855: 89 of h35's 92 units guarded far churches while 8 attackers killed its lone castle)
+  CASTLE_POST: 0,            // >0: castles radio their position (FAR.POST, 61 fuel) every CASTLE_POST_EVERY rounds; a
+                             // military unit born at a church holds, with this probability, the lattice of the
+                             // nearest castle it hears instead (h43 delivery: every castle that fell had 0-2 of its
+                             // own units within 10 tiles; 2299 at round 300: 3 near the castle, 67 near churches)
+  CASTLE_POST_EVERY: 20,
   // endgame
   ENDGAME_MARGIN: 6,
   ENDGAME_FUEL: 0,           // >0: from this round all fuel goes into preachers (health breaks round-1000 ties; a

@@ -10,8 +10,9 @@ import { isAttacker, pickTarget, preacherTarget, retreatStep, THREAT_R2 } from '
 function init(B) {
   const w = B.w, me = w.me, st = B.st;
   st.home = null;
+  let church = false;
   for (const r of w.friends) if ((r.unit === CASTLE || r.unit === CHURCH) && king(r.x, r.y, me.x, me.y) <= 1) {
-    st.home = { x: r.x, y: r.y };
+    st.home = { x: r.x, y: r.y }; church = r.unit === CHURCH;
     if (r.unit === CASTLE) B.birthRound = r.turn - me.turn + 1;
     if (r.signal > 0 && me.turn === 1) { const m = dec(r.signal); if (m.type === SIG.ROUND) B.birthRound = m.v; }
   }
@@ -26,6 +27,8 @@ function init(B) {
   // Reseed with the birth round: units born on the same tile must not share one random stream.
   B.rnd = rng(((B.birthRound || 0) * 4096 + me.y * 64 + me.x) * 8 + me.unit); B.nav.rnd = B.rnd;
   st.guard = B.rnd() < CFG.HOME_GUARD_FRAC;   // stays home through general attacks (until the last rounds)
+  st.toCastle = CFG.CASTLE_POST && church && B.rnd() < CFG.CASTLE_POST;   // CFG.CASTLE_POST: guard a castle instead
+  st.home0 = st.home; st.post = null;
   if (CFG.RUSH) st.target = w.mirror(st.home.x, st.home.y);   // sparring mode: march at once
   st.ready = true;
 }
@@ -38,6 +41,7 @@ function listen(B) {
     if (r.id === me.id || (r.seen && r.team !== me.team)) continue;
     const m = decFarRobot(r);
     if (m && m.type === SIG.RECALL && CFG.RECALL && w.passable(m.x, m.y)) { st.recall = { x: m.x, y: m.y, until: me.turn + CFG.RECALL }; st.target = null; continue; }
+    if (m && m.type === SIG.POST) { if (st.toCastle && w.passable(m.x, m.y)) hearPost(B, m.x, m.y); continue; }
     if (m && m.type === SIG.ENEMY) { if (CFG.SPOT && (CFG.SPOT_MASK >> me.unit & 1)) hearSpot(B, m.x, m.y); continue; }
     if (CFG.RECALL && st.recall && me.turn <= st.recall.until) continue;   // recalled: attack orders wait
     if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || ((st.guard || !(CFG.MARCH_MASK >> me.unit & 1)) && B.round < 900)) continue;
@@ -45,6 +49,8 @@ function listen(B) {
     if (i >= 0) { st.known[i] = [m.x, m.y]; if (st.dead.has(i)) continue; }
     st.target = [m.x, m.y]; st.tIdx = i;
   }
+  // CFG.CASTLE_POST: a castle seen gone is forgotten; the next castle heard becomes home.
+  if (st.post && w.occ(st.post.x, st.post.y) === 0) st.post = null;
   // Drop a target seen to be gone.
   if (st.target) {
     const [x, y] = st.target, id = w.occ(x, y);
@@ -70,6 +76,17 @@ function nextTarget(B) {
     if (d < bd) { bd = d; st.target = p; st.tIdx = i; }
   });
   if (!st.target) st.waitUntil = B.round + CFG.ATTACK_WAIT;
+}
+
+// CFG.CASTLE_POST: the castle nearest the unit's birth church (ties: canonical order) becomes home; its lattice is held.
+function hearPost(B, x, y) {
+  const st = B.st, h = st.home0, n = B.w.n, d = d2(x, y, h.x, h.y);
+  if (st.post && (st.post.x !== x || st.post.y !== y)) {
+    const pd = d2(st.post.x, st.post.y, h.x, h.y);
+    if (pd < d || (pd === d && st.post.y * n + st.post.x < y * n + x)) return;
+  }
+  if (!st.post || st.home.x !== x || st.home.y !== y) { st.home = { x, y }; st.lt = null; }
+  st.post = { x, y };
 }
 
 // CFG.SPOT. The nearest spotted enemy heard this turn (prophets radio their targets for the CFG.SPOT_MASK types).
@@ -332,4 +349,4 @@ export function militaryTurn(B) {
   const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);
   return a || (CFG.KEEP_CLEAR ? stepClear(B) : null);
 }
-export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke, holdTarget, latticeOk, edgeAvoid, spot };
+export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke, holdTarget, latticeOk, edgeAvoid, spot, hearPost };
