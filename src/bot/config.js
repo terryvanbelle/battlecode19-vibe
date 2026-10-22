@@ -92,6 +92,12 @@ export const CFG = {
   PREACHER_MIL: 2,           // ...and an enemy crusader, prophet or preacher in the splash counts this (a pilgrim or a
                              // church 1): above 2, one enemy preacher outweighs a church and a pilgrim (the same duel:
                              // the first shot has to land on the other preacher)
+  CHURCH_GUARD_D: 0,         // >0: a church within this many king steps of its own mirror image (a contested site) builds
+                             // a CHURCH_GUARD_UNIT before its first pilgrim (replica 391-1, seed 2591: uvafan's centre
+                             // church built a prophet the round it stood and held 10 of 14 depots all game; in self-play
+                             // the mirror churches stand adjacent, ours built 7 pilgrims first and one preacher killed 4
+                             // of them and the church)
+  CHURCH_GUARD_UNIT: 4,      // ...4 prophet, 5 preacher, 3 crusader
   STRIKE_R2: 0,              // >0: a structure that sees an enemy church within this r2 and no enemy attacker builds a
                              // preacher toward it first (struct.js strike; seeds 1915, 2030, 2924: mirror churches 1-5
                              // tiles apart, won by whichever side's preacher acted first)

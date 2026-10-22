@@ -388,4 +388,8 @@ test('census: pioneers, churches by round, mines; gate replay names sum by role'
   const tot = summarize([{ cand: 1, teams: T }, { cand: 0, teams: T }]);
   assert.deepStrictEqual([tot.cand.pioneers, tot.ctrl.pioneers, tot.cand.games, tot.cand.phase_mean], [3, 3, 2, 17.5]);
   assert.deepStrictEqual(Object.keys(summarize([{ cand: null, teams: T }])), ['red', 'blue']);
+  // h50 (red) vs h71 (blue, CHURCH_GUARD_D 8, preacher), seed 2591 to round 25: both church the centre at round 18;
+  // red's church builds a pilgrim first, blue's a preacher
+  const g = census(fs.readFileSync(path.join(FIX, 'guard_s2591_r25.bc19')));
+  assert.deepStrictEqual([g[0].churches, g[0].guard_first, g[1].churches, g[1].guard_first], [1, 0, 1, 1]);
 });

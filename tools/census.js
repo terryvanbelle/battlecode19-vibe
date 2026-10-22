@@ -9,6 +9,7 @@
 //   escorts      castle and church builds radioing SIG.GUARD (type 12, CFG.ESCORT)
 //   chainers     castle builds radioing SIG.CHAIN (type 10, CFG.CHAIN_ROUND); recalls: castle radios at FAR.RECALL
 //                (r2 2501, CFG.RECALL); late_preachers: preachers built from round --late (default 900, CFG.ENDGAME_FUEL)
+//   guard_first  churches whose first build is a crusader, prophet or preacher (CFG.CHURCH_GUARD_D, or a threat response)
 //   chains       rounds in which the team built >= --chain-min churches (a one-round church line, chain.js; StoneT2000's
 //                castle killer, LEARNINGS 22); chain_near: those whose nearest church stands within --chain-near king
 //                steps of a living enemy castle; chain_kills: enemy castles that died within 25 rounds after a near one
@@ -28,12 +29,12 @@ const SIG_CHURCH = 2, SIG_CHAIN = 10, SIG_GUARD = 12, FAR_RECALL = 2501;
 function newTeam(by) {
   return { castles: 0, pioneers: 0, pioneer_churches: 0, phase_sum: 0, pioneers_died: 0, stuck: 0, churches: 0,
     churches_by: Object.fromEntries(by.map(r => [r, 0])), depot_idle: 0, mines: 0, escorts: 0, chainers: 0, recalls: 0, late_preachers: 0,
-    chains: 0, chain_churches: 0, chain_near: 0, chain_kills: 0 };
+    guard_first: 0, chains: 0, chain_churches: 0, chain_near: 0, chain_kills: 0 };
 }
 
 // One replay: [red, blue] tallies.
 function census(buf, { to = 1000, stuck = 30, by = [], late = 900, chainMin = 3, chainNear = 4 } = {}) {
-  const T = [newTeam(by), newTeam(by)], P = new Map(), lines = new Map(), falls = [];
+  const T = [newTeam(by), newTeam(by)], P = new Map(), lines = new Map(), falls = [], built = new Set();
   let last = 0;
   simulate(buf, { onStart(g) { for (const r of g.robots) if (r.unit === 0) T[r.team].castles++; },
   onTurn({ round, robot, rec, error, born, died, game }) {
@@ -51,6 +52,7 @@ function census(buf, { to = 1000, stuck = 30, by = [], late = 900, chainMin = 3,
     if (a === 3 && robot.unit === 0 && sig === SIG_CHAIN) t.chainers++;
     if (robot.unit === 0 && rec.signal_radius === FAR_RECALL) t.recalls++;
     if (a === 3 && rec.build_unit === 5 && round >= late) t.late_preachers++;
+    if (a === 3 && robot.unit === 1 && !built.has(robot.id)) { built.add(robot.id); if (rec.build_unit >= 3) t.guard_first++; }
     if (a === 3 && rec.build_unit === 1) {
       t.churches++; for (const r of by) if (round <= r) t.churches_by[r]++;
       for (const b of born) {
@@ -98,7 +100,7 @@ function add(sum, t) {
     else sum[k] = (sum[k] || 0) + t[k];
   }
   sum.games = (sum.games || 0) + 1;
-  for (const k of ['escorts', 'chainers', 'recalls', 'chain_near']) if (t[k]) sum['games_' + k] = (sum['games_' + k] || 0) + 1;
+  for (const k of ['escorts', 'chainers', 'recalls', 'guard_first', 'chain_near']) if (t[k]) sum['games_' + k] = (sum['games_' + k] || 0) + 1;
   if (t.stuck) sum.games_stuck = (sum.games_stuck || 0) + 1;
   return sum;
 }
@@ -116,7 +118,7 @@ function line(t) {
   const by = Object.entries(t.churches_by).map(([r, n]) => ` by${r} ${n}`).join('');
   return `castles ${t.castles} pioneers ${t.pioneers} (church ${t.pioneer_churches}, phase ${t.pioneer_churches ? (t.phase_sum / t.pioneer_churches).toFixed(1) : '-'}, ` +
     `died ${t.pioneers_died}, stuck ${t.stuck}) churches ${t.churches}${by} depot-idle ${t.depot_idle} mines ${t.mines} escorts ${t.escorts} chainers ${t.chainers} recalls ${t.recalls}` +
-    ` late-preachers ${t.late_preachers} chains ${t.chains} (churches ${t.chain_churches}, near ${t.chain_near}, kills ${t.chain_kills})`;
+    ` late-preachers ${t.late_preachers} guard-first ${t.guard_first} chains ${t.chains} (churches ${t.chain_churches}, near ${t.chain_near}, kills ${t.chain_kills})`;
 }
 
 module.exports = { census, candSide, summarize };
@@ -128,7 +130,7 @@ if (require.main === module) {
   const chainMin = +opt('--chain-min', '3'), chainNear = +opt('--chain-near', '4');
   const by = opt('--by', '').split(',').filter(Boolean).map(Number);
   const nc = opt('--castles', null), json = argv.includes('--json'); argv = argv.filter(a => a !== '--json');
-  if (!argv.length) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 20).join('\n')); process.exit(1); }
+  if (!argv.length) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 21).join('\n')); process.exit(1); }
   const rows = argv.map(f => ({ file: path.basename(f), cand: candSide(f), teams: census(fs.readFileSync(f), { to, stuck, by, late, chainMin, chainNear }) }))
     .filter(r => nc === null || r.teams.every(t => t.castles === +nc));
   if (!json) for (const r of rows) console.log(r.file, '| red', line(r.teams[0]), '| blue', line(r.teams[1]));

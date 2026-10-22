@@ -22,6 +22,10 @@ export function structInit(B) {
   st.nDef = 0;             // peacetime defenders built (for the preacher rotation)
   st.deaths = new Map();   // depot index -> pilgrims lost there (castles: seen through the id list)
   st.cool = new Map();     // depot index -> structure turn before which no pilgrim is sent there
+  if (me.unit === CHURCH && CFG.CHURCH_GUARD_D) {   // a contested site: guard first (CFG.CHURCH_GUARD_D)
+    const [mx, my] = w.mirror(me.x, me.y);
+    st.guardDue = Math.max(Math.abs(mx - me.x), Math.abs(my - me.y)) <= CFG.CHURCH_GUARD_D;
+  }
 }
 
 // The robot we built last turn: a friend on its first turn near the build tile.
@@ -208,6 +212,13 @@ function structAct(B, allIds, extra) {
   if (CFG.RUSH && (B.round || 0) > CFG.RUSH && w.canAfford(CRUSADER)) {
     const [ex, ey] = w.mirror(me.x, me.y);
     const b = buildToward(B, CRUSADER, ex, ey); if (b) return b.act;
+  }
+
+  // A contested church's first unit is a guard (CFG.CHURCH_GUARD_D); until the bank affords it, the economy goes on.
+  if (st.guardDue && w.canAfford(CFG.CHURCH_GUARD_UNIT, 0, 2)) {
+    const [ex, ey] = w.mirror(me.x, me.y);
+    const b = buildToward(B, CFG.CHURCH_GUARD_UNIT, ex, ey, B.round ? encNum(SIG.ROUND, B.round) : undefined);
+    if (b) { st.guardDue = false; return b.act; }
   }
 
   // 2. Endgame dump.

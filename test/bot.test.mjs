@@ -1386,6 +1386,38 @@ test('struct: STRIKE_R2: a church that sees an enemy church 4 tiles off and no a
   } finally { CFG.STRIKE_R2 = saved; }
 });
 
+test('struct: CHURCH_GUARD_D: a church near its mirror image builds the guard unit first, one far from it does not', () => {
+  const saved = [CFG.CHURCH_GUARD_D, CFG.CHURCH_GUARD_UNIT, CFG.ECON_UNTIL];
+  try {
+    CFG.ECON_UNTIL = 1000;   // no peacetime army: what a church builds first is the guard or the economy
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const sym = detectSymmetry(g.map, g.karbonite_map, g.fuel_map);
+    const gap = (x, y) => sym === 'H' ? Math.abs(2 * y - (n - 1)) : Math.abs(2 * x - (n - 1));   // king steps to the mirror
+    const pass = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x];
+    const site = want => {   // a passable tile with a free ring, away from the castles, with gap(x, y) in want
+      for (let y = 2; y < n - 2; y++) for (let x = 2; x < n - 2; x++)
+        if (pass(x, y) && want(gap(x, y)) && offsets(2).every(([dx, dy]) => pass(x + dx, y + dy)) && g.robots.every(r => king(r.x, r.y, x, y) > 6)) return [x, y];
+      return null;
+    };
+    const run = (at, d, unit = S.PROPHET) => {
+      CFG.CHURCH_GUARD_D = d; CFG.CHURCH_GUARD_UNIT = unit;
+      const church = { id: 4100, team: 0, unit: S.CHURCH, x: at[0], y: at[1], turn: 1, health: 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      const all = g.robots;
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, church.x, church.y) <= 100).concat([church]);
+      const w = worldFor(g, church); g.robots = all;
+      const B = { api: w.api, w, round: 20, birthRound: 20, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 100; w.fuel = 1000;
+      return churchTurn(B) || {};
+    };
+    const near = site(k => k <= 3), far = site(k => k >= 12);
+    assert.ok(near && far, 'sites');
+    assert.strictEqual(run(near, 8).u, S.PROPHET);
+    assert.strictEqual(run(near, 8, S.PREACHER).u, S.PREACHER);
+    assert.notStrictEqual(run(near, 0).u, S.PROPHET);   // off: the economy (or nothing) first
+    assert.notStrictEqual(run(far, 8).u, S.PROPHET);    // not contested
+  } finally { [CFG.CHURCH_GUARD_D, CFG.CHURCH_GUARD_UNIT, CFG.ECON_UNTIL] = saved; }
+});
+
 test('combat: preacherTarget selfCost (PREACHER_SELF): the 1915 duel, a splash on the shooter is taken only when worth it', () => {
   // Shooter at (33,26); enemy preacher (33,27), enemy church (32,26)... seen in canonical coordinates as in the replay.
   const R = (team, unit, x, y) => ({ team, unit, x, y, seen: true });
