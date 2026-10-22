@@ -68,3 +68,6 @@ I'd like you to get some more bots into the benchmark.  They can't all be blocke
 
 ## 13. 2026-10-21 16:31 PDT
 If 30 smoke test games are complete, that suggests that there are 30 bots you can add to the benchmark, right?
+
+## 14. 2026-10-21 19:23 PDT
+I approve that kind of edit to tools/run_game.js
