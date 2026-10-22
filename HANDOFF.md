@@ -1,28 +1,28 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 00:05 PDT)
+## State (2026-10-22 00:25 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
-  teams make mirror-image decisions. Champion **v4** (`bots/v4` = h19, ROSTER.tsv); frozen history v0-v4, sparring partner
+  teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
   a CFG switch whose default is the incumbent; candidates are built with `--cfg KEY=JSON` into `dist/hN`.
-- Dev line h6 (v3 + RNG reseed, depot cooldown, crusader/preacher rotation, miner switching, shooting fuel floor) is
-  level with v3 (23-17, t 0.7; 7-7 without load-contaminated games): it loses every single-castle map on castles
-  near round 500 and wins the multi-castle ones. h19 = src defaults = h6 + two bug fixes (World.signal fuel;
-  setup that re-runs until complete, LEARNINGS 10): 21-19 vs h6 (t 0.58), ACCEPTED 20:04 and frozen as v4.
-  Candidates are switches on h19, gated against h19 with `--timescale 2 --init-ms 1000 --fast-turn`.
+- v5 = h35 = v4 (h19) + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6 (church density, contested clusters first), RELAY 1
+  (cargo relay), NAV_FIT 1 + LATTICE_STICKY 2 (movement fit, lattice memory), PILGRIM_SAFE_STEP 1: 35-5 vs h19
+  (t 3.44), ACCEPTED 00:08 2026-10-22; these are the src defaults now. Replica submission 95. Candidates are
+  switches on v5, gated against dist/h35 (= bots/v5) with `--timescale 2 --init-ms 1000 --fast-turn`; its two
+  lost cells (905, 2855) are karbonite-bound maps (K 0, F 12,500+ unspent). Clean no-op check of the new defaults
+  (h35d vs h35, --det, VM extra lane): out/noop_v5.cmp in 2019-next.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
-  bots/dist linked to the main tree, outputs in the main tree's out/): h35 (running since ~23:15; stack of every delivered
-  switch: h31 + h21 + h29 + h33; 21:59; delivery passed 22:14, K+F +39%; 28 of 32 won, t 3.0 at 00:00), h40's delivery (8 games of 1000 rounds vs
-  h19, forward churches FRONT_ROUND 200, TRAINING_LOG 23:30; gate vs h19 if it passes), h39 vs h35 (PIONEER_RESERVE 2;
-  delivery passed 23:46; re-gate vs h19 if h35 fails), h41's delivery (kill zones KILL_ZONE 50 on h35, 23:53; driver
-  diagnostic on 1915 clean, 17 ZONE signals), h42's delivery (MIX_BY_STOCK [10, 1] on h35: crusaders when karbonite
-  binds, preachers when fuel binds; 00:02), h31x (20 more cells for h31, church density: INCONCLUSIVE at 20 cells, 25-15,
-  net +5, t 1.67; read pooled), h24x (20 more cells for h24, economy
-  first: INCONCLUSIVE at 20 cells, 26-14, net +6, t 1.50; read both blocks pooled), h33 (PILGRIM_SAFE_STEP; delivery passed 21:59), h29 (NAV_FIT +
-  LATTICE_STICKY 2), h28 (LATTICE_STICKY 2 alone), h21, h20, h7r, h11r, h15r, h8r, h9r, h10r, h18b vs h19; then the reference jobs v4 vs v0
-  and v4 vs rush (main tree). Built, not queued: h32 (contest-first alone), waits on h31x; h34 (SERVE_MOVES 1)
-  failed its delivery (dose stays at 2); h37 (CLAIM_MARGIN 4) failed its delivery (inert) and is closed. h38 (creep instead of march) failed its delivery 23:23: its army moved as much without a march. h16r (turtle) REJECTED 21:13 (16-24, t -1.07), which released the march tweaks from
-  ~/jobq/hold. Withdrawn before their gates: h22, h23 and h27 (deliveries failed), h36 (h22 + h23 doses: delivery failed 23:59 on fuel at round 500, 92 vs > 134), h25s and h26 (replaced by h29, h28), h30 (by h31).
+  bots/dist linked to the main tree, outputs in the main tree's out/): h40's delivery (running; 8 games of 1000 rounds
+  vs h19, forward churches FRONT_ROUND 200, TRAINING_LOG 23:30; if it passes, gate h40v5 = v5 + FRONT_ROUND 200 vs
+  h35), h41's delivery (kill zones KILL_ZONE 50 on h35, 23:53; driver diagnostic on 1915 clean, 17 ZONE signals),
+  h42's delivery (MIX_BY_STOCK [10, 1] on h35: crusaders when karbonite binds, preachers when fuel binds; 00:02),
+  h39 vs h35 (PIONEER_RESERVE 2; delivery passed 23:46), then the old candidates rebased onto v5 (v5 + their own
+  switch, 40 games vs h35): h24v5 (ECON_UNTIL 100), h20v5 (DEF_RESERVE_K 30), h15v5 (MIL_ROTATION null), h8v5,
+  h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Gates for h41/h42
+  go in right after h39's (job names ...4b01b1a41, ...a42) when their deliveries pass. Superseded at v5: h31x, h33,
+  h29, h28, h21 (their switches are in v5). Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
+  their deliveries; h38 (creep instead of march) failed 23:23; h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
+  (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
   at a time under `flock ~/.bc-extra.lock`): `out/dlv_chain2.sh` (sym_h22 last; h21 and h22 deliveries read),

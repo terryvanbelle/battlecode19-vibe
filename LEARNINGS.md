@@ -71,3 +71,10 @@
    failures and we won 49 of those, on a VM running 7 engine processes on 8 vCPUs. Our 33 KB bundle loads in a few
    ms. Read replica wins over a bot with clock failures as inflated; our own VM games run at nice 10
    (`tools/jobq.sh`, the extra lane) so the replica's games get whole cores. (2026-10-21)
+18. **Stack independent switches that passed their deliveries; do not wait for each single gate.** A switch whose
+   effect is a few percent needs far more than 40 games to show alone (h31, church density: 25-15, t 1.67 at 20
+   cells, inconclusive), and a queue of single gates takes a day. h35, the stack of every delivered switch on
+   independent mechanisms (church density, cargo relay, nav fit and lattice memory, safe pilgrim steps), went 35-5
+   (t 3.44) and became v5 55 minutes after its gate started. Keep the stack to switches whose deliveries
+   passed and whose mechanisms do not overlap, and keep the single gates queued for attribution only if the queue
+   has room. (2026-10-22)

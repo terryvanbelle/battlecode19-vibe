@@ -603,14 +603,14 @@ test('castle: PIONEER_RESERVE 2 holds the pioneer karbonite at every castle unti
   } finally { CFG.PIONEER_RESERVE = saved; }
 });
 
-test('tools/plan.mjs: both teams get the same plan; seed 2924 orphans 3 own-side depots, none with SERVE_MOVES 2 + PLAN_CONTEST_FIRST 6', () => {
+test('tools/plan.mjs: both teams get the same plan; seed 2924 orphans no own-side depot (v5), 3 with v4\'s SERVE_MOVES 4 + PLAN_CONTEST_FIRST 0', () => {
   const saved = [CFG.SERVE_MOVES, CFG.PLAN_CONTEST_FIRST];
   try {
     const a = planReport(2924, 0), b = planReport(2924, 1);
     assert.strictEqual(a.text.replace(/team \d/, ''), b.text.replace(/team \d/, ''));
-    assert.strictEqual(a.side, 23); assert.strictEqual(a.orphans, 3);
-    CFG.SERVE_MOVES = 2; CFG.PLAN_CONTEST_FIRST = 6;
-    assert.strictEqual(planReport(2924, 0).orphans, 0);
+    assert.strictEqual(a.side, 23); assert.strictEqual(a.orphans, 0);
+    CFG.SERVE_MOVES = 4; CFG.PLAN_CONTEST_FIRST = 0;
+    assert.strictEqual(planReport(2924, 0).orphans, 3);
   } finally { [CFG.SERVE_MOVES, CFG.PLAN_CONTEST_FIRST] = saved; }
 });
 

@@ -5,3 +5,4 @@ v2	5459fd274318	2026-10-21 12:06	rewrite in a canonical frame (side-symmetric), 
 v3	5ad87538e6af	2026-10-21 12:06	v2 + r2<=2 cruise steps, fuel-aware depot choice, military fuel reserve 300+10/unit; 27/36 vs v2
 rush	960255eed61e	2026-10-21 12:19	sparring partner: src/bot built with --cfg RUSH=4 (crusader stream at the mirror castle from round 5)
 v4	bd4e961ec728	2026-10-21 20:04	h6 (v3 + RNG reseed, depot cooldown, crusader/preacher rotation, miner switching, shooting fuel floor) + World.signal fuel fix + setup re-run until complete; 21-19 vs h6, 0 exceptions
+v5	da91ba0f7380	2026-10-22 00:08	h35 = h19 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1; 35-5 vs h19 (20 cells +17 -2, t 3.44)

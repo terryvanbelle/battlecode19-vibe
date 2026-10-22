@@ -1,11 +1,11 @@
 // Behaviour switches. Every candidate change goes behind a switch here whose default is the incumbent behaviour.
 export const CFG = {
   // economy
-  SERVE_MOVES: 4,            // a depot within this many pilgrim moves (speed r2 4) of a structure is mined from it
+  SERVE_MOVES: 2,            // a depot within this many pilgrim moves (speed r2 4) of a structure is mined from it
   CLUSTER_LINK_R2: 10,       // depots within this r2 of each other form one cluster
   CLAIM_MARGIN: 1,           // church a remote cluster if our distance <= enemy's + margin (moves)
   MAX_PIONEERS: 2,           // church pioneers in flight per castle
-  PLAN_CONTEST_FIRST: 0,     // >0: planned clusters the enemy reaches within this many moves of us are pioneered first
+  PLAN_CONTEST_FIRST: 6,     // >0: planned clusters the enemy reaches within this many moves of us are pioneered first
   PIONEER_MIN_ROUND: 2,
   EXPAND_ROUND: 0,           // >0: from this round castles re-plan every 50 rounds, adding remote clusters on either half
                              // more than EXPAND_KEEP king steps from every enemy castle (castle.js expandPlan; h19's
@@ -39,15 +39,15 @@ export const CFG = {
   DETOUR_EVERY: 10,          // costing this many extra moves: traffic spills onto other routes instead of queueing
   DETOUR_MEMORY: 30,         // in one corridor
   PILGRIM_FAST_FUEL: 1000,  // pilgrims take full r2 4 steps only above this fuel
-  PILGRIM_SAFE_STEP: 0,      // 1: pilgrims never step into a visible enemy attacker's threat range (pilgrim.js stepAvoid)
-  NAV_FIT: 0,                // 1: steps capped below full speed (cruise r2 2, slow pilgrims) follow a field counted in
+  PILGRIM_SAFE_STEP: 1,      // 1: pilgrims never step into a visible enemy attacker's threat range (pilgrim.js stepAvoid)
+  NAV_FIT: 1,                // 1: steps capped below full speed (cruise r2 2, slow pilgrims) follow a field counted in
                              // such steps; 0: the full-speed field, on which they lose a turn every other tile
   SWITCH_FUEL_LOW: 150,      // an empty-handed karbonite miner moves to fuel when fuel < this and karbonite >= ...
   SWITCH_KARB_HIGH: 200,
   SWITCH_KARB_LOW: 30,       // ...and a fuel miner moves to karbonite when karbonite < this and fuel >= ...
   SWITCH_FUEL_HIGH: 3000,
   SWITCH_KING: 8,            // only to depots within this many king steps
-  RELAY: 0,                  // 1: a full pilgrim not next to our structure hands its cargo to a friend next to one (a
+  RELAY: 1,                  // 1: a full pilgrim not next to our structure hands its cargo to a friend next to one (a
                              // military unit, or a pilgrim mining the other resource), and military units deposit
                              // cargo at an adjacent structure (seed 2202: a fuel miner boxed in by a parked crusader
                              // sat full for 824 turns, a quarter of that map's fuel depots)
@@ -84,7 +84,7 @@ export const CFG = {
   LATTICE_R: 12,             // idle military units hold lattice tiles within this many king steps of their home
                              // structure (replica: eigthbot's lattice grows from every structure toward the middle,
                              // round 460 of seed 1036, and its front reaches the enemy castles)
-  LATTICE_STICKY: 0,         // 1: an idle unit keeps walking to its chosen lattice tile until it sees it taken (choosing
+  LATTICE_STICKY: 2,         // 1: an idle unit keeps walking to its chosen lattice tile until it sees it taken (choosing
                              // afresh each turn flips between tiles out of sight, seed 2202: military.js holdTarget);
                              // 2: ...and a tile it saw taken in the last LATTICE_MEMORY turns does not count as free
   LATTICE_MEMORY: 20,

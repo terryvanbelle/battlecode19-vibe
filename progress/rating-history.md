@@ -1,6 +1,6 @@
 # Rating history (replica)
 
-The replica's Team page Rating History for vibe19: the displayed rating (siarnaq's penalized Elo) after each rated (ranked, non-tournament) match, with each submission's first completed rated match marked. Written by `tools/progress/rating_history.py` from data fetched 2026-10-21 22:02 PDT; regenerate, do not edit.
+The replica's Team page Rating History for vibe19: the displayed rating (siarnaq's penalized Elo) after each rated (ranked, non-tournament) match, with each submission's first completed rated match marked. Written by `tools/progress/rating_history.py` from data fetched 2026-10-22 00:19 PDT; regenerate, do not edit.
 
 ![rating history](rating-history.png)
 
@@ -10,5 +10,5 @@ BT = the build's Bradley-Terry rating in `progress/ELO.md` (± 95%), the same fo
 
 | Submission | Build | First rated match | Time | Rating before | Rating after | Rated matches | BT |
 |---:|---|---:|---|---:|---:|---:|---:|
-| #1 | v1 | 1 | 2026-10-21 09:21 PDT | 0 | 237 | 12 | 1422 ± 223 |
-| #7 | v3 | 66 | 2026-10-21 12:22 PDT | 1,208 | 1,270 | 23 | 1681 ± 203 |
+| #1 | v1 | 1 | 2026-10-21 09:21 PDT | 0 | 237 | 12 | 1390 ± 205 |
+| #7 | v3 | 66 | 2026-10-21 12:22 PDT | 1,208 | 1,270 | 23 | 1647 ± 176 |
