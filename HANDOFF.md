@@ -32,7 +32,7 @@
   TRAINING_LOG 10:15), **h65** (ESCORT 2, ...a3d57716, after its
   no-op/symcheck job ...a3d577158) gate vs h50; **h66** (stack: v6 + ENDGAME_FUEL 900 + CHAIN_ROUND 150, symcheck
   then gate vs h50, ...a3d57717; TRAINING_LOG 09:55); the **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each
-  vs h55v6); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775); h55's extension vs h35 (...a3d585) and h24v5's
+  vs h55v6; if h72's delivery passes, the bomber becomes h72 and the h50 job goes, h72's own gate covers it); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775); h55's extension vs h35 (...a3d585) and h24v5's
   (...a3d597); then the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50): h51v6's delivery
   (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6
   vs v0 and v6 vs rush. Gates of passed deliveries go in after h43v6's (job names ...4b01b1a45 onward). The extra
