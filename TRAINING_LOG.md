@@ -1572,3 +1572,27 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - **h62 = v6 + PIONEER_LOST_DOUBLE 1** (castle.js lostRest): the rest before re-sending a pioneer where one died
   doubles per loss (100, 200, 400 ... capped at 1,600). Built, not queued: in h50's gate only 18 of 263 pioneers died,
   so a local gate cannot see it; it waits for a replica panel against StoneT2000 (25 of 46 killed).
+
+## 2026-10-22 08:49 — replica 205 (v5 vs StoneT2000 botfinalsafe) won 2-1; the loss was a one-round church bomb; anti-chain panel pre-registered
+
+- Match 205: game 1 (826, blue) won by castles (botfinalsafe threw 3,931 exceptions and 50 timeouts); game 3 (836,
+  blue) won on health; game 2 (53, red, one castle a side, 58x58) lost at round 233.
+- 205-2: at round 229 StoneT built **16 churches in one round** (replay.js events): a chain from anchor pilgrims that
+  had stood still since round 150-200 at (13,22), (13,23), (16,21), (16,22), 11-12 rows from our castle (9,11), just
+  past castle vision (r2 100) and seen by none of our pilgrims (r2 137). Each link builds a church, the new church a
+  pilgrim, which steps and builds the next, all in the same round (RULES 1: new robots act the round they are built),
+  ~60 K a link: bank 1,015 K at 200, 0 at 233. The ring of churches round our castle built ~13 preachers at round
+  230; the castle (K 180, three preachers in its last 10 rounds) fell at 233. Our 65 military units (crusader idle
+  2,155 of 2,247 turns) guarded our four churches and the castle's lattice; ATTACK_ROUND 450 means we had not
+  attacked. StoneT's pilgrims 29 by 150 to our 15, churches 10 by 175 to our 5, K mined 3,540 to 2,238 by 233.
+- Our counters exist only as untested switches: h54 STRIKE_R2 (a structure seeing an enemy church strikes it with a
+  preacher; only while no enemy attacker is in sight), h56 HUNT (a pilgrim radios an enemy pilgrim parked in our
+  half; here no pilgrim of ours saw the anchors). Self-play cannot rate them: our builds do not chain. So a panel
+  against our own chain bomber, **h55v6 = v6 + CHAIN_ROUND 150** (h55's chain: wait 12 steps out, church-pilgrim-
+  church in one round, preachers at the castle).
+- **Anti-chain panel (pre-registered):** h50 (control), h54v6 (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) and
+  h56v6 (HUNT 2), each vs h55v6 on the same 20 random cells (, both sides, par 2; VM jobs
+  ...a3d5772-4 after h63's gate; out/panel_chain_<build>.jsonl, replays out/rp_panel_chain). Read: `paired.js
+  --cand <hash> --ctrl <h50 hash> --opp <h55v6 hash>` on the concatenated files. A candidate that reaches t >= 2 (or
+  net >= +3 at t >= 1.5) goes to a no-harm gate vs h50 (accept at net >= 0, D >= 12); t <= 0 closes it. Control
+  h50's own record vs h55v6 says how much the chain costs v6 today; if v6 wins nearly all of them the panel is void.
