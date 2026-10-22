@@ -42,6 +42,8 @@ export const CFG = {
   PILGRIM_SAFE_STEP: 1,      // 1: pilgrims never step into a visible enemy attacker's threat range (pilgrim.js stepAvoid)
   PILGRIM_HOT: 0,            // >0: a pilgrim whose target depot sat in a visible attacker's threat range this many turns
   PILGRIM_HOT_MEM: 50,       // in a row retargets to a free depot not threatened and not given up in this many turns
+  PILGRIM_ORPHAN: 0,         // 1: a pilgrim that knows no living structure of ours walks to our half's unseen cluster
+                             // sites (every castle seeds one) until it sees one, instead of standing still
   NAV_FIT: 1,                // 1: steps capped below full speed (cruise r2 2, slow pilgrims) follow a field counted in
                              // such steps; 0: the full-speed field, on which they lose a turn every other tile
   SWITCH_FUEL_LOW: 150,      // an empty-handed karbonite miner moves to fuel when fuel < this and karbonite >= ...

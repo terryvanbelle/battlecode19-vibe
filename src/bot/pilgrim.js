@@ -4,7 +4,7 @@ import { CFG } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, KARB_CAP, FUEL_CAP } from './specs.js';
 import { d2, king, ADJ, rng } from './util.js';
 import { SIG, FAR, dec, encNum, encXY, CT } from './comms.js';
-import { econ } from './mapinfo.js';
+import { econ, bfs } from './mapinfo.js';
 import { fuelStep } from './nav.js';
 import { isAttacker, retreatStep, THREAT_R2 } from './combat.js';
 import { frontSite } from './struct.js';
@@ -149,6 +149,9 @@ function pilgrimAct(B) {
     } else return go(B, 'site', adjSources(sx, sy));
   }
 
+  if (CFG.PILGRIM_ORPHAN && !st.structs.length && !st.site) { const a = orphanStep(B); if (a !== undefined) return a; }
+  else if (st.orphan) { st.orphan = false; st.target = null; }   // home found: mine near it
+
   // Deposit when full.
   if (me.karbonite >= KARB_CAP || me.fuel >= FUEL_CAP) {
     for (const s of st.structs) if (king(me.x, me.y, s.x, s.y) === 1) return w.give(s.x - me.x, s.y - me.y, me.karbonite, me.fuel);
@@ -200,6 +203,27 @@ export function hotRetarget(B) {
   gave.set(t.i, me.turn); st.hotN = 0;
   const alt = freeDepotNear(B, me.x, me.y, null, undefined, 0, d => hot(d.x, d.y) || (gave.has(d.i) && me.turn - gave.get(d.i) <= CFG.PILGRIM_HOT_MEM));
   if (alt) st.target = alt;
+}
+
+// CFG.PILGRIM_ORPHAN: a pilgrim that knows no living structure of ours (line "forget ones whose tile we see empty":
+// its church fell) walks to the nearest site of a cluster in our half (canonical top) that it has not yet seen from
+// ORPHAN_SEEN_R2, until a castle or church comes into sight (vision r2 100); every castle seeds a resource cluster
+// (engine game.js:195) and ours lie in our half. All seen: start over. Before this an orphan mined until full and
+// then returned null for good (h50's gate, seed 1250: pilgrim #3228 stood 430 turns with F100 after its church at
+// (11,31) fell at round 25; stall census of h50/h54/h55's gates: 41 of 165 long streaks carried a full load).
+const ORPHAN_SEEN_R2 = 36;
+export function orphanStep(B) {
+  const w = B.w, me = w.me, st = B.st, n = w.n, cs = B.clusters;
+  if (!st.orphan) { st.orphan = true; st.target = null; st.orphanSeen = new Set(); }
+  const seen = st.orphanSeen;
+  cs.forEach((c, i) => { if (d2(me.x, me.y, c.site[0], c.site[1]) <= ORPHAN_SEEN_R2) seen.add(i); });
+  const ours = cs.filter((c, i) => c.site[1] < n / 2 && !seen.has(i));
+  if (!ours.length) { seen.clear(); return null; }
+  const dist = bfs(w, [[me.x, me.y]], B.offs);
+  let best = null, bd = 1e9;
+  for (const c of ours) { const d = dist[c.site[1] * n + c.site[0]]; if (d >= 0 && d < bd) { bd = d; best = c; } }
+  if (!best) { for (const c of ours) seen.add(c.i); return null; }
+  return go(B, 'orph' + best.i, [best.site, ...adjSources(best.site[0], best.site[1])]);
 }
 
 // Relay (CFG.RELAY): a friend next to us that stands next to one of our structures and will deposit what we give it:

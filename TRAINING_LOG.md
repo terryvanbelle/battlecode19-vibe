@@ -1431,7 +1431,7 @@
   1.11). Census of stall causes over h50/h54/h55's 120 gate replays running (VM out/stallwhy_census.txt) before
   any fix: jam (no foe, home <= 3) against threat stalls.
 
-## 2026-10-22 07:55 — replica throughput (owner PROMPTS 15-20); h8v5 delivery PASSED 3 of 3; h24v5 look 1 no decision
+## 2026-10-22 07:40 — replica throughput (owner PROMPTS 15-20); h8v5 delivery PASSED 3 of 3; h24v5 look 1 no decision
 - Replica queue at 07:28 PDT: 208 waiting (204 ranked), 2 running; 2 execute slots played ~5-7 matches an hour.
   Slot time by team from saturn's log (302 runs, 41.6 slot-hours since 2026-10-21 16:21 PDT; a match counts for both
   teams): Nydroam.BatteredCod 9.9 h (18 runs, 14 nacked, 4 finished, every finished match 38-53 min),
@@ -1455,3 +1455,28 @@
   castles). PASSED 3 of 3: its gate (40 games vs h35, seed0 5000) moved up to run next (job ...a3d577, par 2).
 - h24v5 (ECON_UNTIL 100) gate, 20 cells: +8 -5, D 13, t 0.83: no decision at the D 12 look. 20 more cells (seed0
   6000, appended to out/h24v5_h35.jsonl) queued as ...a3d597, after the h54 / h55 extensions; next look at D >= 24.
+
+## 2026-10-22 07:49 — orphan pilgrims; h60 (PILGRIM_ORPHAN 1) pre-registered
+- Trace (h50's gate, seed 1250, red = h35): pilgrim #3228, born at church #111 (11,31) at round 14, mined fuel beside
+  it; a blue prophet at (19,31) killed the church at round 25. The pilgrim filled to F100 at round 34 and then took no
+  action for 430 rounds, 11 moves from a living castle it had never seen. Cause: pilgrim.js forgets a structure
+  whose tile it sees empty; with st.structs empty the deposit branch returns null for good (`if (!st.structs.length)
+  return null`), and an orphan with part of a load keeps walking to its depot by the fallen church.
+- Census (scratch orphan.js over the stallwhy census of h50/h54/h55's gates, 120 games): of 165 pilgrim stall streaks
+  (50+ turns, 42,762 turns), 56 were orphans (no structure the pilgrim had seen still alive at the streak's start;
+  16,626 turns, 39%), on 9 of 20 maps (1205, 1250, 1325, 1635, 1862, 2030, 241, 2642, 357), both sides. 15 of the 41
+  full-load streaks were orphans; the other 26 full-load streaks knew a living structure (not addressed here).
+- **h60 = v5 + PILGRIM_ORPHAN 1** (pilgrim.js orphanStep): a pilgrim that knows no living structure drops its depot
+  and walks to the nearest (by moves) site of a cluster in our canonical half that it has not yet seen from r2 36,
+  until a castle or church comes into sight; then it mines the free depot nearest to where it stands. Every castle
+  seeds a resource cluster (engine game.js:195), and our castles lie in our half. Displaces: an orphan's mining at
+  its old depot (it leaves at once, part load or full). Unit test: test/bot.test.mjs "PILGRIM_ORPHAN".
+- Decision counter: stall.js (cargo held off any depot, not mining or giving, not next to a structure; to round 450)
+  and its longest streak. Driver diagnostic first: h60 red vs h35 blue, seed 1250, 450 rounds; the red pilgrims that
+  lose church (11,31) must deposit within 60 turns of the fall.
+- Delivery (extra lane, after no-op h35o vs h35 and symcheck): 8 games vs h35 on 1250, 1635, 1862, 357 both sides
+  (orphans in two or more of the three gates). Pass all of: (1) stalled cargo turns to round 450, h60 at most 70% of
+  h35's in the same games; (2) pilgrim mine actions to round 450, h60 at least 100% of h35's; (3) h60 wins at least
+  4 of 8. Then a gate of 40 games vs h35 (seed0 5000, par 2), D looks 12 / 24 / 48, accept t >= 2, reject t <= 0.
+  A repair of a basics failure: the ladder rule's net >= 0 applies. Falsifier: (1) fails (orphans are not where the
+  stalled turns go, or they do not find home). Zero arm h35; no dose (a switch).

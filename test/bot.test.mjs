@@ -731,6 +731,43 @@ test('relay: a full pilgrim not next to a structure hands its load to a unit nex
   } finally { CFG.RELAY = saved; }
 });
 
+test('pilgrim: PILGRIM_ORPHAN walks a full pilgrim that knows no living structure toward our half until it sees one', () => {
+  const saved = CFG.PILGRIM_ORPHAN;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const ours = g.robots.filter(r => r.team === 0);
+    g.robots = g.robots.filter(r => r.team === 1);              // every red structure has fallen
+    const T = makeTransform(detectSymmetry(g.map, g.karbonite_map, g.fuel_map), 0, n);
+    let P = null;                                               // a free tile deep in red's canonical bottom half
+    for (let cy = n - 2; cy >= n / 2 && !P; cy--) for (let cx = 0; cx < n && !P; cx++) {
+      const [x, y] = T.toE(cx, cy);
+      if (g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x] && !g.robots.some(q => q.x === x && q.y === y)) P = [x, y];
+    }
+    const pil = { id: 4001, team: 0, unit: S.PILGRIM, x: P[0], y: P[1], turn: 30, health: 10, karbonite: 0, fuel: 100, signal: 0, signal_radius: 0, castle_talk: 0 };
+    g.robots.push(pil);
+    const run = (on) => {
+      CFG.PILGRIM_ORPHAN = on;
+      const w = worldFor(g, pil), B = { api: w.api, w, round: 40, birthRound: 11, st: {}, deps: null, clusters: null, rnd: rng(2) };
+      B.offs = offsets(4); B.nav = new Nav(w, B.offs, B.rnd);
+      return { B, w, a: pilgrimTurn(B) };
+    };
+    assert.strictEqual(run(0).a, null);                         // the incumbent stands still for good
+    const { B, w, a } = run(1);
+    assert.strictEqual(a.action, 'move'); assert.strictEqual(B.st.orphan, true); assert.strictEqual(B.st.target, null);
+    // It heads for the nearest cluster site of our half (canonical top) by moves: one step nearer.
+    const field = bfs(w, [[w.me.x, w.me.y]], B.offs);
+    const top = B.clusters.filter(c => c.site[1] < n / 2 && field[c.site[1] * n + c.site[0]] >= 0)
+      .sort((p, q) => field[p.site[1] * n + p.site[0]] - field[q.site[1] * n + q.site[0]])[0];
+    const toSite = bfs(w, [top.site], offsets(2)), [cx, cy] = T.toC(pil.x + a.dx, pil.y + a.dy);   // steps capped at r2 2
+    assert.ok(toSite[cy * n + cx] < toSite[w.me.y * n + w.me.x], JSON.stringify({ me: [w.me.x, w.me.y], to: [cx, cy], site: top.site, d: [toSite[w.me.y * n + w.me.x], toSite[cy * n + cx]] }));
+    // A castle in sight ends it: the pilgrim learns it and heads home to deposit.
+    g.robots.push(ours[0]);
+    const w2 = worldFor(g, pil); B.w = w2; B.api = w2.api; B.nav = new Nav(w2, B.offs, B.rnd);
+    const a2 = pilgrimTurn(B);
+    assert.strictEqual(B.st.orphan, false); assert.strictEqual(B.st.structs.length, 1); assert.ok(a2 && a2.action === 'move');
+  } finally { CFG.PILGRIM_ORPHAN = saved; }
+});
+
 test('military: PROPHET_FLOOR keeps prophets from shooting a short bank that other shooters can use', () => {
   const saved = CFG.PROPHET_FLOOR;
   try {

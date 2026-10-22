@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 07:55 PDT)
+## State (2026-10-22 07:40 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -18,9 +18,9 @@
   (...a3d56) read 05:08 D 3 of 20 cells (+2 -1, t 0.58, 17 byte-identical), so the chains gate (...a3d57) took its
   h55-vs-h35 branch (h55's delivery PASSED 3 of 3 at 04:21): block 1 read 05:45 D 11 (+6 -5, t 0.30). Now, in
   order: h50's extension (...a3d576, the stack below, running), h8v5's gate (...a3d577: its delivery PASSED 3 of 3
-  at 07:55), h54's extension blocks ...a3d58, then h55's (...a3d585, seed0 6000), then h54's ...a3d59, a3d595
+  at 07:40), h54's extension blocks ...a3d58, then h55's (...a3d585, seed0 6000), then h54's ...a3d59, a3d595
   (seed0 6000, 7000, 9000, appended to out/h54_h35.jsonl; first look at the first job boundary with D >= 12, rules in
-  TRAINING_LOG 05:08; h55's the same, 05:45), then h24v5's extension (...a3d597: look 1 at 07:55 was D 13, t 0.83,
+  TRAINING_LOG 05:08; h55's the same, 05:45), then h24v5's extension (...a3d597: look 1 at 07:40 was D 13, t 0.83,
   no decision; next look D >= 24). **Every gate job runs at par 2 while the replica queue is long** (owner, PROMPTS
   18; back to par 4 when fewer than 30 replica matches wait). The extension of h50's gate (stack
   PIONEER_RESERVE 2 + MARCH_MASK 8, LEARNINGS 18: 27-13, t 1.70 at 40 games, inconclusive; 20 more cells at seed0
@@ -73,6 +73,10 @@
 - Pilgrim stalls (TRAINING_LOG 05:03): on 7 of 20 maps pilgrims wait for good at the edge of an enemy attacker's
   range (PILGRIM_SAFE_STEP keeps them out, nothing gives the target up) and that side mines 17-63% less.
   CFG.PILGRIM_HOT (h59 = 10) gives the depot up; scratch stall.js / stallwhy.js measure it (copies in 2019-next/out).
+  Orphans (TRAINING_LOG 07:49): 56 of 165 long stall streaks (39% of the turns) were pilgrims that knew no living
+  structure (their church fell; pilgrim.js then returned null for good). CFG.PILGRIM_ORPHAN (h60 = 1) walks them to
+  our half's cluster sites until a structure is in sight: no-op + symcheck on the extra lane (out/dlv_chain26.sh),
+  driver diagnostic on 1250, then the pre-registered delivery (1250, 1635, 1862, 357 both sides).
 - tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
   cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were
   started without it, our own builds only). Not yet synced to the VM trees (they start games under unshare anyway).
@@ -89,7 +93,7 @@
   games; scrims (matches 199-202) challenge StoneT2000 (botfinalsafe, bot1v43) and IvanGeffner (bot6b, eigthbot),
   which had not played (`contest19.py scrim --vs NAME,...`). 199 lost 0-3 and 200 lost 1-2 (TRAINING_LOG 20:23).
   Matches 201 and 202 ended ERR at the old 1800 s game limit (no replays). **Replica throughput (owner, PROMPTS
-  15-20; TRAINING_LOG 07:55):** saturn runs 4 execute slots with GALAXY_GAME_TIMEOUT 5400 s since 14:36 UTC; the
+  15-20; TRAINING_LOG 07:40):** saturn runs 4 execute slots with GALAXY_GAME_TIMEOUT 5400 s since 14:36 UTC; the
   autoscrim is held while 30+ matches wait and fires at most once per 24 h (relay.py fire-jobs). Queue at 07:28 PDT:
   208 waiting. **Watch the queue every check-in** (`python3 tools/galaxy19/field.py queue`: matches NEW/QUE/TRY,
   and what runs); while it is long, clearing it comes before local work (gates at par 2). The seven boosted field
