@@ -19,12 +19,13 @@
   PIONEER_STALL_ANY 40: no-op v6j, symcheck, 8 games vs h50 on h61's cells, ...a3d577100; TRAINING_LOG 11:52; a
   tools swap job ...a3d5770 runs first: the shadow tree gets the driver's tools at that boundary), **h70** delivery
   (PEACE_RESERVE_K 60: no-op v6k, symcheck, 8 games vs h50 on 70, 520, 2591, 1592, ...a3d5771005; TRAINING_LOG 13:20),
+  **h64** (PIONEER_FAST, gate vs h50, ...a3d5771006: moved up 13:45, replica 391-1 is a second case, TRAINING_LOG 13:45),
   **h20v6** (DEF_RESERVE_K 30, the answer to CS554's rush: delivery h50 and h20v6 vs bots/rush4 on 20 poor one-castle
   maps at 200 rounds, then its gate vs h50, ...a3d577101; TRAINING_LOG 10:47), **h15v6** (MIL_ROTATION null, ~75%
   prophets: the replica's prophet-lattice duels, TRAINING_LOG 12:50; ...a3d577102), **h67** (PIONEERS_TEAM 4: a lone
   castle keeps 4 pioneers in flight; no-op v6i, symcheck, then gate vs h50 on 20 one-castle cells, ...a3d57711;
-  TRAINING_LOG 10:15), **h64** (PIONEER_FAST, ...a3d57715) and **h65** (ESCORT 2, ...a3d57716, after its
-  no-op/symcheck job ...a3d577158) gates vs h50; **h66** (stack: v6 + ENDGAME_FUEL 900 + CHAIN_ROUND 150, symcheck
+  TRAINING_LOG 10:15), **h65** (ESCORT 2, ...a3d57716, after its
+  no-op/symcheck job ...a3d577158) gate vs h50; **h66** (stack: v6 + ENDGAME_FUEL 900 + CHAIN_ROUND 150, symcheck
   then gate vs h50, ...a3d57717; TRAINING_LOG 09:55); the **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each
   vs h55v6); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775); h55's extension vs h35 (...a3d585) and h24v5's
   (...a3d597); then the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50): h51v6's delivery

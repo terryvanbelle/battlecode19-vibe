@@ -1822,3 +1822,18 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   (1) h70's churches by 200 >= 120% of h50's; (2) its mine actions to 450 >= 110% of h50's; (3) h70 wins >= 4 of 8.
   Falsifier: (1) fails, i.e. in self-play the bank is not what holds the pioneers back (seed 70's gain was one
   church). On PASS: gate h70 vs h50, 20 random cells from seed0 5000, accept t >= 2, reject t <= 0.
+
+## 2026-10-22 13:45 — replica 391-1 (uvafan, seed 2591): the centre race lost by a crawling pioneer; h64 moved up
+- Seed 2591, 32x32, one castle a side, 14 depots in 3 clusters: 2 by each castle and 10 in the centre (x 13-18,
+  y 3-7), reached through a 2-wide corridor (x 15-16, y 9-12). uvafan's 4th pilgrim (built r4) churched (16,5) at
+  r13 and built a prophet and a crusader there at once; its church staffed 8 pilgrims by r56. Our pioneer #977
+  (built r3, a round earlier) walked one tile a turn (fuel-saving steps) and reached the corridor mouth (17,13) at
+  r11, then hovered at (15-18, 13-14) for 60+ turns: every corridor tile lies in the prophet's r2 64
+  (PILGRIM_SAFE_STEP). Two more pioneers died. We never built a church; 3-5 pilgrims all game; mined 1,540 K and
+  8,200 F against 4,178 and 45,060; army 6 at r200, 0 at r1000; lost on health.
+- Second replica case for h64 (PIONEER_FAST: 2 tiles a turn would have reached the site about r12, before uvafan's
+  r13), after 407-2 (seed 1706). Its gate job moves up to ...a3d5771006, right after h70's delivery. h68 (stall
+  give-up) would free such a pioneer after 40 turns, but there is no other depot to mine on this map.
+- Replica queue at 13:40: 165 waiting (127 TRY, 5 RUN); about 63 slot-hours by each match's slower team's mean
+  match time from the saturn journal (229 acked matches, mean 649 s), 12.7 h on 5 slots. No team holds more than 5%
+  of it (top: NielsKornerup 3.2 slot-h, awesomelemonade 2.9, bovard 2.8), so no drop; the replica keeps 5 slots.
