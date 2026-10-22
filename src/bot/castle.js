@@ -7,6 +7,7 @@ import { SIG, encXY, CT, FAR } from './comms.js';
 import { bfs } from './mapinfo.js';
 import { offsets, d2 } from './util.js';
 import { structInit, structTurn, buildToward } from './struct.js';
+import { chainLaunch } from './chain.js';
 
 const KING = offsets(2), PILGRIM_OFFS = offsets(4);
 
@@ -33,11 +34,13 @@ export function castleTurn(B) {
   st.count = [1, 0, 0, 0, 0, 0];   // our robots by type, from their status bytes (castles: self + talkers)
   st.march = 0;                    // ...of which military units not free for a wave (CFG.WAVE)
   const all = w.robots.concat(w.unplaced);
+  st.chainLive = false;            // CFG.CHAIN_ROUND: our chainer still walks or waits
   for (const r of all) {
     if (r.team !== me.team) continue;
     allIds.add(r.id);
     if (r.id === me.id) continue;
     const ct = r.castle_talk;
+    if (CFG.CHAIN_ROUND && r.id === st.chainId) { if (ct === CT.CHAINER) st.chainLive = true; else if (ct === CT.CHAINGONE) st.chainOff = true; }
     if (ct >= CT.UNIT && ct < CT.UNIT + 6) st.count[ct - CT.UNIT]++;
     else if (ct >= CT.MARCH && ct < CT.MARCH + 6) { st.count[ct - CT.MARCH]++; st.march++; }
     if (me.turn <= 3 && r.castle_talk > 0 && r.castle_talk <= 64) {
@@ -64,7 +67,7 @@ export function castleTurn(B) {
   if (CFG.RECALL) callRecall(B);
   callAttack(B);
   st.pioneerDue = pioneerDue(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
-  const act = structTurn(B, allIds, () => pioneer(B));
+  const act = structTurn(B, allIds, () => pioneer(B) || (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null));
   if (CFG.CASTLE_POST) callPost(B);   // after the build, so a newborn's radio comes first
   return act;
 }

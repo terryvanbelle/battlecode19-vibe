@@ -65,6 +65,23 @@ export const CFG = {
   STRIKE_R2: 0,              // >0: a structure that sees an enemy church within this r2 and no enemy attacker builds a
                              // preacher toward it first (struct.js strike; seeds 1915, 2030, 2924: mirror churches 1-5
                              // tiles apart, won by whichever side's preacher acted first)
+  CHAIN_ROUND: 0,            // >0: from this round castles build church chains at their mirror castles (chain.js: a
+                             // pilgrim waits CHAIN_STAGE king steps out until the bank holds CHAIN_K and CHAIN_F, then
+                             // church, pilgrim, church... one tile nearer each, all in one round, up to CHAIN_END_R2 of
+                             // the castle; each church builds CHAIN_MIX units aimed at it for CHAIN_BURST turns.
+                             // Replica scrim 200, seed 2924: StoneT2000's bot1v43 took all three of our castles so)
+  CHAIN_STAGE: 12,
+  CHAIN_K: 300,              // ...and from CHAIN_ROUND the peacetime army leaves this much karbonite in the bank
+  CHAIN_F: 1200,
+  CHAIN_END_R2: 49,
+  CHAIN_MIX: [5, 3],
+  CHAIN_BURST: 40,
+  CHAIN_FUEL_KEEP: 100,      // ...burst builds leave this much fuel
+  CHAIN_EVERY: 100,          // a castle sends its next chainer this many rounds after the last (none while one waits)
+  CHAIN_STAGGER: 30,         // castle i (canonical order) starts at CHAIN_ROUND + i * this
+  CHAIN_PATIENCE: 10,        // a chainer that got no nearer for this many turns counts as staged within
+  CHAIN_SLACK: 6,            // ...CHAIN_STAGE + this king steps of the target; farther out it quits after
+  CHAIN_GIVEUP: 30,          // ...this many such turns
   // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
   MIL_ROTATION: [4, 3, 4, 3, 5],   // peacetime build order by unit type (prophet 4, crusader 3, preacher 5)
   MIX_BY_STOCK: null,        // [hi, lo]: a peacetime unit is a crusader while fuel / karbonite in the bank >= hi

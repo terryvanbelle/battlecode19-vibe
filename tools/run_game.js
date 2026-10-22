@@ -180,7 +180,7 @@ async function main() {
   const result = {
     winner: g.winner === 0 ? 'red' : g.winner === 1 ? 'blue' : null,
     win_condition: g.win_condition, reason: REASONS[g.win_condition], rounds: g.round, seed,
-    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale, ...limits, fast_turn: !!a.fastTurn,
+    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale, ...limits, fast_turn: !!a.fastTurn, net_isolated: netIsolated(),
     red: a.red, blue: a.blue,
     teams: [0, 1].map(i => ({ team: i === 0 ? 'red' : 'blue', ...counts[i], ...alive[i],
       turns: teams[i].turns, ms_mean: teams[i].turns ? +(teams[i].ms_total / teams[i].turns).toFixed(3) : 0,
@@ -221,5 +221,19 @@ function fastTurn(CrossVM) {
   };
 }
 
-if (require.main === module) main().catch(e => { console.error(String(e && e.stack || e)); process.exit(2); });
-module.exports = { setLimits, parseArgs, fastTurn };
+// Bot code runs only without network (CLAUDE.md rule 6). batch.js starts every game inside `unshare -rn`; a direct
+// call outside a network namespace re-runs itself there, and refuses to run if it cannot.
+function netIsolated() {
+  const ifs = require('os').networkInterfaces();
+  return Object.keys(ifs).every(k => ifs[k].every(x => x.internal));
+}
+
+if (require.main === module) {
+  if (!netIsolated()) {
+    const r = require('child_process').spawnSync('unshare', ['-rn', process.execPath, ...process.argv.slice(1)], { stdio: 'inherit' });
+    if (r.error || r.status === null) { console.error('unshare -rn failed: refusing to run bot code with network access'); process.exit(3); }
+    process.exit(r.status);
+  }
+  main().catch(e => { console.error(String(e && e.stack || e)); process.exit(2); });
+}
+module.exports = { setLimits, parseArgs, fastTurn, netIsolated };

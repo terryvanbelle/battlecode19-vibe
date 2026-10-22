@@ -35,6 +35,7 @@ function resolvePending(B) {
   if (best) {
     if (p.kind === 'mine') st.assign.set(p.ref, { id: best.id, seen: B.w.me.turn });
     else if (p.kind === 'pioneer') { const q = st.pioneers.find(q => q.cluster === p.ref); if (q) q.id = best.id; }
+    else if (p.kind === 'chain') st.chainId = best.id;
   } else if (p.kind === 'mine') st.assign.delete(p.ref);
   st.pending = null;
 }
@@ -173,7 +174,8 @@ function structAct(B, allIds, extra) {
   const attackers = w.enemies.filter(e => isAttacker(e.unit));
   const reserveK = CFG.DEF_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
     (CFG.FRONT_ROUND && st.frontAt !== undefined && B.round - st.frontAt < 40 ? STATS[CHURCH].costK : 0) +
-    (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0);
+    (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0) +
+    (CFG.CHAIN_ROUND && B.round >= CFG.CHAIN_ROUND ? CFG.CHAIN_K : 0);   // peacetime army only
 
   // 1. Defence: answer visible attackers with a defender while they outnumber ours; otherwise shoot.
   if (attackers.length) {

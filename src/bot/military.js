@@ -6,6 +6,7 @@ import { d2, king, rng } from './util.js';
 import { fuelStep } from './nav.js';
 import { SIG, CT, FAR, dec, encXY, decFarRobot } from './comms.js';
 import { isAttacker, pickTarget, preacherTarget, retreatStep, THREAT_R2 } from './combat.js';
+import { learnRound } from './chain.js';
 
 function init(B) {
   const w = B.w, me = w.me, st = B.st;
@@ -14,11 +15,16 @@ function init(B) {
   for (const r of w.friends) if ((r.unit === CASTLE || r.unit === CHURCH) && king(r.x, r.y, me.x, me.y) <= 1) {
     st.home = { x: r.x, y: r.y }; church = r.unit === CHURCH;
     if (r.unit === CASTLE) B.birthRound = r.turn - me.turn + 1;
-    if (r.signal > 0 && me.turn === 1) { const m = dec(r.signal); if (m.type === SIG.ROUND) B.birthRound = m.v; }
+    if (r.signal > 0 && me.turn === 1) {
+      const m = dec(r.signal);
+      if (m.type === SIG.ROUND) B.birthRound = m.v;
+      else if (m.type === SIG.CHAIN && CFG.CHAIN_ROUND) st.chainT = [m.x, m.y];   // born in a church chain (chain.js)
+    }
   }
+  if (st.chainT) learnRound(B);
   if (B.birthRound) B.round = B.birthRound + me.turn - 1;
   if (!st.home) st.home = { x: me.x, y: me.y };
-  st.target = null;   // [x, y] enemy structure to attack
+  st.target = st.chainT || null;   // [x, y] enemy structure to attack
   st.tIdx = -1;       // its enemy castle index from the ATTACK message (-1: unknown)
   st.known = [];      // ATTACK_PERSIST: enemy castle index -> [x, y] heard so far
   st.dead = new Set();   // indices seen destroyed

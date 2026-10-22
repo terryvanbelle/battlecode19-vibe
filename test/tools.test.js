@@ -204,6 +204,18 @@ test('replay: timeline snapshots match the tally and the final state', () => {
 });
 
 // A generous clock (timescale 20): on a throttled machine a frozen robot would part the two games for clock reasons.
+test('run_game: bot code runs only without network; a direct call re-runs itself inside unshare -rn', () => {
+  const { execFileSync } = require('child_process');
+  const probe = 'process.stdout.write(String(require("./tools/run_game.js").netIsolated()))';
+  const cwd = path.join(__dirname, '..');
+  assert.strictEqual(execFileSync('unshare', ['-rn', process.execPath, '-e', probe], { cwd, encoding: 'utf8' }), 'true');
+  // A 2-round game started without unshare reports that it ran isolated.
+  const line = execFileSync(process.execPath, ['tools/run_game.js', '--red', 'bots/v3', '--blue', 'bots/v2', '--seed', '2202',
+    '--max-rounds', '2', '--timescale', '20', '--init-ms', '10000'], { cwd, encoding: 'utf8' });
+  const r = JSON.parse(line.trim().split('\n').pop());
+  assert.deepStrictEqual([r.net_isolated, r.rounds >= 2], [true, true]);
+});
+
 test('run_game: --fast-turn replays byte for byte the game the engine path plays (--det, 40 rounds)', () => {
   const { execFileSync } = require('child_process'), os = require('os');
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fastturn-'));

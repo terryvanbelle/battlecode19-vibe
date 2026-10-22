@@ -8,6 +8,7 @@ import { econ } from './mapinfo.js';
 import { fuelStep } from './nav.js';
 import { isAttacker, retreatStep, THREAT_R2 } from './combat.js';
 import { frontSite } from './struct.js';
+import { chainStart, learnRound, pilgrimChain } from './chain.js';
 
 function init(B) {
   econ(B);
@@ -22,8 +23,10 @@ function init(B) {
       else if (m.type === SIG.CHURCH) { st.site = [m.x, m.y]; st.cluster = B.clusters.findIndex(c => c.site[0] === m.x && c.site[1] === m.y); }
       else if (m.type === SIG.ROUND) B.birthRound = m.v;
       else if (m.type === SIG.FRONT) { B.birthRound = m.v; st.site = frontSite(w, r.x, r.y); st.cluster = -1; }
+      else if (m.type === SIG.CHAIN && CFG.CHAIN_ROUND) { chainStart(B, [m.x, m.y]); st.chainer = r.unit === CASTLE; }
     }
   }
+  if (st.chain) learnRound(B);
   if (B.birthRound) B.round = B.birthRound + me.turn - 1;
   B.rnd = rng(((B.birthRound || 0) * 4096 + me.y * 64 + me.x) * 8 + me.unit); B.nav.rnd = B.rnd;
   if (!st.target && !st.site) st.target = freeDepotNear(B, me.x, me.y, null);
@@ -79,6 +82,9 @@ export function pilgrimTurn(B) {
     const h = st.structs[0] || me;
     st.site = null; st.target = freeDepotNear(B, h.x, h.y, null);
   }
+
+  // CFG.CHAIN_ROUND: a chainer walks, waits and builds the first church; a link pilgrim builds the next one.
+  if (st.chain) { const a = pilgrimChain(B, go); if (a !== undefined) return a; }
 
   // Flee attackers that can reach us next turn.
   const threats = w.enemies.filter(e => isAttacker(e.unit) && d2(me.x, me.y, e.x, e.y) <= THREAT_R2[e.unit]);

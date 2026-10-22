@@ -10,6 +10,7 @@ export const SIG = {
   FRONT: 7,   // structure -> newborn pilgrim: build a church at the builder's front site (struct.js frontSite); v = round
   ZONE: 8,    // structure -> newborn military (r2 25, the turn after the build): a unit of ours died at (x, y) (CFG.KILL_ZONE)
   RECALL: 9,  // castle -> army (far, FAR.RECALL): come home to the castle at (x, y), it is under attack (CFG.RECALL)
+  CHAIN: 10,  // castle -> newborn chainer, chain link -> newborn link or military: church chain at the enemy castle (x, y)
 };
 export function encXY(type, x, y) { return (type << 12) | (x << 6) | y; }
 export function encNum(type, v) { return (type << 12) | (v & 4095); }
@@ -23,6 +24,8 @@ export const CT = {
   DEAD: 72,      // + enemy castle index (< 4, see castle.js): a unit saw that enemy castle gone
   MARCH: 80,     // + unit type: status byte of a military unit not free for a wave: marching, or home guard (CFG.WAVE)
   TAKEN: 88,     // + cluster index (< 40): a pioneer saw an enemy structure at that cluster's site (CFG.EXPAND_ROUND)
+  CHAINER: 70,   // a chainer still walking or waiting (CFG.CHAIN_ROUND, chain.js)
+  CHAINGONE: 71, // a chainer saw its target castle gone
 };
 
 // Far messages (to robots that may not see the sender, so cannot check its team): the message type is the exact

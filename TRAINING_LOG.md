@@ -1180,3 +1180,32 @@
   (2) pilgrim mine actions to round 450: h54 at least 105% of h35's; (3) wins at least 6 of 8. Gate 40 games vs
   h35, falsifier t <= 0 (30 K per strike taken from the first pilgrims and churches; preacher target weights change
   mid-game fights). Attribution if it passes: STRIKE_R2 alone vs the preacher weights alone.
+
+## 2026-10-22 03:30 — h52 delivery FAILED 0 of 3 (attack at 350)
+- 8 games vs h35 (2924, 2202, 241, 1915 both sides; `tools/dlv.js` on out/rp_dlv_h52, SUM rows): (1) h35's castles
+  lost 5, h52's 5 (bar: at least 7); (2) h52 won 3 of 8 (bar 5); (3) enemy military killed 1,446 vs 1,626 lost
+  (89%, bar 95%). Marching at 350 met an unspent lattice with fewer units and lost more than it killed. Not gated;
+  the 350 -> 300 -> 250 dose ladder stops here. h53 (550) plays next on the extra lane.
+
+## 2026-10-22 03:39 — h50 gate INCONCLUSIVE (27-13, t 1.70); 20 more cells queued. h55 (church chains) pre-registered
+- h50 (PIONEER_RESERVE 2 + MARCH_MASK 8) vs h35, 20 cells x 2 sides (seed0 5000): h2h gained 12, lost 5, split 3,
+  net +7, t 1.70; raw 27-13. Between the bars: extended by 20 cells at seed0 6000 (job ...a3d6, h50x), read pooled
+  with this block. h39 and h44 stay in hold until then.
+- h55 = v5 + CHAIN_ROUND 150 (src/bot/chain.js; StoneT2000's tactic from replica scrim 200, seed 2924): from round
+  150 (castle i at 150 + 30 i) a castle sends a pilgrim at its mirror castle; it stops 12 king steps out and waits
+  for 300 K and 1,200 F in the bank (the peacetime army leaves 300 K from round 150), then builds church, pilgrim,
+  church, ... one tile nearer each, all in one round, until a church stands within r2 49; every church of the line
+  builds preachers and crusaders aimed at the castle for 40 turns. Driver diagnostic, h55 red vs h35 on 2924 (400
+  rounds, 0 exceptions, ms_max 748): the second castle's chainer walked from round 180 and fired at 199 (3 churches
+  at king 7 from (47,22); they built 133 units), and that castle fell at 400. The first chainer stood beside its
+  corner castle (6,0) for 250 turns, boxed in by our own military in the 1-wide top corridor, and the patience rule
+  counted it staged there; the third castle never had the 10 K above its reserve after the burst emptied the bank
+  (K 16-240 from 220 to 400). Fixed: patience stages only within 12 + 6 steps; a chainer stuck farther for 30 turns
+  becomes a pilgrim and the castle sends another 100 rounds after the last (unit test).
+- Delivery (VM queue ahead of h50x, 8 games of 1000 rounds vs h35 on 2924, 616, 2202, 357 both sides), summed:
+  (1) the candidate fires a chain (2+ churches in one round, ending within 9 king steps of an enemy castle) in at
+  least 6 of 8 games (scratch chainev.js); (2) enemy castles destroyed (h35's castlesLost, `tools/dlv.js`) at least
+  1.25x the candidate's own and at least 2 more; (3) wins at least 5 of 8. Gate 40 games vs h35, falsifier t <= 0.
+  Doses: CHAIN_ROUND 150 -> 250 (a bigger bank and army first) or CHAIN_END_R2 49 -> 25 (StoneT ended 5 steps out).
+  Symmetry: sym_h55 (seeds 1, 2, 3, 2924, 260 rounds) and a no-op check of the new defaults (h35k vs h35, --det) on
+  the extra lane (`out/dlv_chain22.sh`).

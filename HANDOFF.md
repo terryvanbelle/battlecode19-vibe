@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 03:05 PDT)
+## State (2026-10-22 03:42 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -13,15 +13,17 @@
   (h35d vs h35, --det, VM extra lane): out/noop_v5.cmp in 2019-next.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/):
-  the stack h50 vs h35 (PIONEER_RESERVE 2 + MARCH_MASK
-  8, LEARNINGS 18; ...a3d, running), h54's delivery (STRIKE_R2 36 + PREACHER_SELF 4 + PREACHER_MIL 2.5: win the
-  knife fight at mirror churches that decides which side wins self-play; ...a3d5; TRAINING_LOG 03:02), h51's delivery (CASTLE_POST 0.5: half the church-born army guards the nearest
+  h54's delivery (STRIKE_R2 36 + PREACHER_SELF 4 + PREACHER_MIL 2.5: win the
+  knife fight at mirror churches that decides which side wins self-play; ...a3d5, running; TRAINING_LOG 03:02),
+  h55's delivery (CHAIN_ROUND 150, church chains; ...a3d55; TRAINING_LOG 03:39), the extension of h50's gate (stack
+  PIONEER_RESERVE 2 + MARCH_MASK 8, LEARNINGS 18: 27-13, t 1.70 at 40 games, inconclusive; 20 more cells at seed0
+  6000, ...a3d6, out/h50x_h35.jsonl, read pooled with out/h50_h35.jsonl), h51's delivery (CASTLE_POST 0.5: half the church-born army guards the nearest
   castle; ...a3e; pre-registered TRAINING_LOG 02:33), h43's gate vs h35 (castle recall RECALL 30; delivery passed 3 of
   3 at 01:18, but h43 lost 4 of the 5 games in which it recalled; ...a43), then the old candidates rebased onto v5 (v5 + their own
   switch, 40 games vs h35): h15v5 (MIL_ROTATION null: no crusaders; moved first at 01:15, job ...a5, as crusaders
   died unfired in h41's games and lost h42's karbonite-bound ones), h24v5 (ECON_UNTIL 100), h20v5 (DEF_RESERVE_K 30), h8v5,
   h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Held in ~/jobq/hold
-  until h50's gate reads (02:45): the single gates h39 (PIONEER_RESERVE 2, ...a4) and h44 (MARCH_MASK 8, ...a44),
+  until h50's pooled gate reads: the single gates h39 (PIONEER_RESERVE 2, ...a4) and h44 (MARCH_MASK 8, ...a44),
   needed for attribution only if the stack fails. Gates of passed deliveries go in after h43's (job names
   ...4b01b1a45 onward, so they run before h15v5's ...a5). Superseded at v5: h31x, h33,
   h29, h28, h21 (their switches are in v5). Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
@@ -37,7 +39,8 @@
   `out/dlv_chain16.sh` (no-op h35g vs h35: IDENTICAL; sym_h47 clean), `out/dlv_chain17.sh` (sym_h48 clean), `out/dlv_chain18.sh` (no-op h35h vs h35 IDENTICAL; sym_h49, sym_h50 clean), `out/dlv_chain19.sh` (no-op h35i,
   sym_h51; rerun at 02:15 on the CASTLE_POST_R builds: no-op IDENTICAL, sym_h51 clean), `out/dlv_chain20.sh`
   (deliveries of h52 and h53, attack timing 350 / 550, started 02:44; TRAINING_LOG 02:40), `out/dlv_chain21.sh`
-  (no-op h35j vs h35 for the new defaults PREACHER_SELF / PREACHER_MIL / STRIKE_R2; sym_h54). h51's second driver diagnostic
+  (no-op h35j vs h35 for the new defaults PREACHER_SELF / PREACHER_MIL / STRIKE_R2; sym_h54), `out/dlv_chain22.sh`
+  (no-op h35k vs h35 for the chain code, CHAIN_ROUND 0; sym_h55, 260 rounds; started 03:38). h51's second driver diagnostic
   (2299): 33 units by the castle at 450 against h35's 3, yet h51 lost that castle at 562 (TRAINING_LOG 02:33). Symmetry checks stop only at axis-tile contests or
   combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new
@@ -50,6 +53,14 @@
   pilgrims boxed in full next to packed castles (h21 relay) and prophets firing 84% of attack fuel at 0.40 damage
   per fuel (h22 preachers in their place; h23 prophets keep off a short bank). `replay.js fire`: prophets fire 93%
   of attack fuel in self-play, ~13,500 a game.
+- Church chains (src/bot/chain.js, CFG.CHAIN_ROUND; h55): StoneT2000's tactic seen in replica scrim 200. h55's
+  driver diagnostic on 2924 fired one chain (3 churches 7 steps from a castle, 133 units, the castle fell at 400);
+  its first chainer stood 250 turns beside corner castle (6,0), boxed in by our own military in the 1-wide top
+  corridor. That jam is a movement lead for v5 itself (idle units on and next to a corridor by a corner castle).
+  Defence against chains is not built: chainers loiter 12 steps out for many turns (bot1v43: r200-235 at (34,0)).
+- tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
+  cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were
+  started without it, our own builds only). Not yet synced to the VM trees (they start games under unshare anyway).
 - Replica ladder (ACCESS.md, tools/galaxy19, `tools/galaxy19/contest19.py`): team vibe19 runs v4 since submission
   89 (20:05 PDT); v3 threw 31,098 exceptions in 40 of its 192 replica games (the setup bug v4 fixes). Matches
   created before 89, including scrims 199-202, still play v3. Benchmark field:

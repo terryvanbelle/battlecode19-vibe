@@ -16,6 +16,7 @@ import { minesNow, pilgrimTurn, stepAvoid } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover } from '../src/bot/combat.js';
+import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch } from '../src/bot/chain.js';
 const require = createRequire(import.meta.url);
 const SPECS = require('../engine/node_modules/bc19/specs.json');
 const Game = require('../engine/node_modules/bc19/game.js');
@@ -1072,4 +1073,160 @@ test('combat: preacherTarget selfCost (PREACHER_SELF): the 1915 duel, a splash o
   const crowd = [R(0, S.PREACHER, 10, 10), R(1, S.CRUSADER, 9, 10), R(1, S.CRUSADER, 11, 10), R(1, S.PROPHET, 10, 11)];
   const c = preacherTarget(10, 10, crowd, 0, () => true, 4, 2.5);
   assert.ok(c && hitsSelf(c) && c.value === 3.5, JSON.stringify(c));
+});
+
+// CFG.CHAIN_ROUND fixtures: a site with a free ring on seed 3, away from the castles, and tiles 9 and 4 king steps
+// from it (canonical frame) as chain targets.
+function chainFixture() {
+  const g = new Game(3, 100, 20, false, false), n = g.map.length;
+  const pass = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x];
+  let ours = null;
+  for (let y = 2; y < n - 2 && !ours; y++) for (let x = 2; x < n - 2 && !ours; x++)
+    if (pass(x, y) && offsets(2).every(([dx, dy]) => pass(x + dx, y + dy)) && g.robots.every(r => king(r.x, r.y, x, y) > 12)) ours = [x, y];
+  const mk = (id, team, unit, x, y, turn = 5) => ({ id, team, unit, x, y, turn, health: S.STATS[unit].hp || 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+  const all = g.robots;
+  const world = (robots, me) => {
+    g.robots = all.filter(r => d2(r.x, r.y, me.x, me.y) <= 100).concat(robots);
+    const w = worldFor(g, me); g.robots = all;
+    const log = { sent: [], talk: [] };
+    w.api.signal = (v, r) => log.sent.push([v, r]); w.api.castleTalk = v => log.talk.push(v);
+    return { w, log };
+  };
+  const w0 = world([mk(4100, 0, S.CHURCH, ours[0], ours[1])], mk(4100, 0, S.CHURCH, ours[0], ours[1])).w;
+  const F = bfs(w0, [[w0.me.x, w0.me.y]], offsets(2));
+  const at = (k, ok) => { for (let i = 0; i < w0.N; i++) { const x = i % n, y = (i - x) / n; if (F[i] === k && w0.passable(x, y) && ok(x, y)) return [x, y]; } return null; };
+  const far = at(9, () => true), near = at(4, (x, y) => d2(x, y, w0.me.x, w0.me.y) <= CFG.CHAIN_END_R2), farther = at(20, () => true);
+  const mid = at(15, () => true);
+  const mine = (B, act) => B.w.T.toC(ours[0] + act.dx, ours[1] + act.dy);   // canonical tile of a build or move
+  // The enemy castle standing on a target (a chain whose target tile is seen empty stops: the castle is gone).
+  const castleAt = t => { const [x, y] = w0.T.toE(t[0], t[1]); return mk(4109, 1, S.CASTLE, x, y, 200); };
+  return { g, n, ours, mk, world, me: w0.me, far, near, farther, mid, mine, castleAt };
+}
+
+test('chain: a church born in a chain builds the next pilgrim one step nearer, or military aimed at the castle when near', () => {
+  const saved = CFG.CHAIN_ROUND;
+  try {
+    const X = chainFixture();
+    assert.ok(X.ours && X.far && X.near, 'fixture');
+    const adj = offsets(2).map(([dx, dy]) => [X.ours[0] + dx, X.ours[1] + dy]).find(([x, y]) => X.g.map[y][x]);
+    const run = (t, k = 400) => {
+      const church = X.mk(4100, 0, S.CHURCH, X.ours[0], X.ours[1], 1), pil = X.mk(4101, 0, S.PILGRIM, adj[0], adj[1]);
+      pil.signal = t ? encXY(SIG.CHAIN, t[0], t[1]) : 0; pil.signal_radius = 2;
+      const { w, log } = X.world([church, pil].concat(t ? [X.castleAt(t)] : []), church);
+      w.karbonite = k; w.fuel = 3000;
+      const B = { api: w.api, w, round: 0, birthRound: 0, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      return { act: churchTurn(B), B, log };
+    };
+    CFG.CHAIN_ROUND = 150;
+    const a = run(X.far), here = a.B.st.chainF[X.me.y * X.n + X.me.x];
+    assert.strictEqual(a.act.u, S.PILGRIM);
+    const [px, py] = X.mine(a.B, a.act);
+    assert.ok(a.B.st.chainF[py * X.n + px] < here, 'the pilgrim stands nearer');
+    assert.deepStrictEqual(a.log.sent, [[encXY(SIG.CHAIN, X.far[0], X.far[1]), 2]]);
+    const b = run(X.near);
+    assert.strictEqual(b.act.u, CFG.CHAIN_MIX[0]);
+    const [ux, uy] = X.mine(b.B, b.act);
+    assert.ok(d2(ux, uy, X.near[0], X.near[1]) < d2(X.me.x, X.me.y, X.near[0], X.near[1]), 'toward the castle');
+    assert.deepStrictEqual(b.log.sent, [[encXY(SIG.CHAIN, X.near[0], X.near[1]), 2]]);
+    assert.strictEqual(run(X.far, 55).act.u, CFG.CHAIN_MIX[0], 'no karbonite for another link: the line ends here');
+    CFG.CHAIN_ROUND = 0;
+    assert.strictEqual(run(X.far).B.st.chain, undefined, 'switch off: the radio is ignored');
+  } finally { CFG.CHAIN_ROUND = saved; }
+});
+
+test('chain: a staged chainer waits for CHAIN_K and CHAIN_F, then builds the first church; it fires early when threatened', () => {
+  const saved = CFG.CHAIN_ROUND;
+  try {
+    CFG.CHAIN_ROUND = 150;
+    const X = chainFixture();
+    assert.ok(X.farther, 'fixture');
+    const run = (t, k, f, extra = []) => {
+      const pil = X.mk(4101, 0, S.PILGRIM, X.ours[0], X.ours[1]);
+      const { w, log } = X.world([pil, X.castleAt(t), ...extra], pil);
+      w.karbonite = k; w.fuel = f;
+      const B = { api: w.api, w, round: 200, birthRound: 150, st: { chainer: true }, deps: null, clusters: null, rnd: rng(1) };
+      chainStart(B, t);
+      const act = pilgrimChain(B, () => 'walk');
+      return { act, B, log };
+    };
+    const wait = run(X.far, 299, 3000);
+    assert.strictEqual(wait.act, null, 'staged (9 <= CHAIN_STAGE): holds');
+    assert.deepStrictEqual(wait.log.talk, [CT.CHAINER]);
+    assert.strictEqual(run(X.far, 300, CFG.CHAIN_F - 1).act, null, 'fuel short: holds');
+    const go = run(X.far, 300, CFG.CHAIN_F);
+    assert.strictEqual(go.act.u, S.CHURCH);
+    const [cx, cy] = X.mine(go.B, go.act);
+    assert.ok(go.B.st.chainF[cy * X.n + cx] < go.B.st.chainF[X.me.y * X.n + X.me.x]);
+    assert.deepStrictEqual(go.log.sent, [[encXY(SIG.CHAIN, X.far[0], X.far[1]), 2]]);
+    assert.strictEqual(go.B.st.chain, null, 'an ordinary pilgrim from now on');
+    assert.strictEqual(run(X.farther, 300, 3000).act, 'walk', '20 steps out: walks on');
+    // An enemy prophet that can shoot it: the line starts now, from here, if a church is affordable.
+    const [ex, ey] = X.g.robots.length ? [X.ours[0] + 5, X.ours[1]] : [0, 0];
+    const threat = [X.mk(4102, 1, S.PROPHET, ex, ey)];
+    if (X.g.map[ey] && X.g.map[ey][ex]) {
+      assert.strictEqual(run(X.farther, 60, 300, threat).act.u, S.CHURCH);
+      assert.strictEqual(run(X.farther, 40, 300, threat).act, undefined, 'no church affordable: flee as a pilgrim');
+    }
+  } finally { CFG.CHAIN_ROUND = saved; }
+});
+
+test('chain: a chainer that gets no nearer stages near the line, and quits far from it', () => {
+  const saved = CFG.CHAIN_ROUND;
+  try {
+    CFG.CHAIN_ROUND = 150;
+    const X = chainFixture();
+    assert.ok(X.mid && X.farther && 15 <= CFG.CHAIN_STAGE + CFG.CHAIN_SLACK && 20 > CFG.CHAIN_STAGE + CFG.CHAIN_SLACK, 'fixture');
+    // still: turns it has already stood without getting nearer; the walk is blocked (go returns null).
+    const run = (t, still, k = 0) => {
+      const pil = X.mk(4101, 0, S.PILGRIM, X.ours[0], X.ours[1]);
+      const { w, log } = X.world([pil, X.castleAt(t)], pil);
+      w.karbonite = k; w.fuel = 3000;
+      const B = { api: w.api, w, round: 200, birthRound: 150, st: { chainer: true }, deps: null, clusters: null, rnd: rng(1) };
+      chainStart(B, t);
+      B.st.chainBest = B.st.chainF[X.me.y * X.n + X.me.x]; B.st.chainStill = still;
+      return { act: pilgrimChain(B, () => null), B, log };
+    };
+    assert.strictEqual(run(X.mid, CFG.CHAIN_PATIENCE - 2, 300).act, null, '15 out, not yet patient: walks (blocked)');
+    assert.strictEqual(run(X.mid, CFG.CHAIN_PATIENCE - 1, 300).act.u, S.CHURCH, '15 out, patience spent: staged, fires');
+    const far = run(X.farther, CFG.CHAIN_PATIENCE - 1, 300);
+    assert.strictEqual(far.act, null, '20 out: never staged by patience');
+    assert.strictEqual(far.B.st.chain.length, 2);
+    const quit = run(X.farther, CFG.CHAIN_GIVEUP - 1, 300);
+    assert.strictEqual(quit.act, undefined, 'stuck far CHAIN_GIVEUP turns: an ordinary pilgrim turn');
+    assert.strictEqual(quit.B.st.chain, null);
+    assert.strictEqual(quit.B.st.chainer, false);
+    assert.deepStrictEqual(quit.log.talk, [CT.CHAINER, CT.UNIT + S.PILGRIM], 'the castle hears it is no longer chaining');
+  } finally { CFG.CHAIN_ROUND = saved; }
+});
+
+test('chain: a unit born with the chain radio targets the castle and learns the round from a castle in sight', () => {
+  const saved = CFG.CHAIN_ROUND;
+  try {
+    CFG.CHAIN_ROUND = 150;
+    const X = chainFixture();
+    const adj = offsets(2).map(([dx, dy]) => [X.ours[0] + dx, X.ours[1] + dy]).find(([x, y]) => X.g.map[y][x]);
+    const church = X.mk(4100, 0, S.CHURCH, X.ours[0], X.ours[1], 3);
+    church.signal = encXY(SIG.CHAIN, X.near[0], X.near[1]); church.signal_radius = 2;
+    const pro = X.mk(4101, 0, S.PROPHET, adj[0], adj[1], 1);
+    const castle = X.mk(4102, 1, S.CASTLE, X.ours[0] + 1, X.ours[1] + 1 === adj[1] && X.ours[0] + 1 === adj[0] ? X.ours[1] - 1 : X.ours[1] + 1, 237);
+    const { w } = X.world([church, pro, castle], pro);
+    const B = { api: w.api, w, round: 0, st: {}, deps: null, clusters: null, rnd: rng(2) };
+    B.offs = offsets(S.STATS[S.PROPHET].speed); B.nav = new Nav(w, B.offs, B.rnd);
+    militaryTurn(B);
+    assert.deepStrictEqual(B.st.chainT, X.near);
+    assert.strictEqual(B.round, 237);
+    // learnRound: a robot on its 4th turn that sees a castle on turn 240 was born in round 237.
+    const R = { w: { me: { turn: 4 }, robots: [{ seen: true, unit: S.CASTLE, turn: 240 }] } };
+    learnRound(R);
+    assert.deepStrictEqual([R.birthRound, R.round], [237, 240]);
+  } finally { CFG.CHAIN_ROUND = saved; }
+});
+
+test('chain: with CHAIN_ROUND 0 castles never launch a chainer and the peacetime reserve is unchanged', () => {
+  const saved = CFG.CHAIN_ROUND;
+  try {
+    CFG.CHAIN_ROUND = 0;
+    const B = { w: { me: { x: 0, y: 0 } }, st: { order: [{ x: 0, y: 0 }] }, round: 500 };
+    assert.strictEqual(chainLaunch(B, () => { throw new Error('built'); }), null);
+  } finally { CFG.CHAIN_ROUND = saved; }
 });
