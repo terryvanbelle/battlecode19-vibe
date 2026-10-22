@@ -756,6 +756,9 @@ galaxy-165,3,TestSubjector.BattleCode2~e6de74,StoneT2000.BC19-botfinalsafe,,B,,s
 galaxy-166,1,CometsTech.battlecode2019~187e8c,Nydroam.BatteredCod,,A,,score,,,2026-10-22T00:00:01Z
 galaxy-166,2,CometsTech.battlecode2019~187e8c,Nydroam.BatteredCod,,B,,score,,,2026-10-22T00:00:01Z
 galaxy-166,3,CometsTech.battlecode2019~187e8c,Nydroam.BatteredCod,,B,,score,,,2026-10-22T00:00:01Z
+galaxy-167,1,CS554-software-engineerin~a575dc,IanCoolidge0.battlecode20~f649f3,,A,,score,,,2026-10-22T00:00:01Z
+galaxy-167,2,CS554-software-engineerin~a575dc,IanCoolidge0.battlecode20~f649f3,,B,,score,,,2026-10-22T00:00:01Z
+galaxy-167,3,CS554-software-engineerin~a575dc,IanCoolidge0.battlecode20~f649f3,,B,,score,,,2026-10-22T00:00:01Z
 batch-out/h11c_h6,34,cand:h11c,cand:h6,seed-2927,A,1000,health,2927,red,2026-10-22T00:05:13Z
 batch-out/h11c_h6,36,cand:h11c,cand:h6,seed-2927,B,513,castles,2927,blue,2026-10-22T00:07:18Z
 batch-out/h11c_h6,37,cand:h11c,cand:h6,seed-1862,A,1000,health,1862,red,2026-10-22T00:08:09Z
@@ -1026,3 +1029,9 @@ batch-out/dlv_h43_h35,1,cand:h43,us:v5,seed-905,A,503,castles,905,red,2026-10-22
 batch-out/dlv_h43_h35,2,cand:h43,us:v5,seed-905,A,618,castles,905,blue,2026-10-22T08:06:29Z
 batch-out/dlv_h43_h35,3,cand:h43,us:v5,seed-1250,A,456,castles,1250,red,2026-10-22T08:07:04Z
 batch-out/dlv_h43_h35,4,cand:h43,us:v5,seed-1250,B,458,castles,1250,blue,2026-10-22T08:07:13Z
+batch-out/dlv_h43_h35,5,cand:h43,us:v5,seed-2855,A,667,castles,2855,blue,2026-10-22T08:09:41Z
+batch-out/dlv_h43_h35,6,cand:h43,us:v5,seed-2855,B,710,castles,2855,red,2026-10-22T08:09:43Z
+batch-out/dlv_h43_h35,7,cand:h43,us:v5,seed-2299,B,729,castles,2299,red,2026-10-22T08:09:47Z
+batch-out/dlv_h43_h35,8,cand:h43,us:v5,seed-2299,B,1000,health,2299,blue,2026-10-22T08:10:26Z
+batch-out/dlv_h44_h35,1,cand:h44,us:v5,seed-2202,A,1000,health,2202,blue,2026-10-22T08:18:07Z
+batch-out/dlv_h44_h35,2,cand:h44,us:v5,seed-2202,A,1000,health,2202,red,2026-10-22T08:18:13Z

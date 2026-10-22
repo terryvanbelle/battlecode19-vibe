@@ -1024,3 +1024,17 @@
   damage at most 90% of h35's; (2) enemy military units killed by h48 at least h35's (its kills at least its
   losses); (3) castles lost no more than h35's. Gate 40 games vs h35, falsifier t <= 0 (preachers see 4 tiles and
   walk at 3 fuel per r2). Dose ladder: lo 1 -> 2.
+
+## 2026-10-22 01:18 — h43 delivery PASSED (3 of 3); gate queued. Replica audit: no bot errors since v3
+- h43 (RECALL 30 on h35) vs h35, 8 games of 1000 rounds on 2855/905/1250/2299 both sides (out/dlv_h43_h35.jsonl,
+  rp_dlv_h43; `tools/dlv.js`), against the items of 00:27: (1) a recall radioed in 5 of 8 games (at least 4): PASS;
+  (2) castles lost: h43 3, h35 4: PASS; (3) military units lost: h43 1,034, h35 999 (103%; at most 110%): PASS.
+  Outcome 4 wins in 8; 0 exceptions, timeouts, init failures. Gate h43 vs h35 queued (job ...4b01b1a43, after h39's).
+- Caution for the gate: h43 lost 4 of the 5 games in which it recalled and won the 3 without one. Recalls fire when a
+  castle is outnumbered, so the games were going badly already; the gate decides.
+- sym_h48 clean (contest at round 45 on seed 1, combat after the first attack on seed 3, as accepted).
+- Replica audit (match.json team stats, 53 matches with vibe19): every error our bot logged on the replica is a
+  robot whose sandbox did not start (each of its turns logs one TypeError, counted as an exception, and one "Robot
+  is not initialized.", counted as init_fail): 27 matches, all v3 games before match 141 (the setup bug v4 fixes);
+  none since, and no timeouts or frozen robots. Opponents still lose robots at creation (LEARNINGS 17): bot1v43
+  4,509 of 41,551 turns in 200-1, botfinalsafe 1,107 in 199-1, CometsTech 511 in 141-2.

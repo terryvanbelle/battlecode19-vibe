@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 00:42 PDT)
+## State (2026-10-22 01:20 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -13,12 +13,11 @@
   (h35d vs h35, --det, VM extra lane): out/noop_v5.cmp in 2019-next.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/):
-  h43's delivery (castle recall RECALL 30: a castle under attack calls far
-  guards home; 00:27; 2855 diagnostic: the recall brought the army inside the attack call's reach and it then died
-  in h35's held line), h44's delivery (MARCH_MASK 8: only crusaders march before round 900; 00:37); h45 (EDGE 1.5) withdrawn before its delivery: inert against prophets, whose vision equals their reach; h46's delivery (SPOT 3: firing prophets radio
+  h44's delivery (MARCH_MASK 8: only crusaders march before round 900; 00:37); h45 (EDGE 1.5) withdrawn before its delivery: inert against prophets, whose vision equals their reach; h46's delivery (SPOT 3: firing prophets radio
   their target, crusaders and preachers engage it; job ...a39), h47's delivery (FOCUS 1: focus fire by a shared rule; ...a3a), h48's delivery (preachers when fuel binds,
   MIX_BY_STOCK [1000000, 1]; ...a3b),
-  h39 vs h35 (PIONEER_RESERVE 2; delivery passed 23:46), then the old candidates rebased onto v5 (v5 + their own
+  h39 vs h35 (PIONEER_RESERVE 2; delivery passed 23:46), h43 vs h35 (castle recall RECALL 30; delivery passed 3 of
+  3 at 01:18, but h43 lost 4 of the 5 games in which it recalled; job ...a43), then the old candidates rebased onto v5 (v5 + their own
   switch, 40 games vs h35): h15v5 (MIL_ROTATION null: no crusaders; moved first at 01:15, job ...a5, as crusaders
   died unfired in h41's games and lost h42's karbonite-bound ones), h24v5 (ECON_UNTIL 100), h20v5 (DEF_RESERVE_K 30), h8v5,
   h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Gates for h43-h48
@@ -33,7 +32,7 @@
   sym_h31 clean), `out/dlv_chain9.sh` (h36 vs rush read; sym_h36 clean), `out/dlv_chain11.sh` (sym_h41, sym_h42; clean), `out/dlv_chain12.sh` (h43 vs h35
   on 2855 both sides; read), `out/dlv_chain13.sh` (sym_h44), `out/dlv_chain14.sh` (no-op h35e vs h35: IDENTICAL; sym_h45 clean),
   `out/dlv_chain15.sh` (no-op h35f vs h35: IDENTICAL; sym_h46),
-  `out/dlv_chain16.sh` (no-op h35g vs h35, sym_h47). The h41/h42 deliveries (jobs ...a35, ...a36) run before h39's gate (...a4). Symmetry checks stop only at axis-tile contests or
+  `out/dlv_chain16.sh` (no-op h35g vs h35: IDENTICAL; sym_h47 clean), `out/dlv_chain17.sh` (sym_h48 clean). The h41/h42 deliveries (jobs ...a35, ...a36) run before h39's gate (...a4). Symmetry checks stop only at axis-tile contests or
   combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new
   chain scripts) so the replica's games get whole cores (LEARNINGS 17). Parked: h11, h12
