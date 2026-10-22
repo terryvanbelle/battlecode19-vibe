@@ -4,7 +4,7 @@ import assert from 'node:assert';
 import { createRequire } from 'node:module';
 import * as S from '../src/bot/specs.js';
 import { offsets, rng, d2, king } from '../src/bot/util.js';
-import { depots, clusters, bfs, costField } from '../src/bot/mapinfo.js';
+import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost } from '../src/bot/military.js';
@@ -12,7 +12,7 @@ import { callDue, castleTurn, nextPioneer, pioneerDue } from '../src/bot/castle.
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
-import { minesNow, pilgrimTurn, stepAvoid, huntSpot, hotRetarget } from '../src/bot/pilgrim.js';
+import { minesNow, pilgrimTurn, stepAvoid, huntSpot, hotRetarget, siteStalled } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, PRIORITY } from '../src/bot/combat.js';
@@ -766,6 +766,37 @@ test('pilgrim: PILGRIM_ORPHAN walks a full pilgrim that knows no living structur
     const a2 = pilgrimTurn(B);
     assert.strictEqual(B.st.orphan, false); assert.strictEqual(B.st.structs.length, 1); assert.ok(a2 && a2.action === 'move');
   } finally { CFG.PILGRIM_ORPHAN = saved; }
+});
+
+test('pilgrim: PIONEER_GIVEUP drops a site it gets no nearer to under enemy eyes, reports it taken, and mines', () => {
+  const saved = CFG.PIONEER_GIVEUP;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let P = null, E = null;                                   // a pilgrim next to the castle, an enemy prophet in its sight
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]]) if (!P && free(castle.x + dx, castle.y + dy)) P = [castle.x + dx, castle.y + dy];
+    for (let r = 6; r <= 9 && !E; r++) for (let dy = -r; dy <= r && !E; dy++) for (let dx = -r; dx <= r && !E; dx++)
+      if (Math.max(Math.abs(dx), Math.abs(dy)) === r && d2(0, 0, dx, dy) <= 100 && free(P[0] + dx, P[1] + dy)) E = [P[0] + dx, P[1] + dy];
+    const pil = { id: 4001, team: 0, unit: S.PILGRIM, x: P[0], y: P[1], turn: 20, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    const pro = { id: 4002, team: 1, unit: S.PROPHET, x: E[0], y: E[1], turn: 5, health: 20, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    g.robots.push(pil, pro);
+    const w = worldFor(g, pil); let talked = 0; w.api.castleTalk = v => { talked = v; };
+    const B = { api: w.api, w, round: 30, birthRound: 11, st: {}, deps: null, clusters: null, rnd: rng(2) };
+    B.offs = offsets(4); B.nav = new Nav(w, B.offs, B.rnd);
+    econ(B);
+    const far = B.clusters.map((c, i) => [king(w.me.x, w.me.y, c.site[0], c.site[1]), i]).sort((a, b) => b[0] - a[0])[0][1];
+    B.st.site = B.clusters[far].site.slice(); B.st.cluster = far;
+    CFG.PIONEER_GIVEUP = 3;
+    const calls = [1, 2, 3, 4].map(() => siteStalled(B));    // the first sets its best; three more turns no nearer
+    assert.deepStrictEqual(calls, [false, false, false, true]);
+    assert.strictEqual(B.st.site, null); assert.strictEqual(talked, CT.TAKEN + far); assert.ok(B.st.target);
+    // Without an enemy attacker in sight the count does not run.
+    g.robots = g.robots.filter(r => r.team === 0); talked = 0;   // (an enemy castle in sight counts too)
+    const w2 = worldFor(g, pil), B2 = { ...B, w: w2, api: w2.api, st: { site: B.clusters[far].site.slice(), cluster: far } };
+    assert.deepStrictEqual([1, 2, 3, 4, 5].map(() => siteStalled(B2)), [false, false, false, false, false]);
+    assert.ok(B2.st.site);
+  } finally { CFG.PIONEER_GIVEUP = saved; }
 });
 
 test('military: PROPHET_FLOOR keeps prophets from shooting a short bank that other shooters can use', () => {

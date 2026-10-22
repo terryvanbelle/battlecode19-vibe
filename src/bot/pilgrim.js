@@ -146,7 +146,7 @@ function pilgrimAct(B) {
         if ((w.karb[i] && me.karbonite < KARB_CAP) || (w.fuelD[i] && me.fuel < FUEL_CAP)) return w.fuel >= 1 ? w.mine() : null;
         return null;
       }
-    } else return go(B, 'site', adjSources(sx, sy));
+    } else if (!(CFG.PIONEER_GIVEUP && siteStalled(B))) return go(B, 'site', adjSources(sx, sy));
   }
 
   if (CFG.PILGRIM_ORPHAN && !st.structs.length && !st.site) { const a = orphanStep(B); if (a !== undefined) return a; }
@@ -179,6 +179,19 @@ function pilgrimAct(B) {
     if (alt && alt !== t) st.target = alt;
   }
   return go(B, 'd' + st.target.i, [[st.target.x, st.target.y]]);
+}
+
+// CFG.PIONEER_GIVEUP: count the turns a pioneer spends no nearer its site than its best while an enemy attacker is in
+// sight; at PIONEER_GIVEUP it reports the cluster taken, drops the site and takes the nearest free depot (true: the
+// caller falls through to mining).
+export function siteStalled(B) {
+  const w = B.w, me = w.me, st = B.st, k = king(me.x, me.y, st.site[0], st.site[1]);
+  if (st.siteBest === undefined || k < st.siteBest) { st.siteBest = k; st.siteStall = 0; return false; }
+  if (!w.enemies.some(e => isAttacker(e.unit))) return false;
+  if (++st.siteStall < CFG.PIONEER_GIVEUP) return false;
+  if (st.cluster >= 0 && st.cluster < 40) w.talk(CT.TAKEN + st.cluster);
+  st.site = null; st.target = freeDepotNear(B, me.x, me.y, null);
+  return true;
 }
 
 // CFG.PILGRIM_HOT: a pilgrim stuck PILGRIM_HOT turns in a row gives its target depot up for PILGRIM_HOT_MEM turns,

@@ -22,7 +22,7 @@ export function castleTurn(B) {
     st.partial = new Map();
     st.churched = new Set();
     st.lost = new Map();   // cluster -> round a pioneer for it died
-    st.taken = new Map();  // cluster -> round a pioneer saw an enemy structure there (CFG.EXPAND_ROUND)
+    st.taken = new Map();  // cluster -> round a pioneer saw an enemy structure there (CFG.EXPAND_ROUND) or gave up (PIONEER_GIVEUP)
     st.attackUntil = 0;
     st.deadE = new Set();   // indices (into st.order) of enemy castles reported destroyed
     st.lastT = -1;
@@ -61,6 +61,7 @@ export function castleTurn(B) {
   // Pioneers: one that disappeared frees its cluster for a later retry; one that built its church or is overdue is done.
   st.pioneers = st.pioneers.filter(p => {
     if (p.id > 0 && !allIds.has(p.id)) { st.lost.set(p.cluster, me.turn); return false; }
+    if (CFG.PIONEER_GIVEUP && st.taken.has(p.cluster) && st.taken.get(p.cluster) >= p.since) return false;   // it gave up
     return !st.churched.has(p.cluster) && me.turn - p.since <= 80;
   });
   st.nStructs = () => st.castles.size + st.churched.size;

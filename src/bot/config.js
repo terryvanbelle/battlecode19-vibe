@@ -13,6 +13,10 @@ export const CFG = {
                              // 30 clusters on replica seed 2924, three on our half)
   EXPAND_KEEP: 12,
   EXPAND_SEEN: 5,            // ...and a pioneer that sees an enemy structure this near its site reports it taken (CT.TAKEN)
+  PIONEER_GIVEUP: 0,         // >0: a pioneer that goes this many turns with an enemy attacker in sight and no nearer its site
+                             // (king steps) than its best gives the site up: reports it taken (CT.TAKEN: castles rest it 200
+                             // rounds and free its pioneer slot) and mines (replica seed 1325 self-play: pioneers waited
+                             // 105-375 turns beside contested sites; castles re-sent one every ~100 rounds)
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short
