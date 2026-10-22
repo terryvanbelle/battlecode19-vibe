@@ -1399,3 +1399,34 @@
   h35's; (3) h8v5 wins at least 5 of 8. Then a gate of 40 games vs h35 (its job ...4b06 moves up behind the delivery
   if it passes), D-sized looks 12 / 24 / 48, at most 200 cells, accept t >= 2, reject t <= 0. Dose ladder 900 ->
   850 / 950; zero arm h35. Driver diagnostic h8v5 red vs h35 on 2202 (1000 rounds) running.
+
+## 2026-10-22 06:13 — h58 delivery FAILED 1 of 3, h59 FAILED 0 of 3; the side decides 46% of paired cells
+- h58 (CHURCH_FIRST_R2 144) vs h55, 8 games of 1000 rounds on 2924, 616, 2202, 357 (`tools/dlv.js` SUM on
+  out/rp_dlv_h58): (1) castles lost 11 (bar at most 8; h35 13): fails; (2) wins 3 of 8 (bar 4; h35 2): fails;
+  (3) h55's churches lost 89 (bar 70; h35 killed 58): passes. It kills chains, but loses as many castles. Closed
+  (refuted at this dose); no gate was queued. Extra-lane checks of chain24/25: no-op h35n IDENTICAL, sym_h59 stops
+  only at the accepted kinds (seed 1 axis contest r45; seeds 3 and 1250 combat after the first attack).
+- h59 (PILGRIM_HOT 10) vs h35, 8 games on 1250, 1862, 2872, 241 (out/rp_dlv_h59, out/stall_dlv_h59.txt): (1)
+  stalled pilgrim turns to 450: h59 3,642, h35 3,670 (99%; bar at most 40%): fails; (2) mine actions to 450 27,216
+  vs 26,878 (101%; bar 110%): fails; (3) wins 4 of 8 (bar 5): fails. Closed (inert on its target). The driver
+  diagnostic that "showed" it firing (h59 red stalled 144 vs h35 blue 848 on 1250) compared sides, not builds: h35
+  as red stalls 45 turns there, h59 as blue 848 with the same longest streak (423, #4088). Why it missed: of the
+  streaks on its own seeds (scratch stallwhy.js), 1250/1862 are part-loaded or full pilgrims 6-26 king steps from
+  home with every depot near them hot (no target to switch to; the full ones are in the deposit branch, which
+  PILGRIM_HOT never sees); 241's red streaks are a jam, below.
+- In h58's and h59's deliveries the same side won both games in 7 of 8 cells. Census of 176 finished cells
+  (gates h24-h55 and deliveries h41-h59, both games present): the same side won both games in 81 (46%; red 30,
+  blue 51). In the six random 20-cell gates the side is balanced (red-both 23, blue-both 22); the delivery seeds
+  are side-decided maps reused (blue: 241, 2872, 2202, 2924, 357; red: 1250, 1862). RULES 1: the queue starts with
+  the castles alternating red, blue and new robots are appended, so a red twin acts just before its blue twin.
+- What decides those cells (scratch stepin.js / skirm.js on out/rp_dlv_h59): 1250 and 1862 are economy, blue's
+  pilgrims stall 469-848 turns to 450 against red's 1-144, red mines ~2x; 241 is the mirror-church knife fight of
+  h54 (churches 11 tiles apart at the top centre): rounds 40-200 red loses 69-72 prophets to blue prophets against
+  34, a median 1 king step from its own structures, firing 102-106 shots to blue's 193-203. 30-53% of all shots
+  on both sides hit a unit that had just stepped into the shooter's reach, so stepping in is common but does not
+  separate the sides.
+- 241 red's stall: its church at (12,8) has three passable neighbours; a crusader and a prophet stand on two of
+  them, a pilgrim on the third, and ~10 full pilgrims (K20, 2-3 king steps from home, no enemy in sight) queue in
+  the corridor behind for 220-271 turns (round 250 board). A sealed producer, a basics failure (TRAINING_ALGORITHM
+  1.11). Census of stall causes over h50/h54/h55's 120 gate replays running (VM out/stallwhy_census.txt) before
+  any fix: jam (no foe, home <= 3) against threat stalls.

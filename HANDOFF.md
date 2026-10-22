@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 05:47 PDT)
+## State (2026-10-22 06:15 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -32,7 +32,7 @@
   needed for attribution only if the stack fails. Gates of passed deliveries go in after h43's (job names
   ...4b01b1a45 onward, so they run before h15v5's ...a5). Superseded at v5: h31x, h33,
   h29, h28, h21 (their switches are in v5). Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
-  their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h46 (SPOT for melee) failed 1 of 3 at 01:52; h47 (FOCUS 1) failed 1 of 3 at 02:04; h48 (preachers when fuel binds) failed 1 of 3 at 02:20; h49 (SPOT for prophets) failed 0 of 3 at 02:32; h45 (EDGE 1.5) withdrawn before its delivery (inert: prophet vision equals reach); h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
+  their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h46 (SPOT for melee) failed 1 of 3 at 01:52; h47 (FOCUS 1) failed 1 of 3 at 02:04; h48 (preachers when fuel binds) failed 1 of 3 at 02:20; h49 (SPOT for prophets) failed 0 of 3 at 02:32; h58 (CHURCH_FIRST_R2) failed 1 of 3 and h59 (PILGRIM_HOT) 0 of 3 at 06:13; h45 (EDGE 1.5) withdrawn before its delivery (inert: prophet vision equals reach); h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
@@ -46,10 +46,8 @@
   (deliveries of h52 and h53, attack timing 350 / 550: failed 0 and 2 of 3, ATTACK_ROUND stays 450), `out/dlv_chain21.sh`
   (no-op h35j IDENTICAL; sym_h54 clean), `out/dlv_chain22.sh` (no-op h35k IDENTICAL; sym_h55: seed 2 split on the
   stores alone at round 215), `out/dlv_chain23.sh` (no-op h35l IDENTICAL; sym_h56 clean), `out/dlv_chain24.sh`
-  (started 04:38: no-op h35m vs h35 for CHURCH_FIRST code; sym_h55 seed 2 rerun with the pair-naming symcheck;
-  sym_h58 clean; h58's delivery vs h55, pre-registered TRAINING_LOG 04:40; no-op h35m IDENTICAL), `out/dlv_chain25.sh`
-  (queued 05:04 behind it: no-op h35n, sym_h59, h59's delivery vs h35 and the stall census of its replays;
-  pre-registered TRAINING_LOG 05:03). h51's second driver diagnostic
+  (no-op h35m IDENTICAL; sym_h58 clean; h58's delivery vs h55 FAILED 1 of 3, TRAINING_LOG 06:13), `out/dlv_chain25.sh`
+  (no-op h35n IDENTICAL; sym_h59 clean; h59's delivery FAILED 0 of 3, TRAINING_LOG 06:13). The extra lane is idle. h51's second driver diagnostic
   (2299): 33 units by the castle at 450 against h35's 3, yet h51 lost that castle at 562 (TRAINING_LOG 02:33). Symmetry checks stop only at axis-tile contests or
   combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new
