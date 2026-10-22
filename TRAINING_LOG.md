@@ -270,3 +270,19 @@
   fuel mined at least 5% higher; zero exceptions.
 - Gate: h21 (RELAY=1) vs h19, 40 games, seed0 5000, --timescale 2 --init-ms 1000. Falsifier: net <= 0. No dose
   ladder (one setting); if it passes, a follow-up may relay only when the pilgrim is blocked.
+
+## 2026-10-21 18:25 — h22 pre-registered: preachers in place of prophets
+- Source: h6 vs bots/rush seed 2908 (lost both castles at 639/651 although it killed 258 crusaders): our attack
+  fuel was 20,385, of which prophets fired 17,175 (687 shots) at 0.40 enemy damage per fuel; preachers 1.34,
+  castles and crusaders 1.00. Fuel 3 against 4,680 karbonite when the first castle saw the rush. Replica seed 826
+  (v3 vs CS554, castle (18,31) lost at 176): team fuel 0 from round 160; the prophets next to the castle could not
+  shoot (no fuel, and crusaders inside their r2 16 dead zone). Every unit costs the same 50 fuel to build, and
+  karbonite floats (3,785 unspent at round 1000 on seed 2202): per fuel, a preacher gives 60 HP and 1.34 damage
+  per fuel, a prophet 20 HP and 0.40.
+- Mechanism: peacetime build rotation MIL_ROTATION [4,3,4,3,5] (40% prophets, 40% crusaders, 20% preachers) ->
+  [5,3,5,3,4] (40% preachers, 40% crusaders, 20% prophets). The threat response is unchanged.
+- Delivery: vs bots/rush on seeds 1337, 1879, 2544, 2908 both sides, against h19's games there (h20's delivery
+  run): attack fuel per enemy damage at least 30% lower, team fuel at round 500 higher, no more castles lost.
+- Gate: h22 vs h19, 40 games (seed0 5000, --timescale 2 --init-ms 1000). Falsifier: net <= 0 (prophet range
+  matters more against our own prophet-rich army than fuel). Risk: preachers move at 3 fuel per r2, so the
+  attack call (whole army marches) costs more fuel.
