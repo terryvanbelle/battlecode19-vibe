@@ -436,6 +436,35 @@ test('military: RECALL sends a unit that hears it toward the castle, holding 2-3
   } finally { CFG.RECALL = saved; }
 });
 
+test('military: MARCH_MASK lets only the masked unit types take attack orders before round 900', () => {
+  const saved = CFG.MARCH_MASK;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let at = null;
+    for (let r = 3; r <= 6 && !at; r++) for (let dy = -r; dy <= r && !at; dy++) for (let dx = -r; dx <= r && !at; dx++)
+      if (Math.max(Math.abs(dx), Math.abs(dy)) === r && free(castle.x + dx, castle.y + dy)) at = [castle.x + dx, castle.y + dy];
+    const cw = worldFor(g, castle), [tx, ty] = cw.mirror(cw.me.x, cw.me.y);
+    castle.signal = encXY(0, tx, ty); castle.signal_radius = FAR.ATTACK;
+    const target = (unit, mask, round) => {
+      CFG.MARCH_MASK = mask;
+      const u = { id: 4003, team: 0, unit, x: at[0], y: at[1], turn: 3, health: S.STATS[unit].hp, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      g.robots.push(u);
+      try {
+        const w = worldFor(g, u), B = { api: w.api, w, round, birthRound: round - 2, st: {}, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[unit].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        militaryTurn(B);
+        return B.st.target;
+      } finally { g.robots.pop(); }
+    };
+    assert.deepStrictEqual(target(S.PROPHET, 56, 460), [tx, ty]);   // default: every type marches
+    assert.strictEqual(target(S.PROPHET, 8, 460), null);            // crusaders only
+    assert.deepStrictEqual(target(S.CRUSADER, 8, 460), [tx, ty]);
+    assert.deepStrictEqual(target(S.PROPHET, 8, 950), [tx, ty]);    // the last rounds: everyone
+  } finally { CFG.MARCH_MASK = saved; }
+});
+
 test('relay: a full pilgrim not next to a structure hands its load to a unit next to one, which deposits it', () => {
   const saved = CFG.RELAY;
   try {

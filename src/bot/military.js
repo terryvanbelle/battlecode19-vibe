@@ -39,7 +39,7 @@ function listen(B) {
     const m = decFarRobot(r);
     if (m && m.type === SIG.RECALL && CFG.RECALL && w.passable(m.x, m.y)) { st.recall = { x: m.x, y: m.y, until: me.turn + CFG.RECALL }; st.target = null; continue; }
     if (CFG.RECALL && st.recall && me.turn <= st.recall.until) continue;   // recalled: attack orders wait
-    if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || (st.guard && B.round < 900)) continue;
+    if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || ((st.guard || !(CFG.MARCH_MASK >> me.unit & 1)) && B.round < 900)) continue;
     const i = CFG.ATTACK_PERSIST && m.extra >= 1 && m.extra <= 4 ? m.extra - 1 : -1;
     if (i >= 0) { st.known[i] = [m.x, m.y]; if (st.dead.has(i)) continue; }
     st.target = [m.x, m.y]; st.tIdx = i;
