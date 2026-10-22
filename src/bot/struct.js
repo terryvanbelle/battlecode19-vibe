@@ -115,7 +115,7 @@ export function structTurn(B, allIds, extra) {
   resolvePending(B);
   refreshAssign(B, allIds);
   const attackers = w.enemies.filter(e => isAttacker(e.unit));
-  const reserveK = (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
+  const reserveK = CFG.DEF_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
     (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0);
 
   // 1. Defence: answer visible attackers with a defender while they outnumber ours; otherwise shoot.
@@ -157,7 +157,7 @@ export function structTurn(B, allIds, extra) {
 
   // 3. Economy: a pilgrim for every served depot.
   const dep = nextDepot(B);
-  if (dep && w.canAfford(PILGRIM, 0, 2)) {
+  if (dep && w.canAfford(PILGRIM, CFG.DEF_RESERVE_K, 2)) {
     const b = buildToward(B, PILGRIM, dep.x, dep.y, encXY(SIG.MINE, dep.x, dep.y));
     if (b) { st.pending = { x: b.x, y: b.y, unit: PILGRIM, kind: 'mine', ref: dep.i }; st.assign.set(dep.i, { id: -1, seen: me.turn }); return b.act; }
   }

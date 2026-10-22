@@ -236,3 +236,17 @@
   1000 ms for robot sandbox creation (acf0dc1): 11 of the 14 field entrants that had played had init failures, IvanGeffner
   eigthbot in all 3 of its games, under the batches' load. Scrims 150-153 vs StoneT2000 x2 and IvanGeffner x2,
   the strongest-looking entrants, none of which had played (unranked: galaxy refuses ranked requests downward).
+
+## 2026-10-21 17:55 — h20 pre-registered: standing defence reserve
+- Source: the replica's 11 lifetime losses of vibe19 (v3) are all to CS554, and the fastest is a rush (seed 1915,
+  lost at round 29): our castle built 4 pilgrims, a prophet at round 12 and a church at round 15, so it had no
+  karbonite when 5 crusaders arrived. h6 also loses both sides to bots/rush on 4 maps in 15 (17:10 entry).
+- Mechanism: every karbonite spend except a threat response (pilgrims, castle pioneers, pilgrim-built churches,
+  the peacetime army and guard) leaves CFG.DEF_RESERVE_K in the bank; the threat response (structTurn step 1) may
+  spend it. Switch DEF_RESERVE_K, default 0 (= h19). Unit test: with 35 K and no threat a castle builds nothing
+  at reserve 30; with an enemy crusader in view it builds a preacher.
+- Delivery (before the gate): vs bots/rush on h6's losing seeds 1337, 1879, 2544, 2908, both sides: the castle
+  holds >= 30 K on the round it first sees an attacker in >= 75% of those games, and wins vs rush do not fall.
+- Gate: h20 (DEF_RESERVE_K=30) vs h19, 40 games, seed0 5000, --timescale 2 --init-ms 1000. Falsifier: net <= 0
+  (the reserve's cost in slower expansion outweighs the defence). Dose ladder: 30 then 60 (one preacher's worth,
+  then two).

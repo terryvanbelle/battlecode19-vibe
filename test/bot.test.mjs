@@ -281,6 +281,27 @@ test('roles: a first turn killed at any point is recovered on the next turn', ()
   for (const u of [S.CRUSADER, S.PROPHET, S.PREACHER]) play(u, militaryTurn);
 });
 
+test('struct: DEF_RESERVE_K holds karbonite back from pilgrims and the guard, not from a threat response', () => {
+  const saved = CFG.DEF_RESERVE_K;
+  try {
+    const g = new Game(3, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0);
+    const turn1 = (reserve, enemy) => {
+      CFG.DEF_RESERVE_K = reserve; castle.turn = 1;
+      const extra = enemy ? [{ id: 4999, team: 1, unit: S.CRUSADER, x: castle.x, y: castle.y + 3, turn: 5, health: 40, signal: 0, signal_radius: 0, castle_talk: 0 }] : [];
+      const all = g.robots;   // the castle sees only robots within its vision (r2 100)
+      g.robots = all.filter(r => d2(r.x, r.y, castle.x, castle.y) <= 100).concat(extra);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round: 1, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 35;
+      return castleTurn(B);
+    };
+    assert.ok([S.PILGRIM, S.PROPHET].includes((turn1(0) || {}).u));   // economy or peacetime guard
+    assert.strictEqual(turn1(30), null);                          // either would leave less than 30
+    assert.strictEqual((turn1(30, true) || {}).u, S.PREACHER);    // a crusader 3 tiles away: the reserve is spent
+  } finally { CFG.DEF_RESERVE_K = saved; }
+});
+
 test('combat: target choice, preacher splash avoids friends, retreat', () => {
   const es = [{ id: 9, unit: 2, x: 5, y: 0, team: 1 }, { id: 4, unit: 5, x: 0, y: 3, team: 1 }, { id: 3, unit: 5, x: 3, y: 0, team: 1 }];
   assert.strictEqual(pickTarget(3, 0, 0, es, 64).id, 3); // preachers first, then closer

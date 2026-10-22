@@ -100,7 +100,7 @@ function pioneer(B) {
   const w = B.w, st = B.st;
   const next = nextPioneer(B);
   if (!next) return null;
-  if (!w.canAfford(PILGRIM, 50, 200)) return null;
+  if (!w.canAfford(PILGRIM, 50 + CFG.DEF_RESERVE_K, 200)) return null;
   const c = B.clusters[next.cluster];
   const b = buildToward(B, PILGRIM, c.site[0], c.site[1], encXY(SIG.CHURCH, c.site[0], c.site[1]));
   if (!b) return null;

@@ -72,7 +72,7 @@ export function pilgrimTurn(B) {
     const [sx, sy] = st.site;
     if (king(me.x, me.y, sx, sy) <= 1 && !(me.x === sx && me.y === sy)) {
       const occ = w.occ(sx, sy);
-      if (occ === 0 && w.karbonite >= STATS[CHURCH].costK && w.fuel >= STATS[CHURCH].costF + 2) {
+      if (occ === 0 && w.karbonite >= STATS[CHURCH].costK + CFG.DEF_RESERVE_K && w.fuel >= STATS[CHURCH].costF + 2) {
         if (B.round) w.signal(encNum(SIG.ROUND, B.round), 2);
         if (st.cluster >= 0) w.talk(CT.CHURCH + st.cluster);
         const act = w.build(CHURCH, sx - me.x, sy - me.y);

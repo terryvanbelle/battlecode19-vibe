@@ -40,6 +40,10 @@ export const CFG = {
   // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
   MIL_ROTATION: [4, 3, 4, 3, 5],   // peacetime build order by unit type (prophet 4, crusader 3, preacher 5)
   RESERVE_CHURCH_K: 50,      // karbonite kept back while a pioneer is out
+  DEF_RESERVE_K: 0,          // >0: every karbonite spend but a threat response (pilgrims, pioneers, churches, the
+                             // peacetime army) leaves this much in the bank, so a structure that sees attackers can
+                             // build a preacher (30 K) at once (replica seed 1915: the castle had spent its karbonite
+                             // on a church and fell to five crusaders at round 29)
   PLAN_SERVE_PILGRIM: 0,     // 1: church planning counts a depot as served by pilgrim moves (as staffing does), and
                              // churches a cluster with >= 2 unserved depots (or all, if smaller); 0: any depot within
                              // 2*SERVE_MOVES king steps marks the whole cluster served (seed 1755: never staffed)
