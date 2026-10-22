@@ -1573,7 +1573,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   doubles per loss (100, 200, 400 ... capped at 1,600). Built, not queued: in h50's gate only 18 of 263 pioneers died,
   so a local gate cannot see it; it waits for a replica panel against StoneT2000 (25 of 46 killed).
 
-## 2026-10-22 08:49 — replica 205 (v5 vs StoneT2000 botfinalsafe) won 2-1; the loss was a one-round church bomb; anti-chain panel pre-registered
+## 2026-10-22 08:56 — replica 205 (v5 vs StoneT2000 botfinalsafe) won 2-1; the loss was a one-round church bomb; anti-chain panel pre-registered
 
 - Match 205: game 1 (826, blue) won by castles (botfinalsafe threw 3,931 exceptions and 50 timeouts); game 3 (836,
   blue) won on health; game 2 (53, red, one castle a side, 58x58) lost at round 233.
@@ -1596,3 +1596,5 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   --cand <hash> --ctrl <h50 hash> --opp <h55v6 hash>` on the concatenated files. A candidate that reaches t >= 2 (or
   net >= +3 at t >= 1.5) goes to a no-harm gate vs h50 (accept at net >= 0, D >= 12); t <= 0 closes it. Control
   h50's own record vs h55v6 says how much the chain costs v6 today; if v6 wins nearly all of them the panel is void.
+- h54's three gate-extension jobs vs h35 (...a3d58, a3d59, a3d595) moved to ~/jobq/superseded: 17 of its first 20
+  cells were byte-identical, so D 12 needed ~80 more cells; the panel rates h54v6 where it fires.

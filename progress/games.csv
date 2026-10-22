@@ -819,6 +819,9 @@ galaxy-188,3,bc19-starter,DivyanshuSaxena.Battlecode,,B,,score,,,2026-10-22T00:0
 galaxy-189,1,OmarTahoun.battle-code,RyanSharafuddin.Battlecode_2019,,A,,score,,,2026-10-22T00:00:01Z
 galaxy-189,2,OmarTahoun.battle-code,RyanSharafuddin.Battlecode_2019,,A,,score,,,2026-10-22T00:00:01Z
 galaxy-189,3,OmarTahoun.battle-code,RyanSharafuddin.Battlecode_2019,,A,,score,,,2026-10-22T00:00:01Z
+galaxy-190,1,IvanGeffner.BC19-bot6b,CometsTech.battlecode2019~187e8c,,A,,score,,,2026-10-22T00:00:01Z
+galaxy-190,2,IvanGeffner.BC19-bot6b,CometsTech.battlecode2019~187e8c,,A,,score,,,2026-10-22T00:00:01Z
+galaxy-190,3,IvanGeffner.BC19-bot6b,CometsTech.battlecode2019~187e8c,,A,,score,,,2026-10-22T00:00:01Z
 galaxy-191,1,RyanSharafuddin.Battlecode_2019,Tom-CCS.BC19,,B,,score,,,2026-10-22T00:00:01Z
 galaxy-191,2,RyanSharafuddin.Battlecode_2019,Tom-CCS.BC19,,B,,score,,,2026-10-22T00:00:01Z
 galaxy-191,3,RyanSharafuddin.Battlecode_2019,Tom-CCS.BC19,,B,,score,,,2026-10-22T00:00:01Z
@@ -1432,6 +1435,12 @@ batch-out/h8v5_h35,9,cand:h8v5,us:v5,seed-1250,A,456,castles,1250,red,2026-10-22
 batch-out/h8v5_h35,10,cand:h8v5,us:v5,seed-1250,B,456,castles,1250,blue,2026-10-22T15:06:55Z
 batch-out/dlv_h60_h35,5,cand:h60,us:v5,seed-1862,A,491,castles,1862,red,2026-10-22T15:07:17Z
 batch-out/dlv_h60_h35,6,cand:h60,us:v5,seed-1862,B,491,castles,1862,blue,2026-10-22T15:08:09Z
+galaxy-406,1,us:v6,StoneT2000.BC19-bot1v43,seed-203,A,1000,castles,203,red,2026-10-22T15:08:13Z
+galaxy-406,2,us:v6,StoneT2000.BC19-bot1v43,seed-705,B,1000,castles,705,blue,2026-10-22T15:08:13Z
+galaxy-406,3,us:v6,StoneT2000.BC19-bot1v43,seed-53,B,301,castles,53,red,2026-10-22T15:08:13Z
+galaxy-407,1,StoneT2000.BC19-botfinalsafe,us:v6,seed-799,A,597,castles,799,red,2026-10-22T15:08:13Z
+galaxy-407,2,StoneT2000.BC19-botfinalsafe,us:v6,seed-1706,A,316,castles,1706,blue,2026-10-22T15:08:13Z
+galaxy-407,3,StoneT2000.BC19-botfinalsafe,us:v6,seed-2013,A,282,castles,2013,red,2026-10-22T15:08:13Z
 batch-out/h8v5_h35,11,cand:h8v5,us:v5,seed-2296,A,1000,health,2296,red,2026-10-22T15:12:48Z
 batch-out/h8v5_h35,12,cand:h8v5,us:v5,seed-2296,A,1000,health,2296,blue,2026-10-22T15:13:16Z
 batch-out/dlv_h60_h35,7,cand:h60,us:v5,seed-357,B,1000,castles,357,red,2026-10-22T15:22:10Z
@@ -1442,3 +1451,5 @@ batch-out/h8v5_h35,16,cand:h8v5,us:v5,seed-2633,A,1000,health,2633,blue,2026-10-
 batch-out/h8v5_h35,17,cand:h8v5,us:v5,seed-2855,B,667,castles,2855,red,2026-10-22T15:33:12Z
 batch-out/dlv_h60_h35,8,cand:h60,us:v5,seed-357,A,1000,castles,357,blue,2026-10-22T15:33:33Z
 batch-out/h8v5_h35,18,cand:h8v5,us:v5,seed-2855,A,667,castles,2855,blue,2026-10-22T15:33:43Z
+batch-out/h8v5_h35,19,cand:h8v5,us:v5,seed-2642,B,1000,castles,2642,red,2026-10-22T15:46:03Z
+batch-out/h8v5_h35,20,cand:h8v5,us:v5,seed-2642,A,1000,castles,2642,blue,2026-10-22T15:46:30Z
