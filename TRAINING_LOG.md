@@ -1305,3 +1305,18 @@
   churches died +4, +20, +56 rounds (without CHURCH_FIRST, vs h56 / h56b: +18, +65-70, the third alive at 400 after
   building 39-51 units); line at 307, 3 of 4 died +2, +5, +43, one 12 steps out lived (49 units). No castle lost by
   400 (vs h56: one at 386); health 7,580 to 4,280. h58's delivery vs h55 is on the extra lane.
+
+## 2026-10-22 05:08 — h54 gate block 1 inconclusive at D=3; extended by discordant cells; h59 fires on 1250
+- Gate h54 vs h35 (job ...a3d56, 40 games, seed0 5000; `paired.js --h2h --replays`): 20 cells, h54 21 wins,
+  gained 2, lost 1, split 17, **D 3**, net +1, t 0.58; 17 of the 20 cells are byte-identical replays (neither
+  side's switches ever fired). Pre-registered rule: inconclusive, extend. Sized by D (TRAINING_ALGORITHM 4): jobs
+  ...a3d58, a3d59, a3d595 (20 cells each, seed0 6000, 7000, 9000; no seed shared with any earlier block) append
+  to out/h54_h35.jsonl and rp_h54h35. D is checked at each job boundary; the first look is the first boundary
+  with D >= 12: accept t >= 2, reject t <= 0, otherwise more cells to D >= 24. If all 80 cells give D < 12, t is
+  read at 80 by the same bars and a remaining in-between result is logged "below resolution". Job ...a3d57 played its
+  "not accepted" branch (h55 vs h35).
+- h59 (PILGRIM_HOT 10) driver diagnostic, red vs h35 on seed 1250, 450 rounds (a filter, not a verdict): red's
+  pilgrims stalled 144 turns (longest streak 10) and mined 2,489 (`stall.js`), where h35 as red on this map in
+  h50's gate stalled 1,232 and mined 858. Blue (h35) stalled 848 here: two pilgrims 423 turns at (24,29) and (24,32)
+  under a red crusader at r2 50-53, the mirror of the old stall. Round 450: castle health 2,000 vs 320, units 60
+  vs 9; 0 exceptions, 0 timeouts. Delivery (chain25, VM) decides.
