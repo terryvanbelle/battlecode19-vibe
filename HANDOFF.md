@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 02:22 PDT)
+## State (2026-10-22 02:35 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v5** (`bots/v5` = h35, ROSTER.tsv); frozen history v0-v5, sparring partner
   `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate change is
@@ -13,18 +13,18 @@
   (h35d vs h35, --det, VM extra lane): out/noop_v5.cmp in 2019-next.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/):
-  h49's delivery (SPOT 3 +
-  SPOT_MASK 16: prophets converge on radioed sightings; ...a3c, running), the stack h50 vs h35 (PIONEER_RESERVE 2 + MARCH_MASK
-  8, LEARNINGS 18; ...a3d), then the single gates for attribution: h39 vs h35 (PIONEER_RESERVE 2; delivery passed
+  the stack h50 vs h35 (PIONEER_RESERVE 2 + MARCH_MASK
+  8, LEARNINGS 18; ...a3d, running), h51's delivery (CASTLE_POST 0.5: half the church-born army guards the nearest
+  castle; ...a3e; pre-registered TRAINING_LOG 02:33), then the single gates for attribution: h39 vs h35 (PIONEER_RESERVE 2; delivery passed
   23:46), h43 vs h35 (castle recall RECALL 30; delivery passed 3 of
   3 at 01:18, but h43 lost 4 of the 5 games in which it recalled; job ...a43), h44 vs h35 (MARCH_MASK 8; delivery
   passed 3 of 3 at 01:52, 6 wins in 8; ...a44), then the old candidates rebased onto v5 (v5 + their own
   switch, 40 games vs h35): h15v5 (MIL_ROTATION null: no crusaders; moved first at 01:15, job ...a5, as crusaders
   died unfired in h41's games and lost h42's karbonite-bound ones), h24v5 (ECON_UNTIL 100), h20v5 (DEF_RESERVE_K 30), h8v5,
-  h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Gates for h43-h48
-  go in right after h39's (job names ...4b01b1a43 to ...a48) when their deliveries pass. Superseded at v5: h31x, h33,
+  h7v5, h10v5, h11v5, h9v5, h18v5; then the reference jobs v5 vs v0 and v5 vs rush (main tree). Gates of passed
+  deliveries go in after h44's (job names ...4b01b1a45 onward, so they run before h15v5's ...a5). Superseded at v5: h31x, h33,
   h29, h28, h21 (their switches are in v5). Closed earlier: h34 (SERVE_MOVES 1) and h37 (CLAIM_MARGIN 4) failed
-  their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h46 (SPOT for melee) failed 1 of 3 at 01:52; h47 (FOCUS 1) failed 1 of 3 at 02:04; h48 (preachers when fuel binds) failed 1 of 3 at 02:20; h45 (EDGE 1.5) withdrawn before its delivery (inert: prophet vision equals reach); h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
+  their deliveries; h38 (creep instead of march) failed 23:23; h40 (forward churches) failed 00:29 on castles lost (4 vs 3; dist/h40v5 built, not queued); h41 (kill zones) failed 0 of 3 at 00:57; h46 (SPOT for melee) failed 1 of 3 at 01:52; h47 (FOCUS 1) failed 1 of 3 at 02:04; h48 (preachers when fuel binds) failed 1 of 3 at 02:20; h49 (SPOT for prophets) failed 0 of 3 at 02:32; h45 (EDGE 1.5) withdrawn before its delivery (inert: prophet vision equals reach); h42 (unit mix by stock) failed 2 of 3 at 01:10 (castles 5 vs 4; its preacher half is h48); h16r (turtle) REJECTED 21:13; h22, h23, h27 and h36
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
   Superseded job files are in ~/jobq/superseded.
 - Deliveries in the extra lane (shadow tree, `tools/xbatch.js` so they do not hold the queue, LEARNINGS 11; one game
@@ -34,9 +34,8 @@
   on 2855 both sides; read), `out/dlv_chain13.sh` (sym_h44), `out/dlv_chain14.sh` (no-op h35e vs h35: IDENTICAL; sym_h45 clean),
   `out/dlv_chain15.sh` (no-op h35f vs h35: IDENTICAL; sym_h46),
   `out/dlv_chain16.sh` (no-op h35g vs h35: IDENTICAL; sym_h47 clean), `out/dlv_chain17.sh` (sym_h48 clean), `out/dlv_chain18.sh` (no-op h35h vs h35 IDENTICAL; sym_h49, sym_h50 clean), `out/dlv_chain19.sh` (no-op h35i,
-  sym_h51; rerun at 02:15 on the CASTLE_POST_R builds). Next candidate h51 (CASTLE_POST 0.5: half the church-born
-  army guards the nearest castle; dist/h51 built, second driver diagnostic on 2299 running; pre-registration draft
-  in TRAINING_LOG 02:20). The h41/h42 deliveries (jobs ...a35, ...a36) run before h39's gate (...a4). Symmetry checks stop only at axis-tile contests or
+  sym_h51; rerun at 02:15 on the CASTLE_POST_R builds: no-op IDENTICAL, sym_h51 clean). h51's second driver diagnostic
+  (2299): 33 units by the castle at 450 against h35's 3, yet h51 lost that castle at 562 (TRAINING_LOG 02:33). Symmetry checks stop only at axis-tile contests or
   combat after the first attack, as accepted. A failed delivery: move that gate's job to ~/jobq/superseded.
   Kill chain processes by PID (LEARNINGS 14). Our VM games run at nice 10 (jobq.sh; write `nice -n 10` into new
   chain scripts) so the replica's games get whole cores (LEARNINGS 17). Parked: h11, h12
@@ -64,7 +63,11 @@
   1800 s (exit 124, 03:52 UTC); match 202 (vs eigthbot) did the same at 04:09 UTC and both retry, each holding a
   replica execute slot for ~30 min per attempt. Raising the limit (env file + saturn restart) was blocked by the
   auto-mode classifier (Modify Shared Resources): asked the owner 21:32 PDT, waiting.
-  Matches 201 and 202 ended ERR (game time limit; no replays). Scrims 203 (vs botfinalsafe) and 204 (vs
+  Matches 201 and 202 ended ERR (game time limit; no replays). Replica queue at 02:25 PDT: 207 waiting, 203 of them
+  ranked; 178 were created in one burst at ~04:00 UTC (galaxy's daily autoscrim, ~2 per team), and saturn plays
+  ~7 matches an hour on 2 slots, so the daily autoscrim alone about fills the replica. Scrims 203-206 wait behind
+  ~25 older matches (FIFO). Owner question pending with the time limit: thin the autoscrim (episode schedule) or
+  leave it. Scrims 203 (vs botfinalsafe) and 204 (vs
   bot1v43), requested 22:04 PDT, play v4; 205/206 (v5 vs botfinalsafe, bot1v43) are queued; fetch and compare with
   199/200. Replica 200-3 (2965, lost): three karbonite depots a side, K mined alike, our 132 prophets lost 131
   walking into their held line (TRAINING_LOG, h45).

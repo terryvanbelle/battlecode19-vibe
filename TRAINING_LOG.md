@@ -1099,3 +1099,36 @@
   and 100. Units that took the castle as home already stood on lattice tiles within LATTICE_R 12 of it (the churches
   are within 12) and held. Fix CASTLE_POST_R 6: a unit with a castle post holds within 6 king steps of it. h51
   rebuilt; the first build's no-op and symmetry checks (chain19) rerun on the new builds.
+
+## 2026-10-22 02:32 — h49 delivery FAILED (0 of 3): prophets that walk to a radioed sighting do not fight better
+- h49 (SPOT 3 + SPOT_MASK 16) vs h35, 8 games of 1000 rounds on 2924, 2965, 616, 1250 both sides
+  (out/dlv_h49_h35.jsonl, rp_dlv_h49; `tools/dlv.js` on the VM, out/dlv_h49.tsv), against the items of 02:00:
+  (1) prophet turns idle near a fight out of reach: h49 28,994, h35 32,290 (90%; at most 70%): FAIL; (2) military
+  lost: h49 1,614, h35 1,575 (102%; at most 95%): FAIL; (3) castles lost: h49 9, h35 5: FAIL. 4 wins in 8; 0 errors,
+  exceptions or clock faults (ms_max 190). 1,985 spots radioed. No gate. With h46 (melee listeners) this closes
+  SPOT: on 616 both bots stand idle near contact 9,000-11,000 prophet turns a game whatever is radioed, so a
+  sighting reaches units that are already in the jam.
+
+
+## 2026-10-22 02:33 — h51 pre-registered: half the church-born army guards a castle (CASTLE_POST 0.5)
+- Source: castle falls in h43's delivery (castlefall.js on rp_dlv_h43): every castle that fell had 0-2 of its own
+  units within 10 tiles; on 905 (both sides) 5-8 attackers took it while the defender's 19 units stood 21.7 king
+  steps away on average, on 2855 the defender's 92 units averaged 37.8. Where the army stands (guards.js, h43 and
+  h35 at round 300/450, nearest own structure within 6 king steps): 2299 3 by the castle and 67-87 by churches,
+  2855 15-26 and 59-95, 1250 7-17 and 27-36. Units take as home the structure that built them, and on these maps
+  churches build most of the army; attack orders (ours, and StoneT2000's pushes on the replica) go for castles,
+  which decide games. h43's recall reacts too late (FAR.RECALL only once attackers outnumber half the guards).
+- h51 = v5 + CASTLE_POST 0.5: castles radio their position (FAR.POST, 60 tiles, 61 fuel) every 20 rounds when the
+  turn's radio is free; a military unit born at a church draws (seeded by birth round and tile, so mirror twins
+  draw alike) with probability 0.5 to hold the lattice of the nearest castle heard instead (nearest its church;
+  forgotten when seen gone, replaced by the next castle heard), within CASTLE_POST_R 6 king steps of it.
+- Delivery (VM queue, 8 games of 1000 rounds vs h35 on 2299, 905, 2855, 1250 both sides), summed, `tools/dlv.js`:
+  (1) military units by a castle at round 450 (atCastle450): h51 at least 2x h35's; (2) castles lost: h51 at most
+  70% of h35's; (3) churches lost: h51 at most 150% of h35's. Gate 40 games vs h35, falsifier t <= 0 (churches and
+  their pilgrims left to raiders; the army walks 20-40 tiles at prophet fuel rates). Dose ladder: 0.5 -> 0.8.
+- Driver diagnostic of the CASTLE_POST_R build (h51 red vs h35 on 2299, 700 rounds; out/diag_h51b_h35_2299.*):
+  0 exceptions or clock faults (ms_max 459 and 691 under the driver's load). The switch now moves the army
+  (LEARNINGS 19): by a castle (guards.js, within 6) h51 15 / 25 / 33 at rounds 200 / 300 / 450, h35 3 / 3 / 3; by
+  churches 35 / 60 / 81 against 47 / 72 / 88. But h35 won on castles at 562: a fight at 450-480 cost h51 86 of 117
+  military (h35 32 of 96), and h51's castle (32,3) fell to prophets with 0 of its 9 survivors within 20 tiles and
+  26 of h35's; h51 also lost 2 churches (h35 0). One game; the delivery decides.
