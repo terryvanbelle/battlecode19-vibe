@@ -2,7 +2,8 @@
 // Parallel game batches. Every game runs in its own process inside `unshare -rn` (no network), on the VM.
 //
 //   node tools/batch.js --a <bot dir> --b <bot dir> --seeds 1,2,3 | --seed-file f | --random N [--seed0 S]
-//        [--sides both|a-red] [--par 6] [--timescale K] [--init-ms MS] --out results.jsonl [--replays dir] [--tag name]
+//        [--sides both|a-red] [--par 6] [--timescale K] [--init-ms MS] [--fast-turn] --out results.jsonl [--replays dir]
+//        [--tag name]
 //
 // One JSON row per game: {tag, a, b, a_hash, b_hash, seed, a_side, winner_is_a, reason, rounds, ...runner fields}.
 // Rows are keyed by (a_hash, b_hash, seed, a_side): the same cell is never played twice into one file.
@@ -38,6 +39,7 @@ function parse(argv) {
     else if (k === '--out') a.out = v(); else if (k === '--replays') a.replays = v(); else if (k === '--tag') a.tag = v();
     else if (k === '--timescale') a.timescale = v();
     else if (k === '--init-ms') a.initMs = v();
+    else if (k === '--fast-turn') a.fastTurn = true;
     else throw new Error('unknown ' + k);
   }
   if (!a.a || !a.b || !a.out) throw new Error('need --a --b --out');
@@ -79,6 +81,7 @@ async function main() {
         '--errlog', path.join(o.replays, `${ah}_${bh}_${j.seed}_${j.side}.err.jsonl`));
       if (o.timescale) args.push('--timescale', o.timescale);
       if (o.initMs) args.push('--init-ms', o.initMs);
+      if (o.fastTurn) args.push('--fast-turn');
       const p = spawn('unshare', args, { stdio: ['ignore', 'pipe', 'pipe'] });
       let so = '', se = '';
       p.stdout.on('data', d => { so += d; }); p.stderr.on('data', d => { se += d; });
@@ -88,7 +91,7 @@ async function main() {
           const r = JSON.parse(so.trim().split('\n').pop());
           const ai = j.side === 'red' ? 0 : 1;
           row = { tag: o.tag, a: o.a, b: o.b, a_hash: ah, b_hash: bh, seed: j.seed, a_side: j.side,
-            winner_is_a: r.winner === j.side ? 1 : 0, reason: r.reason, rounds: r.rounds, wall_s: r.wall_s,
+            winner_is_a: r.winner === j.side ? 1 : 0, reason: r.reason, rounds: r.rounds, wall_s: r.wall_s, fast_turn: r.fast_turn,
             a_team: r.teams[ai], b_team: r.teams[1 - ai], map: r.map, t: new Date().toISOString() };
         } catch (e) { row = { tag: o.tag, a_hash: ah, b_hash: bh, seed: j.seed, a_side: j.side, error: (se || so).slice(-500), code }; }
         // A castle that misses the init clock before round 1 says nothing about the bots: retry the game (machine

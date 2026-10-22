@@ -4,7 +4,7 @@
 //
 //   node tools/run_game.js --red <bot dir | bundle.js> --blue <bot dir | bundle.js> [--seed N]
 //        [--replay out.bc19] [--logs out.jsonl] [--json out.json] [--det] [--chi 100] [--che 20]
-//        [--max-rounds N] [--timescale K] [--init-ms MS]
+//        [--max-rounds N] [--timescale K] [--init-ms MS] [--fast-turn]
 //
 // --det        deterministic mode: seeds Math.random in the engine (the per-turn shuffle of visible robots) from
 //              the game seed. Bots that use their own seeded PRNG then replay identically except for clock effects.
@@ -13,6 +13,9 @@
 //              100 ms + 20 ms/turn, and time robustness is measured at 1).
 // --init-ms    wall-clock limit for creating a robot's sandbox (the engine uses the clock's initial value, which
 //              VM load alone overruns; LEARNINGS 3). The robot's clock still starts at the scaled initial value.
+// --fast-turn  hand each turn to the sandbox through one precompiled script instead of fresh source text (see
+//              fastTurn): same view, same vm2 kill. Turns then cost less than in the official engine, so time audits
+//              run without it (owner approval, PROMPTS 14).
 // Prints one JSON line: {winner:"red"|"blue", win_condition, reason, rounds, seed, map:{w,castles}, teams:[...]}.
 'use strict';
 const fs = require('fs');
@@ -40,6 +43,7 @@ function parseArgs(argv) {
     else if (k === '--max-rounds') a.maxRounds = parseInt(v(), 10);
     else if (k === '--timescale') a.timescale = parseFloat(v());
     else if (k === '--init-ms') a.initMs = parseFloat(v());
+    else if (k === '--fast-turn') a.fastTurn = true;
     else throw new Error('unknown argument ' + k);
   }
   if (!a.red || !a.blue) throw new Error('need --red and --blue');
@@ -84,6 +88,7 @@ async function main() {
   // Warm-up: the first vm2 sandbox in a process costs 50-150 ms (cold JIT), which can push a castle past the 100 ms
   // initialisation limit and lose the game for a harness reason. Create and discard sandboxes for both bundles first.
   const CrossVM = require(path.join(ENGINE, 'vm'));
+  if (a.fastTurn) fastTurn(CrossVM);
   // A bundle that throws (or times out) while loading is the engine's business (initializeRobot catches it and the
   // robot fails to initialise), so the warm-up must not let it crash the whole game.
   for (let i = 0; i < 3; i++) for (const code of [red, blue]) { try { new CrossVM(code); } catch (e) { /* engine decides */ } }
@@ -175,7 +180,7 @@ async function main() {
   const result = {
     winner: g.winner === 0 ? 'red' : g.winner === 1 ? 'blue' : null,
     win_condition: g.win_condition, reason: REASONS[g.win_condition], rounds: g.round, seed,
-    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale, ...limits,
+    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale, ...limits, fast_turn: !!a.fastTurn,
     red: a.red, blue: a.blue,
     teams: [0, 1].map(i => ({ team: i === 0 ? 'red' : 'blue', ...counts[i], ...alive[i],
       turns: teams[i].turns, ms_mean: teams[i].turns ? +(teams[i].ms_total / teams[i].turns).toFixed(3) : 0,
@@ -199,5 +204,22 @@ function setLimits(g, a) {
   return { init_ms: g.chess_initial, turn_kill_ms: SPECS.TURN_MAX_TIME };
 }
 
+// The engine hands a robot its turn as source text, 'robot._do_turn(' + JSON of its view + ');', which vm2 parses
+// (acorn) and V8 compiles anew on every turn: about half of a game's wall time (profile of a 200-round h19 self-play
+// game: vm.Script 23%, runInContext 20%, acorn 7%; our bot's own functions a few percent each). fastTurn makes every
+// CrossVM run one precompiled script, robot._do_turn(JSON.parse(view)), with the JSON text as a sandbox global: the
+// bot gets an equal object under the same vm2 timeout; any other message still runs as source.
+function fastTurn(CrossVM) {
+  const { VMScript } = require(path.join(ENGINE, '..', 'vm2'));
+  const PRE = 'robot._do_turn(', POST = ');';
+  const script = new VMScript('robot._do_turn(JSON.parse(__bc19_view));', 'turn.js');
+  CrossVM.prototype.turn = function (message) {
+    if (this.dead) throw 'Robot exceeded memory limits.';
+    if (typeof message !== 'string' || !message.startsWith(PRE) || !message.endsWith(POST)) return this.vm.run(message);
+    this.vm.setGlobal('__bc19_view', message.slice(PRE.length, -POST.length));
+    return this.vm.run(script);
+  };
+}
+
 if (require.main === module) main().catch(e => { console.error(String(e && e.stack || e)); process.exit(2); });
-module.exports = { setLimits, parseArgs };
+module.exports = { setLimits, parseArgs, fastTurn };
