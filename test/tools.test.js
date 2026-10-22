@@ -165,3 +165,13 @@ test('replay: threat report finds each structure\'s first enemy combat unit in v
   assert.deepEqual([s.id, s.team, s.round, s.near[3], s.karbonite], [812, 0, 603, 1, 100]);
   assert.match(replay.threatText(rows), /castle#812 \(3,39\): first threat r603 \(crus 1\) K 100/);
 });
+
+test('replay: fire efficiency per shooter type adds up to the fuel tally', () => {
+  const buf = fs.readFileSync(path.join(FIX, 'rush_s2908_r80.bc19'));   // h6 (red) vs bots/rush, first 80 rounds
+  const rows = replay.fire(buf), an = replay.analyze(buf);
+  for (const team of [0, 1]) assert.strictEqual(rows.filter(a => a.team === team).reduce((s, a) => s + a.fuel, 0), an.tally[team].fuel_attack);
+  const pro = rows.find(a => a.team === 0 && a.unit === 4);
+  assert.deepStrictEqual([pro.shots, pro.fuel, pro.enemy, pro.kills], [43, 1075, 430, 10]);   // prophets: 0.40 damage per fuel
+  assert.match(replay.fireText(rows), /red\tpreacher\t3\t45\t50\t0\t2\t1\.11/);
+  assert.strictEqual(replay.fire(buf, 0, 20).length, 0);   // the rush arrives at round 30
+});

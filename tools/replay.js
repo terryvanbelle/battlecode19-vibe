@@ -11,6 +11,7 @@
 //   node tools/replay.js nav      <replay>                 # per team and unit type: moves, idle, oscillation
 //   node tools/replay.js talk     <replay> [--team T]      # castle-talk and radio telemetry per turn
 //   node tools/replay.js threat   <replay> [--json]        # each structure's first enemy combat unit in view: stores, response
+//   node tools/replay.js fire     <replay> [--from R --to R]  # per team and shooter type: shots, fuel, damage per fuel
 // Teams: 0 red, 1 blue. Unit codes: 0 castle, 1 church, 2 pilgrim, 3 crusader, 4 prophet, 5 preacher.
 'use strict';
 const fs = require('fs');
@@ -280,12 +281,31 @@ function threatText(rows) {
     (s.died !== null ? `; died r${s.died}` : '')).join('\n');
 }
 
-module.exports = { threats, threatText, parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
+// Fire efficiency per team and shooter type over rounds [from, to]: shots, fuel spent on them, damage to enemies
+// and to friends, kills, and enemy damage per fuel (crusader and castle 1.0, prophet 0.4, preacher up to 1.33 x splash).
+function fire(buf, from = 0, to = Infinity) {
+  const rows = {};
+  simulate(buf, { onTurn(ev) {
+    if (ev.rec.action !== 2 || ev.error || ev.round < from || ev.round > to) return;
+    const r = ev.robot, k = r.team + ':' + r.unit;
+    const a = rows[k] || (rows[k] = { team: r.team, unit: r.unit, shots: 0, fuel: 0, enemy: 0, friendly: 0, kills: 0 });
+    a.shots++; a.fuel += SPECS.UNITS[r.unit].ATTACK_FUEL_COST;
+    for (const d of ev.damage) { if (d.team === r.team) a.friendly += d.dmg; else { a.enemy += d.dmg; if (d.killed) a.kills++; } }
+  } });
+  return Object.values(rows).sort((a, b) => a.team - b.team || a.unit - b.unit);
+}
+
+function fireText(rows) {
+  return ['team\tshooter\tshots\tfuel\tenemy_dmg\tfriendly_dmg\tkills\tdmg_per_fuel',
+    ...rows.map(a => [['red', 'blue'][a.team], UNIT[a.unit], a.shots, a.fuel, a.enemy, a.friendly, a.kills, (a.enemy / a.fuel).toFixed(2)].join('\t'))].join('\n');
+}
+
+module.exports = { fire, fireText, threats, threatText, parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
 
 if (require.main === module) {
   const argv = process.argv.slice(2), cmd = argv[0], file = argv[1];
   const opt = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
-  if (!cmd || !file) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 16).join('\n')); process.exit(1); }
+  if (!cmd || !file) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 17).join('\n')); process.exit(1); }
   const buf = fs.readFileSync(file);
   if (cmd === 'summary') console.log(summaryText(analyze(buf)));
   else if (cmd === 'json') console.log(JSON.stringify(analyze(buf)));
@@ -295,6 +315,7 @@ if (require.main === module) {
   else if (cmd === 'events') console.log(events(buf, parseInt(opt('--from', '0'), 10), parseFloat(opt('--to', 'Infinity')), opt('--kind', 'build,death,attack').split(',')));
   else if (cmd === 'nav') console.log(nav(buf));
   else if (cmd === 'talk') console.log(events(buf, 0, Infinity, ['signal', 'talk']).split('\n').filter(l => !opt('--team') || l.includes(' ' + 'RB'[+opt('--team')])).join('\n'));
+  else if (cmd === 'fire') console.log(fireText(fire(buf, parseInt(opt('--from', '0'), 10), parseFloat(opt('--to', 'Infinity')))));
   else if (cmd === 'threat') { const t = threats(buf); console.log(argv.includes('--json') ? JSON.stringify(t) : threatText(t)); }
   else { console.error('unknown command ' + cmd); process.exit(1); }
 }
