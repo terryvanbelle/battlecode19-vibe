@@ -600,3 +600,14 @@
   pilgrims lost at most 70% of h19's in the same games, mined K+F within 5% of h19's or better. Falsifier: gate
   t <= 0. Dose: one setting. Its real test is the replica field (pioneers shot by roaming prophets); the
   self-play gate guards against harm.
+
+## 2026-10-21 21:35 — h31 delivery PASSED
+- Driver, 200 rounds vs h19 (h19's numbers from the same games): 1828 h31 red: 4 churches vs 3, K+F 15,694 vs
+  11,828 (+33%). 826 h31 red: 8 churches vs 7, K+F 19,080 vs 14,582 (+31%), pilgrims lost 4 vs 10. 826 h31 blue:
+  8 vs 7, 19,072 vs 14,208 (+34%), pilgrims lost 3 vs 10. 2202: identical to h19 (one church each; the map's
+  clusters all lie within 2 moves). Pre-registered: K+F >= +10% on 1828 and on 826 both sides (met), churches >=
+  h19's on all three (met). Gate queued next (job ...4b01b1).
+- h32 (PLAN_CONTEST_FIRST=6 alone), 1828 red: 2 churches vs 3, K+F 11,800 vs 10,920: contest-first matters only
+  with the denser plan. It stays unqueued unless h31 passes.
+- Replica scrim 200 game 2 (seed 2924) lost its centre pioneer the h33 way too: it stepped from r2 81 to 49 of a
+  standing prophet at (23,2) and died next round.
