@@ -12,19 +12,20 @@
   gated against h19 with `--timescale 2 --init-ms 1000` (TRAINING_LOG 17:40).
 - VM queue (`~/jobq`, in order): h18 vs h6 (cruise fuel reserve, running, 30/40 at 18:10); then gates run from the
   shadow tree ~/projects/vibe/2019-next (new tools incl. `--init-ms`; engine/maps/bots/dist link to the main tree;
-  outputs in the main tree's out/): h19 vs h6, h21, h20, h22, h7r, h11r, h15r, h8r, h16r, h9r, h10r vs h19 (jobs
-  ...4b01-4b11); then the held reference jobs in ~/jobq/hold (v3 vs v0, v3 vs rush), which need the main tree
+  outputs in the main tree's out/): h19 vs h6, h21, h20, h22, h23, h7r, h11r, h15r, h8r, h16r, h9r, h10r vs
+  h19 (jobs ...4b01-4b11, h23 = 4b04a); then the held reference jobs in ~/jobq/hold (v3 vs v0, v3 vs rush), which need the main tree
   synced (`vm_sync`, after h18 ends). The h6-based h15, h16, h7-h10 jobs are in ~/jobq/superseded. Deliveries in
   the extra lane (`out/dlv_chain2.sh` in the shadow tree, via `tools/xbatch.js` so they do not hold the queue,
   LEARNINGS 11): h20 and h19 vs bots/rush on h6's four rush-losing maps, h21 vs h19 on 2202/1635/2296, h22 vs
-  rush, symchecks of h20-h22. A failed delivery: delete that gate's job from ~/jobq/pending. Parked: h11, h12
+  rush, h23 vs rush (`out/dlv_chain3.sh`), symchecks of h20-h23. A failed delivery: delete that gate's job from ~/jobq/pending. Parked: h11, h12
   (waves), h13 (keep clear), h14 (detour), h17 (karbonite stop).
 - Main finding: after the attack call at round 450 the army burns the fuel bank in ~50 rounds (8 sampled games:
   7,000-9,000 fuel at 450, under 100 by 500), then cannot shoot or move: 85-90% of it stays within 12 king steps of
   home through round 700 (seed 2202). A fuel freeze more than a traffic jam (detour h14 freed nobody); h18's cruise
   fuel reserve keeps the bank (delivery passed) and is the lead under test. Two more fuel leaks (18:10-18:25):
   pilgrims boxed in full next to packed castles (h21 relay) and prophets firing 84% of attack fuel at 0.40 damage
-  per fuel (h22 preachers in their place).
+  per fuel (h22 preachers in their place; h23 prophets keep off a short bank). `replay.js fire`: prophets fire 93%
+  of attack fuel in self-play, ~13,500 a game.
 - Replica ladder (ACCESS.md, tools/galaxy19, `tools/galaxy19/contest19.py`): team vibe19 runs v3, which threw
   31,098 exceptions in 40 of its 192 replica games (the setup bug h19 fixes): submit h19 once its gate vs h6 is not a
   loss. Benchmark field:
