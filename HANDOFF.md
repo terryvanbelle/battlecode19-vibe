@@ -73,6 +73,11 @@
   (1250, 1635, 1862, 357 both sides, vs h35) failed 1 of 3 (stalls 80% of h35's, bar 70%; TRAINING_LOG 08:43):
   closed, no gate. Pilgrims that know a structure but whose depots sit under an enemy
   army (seed 1250 #4088: 423 turns beside (24,29), castle in sight) are not orphans: h59 (PILGRIM_HOT) failed there.
+- Church bomb (TRAINING_LOG 08:56, replica 205-2): StoneT2000 builds a 16-link church chain in one round from
+  pilgrims parked just past our castle's vision, then ~13 preachers at our castle (lone castle dead at 233). Our
+  counters h54 (STRIKE) and h56 (HUNT) cannot be rated in self-play, so an anti-chain panel runs after h63's gate:
+  h50, h54v6, h56v6 each vs h55v6 (our chain bomber) on 20 cells (VM jobs ...a3d5772-4; read with paired.js --cand
+  --ctrl --opp). h54's h2h extensions were withdrawn.
 - Idle on safe depots (TRAINING_LOG 08:43, replica 206-3): a pilgrim mines only on its target; when the target is
   taken or under an enemy attacker it never takes the depot it stands on, so seven pilgrims of castle (0,14) mined
   nothing for 200+ rounds beside StoneT2000's prophets. CFG.PILGRIM_HERE (h63 = 1): gate vs h50 is next in the job
