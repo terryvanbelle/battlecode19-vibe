@@ -155,3 +155,13 @@ test('basics: --team auto reads team A side from a batch replay name', () => {
   assert.strictEqual(teamOf('red', 'x_blue.bc19'), 0);
   assert.throws(() => teamOf('auto', 'game.bc19'));
 });
+
+test('replay: threat report finds each structure\'s first enemy combat unit in view', () => {
+  const rows = replay.threats(fs.readFileSync(path.join(FIX, 'example_s2.bc19')));
+  assert.equal(rows.length, 4);
+  const hit = rows.filter(s => s.round !== null);
+  assert.equal(hit.length, 1);
+  const s = hit[0];
+  assert.deepEqual([s.id, s.team, s.round, s.near[3], s.karbonite], [812, 0, 603, 1, 100]);
+  assert.match(replay.threatText(rows), /castle#812 \(3,39\): first threat r603 \(crus 1\) K 100/);
+});

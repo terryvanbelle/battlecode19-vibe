@@ -10,6 +10,7 @@
 //   node tools/replay.js events   <replay> [--from R --to R] [--kind build,death,attack,signal,talk]
 //   node tools/replay.js nav      <replay>                 # per team and unit type: moves, idle, oscillation
 //   node tools/replay.js talk     <replay> [--team T]      # castle-talk and radio telemetry per turn
+//   node tools/replay.js threat   <replay> [--json]        # each structure's first enemy combat unit in view: stores, response
 // Teams: 0 red, 1 blue. Unit codes: 0 castle, 1 church, 2 pilgrim, 3 crusader, 4 prophet, 5 preacher.
 'use strict';
 const fs = require('fs');
@@ -248,12 +249,43 @@ function nav(buf) {
   return rows.join('\n');
 }
 
-module.exports = { parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
+// Each castle and church's first round-end with an enemy combat unit within its vision (r2 100): the team's stores
+// then, what that structure built in the next `window` rounds, and when (if) it died.
+function threats(buf, window = 10) {
+  const seen = new Map(); // structure id -> record
+  const out = [];
+  simulate(buf, {
+    onTurn(ev) {
+      for (const b of ev.born) { const s = seen.get(ev.robot.id); if (s && s.round !== null && ev.round <= s.round + window) s.built[b.unit]++; }
+      for (const d of ev.died) { const s = seen.get(d.id); if (s && s.died === null) s.died = ev.round; }
+    },
+    onRoundEnd(round, g) {
+      for (const st of g.robots) {
+        if (st.unit > 1) continue;
+        let s = seen.get(st.id);
+        if (!s) { s = { id: st.id, team: st.team, unit: st.unit, x: st.x, y: st.y, round: null, built: [0, 0, 0, 0, 0, 0], died: null }; seen.set(st.id, s); out.push(s); }
+        if (s.round !== null) continue;
+        const near = [0, 0, 0, 0, 0, 0];
+        for (const o of g.robots) if (o.team !== st.team && o.unit > 2 && (o.x - st.x) ** 2 + (o.y - st.y) ** 2 <= 100) near[o.unit]++;
+        if (near[3] + near[4] + near[5]) Object.assign(s, { round, near, karbonite: g.karbonite[st.team], fuel: g.fuel[st.team] });
+      }
+    },
+  });
+  return out;
+}
+
+function threatText(rows) {
+  return rows.map(s => `${['red', 'blue'][s.team]} ${UNIT[s.unit]}#${s.id} (${s.x},${s.y}): ` + (s.round === null ? 'never threatened' :
+    `first threat r${s.round} (${fmtUnits(s.near)}) K ${s.karbonite} F ${s.fuel}; built next 10 rounds: ${fmtUnits(s.built)}`) +
+    (s.died !== null ? `; died r${s.died}` : '')).join('\n');
+}
+
+module.exports = { threats, threatText, parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
 
 if (require.main === module) {
   const argv = process.argv.slice(2), cmd = argv[0], file = argv[1];
   const opt = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
-  if (!cmd || !file) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 15).join('\n')); process.exit(1); }
+  if (!cmd || !file) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 16).join('\n')); process.exit(1); }
   const buf = fs.readFileSync(file);
   if (cmd === 'summary') console.log(summaryText(analyze(buf)));
   else if (cmd === 'json') console.log(JSON.stringify(analyze(buf)));
@@ -263,5 +295,6 @@ if (require.main === module) {
   else if (cmd === 'events') console.log(events(buf, parseInt(opt('--from', '0'), 10), parseFloat(opt('--to', 'Infinity')), opt('--kind', 'build,death,attack').split(',')));
   else if (cmd === 'nav') console.log(nav(buf));
   else if (cmd === 'talk') console.log(events(buf, 0, Infinity, ['signal', 'talk']).split('\n').filter(l => !opt('--team') || l.includes(' ' + 'RB'[+opt('--team')])).join('\n'));
+  else if (cmd === 'threat') { const t = threats(buf); console.log(argv.includes('--json') ? JSON.stringify(t) : threatText(t)); }
   else { console.error('unknown command ' + cmd); process.exit(1); }
 }
