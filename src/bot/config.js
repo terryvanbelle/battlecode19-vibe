@@ -5,6 +5,7 @@ export const CFG = {
   CLUSTER_LINK_R2: 10,       // depots within this r2 of each other form one cluster
   CLAIM_MARGIN: 1,           // church a remote cluster if our distance <= enemy's + margin (moves)
   MAX_PIONEERS: 2,           // church pioneers in flight per castle
+  PLAN_CONTEST_FIRST: 0,     // >0: planned clusters the enemy reaches within this many moves of us are pioneered first
   PIONEER_MIN_ROUND: 2,
   EXPAND_ROUND: 0,           // >0: from this round castles re-plan every 50 rounds, adding remote clusters on either half
                              // more than EXPAND_KEEP king steps from every enemy castle (castle.js expandPlan; h19's

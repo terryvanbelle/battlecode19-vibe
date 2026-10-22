@@ -522,3 +522,24 @@ test('castle: EXPAND_ROUND adds remote clusters on either half away from enemy c
     assert.strictEqual((nextPioneer(B) || {}).cluster, added[1] ? added[1].cluster : undefined);
   } finally { CFG.EXPAND_ROUND = saved; }
 });
+
+test('castle: PLAN_CONTEST_FIRST plans the clusters the enemy nearly reaches before nearer safe ones, mirror-identical', () => {
+  const saved = CFG.PLAN_CONTEST_FIRST;
+  try {
+    const plan = (team, cf) => {
+      CFG.PLAN_CONTEST_FIRST = cf;
+      const g = new Game(1915, 100, 20, false, false);   // one castle a side; the centre cluster straddles the axis
+      const castle = g.robots.find(r => r.team === team);
+      const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+      for (const t of [1, 2, 3]) { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; w.karbonite = 0; castleTurn(B); }
+      return B.st.plan.map(p => ({ site: B.clusters[p.cluster].site.join(','), d: p.d, m: p.m }));
+    };
+    const off = plan(0, 0), on = plan(0, 6);
+    assert.deepStrictEqual(on.map(p => p.site).sort(), off.map(p => p.site).sort());   // same clusters
+    for (let i = 1; i < off.length; i++) assert.ok(off[i - 1].d <= off[i].d);         // default: nearest first
+    const hot = on.map(p => p.m <= 6), firstCold = hot.indexOf(false);
+    assert.ok(firstCold > 0 && hot.slice(firstCold).every(h => !h), 'contested clusters first');
+    assert.notDeepStrictEqual(on.map(p => p.site), off.map(p => p.site));             // and it changes the order here
+    assert.deepStrictEqual(plan(1, 6), on);                                           // both teams alike
+  } finally { CFG.PLAN_CONTEST_FIRST = saved; }
+});
