@@ -1981,3 +1981,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   line, and line churches keep the bank. Driver diagnostic on 799 (h74 red, 450) running.
 - h72's delivery after 4 of 8 (2013 both sides, 2924 both sides): h72 won 3; lines of >= 5 churches on h72's side in
   all 4 (7, 5, 7, 6 churches), 2 of them followed by a castle kill within 25 rounds.
+
+## 2026-10-22 14:41 — h72 delivery PASSED 3 of 3; gate h72 vs h50 queued first; anti-chain panel bomber is now h72
+- h72's delivery vs h50 (2013, 2924, 705, 1706, both sides, 8 games): h72 won 6 (2013 blue r239, 2924 both, 705
+  both on health, 1706 red r363), lost 2013 red and 1706 blue. Census --chain-min 5 on h72's side: lines in 7 of 8
+  (all but 1706 blue; 15 churches over 2 lines on 1706 red); a castle kill within 25 rounds of a line in 3
+  (1706 red, 2013 blue, 2924 red). Criteria: lines >= 5 churches in >= 4/8 PASS (7), chain kills >= 3 PASS (3),
+  wins >= 5/8 PASS (6).
+- Symcheck h72 (seeds 1, 2, 3, 2013, 300 rounds): seed 2 clean to 300; 1, 3 and 2013 stop at the known
+  engine-order divergences before r200 (not chain code: the chainer is built at r200).
+- Per the pre-registration: gate h72 vs h50 (20 random cells, seed0 5000, par 2; job ...a3d5771001, next after
+  h68's delivery). The anti-chain panel's bomber is now h72 instead of h55v6 (jobs ...a3d5773 h54v6 vs h72 and
+  ...a3d5774 h56v6 vs h72, out/panel_chain72_*); the h50 cell comes from the gate itself, so ...a3d5772 (h50 vs
+  h55v6) is dropped. h66's chain half becomes h72's (or h74's, if its 799 diagnostic shows the line church keeping
+  the bank) once that diagnostic is read.

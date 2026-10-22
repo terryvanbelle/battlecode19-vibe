@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 13:55 PDT)
+## State (2026-10-22 14:41 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -14,13 +14,12 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 13:55:
-  **h68** delivery (PIONEER_GIVEUP 20 +
-  PIONEER_STALL_ANY 40: no-op v6j, symcheck, 8 games vs h50 on h61's cells, ...a3d577100; TRAINING_LOG 11:52; a
-  tools swap job ...a3d5770 runs first: the shadow tree gets the driver's tools at that boundary; then **h72**'s delivery,
-  moved up 13:47: StoneT2000's long church line, CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5];
-  symcheck, 8 full games vs h50 on 2013, 2924, 705, 1706, ...a3d57700; TRAINING_LOG 13:43; on PASS it replaces h66's
-  chain half), **h70** delivery
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 14:41:
+  **h68** delivery running (PIONEER_GIVEUP 20 +
+  PIONEER_STALL_ANY 40: no-op v6j, symcheck, 8 games vs h50 on h61's cells, ...a3d577100; TRAINING_LOG 11:52); then
+  **h72**'s gate vs h50 (StoneT2000's long church line, CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500,
+  MIX [5]; delivery PASSED 3/3 at 14:41: wins 6/8, lines in 7/8, chain kills 3; 20 random cells, ...a3d5771001;
+  h66's chain half becomes h72's or h74's once h74's 799 diagnostic is read), **h70** delivery
   (PEACE_RESERVE_K 60: no-op v6k, symcheck, 8 games vs h50 on 70, 520, 2591, 1592, ...a3d5771005; TRAINING_LOG 13:04),
   **h71** delivery (CHURCH_GUARD_D 8 preacher + PREACHER_SELF 4 + PREACHER_MIL 2.5: no-op v6l, symcheck, 8 games vs
   h50 on 2591, 1915, 2030, 2924, ...a3d57710055; TRAINING_LOG 13:20),
@@ -31,8 +30,8 @@
   castle keeps 4 pioneers in flight; no-op v6i, symcheck, then gate vs h50 on 20 one-castle cells, ...a3d57711;
   TRAINING_LOG 10:15), **h65** (ESCORT 2, ...a3d57716, after its
   no-op/symcheck job ...a3d577158) gate vs h50; **h66** (stack: v6 + ENDGAME_FUEL 900 + CHAIN_ROUND 150, symcheck
-  then gate vs h50, ...a3d57717; TRAINING_LOG 09:55); the **anti-chain panel** (...a3d5772-4: h50, h54v6, h56v6 each
-  vs h55v6; if h72's delivery passes, the bomber becomes h72 and the h50 job goes, h72's own gate covers it); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775); h55's extension vs h35 (...a3d585) and h24v5's
+  then gate vs h50, ...a3d57717; TRAINING_LOG 09:55); the **anti-chain panel** (...a3d5773-4: h54v6 and h56v6 each
+  vs h72, out/panel_chain72_*; the h50 cell is h72's gate, so ...a3d5772 was dropped at 14:41); **h8v6** (v6 + ENDGAME_FUEL 900 vs h50, ...a3d5775); h55's extension vs h35 (...a3d585) and h24v5's
   (...a3d597); then the jobs rebased onto v6 at 08:00 (v6 + their own switch vs dist/h50): h51v6's delivery
   (CASTLE_POST 0.5, ...a3e), h43v6 (RECALL 30, ...a43), h7v6, h10v6, h11v6, h9v6, h18v6; then the reference jobs v6
   vs v0 and v6 vs rush. Gates of passed deliveries go in after h43v6's (job names ...4b01b1a45 onward). The extra
@@ -75,9 +74,9 @@
   army (seed 1250 #4088: 423 turns beside (24,29), castle in sight) are not orphans: h59 (PILGRIM_HOT) failed there.
 - Church bomb (TRAINING_LOG 08:56, replica 205-2): StoneT2000 builds a 16-link church chain in one round from
   pilgrims parked just past our castle's vision, then ~13 preachers at our castle (lone castle dead at 233). Our
-  counters h54 (STRIKE) and h56 (HUNT) cannot be rated in self-play, so an anti-chain panel runs after h63's gate:
-  h50, h54v6, h56v6 each vs h55v6 (our chain bomber) on 20 cells (VM jobs ...a3d5772-4; read with paired.js --cand
-  --ctrl --opp). h54's h2h extensions were withdrawn.
+  counters h54 (STRIKE) and h56 (HUNT) cannot be rated in self-play, so an anti-chain panel runs: h54v6 and h56v6
+  each vs h72 (our chain bomber since its delivery passed) on 20 cells, with h72's gate vs h50 as the control cell
+  (VM jobs ...a3d5773-4 and ...a3d5771001; read with paired.js --cand --ctrl --opp). h54's h2h extensions were withdrawn.
 - Idle on safe depots (TRAINING_LOG 08:43, replica 206-3): a pilgrim mines only on its target; when the target is
   taken or under an enemy attacker it never takes the depot it stands on, so seven pilgrims of castle (0,14) mined
   nothing for 200+ rounds beside StoneT2000's prophets. CFG.PILGRIM_HERE (h63 = 1): gate vs h50 is next in the job
