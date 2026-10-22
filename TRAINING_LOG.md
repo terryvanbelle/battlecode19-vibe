@@ -1320,3 +1320,28 @@
   h50's gate stalled 1,232 and mined 858. Blue (h35) stalled 848 here: two pilgrims 423 turns at (24,29) and (24,32)
   under a red crusader at r2 50-53, the mirror of the old stall. Round 450: castle health 2,000 vs 320, units 60
   vs 9; 0 exceptions, 0 timeouts. Delivery (chain25, VM) decides.
+
+## 2026-10-22 05:45 — h55 (chains) gate block 1 inconclusive; replica economy census; v5 still burns its fuel in the march; queue reordered
+- Gate h55 vs h35 (job ...a3d57, 40 games, seed0 5000): 20 cells, h55 21 wins, gained 6, lost 5, split 9, **D 11**,
+  net +1, t 0.30; no identical cells (chains fire in every game). Scattered: castles taken both ways on most maps.
+  Short of the first look at D >= 12: 20 more cells (seed0 6000, job ...a3d585, appended); then accept t >= 2,
+  reject t <= 0, otherwise more cells to D >= 24.
+- Replica economy census (scratch econcensus.js over all 210 downloaded replica games, all v0-v3; `replay.js
+  timeline` at rounds 100-400): vibe19's median karbonite mined by round 400 exceeds the opponent's in the same
+  game both in its 193 wins (+1,370) and in its 17 losses (+402), with more pilgrims (+2 to +4) and as many
+  churches. Losses with the bigger economy and the bigger army: StoneT2000 botfinalsafe on 616 (round 400: K 5,312
+  vs 4,438, army 158 vs 45; lost on castles at 974), CS554 on 826 (K 5,052 vs 2,068, army 130 vs 17; lost on
+  castles at 1000). Only bot1v43 on 2924 out-mined us (22 churches to 1, K 5,728 vs 3,492). In 199-1 (616) v3's
+  fuel went 10,670 -> 10 between rounds 450 and 500 (move fuel +8,900) and stayed under 140 to the end. We lose
+  fights, not the economy race.
+- v5 self-play, driver, seed 2924, 400 rounds: 3-4 churches and 20-23 pilgrims from round 100 on (every depot of
+  our half staffed), K mined by 400 5,446 / 5,570 (bot1v43 in 200-2: 5,728), karbonite bank ~180 (binding), fuel
+  16,700 / 27,200 floating, army 215 / 222.
+- v5 self-play after the attack call (identical cells of h54's gate, `replay.js timeline`, VM): the bank still
+  collapses within 50 rounds of round 450 on 3 of 6 maps (241: 728 -> 51; 2299: 10,196 -> 287, both armies 96 ->
+  14; 357: 23,222 -> 6,091 -> 31, move fuel +13,300 in rounds 450-500), while field bots spend 5,600-8,300 on
+  moves in a whole game (TRAINING_LOG 2026-10-21 18:53).
+- Queue: h24v5 (ECON_UNTIL 100 on v5; h24 was 11-5 at t 1.50 on h19) moved to run after h55's gate (job
+  ...a3d575, running), then h50's extension (MARCH_MASK 8 + PIONEER_RESERVE 2: crusaders alone march; 27-13, t
+  1.70; job ...a3d576), then h54's first extension block, h55's extension, h54's other two. The census shows
+  economy is not the field gap, so h24v5 runs first on its self-play near-miss, not on field evidence.
