@@ -73,7 +73,9 @@ export const CFG = {
                              // structure (replica: eigthbot's lattice grows from every structure toward the middle,
                              // round 460 of seed 1036, and its front reaches the enemy castles)
   LATTICE_STICKY: 0,         // 1: an idle unit keeps walking to its chosen lattice tile until it sees it taken (choosing
-                             // afresh each turn flips between tiles out of sight, seed 2202: military.js holdTarget)
+                             // afresh each turn flips between tiles out of sight, seed 2202: military.js holdTarget);
+                             // 2: ...and a tile it saw taken in the last LATTICE_MEMORY turns does not count as free
+  LATTICE_MEMORY: 20,
   // attack
   ATTACK_ROUND: 450,         // castles call a general attack from this round when the army is big
   ATTACK_MIN_ARMY: 20,

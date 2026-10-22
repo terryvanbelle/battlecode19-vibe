@@ -140,15 +140,19 @@ function stepClear(B) {
 }
 
 // The free lattice tile nearest an anchor ahead of home (toward the enemy), within CFG.LATTICE_R king steps of home.
+// CFG.LATTICE_STICKY >= 2: a tile out of sight that this unit saw taken in the last LATTICE_MEMORY turns is not free.
 function latticeTarget(B) {
   const w = B.w, me = w.me, h = B.st.home, n = w.n, LATTICE_R = CFG.LATTICE_R;
   const ay = h.y + (h.y < n / 2 ? 2 : 0);
+  const mem = CFG.LATTICE_STICKY >= 2 ? (B.st.ltSeen || (B.st.ltSeen = new Int16Array(n * n))) : null;
   let best = null, bd = 1e9;
   for (let dy = -LATTICE_R; dy <= LATTICE_R; dy++) for (let dx = -LATTICE_R; dx <= LATTICE_R; dx++) {
     const x = h.x + dx, y = h.y + dy;
     if (x < 0 || y < 0 || x >= n || y >= n || !latticeOk(B, x, y)) continue;
-    const occ = w.occ(x, y);
+    const occ = w.occ(x, y), i = y * n + x;
+    if (mem) { if (occ > 0 && occ !== me.id) mem[i] = me.turn; else if (occ === 0) mem[i] = 0; }
     if (occ > 0 && occ !== me.id) continue;
+    if (mem && occ < 0 && mem[i] && me.turn - mem[i] <= CFG.LATTICE_MEMORY) continue;
     const v = d2(x, y, h.x, ay) * 8 + d2(x, y, me.x, me.y);
     if (v < bd) { bd = v; best = [x, y]; }
   }
@@ -156,9 +160,10 @@ function latticeTarget(B) {
 }
 
 // The lattice tile an idle unit walks to. Tiles out of sight count as free, so choosing afresh every turn can flip
-// between two tiles that are each out of sight from where the other was chosen (seed 2202, preacher, vision r2 16:
-// (18,2) seen taken from (15,4) sends it toward (11,3); one step on, (18,2) is out of sight and wins again).
-// CFG.LATTICE_STICKY keeps the previous choice while it is still a lattice tile in range and not seen taken.
+// between tiles out of sight from where the other was chosen. CFG.LATTICE_STICKY keeps the previous choice while it
+// is still a lattice tile in range and not seen taken. That does not cover two tiles that are both taken, each seen
+// only from the other's side (seed 2202, preacher, vision r2 16: from (15,4) it sees (18,2) taken and picks (11,3),
+// from (14,5) the reverse, 36-74 turns in a row): LATTICE_STICKY 2 also remembers tiles seen taken (latticeTarget).
 function holdTarget(B) {
   const w = B.w, st = B.st, h = st.home, me = w.me;
   if (CFG.LATTICE_STICKY && st.lt) {

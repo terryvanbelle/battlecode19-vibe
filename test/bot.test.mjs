@@ -458,6 +458,27 @@ test('military: LATTICE_STICKY keeps a lattice target that only looked worse fro
   } finally { CFG.LATTICE_STICKY = saved; }
 });
 
+test('military: LATTICE_STICKY 2 remembers lattice tiles seen taken, so two taken tiles do not trade places', () => {
+  // A (12,2) and B (6,2) are both taken, C (2,2) is free. A preacher (vision r2 16) at (11,4) sees A taken, not B;
+  // at (8,4) it sees B taken, not A. Row 4 is a depot corridor (no lattice).
+  const saved = CFG.LATTICE_STICKY, A = [12, 2], Bt = [6, 2], C = [2, 2];
+  try {
+    const at = (t, p) => (t[0] === p[0] && t[1] === p[1]);
+    const w = { n: 24, me: null, friends: [],
+      passable: (x, y) => y === 4 || at([x, y], A) || at([x, y], Bt) || at([x, y], C),
+      isDepot: (x, y) => y === 4,
+      occ(x, y) { return d2(x, y, this.me.x, this.me.y) > 16 ? -1 : at([x, y], A) ? 77 : at([x, y], Bt) ? 78 : 0; } };
+    const run = sticky => {
+      CFG.LATTICE_STICKY = sticky; w.me = { id: 5, x: 11, y: 4, turn: 10 };
+      const B = { w, st: { home: { x: 10, y: 0 } } }, out = [holdTarget(B)];
+      w.me = { id: 5, x: 8, y: 4, turn: 11 }; out.push(holdTarget(B));
+      return out;
+    };
+    assert.deepStrictEqual(run(1), [Bt, A]);   // B seen taken: back to A, which it saw taken a turn ago
+    assert.deepStrictEqual(run(2), [Bt, C]);   // remembers A
+  } finally { CFG.LATTICE_STICKY = saved; }
+});
+
 test('combat: target choice, preacher splash avoids friends, retreat', () => {
   const es = [{ id: 9, unit: 2, x: 5, y: 0, team: 1 }, { id: 4, unit: 5, x: 0, y: 3, team: 1 }, { id: 3, unit: 5, x: 3, y: 0, team: 1 }];
   assert.strictEqual(pickTarget(3, 0, 0, es, 64).id, 3); // preachers first, then closer

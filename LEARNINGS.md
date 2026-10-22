@@ -48,3 +48,11 @@
    self-play game used 12 s of CPU once and 50 s the next, and under that load robots overran their clocks so even
    `--det` replays parted. Speed comparisons run on the VM, over many games (a gate's per-game wall time), never as a
    driver pair. Profiles are still useful for where time goes (the shares), not for how much. (2026-10-21)
+14. **Over gssh, `pkill -f`/`pgrep -f` patterns match the remote command line that runs them.** A command that both
+   names `dlv_chain6.sh` and kills processes matching it killed its own ssh session halfway (exit 255), leaving a
+   child of the chain running. Kill by PID, or send the script on stdin (`gssh 'bash -s' < script`) so the pattern
+   is not on any command line. (2026-10-21)
+15. **An out-of-sight tile is unknown, not free.** Lattice choice counted tiles out of vision as free, so a preacher
+   (vision r2 16) traded two taken tiles for 36-74 turns, each seen taken only from the other's side; keeping the
+   choice (sticky) cannot help when it really is taken. Remembering what was seen taken for 20 turns brought preacher
+   oscillations on seed 2202 from 50 (h19) / 185 (NAV_FIT) to 3-4. `CFG.LATTICE_STICKY` 2. (2026-10-21)
