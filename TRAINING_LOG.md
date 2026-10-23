@@ -2967,3 +2967,12 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   prophets' band, the default tile again). h111 = v7 + SAFE_BUILD 2 (39be56a5794b). h109 parked. No-op: the defaults
   build out/v7chk8 replays h87 vs h87 on 799 to 300 IDENTICAL; 121 node + 58 Python tests pass. Driver diagnostic
   (the same four games against h87) next, then h110's on 2013.
+
+## 2026-10-23 06:46 — h107 (DEF_FAR_UNIT 3) FAILED: mechanism missed, falsifier confirmed
+- Gate h107 vs h87, the 20 cells of seed0 5000 (out/h107_h87.jsonl): 15-25; gained 1, lost 6, split 13, D 7, net -5,
+  t -1.89. Symcheck: ok (contest / combat divergences only).
+- Mechanism (out/dlv_gate_h107.txt, SUM): deathsOn3 / milBuilt h107 4,423 / 9,047 = 0.49, h87 2,352 / 7,701 = 0.31:
+  **missed** (more units fed onto one tile, not fewer). Falsifier, every part: milLostUnfired / milBuilt 0.42 vs
+  0.26 (crusaders sent at distant prophets die walking in) and castles lost 34 vs 26.
+- D 7 is short of the first look (12), but at net -5 the local accept is closed (5 more discordant cells give net 0
+  at best) and the mechanism failed: closed as h101 was (03:50), no extension, no panel. DEF_FAR_UNIT stays 0.

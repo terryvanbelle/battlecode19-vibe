@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 92 other, 25 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped, 2 sparring partners (148 rows).
+Totals: 93 other, 24 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped, 2 sparring partners (148 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -150,7 +150,7 @@ Totals: 92 other, 25 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped,
 | `h104` | 2026-10-23 | v7 | v7 + no general attack (ATTACK_ROUND=1001, ATTACK_LATE=1001): holds, endgame crusader build kept | 22-18 (D 4, net +2, t 1.00) |  |  |  | REPLICA PANEL: gate block 1 D 4 t 1.00, mechanism missed (milLost/milBuilt 0.95 of h87's, bar 0.85); block 1 = matches 432-437 (submission 102), control 420-425 |
 | `h105` | 2026-10-23 | v7 | structural: the field's turtle style, v7 + MIL_ROTATION [4] + ATTACK_ROUND 1001 + ATTACK_LATE 1001 + CHAIN_ROUND 0 (= dist/turtle) |  |  |  |  | BUILT, NOT QUEUED: lost to h87 on 2046 (castles 1 vs 2); kept as the sparring bot dist/turtle |
 | `h106` | 2026-10-23 | v7 | structural: the field's army doctrine on v7, MIL_ROTATION [4] + ATTACK_ROUND 1001 + ATTACK_LATE 1001 (chain kept) |  |  |  |  | BUILT, NOT QUEUED: lost its lone castle to h87 on 2644 at r279 (as h98 at r277) |
-| `h107` | 2026-10-23 | v7 | v7 + a threat response against a closest attacker beyond r2 36 that is no crusader builds a crusader, not a prophet (DEF_FAR_UNIT=3) |  |  |  |  | QUEUED: VM job ...19i (after h100's extension 2), 20 cells vs h87, field-aimed bars (t >= 2 + deathsOn3/milBuilt below h87's; reject t <= -1; else replica panel); diagnostic on 2013 changes moves from r200, same result |
+| `h107` | 2026-10-23 | v7 | v7 + a threat response against a closest attacker beyond r2 36 that is no crusader builds a crusader, not a prophet (DEF_FAR_UNIT=3) | 15-25 |  |  |  | FAILED (t -1.89, D 7; mechanism deathsOn3/milBuilt 0.49 vs 0.31; castles lost 34 vs 26) |
 | `h108` | 2026-10-23 | v7 | v7 + castle recall (h43 rebased): a castle whose visible attackers outnumber half its defenders radios its position (50 tiles) every 10 rounds; units that hear it come home for 30 rounds (RECALL=30) |  |  |  |  | PARKED: diagnostic on 2013 turned h87's win as red into a castle loss (a recall clears chain-born units' targets for good); not gated |
 | `h109` | 2026-10-23 | v7 | v7 + structures never build onto a tile where the visible enemy attackers could kill the newborn before its first turn (SAFE_BUILD=1) |  |  |  |  | PARKED (diagnostic: blocks chain launches; worse 2 of 4 cells; -> h111) |
 | `h94` | 2026-10-23 | h82 | h82 + ATTACK_LATE 1001: prophets and preachers never take attack orders (the all-out march from round 900 is off); crusaders still march from 450 |  |  |  |  | REBASED 2026-10-23 00:45 onto v7 as h96 (its gate job ...a3d577100019d now plays h96 vs h87) |

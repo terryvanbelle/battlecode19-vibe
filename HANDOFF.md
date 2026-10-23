@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 06:12 PDT)
+## State (2026-10-23 06:46 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -30,7 +30,7 @@
   the economy census on its games. **h96**'s panel block 1 (v7 + ATTACK_LATE 1001, gate inconclusive t 0.58):
   matches 426-431 (submission 100), same opponents and maps, created 04:22, control = 420-425; two-block rule
   (TRAINING_LOG 04:24). The ladder's vibe19 is submission 103 (= bots/v7 again, after h104's block 432-437 was created).
-  **h107** (gate running, ...19i) = v7 + DEF_FAR_UNIT 3 (a threat response answers a prophet or castle beyond r2 36 with a crusader, not a
+  **h107** FAILED 06:46 (gate t -1.89, D 7; mechanism missed, castles lost 34 vs 26) = v7 + DEF_FAR_UNIT 3 (a threat response answers a prophet or castle beyond r2 36 with a crusader, not a
   prophet; wololo's siege of our lone castle on 2013, TRAINING_LOG 04:48): built, no-op IDENTICAL, on the VM; driver
   diagnostic on 2013 changes moves from r200 (same result); gate queued (...19i, after h100's extension 2;
   TRAINING_LOG 05:04).
