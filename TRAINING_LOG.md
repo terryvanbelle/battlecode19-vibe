@@ -3481,3 +3481,11 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   games: pioneer idle turns away from enemies to r200 (out/st_h124.txt) at most 0.7 of h87's; churches built (dlv)
   at least h87's; castles lost not above h87's. Looks when D first reaches 12; accept t >= 2 with the mechanism;
   reject t <= -1; in between, a replica panel (two-block rule).
+
+## 2026-10-23 14:48 — h111 REJECTED on the replica (block 1 net 0); h123 at 15 cells D 0
+- h111 (v7 + SAFE_BUILD 2) block 1 = matches 616-621 against v7's control 420-425 (same opponents, maps, sides):
+  gained 2 (uvafan 1653, bot1v43 2321), lost 2 (IanCoolidge0 203 on health; awesomelemonade 1712: a castle win at
+  r474 became a loss at r1000),
+  D 4, net 0, 6/18 wins each -> **REJECTED** by the two-block rule (net <= 0 after block 1).
+- h123's gate at 15 of 20 cells: 30 games, every cell split, D 0 (CHAIN_FAILS rarely changes a self-play result).
+- Replica queue 90 (101 at 14:2x): falling about 20 an hour.
