@@ -2215,3 +2215,21 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - 18:31: h77's last 14 rush4 games add no castle loss: **8 of 40** (1706, 1755, 1756, 1699, both sides) = h50's 6
   + 2, so (4) holds and **h77's delivery PASSES** (all 4). Its gate is queued as pre-registered (VM job
   ...a3d577100016, after h82's delivery, running, and h78's): h77 vs h50, 20 random cells from seed0 5000, par 2.
+
+## 2026-10-22 18:46 — run_game --fast-init: robots' sandboxes reuse one compiled bundle; on in jobs and the replica
+- Profile (VM, h50 self-play 300 rounds on 826): runInContext 43%, engine game.js 24%, vm.js 9%, GC 6%, acorn 6%;
+  our bot's functions a few percent. Creating a robot's sandbox costs 43 ms on the driver (vm2 transforms and V8
+  compiles the 50 KB bundle anew per robot) vs 3.4 ms with one VMScript; that game builds 523 robots.
+- `--fast-init` (run_game.js fastInit, batch.js passes it): vm2's VM.run gets the bundle's VMScript whenever it is
+  handed that bundle's text; the same code runs in the same fresh VM under the same kill. Unit test: a fresh sandbox
+  per robot, the script compiled once, and a 40-round --det game replayed byte for byte. On the VM (load ~11, beside
+  the gate and the replica): the 300-round game replays byte for byte, wall 252 s -> 212 s (-16%), init_ms_max
+  113/417 -> 39/45 ms, 0 errors either way.
+- Added to the batch lines of the 20 pending jobs that run from 2019-next (the two reference jobs in the main tree
+  keep the old tools). Replica: saturn passes it (GALAXY_FAST_INIT, default 1; README); runtime and app deployed,
+  smoke game on the deployed runtime clean, saturn restarted 01:46 UTC (the 5 matches in flight re-run). Replica
+  games average 301 s; the saving there is ~75 ms per robot, under 10%, and creation spikes that risk init failures
+  under load fall from hundreds of ms to tens.
+- h82's delivery so far: no-op v6q IDENTICAL; symcheck contest/combat only; **rush4 castle losses 0 of 40** (h50: 6,
+  h77: 8): criterion (1) holds. The 4 games vs h50 run. h70 (PEACE_RESERVE_K 60) and h67 (PIONEERS_TEAM 4) are
+  superseded by h77's gate (their switches are among its four).

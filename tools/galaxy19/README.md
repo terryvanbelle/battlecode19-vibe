@@ -82,7 +82,10 @@ One deliberate deviation: a robot gets 1000 ms of wall clock to create its sandb
 official servers did not impose. The same 1000 ms bounds vm2's run of the bundle during creation (run_game.js
 loadLimit; the engine runs it under the 200 ms per-turn kill, which cost StoneT2000 16 robots in match 306 once 5
 slots ran, 2026-10-22). The robot's clock still starts at 100 ms and gains 20 ms a turn; its turns keep the 200 ms
-kill.
+kill. Since 2026-10-23 01:46 UTC saturn also passes `run_game.js --fast-init` (`GALAXY_FAST_INIT`, default 1): each
+bundle is compiled once per game instead of once per robot, which leaves every clock rule as it was (creation is
+bounded by the 1000 ms above, not by the robot's clock) and saves the VM about 75 ms of CPU per robot under load
+(a 300-round self-play game: 252 s -> 212 s, the same replay byte for byte).
 
 ## Deploying a change to saturn or the runtime
 
