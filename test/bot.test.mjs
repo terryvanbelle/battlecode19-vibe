@@ -396,6 +396,28 @@ test('struct: DEF_RESERVE_K holds karbonite back from pilgrims and the guard, no
   } finally { CFG.DEF_RESERVE_K = saved; }
 });
 
+test('struct: DEF_FAR_UNIT answers a prophet beyond r2 36 with a crusader; nearer, or a crusader, still a preacher', () => {
+  const saved = CFG.DEF_FAR_UNIT;
+  try {
+    const g = new Game(3, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0);
+    const turn1 = (far, unit, dy) => {
+      CFG.DEF_FAR_UNIT = far; castle.turn = 1;
+      const extra = [{ id: 4999, team: 1, unit, x: castle.x, y: castle.y + dy, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 }];
+      const all = g.robots;
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100).concat(extra);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round: 1, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 100; w.fuel = 500;
+      return (castleTurn(B) || {}).u;
+    };
+    assert.strictEqual(turn1(0, S.PROPHET, 7), S.PROPHET);     // default: a prophet against a prophet 7 tiles out
+    assert.strictEqual(turn1(3, S.PROPHET, 7), S.CRUSADER);
+    assert.strictEqual(turn1(3, S.PROPHET, 5), S.PREACHER);    // r2 25 <= 36: a preacher either way
+    assert.strictEqual(turn1(3, S.CRUSADER, 7), S.PREACHER);
+  } finally { CFG.DEF_FAR_UNIT = saved; }
+});
+
 testPreV7('struct: ECON_UNTIL keeps the peacetime army out before that round, not a threat response', () => {
   const saved = [CFG.ECON_UNTIL, CFG.SERVE_MOVES];
   try {

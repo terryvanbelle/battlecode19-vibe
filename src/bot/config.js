@@ -175,6 +175,11 @@ export const CFG = {
                              // opening race is run on the whole bank (h82 self-play, seed 2591: with 80 K the castle
                              // waited r3-r13 for 90 K, its pioneer left at r14 and churched the centre at r26;
                              // uvafan's pioneer left at r4 and churched it at r13, replica 391-1)
+  DEF_FAR_UNIT: 0,           // >0: the unit a threat response builds against a closest attacker beyond r2 36 that is no
+                             // crusader (0: a prophet); 3: a crusader, 40 HP for 15 K against a prophet's 20 for 25 K,
+                             // and inside a prophet's dead zone (r2 < 16) once it closes (replica 414-1, seed 2013:
+                             // wololo's prophets just outside our castle's reach shot 9 newborn prophets on its build
+                             // tile in rounds 169-180, then the castle)
   PLAN_SERVE_PILGRIM: 0,     // 1: church planning counts a depot as served by pilgrim moves (as staffing does), and
                              // churches a cluster with >= 2 unserved depots (or all, if smaller); 0: any depot within
                              // 2*SERVE_MOVES king steps marks the whole cluster served (seed 1755: never staffed)

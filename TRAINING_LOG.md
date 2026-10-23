@@ -2845,3 +2845,25 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   r1000 1,044; ours 31 and 22. Our karbonite stock stayed at 2-127 from r100 (we spend all we mine); fuel 12,682
   banked at r1000. The gap is mining rate (pilgrims, churches), not spending. v7's self-play on 1712 has 31-33
   pilgrims at r100 (TRAINING_LOG 03:50); its replica block (420-425, uvafan on 1712 among them) measures it.
+
+## 2026-10-23 04:48 — v7's self-play economy on six more loss maps; wololo's siege on 2013; h107 (DEF_FAR_UNIT)
+- Driver, v7 vs v7 to r200 (--det, scratch v7self/econ.tsv), r100 churches / pilgrims red/blue against the field
+  bot's r100 in our replica loss there (comp census, v6 the loser): 1036 5/4, 27/19 (IanCoolidge0 419-3: 4, 26;
+  v6 1, 11); 2013 5/5, 22/24 (wololo 414-1: 3, 21); 1375 7/6, 32/32 (wololo 403-1: 6, 36); 2321 4/3, 21/18
+  (bot1v43 416-3: 8, 18); 203 2/1, 11/10 (IanCoolidge0 419-1: 1, 12); 2644 2/2, 7/11 (IanCoolidge0 419-2: 2, 15).
+  With 1712 and 836 (03:50): v7 reaches the field's r100 pilgrim count on 6 of 8 maps. Short on 2644 (22 depots;
+  the centre cluster holds 10, c2 in our plan at m 3): in self-play the mirror centre churches (28,19) and (28,22),
+  3 tiles apart, both stand from r24; at r100 (ECON_UNTIL) red builds a peacetime prophet, blue sees it within r2
+  36 and answers with a preacher, which kills 4 red pilgrims and then the church (r102). IanCoolidge0 holds that
+  centre with 4 churches and 29 pilgrims at r200.
+- wololo's win on 2013 (414-1, our lone castle at (15,14)): it killed our centre church (28,18) at r93, churched
+  (28,18) itself at r112 and (27,15) at r136, 13 tiles from our castle, and massed prophets at (22-26, 17-19): just
+  outside the castle's reach (r2 65-80), in reach of its build tile (16,15) (r2 45). Our threat response built a
+  prophet toward the closest attacker every turn; in r169-180 nine newborn prophets died on (16,15), then the castle
+  (r180). Our army stood at the far churches (40,20), (40,33), (26,0), (34,4).
+- Switch DEF_FAR_UNIT (struct.js structAct, default 0 = v7): the unit a threat response builds against a closest
+  attacker beyond r2 36 that is not a crusader; h107 = v7 + DEF_FAR_UNIT 3 (crusader: 40 HP for 15 K against the
+  prophet's 20 for 25 K; a crusader that closes to r2 < 16 cannot be shot by that prophet). Unit test 'struct:
+  DEF_FAR_UNIT answers a prophet beyond r2 36 with a crusader ...'.
+- (04:59) No-op: the defaults build out/v7chk6 replays h87 vs h87 on 799 to 300 IDENTICAL (--det); 120 node + 57 Python
+  tests pass. dist/h107 = v7 + DEF_FAR_UNIT 3 (06ee0603d863). Driver diagnostic h107 vs h87 on 2013 next.

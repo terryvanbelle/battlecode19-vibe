@@ -194,7 +194,7 @@ function structAct(B, allIds, extra) {
     // bank (seed 799: a front church's answers took 136 of 211 military builds in r200-400 and no line ever fired).
     const hold = CFG.CHAIN_HOLD_R2 && me.unit === CHURCH && chainOn && cd > CFG.CHAIN_HOLD_R2 ? CFG.CHAIN_K : 0;
     if (ours < attackers.length * 2 + 1) {
-      const unit = cd <= 36 || closest.unit === CRUSADER ? PREACHER : PROPHET;
+      const unit = cd <= 36 || closest.unit === CRUSADER ? PREACHER : (CFG.DEF_FAR_UNIT || PROPHET);
       if (w.canAfford(unit, hold)) { const b = buildToward(B, unit, closest.x, closest.y); if (b) return b.act; }
       if (unit === PREACHER && w.canAfford(PROPHET, hold)) { const b = buildToward(B, PROPHET, closest.x, closest.y); if (b) return b.act; }
     }

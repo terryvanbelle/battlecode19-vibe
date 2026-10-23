@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 88 other, 24 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped, 2 sparring partners (143 rows).
+Totals: 89 other, 24 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped, 2 sparring partners (144 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -150,6 +150,7 @@ Totals: 88 other, 24 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped,
 | `h104` | 2026-10-23 | v7 | v7 + no general attack (ATTACK_ROUND=1001, ATTACK_LATE=1001): holds, endgame crusader build kept |  |  |  |  | QUEUED: VM job ...19g (after h100's extension), 20 cells vs h87, field-aimed bars (t >= 2 + milLost/milBuilt <= 85% of h87's; reject t <= -1; else replica panel) |
 | `h105` | 2026-10-23 | v7 | structural: the field's turtle style, v7 + MIL_ROTATION [4] + ATTACK_ROUND 1001 + ATTACK_LATE 1001 + CHAIN_ROUND 0 (= dist/turtle) |  |  |  |  | BUILT, NOT QUEUED: lost to h87 on 2046 (castles 1 vs 2); kept as the sparring bot dist/turtle |
 | `h106` | 2026-10-23 | v7 | structural: the field's army doctrine on v7, MIL_ROTATION [4] + ATTACK_ROUND 1001 + ATTACK_LATE 1001 (chain kept) |  |  |  |  | BUILT, NOT QUEUED: lost its lone castle to h87 on 2644 at r279 (as h98 at r277) |
+| `h107` | 2026-10-23 | v7 | v7 + a threat response against a closest attacker beyond r2 36 that is no crusader builds a crusader, not a prophet (DEF_FAR_UNIT=3) |  |  |  |  | BUILT: no-op IDENTICAL; diagnostic on 2013 next |
 | `h94` | 2026-10-23 | h82 | h82 + ATTACK_LATE 1001: prophets and preachers never take attack orders (the all-out march from round 900 is off); crusaders still march from 450 |  |  |  |  | REBASED 2026-10-23 00:45 onto v7 as h96 (its gate job ...a3d577100019d now plays h96 vs h87) |
 | `h95` | 2026-10-23 | h82 | h82 + PIONEER_DEPART_K 0: a pioneer leaves once the bank holds a pilgrim and DEF_RESERVE_K, and builds its church when it holds church + reserve |  |  |  |  | REBASED 2026-10-23 00:45 onto v7 as h97 before its delivery ran |
 | `h96` | 2026-10-23 | v7 | v7 + ATTACK_LATE 1001 (h94 rebased): prophets and preachers never take attack orders; crusaders still march from 450 | 21-19 vs h87 after 20 cells (out/h96_h87.jsonl): gained 2, lost 1, split 17, net +1, t 0.58 |  |  |  | INCONCLUSIVE at 20 cells (D 3 of the 12 the first look needs); extension ranked below h100 |
