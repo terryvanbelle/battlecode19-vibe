@@ -2438,7 +2438,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   travel time), or a pioneer paid from the reserve's surplus only. h85 (PIONEER_FAST alone) stays built, waiting:
   h90's K bar suggests it is no economy gain by itself.
 
-## 2026-10-22 22:55 — anti-chain delivery FAILS (h83, h84); h87 delivery PASSES; h91 (RICH_K 0) pre-registered
+## 2026-10-22 22:45 — anti-chain delivery FAILS (h83, h84); h87 delivery PASSES; h91 (RICH_K 0) pre-registered
 - Anti-chain delivery (...a3d577100017, as pre-registered 19:30), each vs h76 on 799, 1706, 2013, 2924 both sides,
   full games: castles lost h82 6 (2 on 799 twice, 1 on 2924 twice), h83 6, h84 6; wins 4 / 4 / 4. (1) needs <= 3:
   **h83 and h84 FAIL.** The falsifier held: neither the hunt nor the strike saves a castle from the chain (the same
