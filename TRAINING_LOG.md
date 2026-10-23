@@ -2690,3 +2690,50 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - out/h64_h50.jsonl (40 games, the 20 cells of seed0 5000): 22-18, gained 8, lost 6, split 6, D 14, net +2, t 0.53.
   0 < t < 2: inconclusive. Its base v6 is no longer the incumbent, so it is not extended; a port (v7 +
   PIONEER_FAST 1) ranks behind h100 and h101.
+
+## 2026-10-23 03:05 — economy census of 63 replica games: we stop expanding at r50; half our pioneers fail in losses
+- Scratch combat/econ.js over the 63 replica games of the combat census (45 lost, 17 won, 1 unparsed), medians,
+  ours/theirs. **Losses**: r50 churches 1/1, pilgrims 9/7, mine actions 242/175 (we lead); r100 1/3, 10/18, 603/666;
+  r200 1/5.5, 10.5/24.5, 1374/2026; r400 1/6, 12.5/26, 2936/4806. We built no church at all in 14 of 45 losses (they
+  in 4). **Wins**: r200 churches 1/2, pilgrims 13/15, mines 1828/1486. We lead every game at r50 and stop there: in
+  losses our pilgrim count is flat from r50 while theirs doubles by r100 and again by r200.
+- Scratch combat/pioneer.js (pilgrims whose first act is a church, or that walk 15+ rounds without mining), rounds
+  < 200: in losses 220 of our pioneers, 105 built a church, 47 died, 67 were still walking at r200 or their death
+  (89 stood 10+ turns within 2 tiles of one spot); in wins 57, 42 built, 3 died, 10 walking. Mean trip to a church
+  20.5 rounds (theirs 22.8): the pioneers that arrive are not slow; half never arrive.
+- Two cases read: 416-1 (seed 2591, 32x32, one castle a side, bot1v43): the only free cluster straddles the top
+  centre behind a 2-wide corridor; bot1v43's round-3 prophet sat in it at (16,14) from r29 to r55, our pioneer stood
+  off its range at (15,22) from r30 (a way round by the east edge exists), the castle built nothing from r5 to r53
+  with 70-130 K banked (no depot left to staff, the pioneer still out, ECON_UNTIL 100); no church, 3 pilgrims, castle
+  lost at r165. 416-3 (seed 2321, 45x45, bot1v43): two pioneers born r13-14 for the (26,16) cluster stood at
+  (29-31,13-14) from r23 to past r78, at r2 65 and 100 of a prophet bot1v43's church built at r17 and parked at
+  (21,14), r2 29 from our site; no way round (the site itself is in range). Our castle never saw it (r2 169).
+- Two answers: walk round a held choke (PIONEER_DETOUR below), and clear a held site (a crusader beats a lone
+  prophet: inside r2 16 the prophet cannot fire; ESCORT on v7 with ESCORT_UNIT 3 has never been gated: h65 was a v6
+  job, h93 went with h88).
+- Switch PIONEER_DETOUR (pilgrim.js detourCost, nav.js step's new `costed` option; default 0): a pioneer remembers
+  each enemy attacker it sees for PIONEER_DETOUR turns (forgotten sooner once its tile is in sight without it) and
+  walks to its site over a field in which each tile in a remembered attacker's THREAT_R2 costs DETOUR_PEN (20) extra
+  moves. Unit test 'pilgrim: PIONEER_DETOUR walks round a remembered attacker that holds the short gap'. h102 = v7 +
+  PIONEER_DETOUR 50.
+- No-op check: the defaults build out/v7chk4 (src with PIONEER_DETOUR) replays h87 vs h87 on 799 to 300 IDENTICAL.
+  Driver diagnostic h102 red vs h100 on 2591 to 300 (--det): byte-for-byte h87's game vs h100 (both centre churches
+  at r26 / r33; no enemy attacker came in sight of a pioneer). In self-play nobody fields an army before ECON_UNTIL
+  100, so the switch has nothing to see: its test needs an opponent that parks a prophet in front of our pioneers.
+
+## 2026-10-23 03:45 — h100 gate inconclusive (t 0.71, D 8), mechanism passes: extension queued; a camping sparring partner
+- Gate h100 (v7 + ESCORT_FIRST 1) vs h87, the 20 cells of seed0 5000 (out/h100_h87.jsonl): 22-18; gained 5, lost 3,
+  split 12, **D 8**, net +2, t 0.71. Inconclusive and D < 12: the next 20 cells as pre-registered (VM job
+  ...a3d577100019fzz, after h101's gate and the time audit), read pooled.
+- Mechanism (scratch combat/econ200.js on the 40 gate replays, rounds < 200): pilgrims lost h100 29, h87 45 (0.64;
+  bar <= 0.80, pass); mean first church h100 30.9, h87 28.2 (+2.7; bar <= +5, pass); no church before r200 in 4
+  games each.
+- Time audit queued (VM job ...a3d577100019fz, after h101): v7 vs v7 on 2740 and 1712 under the replica's flags
+  (contest clock, --init-ms 1000, --fast-init, --fast-view, the kill on), --logs: the bot's "TIME ms unit turn" lines
+  name what overruns. Our replica games: 57 frozen turns and 9 timeouts in 288 games, 1-2% of our turns over 20 ms on
+  the big maps (418-2: 7,340 of 435,584; ms_max 454).
+- Sparring partner dist/camp = v7 + ESCORT_FIRST 1 + ESCORT_MIRROR 1 (new switch, castle.js escortFirst; for
+  sparring builds only): the round-4 escort prophet holds the enemy's mirror site of our first contested cluster,
+  bot1v43's opening in 410-1, 416-1 and 416-3. Unit test: the ESCORT_FIRST test covers it. Driver diagnostics h87,
+  h102 and h103 (= v7 + ESCORT 2 + ESCORT_UNIT 3: an overdue or lost pioneer gets 2 crusaders at its site; a crusader
+  inside r2 16 of a prophet cannot be shot by it) vs camp on 2321 and 2591 to 200 running.

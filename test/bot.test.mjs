@@ -12,7 +12,7 @@ import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEs
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
-import { minesNow, pilgrimTurn, stepAvoid, huntSpot, hotRetarget, hereRetarget, siteStalled, stallRetarget } from '../src/bot/pilgrim.js';
+import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, canHit, PRIORITY } from '../src/bot/combat.js';
@@ -1299,6 +1299,14 @@ test('castle: ESCORT_FIRST owes escorts to the first contested cluster at planni
     const B2 = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
     for (const t of [1, 2, 3]) { castle2.turn = t; const w2 = worldFor(g2, castle2); B2.w = w2; B2.api = w2.api; castleTurn(B2); }
     assert.deepStrictEqual(B2.st.escorts, []);
+    // ESCORT_MIRROR (sparring): the same escort holds the mirror image of the site.
+    Object.assign(CFG, { ESCORT_FIRST: 1, ESCORT_MIRROR: 1 });
+    const g3 = new Game(1915, 100, 20, false, false), castle3 = g3.robots.find(r => r.team === 0);
+    const B3 = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    for (const t of [1, 2, 3]) { castle3.turn = t; const w3 = worldFor(g3, castle3); B3.w = w3; B3.api = w3.api; castleTurn(B3); }
+    const [mx, my] = B3.w.mirror(site[0], site[1]);
+    assert.ok(mx !== site[0] || my !== site[1]);
+    assert.deepStrictEqual(B3.st.escorts, [{ cluster: hot.cluster, x: mx, y: my, left: 1 }]);
   } finally { Object.assign(CFG, saved); }
 });
 
@@ -1477,6 +1485,44 @@ test('pilgrim: PILGRIM_SAFE_STEP keeps steps out of a visible attacker\'s threat
     CFG.PILGRIM_SAFE_STEP = 1;
     assert.strictEqual(stepAvoid({ enemies: [{ unit: S.PILGRIM, x: 1, y: 1 }, { unit: S.CHURCH, x: 2, y: 2 }] }), null);
   } finally { CFG.PILGRIM_SAFE_STEP = saved; }
+});
+
+test('pilgrim: PIONEER_DETOUR walks round a remembered attacker that holds the short gap (replica 416-1, seed 2591)', () => {
+  const saved = { ...CFG };
+  try {
+    // 24x24, a wall 3 rows deep (y = 7..9, too deep to step over) with gaps at x = 8 (the short way) and x = 23 (the
+    // long way); an enemy prophet holds (8,11), r2 64 over the short gap; the pioneer starts at (8,21) for (8,1).
+    const n = 24, walls = [];
+    for (let x = 0; x < n; x++) for (let y = 7; y <= 9; y++) if (x !== 8 && x !== 23) walls.push([x, y]);
+    const run = detour => {
+      Object.assign(CFG, { PILGRIM_SAFE_STEP: 1, PIONEER_DETOUR: detour });
+      const w = stubWorld(n, walls, [[8, 11]]); w.me = { x: 8, y: 21, turn: 0 };
+      const B = { w, st: {}, nav: new Nav(w, offsets(4), rng(3)) }, seen = [];
+      for (let t = 1; t <= 60; t++) {
+        w.me = { ...w.me, turn: t };
+        w.enemies = d2(w.me.x, w.me.y, 8, 11) <= 100 ? [{ id: 77, unit: S.PROPHET, x: 8, y: 11 }] : [];
+        const c = detour ? detourCost(B) : null; seen.push(c ? 1 : 0);
+        const s = B.nav.step('site', [[8, 1]], 4, stepAvoid(w), undefined, null, c);
+        if (s) w.me = { ...w.me, x: w.me.x + s[0], y: w.me.y + s[1] };
+        assert.ok(d2(w.me.x, w.me.y, 8, 11) > 64, 'stepped into range at ' + [w.me.x, w.me.y]);
+        if (w.me.y < 7) return { t, x: w.me.x, seen };
+      }
+      return null;
+    };
+    assert.strictEqual(run(0), null);   // the default waits at the edge of the prophet's range
+    const r = run(50);
+    assert.ok(r && r.x >= 21, 'crossed by the far gap: ' + JSON.stringify(r && [r.t, r.x]));
+    assert.ok(r.seen.every(v => v === 1), 'remembered while out of sight');
+    // Forgotten after PIONEER_DETOUR turns out of sight, or at once when its tile is in sight without it.
+    const w = stubWorld(n, [], []), B = { w, st: {} };
+    w.me = { x: 0, y: 0, turn: 1 }; w.enemies = [{ id: 5, unit: S.CRUSADER, x: 9, y: 9 }];
+    assert.ok(detourCost(B)); w.enemies = [];
+    w.me = { x: 0, y: 0, turn: 50 }; assert.ok(detourCost(B));
+    w.me = { x: 0, y: 0, turn: 51 }; assert.strictEqual(detourCost(B), null);
+    w.me = { x: 0, y: 0, turn: 60 }; w.enemies = [{ id: 5, unit: S.CRUSADER, x: 9, y: 9 }]; assert.ok(detourCost(B));
+    w.enemies = []; w.me = { x: 5, y: 5, turn: 61 }; assert.strictEqual(detourCost(B), null);
+    w.me = { x: 0, y: 0, turn: 62 }; w.enemies = [{ id: 6, unit: S.PILGRIM, x: 3, y: 3 }]; assert.strictEqual(detourCost(B), null);
+  } finally { Object.assign(CFG, saved); }
 });
 
 test('military: KILL_ZONE: a unit of ours gone from where it could not walk out of sight marks a zone; idle units hold no lattice tile in it', () => {

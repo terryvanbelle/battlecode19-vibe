@@ -43,6 +43,7 @@ export const CFG = {
                              // took the centre with 3 churches and we mined 218 K to its 732 by r161; uvafan and wololo
                              // guard contested sites with prophets too)
   ESCORT_UNIT: 4,            // prophet
+  ESCORT_MIRROR: 0,          // 1 (sparring partners only, bots/camp): ESCORT_FIRST's units hold the enemy's mirror site
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short
@@ -78,6 +79,10 @@ export const CFG = {
                              // killed at 29, 5 king steps short; botfinalsafe held the cluster all game; 2 tiles a turn
                              // costs ~1 more fuel a tile)
   PILGRIM_SAFE_STEP: 1,      // 1: pilgrims never step into a visible enemy attacker's threat range (pilgrim.js stepAvoid)
+  PIONEER_DETOUR: 0,         // >0: a pioneer remembers enemy attackers it saw for this many turns and walks round their
+                             // threat range to its site (pilgrim.js detourCost; replica 416-1, seed 2591: bot1v43's
+                             // prophet held the centre corridor 26 rounds while our pioneer waited at its edge)
+  DETOUR_PEN: 20,            // ...extra moves charged per remembered-threat tile entered
   PILGRIM_HOT: 0,            // >0: a pilgrim whose target depot sat in a visible attacker's threat range this many turns
   PILGRIM_HOT_MEM: 50,       // in a row retargets to a free depot not threatened and not given up in this many turns
   PILGRIM_STALL: 0,          // >0: a pilgrim this many turns no nearer its target depot (king steps) than its best, whatever

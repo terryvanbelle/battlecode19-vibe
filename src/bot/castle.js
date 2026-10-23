@@ -200,7 +200,12 @@ export function openEscort(B, cluster, left = CFG.ESCORT) {
 // (escort before pioneer in the castle's build order) and walk out ahead of its pioneer.
 export function escortFirst(B) {
   const p = B.st.plan.find(q => q.m <= CFG.PLAN_CONTEST_FIRST);
-  if (p) openEscort(B, p.cluster, CFG.ESCORT_FIRST);
+  if (!p) return;
+  openEscort(B, p.cluster, CFG.ESCORT_FIRST);
+  // CFG.ESCORT_MIRROR (sparring partners only): the escort holds the mirror image of the site, the enemy's own site
+  // for that cluster pair, as bot1v43's round-3 prophet does (replica 410-1, 416-1, 416-3).
+  const e = CFG.ESCORT_MIRROR && B.st.escorts.find(q => q.cluster === p.cluster);
+  if (e) [e.x, e.y] = B.w.mirror(e.x, e.y);
 }
 
 // Build the next escort unit owed, radioing it the site (a turn whose radio is taken waits: the unit must hear it).

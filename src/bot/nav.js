@@ -22,6 +22,16 @@ export class Nav {
     return f;
   }
 
+  // A field in which entering tile i costs cost(i) moves, cached like field() under its own key.
+  costed(key, sources, offs, cost) {
+    let f = this.cache.get(key);
+    if (f) { this.cache.delete(key); this.cache.set(key, f); return f; }
+    f = costField(this.w, typeof sources === 'function' ? sources() : sources, offs, cost);
+    this.cache.set(key, f);
+    if (this.cache.size > this.cacheSize) this.cache.delete(this.cache.keys().next().value);
+    return f;
+  }
+
   // Distance (moves) from the robot's tile to the key's sources, -1 if unreachable.
   dist(key, sources) { const w = this.w; return this.field(key, sources)[w.me.y * w.n + w.me.x]; }
 
@@ -30,8 +40,9 @@ export class Nav {
   // count (otherwise a long-blocked robot slides every turn). detour: [after, penalty, every, memory]: once blocked
   // `after` turns, follow (for the rest of this key, rebuilt every `every` turns) a field in which each tile a friend
   // was seen on within the last `memory` turns costs `penalty` extra moves, so a jam out of sight still repels.
+  // costed: {sig, cost(i)}: follow a field in which entering tile i costs cost(i) moves (cached per sig).
   // Returns [dx, dy] or null (arrived, unreachable, or waiting).
-  step(key, sources, maxR2, avoid, ladder = LADDER, detour = null) {
+  step(key, sources, maxR2, avoid, ladder = LADDER, detour = null, costed = null) {
     const w = this.w, n = w.n, me = w.me;
     // CFG.NAV_FIT: a step capped below full speed follows a field counted in such steps. In full-speed moves a short
     // step lowers the distance only every other tile (every third for a crusader), and the robot counted itself
@@ -40,7 +51,7 @@ export class Nav {
     if (CFG.NAV_FIT && maxR2 > 0 && maxR2 < offs[offs.length - 1][2]) {
       offs = offs.filter(o => o[2] <= maxR2); fkey = key + '#' + offs[offs.length - 1][2];
     }
-    let f = this.field(fkey, sources, offs);
+    let f = costed ? this.costed(fkey + '!' + costed.sig, sources, offs, costed.cost) : this.field(fkey, sources, offs);
     if (key !== this.lastKey) { this.blocked = 0; this.lastKey = key; this.det = null; }
     if (detour) {
       const seen = this.seenBusy || (this.seenBusy = new Int16Array(w.N));

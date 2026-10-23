@@ -55,11 +55,42 @@ function freeDepotNear(B, x, y, cluster, kind, maxKing, skip) {
 function adjSources(x, y) { return ADJ.map(([dx, dy]) => [x + dx, y + dy]); }
 
 // fast: full r2 4 steps whatever the bank (CFG.PIONEER_FAST); otherwise only above PILGRIM_FAST_FUEL.
-function go(B, key, sources, fast) {
+function go(B, key, sources, fast, costed = null) {
   const w = B.w;
   const r = fuelStep(w.fuel, 4, 1, w.fuel > 300 ? 0 : 40);
-  const s = B.nav.step(key, sources, fast || w.fuel > CFG.PILGRIM_FAST_FUEL ? r : Math.min(r, 2), stepAvoid(w));
+  const s = B.nav.step(key, sources, fast || w.fuel > CFG.PILGRIM_FAST_FUEL ? r : Math.min(r, 2), stepAvoid(w), undefined, null, costed);
   return s ? w.move(s[0], s[1]) : null;
+}
+
+// CFG.PIONEER_DETOUR: a pioneer remembers each enemy attacker it sees for this many turns (forgotten sooner once its
+// tile is in sight without it) and, while it remembers any, walks to its site over a field in which every tile in a
+// remembered attacker's THREAT_R2 costs DETOUR_PEN extra moves: it takes the way round a choke the enemy holds instead
+// of waiting at its edge (replica 416-1, seed 2591: bot1v43's prophet held the 2-wide centre corridor at (16,14) from
+// round 29 to 55, our pioneer stood off its range at (15,22) all that time; no church, 3 pilgrims, castle lost r165).
+// Returns the nav's costed option, or null while it remembers none.
+export function detourCost(B) {
+  const w = B.w, me = w.me, st = B.st, n = w.n;
+  const mem = st.tmem || (st.tmem = new Map());
+  for (const e of w.enemies) if (isAttacker(e.unit)) mem.set(e.id, { x: e.x, y: e.y, u: e.unit, t: me.turn });
+  for (const [id, m] of mem) {
+    if (me.turn - m.t >= CFG.PIONEER_DETOUR || (m.t !== me.turn && d2(me.x, me.y, m.x, m.y) <= STATS[PILGRIM].vision)) mem.delete(id);
+  }
+  if (!mem.size) return null;
+  const list = [...mem.values()].sort((a, b) => (a.y * n + a.x) - (b.y * n + b.x) || a.u - b.u);
+  const sig = list.map(m => `${m.x},${m.y},${m.u}`).join(';');
+  if (st.tsig !== sig) {
+    const zone = new Uint8Array(w.N);
+    for (const m of list) {
+      const R2 = THREAT_R2[m.u], R = Math.floor(Math.sqrt(R2));
+      for (let dy = -R; dy <= R; dy++) for (let dx = -R; dx <= R; dx++) {
+        const x = m.x + dx, y = m.y + dy;
+        if (x >= 0 && y >= 0 && x < n && y < n && dx * dx + dy * dy <= R2) zone[y * n + x] = 1;
+      }
+    }
+    st.tsig = sig; st.tzone = zone;
+  }
+  const zone = st.tzone, pen = 1 + CFG.DETOUR_PEN;
+  return { sig, cost: i => (zone[i] ? pen : 1) };
 }
 
 // CFG.PILGRIM_SAFE_STEP: never step into the threat range of a visible enemy attacker. Fleeing starts only inside
@@ -148,7 +179,9 @@ function pilgrimAct(B) {
         if ((w.karb[i] && me.karbonite < KARB_CAP) || (w.fuelD[i] && me.fuel < FUEL_CAP)) return w.fuel >= 1 ? w.mine() : null;
         return null;
       }
-    } else if (!((CFG.PIONEER_GIVEUP || CFG.PIONEER_STALL_ANY) && siteStalled(B))) return go(B, 'site', adjSources(sx, sy), CFG.PIONEER_FAST);
+    } else if (!((CFG.PIONEER_GIVEUP || CFG.PIONEER_STALL_ANY) && siteStalled(B))) {
+      return go(B, 'site', adjSources(sx, sy), CFG.PIONEER_FAST, CFG.PIONEER_DETOUR ? detourCost(B) : null);
+    }
   }
 
   if (CFG.PILGRIM_ORPHAN && !st.structs.length && !st.site) { const a = orphanStep(B); if (a !== undefined) return a; }
