@@ -3362,6 +3362,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   acts first in a round for robots of equal age and takes contested tiles (symcheck's CONTEST divergences: "red
   took axis tile"). Engine source: the initial castles are created in pairs, team 0 first (game.js
   `to_create.push({team:0,...}); to_create.push({team:1,...})`), and enactTurn walks this.robots in insertion
-  order (`this.robots[this.robin]`), so red's castles and their same-round newborns move before blue's. It is why 14-17 of a gate's 20 cells split by side (D 3-8). Pairing both sides keeps the gate
-  fair; on the replica sides alternate per game.
+  order (`this.robots[this.robin]`), so red's castles and their same-round newborns move before blue's. It is why
+  14-17 of a gate's 20 cells split by side (D 3-8). Pairing both sides keeps the gate fair; on the replica sides
+  alternate per game.
 - h115 (ENDGAME_FUEL 900) at 17 of 20 cells: gained 2, lost 1, D 3, t 0.58. Replica 140 waiting (134 ranked).
