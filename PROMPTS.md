@@ -116,3 +116,6 @@ Go ahead and build whatever scripts you need, and I'll add them
 
 ## 28. 2026-10-23 12:29 PDT
 Let me know if you have any more trouble running tools or editing source files
+
+## 29. 2026-10-23 12:33 PDT
+Also run through your history and tell me if you've accessed anything off the battlecode-dev or claude-driver servers, apart from setting up Galaxy, downloading bots, or interfacing with our github repositories
