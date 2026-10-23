@@ -3396,3 +3396,11 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   The owner asked for wrapper scripts: tools/bump_ours.sh (reorders only; digit ids or vibe19; never --drop), unit
   test in test/tools.test.js. With it allowed, 8 waiting matches of ours (499, 553, 616-621) now lead the queue
   (127 waiting).
+
+## 2026-10-23 12:47 — h121's gate: t -0.28, first church only 4.4 rounds earlier -> rejected
+- h121 (v7 + PIONEER_EARLY 6 + PIONEER_HOLD 64 + PIONEER_LEAN 3) vs h87, 20 cells of seed0 5000: 19-21, gained 6,
+  lost 7, split 7, D 13, net -1, t -0.28 (look at D 12: middle zone). Pre-registered (11:33): first church >= 5
+  rounds earlier than h87's on the mean: r36.0 vs r40.4 over 40 games each (st_h121.txt, to r150), short; churches
+  standing by r100 98 vs 94 and castles lost 32 vs 32 (dlv) pass. The signature fell short of its bar, so no panel:
+  REJECTED. The driver diagnostics (r13-18 vs r22-26) were the four seeds where it fires best.
+- VM: h116's gate (...19r) running, then h118 (...19s). Replica: 553, 499, 490 running; 616-621 next.
