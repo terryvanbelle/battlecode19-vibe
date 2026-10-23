@@ -3458,3 +3458,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   (PIONEER_LEAN 1-2) is the next form if the economy line comes back to it.
 - Symcheck h118: mirror-identical to the first contest or combat on 1, 2, 3, 2321.
 - Replica 619 (h111 block, uvafan): 2-1 to uvafan (v7's 423 was 0-3). 620 still running.
+
+## 2026-10-23 14:18 — time audit closed: the overruns are the engine's and GC's, and each costs one turn
+- Audit ...19ra, seed 1712 (v7 red, then blue) under the replica's flags: v7's slow turns (> 100 ms) were 3
+  newborns on turn 1 (105-122 ms against the 120 ms bank: one froze) and 4 late spikes of 215-685 ms (vm2 kills) by
+  a crusader, a prophet, a pilgrim and a preacher with banks of 4,500-13,400 ms. h87 had the same kinds.
+- CPU profile (an unminified v7 vs h87 on 1712, --no-kill, beside the audit; node --cpu-prof): of 797 s, the engine's
+  per-turn compile of the turn message (vm Script) is 361 s, GC 146 s, the engine's view dump 82 s, all bot code
+  ~125 s (top: preacherTarget 11 s, bfs 8 s). A newborn's own first-turn work (born: World, detectSymmetry, econ)
+  is 6.3 s over ~700 births, ~9 ms each; the rest of its 110-120 ms first turn is the sandbox's first run. The
+  spikes hit both teams and every unit type (castle 1,265 ms at bank 7,635): GC pauses and CPU contention.
+- Cost to us: a frozen robot skips only the turns until its bank is positive again (+20 ms a turn, game.js 759-766):
+  one turn for these; a vm2 kill loses that turn's action. 1-24 lost turns in a 1000-round game of hundreds of
+  robots. **Closed** as not a bot defect; the audit was stopped after 1712 (by PID) so h123's gate could start.
+  Moving born's ~9 ms to turn 2 would save at most those few newborn turns: not worth a gate.

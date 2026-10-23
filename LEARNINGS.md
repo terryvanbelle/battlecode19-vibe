@@ -169,3 +169,8 @@
    own shell carries the pattern in its command line. Seven such waiters looped for hours unseen. Write the pattern
    so it cannot match its own text (`pgrep -f "[u]nit-tests.sh"`), or wait on the output file or a PID.
    (TRAINING_LOG 2026-10-23 12:01)
+31. **Read a replica freeze before chasing it.** "Script execution timed out" is vm2's 200 ms kill on one turn and
+   "clock overdrawn" freezes a robot only until its bank refills (+20 ms a turn), so each costs about one turn. In
+   2019 a turn's time is mostly the engine (the turn message is compiled as a script every turn), GC and load; our
+   code was ~2 ms a turn. Profile before rewriting: `node --cpu-prof` on one game with an unminified build.
+   (TRAINING_LOG 2026-10-23 14:18)

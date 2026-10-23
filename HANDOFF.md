@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 13:47 PDT)
+## State (2026-10-23 14:18 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run built
@@ -17,9 +17,8 @@
 - **VM queue** (`~/jobq`: the runner takes pending jobs in locale `sort` order of their names; gates run from the
   shadow tree ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree,
   outputs in the main tree's out/). Gates at par 2 while saturn runs its 6 slots (8 vCPUs; owner, PROMPTS 18). Now:
-  the **time audit** ...19ra running (v7 vs h87 under the
-  replica's flags with run_game --turnlog, out/ta_v7/: the replica's vm2 kills, TRAINING_LOG 13:30) and **h123**
-  (...19t, 13:04: CHAIN_FAILS 2), with field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject
+  **h123**'s gate running (...19t, 13:04: CHAIN_FAILS 2); the time audit closed 14:18 (overruns are engine, GC and
+  load, about one turn each: LEARNINGS 31), with field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject
   t <= -1, else a replica panel). Done: h118 REJECTED 13:47 (mechanism short: idle 0.78 of h87's, bar 0.7; churches +10%, a lead), h116 REJECTED 13:30 (t -1.07: r100 army 616 vs 165, castles lost 60 vs 52),
   h121 REJECTED 12:47 (t -0.28, first church 4.4 rounds earlier, bar 5), h115 REJECTED 11:58 (t 0.58, mechanism opposite: fuelEnd 3.5 times h87's in r1000 games, karbonite binds),
   h114 REJECTED 11:24 (t -1.63, churches built 312 vs 400), h113 REJECTED 10:38 (t -1.73), h112 (t 0.71 -> replica panel, waiting), h111 (t 0.82
