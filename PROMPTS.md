@@ -95,3 +95,6 @@ If certain benchmark bots are causing the lion's share of the blockage, then I'm
 
 ## 21. 2026-10-22 08:19 PDT
 drop Nydroam.BatteredCod and any other bots you deem necessary to drop
+
+## 22. 2026-10-23 06:10 PDT
+Good morning!  What blocked you in the night that you need permissions for?
