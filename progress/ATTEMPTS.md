@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 116 other, 12 accepted, 10 in progress, 7 rejected, 3 dropped, 3 queued, 2 sparring partners (153 rows).
+Totals: 117 other, 12 accepted, 10 in progress, 7 rejected, 3 dropped, 3 queued, 2 sparring partners (154 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -159,7 +159,8 @@ Totals: 116 other, 12 accepted, 10 in progress, 7 rejected, 3 dropped, 3 queued,
 | `h113` | 2026-10-23 | v7 | v7 + a chainer that sees 2 or more enemy crusaders, prophets or preachers starts no line (CHAIN_CLEAR=2) |  |  |  |  | BUILT |
 | `h114` | 2026-10-23 | v7 | v7 + a structure's guard quota builds without waiting for the chain's bank (CHAIN_GUARD=1) |  |  |  |  | BUILT |
 | `h116` | 2026-10-23 | v7 | v7 + before ECON_UNTIL the peacetime army builds from the bank past ECON_RICH + the reserves (ECON_RICH=100) |  |  |  |  | QUEUED (1f518954affb): gate ...19r vs h87 20 cells; no-op IDENTICAL; driver diagnostic 1653: army 34 vs 3 at r100 |
-| `h117` | 2026-10-23 | v7 | v7 + a pioneer waiting at its free site for the church's karbonite says so (CT.WAIT); castles then leave the church + DEF_RESERVE_K in the bank for pilgrims and threat responses beyond r2 64 (PIONEER_HOLD=64) |  |  |  |  | BUILT (a50b972763c3): no-op IDENTICAL; driver diagnostic on 836 and 2013 running |
+| `h117` | 2026-10-23 | v7 | v7 + a pioneer waiting at its free site for the church's karbonite says so (CT.WAIT); castles then leave the church + DEF_RESERVE_K in the bank for pilgrims and threat responses beyond r2 64 (PIONEER_HOLD=64) |  |  |  |  | PARKED (a50b972763c3): self-play diagnostic 836/2013 churches unchanged |
+| `h118` | 2026-10-23 | v7 | v7 + PIONEER_HOLD 64 + a pioneer that has waited 3 turns beside its free site builds on the church's cost alone (PIONEER_LEAN=3) |  |  |  |  | BUILT (21d5ea5d4597 |
 | `h94` | 2026-10-23 | h82 | h82 + ATTACK_LATE 1001: prophets and preachers never take attack orders (the all-out march from round 900 is off); crusaders still march from 450 |  |  |  |  | REBASED 2026-10-23 00:45 onto v7 as h96 (its gate job ...a3d577100019d now plays h96 vs h87) |
 | `h95` | 2026-10-23 | h82 | h82 + PIONEER_DEPART_K 0: a pioneer leaves once the bank holds a pilgrim and DEF_RESERVE_K, and builds its church when it holds church + reserve |  |  |  |  | REBASED 2026-10-23 00:45 onto v7 as h97 before its delivery ran |
 | `h96` | 2026-10-23 | v7 | v7 + ATTACK_LATE 1001 (h94 rebased): prophets and preachers never take attack orders; crusaders still march from 450 | 21-19 vs h87 after 20 cells (out/h96_h87.jsonl): gained 2, lost 1, split 17, net +1, t 0.58 |  | block 1 (426-431, 18 games): gained 0, lost 3, net -3, t -1.73; cand 3/18 vs ctrl 6/18 | vs v7 21-19; vs IanCoolidge0.battlecode20~69ce88 0-3 (replica); vs StoneT2000.BC19-bot1v43 1-2 (replica); vs StoneT2000.BC19-botfinalsafe 1-2 (replica); vs m-schier.battlecode-2019-wololo 0-3 (replica); vs uvafan.bc2019 0-3 (replica) | REJECTED (replica, two-block rule): block 1 net -3 |

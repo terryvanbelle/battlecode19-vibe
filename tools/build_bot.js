@@ -51,7 +51,10 @@ module.exports = { build };
 if (require.main === module) {
   const argv = process.argv.slice(2), [src, out] = argv, cfg = {};
   if (!src || !out) { console.error('usage: build_bot.js <src dir> <out dir> [--no-minify] [--cfg KEY=JSON ...]'); process.exit(2); }
-  for (let i = 2; i < argv.length; i++) if (argv[i] === '--cfg') { const [k, v] = argv[++i].split(/=(.*)/s); cfg[k] = JSON.parse(v); }
+  for (let i = 2; i < argv.length; i++) {
+    if (argv[i] === '--cfg') { const [k, v] = argv[++i].split(/=(.*)/s); cfg[k] = JSON.parse(v); }
+    else if (argv[i] !== '--no-minify') { console.error(`unexpected argument ${argv[i]} (one --cfg per KEY=JSON)`); process.exit(2); }
+  }
   build(src, out, { noMinify: argv.includes('--no-minify'), cfg })
     .then(r => console.log(`${out}/robot.js: ${r.before} -> ${r.after} bytes`))
     .catch(e => { console.error(String(e && e.stack || e)); process.exit(1); });

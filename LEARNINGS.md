@@ -157,3 +157,7 @@
    agent's estimate of the hour ran ahead of the real one: TRAINING_LOG headings drifted from 8 to 47 minutes past
    their own commit times in five hours, and HANDOFF quoted a state time still to come. Read `date` (PDT for the
    owner) whenever a time is written. (TRAINING_LOG 2026-10-23 03:30)
+28. **Read a candidate's switches back from its bundle before playing it; a tool must refuse arguments it does not
+   know.** `build_bot.js --cfg A=1 B=2` built h118 with A only (B was a stray argument, silently dropped), and its
+   first diagnostic replayed h117's games move for move. build_bot now exits on any argument it does not parse; the
+   bundle's `Object.assign(CFG, {...})` line is the record of what a build is. (TRAINING_LOG 2026-10-23 10:23)

@@ -211,6 +211,9 @@ export const CFG = {
                              // answer an attacker farther than r2 PIONEER_HOLD (replica 420-3, seed 836: four pioneers
                              // stood at their sites r24-r121+ while the bank averaged 26 K: castles answered wololo's
                              // harassers with 20 prophets and staffed depots at 40 K; 356 such turns to r150, 420-1 138)
+  PIONEER_LEAN: 0,           // >0: a pioneer that has waited this many turns beside its free site builds the church on its
+                             // cost alone, without DEF_RESERVE_K (420-3: in 401 waiting turns the bank held 80 K 8 times
+                             // and 50-79 K 74 times; churches, which hear no castle talk, spent half of it)
   PIONEER_DEPART_K: 50,      // a castle sends a pioneer once the bank holds a pilgrim, DEF_RESERVE_K and this much more;
                              // the pioneer builds its church only when the bank holds the church and DEF_RESERVE_K (it
                              // waits at the site), so 0 starts the walk on the reserve's surplus and the mining on the way

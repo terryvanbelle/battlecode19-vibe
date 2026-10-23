@@ -638,6 +638,37 @@ test('pilgrim: PIONEER_HOLD a pioneer beside its free site that cannot afford th
   } finally { CFG.PIONEER_HOLD = saved; }
 });
 
+test('pilgrim: PIONEER_LEAN a pioneer that has waited beside its free site builds the church without the reserve', () => {
+  const saved = CFG.PIONEER_LEAN;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    g.robots = g.robots.filter(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let P = null, site = null;
+    for (let y = Math.floor(n / 2) - 3; y <= Math.floor(n / 2) + 3 && !P; y++) for (let x = 1; x < n - 1 && !P; x++)
+      if (free(x, y) && free(x + 1, y) && g.robots.every(q => d2(q.x, q.y, x, y) > 9)) { P = [x, y]; site = [x + 1, y]; }
+    const pil = { id: 4001, team: 0, unit: S.PILGRIM, x: P[0], y: P[1], turn: 30, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    g.robots.push(pil);
+    const church = S.STATS[S.CHURCH].costK;
+    assert.ok(CFG.DEF_RESERVE_K > 0, 'v7 values');
+    const run = (lean, waits) => {      // `waits` turns short of the church and its reserve, then one at the church's cost
+      CFG.PIONEER_LEAN = lean;
+      const w = worldFor(g, pil);
+      const B = { api: w.api, w, round: 40, birthRound: 11, st: {}, deps: null, clusters: null, rnd: rng(2) };
+      B.offs = offsets(4); B.nav = new Nav(w, B.offs, B.rnd);
+      pilgrimTurn(B);                                            // setup
+      B.st.site = site.slice(); B.st.cluster = 0; w.fuel = 1000;
+      const as = [];
+      for (let i = 0; i < waits; i++) { w.karbonite = church - 1; as.push(pilgrimTurn(B)); }
+      w.karbonite = church; as.push(pilgrimTurn(B));
+      return as.map(a => a ? a.u || a.action : null);
+    };
+    assert.deepStrictEqual(run(0, 5), [null, null, null, null, null, null]);   // default: the reserve too, always
+    assert.deepStrictEqual(run(3, 2), [null, null, null]);                     // waited 2 of 3 turns: not yet
+    assert.deepStrictEqual(run(3, 3), [null, null, null, S.CHURCH]);           // waited 3: builds on 50 K
+  } finally { CFG.PIONEER_LEAN = saved; }
+});
+
 testPreV7('struct: PEACE_RESERVE_K holds karbonite back from the peacetime army, not from pilgrims or a threat response', () => {
   const saved = [CFG.PEACE_RESERVE_K, CFG.SERVE_MOVES];
   try {

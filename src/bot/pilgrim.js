@@ -160,7 +160,8 @@ function pilgrimAct(B) {
     const [sx, sy] = st.site;
     if (king(me.x, me.y, sx, sy) <= 1 && !(me.x === sx && me.y === sy)) {
       const occ = w.occ(sx, sy);
-      if (occ === 0 && w.karbonite >= STATS[CHURCH].costK + defReserveK(B) && w.fuel >= STATS[CHURCH].costF + 2) {
+      const lean = CFG.PIONEER_LEAN && st.siteIdle >= CFG.PIONEER_LEAN;   // waited long enough: the reserve goes too
+      if (occ === 0 && w.karbonite >= STATS[CHURCH].costK + (lean ? 0 : defReserveK(B)) && w.fuel >= STATS[CHURCH].costF + 2) {
         if (B.round) w.signal(encNum(SIG.ROUND, B.round), 2);
         if (st.cluster >= 0) w.talk(CT.CHURCH + st.cluster);
         const act = w.build(CHURCH, sx - me.x, sy - me.y);
@@ -176,6 +177,7 @@ function pilgrimAct(B) {
       // Wait for resources; mine meanwhile if standing on a depot.
       if (st.site) {
         if (CFG.PIONEER_HOLD && occ === 0) w.talk(CT.WAIT);
+        if (occ === 0) st.siteIdle = (st.siteIdle || 0) + 1;
         const i = me.y * w.n + me.x;
         if ((w.karb[i] && me.karbonite < KARB_CAP) || (w.fuelD[i] && me.fuel < FUEL_CAP)) return w.fuel >= 1 ? w.mine() : null;
         return null;

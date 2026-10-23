@@ -3209,3 +3209,33 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   held and released at 90 K, a far prophet answered only at 105 K, a near one at once), pilgrim (talks WAIT, builds
   when affordable), CT ranges disjoint; 127 node + 58 Python pass. No-op: defaults build out/v7chk14 replays h87 vs
   h87 on 799 to 300 IDENTICAL (alone on the driver). Built **h117** = v7 + PIONEER_HOLD 64, dist/h117 a50b972763c3.
+
+## 2026-10-23 10:12 — h117's diagnostic: the WAIT talk works, the churches still spend; PIONEER_LEAN added (h118)
+- h117 red vs h87 blue to r200 (--det, alone on the driver). 836: churches on the same rounds both sides (22, 41,
+  44, 47, 55, 55, 59), red's pioneers idle at sites 13 turns to blue's 17; red 31 pilgrims at r100 to blue's 34 (the
+  hold delays castle pilgrims). 2013: churches on the same rounds, idle 34 vs 35, pilgrims 22 vs 24. In self-play the
+  waits are short and the hold only costs pilgrims. On 836 pioneer #801 talked WAIT r51-58 while the bank fell back
+  to 32 K at its turns: the spenders were the churches, which hear no castle talk.
+- Who spent during the field waits (replica 420-3, our side, r41-146): castles 8 prophets against attackers at r2
+  65-100 (h117 holds these), 6 at r2 <= 64, 2 pilgrims; churches 5 prophets (r2 65-100) and 8 pilgrims. 420-1
+  (r30-150): churches 16 pilgrims and 13 military, castles 6 units. Bank at the waiting pioneers' turns in 420-3: 80 K
+  or more on 8 of 401 turns, 50-79 K on 74 (each church needed one such turn).
+- The census's pioneer set also counted pilgrims after their churches: 836 #3389 built its church at r41, then
+  walked toward a depot of the centre cluster and stood at r2 65 from an enemy attacker for 15+ turns
+  (PILGRIM_SAFE_STEP). Those turns count as held (r2 <= 100), so the 603 far-idle turns stand. The held case was
+  tried three times (h59 PILGRIM_HOT, h78, h88), none accepted.
+- New switch CFG.PIONEER_LEAN (0 = v7): a pioneer that has waited this many turns beside its free site builds on the
+  church's cost alone, without DEF_RESERVE_K (comms-free, so the churches' spending no longer blocks it). Unit test:
+  waits 2 of 3 turns then nothing, waits 3 then builds on 50 K, default never. **h118** = v7 + PIONEER_HOLD 64 +
+  PIONEER_LEAN 3. h117 is parked as a component (no gate on its own: self-play showed only its cost).
+
+## 2026-10-23 10:23 — h118 rebuilt (the first build lost PIONEER_LEAN); h103's replica block 1 final net +1
+- h118's first build (f0e94a8803bd) passed `--cfg PIONEER_HOLD=64 PIONEER_LEAN=3`: build_bot took the second pair
+  for a stray argument and dropped it, so the bundle was h117 and its diagnostic matched h117's move for move. Every
+  other dist/h* bundle carries all the switches its ledger row names (checked from each bundle's Object.assign line).
+  build_bot.js now exits on an argument it does not parse (LEARNINGS 28). h118 rebuilt with one --cfg per key:
+  21d5ea5d4597, {PIONEER_HOLD: 64, PIONEER_LEAN: 3}. No-op for the PIONEER_LEAN source: out/v7chk15 IDENTICAL, 128
+  node tests pass.
+- h103 (escorts) replica block 1 (438-443) complete: gained 3, lost 2 (442-3 awesomelemonade seed 2797, v7's win on
+  castles at r1000 turned to a loss on health), net +1, t 0.45 -> a second block by the two-block rule, when fewer
+  than 30 wait (159 now). h113's gate at 13 of 20 cells: gained 0, lost 3, D 3, t -1.73.
