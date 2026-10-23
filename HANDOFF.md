@@ -20,11 +20,10 @@
   and its **ladder panel** decides: block 1 = replica matches 408-413 (h82, sub 97) vs 414-419 (v6, sub 98) on the
   same maps (progress/panels/h82-b1.json), at the queue's front; accept at t >= 1.5 and net >= +3 over the 18
   (opponent, game) cells, reject at net <= 0, else block 2 (TRAINING_LOG 21:05). Then the
-  **h89 / h90 delivery** (running, ...a3d577100016b: h89 = h82 + DEF_RESERVE_FROM 30, the opening race on the whole bank; h90 =
-  h89 + PIONEER_FAST 1; race vs h82 on 8 replica loss maps to 150 and rush vs rush4 on 20 poor maps; TRAINING_LOG
-  20:10), the **anti-chain delivery on h82** (...a3d577100017: h82, h83 = h82 + HUNT 2, h84 = h82 + STRIKE_R2 36 + PREACHER_SELF 4
+  h89 / h90 delivery FAILED 21:55 (rush4 castle losses 8 of 40 each, h82 0; TRAINING_LOG 21:55), the **anti-chain
+  delivery on h82** (running, ...a3d577100017: h82, h83 = h82 + HUNT 2, h84 = h82 + STRIKE_R2 36 + PREACHER_SELF 4
   + PREACHER_MIL 2.5, each vs h76 on 799, 1706, 2013, 2924 both sides; TRAINING_LOG 19:30: StoneT2000's chains take
-  our castles on the replica; superseded if h82's gate rejects), the **h87 delivery** (...a3d577100018: h87 = h82 +
+  our castles on the replica), the **h87 delivery** (...a3d577100018: h87 = h82 +
   h76's chain vs h82 on the same four maps; TRAINING_LOG 19:40), **h88**'s gate vs h82 (...a3d577100019: h82 + h78's
   pilgrim fixes PIONEER_GIVEUP 20, PIONEER_STALL_ANY 40, PIONEER_HOME 1, PILGRIM_STALL 25; h78's delivery vs h50
   PASSED 3/3 at 20:05: mines to 450 113%, churches 39 vs 31, wins 6/8; superseded if h82's gate rejects), **h64**'s gate (PIONEER_FAST vs h50, renamed ...a3d5771001 and moved up at 17:21: replica losses are economy

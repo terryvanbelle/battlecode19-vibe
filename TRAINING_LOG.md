@@ -2424,3 +2424,16 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   dist/h82o (h82's cfg on this src, 1469e3753540) vs dist/h82, --det with a 50x clock and --no-kill (only bot logic
   can differ; without them even h82 vs h82 differs on the driver, by clock freezes): 826 (H) self-play to 250, h82 vs
   h50 and h82o vs h50 on 1375 (V) and 2591 (V) to 200: IDENTICAL replays. Wall 156.8 s -> 132.5 s on 826.
+
+## 2026-10-22 21:55 — h89 / h90 delivery FAILS on the rush: the open bank before round 30 costs a castle
+- VM job ...a3d577100016b as pre-registered (20:10). symcheck h89, h90 on 1, 2, 3, 2591 to 200: symmetric up to
+  the first contest/combat (seed 2 to 200 clean). Race vs h82 on the 8 replica loss maps, both sides, to 150:
+  (1) first church on the candidate's side, mean of 16: h89 18.2, h90 15.1, h82 25.4 (bar h82 - 3: both met);
+  (2) K mined by r150: h89 25,176 vs h82 23,976 = 105.0% (bar 105%: met at the bar), h90 24,844 vs 25,004 = 99%
+  (missed); (3) castles lost to bots/rush4 on h82's 20 poor one-castle maps both sides to 200: h89 8 of 40, h90 8
+  of 40 (bar 2; h82 0): 1706, 1755, 1756 / 1921, 1699, both sides, castle down at r22-27 on 37-40 tile maps.
+- **h89 FAILS (bar 3), h90 FAILS (bars 2, 3).** The falsifier was right: the 30 K the reserve kept before round 30
+  is what the castle's threat response builds with when the rush arrives at r15-20. Closed: reserve released by a
+  fixed round. Re-open: a reserve released only until the rush could first arrive (the mirror castle's crusader
+  travel time), or a pioneer paid from the reserve's surplus only. h85 (PIONEER_FAST alone) stays built, waiting:
+  h90's K bar suggests it is no economy gain by itself.
