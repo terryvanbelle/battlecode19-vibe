@@ -2301,3 +2301,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   are no identity check.
 - The message is built before the robot's clock starts (game.js enactTurn: dump, then start_time), so it changes no
   clock: saturn passes --fast-view too (GALAXY_FAST_VIEW, default 1), to drain the replica queue (98 waiting).
+
+## 2026-10-22 20:05 — h78 delivery PASSES (rebased onto h82 as h88); replica restarted on --fast-view
+- h78 (v6 + PIONEER_GIVEUP 20, PIONEER_STALL_ANY 40, PIONEER_HOME 1, PILGRIM_STALL 25) vs h50 on 418, 1325, 2542,
+  2072 both sides: (1) mines to 450 on h78's side 54,188 vs 47,772 = 113% (bar 108%); (2) churches by 450 39 vs 31;
+  (3) wins 6 of 8 (bar 4; lost 418 blue on health, 2072 blue on castles). PASS 3/3. Pioneers in flight 64 vs 88,
+  stuck 22 vs 42, died 1 vs 11: the stalled ones mine at home instead. No-op v6p replays h50 IDENTICAL; symcheck
+  1, 2, 3, 418 contest/combat only.
+- h78 sits on v6, the incumbent until h82's gate reads. h88 = h82 + h78's four keys (dist/h82 rebuilds byte for
+  byte from src); gate h88 vs h82 queued (...a3d577100019: symcheck, 20 cells from seed0 5000), behind the two
+  deliveries. Superseded if h82's gate rejects.
+- Driver diagnostic h83 (HUNT 2) vs h76 on 2013, 450 rounds: h83 won (castles), lost no castle, killed 8 of h76's
+  11 churches; h76 built 63 prophets and 54 preachers to h83's 132 and 74. One game, read for the hunt only.
+- Replica: saturn restarted 03:00 UTC (two of the three long slots had acked; the third, 4,500 s into its match, was
+  re-queued). All 5 games run with --fast-view. The queue stood at 123 waiting (90 TRY, 33 QUE).

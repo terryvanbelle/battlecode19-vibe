@@ -86,6 +86,10 @@ kill. Since 2026-10-23 01:46 UTC saturn also passes `run_game.js --fast-init` (`
 bundle is compiled once per game instead of once per robot, which leaves every clock rule as it was (creation is
 bounded by the 1000 ms above, not by the robot's clock) and saves the VM about 75 ms of CPU per robot under load
 (a 300-round self-play game: 252 s -> 212 s, the same replay byte for byte).
+Since 2026-10-23 03:00 UTC it passes `--fast-view` too (`GALAXY_FAST_VIEW`, default 1): the view queries and the
+turn message (fastDump) are computed without the engine's per-call copies, and the message is written as the engine
+writes it, byte for byte. The engine builds that message before the robot's clock starts (game.js enactTurn), so no
+clock changes (the same game, measured with `--no-kill`, which saturn does not pass: 129 s -> 82 s).
 
 ## Deploying a change to saturn or the runtime
 
