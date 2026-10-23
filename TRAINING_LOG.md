@@ -2915,3 +2915,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   builds onto a tile ...'. No-op: the defaults build out/v7chk7 replays h87 on 799 to 300 IDENTICAL; 121 + 57 tests.
 - tools/dlv.js gains the column stillborn (military units that died before their first turn; tested <=
   milLostUnfired); on 414-1 it gives 10 / 0 as the scratch census.
+
+## 2026-10-23 05:42 — h104 gate block 1: t 1.00, D 4, mechanism missed; replica panel block 1 created (matches 432-437)
+- Gate h104 (v7 + ATTACK_ROUND 1001 + ATTACK_LATE 1001) vs h87, the 20 cells of seed0 5000 (out/h104_h87.jsonl):
+  22-18; gained 3, lost 1, split 16, **D 4**, net +2, t 1.00. Mechanism (out/dlv_gate_h104.txt, SUM): milLost /
+  milBuilt h104 5,160 / 8,873 = 0.582, h87 5,053 / 8,269 = 0.611: ratio 0.95, bar <= 0.85: **missed**. Castles lost
+  24 vs 30, churches built 446 vs 406. Symcheck: ok (combat / contest divergences only).
+- Deviation from the pre-registered look (D first 12): at 0.2 discordant cells per cell, D 12 needs about 40 more
+  cells (80 games, about 3 VM hours), and with the mechanism missed the local accept is closed: the extension
+  could only reject (t <= -1 from net +2). The field-aimed rule's middle zone applies now: the replica panel decides.
+- Block 1: submission 102 = dist/h104 (144f5cfdab65), requests 205-210 -> matches 432-437 against v7-m1's six
+  opponents on their maps; then submission 103 = bots/v7 (the ladder's build). Control = v7's block 420-425; h96's
+  block is 426-431. Two-block rule: accept after block 1 at t >= 1.5 and net >= +3, reject at net <= 0, otherwise
+  block 2 (same maps, sides swapped). Falsifier: without marches the field out-mines us unchallenged and wins on
+  health at r1000 (h104's losses on health where v7's were on castles).

@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 89 other, 26 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped, 2 sparring partners (146 rows).
+Totals: 90 other, 25 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped, 2 sparring partners (146 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -147,7 +147,7 @@ Totals: 89 other, 26 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped,
 | `h101` | 2026-10-23 | v7 | v7 + crusaders and preachers hold no lattice tile ahead of the lattice centre's row; prophets keep the front (MELEE_BACK=2) | 20 cells gained 4 lost 6 net -2 t -0.63 (D 10); 18/40 vs h87 |  |  |  | FAILED: mechanism 0.78 of h87's melee lost unfired (bar 0.75), castles lost 39 vs 31; closed, no extension or panel |
 | `h102` | 2026-10-23 | v7 | v7 + a pioneer remembers enemy attackers it saw for 50 turns and walks round their threat range to its site (PIONEER_DETOUR=50) |  |  |  |  | BUILT: inert in every diagnostic (self-play 2591; vs camp 2321 and 2591); not gated, kept for a stack or panel |
 | `h103` | 2026-10-23 | v7 | v7 + a castle whose pioneer is overdue (10 turns past its distance) or lost builds 2 crusaders that hold the lattice at its site (ESCORT=2, ESCORT_UNIT=3) |  |  |  |  | QUEUED: VM job ...19j (after h107), 20 cells vs h87, field-aimed bars (t >= 2; reject t <= -1; else replica panel); field case 419-2 (IanCoolidge0's crusader squatters on 2644) |
-| `h104` | 2026-10-23 | v7 | v7 + no general attack (ATTACK_ROUND=1001, ATTACK_LATE=1001): holds, endgame crusader build kept |  |  |  |  | QUEUED: VM job ...19g (after h100's extension), 20 cells vs h87, field-aimed bars (t >= 2 + milLost/milBuilt <= 85% of h87's; reject t <= -1; else replica panel) |
+| `h104` | 2026-10-23 | v7 | v7 + no general attack (ATTACK_ROUND=1001, ATTACK_LATE=1001): holds, endgame crusader build kept | 22-18 (D 4, net +2, t 1.00) |  |  |  | REPLICA PANEL: gate block 1 D 4 t 1.00, mechanism missed (milLost/milBuilt 0.95 of h87's, bar 0.85); block 1 = matches 432-437 (submission 102), control 420-425 |
 | `h105` | 2026-10-23 | v7 | structural: the field's turtle style, v7 + MIL_ROTATION [4] + ATTACK_ROUND 1001 + ATTACK_LATE 1001 + CHAIN_ROUND 0 (= dist/turtle) |  |  |  |  | BUILT, NOT QUEUED: lost to h87 on 2046 (castles 1 vs 2); kept as the sparring bot dist/turtle |
 | `h106` | 2026-10-23 | v7 | structural: the field's army doctrine on v7, MIL_ROTATION [4] + ATTACK_ROUND 1001 + ATTACK_LATE 1001 (chain kept) |  |  |  |  | BUILT, NOT QUEUED: lost its lone castle to h87 on 2644 at r279 (as h98 at r277) |
 | `h107` | 2026-10-23 | v7 | v7 + a threat response against a closest attacker beyond r2 36 that is no crusader builds a crusader, not a prophet (DEF_FAR_UNIT=3) |  |  |  |  | QUEUED: VM job ...19i (after h100's extension 2), 20 cells vs h87, field-aimed bars (t >= 2 + deathsOn3/milBuilt below h87's; reject t <= -1; else replica panel); diagnostic on 2013 changes moves from r200, same result |

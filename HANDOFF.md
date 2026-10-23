@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 05:07 PDT)
+## State (2026-10-23 05:42 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -20,8 +20,8 @@
   replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait; 63 at 03:30). Order at 04:28:
   the time audit done (...19fz: overruns are machine load, no bot change; TRAINING_LOG 04:22), **h100**'s extension (...19fzz: the next 20 cells;
   after 20 cells 22-18, D 8, t 0.71, mechanism passed; at its D-12 look t 1.15, net +4: inconclusive, TRAINING_LOG
-  04:38), then the **h104** gate (...19g: v7 with no general attack, 20 cells vs h87, field-aimed bars; TRAINING_LOG
-  04:28), then **h100**'s extension 2 (...19h: cells 41-70, look when pooled D first reaches 24). Everything after it
+  04:38), the **h104** gate done (t 1.00, D 4, mechanism missed: to the replica panel, matches 432-437,
+  submission 102; TRAINING_LOG 05:42), **h100**'s extension 2 running (...19h: cells 41-70, look when pooled D first reaches 24). Everything after it
   is a stale v6 job; new jobs are named to sort ahead of them (after ...19j and before ...10055, e.g. ...19k; never a
   longer name such as ...19ga, which the locale sort puts before ...19g). **h103**'s gate (...19j, after h107's;
   escorts for overdue pioneers; field case 419-2, IanCoolidge0's crusader squatters on 2644; TRAINING_LOG 05:07). **v7 on the replica**: measurement block 420-425 (created 03:27,
@@ -29,7 +29,7 @@
   spool_bump to the front was refused by the permission check; owner told); read v7 vs v6 and h82 per cell and rerun
   the economy census on its games. **h96**'s panel block 1 (v7 + ATTACK_LATE 1001, gate inconclusive t 0.58):
   matches 426-431 (submission 100), same opponents and maps, created 04:22, control = 420-425; two-block rule
-  (TRAINING_LOG 04:24). The ladder's vibe19 is submission 101 (= bots/v7 again).
+  (TRAINING_LOG 04:24). The ladder's vibe19 is submission 103 (= bots/v7 again, after h104's block 432-437 was created).
   **h107** = v7 + DEF_FAR_UNIT 3 (a threat response answers a prophet or castle beyond r2 36 with a crusader, not a
   prophet; wololo's siege of our lone castle on 2013, TRAINING_LOG 04:48): built, no-op IDENTICAL, on the VM; driver
   diagnostic on 2013 changes moves from r200 (same result); gate queued (...19i, after h100's extension 2;
