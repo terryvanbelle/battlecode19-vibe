@@ -763,8 +763,8 @@ test('military: EDGE keeps a marching unit out of reach of enemy attackers until
   } finally { CFG.EDGE = saved; }
 });
 
-test('military: MARCH_MASK lets only the masked unit types take attack orders before round 900', () => {
-  const saved = CFG.MARCH_MASK;
+test('military: MARCH_MASK lets only the masked unit types take attack orders before ATTACK_LATE', () => {
+  const saved = CFG.MARCH_MASK, late = CFG.ATTACK_LATE;
   try {
     const g = new Game(3, 100, 20, false, false), n = g.map.length;
     const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
@@ -789,7 +789,12 @@ test('military: MARCH_MASK lets only the masked unit types take attack orders be
     assert.strictEqual(target(S.PROPHET, 8, 460), null);            // crusaders only
     assert.deepStrictEqual(target(S.CRUSADER, 8, 460), [tx, ty]);
     assert.deepStrictEqual(target(S.PROPHET, 8, 950), [tx, ty]);    // the last rounds: everyone
-  } finally { CFG.MARCH_MASK = saved; }
+    CFG.ATTACK_LATE = 1001;
+    assert.strictEqual(target(S.PROPHET, 8, 950), null);            // ATTACK_LATE past the game: the mask holds
+    assert.deepStrictEqual(target(S.CRUSADER, 8, 950), [tx, ty]);
+    CFG.ATTACK_LATE = 700;
+    assert.deepStrictEqual(target(S.PROPHET, 8, 710), [tx, ty]);
+  } finally { CFG.MARCH_MASK = saved; CFG.ATTACK_LATE = late; }
 });
 
 test('relay: a full pilgrim not next to a structure hands its load to a unit next to one, which deposits it', () => {

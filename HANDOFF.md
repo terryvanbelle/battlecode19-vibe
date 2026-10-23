@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 23:31 PDT)
+## State (2026-10-23 00:00 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -19,13 +19,14 @@
   DEF_RESERVE_K 30) is field-aimed (TRAINING_ALGORITHM §2.6): its gate ended 21:15 non-inferior (+12 -8, t 0.89)
   and its **ladder panel** decides: block 1 = replica matches 408-413 (h82, sub 97) vs 414-419 (v6, sub 98) on the
   same maps (progress/panels/h82-b1.json), at the queue's front; accept at t >= 1.5 and net >= +3 over the 18
-  (opponent, game) cells, reject at net <= 0, else block 2 (TRAINING_LOG 21:05); 409 (2-1) and 410 (1-2) are in.
+  (opponent, game) cells, reject at net <= 0, else block 2 (TRAINING_LOG 21:05); at 00:00 all but 412, 417 and 418 are in (net +2 over 12 scored cells; IanCoolidge0's 3 cells 0, 413 and 419 both 0-3).
   Closed: h89 / h90 delivery FAILED 21:55; the anti-chain delivery FAILED 22:45 for h83 (HUNT 2) and h84 (STRIKE_R2)
-  (each lost the same 6 castles to h76 as h82). The h87 delivery PASSED 3/3 at 22:45. On the VM: **h88**'s gate vs
-  h82 (running, ...a3d577100019: h82 + h78's pilgrim fixes PIONEER_GIVEUP 20, PIONEER_STALL_ANY 40, PIONEER_HOME 1,
-  PILGRIM_STALL 25), **h87**'s gate (...a3d577100019b: h87 = h82 + h76's chain, vs h50; rebase it onto h82 if h82 is
-  accepted before it starts), the **h91 delivery** (...a3d577100019c: h91 = h82 + RICH_K 0, the peacetime army spends
-  the bank above the reserves; TRAINING_LOG 22:45), **h64**'s gate (PIONEER_FAST vs h50, renamed ...a3d5771001 and moved up at 17:21: replica losses are economy
+  (each lost the same 6 castles to h76 as h82). The h87 delivery PASSED 3/3 at 22:45. h88 (h82 + h78's pilgrim
+  fixes) REJECTED 2026-10-23 00:00 (net -2, t -1.41; dist/h93 = h88 + ESCORT 2 goes with it). On the VM: **h87**'s
+  gate (running since 00:00, ...a3d577100019b: h87 = h82 + h76's chain, vs h50), the **h91 delivery**
+  (...a3d577100019c: h91 = h82 + RICH_K 0, the peacetime army spends the bank above the reserves; TRAINING_LOG
+  22:45), **h94**'s gate vs h82 (...a3d577100019d: h94 = h82 + ATTACK_LATE 1001, no all-out march at round 900:
+  in 48 replica games it took no castle and lost 903 units to 538; TRAINING_LOG 2026-10-23 00:00), **h64**'s gate (PIONEER_FAST vs h50, renamed ...a3d5771001 and moved up at 17:21: replica losses are economy
   first, and 391-1 is a lost pioneer race), **h71** delivery (CHURCH_GUARD_D 8 preacher + PREACHER_SELF 4 + PREACHER_MIL 2.5: no-op v6l, symcheck, 8 games vs
   h50 on 2591, 1915, 2030, 2924, ...a3d57710055; TRAINING_LOG 13:20), then **h76**'s gate vs h50 (StoneT2000's long
   church line: h72 = CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5], delivery PASSED 14:41; h76 = h72 +

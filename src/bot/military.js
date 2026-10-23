@@ -53,7 +53,7 @@ function listen(B) {
     if (m && m.type === SIG.ENEMY) { if (CFG.SPOT && (CFG.SPOT_MASK >> me.unit & 1)) hearSpot(B, m.x, m.y); continue; }
     if (m && m.type === SIG.HUNT) { if (CFG.HUNT && me.unit !== PROPHET) hearHunt(B, m.x, m.y); continue; }
     if (CFG.RECALL && st.recall && me.turn <= st.recall.until) continue;   // recalled: attack orders wait
-    if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || ((st.guard || !(CFG.MARCH_MASK >> me.unit & 1)) && B.round < 900)) continue;
+    if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || ((st.guard || !(CFG.MARCH_MASK >> me.unit & 1)) && B.round < CFG.ATTACK_LATE)) continue;
     const i = CFG.ATTACK_PERSIST && m.extra >= 1 && m.extra <= 4 ? m.extra - 1 : -1;
     if (i >= 0) { st.known[i] = [m.x, m.y]; if (st.dead.has(i)) continue; }
     st.target = [m.x, m.y]; st.tIdx = i;
@@ -68,7 +68,7 @@ function listen(B) {
       if (CFG.ATTACK_PERSIST) nextTarget(B);
     }
   }
-  if (CFG.WAVE && (st.target || (st.guard && B.round < 900))) w.talk(CT.MARCH + me.unit);   // not free for a wave
+  if (CFG.WAVE && (st.target || (st.guard && B.round < CFG.ATTACK_LATE))) w.talk(CT.MARCH + me.unit);   // not free for a wave
   if (st.reports.length) { w.talk(CT.DEAD + st.reports[0]); st.reports.push(st.reports.shift()); if (--st.reportTurns <= 0) st.reports = []; }
 }
 

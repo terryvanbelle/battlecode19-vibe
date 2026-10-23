@@ -2515,3 +2515,39 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - Panel block 1 (h82 vs v6) so far: wololo cells 0, 0, 0; botfinalsafe 203: 0, 1706: 0, 2740: +1 (409 W by health,
   415 L by health); bot1v43 388: +1, others 0; uvafan (411: 0-3), IanCoolidge0 (413: 0-3) wait for 417 and 419;
   awesomelemonade for 412 and 418. Net +2 over 9 cells.
+
+## 2026-10-23 00:00 — h88 REJECTED; phase census of 48 replica games; h94 (no all-out march at 900) queued
+- h88 (h82 + PIONEER_GIVEUP 20, PIONEER_STALL_ANY 40, PIONEER_HOME 1, PILGRIM_STALL 25) vs h82, 20 cells from seed0
+  5000 (out/h88_h82.jsonl): 18-22; gained 0, lost 2, split 18, net -2, t -1.41. Pre-registered: reject at t <= 0.
+  **REJECTED.** Symcheck h88 on 1, 2, 3, 418: contest/combat only. 18 of 20 cells split: the two builds play the
+  same game from each seat, so a seat wins both. dist/h93 (h88 + ESCORT 2, built 22:53, never queued) goes with it;
+  ESCORT 2 on h82 is h86.
+- Phase census (scratch bank/phases.js, matches 385-419, 48 games with vibe19, 12 W / 36 L): military units lost,
+  ours / theirs, before 450, 450-899, from 900: wins 508/516, 928/741, 210/183; losses 2,142/1,418, 2,555/1,238,
+  693/355. Castles: in the wins we took 15, all in 450-899 (HCN-bot 5, nthistle 4, StoneT2000's two bots 5, of them
+  3 on 60, awesomelemonade 1); in the losses we lost 23 before 450, 10 in 450-899, 1 from 900. **From round 900 on, no
+  castle fell to us in 48 games**, and that window cost us 903 units to their 538. 20 games reached round 1000: 9
+  lost on health, 5 lost on castles. Three of the health losses led or nearly led at 899 and then lost: 411-2
+  (seed 1653, uvafan) health 5,140 vs 4,400 at 899, 3,660 vs 7,220 at 1000 (we lost 63 units after 900, they 19);
+  416-2 (388, bot1v43) 2,150 vs 1,560 -> 2,850 vs 3,230; 385-2 (2797, botfinalsafe) 3,240 vs 3,400 -> 550 vs 6,310
+  (101 lost vs 35). The 450 crusader march is what wins (every castle we took); the 900 all-out march is not.
+- 411-1 (seed 2046, h82 vs uvafan, 33x33, 7 pilgrims and no church each, lost on health 740 vs 5,220): we built 233
+  military and lost 225, they lost 70; our 145 attacks dealt 1,450 damage, theirs 812 dealt 8,120; our prophets were
+  idle 20,939 of 21,724 turns; K sat at about 290 all game and 20,044 fuel was unspent at the end; we spent 4,510
+  fuel on signals (the attack call every 5 rounds) to their 911.
+- Clock overruns on the replica (all match archives with vibe19, 288 games): exceptions 0 since match 140; 57
+  frozen turns and 9 timeouts in all, every one since match 181, most on big long games (409-3 seed 2740: 17;
+  415-3 2740: 13; 411-3 1712: 9 and 2 timeouts; 411-2 one turn of 1,448 ms). The opponents in the same games: 60,
+  268, 250, 1,115, 184. Our mean turn rose from about 2.2 ms (matches 385-397) to 3-4 ms (408-419). The VM at
+  00:00: load 13 on 8 vCPUs, 6 replica games each at 70-90% of a core plus our 2 gate games at nice 10 (2.4 cores);
+  saturn's cgroup was throttled once in 18,086 periods. Lead, not acted on: which of our robots overrun (the
+  archive keeps only counts; run_game.js --logs on the replica would name them).
+- **h94** = h82 + CFG.ATTACK_LATE 1001 (new switch, default 900, replacing the literal 900 in military.js listen():
+  from ATTACK_LATE every military unit, home guards and unmasked types too, obeys attack orders; at 1001 prophets and
+  preachers never march, crusaders still do from 450). Unit test: MARCH_MASK's test now covers ATTACK_LATE 1001
+  and 700. Gate h94 vs h82 queued (...a3d577100019d, behind the h91 delivery), the cells of h88's gate.
+  Pre-registered: accept t >= 2; reject t <= 0; an accept also needs the mechanism: h94 loses fewer units from
+  round 900 on than h82 over the gate's games that reach 900 (phases.js on its replays). If h82's panel rejects
+  h82 first, h94 is rebased onto v6.
+- Panel block 1: 419 (v6 vs IanCoolidge0) 0-3 like h82's 413, so those 3 cells are 0; net +2 over 12 cells; 412, 417
+  and 418 run (417 kept 2 games across the 23:30 restart).
