@@ -128,3 +128,9 @@
    page: #1936 gave its site up under enemy eyes, took the free depot nearest itself, 11 king steps on under the
    enemy's guards, and hovered short of it for 220 turns. A replay re-simulates actions; the decision behind them is
    only in the bot. (TRAINING_LOG 2026-10-22 16:29)
+25. **Profile the harness, not only the bot: a game's wall time is mostly the engine's sandbox plumbing.** A CPU
+   profile of a 300-round self-play game on the VM put our bot's functions at a few percent; vm2's timed
+   runInContext (a watchdog per call) took 43% and the engine's per-turn state dump 24%. The cheap win was outside
+   both: vm2 transformed and compiled the whole 50 KB bundle anew for every robot (43 ms each, 523 robots a game);
+   one compiled script per bundle (`run_game.js --fast-init`) replays byte for byte and cut the game 16%. Check
+   any such shortcut with a --det replay compare before trusting it. (TRAINING_LOG 2026-10-22 18:46)
