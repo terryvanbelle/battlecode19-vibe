@@ -1,7 +1,7 @@
 // Castle: shares its position with the other castles over castle talk (canonical x+1 on turn 1, y+1 on turn 2),
 // plans and sends church pioneers, calls attacks, and runs the structure loop.
 // Enemy castles are exactly the mirrors of ours (canonical frame: (x, n-1-y)).
-import { CFG } from './config.js';
+import { CFG, defReserveK } from './config.js';
 import { PILGRIM, CRUSADER } from './specs.js';
 import { SIG, encXY, CT, FAR } from './comms.js';
 import { bfs } from './mapinfo.js';
@@ -180,7 +180,7 @@ function pioneer(B) {
   const w = B.w, st = B.st;
   const next = nextPioneer(B);
   if (!next) return null;
-  if (!w.canAfford(PILGRIM, 50 + CFG.DEF_RESERVE_K, 200)) return null;
+  if (!w.canAfford(PILGRIM, 50 + defReserveK(B), 200)) return null;
   const c = B.clusters[next.cluster];
   const b = buildToward(B, PILGRIM, c.site[0], c.site[1], encXY(SIG.CHURCH, c.site[0], c.site[1]));
   if (!b) return null;
@@ -202,7 +202,7 @@ export function escort(B) {
   st.escorts = st.escorts.filter(e => e.left > 0 && !st.churched.has(e.cluster));
   const e = st.escorts[0];
   if (!e || w.sentR2) return null;
-  const reserveK = CFG.DEF_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0);
+  const reserveK = defReserveK(B) + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0);
   if (!w.canAfford(CFG.ESCORT_UNIT, reserveK, CFG.MIL_FUEL_RESERVE)) return null;
   const b = buildToward(B, CFG.ESCORT_UNIT, e.x, e.y, encXY(SIG.GUARD, e.x, e.y));
   if (!b) return null;

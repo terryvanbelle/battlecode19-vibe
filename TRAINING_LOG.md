@@ -2315,3 +2315,33 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   11 churches; h76 built 63 prophets and 54 preachers to h83's 132 and 74. One game, read for the hunt only.
 - Replica: saturn restarted 03:00 UTC (two of the three long slots had acked; the third, 4,500 s into its match, was
   re-queued). All 5 games run with --fast-view. The queue stood at 123 waiting (90 TRY, 33 QUE).
+
+## 2026-10-22 20:10 — the opening race: h82's threat reserve holds the first pioneer back; h89, h90 pre-registered
+- Replica losses, economy at r100 / r200 (pilgrims / churches; econloss on matches 391, 394, 298, 388, 385): the
+  winners keep adding pilgrims and churches past r100 (uvafan on 1241: 22/3 -> 46/11; ours 13/1 -> 19/4). h82
+  self-play to 200 on the same maps fills its own half by r100 (1241: 33-36 pilgrims, 34 depots a side; 70: 19 of
+  20; 2591, 2965, 1915, 1592: 8-9 on 7-8 a side), so the winners' extra pilgrims were on depots v6 left free.
+- The race on 2591 (32x32, 7 depots a side, a 10-depot cluster on the axis): uvafan (391-1) built its pioneer at r4,
+  churched the centre at r13 and put a prophet on it; v6 never churched. h82 self-play: pilgrims r1, r2, then the
+  castle waits (80 K, h82's pioneer check needs 10 + 50 + DEF_RESERVE_K 30) until r14; the pioneer walks one tile a
+  turn (PILGRIM_FAST_FUEL 1000) and churches at r26. DEF_RESERVE_K also holds back depot pilgrims and the church.
+- CFG.DEF_RESERVE_FROM (config.js defReserveK): the reserve is held only from that round. No-op h82n (h82's cfg on
+  this src) vs h82 --det on 2591 replays h82 vs h82 IDENTICAL. h89 = h82 + DEF_RESERVE_FROM 30; h90 = h89 +
+  PIONEER_FAST 1 (h85's switch). Driver, each red vs h82 on 2591: pioneer r3; centre church r18 (h89), r12 (h90);
+  K mined by r200 1,330 / 1,356 vs h82's 408 / 408 (h82 lost its church).
+- **Delivery pre-registered** (VM job ...a3d577100016b, after h82's gate, before any game on its panel): symcheck
+  h89, h90 on 1, 2, 3, 2591 to 200; race: h89 and h90 each vs h82 on 2591, 2965, 1915, 1592, 70, 1241, 836, 493
+  (replica loss maps) both sides to 150 rounds; rush: h89 and h90 each vs bots/rush4 on h82's 20 poor one-castle maps
+  both sides to 200 (h82: 0 castles lost of 40). PASS for X needs all 3: (1) first church round on X's side, mean
+  over the 16 race games, <= h82's side mean - 3; (2) K mined by r150 on X's side >= 105% of h82's side; (3) castles
+  X loses to rush4 <= 2 of 40. Falsifier: (3), the open bank lets the rush in. On PASS: gate the passing X with the
+  larger (2) vs the incumbent; h85 (PIONEER_FAST alone) is then superseded by h90's result.
+
+## 2026-10-22 20:15 — compact view rows (--fast-view with --fast-turn): 6% less CPU, the same game
+- fastDump with --fast-turn writes each out-of-sight row of the view as null; the turn script rebuilds it in the
+  sandbox as a copy of one row of -1s, so the bot gets an equal object. Unit test: for every robot of the two probe
+  maps the rebuilt object's JSON equals the engine's message, the compact text is under 80% of the full one; the
+  40-round --fast-turn game replays byte for byte. vm2 micro-benchmark (64-tile map, 200 robots): parse of the full
+  view 0.125 ms a turn; compact rebuilt by a push loop 0.19 (slower: the first VM timing, 99.7 s CPU vs 91.5);
+  by slice 0.061. VM, h50 self-play on 826 to 300, alternating: 91.5, 91.7, 95.7 s CPU (base) vs 86.5, 87.2
+  (slice), the same replay each time. The replica does not pass --fast-turn, so it is unchanged.

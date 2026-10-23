@@ -137,5 +137,7 @@
    profile then put the engine's turn message on top (a JSON round trip per robot shown, a fresh map-sized view):
    writing the same text directly took the game to 82 s (`--fast-view`). Check any such shortcut with a --det replay
    compare before trusting it, and keep the engine's path wherever time is the thing measured; work done before the
-   robot's clock starts (the turn message) changes no clock, so it can go on the replica too. (TRAINING_LOG
-   2026-10-22 18:46, 18:56, 19:50)
+   robot's clock starts (the turn message) changes no clock, so it can go on the replica too. Inside the sandbox,
+   prefer bulk built-ins to loops: rebuilding the out-of-sight view rows with a push loop cost more CPU than parsing
+   them (0.19 vs 0.125 ms a turn); copying one row with slice cost 0.061, 6% of the game. (TRAINING_LOG
+   2026-10-22 18:46, 18:56, 19:50, 20:15)

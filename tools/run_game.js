@@ -26,7 +26,8 @@
 //              time. Only for batches of our own builds (strategy gates); time audits and the replica keep the kill.
 // --fast-view  the engine's per-turn view of the map, computed over the robot's vision square instead of the whole map
 //              (see fastView), and the turn message written without the engine's JSON copies (see fastDump): the same
-//              view and the same text.
+//              view and the same text (with --fast-turn, rows out of sight travel as null and the turn script rebuilds
+//              them: the same object).
 // Prints one JSON line: {winner:"red"|"blue", win_condition, reason, rounds, seed, map:{w,castles}, teams:[...]}.
 'use strict';
 const fs = require('fs');
@@ -94,7 +95,7 @@ async function main() {
   if (a.det) Math.random = seededRandom(a.seed || 1);
   const Game = require(path.join(ENGINE, 'game'));
   const Coldbrew = require(path.join(ENGINE, 'runtime'));
-  if (a.fastView) { fastView(Game); fastDump(Game); }
+  if (a.fastView) { fastView(Game); fastDump(Game, !!a.fastTurn); }
   const [red, blue] = await Promise.all([loadBot(a.red), loadBot(a.blue)]);
 
   const seed = a.seed === 0 ? Math.floor(Math.random() * Math.pow(2, 31)) : a.seed;
@@ -248,11 +249,19 @@ function loadLimit(CrossVM, ms) {
 // (acorn) and V8 compiles anew on every turn: about half of a game's wall time (profile of a 200-round h19 self-play
 // game: vm.Script 23%, runInContext 20%, acorn 7%; our bot's own functions a few percent each). fastTurn makes every
 // CrossVM run one precompiled script, robot._do_turn(JSON.parse(view)), with the JSON text as a sandbox global: the
-// bot gets an equal object under the same vm2 timeout; any other message still runs as source.
+// bot gets an equal object under the same vm2 timeout; any other message still runs as source. With fastDump's
+// compact view (--fast-view with --fast-turn) a row of the view out of sight comes as null and is rebuilt here as a
+// copy of one row of -1s, which spares the sandbox parsing most of the view (vm2 micro-benchmark, a 64-tile map:
+// 0.125 ms a turn -> 0.061; a push loop per row instead took 0.19).
+const TURN_SCRIPT = '(function () { var v = JSON.parse(__bc19_view), s = v && v.shadow, w = 0, i, j, t;' +
+  ' if (s && s.length) { for (i = 0; i < s.length; i++) if (s[i] !== null) { w = s[i].length; break; }' +
+  ' for (i = 0; i < s.length; i++) if (s[i] === null) { if (!t) { t = []; for (j = 0; j < w; j++) t.push(-1); }' +
+  ' s[i] = t.slice(); } }' +
+  ' return robot._do_turn(v); })();';
 function fastTurn(CrossVM) {
   const { VMScript } = require(path.join(ENGINE, '..', 'vm2'));
   const PRE = 'robot._do_turn(', POST = ');';
-  const script = new VMScript('robot._do_turn(JSON.parse(__bc19_view));', 'turn.js');
+  const script = new VMScript(TURN_SCRIPT, 'turn.js');
   CrossVM.prototype.turn = function (message) {
     if (this.dead) throw 'Robot exceeded memory limits.';
     if (typeof message !== 'string' || !message.startsWith(PRE) || !message.endsWith(POST)) return this.vm.run(message);
@@ -301,7 +310,8 @@ function fastView(Game) {
 // every robot, every turn), then stringifies a fresh map-sized view with the rest. fastDump writes the same text
 // directly: each shown robot's fields in their own order less the engine's deletions, and the view's rows straight
 // from the shadow (a row out of sight is one cached string of -1s). The shuffle draws Math.random as the engine does.
-function fastDump(Game) {
+// compact (only with fastTurn, whose turn script rebuilds them): a row out of sight is written as null.
+function fastDump(Game, compact) {
   const quoted = new Map(), blank = new Map();
   const q = k => { let s = quoted.get(k); if (s === undefined) quoted.set(k, s = JSON.stringify(k)); return s; };
   const json = v => typeof v === 'number' ? (isFinite(v) ? String(v) : 'null') : JSON.stringify(v);
@@ -336,7 +346,7 @@ function fastDump(Game) {
     let none = blank.get(w);
     if (none === undefined) blank.set(w, none = '[' + Array(w).fill(-1).join(',') + ']');
     for (let r = 0; r < h; r++) {
-      if (r < robot.y - k || r > robot.y + k) { rows[r] = none; continue; }
+      if (r < robot.y - k || r > robot.y + k) { rows[r] = compact ? 'null' : none; continue; }
       const dy = robot.y - r, row = this.shadow[r], cells = Array(w);
       for (let c = 0; c < w; c++) {
         const dx = robot.x - c;
@@ -379,4 +389,4 @@ if (require.main === module) {
   }
   main().catch(e => { console.error(String(e && e.stack || e)); process.exit(2); });
 }
-module.exports = { setLimits, parseArgs, fastTurn, fastInit, fastView, fastDump, loadLimit, netIsolated };
+module.exports = { setLimits, parseArgs, fastTurn, fastInit, fastView, fastDump, loadLimit, netIsolated, TURN_SCRIPT };

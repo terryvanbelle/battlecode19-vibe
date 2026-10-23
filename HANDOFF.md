@@ -18,7 +18,9 @@
   **h82**'s gate running (...a3d577100016: h77 + DEF_RESERVE_K 30 = v6 + ECON_UNTIL 100 + PIONEERS_TEAM 6
   + PEACE_RESERVE_K 60 + PLAN_VALUE 10 + DEF_RESERVE_K 30, wololo's expansion with a preacher's karbonite kept for a
   rush; delivery PASSED 19:06: 4/4 wins, K by r200 169%, rush4 castle losses 0 of 40; it replaced h77's gate), the
-  **anti-chain delivery on h82** (...a3d577100017: h82, h83 = h82 + HUNT 2, h84 = h82 + STRIKE_R2 36 + PREACHER_SELF 4
+  **h89 / h90 delivery** (...a3d577100016b: h89 = h82 + DEF_RESERVE_FROM 30, the opening race on the whole bank; h90 =
+  h89 + PIONEER_FAST 1; race vs h82 on 8 replica loss maps to 150 and rush vs rush4 on 20 poor maps; TRAINING_LOG
+  20:10), the **anti-chain delivery on h82** (...a3d577100017: h82, h83 = h82 + HUNT 2, h84 = h82 + STRIKE_R2 36 + PREACHER_SELF 4
   + PREACHER_MIL 2.5, each vs h76 on 799, 1706, 2013, 2924 both sides; TRAINING_LOG 19:30: StoneT2000's chains take
   our castles on the replica; superseded if h82's gate rejects), the **h87 delivery** (...a3d577100018: h87 = h82 +
   h76's chain vs h82 on the same four maps; TRAINING_LOG 19:40), **h88**'s gate vs h82 (...a3d577100019: h82 + h78's
@@ -44,7 +46,7 @@
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
   Superseded 18:43 by h77 (their switches are among its four): h70's delivery and h67's gate, not run. Superseded
   19:06 by h82 (h77 + DEF_RESERVE_K 30, delivery PASSED): h77's gate, not run.
-  Built on h82, waiting for its verdict: h85 (h82 + PIONEER_FAST 1), h86 (h82 + ESCORT 2). When h82 is accepted the
+  Built on h82, waiting for its verdict: h85 (h82 + PIONEER_FAST 1; its effect is read in h90's delivery), h86 (h82 + ESCORT 2). When h82 is accepted the
   queued v6 gates (h64, h76, h20v6, h15v6, h65, h79, h8v6, ...) are stale: rebase them on h82 or supersede them.
   Superseded job files are in ~/jobq/superseded.
 - The extra lane (retired 11:52; `tools/xbatch.js`, out/dlv_chain*.sh) ran the no-op checks, symchecks and

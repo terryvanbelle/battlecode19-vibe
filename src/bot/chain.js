@@ -7,7 +7,7 @@
 // military aimed at the castle (radio SIG.CHAIN) for CHAIN_BURST turns, units born at the front instead of marching
 // there (replica scrim 200, seed 2924: StoneT2000's bot1v43 built such lines 5-13 tiles from each of our castles at
 // rounds 235, 341 and 541, then a preacher from each church each round, and took the three castles).
-import { CFG } from './config.js';
+import { CFG, defReserveK } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM } from './specs.js';
 import { d2, ADJ, offsets } from './util.js';
 import { bfs } from './mapinfo.js';
@@ -145,7 +145,7 @@ export function chainLaunch(B, buildToward) {
   const idx = Math.max(0, st.order.findIndex(c => c.x === me.x && c.y === me.y));
   if (B.round < CFG.CHAIN_ROUND + idx * CFG.CHAIN_STAGGER) return null;
   if (st.chainAt !== undefined && B.round - st.chainAt < CFG.CHAIN_EVERY) return null;
-  if (!w.canAfford(PILGRIM, CFG.DEF_RESERVE_K, 2)) return null;
+  if (!w.canAfford(PILGRIM, defReserveK(B), 2)) return null;
   const [tx, ty] = w.mirror(me.x, me.y);
   const b = buildToward(B, PILGRIM, tx, ty, encXY(SIG.CHAIN, tx, ty));
   if (!b) return null;

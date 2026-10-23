@@ -157,6 +157,10 @@ export const CFG = {
                              // peacetime army) leaves this much in the bank, so a structure that sees attackers can
                              // build a preacher (30 K) at once (replica seed 1915: the castle had spent its karbonite
                              // on a church and fell to five crusaders at round 29)
+  DEF_RESERVE_FROM: 0,       // >0: ...held only from this round on (a unit that does not know the round holds it), so the
+                             // opening race is run on the whole bank (h82 self-play, seed 2591: with 80 K the castle
+                             // waited r3-r13 for 90 K, its pioneer left at r14 and churched the centre at r26;
+                             // uvafan's pioneer left at r4 and churched it at r13, replica 391-1)
   PLAN_SERVE_PILGRIM: 0,     // 1: church planning counts a depot as served by pilgrim moves (as staffing does), and
                              // churches a cluster with >= 2 unserved depots (or all, if smaller); 0: any depot within
                              // 2*SERVE_MOVES king steps marks the whole cluster served (seed 1755: never staffed)
@@ -237,3 +241,8 @@ export const CFG = {
   // time
   TIME_SLOW_MS: 30,
 };
+
+// The karbonite every spend but a threat response leaves in the bank now (CFG.DEF_RESERVE_K, _FROM).
+export function defReserveK(B) {
+  return CFG.DEF_RESERVE_FROM && B.round > 0 && B.round < CFG.DEF_RESERVE_FROM ? 0 : CFG.DEF_RESERVE_K;
+}

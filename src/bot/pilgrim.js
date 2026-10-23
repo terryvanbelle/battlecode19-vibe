@@ -1,6 +1,6 @@
 // Pilgrim: mines its assigned depot and deposits at the nearest friendly structure; a pioneer first builds a church at
 // its cluster's site. Flees attackers that could hit it next turn.
-import { CFG } from './config.js';
+import { CFG, defReserveK } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, KARB_CAP, FUEL_CAP } from './specs.js';
 import { d2, king, ADJ, rng } from './util.js';
 import { SIG, FAR, dec, encNum, encXY, CT } from './comms.js';
@@ -129,7 +129,7 @@ function pilgrimAct(B) {
     const [sx, sy] = st.site;
     if (king(me.x, me.y, sx, sy) <= 1 && !(me.x === sx && me.y === sy)) {
       const occ = w.occ(sx, sy);
-      if (occ === 0 && w.karbonite >= STATS[CHURCH].costK + CFG.DEF_RESERVE_K && w.fuel >= STATS[CHURCH].costF + 2) {
+      if (occ === 0 && w.karbonite >= STATS[CHURCH].costK + defReserveK(B) && w.fuel >= STATS[CHURCH].costF + 2) {
         if (B.round) w.signal(encNum(SIG.ROUND, B.round), 2);
         if (st.cluster >= 0) w.talk(CT.CHURCH + st.cluster);
         const act = w.build(CHURCH, sx - me.x, sy - me.y);

@@ -1,5 +1,5 @@
 // Shared logic of castles and churches: depot service, pilgrim assignment, defence, peacetime army, endgame dump.
-import { CFG } from './config.js';
+import { CFG, defReserveK } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, ADJ, offsets } from './util.js';
 import { bfs, econ } from './mapinfo.js';
@@ -124,7 +124,7 @@ export function frontPioneer(B) {
   if (!site || !(st.pf[site[1] * w.n + site[0]] >= 0)) return null;
   // A mobile attacker in sight, or a site in an enemy castle's range: the pioneer would walk into fire.
   if (w.enemies.some(e => isAttacker(e.unit) && (e.unit !== CASTLE || d2(site[0], site[1], e.x, e.y) <= THREAT_R2[CASTLE]))) return null;
-  if (!w.canAfford(PILGRIM, STATS[CHURCH].costK + CFG.DEF_RESERVE_K, STATS[CHURCH].costF + 2)) return null;
+  if (!w.canAfford(PILGRIM, STATS[CHURCH].costK + defReserveK(B), STATS[CHURCH].costF + 2)) return null;
   const b = buildToward(B, PILGRIM, site[0], site[1], encNum(SIG.FRONT, B.round));
   if (!b) return null;
   st.frontAt = B.round;
@@ -180,7 +180,7 @@ function structAct(B, allIds, extra) {
   // was shot before the church's first turn. Its army spent the bank the next line needs (seed 799: church #505, its
   // chainer killed in between, built 136 units in r246-450 and no line fired).
   const chainOn = CFG.CHAIN_ROUND && (B.round >= CFG.CHAIN_ROUND || (CFG.CHAIN_KEEP && me.unit === CHURCH && !B.round));
-  const reserveK = CFG.DEF_RESERVE_K + CFG.PEACE_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
+  const reserveK = defReserveK(B) + CFG.PEACE_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
     (CFG.FRONT_ROUND && st.frontAt !== undefined && B.round - st.frontAt < 40 ? STATS[CHURCH].costK : 0) +
     (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0) +
     (chainOn ? CFG.CHAIN_K : 0);   // peacetime army only
@@ -236,7 +236,7 @@ function structAct(B, allIds, extra) {
 
   // 3. Economy: a pilgrim for every served depot.
   const dep = nextDepot(B);
-  if (dep && w.canAfford(PILGRIM, CFG.DEF_RESERVE_K, 2)) {
+  if (dep && w.canAfford(PILGRIM, defReserveK(B), 2)) {
     const b = buildToward(B, PILGRIM, dep.x, dep.y, encXY(SIG.MINE, dep.x, dep.y));
     if (b) { st.pending = { x: b.x, y: b.y, unit: PILGRIM, kind: 'mine', ref: dep.i }; st.assign.set(dep.i, { id: -1, seen: me.turn }); return b.act; }
   }
