@@ -2471,7 +2471,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   16 and loses no more castles than h82. Falsifier: (3), the army spends what the economy needed. On PASS: gate h91
   vs the incumbent.
 
-## 2026-10-22 23:00 — bank study: in our replica losses the enemy banks more, not less; 413-2's stuck pioneer
+## 2026-10-22 22:49 — bank study: in our replica losses the enemy banks more, not less; 413-2's stuck pioneer
 - 62 replica games with vibe19 (matches 199-410; scratch bank.sh: replay.js rounds every 25, means over r100-400).
   Losses (40): our bank 129 K vs theirs 480, army 37 vs 45 (ours smaller in 24 of 40), our bank above theirs in 4.
   Wins (22): bank 202 vs 404, army 75 vs 19. So hoarding is not what loses in general: StoneT2000's bots bank
