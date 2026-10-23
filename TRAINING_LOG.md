@@ -2470,3 +2470,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   r100-400 (every 25 rounds) <= 60% of h82's; (2) h91's mean army over r100-400 >= 115% of h82's; (3) h91 wins >= 8 of
   16 and loses no more castles than h82. Falsifier: (3), the army spends what the economy needed. On PASS: gate h91
   vs the incumbent.
+
+## 2026-10-22 23:00 — bank study: in our replica losses the enemy banks more, not less; 413-2's stuck pioneer
+- 62 replica games with vibe19 (matches 199-410; scratch bank.sh: replay.js rounds every 25, means over r100-400).
+  Losses (40): our bank 129 K vs theirs 480, army 37 vs 45 (ours smaller in 24 of 40), our bank above theirs in 4.
+  Wins (22): bank 202 vs 404, army 75 vs 19. So hoarding is not what loses in general: StoneT2000's bots bank
+  300-1,600 K. It is real on 1706 (204-1, 403-3, 407-2, 409-2: our bank 143-260, army 7-13 vs 22-41). h91's delivery
+  stays as pre-registered (it tests what it says), behind h87's gate; RICH_K is no lead for the economy gap.
+- Panel block 1 so far: 408 (h82 vs wololo) 0-3, 411 (vs uvafan) 0-3, 413 (vs IanCoolidge0) 0-3; control 414 (v6 vs
+  wololo) 0-3, 416 (v6 vs bot1v43) 0-3 (h82's 410: 1-2, the 388 cell for h82). Read when the block is complete.
+- 413-2 (2644, 42x42, one castle a side, h82 red): no church all game, 3-8 pilgrims, army 1-8; IanCoolidge0 30
+  pilgrims, 5 churches (one on our half at (20,9) by r60), army 172. Pioneer #2509 (built r14) spent 146 turns
+  within 2-6 tiles of (33,16) without reaching its site or giving it up and died at r160; #451 (r27) likewise until
+  r175. The castle built nothing from r27 to r95 with 155 K banked (ECON_UNTIL 100; both planned clusters had a
+  pioneer out). h88's give-up and stall switches target this case; its gate vs h82 is running.
