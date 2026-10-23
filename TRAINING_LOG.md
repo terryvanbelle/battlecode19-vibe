@@ -3472,3 +3472,12 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   one turn for these; a vm2 kill loses that turn's action. 1-24 lost turns in a 1000-round game of hundreds of
   robots. **Closed** as not a bot defect; the audit was stopped after 1712 (by PID) so h123's gate could start.
   Moving born's ~9 ms to turn 2 would save at most those few newborn turns: not worth a gate.
+
+## 2026-10-23 14:18 — h124 pre-registered and queued (...19u, after h123)
+- h124 = v7 + PIONEER_HOLD 64 + PIONEER_LEAN 1 (2aaf3dfb1254): h118's pair with the lean after one waiting turn
+  instead of three, to push the idle turns under the bar h118 missed (0.78 of h87's) while keeping its church gain.
+  No new code (both switches are unit-tested; h118's driver diagnostics hold), so no no-op run.
+- Gate ...19u: symcheck 1, 2, 3, 2321; h124 vs h87, 20 cells of seed0 5000, par 2. Mechanism, summed over the 40
+  games: pioneer idle turns away from enemies to r200 (out/st_h124.txt) at most 0.7 of h87's; churches built (dlv)
+  at least h87's; castles lost not above h87's. Looks when D first reaches 12; accept t >= 2 with the mechanism;
+  reject t <= -1; in between, a replica panel (two-block rule).
