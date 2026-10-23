@@ -152,13 +152,18 @@ function edgeAvoid(B) {
   return hot(me.x, me.y) ? undefined : hot;
 }
 
-// A lattice tile: (x + y) even, passable, not a depot, not adjacent to the home structure (CFG.KEEP_CLEAR: and not
-// kept clear; CFG.KILL_ZONE: and not in a kill zone).
+// A lattice tile: (x + y) even (CFG.LATTICE_SPARSE: x + 2y a multiple of 5), passable, not a depot, not adjacent to
+// the home structure (CFG.KEEP_CLEAR: and not kept clear; CFG.KILL_ZONE: and not in a kill zone).
 function latticeOk(B, x, y) {
   const w = B.w, h = B.st.home;
-  return ((x + y) & 1) === 0 && w.passable(x, y) && !w.isDepot(x, y) && d2(x, y, h.x, h.y) >= CFG.LATTICE_MIN_R2 &&
+  return latticeTile(x, y) && w.passable(x, y) && !w.isDepot(x, y) && d2(x, y, h.x, h.y) >= CFG.LATTICE_MIN_R2 &&
     !(CFG.KEEP_CLEAR && keepClear(B, x, y)) && !(CFG.KILL_ZONE && inZone(B, x, y));
 }
+
+// The pattern alone. A preacher's 3x3 splash covers up to 5 tiles of the (x + y) even one (4 prophets of a lattice
+// killed by one shot: replica 407, seed 1706, round 306, from a chain line's newborn preacher) and at most 2 of the
+// sparse one, which holds a fifth of the tiles instead of half.
+export function latticeTile(x, y) { return CFG.LATTICE_SPARSE ? (x + 2 * y) % 5 === 0 : ((x + y) & 1) === 0; }
 
 // CFG.KILL_ZONE. A military unit of ours seen last turn that is gone now, from where it could not have walked out of
 // sight (3 tiles: the fastest unit's move), died there: a kill zone, kept KILL_ZONE turns of this robot's clock.

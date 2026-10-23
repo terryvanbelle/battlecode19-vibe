@@ -171,6 +171,8 @@ export const CFG = {
   // lattice
   LATTICE_MIN_R2: 5,         // lattice tiles at least this far (r2) from the home structure
   KEEP_CLEAR: 0,             // 1: idle military units keep off depots, tiles next to our structures and chokepoints
+  LATTICE_SPARSE: 0,         // 1: lattice tiles are those with x + 2y a multiple of 5 (any 3x3 preacher splash covers at
+                             // most 2), not (x + y) even (up to 5; military.js latticeTile)
   LATTICE_R: 12,             // idle military units hold lattice tiles within this many king steps of their home
                              // structure (replica: eigthbot's lattice grows from every structure toward the middle,
                              // round 460 of seed 1036, and its front reaches the enemy castles)

@@ -7,7 +7,7 @@ import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
-import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost } from '../src/bot/military.js';
+import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile } from '../src/bot/military.js';
 import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
@@ -1760,4 +1760,22 @@ test('pilgrim: PILGRIM_HOT gives up a depot under a visible attacker for one tha
     assert.deepStrictEqual([70, 71, 72, 73].map(t => turn(t, far, 5 + (t - 70), 9 + (t - 70))), [1, 1, 1, 1]);
     assert.deepStrictEqual([74, 75, 76].map(t => turn(t, far, 8, 12)), [1, 1, 0]);
   } finally { [CFG.PILGRIM_HOT, CFG.PILGRIM_HOT_MEM] = saved; }
+});
+
+test('military: LATTICE_SPARSE puts at most 2 lattice tiles under any 3x3 preacher splash, a fifth of the tiles', () => {
+  const saved = CFG.LATTICE_SPARSE;
+  try {
+    const scan = () => {
+      let worst = 0, tiles = 0;
+      for (let y = 0; y < 20; y++) for (let x = 0; x < 20; x++) {
+        if (latticeTile(x, y)) tiles++;
+        let k = 0;
+        for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) if (latticeTile(x + dx, y + dy)) k++;
+        worst = Math.max(worst, k);
+      }
+      return [worst, tiles];
+    };
+    CFG.LATTICE_SPARSE = 0; assert.deepStrictEqual(scan(), [5, 200]);
+    CFG.LATTICE_SPARSE = 1; assert.deepStrictEqual(scan(), [2, 80]);
+  } finally { CFG.LATTICE_SPARSE = saved; }
 });
