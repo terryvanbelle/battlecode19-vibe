@@ -2929,3 +2929,10 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   block is 426-431. Two-block rule: accept after block 1 at t >= 1.5 and net >= +3, reject at net <= 0, otherwise
   block 2 (same maps, sides swapped). Falsifier: without marches the field out-mines us unchallenged and wins on
   health at r1000 (h104's losses on health where v7's were on castles).
+
+## 2026-10-23 05:50 — h100 (ESCORT_FIRST) D-24 look: t 1.63, inconclusive; extension 3 queued (...19k)
+- Pooled h100 vs h87 (out/h100_h87.jsonl, seed0 5000 cells 1-70 so far; extension 2 still running), scanned over
+  growing prefixes: D first reaches 24 at game 96 (48 cells): gained 16, lost 8, split 24, net +8, **t 1.63**:
+  inconclusive (accept t >= 2, reject t <= 0). Next look when D first reaches 48. At 57 cells: D 27, net +5, t 0.96
+  (the drift after the look is not a look; it is recorded only).
+- Extension 3 queued as VM job ...19k (after h103's gate): cells 71-100 of seed0 5000, tag h100h87z, same file.
