@@ -2805,3 +2805,16 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   rounds, castles): 1 frozen turn, 34 slow turns, all first turns. Time overruns are a machine effect on the
   loaded VM and cost a few robot turns per big game; no bot change. LEARNINGS 8 (never oversubscribe) applies to the
   replica's fidelity: 8 games on 8 vCPUs is a load of 10-12, since each game uses more than one core.
+
+## 2026-10-23 04:31 — h96's replica panel block 1 created (matches 426-431)
+- h96 = v7 + ATTACK_LATE 1001 (no all-in from round 900): its gate vs h87 ended inconclusive (21-19, net +1, t
+  0.58, D 3; TRAINING_LOG 01:45), the field-aimed middle zone, so the replica panel decides. Field case (417-1, v6
+  vs uvafan on 2046): from r900 every unit marched into a 126-prophet wall; 45 of our 48 units were lost by r1000
+  and health went to 680 vs 5,470; the same on 1653.
+- Block 1: submission 100 = dist/h96 (ce4eae991457), requests 199-204 -> matches 426-431 against the six opponents of
+  v7's block (wololo, botfinalsafe, bot1v43, uvafan, awesomelemonade, IanCoolidge0 ~69ce88) on its maps
+  (progress/panels/v7-m1.json); then submission 101 = bots/v7 again (the ladder's build). Control = v7's block
+  420-425 (submission 99), created an hour earlier, the same cells. Cells = (opponent, game), 18; two-block rule:
+  accept after block 1 at t >= 1.5 and net >= +3, reject at net <= 0, otherwise block 2 (same maps, sides swapped).
+  Falsifier: games v7 wins on castles after round 900 become losses on health. The block waits in queue order behind
+  v7's (about 55 matches ahead at 9 an hour).
