@@ -101,3 +101,6 @@ Good morning!  What blocked you in the night that you need permissions for?
 
 ## 23. 2026-10-23 06:12 PDT
 confirm permissions
+
+## 24. 2026-10-23 06:52 PDT
+(owner ran in the session) bash /tmp/claude-1000/-home-terryvanbelle-projects-vibe-2019/036796d7-3949-4610-8fd3-96aaf0322abc/scratchpad/move_stale.sh

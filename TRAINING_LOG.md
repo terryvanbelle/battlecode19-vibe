@@ -2989,3 +2989,9 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - Reading: against a prophet turtle every march is a gift; alive at r1000, the same 89 crusaders and 42 preachers
   would be 6,080 hp, more than uvafan's total. This is h104's hypothesis (no general attack; replica panel 432-437
   queued); h96 (no r900 all-in, marches kept) covers half of it (426-431).
+
+## 2026-10-23 06:54 — stale VM jobs cleared by the owner; HANDOFF State rewritten
+- The owner ran the move (PROMPTS 24): the 21 stale v6-era jobs (...a3d57710055 through ...1792611232841159268)
+  are in ~/jobq/superseded; pending holds only h100's extension 3 (...19k), behind h103's running gate.
+- HANDOFF's State section rewritten to current facts (82 lines, was 210): the stale-job queue text, v5/v6 candidate
+  lists and old replica history removed (they live here by date).
