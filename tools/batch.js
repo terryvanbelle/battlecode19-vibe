@@ -3,7 +3,7 @@
 //
 //   node tools/batch.js --a <bot dir> --b <bot dir> --seeds 1,2,3 | --seed-file f | --random N [--seed0 S]
 //        [--sides both|a-red] [--par 6] [--timescale K] [--init-ms MS] [--fast-turn] [--fast-init] --out results.jsonl [--replays dir]
-//        [--tag name] [--max-rounds N] [--no-kill] [--game-cap S]
+//        [--tag name] [--max-rounds N] [--no-kill] [--game-cap S] [--fast-view]
 //
 // --no-kill passes run_game.js --no-kill (no per-turn vm2 kill); a game then has a wall-clock cap, --game-cap seconds
 // (default 3600 with --no-kill, none without), after which its process is killed and the cell is an error row.
@@ -45,6 +45,7 @@ function parse(argv) {
     else if (k === '--fast-turn') a.fastTurn = true;
     else if (k === '--fast-init') a.fastInit = true;
     else if (k === '--no-kill') a.noKill = true;
+    else if (k === '--fast-view') a.fastView = true;
     else if (k === '--game-cap') a.gameCap = +v();
     else if (k === '--max-rounds') a.maxRounds = v();
     else throw new Error('unknown ' + k);
@@ -91,6 +92,7 @@ async function main() {
       if (o.fastTurn) args.push('--fast-turn');
       if (o.fastInit) args.push('--fast-init');
       if (o.noKill) args.push('--no-kill');
+      if (o.fastView) args.push('--fast-view');
       if (o.maxRounds) args.push('--max-rounds', o.maxRounds);
       const p = spawn('unshare', args, { stdio: ['ignore', 'pipe', 'pipe'] });
       let so = '', se = '';
@@ -105,7 +107,7 @@ async function main() {
           const ai = j.side === 'red' ? 0 : 1;
           row = { tag: o.tag, a: o.a, b: o.b, a_hash: ah, b_hash: bh, seed: j.seed, a_side: j.side,
             winner_is_a: r.winner === j.side ? 1 : 0, reason: r.reason, rounds: r.rounds, wall_s: r.wall_s, fast_turn: r.fast_turn,
-            fast_init: r.fast_init, no_kill: r.no_kill,
+            fast_init: r.fast_init, no_kill: r.no_kill, fast_view: r.fast_view,
             a_team: r.teams[ai], b_team: r.teams[1 - ai], map: r.map, t: new Date().toISOString() };
         } catch (e) { row = { tag: o.tag, a_hash: ah, b_hash: bh, seed: j.seed, a_side: j.side, error: (se || so).slice(-500), code }; }
         // A castle that misses the init clock before round 1 says nothing about the bots: retry the game (machine

@@ -342,6 +342,34 @@ test('run_game --no-kill replays the killed path\'s game; batch.js caps a game w
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('run_game --fast-view: the engine\'s view of every unit at every tile, and its game byte for byte', () => {
+  const { execFileSync } = require('child_process'), os = require('os');
+  const root = path.join(__dirname, '..');
+  const probe = `const Game = require('./engine/node_modules/bc19/game'), SPECS = require('./engine/node_modules/bc19/specs');
+    const slow = Game.prototype.getVisible; require('./tools/run_game.js').fastView(Game); const fast = Game.prototype.getVisible;
+    let n = 0, bad = 0;
+    for (const seed of [2202, 826]) { const g = new Game(seed, 100, 20, false, false), m = g.shadow.length;
+      for (let y = 0; y < m; y++) for (let x = 0; x < m; x++) g.shadow[y][x] = (x * 7 + y * 13) % 5 ? 0 : y * m + x + 1;
+      for (let unit = 0; unit < 6; unit++) for (let y = 0; y < m; y += 3) for (let x = 0; x < m; x += 3) {
+        const r = { unit, x, y }; n++; if (JSON.stringify(slow.call(g, r)) !== JSON.stringify(fast.call(g, r))) bad++; } }
+    console.log(JSON.stringify([n > 1000, bad]));`;
+  assert.deepStrictEqual(JSON.parse(execFileSync(process.execPath, ['-e', probe], { cwd: root, encoding: 'utf8' })), [true, 0]);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fastview-'));
+  try {
+    const play = (...x) => {
+      const out = path.join(dir, (x.length ? 'fast' : 'slow') + '.bc19');
+      const line = execFileSync('unshare', ['-rn', process.execPath, path.join(root, 'tools', 'run_game.js'),
+        '--red', 'bots/v3', '--blue', 'bots/v2', '--seed', '2202', '--max-rounds', '40', '--det', '--timescale', '20',
+        '--init-ms', '10000', '--fast-turn', '--replay', out, ...x], { cwd: root, encoding: 'utf8' });
+      return [JSON.parse(line), fs.readFileSync(out)];
+    };
+    const [rs, bs] = play(), [rf, bf] = play('--fast-view');
+    assert.deepStrictEqual([rs.fast_view, rf.fast_view], [false, true]);
+    assert.ok(rf.teams.every(t => t.errors === 0 && t.turns > 100), 'clean games');
+    assert.ok(bs.equals(bf), 'same replay');
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('dlv: delivery numbers agree with the replay analysis and with each other', () => {
   const dlv = require('../tools/dlv');
   const buf = fs.readFileSync(path.join(FIX, 'rush_s2908_r80.bc19'));

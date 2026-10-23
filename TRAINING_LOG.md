@@ -2233,3 +2233,16 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - h82's delivery so far: no-op v6q IDENTICAL; symcheck contest/combat only; **rush4 castle losses 0 of 40** (h50: 6,
   h77: 8): criterion (1) holds. The 4 games vs h50 run. h70 (PEACE_RESERVE_K 60) and h67 (PIONEERS_TEAM 4) are
   superseded by h77's gate (their switches are among its four).
+
+## 2026-10-22 18:58 — run_game --no-kill and --fast-view: gate games about 2x faster than this morning
+- `--no-kill`: turns run without vm2's per-turn kill (vm2 starts a watchdog for every timed call); the chess clock
+  still charges each turn, sandbox creation keeps --init-ms's bound, and batch.js kills a game past --game-cap
+  (3600 s by default with --no-kill; unit test: a bot whose turn never returns is an error row after 3 s). Only for
+  batches of our own builds; time audits and the replica keep the engine's kill.
+- `--fast-view`: getVisible tests only the vision square (unit test: every unit at 1,800+ tiles on two maps equals
+  the engine's view; a 40-round game byte for byte). 20 us per call instead of 49 (driver).
+- VM, h50 self-play on 826, 300 rounds, --det --timescale 2 --fast-turn (load ~10): 252 s; + --fast-init 212 s;
+  + --no-kill 129 s (turn ms_mean 2.14 -> 0.80: the watchdog cost ~1.3 ms per turn under load); + --fast-view 129 s.
+  All four replays byte for byte the same. The 22 pending jobs in 2019-next carry all three flags.
+- Note for the replica (unchanged): its bots' clocks pay that ~1.3 ms per turn on this loaded VM, about 6% of the
+  20 ms a turn adds; the official servers were idler.

@@ -4,7 +4,7 @@
 //
 //   node tools/run_game.js --red <bot dir | bundle.js> --blue <bot dir | bundle.js> [--seed N]
 //        [--replay out.bc19] [--logs out.jsonl] [--json out.json] [--det] [--chi 100] [--che 20]
-//        [--max-rounds N] [--timescale K] [--init-ms MS] [--fast-turn] [--fast-init] [--no-kill]
+//        [--max-rounds N] [--timescale K] [--init-ms MS] [--fast-turn] [--fast-init] [--no-kill] [--fast-view]
 //
 // --det        deterministic mode: seeds Math.random in the engine (the per-turn shuffle of visible robots) from
 //              the game seed. Bots that use their own seeded PRNG then replay identically except for clock effects.
@@ -24,6 +24,8 @@
 //              timed call, the largest cost of a game on the loaded VM. The chess clock still charges each turn, so a
 //              slow robot still freezes; a turn that never returns hangs the game, so batch.js caps each game's wall
 //              time. Only for batches of our own builds (strategy gates); time audits and the replica keep the kill.
+// --fast-view  the engine's per-turn view of the map, computed over the robot's vision square instead of the whole map
+//              (see fastView): the same view.
 // Prints one JSON line: {winner:"red"|"blue", win_condition, reason, rounds, seed, map:{w,castles}, teams:[...]}.
 'use strict';
 const fs = require('fs');
@@ -54,6 +56,7 @@ function parseArgs(argv) {
     else if (k === '--fast-turn') a.fastTurn = true;
     else if (k === '--fast-init') a.fastInit = true;
     else if (k === '--no-kill') a.noKill = true;
+    else if (k === '--fast-view') a.fastView = true;
     else throw new Error('unknown argument ' + k);
   }
   if (!a.red || !a.blue) throw new Error('need --red and --blue');
@@ -90,6 +93,7 @@ async function main() {
   if (a.det) Math.random = seededRandom(a.seed || 1);
   const Game = require(path.join(ENGINE, 'game'));
   const Coldbrew = require(path.join(ENGINE, 'runtime'));
+  if (a.fastView) fastView(Game);
   const [red, blue] = await Promise.all([loadBot(a.red), loadBot(a.blue)]);
 
   const seed = a.seed === 0 ? Math.floor(Math.random() * Math.pow(2, 31)) : a.seed;
@@ -198,7 +202,7 @@ async function main() {
   const result = {
     winner: g.winner === 0 ? 'red' : g.winner === 1 ? 'blue' : null,
     win_condition: g.win_condition, reason: REASONS[g.win_condition], rounds: g.round, seed,
-    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale, ...limits, fast_turn: !!a.fastTurn, fast_init: !!a.fastInit, no_kill: !!a.noKill, net_isolated: netIsolated(),
+    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale, ...limits, fast_turn: !!a.fastTurn, fast_init: !!a.fastInit, no_kill: !!a.noKill, fast_view: !!a.fastView, net_isolated: netIsolated(),
     red: a.red, blue: a.blue,
     teams: [0, 1].map(i => ({ team: i === 0 ? 'red' : 'blue', ...counts[i], ...alive[i],
       turns: teams[i].turns, ms_mean: teams[i].turns ? +(teams[i].ms_total / teams[i].turns).toFixed(3) : 0,
@@ -272,6 +276,26 @@ function fastInit(bundles) {
   return scripts;
 }
 
+// The engine builds each turn's view by testing every tile of the map against the robot's vision radius (game.js
+// getVisible: n*n Math.pow pairs per turn). fastView tests only the tiles of the square around the robot that holds
+// its vision disc; every other tile stays -1, as the engine leaves it.
+function fastView(Game) {
+  Game.prototype.getVisible = function (robot) {
+    const h = this.shadow.length, w = this.shadow[0].length, R = SPECS.UNITS[robot.unit]['VISION_RADIUS'];
+    const view = Array(h);
+    for (let i = 0; i < h; i++) view[i] = Array(w).fill(-1);
+    const k = Math.floor(Math.sqrt(R));
+    for (let r = Math.max(0, robot.y - k); r <= Math.min(h - 1, robot.y + k); r++) {
+      const dy = robot.y - r;
+      for (let c = Math.max(0, robot.x - k); c <= Math.min(w - 1, robot.x + k); c++) {
+        const dx = robot.x - c;
+        if (dx * dx + dy * dy <= R) view[r][c] = this.shadow[r][c];
+      }
+    }
+    return view;
+  };
+}
+
 // Bot code runs only without network (CLAUDE.md rule 6). batch.js starts every game inside `unshare -rn`; a direct
 // call outside a network namespace re-runs itself there, and refuses to run if it cannot.
 // A sandbox that forbids netlink sockets cannot list addresses (systemd RestrictAddressFamilies, the replica's saturn
@@ -293,4 +317,4 @@ if (require.main === module) {
   }
   main().catch(e => { console.error(String(e && e.stack || e)); process.exit(2); });
 }
-module.exports = { setLimits, parseArgs, fastTurn, fastInit, loadLimit, netIsolated };
+module.exports = { setLimits, parseArgs, fastTurn, fastInit, fastView, loadLimit, netIsolated };
