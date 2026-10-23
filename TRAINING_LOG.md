@@ -2737,3 +2737,25 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   bot1v43's opening in 410-1, 416-1 and 416-3. Unit test: the ESCORT_FIRST test covers it. Driver diagnostics h87,
   h102 and h103 (= v7 + ESCORT 2 + ESCORT_UNIT 3: an overdue or lost pioneer gets 2 crusaders at its site; a crusader
   inside r2 16 of a prophet cannot be shot by it) vs camp on 2321 and 2591 to 200 running.
+
+## 2026-10-23 03:30 — v7 against the camping sparring partner; the census was v6's; a v7 block on the replica
+- Correction to 03:05: every game of the economy census is a v5-v6 or h82 game (matches 385-419; v7 = submission
+  99 has played no replica match). v6 kept 2 pioneers in flight (MAX_PIONEERS 2): in 416-3 the castle built its
+  3rd and 4th pioneers at r94-95, exactly when the first two aged out of its list (80 turns). v7's PIONEERS_TEAM 6
+  is h82's answer to that, and h82's panel (408-413) beat v6 by net +2 over 18 cells.
+- Driver diagnostics vs dist/camp (red = ours), seed 2321 to 200: **h87** r100 5 churches / 24 pilgrims / 1,136 K
+  mined vs camp's 2 / 15 / 794, r200 4 / 25 / 2,712 vs 1 / 15 / 1,622; its 5 pioneers all built (one stood 10+
+  turns); camp lost 3 pioneers. v6 had 0 churches and 9 pilgrims at r100 against bot1v43 on this map. **h102**:
+  byte-for-byte h87's game again (inert). **h103**: r100 4 / 20 / 988, army 10 (its crusader escorts), r200 4 / 25
+  / 2,098: the escorts cost h87's pace where h87's pioneers were never stopped.
+- Replica measurement block for v7 (matches 420-425, created 03:27; progress/panels/v7-m1.json = h82-b1's maps):
+  wololo, botfinalsafe, bot1v43, uvafan, awesomelemonade, IanCoolidge0 ~69ce88 on the same 3 maps each as h82's
+  block (408-413) and v6's (414-419). Read: cells (opponent, game), v7 vs v6 and v7 vs h82, gained / lost; and the
+  economy census rerun on v7's games. Bumping them to the front (spool_bump, sudo on the VM) was denied by the
+  permission classifier; they wait in queue order behind ~66 field matches (about 7 hours at 9 an hour).
+- Seed 2591 to 200 vs camp: h87, h102 and h103 play the same game (red r50 1 church / 9 pilgrims, r150 0 churches,
+  r200 11 pilgrims; one pioneer stalled 98 turns; camp 1 church / 6 pilgrims). h102 (PIONEER_DETOUR) is inert in
+  every diagnostic so far (self-play 2591, camp 2321 and 2591): not gated (LEARNINGS 19); kept for a stack or a
+  replica panel. h103's escorts fired only on 2321, where they cost pace.
+- Clock correction: the headings 02:55 and 03:45 above ran ahead of the clock (their commits were at 02:41 and
+  03:12 PDT, so the true times are at most those); this entry and later ones use `date`.

@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 03:50 PDT)
+## State (2026-10-23 03:35 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -17,16 +17,20 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 03:50:
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait; 63 at 03:30). Order at 03:30:
   **h101**'s gate running (...a3d577100019f: v7 + MELEE_BACK 2, crusaders and preachers stay off lattice tiles ahead
   of home, vs h87; field-aimed bars; TRAINING_LOG 02:20), then the **time audit** (...19fz: v7 vs v7 on 2740 and 1712
   under the replica's flags with --logs; TRAINING_LOG 03:45), then **h100**'s extension (...19fzz: the next 20 cells;
   after 20 cells 22-18, D 8, t 0.71, mechanism passed). Everything after it is a stale v6 job; new jobs are named to sort ahead of them (between ...19fzz and ...10055, e.g.
-  ...19g; drafts in scratch: ...19g = h102's gate, ...19h = h103's). Open: **h96** (v7 + ATTACK_LATE 1001) inconclusive after 20 cells (21-19, net +1, t 0.58,
-  D 3), its extension ranked below h100 (TRAINING_LOG 01:45). Built, not queued: h102 (PIONEER_DETOUR 50) and
-  h103 (ESCORT 2, ESCORT_UNIT 3), aimed at our stalled pioneers (economy census 03:05: in losses half our pioneers
-  never arrive), under diagnosis against the sparring bot dist/camp (v7 + ESCORT_FIRST 1 + ESCORT_MIRROR 1, bot1v43's
-  round-3 prophet on our contested site); h98 (MIL_ROTATION null) and h99
+  ...19g; draft in scratch: ...19h = h103's gate). **v7 on the replica**: measurement block 420-425 (created 03:27,
+  progress/panels/v7-m1.json = h82-b1's maps, the same 6 opponents as 408-413 / 414-419), waiting in queue order (the
+  spool_bump to the front was refused by the permission check; owner told); read v7 vs v6 and h82 per cell and rerun
+  the economy census on its games. Open: **h96** (v7 + ATTACK_LATE 1001) inconclusive after 20 cells (21-19, net +1, t 0.58,
+  D 3), its extension ranked below h100 (TRAINING_LOG 01:45). Built, not queued: h102 (PIONEER_DETOUR 50; inert in self-play
+  and vs camp on 2321 and 2591) and h103 (ESCORT 2, ESCORT_UNIT 3; vs camp on 2321 its escorts cost h87's pace, on
+  2591 inert), aimed at our stalled pioneers (economy census 03:05, v6's games: in losses half our pioneers never
+  arrive); sparring bot dist/camp = v7 + ESCORT_FIRST 1 + ESCORT_MIRROR 1 (bot1v43's round-3 prophet on our contested
+  site; h87 out-expands it 5 churches to 2 on 2321); both wait for v7's replica block; h98 (MIL_ROTATION null) and h99
   ([4]), after the combat census (01:45: 92% of our lost crusaders never fired on the replica) and h98's driver loss
   on 2644. Closed: h97 delivery FAILED 01:25 (PIONEER_DEPART_K 0: 1 of 3 bars); h91 delivery FAILED 01:10 (RICH_K 0:
   wins 7 of 16); **h87 ACCEPTED as v7** 00:30 (gate vs h50 t 2.06); h82 superseded by it (its field-aimed panel
