@@ -2358,3 +2358,13 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   fastOver 83.7 (69.2), 85.4 (70.0), 85.3 (68.9), 86.8 (69.6); + semi 32 MB 85.4 (66.8), 81.2 (62.1); + semi 64 MB
   77.3 (56.3), 76.5 (55.7). Every replay the same as the base. Base to fastOver + 64 MB: -13% CPU, -23% wall.
 - The replica gets fastOver with its next runtime deploy (it passes --fast-view); it keeps the stock heap.
+
+## 2026-10-22 20:58 — replica: a 6th execute slot, 64 MB semi-space and fastOver on its games (queue 116)
+- The queue clears at about 6 matches an hour (163 at 14:23, 123 at 20:05, 116 at 20:40), ~10 h to go on 5 slots;
+  the owner's rule makes clearing it the priority (PROMPTS 17). saturn: MAX_EXECUTE_SLOTS 6 (GALAXY_EXECUTE_SLOTS
+  6, unit MemoryMax 14G, CPUQuota 700%): 6 replica games + 2 gate games = 8 on the VM's 8 vCPUs (README limit).
+  Each game also gets --max-semi-space-size=64 (GALAXY_GAME_SEMI_MB; GC inside a turn is charged to that robot, so
+  this takes noise off the clock) and the new runtime's fastOver (part of --fast-view, off every clock).
+- Restarted 03:57:41 UTC when one game was 39 min old and four were under 4 min (in-flight matches re-run): all six
+  slots leased at once (404, 217, 221, 223, 224, 225), each node with the semi-space flag. Expect ~+20% slots and
+  ~-13% CPU a game; read the ack rate at the next check-ins.
