@@ -2976,3 +2976,16 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   0.26 (crusaders sent at distant prophets die walking in) and castles lost 34 vs 26.
 - D 7 is short of the first look (12), but at net -5 the local accept is closed (5 more discordant cells give net 0
   at best) and the mechanism failed: closed as h101 was (03:50), no extension, no panel. DEF_FAR_UNIT stays 0.
+
+## 2026-10-23 06:51 — 417-1 (v6 vs uvafan, seed 2046, lost on health): our melee never fired; the case for h104
+- replay.js summary / timeline / fire on ~/projects/vibe/bc19-galaxy-replays/417/game-01-seed2046.bc19 (33x33, two
+  castles each, no church either side, 7 pilgrims each): mined K 4,718 vs 5,428 (we lost 2 pilgrims; our pilgrims
+  idle 391 of 6,858 turns, theirs 0), F 27,560 vs 36,040 (we ended with 22,100 fuel unspent, karbonite-bound).
+- Armies level to r450: 72 vs 70 (uvafan: prophets only until r900). Our r450 march took crusaders 30 -> 3; from
+  then our army sat at 45-48 while theirs grew 81 -> 126 prophets; at r900 (ATTACK_LATE) everything marched: army 48
+  -> 6. uvafan then built 71 crusaders (r900-1000) for health. Health at r1000: 680 vs 5,470.
+- Built / lost: we 89 crusaders, 85 prophets, 42 preachers / 84, 84, 42; they 172 prophets, 72 crusaders / 63, 1.
+  **Our crusaders and preachers fired 0 shots all game**; our prophets 138 (theirs 758). Kills 64 vs 210.
+- Reading: against a prophet turtle every march is a gift; alive at r1000, the same 89 crusaders and 42 preachers
+  would be 6,080 hp, more than uvafan's total. This is h104's hypothesis (no general attack; replica panel 432-437
+  queued); h96 (no r900 all-in, marches kept) covers half of it (426-431).
