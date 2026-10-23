@@ -633,12 +633,12 @@ test('military: RECALL sends a unit that hears it toward the castle, holding 2-3
     assert.ok(far && near);
     const cw = worldFor(g, castle);
     castle.signal = encXY(0, cw.me.x, cw.me.y); castle.signal_radius = FAR.RECALL;
-    const run = ([x, y], on) => {
+    const run = ([x, y], on, st = {}) => {
       CFG.RECALL = on;
       const cru = { id: 4002, team: 0, unit: S.CRUSADER, x, y, turn: 3, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
       g.robots.push(cru);
       try {
-        const w = worldFor(g, cru), B = { api: w.api, w, round: 20, birthRound: 18, st: {}, deps: null, clusters: null, rnd: rng(2) };
+        const w = worldFor(g, cru), B = { api: w.api, w, round: 20, birthRound: 18, st, deps: null, clusters: null, rnd: rng(2) };
         B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
         const a = militaryTurn(B);
         return { a, B, w };
@@ -650,6 +650,13 @@ test('military: RECALL sends a unit that hears it toward the castle, holding 2-3
     assert.ok(king(far[0] + on.a.dx, far[1] + on.a.dy, castle.x, castle.y) < k0);
     assert.strictEqual(run(near, 30).a, null);       // already 2 king steps out: holds
     assert.strictEqual(run(far, 0).B.st.recall, undefined);
+    assert.strictEqual(on.B.st.target, null);
+    // A chain-born unit keeps its line's target through the recall, and still walks to the ring first.
+    const ec = cw.enemies.find(e => e.unit === S.CASTLE), ct = [ec.x, ec.y];
+    const ch = run(far, 30, { chainT: ct });
+    assert.ok(ch.B.st.recall && ch.a && ch.a.action === 'move');
+    assert.deepStrictEqual(ch.B.st.target, ct);
+    assert.ok(king(far[0] + ch.a.dx, far[1] + ch.a.dy, castle.x, castle.y) < k0);
   } finally { CFG.RECALL = saved; }
 });
 

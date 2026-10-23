@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 90 other, 25 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped, 2 sparring partners (146 rows).
+Totals: 91 other, 25 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped, 2 sparring partners (147 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -160,3 +160,4 @@ Totals: 90 other, 25 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped,
 | `h98` | 2026-10-23 | v7 | v7 + MIL_ROTATION null: no peacetime crusaders (prophets, every 4th a preacher) |  |  |  |  | BUILT, NOT QUEUED: driver 2644 lost a contested church at r100-125 to h87's crusaders and its castle at r277 |
 | `h99` | 2026-10-23 | v7 | v7 + MIL_ROTATION [4]: peacetime army all prophets |  |  |  |  | BUILT, NOT QUEUED (h98's diagnostic: crusaders win close contests in self-play) |
 | `v7` | 2026-10-23 00:30 | v6 | Frozen snapshot of h87 (bots/v7): v6 + h82's economy switches (ECON_UNTIL 100, PIONEERS_TEAM 6, PEACE_RESERVE_K 60, PLAN_VALUE 10, DEF_RESERVE_K 30) + h76's church chain from round 200; the replica build since submission 99 |  |  | submission 99 | vs v6 29-11; vs h82 6-2 | ACCEPTED 00:30 as v7 (h87 row: gate vs h50) |
+| `h110` | 2026-10-23 06:17 | v7 | castles under attack recall the army (RECALL 30), chain-born units keep their line target (h108 fixed) |  |  |  |  | BUILT |

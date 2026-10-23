@@ -48,7 +48,13 @@ function listen(B) {
   for (const r of w.robots) {
     if (r.id === me.id || (r.seen && r.team !== me.team)) continue;
     const m = decFarRobot(r);
-    if (m && m.type === SIG.RECALL && CFG.RECALL && w.passable(m.x, m.y)) { st.recall = { x: m.x, y: m.y, until: me.turn + CFG.RECALL }; st.target = null; continue; }
+    // A recall drops a general attack order (castles repeat those) but not a chain line's target, which nobody
+    // repeats: chain-born units hold the recall ring, then march again (h108: recalls ended our chain push).
+    if (m && m.type === SIG.RECALL && CFG.RECALL && w.passable(m.x, m.y)) {
+      st.recall = { x: m.x, y: m.y, until: me.turn + CFG.RECALL };
+      if (st.target !== st.chainT) st.target = null;
+      continue;
+    }
     if (m && m.type === SIG.POST) { if (st.toCastle && w.passable(m.x, m.y)) hearPost(B, m.x, m.y); continue; }
     if (m && m.type === SIG.ENEMY) { if (CFG.SPOT && (CFG.SPOT_MASK >> me.unit & 1)) hearSpot(B, m.x, m.y); continue; }
     if (m && m.type === SIG.HUNT) { if (CFG.HUNT && me.unit !== PROPHET) hearHunt(B, m.x, m.y); continue; }

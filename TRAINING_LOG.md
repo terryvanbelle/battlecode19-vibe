@@ -2943,3 +2943,11 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   (...19k, cells 71-100) stays queued behind h103's gate; at this drift the D-48 look will likely reject.
 - Owner (PROMPTS 22) asked what the permission check blocked overnight: the move of 21 stale v6 jobs from
   ~/jobq/pending to ~/jobq/superseded, and the spool_bump of replica block 420-425 (no longer needed: queue 32).
+
+## 2026-10-23 06:17 — RECALL fixed for chain-born units; h110 built
+- military.js listen: a recall now drops only a general attack order (castles repeat those every ATTACK_EVERY
+  rounds); a chain-born unit keeps its line's target (st.target === st.chainT), holds the recall ring while the
+  recall lasts, then marches again. The cause of h108's loss on 2013 (05:12). RECALL is 0 in v7, so the defaults
+  are unchanged. The unit test 'military: RECALL sends a unit ...' now also checks a chain-born unit keeps its target
+  and still walks to the ring (it fails on the old code); 121 node + 57 Python tests pass.
+- h110 = v7 + RECALL 30 (the fixed code). Driver diagnostic on 2013 (h108's case) after h109's.
