@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 03:35 PDT)
+## State (2026-10-23 04:25 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -24,8 +24,12 @@
   ...19g; draft in scratch: ...19h = h103's gate). **v7 on the replica**: measurement block 420-425 (created 03:27,
   progress/panels/v7-m1.json = h82-b1's maps, the same 6 opponents as 408-413 / 414-419), waiting in queue order (the
   spool_bump to the front was refused by the permission check; owner told); read v7 vs v6 and h82 per cell and rerun
-  the economy census on its games. Open: **h96** (v7 + ATTACK_LATE 1001) inconclusive after 20 cells (21-19, net +1, t 0.58,
-  D 3), its extension ranked below h100 (TRAINING_LOG 01:45). Built, not queued: h102 (PIONEER_DETOUR 50; inert in self-play
+  the economy census on its games. **h96**'s panel block 1 (v7 + ATTACK_LATE 1001, gate inconclusive t 0.58):
+  matches 426-431 (submission 100), same opponents and maps, created 04:22, control = 420-425; two-block rule
+  (TRAINING_LOG 04:24). The ladder's vibe19 is submission 101 (= bots/v7 again).
+  Built, not queued: h104 (no general attack), h105 = dist/turtle (sparring bot: prophets only, no attack, no
+  chain) and h106 (prophets only, no attack, chain kept): the prophet doctrine lost to h87 in every self-play test
+  (TRAINING_LOG 04:22); h102 (PIONEER_DETOUR 50; inert in self-play
   and vs camp on 2321 and 2591) and h103 (ESCORT 2, ESCORT_UNIT 3; vs camp on 2321 its escorts cost h87's pace, on
   2591 inert), aimed at our stalled pioneers (economy census 03:05, v6's games: in losses half our pioneers never
   arrive); sparring bot dist/camp = v7 + ESCORT_FIRST 1 + ESCORT_MIRROR 1 (bot1v43's round-3 prophet on our contested
