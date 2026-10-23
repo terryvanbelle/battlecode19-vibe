@@ -5,6 +5,7 @@
 //   node tools/run_game.js --red <bot dir | bundle.js> --blue <bot dir | bundle.js> [--seed N]
 //        [--replay out.bc19] [--logs out.jsonl] [--json out.json] [--det] [--chi 100] [--che 20]
 //        [--max-rounds N] [--timescale K] [--init-ms MS] [--fast-turn] [--fast-init] [--no-kill] [--fast-view]
+//        [--turnlog out.jsonl [--turnlog-ms 100]]
 //
 // --det        deterministic mode: seeds Math.random in the engine (the per-turn shuffle of visible robots) from
 //              the game seed. Bots that use their own seeded PRNG then replay identically except for clock effects.
@@ -29,6 +30,9 @@
 //              view and the same text (with --fast-turn, rows out of sight travel as null and the turn script rebuilds
 //              them: the same object), and the game-over test between turns skips its scan of every robot while
 //              each team keeps a live castle (see fastOver): the same answer.
+// --turnlog    one JSON line per turn slower than --turnlog-ms (default 100): {round, team, unit, id, turn, ms, bank}
+//              (bank = the robot's chess clock before the turn), to find which robot overran vm2's 200 ms kill
+//              ("Script execution timed out": the turn's action is lost) in a time audit.
 // Prints one JSON line: {winner:"red"|"blue", win_condition, reason, rounds, seed, map:{w,castles}, teams:[...]}.
 'use strict';
 const fs = require('fs');
@@ -60,6 +64,8 @@ function parseArgs(argv) {
     else if (k === '--fast-init') a.fastInit = true;
     else if (k === '--no-kill') a.noKill = true;
     else if (k === '--fast-view') a.fastView = true;
+    else if (k === '--turnlog') a.turnlog = v();
+    else if (k === '--turnlog-ms') a.turnlogMs = parseFloat(v());
     else throw new Error('unknown argument ' + k);
   }
   if (!a.red || !a.blue) throw new Error('need --red and --blue');
@@ -124,6 +130,7 @@ async function main() {
 
   // Per-team instrumentation: wrap each robot's hook as it registers, to time turns as the engine does.
   const teams = [0, 1].map(() => ({ turns: 0, ms_total: 0, ms_max: 0, slow_turns: 0, robots_built: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } }));
+  const turnlog = a.turnlog ? [] : null, turnlogMs = a.turnlogMs || 100;
   const origRegister = g.registerHook.bind(g);
   g.registerHook = function (hook, id) {
     const robot = g.getItem(id);
@@ -134,6 +141,8 @@ async function main() {
       try { return hook(dump); } finally {
         const ms = Number(process.hrtime.bigint() - s) / 1e6;
         t.turns++; t.ms_total += ms; if (ms > t.ms_max) t.ms_max = ms; if (ms > SPECS.CHESS_EXTRA) t.slow_turns++;
+        if (turnlog && ms > turnlogMs) turnlog.push(JSON.stringify({ round: g.round, team: robot.team, unit: robot.unit,
+          id: robot.id, turn: robot.turn, ms: +ms.toFixed(1), bank: +robot.time.toFixed(1) }));   // processAction charges ms after the hook
       }
     }, id);
   };
@@ -148,6 +157,7 @@ async function main() {
     g.enactTurn();
   }
   const wall = (Date.now() - t0) / 1000;
+  if (turnlog) fs.writeFileSync(a.turnlog, turnlog.map(l => l + '\n').join(''));
 
   // Logs: g.logs[team] = [{type:'log'|'error', message, robot, timestamp}]
   const counts = [0, 1].map(team => {

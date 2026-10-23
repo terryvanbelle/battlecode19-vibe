@@ -3418,3 +3418,18 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   summed over the 40 games: lines (3+ churches born in one round, ~/scratch19/lines.js -> out/ln_h123.txt) at most
   0.8 of h87's; castles lost (dlv) not above h87's. Field-aimed bars: look at D 12, accept t >= 2 with the
   mechanism, reject t <= -1, else a replica panel (two-block rule).
+
+## 2026-10-23 13:30 — h116 REJECTED; replica vm2 kills found, time audit queued (...19ra)
+- Gate h116 (v7 + ECON_RICH 100) vs h87, 20 cells, 40 games: 16 wins, gained 5, lost 9, D 14, net -4, t -1.07 ->
+  **REJECTED** (t <= -1 at the look). The switch did what it was built for: at r100 our army summed 616 to h87's 165
+  and our bank 6,211 K to 14,253 (out/tl_h116.txt). It cost the rest: castles lost 60 vs 52, churches 838 vs 890
+  (94%, bar 95%). The units built early do not win the game; the churches they take the karbonite from do.
+- Replica: each of 490 game 2 (mvpatel2000, seed 2644, ms_max 204) and 499 game 3 (IanCoolidge0, seed 60, ms_max
+  307) has one "Script execution timed out" for vibe19: the engine's vm2 kill at TURN_MAX_TIME 200 ms (engine
+  vm.js, specs.json), separate from the chess clock; the turn's action is lost. Our gates run --no-kill, so they
+  never see it (their ms_max p90 is ~250 ms). The VM's load average was 9.8-11.6 on 8 vCPUs at 13:2x (six replica
+  games + a gate pair + analysis), so contention is part of it, but the bot has turns near the limit.
+- tools/run_game.js --turnlog FILE [--turnlog-ms 100]: one JSON line per slow turn {round, team, unit, id, turn, ms,
+  bank}; unit test. Job ...19ra runs next (after h118's gate ...19s, now running; before h123's ...19t):
+  v7 vs h87 on seeds 60, 2644, 836, 1712, 2046, 1653, both sides, one game at a time under the replica's flags
+  (kill on, contest clock) -> out/ta_v7/. Then: fix the slow paths that log over ~150 ms.

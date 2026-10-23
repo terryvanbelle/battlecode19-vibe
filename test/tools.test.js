@@ -176,6 +176,26 @@ test('run_game: --init-ms bounds the bundle\'s load under vm2; turns keep the pe
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('run_game: --turnlog lists each turn over --turnlog-ms with its robot and clock bank', () => {
+  const { execFileSync } = require('child_process'), os = require('os');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tlog-'));
+  try {
+    fs.writeFileSync(path.join(dir, 'robot.js'), "import {BCAbstractRobot} from 'battlecode';\n" +
+      'class MyRobot extends BCAbstractRobot {\n' +
+      '  turn() { let x = 0; for (let i = 0; i < 2e7; i++) x += i % 7; this.x = x; return null; }\n}\n');   // ~60 ms
+    const log = path.join(dir, 'turns.jsonl');
+    execFileSync(process.execPath, ['tools/run_game.js', '--red', dir, '--blue', 'bots/v6', '--seed', '2202',
+      '--max-rounds', '3', '--chi', '5000', '--turnlog', log, '--turnlog-ms', '20'],
+      { cwd: path.join(__dirname, '..'), encoding: 'utf8' });
+    const all = fs.readFileSync(log, 'utf8').trim().split('\n').map(l => JSON.parse(l));
+    const rows = all.filter(r => r.team === 0);   // blue's v6 has slow turns of its own
+    assert.ok(all.every(r => r.ms > 20 && [0, 1].includes(r.team)));
+    assert.ok(rows.length >= 6 && rows.every(r => r.unit === 0 && r.ms < 1000));   // two castles, rounds 1-4
+    assert.ok(rows.every(r => r.bank > r.ms && r.bank <= 5000 + 20 * r.turn));   // the clock before the turn's charge
+    assert.ok(rows.some(r => r.round >= 2));
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('jobq: add and status list pending jobs in order', () => {
   const { execFileSync } = require('child_process');
   const os = require('os');
