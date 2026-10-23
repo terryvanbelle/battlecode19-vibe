@@ -3181,3 +3181,21 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   built (dlv) at least 95% of h87's; castles lost not above h87's. Bars as at 07:28 (look when D first reaches 12;
   accept t >= 2 with the mechanism, reject t <= -1, in between a replica panel by the two-block rule).
 - h112's gate (...19n) at 11 of 20 cells: 22 games, 14 wins, gained 3, lost 0, D 3, t 1.73 (no look yet).
+
+## 2026-10-23 09:55 — h112's gate: t 0.71, mechanism met narrowly -> replica panel (when the queue is short); h103 and h104 at 15 of 18
+- h112 (v7 + DEF_SEEN 1) vs h87, 20 cells of seed0 5000: 22-18, gained 5, lost 3, split 12, D 8, net +2, t 0.71 (no
+  D 12 look). Middle zone -> replica panel. Mechanism (castles lost below h87's) met narrowly: dlv SUM 30 vs 32. Its
+  other numbers move more: churches lost 123 vs 207, stillborn 115 vs 530, mines to r450 154,642 vs 140,299 (+10%),
+  military built 8,304 vs 7,352, churches built 403 vs 465. Symcheck 1, 2, 3, 2321: contest/combat divergences only.
+  Its block waits until fewer than 30 replica matches wait (169 now).
+- Replica, 15 of 18 games each (the awesomelemonade match is the last): h103 (escorts) 438-443 gained 3, lost 1,
+  net +2; h104 (no general attack) 432-437 gained 3, lost 1, net +2. Both lost botfinalsafe seed 203, which v7 won as
+  blue and both played as red. Neither can reach the block-1 accept bar (t >= 1.5 with net >= +3: at best 4-1, t 1.34)
+  nor fall to net <= 0 unless both of v7's awesomelemonade wins turn, so each will need a second block.
+- Field pioneer census (v7's 18 control games, r30-150; pioneers = SIG.CHURCH-born pilgrims): 603 turns idle at
+  their sites with no enemy attacker within r2 100, waiting for the church's karbonite (420-3 seed 836: 356, bank
+  mean 26 K; 420-1: 138; 421-3: 43; 424-1: 45), and 1,119 idle with an enemy attacker within r2 100 (422-3: 239,
+  421-2: 140, 423-3: 152). In 420-3, pioneers sent at r23-25 built their churches at r121, 145 and 147; the castles
+  spent the bank on 20 prophets answering wololo's harassers and on pilgrims at 40 K. In r76-100 the field's
+  pilgrims sit by more structures (StoneT2000 7-9 by r100 to our 1-5; mean r2 from a mined tile to its nearest
+  structure 1.5-1.9 to our 2-5).
