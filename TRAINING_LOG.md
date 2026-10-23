@@ -2806,7 +2806,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   loaded VM and cost a few robot turns per big game; no bot change. LEARNINGS 8 (never oversubscribe) applies to the
   replica's fidelity: 8 games on 8 vCPUs is a load of 10-12, since each game uses more than one core.
 
-## 2026-10-23 04:31 — h96's replica panel block 1 created (matches 426-431)
+## 2026-10-23 04:24 — h96's replica panel block 1 created (matches 426-431)
 - h96 = v7 + ATTACK_LATE 1001 (no all-in from round 900): its gate vs h87 ended inconclusive (21-19, net +1, t
   0.58, D 3; TRAINING_LOG 01:45), the field-aimed middle zone, so the replica panel decides. Field case (417-1, v6
   vs uvafan on 2046): from r900 every unit marched into a 126-prophet wall; 45 of our 48 units were lost by r1000
