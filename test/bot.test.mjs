@@ -538,6 +538,33 @@ test('struct: CHAIN_GUARD lets the guard quota past the chain reserve, not the a
   } finally { [CFG.CHAIN_GUARD, CFG.SERVE_MOVES] = saved; }
 });
 
+test('struct: ECON_RICH builds the peacetime army before ECON_UNTIL from the bank past it and the reserves only', () => {
+  const saved = [CFG.ECON_RICH, CFG.SERVE_MOVES];
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    CFG.SERVE_MOVES = 1;   // every served depot is in sight and staffed below: the economy has nothing to build
+    let id = 4100;
+    for (let y = castle.y - 2; y <= castle.y + 2; y++) for (let x = castle.x - 2; x <= castle.x + 2; x++)
+      if (x >= 0 && y >= 0 && x < n && y < n && (g.karbonite_map[y][x] || g.fuel_map[y][x]) && !g.robots.some(q => q.x === x && q.y === y))
+        g.robots.push({ id: id++, team: 0, unit: S.PILGRIM, x, y, turn: 3, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const turn1 = (rich, k) => {
+      CFG.ECON_RICH = rich; castle.turn = 50;   // a castle's round is its turn: before ECON_UNTIL
+      const all = g.robots;
+      g.robots = all.filter(r => d2(r.x, r.y, castle.x, castle.y) <= 100);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round: 50, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = k; w.fuel = 2000;
+      return castleTurn(B);
+    };
+    assert.ok(CFG.ECON_UNTIL > 50, 'v7 values');
+    const reserve = CFG.DEF_RESERVE_K + CFG.PEACE_RESERVE_K;   // no pioneer out or due, no chain yet
+    assert.strictEqual(turn1(0, 600), null);                                                  // default: no army before ECON_UNTIL
+    assert.ok([S.CRUSADER, S.PROPHET, S.PREACHER].includes((turn1(100, 600) || {}).u));       // a rich bank builds one
+    assert.strictEqual(turn1(100, 100 + reserve), null);                                      // at the threshold: waits
+  } finally { [CFG.ECON_RICH, CFG.SERVE_MOVES] = saved; }
+});
+
 testPreV7('struct: PEACE_RESERVE_K holds karbonite back from the peacetime army, not from pilgrims or a threat response', () => {
   const saved = [CFG.PEACE_RESERVE_K, CFG.SERVE_MOVES];
   try {

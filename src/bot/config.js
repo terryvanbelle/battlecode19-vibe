@@ -60,6 +60,10 @@ export const CFG = {
   ECON_UNTIL: 100,           // >0: no peacetime army before this round (threat responses still build), so karbonite goes
                              // to pilgrims and church pioneers (replica seed 826 vs CometsTech, round 100: eigthbot 8
                              // churches, 47 pilgrims, no military; v3 3 churches, 21 pilgrims, 19 military)
+  ECON_RICH: 0,              // >0: ...except the bank past this much above the reserves, which builds the peacetime army
+                             // anyway (replica, v7's 18 games in 420-425: the bank held 245-658 K at r75 in 10 and
+                             // 315-863 at r100 in 10, army 0-3, while 1-2 enemy prophets by the centre held 4-8 of our
+                             // pioneers short of their sites; seed 2321: 535 K at r100, castle lost r214)
   MIL_FUEL_RESERVE: 300,     // peacetime military builds keep this much fuel back (movement and mining need it)
   MIL_FUEL_PER_UNIT: 10,     // ...plus this much per military unit we have (each needs fuel to shoot and move)
   FUEL_PER_KARB: 2.5,        // staff fuel depots while fuel < this x karbonite (and below FUEL_HIGH)

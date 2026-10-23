@@ -3146,3 +3146,25 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - h103 (ESCORT 2, ESCORT_UNIT 3) block 438-443, 9 of 18 games (438, 439, 440): gained 1 (bot1v43 seed 2591: v7 lost
   its castles at r214, h103 won at r758), lost 1 (botfinalsafe seed 203: v7 won at r1000, h103 lost at r939), net 0.
 - VM: h112's gate (...19n) running, then h113, h114, h115. Replica: 176 waiting (170 ranked); fetched 430, 438, 439.
+
+## 2026-10-23 09:31 — v7's field pioneers: 41 of 80 wasted, the first one fails 13 of 16; the bank idles r50-100; h116 (ECON_RICH)
+- Census of v7's 18 control games (420-425; scratch chain/clusters2.js, pioneers.js, replay.js timeline). Own-half
+  clusters we do not hold at r100 are mostly the **centre**: in 12 games the enemy holds an equidistant cluster
+  (king 9/9, 11/11, 12/12, 13/13, 22/22, 23/23 from the two castles) of 6-12 depots, the richest on the map; the
+  rest are far clusters nobody holds (836: four, k12-21 from us). Pioneers (newborn pilgrims radioed SIG.CHURCH) to
+  r150: 80 sent, 39 churched (launch to church median 16 rounds, 5-122), 21 killed, 20 never built. The first
+  pioneer (launched r12-17, the contested centre first by PLAN_CONTEST_FIRST) churched in 3 of 16 games; re-sends
+  after r90 (the cluster comes free 80 turns after launch) in 4 of 21. Seed 2321 (422-3, StoneT2000 bot1v43, we
+  blue, castle (33,9)): their church (19,16) and prophets at (21,14) and (18,15) by r30 cover every way out of our
+  pocket to the centre; pioneers #307, #3785, #1849, #2552 (r14-24) stood at (29-31,12-14), r2 65 from the prophet
+  (PILGRIM_SAFE_STEP), for ~90 rounds, neither mining nor moving; four more went the same way at r95-105.
+- The bank meanwhile: our karbonite at r75 245-658 in 10 of 18 games, at r100 315-863 in 10 (1653: 418 at r50, 658
+  at r75, 863 at r100), army 0-3 (ECON_UNTIL 100: no peacetime army before r100); at r125 the army is 15-43. The
+  economy had nothing left to buy (plan exhausted or blocked) and the karbonite waited 25-60 rounds.
+- **h116** = v7 + ECON_RICH 100 (new switch, default 0): before ECON_UNTIL the peacetime army still builds from the
+  bank past ECON_RICH + the reserves (190 K with no pioneer out, up to ~300 with every reserve), so the pilgrims and
+  pioneers keep first claim and only idle karbonite becomes units. Unit test (rich bank builds, at the threshold
+  waits, default never). Expectation for self-play: small (both sides' banks idle alike); the field effect is the
+  point (containment by 1-2 prophets in r20-100).
+- No-op: the defaults build out/v7chk13 (src with ECON_RICH) replays h87 vs h87 on 799 to 300 IDENTICAL, alone on the
+  driver; unit tests 125 node + 58 Python pass. dist/h116 = v7 + ECON_RICH 100 (1f518954affb).
