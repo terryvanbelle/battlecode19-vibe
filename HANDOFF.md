@@ -23,7 +23,7 @@
   04:38), the **h104** gate done (t 1.00, D 4, mechanism missed: to the replica panel, matches 432-437,
   submission 102; TRAINING_LOG 05:42), **h100**'s extension 2 done (...19h: cells 41-70; at 70 cells net +1, t 0.17, D 35; the D-24 look at 48 cells gave t 1.63, net +8: inconclusive; extension 3 = cells 71-100 queued as ...19k after h103, look at D 48; TRAINING_LOG 05:50). Everything after it
   is a stale v6 job; new jobs are named to sort ahead of them (after ...19k and before ...10055, e.g. ...19l; never a
-  longer name such as ...19ga, which the locale sort puts before ...19g). **h103**'s gate (...19j, after h107's;
+  longer name such as ...19ga, which the locale sort puts before ...19g). **h103**'s gate running (...19j;
   escorts for overdue pioneers; field case 419-2, IanCoolidge0's crusader squatters on 2644; TRAINING_LOG 05:07). **v7 on the replica**: measurement block 420-425 (created 03:27,
   progress/panels/v7-m1.json = h82-b1's maps, the same 6 opponents as 408-413 / 414-419), waiting in queue order (the
   spool_bump to the front was refused by the permission check; owner told); read v7 vs v6 and h82 per cell and rerun
