@@ -2234,7 +2234,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   h77: 8): criterion (1) holds. The 4 games vs h50 run. h70 (PEACE_RESERVE_K 60) and h67 (PIONEERS_TEAM 4) are
   superseded by h77's gate (their switches are among its four).
 
-## 2026-10-22 18:58 — run_game --no-kill and --fast-view: gate games about 2x faster than this morning
+## 2026-10-22 18:56 — run_game --no-kill and --fast-view: gate games about 2x faster than this morning
 - `--no-kill`: turns run without vm2's per-turn kill (vm2 starts a watchdog for every timed call); the chess clock
   still charges each turn, sandbox creation keeps --init-ms's bound, and batch.js kills a game past --game-cap
   (3600 s by default with --no-kill; unit test: a bot whose turn never returns is an error row after 3 s). Only for

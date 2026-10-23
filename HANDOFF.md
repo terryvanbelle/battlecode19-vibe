@@ -130,7 +130,7 @@
   vs h19 vs h6 (425 s at par 4); time audits and the replica use the engine path. Never time on the driver (LEARNINGS 13).
   Jobs from 18:45 2026-10-22 (and the replica's games since 01:46 UTC, saturn GALAXY_FAST_INIT) add `--fast-init`: each
   bundle compiled once per game for every robot sandbox; same replay byte for byte, 16% less wall time (TRAINING_LOG 18:46).
-  Jobs from 18:58 also add `--no-kill --fast-view` (no per-turn vm2 watchdog, batch.js caps a game at 3600 s; the view
+  Jobs from 18:56 also add `--no-kill --fast-view` (no per-turn vm2 watchdog, batch.js caps a game at 3600 s; the view
   over the vision square): the 300-round game 252 s -> 212 s -> 129 s, same replay. The replica keeps the kill.
 - VM work goes through the sequential job queue `tools/jobq.sh` (add/start/status) so batches never overlap. Beside
   a batch, at most one extra game process, under `flock ~/.bc-extra.lock` (LEARNINGS 8).
