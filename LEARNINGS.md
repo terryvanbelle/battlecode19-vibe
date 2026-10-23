@@ -150,3 +150,7 @@
    1.6 h lost per match). saturn now keeps every finished game until its message is acked and replays only the
    missing ones; the heap is 3 GB. Watch per-game RSS against the cap, not only the VM's free memory.
    (TRAINING_LOG 2026-10-22 23:31)
+27. **Stamp every log entry and report from the clock, never from a sense of elapsed time.** Over a long night the
+   agent's estimate of the hour ran ahead of the real one: TRAINING_LOG headings drifted from 8 to 47 minutes past
+   their own commit times in five hours, and HANDOFF quoted a state time still to come. Read `date` (PDT for the
+   owner) whenever a time is written. (TRAINING_LOG 2026-10-23 03:30)
