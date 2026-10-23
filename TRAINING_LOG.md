@@ -2759,3 +2759,26 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   replica panel. h103's escorts fired only on 2321, where they cost pace.
 - Clock correction: the headings 02:55 and 03:45 above ran ahead of the clock (their commits were at 02:41 and
   03:12 PDT, so the true times are at most those); this entry and later ones use `date`.
+
+## 2026-10-23 03:50 — h101 FAILED its mechanism; how the four strong bots beat us: prophet mass, and our attacks
+- Gate h101 (v7 + MELEE_BACK 2) vs h87, 20 cells of seed0 5000 (out/h101_h87.jsonl): 18-22; gained 4, lost 6, split
+  10, D 10, net -2, t -0.63. Mechanism (out/dlv_gate_h101.txt): melee lost unfired 1,611 vs 2,070 = 0.78 of h87's
+  (bar <= 0.75): **FAILED**, closed with no extension and no panel. Castles lost 39 vs 31, its falsifier's direction.
+- Composition census (scratch combat/comp.js: units by type every 100 rounds) of our replica games against wololo,
+  uvafan, IanCoolidge0 ~69ce88 and bot1v43 (v3-v6 and h82; our records 0-9, 0-9, 0-9, 2-10): all four mass
+  prophets: uvafan 300 at r400 on 1241 and 436-864 at r1000 on 1712; wololo 117 + 35 preachers at r200 on 826, 736
+  at r798 on 836; IanCoolidge0 143-202. Where the map allows, on 2-3x our pilgrims (r200: they 20-33 pilgrims and
+  3-7 churches, we 9-15 and 1-2). h82's games (408) had 1-3 military units at r100 (ECON_UNTIL 100); wololo had 5
+  and killed our lone castle on 2013 at r198 (414-1: r180).
+- A level economy lost too: uvafan on 2046 (411-1, 417-1) and 1653, both sides 7-9 pilgrims and no church all game.
+  417-1 by the hundred: r400 we 27 crusaders, 25 prophets, 12 preachers vs 63 prophets; r500 3 crusaders (the r450
+  march, MARCH_MASK 8); r500-900 our crusaders stay at 2-3 while built (each new one marches and dies) and our army
+  holds at ~45 while theirs grows 81 -> 126 prophets; from r900 (ATTACK_LATE) everything marches. r1000: we 5
+  crusaders and 1 prophet, they 71 crusaders (their endgame build) and 109 prophets; health 680 vs 5,470.
+- v7's own economy (h87 vs h87 to r200, --det): on 1712 r100 8 churches and 31 pilgrims (uvafan there: 5-6 and
+  31-38; v5-v6: 1-4 and 15-24); over the 20 gate maps of seed0 5000 it averages r100 2.5 churches and 12 pilgrims,
+  most maps being poorer. v7 has not met these bots yet (block 420-425).
+- Field proxy for the turtles: dist/turtle = v7 + MIL_ROTATION [4] + ATTACK_ROUND 1001 + ATTACK_LATE 1001 +
+  CHAIN_ROUND 0 (prophets only, never attacks). h104 = v7 + ATTACK_ROUND 1001 + ATTACK_LATE 1001 (holds; the endgame
+  crusader build stays; h16r, the turtle of h19, lost its gate at t -1.07 with castles lost 23 vs 6). Driver
+  diagnostics h87 and h104 vs turtle on 2046 to 1000 running.
