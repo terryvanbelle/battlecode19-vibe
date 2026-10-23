@@ -27,7 +27,8 @@
 // --fast-view  the engine's per-turn view of the map, computed over the robot's vision square instead of the whole map
 //              (see fastView), and the turn message written without the engine's JSON copies (see fastDump): the same
 //              view and the same text (with --fast-turn, rows out of sight travel as null and the turn script rebuilds
-//              them: the same object).
+//              them: the same object), and the game-over test between turns skips its scan of every robot while
+//              each team keeps a live castle (see fastOver): the same answer.
 // Prints one JSON line: {winner:"red"|"blue", win_condition, reason, rounds, seed, map:{w,castles}, teams:[...]}.
 'use strict';
 const fs = require('fs');
@@ -95,7 +96,7 @@ async function main() {
   if (a.det) Math.random = seededRandom(a.seed || 1);
   const Game = require(path.join(ENGINE, 'game'));
   const Coldbrew = require(path.join(ENGINE, 'runtime'));
-  if (a.fastView) { fastView(Game); fastDump(Game, !!a.fastTurn); }
+  if (a.fastView) { fastView(Game); fastDump(Game, !!a.fastTurn); fastOver(Game); }
   const [red, blue] = await Promise.all([loadBot(a.red), loadBot(a.blue)]);
 
   const seed = a.seed === 0 ? Math.floor(Math.random() * Math.pow(2, 31)) : a.seed;
@@ -306,6 +307,30 @@ function fastView(Game) {
   };
 }
 
+// The loop asks game.js isOver before every robot's turn, and it counts every robot's health, castles and init
+// state: 4% of a game. While the round is below MAX_ROUNDS and each team has a castle that is initialized with a hook
+// (both set once; a robot leaves the list only through _deleteRobot), every branch of it is false and it draws no
+// randomness (and an engine verdict once given stands), so fastOver answers false from a cached castle per team and
+// asks the engine otherwise.
+function fastOver(Game) {
+  const isOver = Game.prototype.isOver, del = Game.prototype._deleteRobot;
+  Game.prototype._deleteRobot = function (robot) {
+    if (this.__live && (this.__live[0] === robot || this.__live[1] === robot)) this.__live = null;
+    return del.call(this, robot);
+  };
+  Game.prototype.isOver = function () {
+    if (this.round < SPECS.MAX_ROUNDS && this.win_condition === undefined) {
+      if (!this.__live) {
+        const live = [null, null];
+        for (const r of this.robots) if (r.unit === SPECS.CASTLE && r.initialized && r.hook && !live[r.team]) live[r.team] = r;
+        if (live[0] && live[1]) this.__live = live;
+      }
+      if (this.__live) return false;
+    }
+    return isOver.call(this);
+  };
+}
+
 // The engine's turn message (game.js getGameStateDump) copies every robot it shows by a JSON round trip (a castle shows
 // every robot, every turn), then stringifies a fresh map-sized view with the rest. fastDump writes the same text
 // directly: each shown robot's fields in their own order less the engine's deletions, and the view's rows straight
@@ -389,4 +414,4 @@ if (require.main === module) {
   }
   main().catch(e => { console.error(String(e && e.stack || e)); process.exit(2); });
 }
-module.exports = { setLimits, parseArgs, fastTurn, fastInit, fastView, fastDump, loadLimit, netIsolated, TURN_SCRIPT };
+module.exports = { setLimits, parseArgs, fastTurn, fastInit, fastView, fastDump, fastOver, loadLimit, netIsolated, TURN_SCRIPT };

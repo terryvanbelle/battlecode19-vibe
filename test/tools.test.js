@@ -393,6 +393,30 @@ test('run_game --fast-view: fastDump writes the engine\'s turn message for every
     [true, true, true, true, true, 0]);
 });
 
+test('run_game --fast-view: fastOver answers as the engine\'s isOver (castles killed, robots not initialized, last rounds)', () => {
+  const { execFileSync } = require('child_process');
+  const probe = `const Game = require('./engine/node_modules/bc19/game');
+    const rg = require('./tools/run_game.js'), slow = Game.prototype.isOver; rg.fastOver(Game); const fast = Game.prototype.isOver;
+    let n = 0, bad = 0, over = 0, short = 0, s = 1;
+    const rnd = () => (s = (s * 1103515245 + 12345) >>> 0) / 4294967296;
+    for (const seed of [2202, 826, 2591, 1822]) for (let trial = 0; trial < 150; trial++) {
+      const g = new Game(seed, 100, 20, false, false), m = g.shadow.length;
+      for (let i = 0; i < 12; i++) { const x = Math.floor(rnd() * m), y = Math.floor(rnd() * m);
+        if (g.map[y][x] && !g.shadow[y][x]) g.createItem(x, y, i % 2, i % 6); }
+      for (const r of g.robots) { r.initialized = rnd() < 0.85; r.hook = r.initialized && rnd() < 0.9 ? () => null : null; r.health = 1 + Math.floor(rnd() * 200); }
+      for (let step = 0; step < 6; step++) {
+        g.round = [1, 300, 998, 999, 1000, 1001][Math.floor(rnd() * 6)];
+        const f = fast.call(g); if (g.__live && f === false) short++; g.win_condition = undefined;
+        const e = slow.call(g); g.win_condition = undefined; g.winner = undefined;
+        n++; if (f !== e) bad++; if (e) over++;
+        if (g.robots.length && rnd() < 0.6) { const cs = g.robots.filter(r => r.unit === 0), pool = cs.length && rnd() < 0.7 ? cs : g.robots;
+          g._deleteRobot(pool[Math.floor(rnd() * pool.length)]); }
+      } }
+    console.log(JSON.stringify([n > 3000, over > 300, short > 300, bad]));`;
+  assert.deepStrictEqual(JSON.parse(execFileSync(process.execPath, ['-e', probe], { cwd: path.join(__dirname, '..'), encoding: 'utf8' })),
+    [true, true, true, 0]);
+});
+
 test('dlv: delivery numbers agree with the replay analysis and with each other', () => {
   const dlv = require('../tools/dlv');
   const buf = fs.readFileSync(path.join(FIX, 'rush_s2908_r80.bc19'));

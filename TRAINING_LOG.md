@@ -2345,3 +2345,16 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   view 0.125 ms a turn; compact rebuilt by a push loop 0.19 (slower: the first VM timing, 99.7 s CPU vs 91.5);
   by slice 0.061. VM, h50 self-play on 826 to 300, alternating: 91.5, 91.7, 95.7 s CPU (base) vs 86.5, 87.2
   (slice), the same replay each time. The replica does not pass --fast-turn, so it is unchanged.
+
+## 2026-10-22 20:37 — the game-over scan and the young generation: 13% less CPU, the same game
+- Profile: Game.isOver 3.8% of a 300-round game (it scans every robot each turn for a dead castle), GC 17.4%.
+- fastOver (run_game.js, part of --fast-view): while each team keeps a castle that is initialized and hooked, and
+  the round and verdict leave the game open, isOver is false without the scan; the engine's _deleteRobot drops the
+  cached pair. Unit test: 3,000+ random probe states on seeds 2202, 826, 2591, 1822 (initialized/hook flags, rounds
+  1 to 1001, robots deleted between calls) give the engine's answer every time.
+- batch.js with --no-kill runs node with --max-semi-space-size=64 (a turn is never killed there, so GC timing
+  cannot change a game; kill-mode batches stay stock).
+- VM, h50 self-play on 826 to 300, CPU s (wall s), all fast flags, load 12-14: base 88.6 (72.3), 88.6 (72.1);
+  fastOver 83.7 (69.2), 85.4 (70.0), 85.3 (68.9), 86.8 (69.6); + semi 32 MB 85.4 (66.8), 81.2 (62.1); + semi 64 MB
+  77.3 (56.3), 76.5 (55.7). Every replay the same as the base. Base to fastOver + 64 MB: -13% CPU, -23% wall.
+- The replica gets fastOver with its next runtime deploy (it passes --fast-view); it keeps the stock heap.

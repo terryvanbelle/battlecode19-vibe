@@ -7,6 +7,8 @@
 //
 // --no-kill passes run_game.js --no-kill (no per-turn vm2 kill); a game then has a wall-clock cap, --game-cap seconds
 // (default 3600 with --no-kill, none without), after which its process is killed and the cell is an error row.
+// With --no-kill a game also runs with V8's --max-semi-space-size=64: fewer scavenges, about 10% less CPU (TRAINING_LOG
+// 2026-10-22 20:37). A turn is never killed there, so GC timing cannot change a game; with kills it stays stock.
 //
 // One JSON row per game: {tag, a, b, a_hash, b_hash, seed, a_side, winner_is_a, reason, rounds, ...runner fields}.
 // Rows are keyed by (a_hash, b_hash, seed, a_side): the same cell is never played twice into one file.
@@ -84,7 +86,8 @@ async function main() {
       if (next >= jobs.length) { if (finished === total) resolve(); return; }
       const j = jobs[next++];
       const red = j.side === 'red' ? o.a : o.b, blue = j.side === 'red' ? o.b : o.a;
-      const args = ['-rn', node, path.join(ROOT, 'tools', 'run_game.js'), '--red', red, '--blue', blue, '--seed', String(j.seed)];
+      const args = ['-rn', node, ...(o.noKill ? ['--max-semi-space-size=64'] : []),
+        path.join(ROOT, 'tools', 'run_game.js'), '--red', red, '--blue', blue, '--seed', String(j.seed)];
       if (o.replays) args.push('--replay', path.join(o.replays, `${ah}_${bh}_${j.seed}_${j.side}.bc19`),
         '--errlog', path.join(o.replays, `${ah}_${bh}_${j.seed}_${j.side}.err.jsonl`));
       if (o.timescale) args.push('--timescale', o.timescale);

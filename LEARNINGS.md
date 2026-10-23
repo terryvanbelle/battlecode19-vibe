@@ -139,5 +139,6 @@
    compare before trusting it, and keep the engine's path wherever time is the thing measured; work done before the
    robot's clock starts (the turn message) changes no clock, so it can go on the replica too. Inside the sandbox,
    prefer bulk built-ins to loops: rebuilding the out-of-sight view rows with a push loop cost more CPU than parsing
-   them (0.19 vs 0.125 ms a turn); copying one row with slice cost 0.061, 6% of the game. (TRAINING_LOG
-   2026-10-22 18:46, 18:56, 19:50, 20:15)
+   them (0.19 vs 0.125 ms a turn); copying one row with slice cost 0.061, 6% of the game. The engine's own
+   per-turn checks are fair game too (its game-over scan of every robot, 4%), and so is the VM's young generation:
+   a 64 MB semi-space cut GC enough for 10% more. (TRAINING_LOG 2026-10-22 18:46, 18:56, 19:50, 20:15, 20:37)
