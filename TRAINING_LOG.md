@@ -3448,3 +3448,13 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   786). 2644: their crusaders (r3, r4) went ahead of the pilgrims and held the centre; our two later pioneers died
   at r65 and r72. On axis-rich maps the race is decided by the armed arrival. Panels in line: h103 (ESCORT 2
   crusaders) block 2 and h119 (PIONEER_CALL); h100 (ESCORT_FIRST 1 prophet) was rejected in self-play, t -0.29.
+
+## 2026-10-23 13:47 — h118 REJECTED (mechanism short); the time audit is running (...19ra)
+- Gate h118 (v7 + PIONEER_HOLD 64 + PIONEER_LEAN 3) vs h87, 20 cells, 40 games: 20 wins, gained 2, lost 2, split
+  16, D 4, net 0, t 0 (ends at 20 cells below D 12: read as is). Mechanism (out/st_h118.txt): pioneer idle turns
+  with no enemy attacker within r2 100, to r200, 207 vs h87's 266 = 0.78, bar 0.7 -> **REJECTED** (a mechanism
+  short of its bar does not go to the replica). The other items were met: churches 910 vs 828 (+10%), castles lost
+  58 vs 64. Lead kept: the hold-then-lean pair builds more churches without losing more castles; a stronger lean
+  (PIONEER_LEAN 1-2) is the next form if the economy line comes back to it.
+- Symcheck h118: mirror-identical to the first contest or combat on 1, 2, 3, 2321.
+- Replica 619 (h111 block, uvafan): 2-1 to uvafan (v7's 423 was 0-3). 620 still running.
