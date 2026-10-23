@@ -2120,3 +2120,20 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   ENDGAME_FUEL 900 + h76's chain (7265d5f3f823): symcheck, then gate vs h50. h72's gate is not run (h76 contains it).
 - Replica 406 (vibe19 1-2 StoneT2000 bot1v43, seeds 53, 203, 705) and 407 (botfinalsafe 3-0, seeds 799, 1706,
   2013, unranked: the chain maps) fetched; vibe19 is still submission 96 (v6, no chain). Study below when read.
+
+## 2026-10-22 17:10 — h78 rebuilt with homeDepot; delivery pre-registered (after h77's)
+- The first h78 build on 418 (blue vs h50, 450 rounds, driver): mines 4,744 vs h68's 4,150 in the same cell, depot
+  idle 16 vs 85; 4 pioneers still counted stuck (census counts a first mine 30+ turns after birth as stuck, so a
+  pioneer that gives up and then mines still counts). Its debug twin (scratch dbgsrc, the same switches; the replay
+  differs from the plain build's by clock effects): #1936 now mines at home by round ~280; the pioneers still idle
+  (#1226, #2547, #3645) give up contested sites (9,32) and (28,25) when every depot by their nearest structure
+  (37,14) is taken, so "nearest the nearest structure" is (28,22), under the enemy's army again.
+- homeDepot (pilgrim.js; used by PIONEER_HOME and PILGRIM_STALL): the free depot not given up with the fewest
+  4 x (king steps to the nearest structure we know) + king steps from us, karbonite first on ties. Unit test (a
+  depot 2 steps from a far structure beats one 3 from us and 7 from any structure). Node 107 pass, Python 54 OK.
+  Rebuilt h78 (e1eb254c09e2; v6p unchanged, c8cbc062db75): 418 mines 4,721 (the same as the first build).
+- h78 delivery pre-registered (VM job ...a3d577100015, after h77's, before h70's): no-op v6p vs h50 --det on 1828
+  byte-identical; symcheck h78 on 1, 2, 3, 418 to 300; h78 vs h50 on h61's cells 418, 1325, 2542, 2072 both sides
+  (8 full games); census --to 450. PASS needs all 3: (1) mine actions to 450 on h78's side >= 108% of h50's side,
+  summed over the 8 games; (2) churches built by 450, h78's side >= h50's; (3) h78 wins >= 4 of 8. Falsifier: (1),
+  the give-ups lead nowhere productive. On PASS: gate vs h50 (20 random cells, seed0 5000) after h76's.

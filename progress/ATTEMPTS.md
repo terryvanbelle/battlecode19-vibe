@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 63 other, 27 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected, 1 sparring partners (117 rows).
+Totals: 62 other, 28 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected, 1 sparring partners (117 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -121,7 +121,7 @@ Totals: 63 other, 27 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected,
 | `h75` | 2026-10-22 | h50 | v6 + endgame fuel (ENDGAME_FUEL=900) + h72's church line (CHAIN_ROUND=200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5]): replaces h66 |  |  |  |  | WITHDRAWN: replaced by h79 (h76's chain) |
 | `h76` | 2026-10-22 | h50 | h72 + a chainer within reach of a visible attacker neither starts its line nor waits (CHAIN_SAFE=1) + a church that does not know the round keeps the chain bank (CHAIN_KEEP=1) |  |  |  |  | DELIVERY PASSED 3/3 (no broken first link in 8 games, lines >= 5 churches in 7/8, wins 6/8); GATE QUEUED vs h50 (...a3d57710056, replacing h72's) |
 | `h77` | 2026-10-22 | h50 | v6 + economy first: no peacetime army before round 100 (ECON_UNTIL=100), 6 pioneers in flight (PIONEERS_TEAM=6), a 60 K peacetime reserve (PEACE_RESERVE_K=60), clusters by king steps per depot (PLAN_VALUE=10) |  |  |  |  | QUEUED (...a3d57710001, after h76's delivery): no-op v6o, symcheck, delivery vs h50 on 1375, 826, 1706, 70 both sides and vs rush4 (pilgrims r100 >= 150%, K by 200 >= 130%, wins >= 5/8, rush losses <= h50 + 2). Driver 1375: 33 vs 12 pilgrims at r100 |
-| `h78` | 2026-10-22 | h50 | h68 + a pioneer that gives its site up mines near home (PIONEER_HOME=1) + a pilgrim 25 turns no nearer its target depot gives it up for 50 turns (PILGRIM_STALL=25) |  |  |  |  | BUILT: driver 418 vs h50 (blue, 450 rounds): mines 4,744 vs h68's 4,150, depot-idle 16 vs 85; delivery being pre-registered |
+| `h78` | 2026-10-22 | h50 | h68 + a pioneer that gives its site up, and a pilgrim 25 turns no nearer its target depot (given up 50 turns), take a free depot on ground we hold (PIONEER_HOME=1, PILGRIM_STALL=25; pilgrim.js homeDepot) |  |  |  |  | QUEUED (...a3d577100015): no-op v6p, symcheck, delivery vs h50 on 418, 1325, 2542, 2072 both sides (mines to 450 >= 108% of h50's side, churches >= h50's, wins >= 4/8). Driver 418: mines 4,721 vs h68's 4,150 |
 | `h79` | 2026-10-22 | h50 | v6 + ENDGAME_FUEL 900 + h76's chain (CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5], CHAIN_KEEP 1, CHAIN_SAFE 1) |  |  |  |  | QUEUED (...a3d57717): symcheck, gate vs h50 |
 | `h7v5` | 2026-10-22 | h35 | v5 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | REBASED onto v6 as h7v6 (gate vs h35 withdrawn) |
 | `h7v6` | 2026-10-22 | h50 | v6 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | QUEUED: 40 games vs h50 |

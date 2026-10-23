@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 16:52 PDT)
+## State (2026-10-22 17:10 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -17,7 +17,9 @@
   replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 16:52:
   **h77**'s delivery running (...a3d57710001: v6 + ECON_UNTIL 100 + PIONEERS_TEAM 6 + PEACE_RESERVE_K 60 +
   PLAN_VALUE 10, wololo's expansion; no-op v6o, symcheck, vs h50 on 1375, 826, 1706, 70 both sides, h50 and h77 vs
-  rush4 on 20 one-castle maps, then timelines; TRAINING_LOG 16:12; on PASS its gate goes first), **h70** delivery
+  rush4 on 20 one-castle maps, then timelines; TRAINING_LOG 16:12; on PASS its gate goes first), **h78** delivery
+  (...a3d577100015: h68 + PIONEER_HOME 1 + PILGRIM_STALL 25 vs h50 on 418, 1325, 2542, 2072; TRAINING_LOG 17:10),
+  **h70** delivery
   (PEACE_RESERVE_K 60: no-op v6k, symcheck, 8 games vs h50 on 70, 520, 2591, 1592, ...a3d5771005; TRAINING_LOG 13:04),
   **h71** delivery (CHURCH_GUARD_D 8 preacher + PREACHER_SELF 4 + PREACHER_MIL 2.5: no-op v6l, symcheck, 8 games vs
   h50 on 2591, 1915, 2030, 2924, ...a3d57710055; TRAINING_LOG 13:20), then **h76**'s gate vs h50 (StoneT2000's long
@@ -94,7 +96,8 @@
   way at 16:12: its replays are byte-identical to h61's. Cause (debug build, TRAINING_LOG 16:29; LEARNINGS 24): the
   pioneer does give its site up, then takes the free depot nearest itself, under the same enemy guards, and hovers
   short of it for good. h78 = h68 + CFG.PIONEER_HOME 1 (that depot is chosen near its nearest structure) +
-  CFG.PILGRIM_STALL 25 (any pilgrim 25 turns no nearer its target gives it up for 50 turns): driver check running.
+  CFG.PILGRIM_STALL 25 (any pilgrim 25 turns no nearer its target gives it up for 50 turns), both choosing by
+  homeDepot (a free depot on ground we hold): delivery ...a3d577100015 after h77's (TRAINING_LOG 17:10).
   The longer rest after a pioneer is killed is h62 (above).
 - tools/run_game.js re-runs itself inside `unshare -rn` when it finds a network interface, refuses to run if it
   cannot, and records `net_isolated` in its JSON (unit test; driver diagnostics before 03:20 PDT 2026-10-22 were
