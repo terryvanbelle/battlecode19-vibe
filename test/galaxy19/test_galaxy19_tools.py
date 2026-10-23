@@ -133,8 +133,9 @@ class Games(unittest.TestCase):
         self.assertLessEqual(saturn.GAME_HEAP_MB * saturn.MAX_EXECUTE_SLOTS, 11 * 1024)  # within the unit's MemoryMax (12G)
         self.assertEqual(argv[2:], ['/r/tools/run_game.js', '--red', '/w/a.js', '--blue', '/w/b.js', '--seed', '7',
                                     '--replay', '/w/r.bc19', '--json', '/w/o.json', '--init-ms', str(saturn.INIT_MS)] +
-                         (['--fast-init'] if saturn.FAST_INIT else []))
+                         (['--fast-init'] if saturn.FAST_INIT else []) + (['--fast-view'] if saturn.FAST_VIEW else []))
         self.assertTrue(saturn.FAST_INIT)   # the default: compile each bundle once per game
+        self.assertTrue(saturn.FAST_VIEW)   # the default: the same turn message, built before the clock starts
         self.assertGreaterEqual(saturn.INIT_MS, 100)   # never stricter than the engine's own rule
 
 

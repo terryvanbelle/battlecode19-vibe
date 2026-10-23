@@ -2260,3 +2260,44 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   130.7 s): engine getGameStateDump 26% (the O(robots) scan per turn and the JSON of the view), our fastView 15% (a
   fresh 64x64 view per turn), the sandbox's JSON.parse of the view 11%, GC 9%, insulate 9% (castles copy every
   robot); our bot's code ~18%. The next harness win is the dump.
+
+## 2026-10-22 19:30 — replica 406/407: StoneT2000's chains take our castles from an unseen staging pilgrim; anti-chain delivery on h82 pre-registered
+- StoneT2000's bots beat vibe19 (v6) 2-1 and 3-0 (406, 407; earlier 385, 388 alike). Their economy: 13-25 churches by
+  round 280-316 against our 1-6. Of their 6 castle kills, 4 came with an enemy church line near the castle (scratch
+  chainloss.py: 3-14 enemy churches built within r2 100 of the castle in the 40 rounds before it fell). 406-3 (seed
+  53): blue banked 1,995 K by 290, then built 16 churches in a line to 2 tiles of our castle (9,11) at 295-299, each
+  spawning a preacher a turn; the castle fell at 301 with our army at 104 units (to their 51) mostly in the east.
+- The chainer stands still for a long time first (scratch loiter.js, whosees.js): 406-3, pilgrim #1812 at (13,23)
+  r162-300, 12 king steps from our castle, inside its own prophet lattice, at r2 90 of two of our idle crusaders
+  (vision 49): no unit of ours ever saw it. 407-3 (seed 2013): #1154 at (11,27) r117-276, seen by 1-3 of our pilgrims
+  at r2 64-82 for 140 rounds; v6 has HUNT 0, so nobody reported it.
+- StoneT2000's init failures on the replica (2,000-4,500 errors in some games: "Robot is not initialized" each turn
+  of a robot whose sandbox start timed out) predate --fast-init (matches 199-388 alike): their slow start under the
+  VM's load, which only hurts them.
+- Stacked candidates on h82 (the same src; dist/h82 rebuilds byte for byte): h83 = h82 + HUNT 2 (h56v6's hunt), h84
+  = h82 + STRIKE_R2 36 + PREACHER_SELF 4 + PREACHER_MIL 2.5 (h54v6's), h85 = h82 + PIONEER_FAST 1 (h64's), h86 = h82
+  + ESCORT 2 (h65's). h85 and h86 wait for h82's verdict.
+- **Anti-chain delivery pre-registered** (VM job ...a3d577100017, after h82's gate, before any game on its panel):
+  h82 (control), h83 and h84 each vs h76 (our chain, 6 castle kills in 7 lines vs h50) on 799, 1706, 2013, 2924 both
+  sides, full games; symcheck h83 and h84 on 1, 2, 3, 2013 to 300. PASS for X needs all 3: (1) castles X loses to h76
+  <= 50% of h82's, read only if h82 loses >= 4 (fewer: X fails, the panel cannot show a defence); (2) X's wins vs
+  h76 >= h82's; (3) X's K mined by r200 >= 90% of h82's over the 8 games. Falsifier: (1), the hunt or the strike
+  does not save castles from a chain. On PASS: gate X vs the incumbent. If h82's gate rejects, the job is superseded.
+- 19:40: h87 = h82 + h76's chain (CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5], KEEP 1, SAFE 1):
+  StoneT2000's weapon on h82's economy. **h87 delivery pre-registered** (VM job ...a3d577100018, after the anti-chain
+  delivery, before any game on its panel): symcheck h87 on 1, 2, 3, 799 to 300; h87 vs h82 on 799, 1706, 2013, 2924
+  both sides, full games; census --chain-min 5. PASS needs all 3: (1) a line of >= 5 churches on h87's side in >= 6
+  of 8; (2) h87 wins >= 5 of 8; (3) castles h87 loses <= h82's. Falsifier: (2). On PASS: gate h87 vs the incumbent.
+
+## 2026-10-22 19:50 — fastDump: the engine's turn message written directly; a gate game 129 s -> 82 s
+- The fast-path profile (19:06) put the engine's getGameStateDump at 26%, insulate 9%, the view 15%. fastDump
+  (run_game.js, part of --fast-view) writes the same text: each shown robot's fields in their own order less the
+  engine's deletions, the view's rows from the shadow with a cached row of -1s, the shuffle drawing Math.random as
+  the engine does. Unit tests: for every robot of two maps with ~400 robots placed (castles, signals of every
+  radius, turn-1 maps, trade offers), the engine's text and fastDump's are equal; the 40-round game replays byte for
+  byte. Micro-benchmark, 1,120 robots: 0.57 -> 0.16 ms per turn message.
+- VM, h50 self-play on 826, 300 rounds, all fast flags: 129 s -> 82 s, the same replay byte for byte (252 s this
+  morning). The driver at --timescale 2 freezes robots on the clock (685 s, 156 and 91 frozen turns), so its replays
+  are no identity check.
+- The message is built before the robot's clock starts (game.js enactTurn: dump, then start_time), so it changes no
+  clock: saturn passes --fast-view too (GALAXY_FAST_VIEW, default 1), to drain the replica queue (98 waiting).

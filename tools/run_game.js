@@ -25,7 +25,8 @@
 //              slow robot still freezes; a turn that never returns hangs the game, so batch.js caps each game's wall
 //              time. Only for batches of our own builds (strategy gates); time audits and the replica keep the kill.
 // --fast-view  the engine's per-turn view of the map, computed over the robot's vision square instead of the whole map
-//              (see fastView): the same view.
+//              (see fastView), and the turn message written without the engine's JSON copies (see fastDump): the same
+//              view and the same text.
 // Prints one JSON line: {winner:"red"|"blue", win_condition, reason, rounds, seed, map:{w,castles}, teams:[...]}.
 'use strict';
 const fs = require('fs');
@@ -93,7 +94,7 @@ async function main() {
   if (a.det) Math.random = seededRandom(a.seed || 1);
   const Game = require(path.join(ENGINE, 'game'));
   const Coldbrew = require(path.join(ENGINE, 'runtime'));
-  if (a.fastView) fastView(Game);
+  if (a.fastView) { fastView(Game); fastDump(Game); }
   const [red, blue] = await Promise.all([loadBot(a.red), loadBot(a.blue)]);
 
   const seed = a.seed === 0 ? Math.floor(Math.random() * Math.pow(2, 31)) : a.seed;
@@ -296,6 +297,67 @@ function fastView(Game) {
   };
 }
 
+// The engine's turn message (game.js getGameStateDump) copies every robot it shows by a JSON round trip (a castle shows
+// every robot, every turn), then stringifies a fresh map-sized view with the rest. fastDump writes the same text
+// directly: each shown robot's fields in their own order less the engine's deletions, and the view's rows straight
+// from the shadow (a row out of sight is one cached string of -1s). The shuffle draws Math.random as the engine does.
+function fastDump(Game) {
+  const quoted = new Map(), blank = new Map();
+  const q = k => { let s = quoted.get(k); if (s === undefined) quoted.set(k, s = JSON.stringify(k)); return s; };
+  const json = v => typeof v === 'number' ? (isFinite(v) ? String(v) : 'null') : JSON.stringify(v);
+  const put = (out, k, v) => { const s = json(v); if (s !== undefined) out.push(q(k) + ':' + s); };
+  const DROP = new Set(['initialized', 'hook', 'start_time', 'doing']), PRIVATE = new Set(['health', 'karbonite', 'fuel', 'time']);
+  Game.prototype.getGameStateDump = function (robot) {
+    const R = SPECS.UNITS[robot.unit]['VISION_RADIUS'], is_castle = robot.unit === SPECS.CASTLE;
+    const shown = [];
+    for (let i = 0; i < this.robots.length; i++) {
+      const o = this.robots[i], dx = robot.x - o.x, dy = robot.y - o.y, d = dx * dx + dy * dy;
+      const visible = d <= R, radioable = d <= o.signal_radius;
+      if (!visible && !radioable && (!is_castle || robot.team !== o.team)) continue;
+      const out = [];
+      let signal = false, radius = false;
+      for (const k of Object.keys(o)) {
+        if (DROP.has(k) || (robot.id !== o.id && PRIVATE.has(k))) continue;
+        if (!visible && (k === 'unit' || (!radioable && (k === 'x' || k === 'y')) || (!is_castle && k === 'team'))) continue;
+        if (k === 'castle_talk' && (!is_castle || robot.team !== o.team)) continue;
+        if (!radioable && k === 'signal') { signal = true; out.push('"signal":-1'); continue; }
+        if (!radioable && k === 'signal_radius') { radius = true; out.push('"signal_radius":-1'); continue; }
+        put(out, k, o[k]);
+      }
+      if (!radioable && !signal) out.push('"signal":-1');
+      if (!radioable && !radius) out.push('"signal_radius":-1');
+      shown.push('{' + out.join(',') + '}');
+    }
+    for (let i = shown.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1)), x = shown[i];
+      shown[i] = shown[j]; shown[j] = x;
+    }
+    const h = this.shadow.length, w = this.shadow[0].length, k = Math.floor(Math.sqrt(R)), rows = Array(h);
+    let none = blank.get(w);
+    if (none === undefined) blank.set(w, none = '[' + Array(w).fill(-1).join(',') + ']');
+    for (let r = 0; r < h; r++) {
+      if (r < robot.y - k || r > robot.y + k) { rows[r] = none; continue; }
+      const dy = robot.y - r, row = this.shadow[r], cells = Array(w);
+      for (let c = 0; c < w; c++) {
+        const dx = robot.x - c;
+        const s = dx * dx + dy * dy <= R ? json(row[c]) : '-1';
+        cells[c] = s === undefined ? 'null' : s;
+      }
+      rows[r] = '[' + cells.join(',') + ']';
+    }
+    const out = [];
+    put(out, 'id', robot.id);
+    out.push('"shadow":[' + rows.join(',') + ']', '"visible":[' + shown.join(',') + ']');
+    put(out, 'map', robot.turn === 1 ? this.map : [[0], [0]]);
+    put(out, 'karbonite_map', robot.turn === 1 ? this.karbonite_map : [[0], [0]]);
+    put(out, 'fuel_map', robot.turn === 1 ? this.fuel_map : [[0], [0]]);
+    put(out, 'fuel', this.fuel[robot.team]);
+    put(out, 'karbonite', this.karbonite[robot.team]);
+    put(out, 'last_offer', robot.unit === SPECS.CASTLE ? this.last_offer : null);
+    return 'robot._do_turn({' + out.join(',') + '});';
+  };
+}
+
 // Bot code runs only without network (CLAUDE.md rule 6). batch.js starts every game inside `unshare -rn`; a direct
 // call outside a network namespace re-runs itself there, and refuses to run if it cannot.
 // A sandbox that forbids netlink sockets cannot list addresses (systemd RestrictAddressFamilies, the replica's saturn
@@ -317,4 +379,4 @@ if (require.main === module) {
   }
   main().catch(e => { console.error(String(e && e.stack || e)); process.exit(2); });
 }
-module.exports = { setLimits, parseArgs, fastTurn, fastInit, fastView, loadLimit, netIsolated };
+module.exports = { setLimits, parseArgs, fastTurn, fastInit, fastView, fastDump, loadLimit, netIsolated };

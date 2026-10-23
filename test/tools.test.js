@@ -370,6 +370,26 @@ test('run_game --fast-view: the engine\'s view of every unit at every tile, and 
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('run_game --fast-view: fastDump writes the engine\'s turn message for every robot, byte for byte', () => {
+  const { execFileSync } = require('child_process');
+  const probe = `const Game = require('./engine/node_modules/bc19/game');
+    const slow = Game.prototype.getGameStateDump; require('./tools/run_game.js').fastDump(Game); const fast = Game.prototype.getGameStateDump;
+    let n = 0, bad = 0, castles = 0, signals = 0, maps = 0;
+    for (const seed of [2202, 826]) { const g = new Game(seed, 100, 20, false, false), m = g.shadow.length;
+      let s = seed; const rnd = () => (s = (s * 1103515245 + 12345) >>> 0) / 4294967296;
+      g.last_offer = [[3, -5], [0, 7]];
+      for (let i = 0; i < 400; i++) { const x = Math.floor(rnd() * m), y = Math.floor(rnd() * m);
+        if (!g.map[y][x] || g.shadow[y][x] > 0) continue;
+        const r = g.createItem(x, y, i % 2, i % 6); r.signal = i * 37 % 65536; r.signal_radius = [0, 4, 100, 2000, 8000][i % 5];
+        r.castle_talk = i % 256; r.turn = i % 7 ? 9 : 1; r.health = 1 + i % 50; r.karbonite = i % 20; r.fuel = i % 100; }
+      for (const r of g.robots) { let t = 7; const save = Math.random; Math.random = () => (t = (t * 69069 + 1) >>> 0) / 4294967296;
+        const a = slow.call(g, r); t = 7; const b = fast.call(g, r); Math.random = save;
+        n++; if (a !== b) bad++; if (r.unit === 0) castles++; if (a.includes('"signal_radius":8000')) signals++; if (r.turn === 1) maps++; } }
+    console.log(JSON.stringify([n > 300, castles > 10, signals > 100, maps > 20, bad]));`;
+  assert.deepStrictEqual(JSON.parse(execFileSync(process.execPath, ['-e', probe], { cwd: path.join(__dirname, '..'), encoding: 'utf8' })),
+    [true, true, true, true, 0]);
+});
+
 test('dlv: delivery numbers agree with the replay analysis and with each other', () => {
   const dlv = require('../tools/dlv');
   const buf = fs.readFileSync(path.join(FIX, 'rush_s2908_r80.bc19'));

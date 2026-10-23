@@ -18,8 +18,11 @@
   **h78** delivery running (...a3d577100015: h68 + PIONEER_HOME 1 + PILGRIM_STALL 25 vs h50 on 418, 1325, 2542, 2072;
   TRAINING_LOG 17:10), **h82**'s gate (...a3d577100016: h77 + DEF_RESERVE_K 30 = v6 + ECON_UNTIL 100 + PIONEERS_TEAM 6
   + PEACE_RESERVE_K 60 + PLAN_VALUE 10 + DEF_RESERVE_K 30, wololo's expansion with a preacher's karbonite kept for a
-  rush; delivery PASSED 19:06: 4/4 wins, K by r200 169%, rush4 castle losses 0 of 40; it replaced h77's gate),
-  **h64**'s gate (PIONEER_FAST vs h50, renamed ...a3d5771001 and moved up at 17:21: replica losses are economy
+  rush; delivery PASSED 19:06: 4/4 wins, K by r200 169%, rush4 castle losses 0 of 40; it replaced h77's gate), the
+  **anti-chain delivery on h82** (...a3d577100017: h82, h83 = h82 + HUNT 2, h84 = h82 + STRIKE_R2 36 + PREACHER_SELF 4
+  + PREACHER_MIL 2.5, each vs h76 on 799, 1706, 2013, 2924 both sides; TRAINING_LOG 19:30: StoneT2000's chains take
+  our castles on the replica; superseded if h82's gate rejects), the **h87 delivery** (...a3d577100018: h87 = h82 +
+  h76's chain vs h82 on the same four maps; TRAINING_LOG 19:40), **h64**'s gate (PIONEER_FAST vs h50, renamed ...a3d5771001 and moved up at 17:21: replica losses are economy
   first, and 391-1 is a lost pioneer race), **h71** delivery (CHURCH_GUARD_D 8 preacher + PREACHER_SELF 4 + PREACHER_MIL 2.5: no-op v6l, symcheck, 8 games vs
   h50 on 2591, 1915, 2030, 2924, ...a3d57710055; TRAINING_LOG 13:20), then **h76**'s gate vs h50 (StoneT2000's long
   church line: h72 = CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5], delivery PASSED 14:41; h76 = h72 +
@@ -40,6 +43,8 @@
   (deliveries failed), h25s and h26 (replaced by h29, h28), h30 (by h31) withdrawn. Built, not queued: h32.
   Superseded 18:43 by h77 (their switches are among its four): h70's delivery and h67's gate, not run. Superseded
   19:06 by h82 (h77 + DEF_RESERVE_K 30, delivery PASSED): h77's gate, not run.
+  Built on h82, waiting for its verdict: h85 (h82 + PIONEER_FAST 1), h86 (h82 + ESCORT 2). When h82 is accepted the
+  queued v6 gates (h64, h76, h20v6, h15v6, h65, h79, h8v6, ...) are stale: rebase them on h82 or supersede them.
   Superseded job files are in ~/jobq/superseded.
 - The extra lane (retired 11:52; `tools/xbatch.js`, out/dlv_chain*.sh) ran the no-op checks, symchecks and
   deliveries of h21-h62; each result is in TRAINING_LOG. A failed delivery: move that gate's job to ~/jobq/superseded.

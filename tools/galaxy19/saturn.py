@@ -69,6 +69,9 @@ INIT_MS = int(os.environ.get('GALAXY_INIT_MS', '1000'))
 # run_game.js --fast-init: each bundle is compiled once per game instead of once per robot sandbox (no clock rule
 # changes: a sandbox's creation is bounded by INIT_MS, never by the bot's clock). Saves the VM ~40 ms of CPU per robot.
 FAST_INIT = os.environ.get('GALAXY_FAST_INIT', '1') == '1'
+# run_game.js --fast-view: the engine's per-turn view and turn message are built without its full-map scan and JSON
+# copies, the same text before the robot's clock starts (game.js enactTurn), so no clock changes.
+FAST_VIEW = os.environ.get('GALAXY_FAST_VIEW', '1') == '1'
 # per-team stats copied from run_game.js into match.json: errors and clock health (timeouts = vm2 script timeouts,
 # frozen = out of chess-clock time, slow_turns = turns over 20 ms of wall time) to watch CPU contention; init_robots
 # (robots whose sandbox failed to start) and err_kinds (the five commonest error kinds) tell a replica fault from a bot's
@@ -365,7 +368,7 @@ class Runtime:
     def game_argv(self, red, blue, seed, replay, out_json):
         return [self.node, f'--max-old-space-size={GAME_HEAP_MB}', self.run_game, '--red', red, '--blue', blue,
                 '--seed', str(seed), '--replay', replay, '--json', out_json] + (['--init-ms', str(INIT_MS)] if INIT_MS else []) + \
-            (['--fast-init'] if FAST_INIT else [])
+            (['--fast-init'] if FAST_INIT else []) + (['--fast-view'] if FAST_VIEW else [])
 
     def cmd(self, workdir, argv):
         return [*self.sandbox, workdir, *argv] if self.sandbox else list(argv)

@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 67 other, 25 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected, 1 sparring partners (119 rows).
+Totals: 69 other, 28 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected, 1 sparring partners (124 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -127,6 +127,11 @@ Totals: 67 other, 25 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected,
 | `h7v6` | 2026-10-22 | h50 | v6 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | QUEUED: 40 games vs h50 |
 | `h80` | 2026-10-22 | h50 | v6 + a lattice no preacher splash covers more than 2 tiles of (LATTICE_SPARSE=1: x + 2y a multiple of 5) + LATTICE_R=18 for room |  |  |  |  | BUILT, NOT QUEUED: driver h76 vs h80 on 1706 falls at 288 as h50 at 289 (economy and turn order decide 1706) |
 | `h82` | 2026-10-22 | h50 | h77 + a 30 K reserve for a threat response on every other spend (DEF_RESERVE_K=30) |  |  |  |  | GATE QUEUED (...a3d577100016, replacing h77 gate): delivery PASSED 19:06 (wins 4/4; K by r200 169%; rush4 castle losses 0 of 40, h50 6) |
+| `h83` | 2026-10-22 | h82 | h82 + pilgrims radio a loitering enemy pilgrim in our half to idle melee units (HUNT=2): the church-chain stager |  |  |  |  | QUEUED (...a3d577100017): anti-chain delivery vs h76 with h82 as control (castles lost <= 50% of h82s, wins >= h82s, K by r200 >= 90%) |
+| `h84` | 2026-10-22 | h82 | h82 + a structure that sees an enemy church within r2 36 builds a preacher toward it first, preacher splash scoring (STRIKE_R2=36, PREACHER_SELF=4, PREACHER_MIL=2.5) |  |  |  |  | QUEUED (...a3d577100017): anti-chain delivery vs h76 with h82 as control |
+| `h85` | 2026-10-22 | h82 | h82 + pioneers take full r2 4 steps whatever the fuel (PIONEER_FAST=1) |  |  |  |  | BUILT, NOT QUEUED: waits for h82s gate |
+| `h86` | 2026-10-22 | h82 | h82 + an escort for an overdue or lost pioneer (ESCORT=2) |  |  |  |  | BUILT, NOT QUEUED: waits for h82s gate |
+| `h87` | 2026-10-22 | h82 | h82 + h76's church chain from round 200 (CHAIN_ROUND=200, CHAIN_STAGE=15, CHAIN_END_R2=2, CHAIN_K=1000, CHAIN_F=3500, CHAIN_MIX=[5], CHAIN_KEEP=1, CHAIN_SAFE=1) |  |  |  |  | QUEUED (...a3d577100018): delivery vs h82 on 799, 1706, 2013, 2924 (lines >= 5 in 6/8, wins >= 5/8, castles lost <= h82s) |
 | `h8v5` | 2026-10-22 | h35 | v5 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8r |  |  |  | vs v5 31-17 | DELIVERY PASSED 3 of 3 vs h35: preachers built r900-1000 377 vs 9 (bar 3x), final health 136% (bar 120%), wins 7/8 (bar 5); gate moved up (par 2); gate vs h35: 20 cells D 4 net +4, below the first look (D 12): undecided; REBASED onto v6 as h8v6 |
 | `h8v6` | 2026-10-22 | h50 | v6 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8v5 |  |  |  |  | QUEUED: 40 games vs h50 |
 | `h9v5` | 2026-10-22 | h35 | v5 + church planning counts depots served by pilgrim moves (PLAN_SERVE_PILGRIM=1); rebased from h9r |  |  |  |  | REBASED onto v6 as h9v6 (gate vs h35 withdrawn) |

@@ -133,6 +133,9 @@
    runInContext took 43% and the engine's per-turn state dump 24%. Two shortcuts halved the game (252 s -> 129 s)
    with the same replay byte for byte: compile the bundle once for all robot sandboxes (vm2 recompiled 50 KB per
    robot, 43 ms each; `--fast-init`), and drop the per-turn kill in our own-build batches (vm2 starts a watchdog
-   thread per timed call, ~1.3 ms a turn on a loaded host; `--no-kill`, with a per-game wall cap instead). Check any
-   such shortcut with a --det replay compare before trusting it, and keep the engine's path wherever time is the
-   thing measured. (TRAINING_LOG 2026-10-22 18:46, 18:56)
+   thread per timed call, ~1.3 ms a turn on a loaded host; `--no-kill`, with a per-game wall cap instead). A second
+   profile then put the engine's turn message on top (a JSON round trip per robot shown, a fresh map-sized view):
+   writing the same text directly took the game to 82 s (`--fast-view`). Check any such shortcut with a --det replay
+   compare before trusting it, and keep the engine's path wherever time is the thing measured; work done before the
+   robot's clock starts (the turn message) changes no clock, so it can go on the replica too. (TRAINING_LOG
+   2026-10-22 18:46, 18:56, 19:50)
