@@ -2936,3 +2936,10 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   inconclusive (accept t >= 2, reject t <= 0). Next look when D first reaches 48. At 57 cells: D 27, net +5, t 0.96
   (the drift after the look is not a look; it is recorded only).
 - Extension 3 queued as VM job ...19k (after h103's gate): cells 71-100 of seed0 5000, tag h100h87z, same file.
+
+## 2026-10-23 06:12 — h100 extension 2 finished (70 cells): net +1, t 0.17; owner asked what was blocked
+- out/h100_h87.jsonl, 140 games (cells 1-70 of seed0 5000): 71-69; gained 18, lost 17, split 35, D 35, net +1,
+  t 0.17 (at 60 cells net +5, t 0.93; at 65 net +2, t 0.35). Not a look (D 35; the next is at D 48). Extension 3
+  (...19k, cells 71-100) stays queued behind h103's gate; at this drift the D-48 look will likely reject.
+- Owner (PROMPTS 22) asked what the permission check blocked overnight: the move of 21 stale v6 jobs from
+  ~/jobq/pending to ~/jobq/superseded, and the spool_bump of replica block 420-425 (no longer needed: queue 32).
