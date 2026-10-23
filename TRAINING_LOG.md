@@ -2153,3 +2153,14 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   round 45, then the first prophet duel is decided by the engine's turn order (red #14 kills its twin #1773 at
   (24,22) before it acts, round 46), so 1706 is a red map for every build. h80: built, not queued (no evidence; it
   needs a chain map where the lattice, not the economy, decides).
+
+## 2026-10-22 17:21 — replica losses are economy first; h64's gate moved up
+- Timelines (replay.js timeline) of the losses to uvafan (391), IanCoolidge0 (298) and awesomelemonade (394): K mined
+  by round 200, ours vs theirs: 2591 308 vs 964; 1241 2,064 vs 4,172; 70 1,968 vs 2,820 and 1,920 vs 3,368; 836
+  2,950 vs 4,188; 2965 672 vs 930; 1915 504 vs 930; 520 2,130 vs 2,270; 1592 1,376 vs 1,414. Behind by 30% or more in
+  7 of 9; with 403 (wololo, 3 of 3), the economy gap is the common thread, not the fights.
+- 391-1 (seed 2591, one castle each, left-right mirror): uvafan's 4th unit (#851, round 4) sprints at r2 4 and
+  churches the rich centre-top cluster (16,5) at round 13, with a prophet built the same turn and 9 pilgrims by round
+  56. Ours (#977, round 3) walks 1 tile a turn and stops at (17,13), 8 tiles short, at round 20; home has one
+  karbonite depot, so we mine 156 K by round 100 and build a unit every ~40 rounds. h64 (PIONEER_FAST) is this fix:
+  its gate (job renamed ...a3d5771001) now runs right after h78's delivery, before h70's and h71's.

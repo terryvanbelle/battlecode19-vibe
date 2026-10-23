@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 17:10 PDT)
+## State (2026-10-22 17:21 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -19,13 +19,13 @@
   PLAN_VALUE 10, wololo's expansion; no-op v6o, symcheck, vs h50 on 1375, 826, 1706, 70 both sides, h50 and h77 vs
   rush4 on 20 one-castle maps, then timelines; TRAINING_LOG 16:12; on PASS its gate goes first), **h78** delivery
   (...a3d577100015: h68 + PIONEER_HOME 1 + PILGRIM_STALL 25 vs h50 on 418, 1325, 2542, 2072; TRAINING_LOG 17:10),
-  **h70** delivery
+  **h64**'s gate (PIONEER_FAST vs h50, renamed ...a3d5771001 and moved up at 17:21: replica losses are economy
+  first, and 391-1 is a lost pioneer race), **h70** delivery
   (PEACE_RESERVE_K 60: no-op v6k, symcheck, 8 games vs h50 on 70, 520, 2591, 1592, ...a3d5771005; TRAINING_LOG 13:04),
   **h71** delivery (CHURCH_GUARD_D 8 preacher + PREACHER_SELF 4 + PREACHER_MIL 2.5: no-op v6l, symcheck, 8 games vs
   h50 on 2591, 1915, 2030, 2924, ...a3d57710055; TRAINING_LOG 13:20), then **h76**'s gate vs h50 (StoneT2000's long
   church line: h72 = CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5], delivery PASSED 14:41; h76 = h72 +
   CHAIN_KEEP 1 + CHAIN_SAFE 1, delivery PASSED 3/3 at 16:52; 20 random cells, ...a3d57710056, h72's gate not run),
-  **h64** (PIONEER_FAST, gate vs h50, ...a3d5771006: moved up 13:08, replica 391-1 is a second case, TRAINING_LOG 13:08),
   **h20v6** (DEF_RESERVE_K 30, the answer to CS554's rush: delivery h20v6 vs bots/rush4 on 20 poor one-castle
   maps at 200 rounds against h50's line from h77's job, then its gate vs h50, ...a3d577101; TRAINING_LOG 10:47), **h15v6** (MIL_ROTATION null, ~75%
   prophets: the replica's prophet-lattice duels, TRAINING_LOG 12:50; ...a3d577102), **h67** (PIONEERS_TEAM 4: a lone
