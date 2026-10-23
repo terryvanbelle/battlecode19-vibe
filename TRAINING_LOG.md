@@ -3409,7 +3409,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - CHAIN_FAILS (default 0): a chainer that fires talks CT.CHAINFIRE (78) for one turn; castles count the fires
   since the last enemy castle reported destroyed (CT.DEAD); at CHAIN_FAILS they launch no more lines and their
   peacetime army stops leaving CHAIN_K in the bank (churches keep theirs; the bank is shared). A later kill resets
-  the count. From the 12:3x chain census (uvafan: 9 lines, no kill). Unit tests 134 node + 58 Python pass; no-op
+  the count. From the 12:41 chain census (uvafan: 9 lines, no kill). Unit tests 134 node + 58 Python pass; no-op
   out/v7chk19 IDENTICAL alone. h123 = v7 + CHAIN_FAILS 2, sha 0e0c30f2f808.
 - Delivery (driver, one game at a time, seed 2046 to r1000, red vs h87): h87 red lines r352 and r575, no kill, then
   blue's 12-church line at r871 took both its castles (lost r927); h123 red the same two lines, then none, and held:
