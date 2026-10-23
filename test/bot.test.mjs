@@ -98,6 +98,71 @@ test('world: both teams see the same canonical board, own castles on top, enemie
   }
 });
 
+// The pre-2026-10-22 forms of detectSymmetry, World's per-tile transform and bfs, kept as references.
+function refSymmetry(pass, karb, fuel) {
+  const n = pass.length; let h = true, v = true;
+  for (let y = 0; y < n && (h || v); y++) {
+    const ry = n - 1 - y;
+    for (let x = 0; x < n; x++) {
+      if (h && (pass[y][x] !== pass[ry][x] || karb[y][x] !== karb[ry][x] || fuel[y][x] !== fuel[ry][x])) h = false;
+      const rx = n - 1 - x;
+      if (v && (pass[y][x] !== pass[y][rx] || karb[y][x] !== karb[y][rx] || fuel[y][x] !== fuel[y][rx])) v = false;
+    }
+  }
+  return h ? 'H' : v ? 'V' : 'H';
+}
+function refBfs(w, sources, offs) {
+  const n = w.n, d = new Int16Array(w.N).fill(-1), q = new Int16Array(w.N);
+  let h = 0, t = 0;
+  for (const [x, y] of sources) { if (x < 0 || y < 0 || x >= n || y >= n) continue; const i = y * n + x; if (w.pass[i] && d[i] < 0) { d[i] = 0; q[t++] = i; } }
+  while (h < t) {
+    const c = q[h++], x = c % n, y = (c - x) / n, nd = d[c] + 1;
+    for (const o of offs) {
+      const nx = x + o[0], ny = y + o[1];
+      if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
+      const k = ny * n + nx; if (d[k] < 0 && w.pass[k]) { d[k] = nd; q[t++] = k; }
+    }
+  }
+  return d;
+}
+
+test('world: the unrolled symmetry test, per-tile transform and bfs equal their reference forms', () => {
+  let maps = 0, fields = 0;
+  for (let seed = 1; seed <= 40; seed++) {
+    let g; try { g = new Game(seed, 100, 20, false, false); } catch (e) { continue; }
+    if (!g.robots.length) continue;
+    maps++;
+    assert.strictEqual(detectSymmetry(g.map, g.karbonite_map, g.fuel_map), refSymmetry(g.map, g.karbonite_map, g.fuel_map), 'seed ' + seed);
+    for (const team of [0, 1]) {
+      const r = g.robots.find(q => q.team === team), w = worldFor(g, r), n = w.n, T = makeTransform(w.sym, team, n);
+      for (let cy = 0; cy < n; cy++) for (let cx = 0; cx < n; cx++) {
+        const [ex, ey] = T.toE(cx, cy), i = cy * n + cx;
+        if (w.EX[i] !== ex || w.EY[i] !== ey || w.pass[i] !== (g.map[ey][ex] ? 1 : 0) || w.karb[i] !== (g.karbonite_map[ey][ex] ? 1 : 0) ||
+            w.fuelD[i] !== (g.fuel_map[ey][ex] ? 1 : 0)) assert.fail('seed ' + seed + ' team ' + team + ' tile ' + cx + ',' + cy);
+      }
+      for (const offs of [offsets(2), offsets(4), offsets(9)]) {
+        const src = [[w.me.x, w.me.y], [n - 1 - w.me.x, w.me.y], [-1, 3]];
+        assert.deepStrictEqual(bfs(w, src, offs), refBfs(w, src, offs)); fields++;
+        assert.deepStrictEqual(bfs(w, src, offs), refBfs(w, src, offs));   // the cached flat offsets give the same field
+      }
+    }
+  }
+  // Boards symmetric both ways, neither way, and odd sizes.
+  const rnd = rng(9);
+  for (let k = 0; k < 400; k++) {
+    const n = 3 + Math.floor(rnd() * 8), mk = () => Array.from({ length: n }, () => Array(n).fill(false));
+    const P = mk(), K = mk(), F = mk(), kind = k % 4;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const yy = kind & 1 ? Math.min(y, n - 1 - y) : y, xx = kind & 2 ? Math.min(x, n - 1 - x) : x;
+      const v = ((yy * 31 + xx * 17 + k) % 5);
+      P[y][x] = v !== 0; K[y][x] = v === 1; F[y][x] = v === 2;
+    }
+    if (rnd() < 0.3) { const y = Math.floor(rnd() * n), x = Math.floor(rnd() * n); P[y][x] = !P[y][x]; }
+    assert.strictEqual(detectSymmetry(P, K, F), refSymmetry(P, K, F), 'board ' + k);
+  }
+  assert.ok(maps >= 30 && fields >= 180, maps + ' maps ' + fields + ' fields');
+});
+
 test('mapinfo: clusters partition depots, sites are free tiles, bfs counts moves', () => {
   const g = new Game(2, 100, 20, false, false), w = worldFor(g, g.robots[0]), n = w.n;
   const deps = depots(w), cs = clusters(w, deps, 10);

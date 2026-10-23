@@ -2406,3 +2406,21 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   arms (408/414 wololo: 2644, 836, 2013; 409/415 botfinalsafe: 2740, 1706, 203; 410/416 bot1v43: 2591, 2321, 388;
   411/417 uvafan: 1653, 1712, 2046; 412/418 awesomelemonade: 1712, 2797, 2518; 413/419 IanCoolidge0: 1036, 203,
   2644); player order shuffled per match. All 12 bumped to the front (spool_bump). vibe19's active build is v6.
+
+## 2026-10-22 22:05 — a new robot's first turn: World build 4x faster, bfs on flat offsets; the same games
+- Basics: our replica games show a few clock overdraws (403-2: 4 frozen in 72,243 turns, ms_max 236; 391-1: 3;
+  406-3: 1 timeout). h82's gate errlogs (capped at 200 lines a team a game): 961 turns over 30 ms, 14 over 100;
+  256 of 315 crusader and 256 of 378 prophet slow turns were the unit's first or second turn.
+- Instrumented build (scratch copy; per-phase Date.now), h82 self-play on 826 (64x64), first turns only: mean 107.5
+  ms, of it the World constructor 53.1 (detectSymmetry over every tile pair twice, then a closure call and a
+  2-element array per tile for the frame transform) and the first bfs 34.0 (offsets read as arrays of arrays), all
+  in cold code in a fresh sandbox.
+- src: detectSymmetry compares each mirror pair once and stops a direction at its first mismatch; World writes
+  T.toE out per tile with no closure or array; bfs reads the offsets as two Int8Arrays cached on the offsets list.
+  New unit test: on the 40 first seeds' maps (both teams) EX, EY, pass, karb, fuel equal makeTransform's, bfs fields
+  equal the old bfs for king, r^2 4 and r^2 9 offsets, and detectSymmetry equals the old one on 400 synthetic boards
+  (symmetric both ways, either, neither, odd sizes). Unit tests 114 + 55.
+- Same driver, same game after: first-turn mean 45.3 ms (World 12.5, bfs 19.8), turns over 30 ms 188 -> 68.
+  dist/h82o (h82's cfg on this src, 1469e3753540) vs dist/h82, --det with a 50x clock and --no-kill (only bot logic
+  can differ; without them even h82 vs h82 differs on the driver, by clock freezes): 826 (H) self-play to 250, h82 vs
+  h50 and h82o vs h50 on 1375 (V) and 2591 (V) to 200: IDENTICAL replays. Wall 156.8 s -> 132.5 s on 826.

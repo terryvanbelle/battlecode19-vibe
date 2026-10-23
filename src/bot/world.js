@@ -14,15 +14,16 @@ import { STATS } from './specs.js';
 
 // 'H' if the map is mirror-symmetric across the horizontal midline (y -> n-1-y), else 'V' if across the vertical one;
 // 'H' when both hold (both images are then identical boards; castles follow the generator's choice, see castle.js).
+// Each mirror pair is compared once (rows y < n-1-y, columns x < n-1-x): a new robot's first turn runs cold code.
 export function detectSymmetry(pass, karb, fuel) {
   const n = pass.length; let h = true, v = true;
   for (let y = 0; y < n && (h || v); y++) {
-    const ry = n - 1 - y;
-    for (let x = 0; x < n; x++) {
-      if (h && (pass[y][x] !== pass[ry][x] || karb[y][x] !== karb[ry][x] || fuel[y][x] !== fuel[ry][x])) h = false;
-      const rx = n - 1 - x;
-      if (v && (pass[y][x] !== pass[y][rx] || karb[y][x] !== karb[y][rx] || fuel[y][x] !== fuel[y][rx])) v = false;
+    const ry = n - 1 - y, P = pass[y], K = karb[y], F = fuel[y];
+    if (h && y < ry) {
+      const P2 = pass[ry], K2 = karb[ry], F2 = fuel[ry];
+      for (let x = 0; x < n; x++) if (P[x] !== P2[x] || K[x] !== K2[x] || F[x] !== F2[x]) { h = false; break; }
     }
+    if (v) for (let x = 0, rx = n - 1; x < rx; x++, rx--) if (P[x] !== P[rx] || K[x] !== K[rx] || F[x] !== F[rx]) { v = false; break; }
   }
   return h ? 'H' : v ? 'V' : 'H';
 }
@@ -51,9 +52,11 @@ export class World {
     this.T = T;
     this.pass = new Uint8Array(n * n); this.karb = new Uint8Array(n * n); this.fuelD = new Uint8Array(n * n);
     this.EX = new Uint8Array(n * n); this.EY = new Uint8Array(n * n);
-    for (let cy = 0; cy < n; cy++) for (let cx = 0; cx < n; cx++) {
-      const [ex, ey] = T.toE(cx, cy), i = cy * n + cx;
-      this.EX[i] = ex; this.EY[i] = ey;
+    // T.toE written out (no closure or array per tile): H keeps x and flips y for blue; V swaps the axes.
+    const m = n - 1, H = this.sym === 'H', red = this.team === 0, EX = this.EX, EY = this.EY;
+    for (let cy = 0, i = 0; cy < n; cy++) for (let cx = 0; cx < n; cx++, i++) {
+      const ex = H ? cx : red ? cy : m - cy, ey = H ? (red ? cy : m - cy) : cx;
+      EX[i] = ex; EY[i] = ey;
       this.pass[i] = pass[ey][ex] ? 1 : 0; this.karb[i] = karb[ey][ex] ? 1 : 0; this.fuelD[i] = fuel[ey][ex] ? 1 : 0;
     }
   }

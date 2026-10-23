@@ -40,19 +40,26 @@ export function clusters(w, deps, link) {
 
 // BFS over passable tiles with a move set (offsets [dx,dy,r2]) from source tiles; counts moves. -1 = unreachable.
 export function bfs(w, sources, offs) {
-  const n = w.n, d = new Int16Array(w.N).fill(-1), q = new Int16Array(w.N);
+  const n = w.n, d = new Int16Array(w.N).fill(-1), q = new Int16Array(w.N), pass = w.pass;
   let h = 0, t = 0;
-  for (const [x, y] of sources) { if (x < 0 || y < 0 || x >= n || y >= n) continue; const i = y * n + x; if (w.pass[i] && d[i] < 0) { d[i] = 0; q[t++] = i; } }
-  const L = offs.length;
+  for (const [x, y] of sources) { if (x < 0 || y < 0 || x >= n || y >= n) continue; const i = y * n + x; if (pass[i] && d[i] < 0) { d[i] = 0; q[t++] = i; } }
+  const L = offs.length, DX = flatOffs(offs, 0), DY = flatOffs(offs, 1);
   while (h < t) {
     const c = q[h++], x = c % n, y = (c - x) / n, nd = d[c] + 1;
     for (let j = 0; j < L; j++) {
-      const nx = x + offs[j][0], ny = y + offs[j][1];
+      const nx = x + DX[j], ny = y + DY[j];
       if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
-      const k = ny * n + nx; if (d[k] < 0 && w.pass[k]) { d[k] = nd; q[t++] = k; }
+      const k = ny * n + nx; if (d[k] < 0 && pass[k]) { d[k] = nd; q[t++] = k; }
     }
   }
   return d;
+}
+
+// One coordinate of an offsets list as an Int8Array, kept on the list (offsets lists are built once per robot).
+function flatOffs(offs, c) {
+  const key = c ? '_dy' : '_dx';
+  if (!offs[key]) { const a = new Int8Array(offs.length); for (let j = 0; j < offs.length; j++) a[j] = offs[j][c]; offs[key] = a; }
+  return offs[key];
 }
 
 // Like bfs, but entering tile i costs cost(i) >= 1 moves (integer): a bucket-queue Dijkstra. Int32 distances.
