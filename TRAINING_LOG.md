@@ -3520,3 +3520,12 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   t -0.82. Mechanism missed: churches 766 vs 772 (bar 1.05x), castles lost 64 vs 62 -> **REJECTED**. 1036's added
   axis church was the exception: across the field of seeds the turn-3 plan plus the chains already church what
   is safe to church. Re-open: only with a defended expansion (an escort or a church line to the site).
+
+## 2026-10-23 16:20 — partner census queued (...19w); our panel blocks wait for the queue
+- Seven v7 candidates in a row rejected against h87 (h116, h118, h121, h123, h124, h125; h111 on the replica): the
+  gate opponent is v7 itself, which shares v7's blind spots. Job ...19w: v7 vs dist/turtle, dist/camp, dist/block
+  and bots/rush4, 10 cells (20 games) each, par 2 (out/pc_v7_*.jsonl). A partner v7 beats in nearly every game
+  cannot tell candidates apart; one that takes games off v7 is a candidate second gate opponent.
+- Replica: 66 waiting (all ranked field matches, falling about 20 an hour). Our blocks (h103 block 2, h112 and h119
+  block 1) go in under 30, as HANDOFF has it (the owner's < 30 answer, PROMPTS 18, was for the autoscrim; we hold
+  ours with it while the queue clears).
