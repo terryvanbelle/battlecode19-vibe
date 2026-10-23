@@ -2484,3 +2484,34 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   within 2-6 tiles of (33,16) without reaching its site or giving it up and died at r160; #451 (r27) likewise until
   r175. The castle built nothing from r27 to r95 with 155 K banked (ECON_UNTIL 100; both planned clusters had a
   pioneer out). h88's give-up and stall switches target this case; its gate vs h82 is running.
+
+## 2026-10-22 23:31 — replica: games ran out of heap; saturn now keeps a match's finished games across attempts
+- Replica queue at 23:00: 103 waiting (70 TRY, 33 QUE), all ranked benchmark matches created 2026-10-22 01:00 PDT; its
+  ratings are frozen behind them (a participation is rated only after the team's previous one). saturn's journal
+  since then: 133 acks, 259 nacks (214 in one burst at 09:xx PDT, exit 1, during the slot redeploy; 26 from the
+  three restarts at 18:46, 20:00 and 20:57 PDT, which re-ran 15 matches from their first game, up to 1.6 h of
+  games each; 17 time limits; 2 crashes). The crashes: match 227 game 2 "FATAL ERROR: Ineffective mark-compacts near
+  heap limit ... JavaScript heap out of memory" (exit -6, after 4,758 s), 404 (NielsKornerup v wololo) game 2 exit
+  -11 after 3,835 s, its 6th failed attempt. At 23:08 four of six replica games held 1.9-2.0 GB RSS under the 2 GB
+  heap cap, every one on seed 1712 or 2740 (our panel's 412/418 among them); the saturn unit used 12.3 of its 14 GB.
+  These games carry 300-800 robots a side (uvafan 405-507 prophets, awesomelemonade 802 units in 394-2), each robot a
+  vm2 sandbox. Near the cap V8 runs full GCs inside robots' turns and the chess clock charges them, so some of our
+  replica frozen turns and timeouts on big maps (2740: 17 frozen; 1712: 9 frozen + 2 timeouts) may be the host's.
+- saturn (deployed 23:30): a game an earlier attempt of the same message finished is kept in
+  $GALAXY_HOME/saturn/resume/<sha of report url + details> (row.json + replay; removed on ack or after 3 days) and
+  not replayed; per-game V8 heap 2048 -> 3072 MB, the unit's MemoryMax 14G -> 22G (VM 32 GB). Unit tests: a match
+  whose game 2 fails once replays only games 2-3 on retry, the archive holds all three, another match never reuses
+  them; kept games are checked for seed and sides; old directories are pruned. Before the restart a one-off script
+  (scratch seed_resume.py) matched each slot's A/B bundles to exactly one spooled message and moved the 6 finished
+  games (418-1, 227-1, 412-1, 404-1, 417-1, 417-2) into the cache, so the restart lost only the games in progress:
+  417 restarted at game 3, 404 / 412 / 418 / 227 at game 2, all six at --max-old-space-size=3072.
+- Census of enemy churches on our half of the mirror (61 replica games with vibe19, matches 199-414; scratch
+  halves.js): losses (41): the enemy had one there by r400 in 34, 51 churches by r200 and 253 by r400; ours on
+  theirs: 4. Wins (20): 5 games, 3 by r200, 22 by r400; ours 3. First such church: uvafan r13-133, IanCoolidge0
+  r24-318, wololo r49-76, StoneT2000 r24-615. Economy, 391-3 (seed 70, vs uvafan, we blue): r100 uvafan 27 pilgrims,
+  4 churches, mined 944 K / 5,320 F; us 13 pilgrims, 2 churches, 906 K / 3,200 F; r200 29 / 5 / 18,180 F vs 15 / 2 /
+  8,530 F. Its army passed ours after r150 and stayed bigger (230 vs 157 at r400; 672 vs 38 at r1000). The gap to the
+  top bots is pilgrims and churches, twice ours by r100, not the army.
+- Panel block 1 (h82 vs v6) so far: wololo cells 0, 0, 0; botfinalsafe 203: 0, 1706: 0, 2740: +1 (409 W by health,
+  415 L by health); bot1v43 388: +1, others 0; uvafan (411: 0-3), IanCoolidge0 (413: 0-3) wait for 417 and 419;
+  awesomelemonade for 412 and 418. Net +2 over 9 cells.

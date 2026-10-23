@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-22 22:45 PDT)
+## State (2026-10-22 23:31 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v6** (`bots/v6` = h50, ROSTER.tsv); frozen history v0-v6, sparring
   partner `bots/rush`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -125,8 +125,11 @@
   which had not played (`contest19.py scrim --vs NAME,...`). 199 lost 0-3 and 200 lost 1-2 (TRAINING_LOG 20:23).
   Matches 201 and 202 ended ERR at the old 1800 s game limit (no replays). **Replica throughput (owner, PROMPTS
   15-20; TRAINING_LOG 07:40):** saturn runs 6 execute slots (5th since 16:36 UTC, 6th since 03:57 UTC 2026-10-23, TRAINING_LOG 09:40, 20:58) with GALAXY_GAME_TIMEOUT 10800 s and a 64 MB semi-space per game; the
-  autoscrim is held while 30+ matches wait and fires at most once per 24 h (relay.py fire-jobs). Queue at 20:58 PDT:
-  116 waiting (180 at 09:40, 123 at 20:05). saturn passes run_game.js --fast-init since 01:46 UTC and --fast-view since 03:00 UTC
+  autoscrim is held while 30+ matches wait and fires at most once per 24 h (relay.py fire-jobs). Queue at 23:00 PDT:
+  103 waiting (116 at 20:58, 180 at 09:40), all ranked field matches created 01:00 PDT: every rating is frozen behind
+  them (a participation is rated only after the team's previous one). Since 23:30 PDT saturn keeps a match's finished
+  games across attempts (a crash or restart costs only the games in progress) and caps each game's heap at 3 GB, not
+  2 (big-map games crashed at 2 GB; TRAINING_LOG 23:31, LEARNINGS 26). saturn passes run_game.js --fast-init since 01:46 UTC and --fast-view since 03:00 UTC
   2026-10-23 (pre-clock work only, the same game byte for byte; README). **Watch the queue every check-in** (`python3 tools/galaxy19/field.py queue`: matches NEW/QUE/TRY,
   and what runs); while it is long, clearing it comes before local work (gates at par 2). The seven boosted field
   bots (StoneT2000 x2, uvafan, awesomelemonade, nthistle, jamesrayman HCN-bot, m-schier wololo; requests 158-178)

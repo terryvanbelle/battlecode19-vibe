@@ -130,7 +130,7 @@ class Games(unittest.TestCase):
         argv = rt.game_argv('/w/a.js', '/w/b.js', 7, '/w/r.bc19', '/w/o.json')
         self.assertEqual(argv[0], '/r/bin/node')
         self.assertEqual(argv[1], f'--max-old-space-size={saturn.GAME_HEAP_MB}')   # bounded memory per game
-        self.assertLessEqual(saturn.GAME_HEAP_MB * saturn.MAX_EXECUTE_SLOTS, 13 * 1024)  # within the unit's MemoryMax (14G)
+        self.assertLessEqual(saturn.GAME_HEAP_MB * saturn.MAX_EXECUTE_SLOTS, 21 * 1024)  # within the unit's MemoryMax (22G)
         semi = [f'--max-semi-space-size={saturn.GAME_SEMI_MB}'] if saturn.GAME_SEMI_MB else []
         self.assertEqual(argv[2:2 + len(semi)], semi)
         self.assertEqual(argv[2 + len(semi):], ['/r/tools/run_game.js', '--red', '/w/a.js', '--blue', '/w/b.js', '--seed', '7',
@@ -139,6 +139,94 @@ class Games(unittest.TestCase):
         self.assertTrue(saturn.FAST_INIT)   # the default: compile each bundle once per game
         self.assertTrue(saturn.FAST_VIEW)   # the default: the same turn message, built before the clock starts
         self.assertGreaterEqual(saturn.INIT_MS, 100)   # never stricter than the engine's own rule
+
+
+FAKE_GAME = """import json, os, sys
+red, blue, seed, replay, out, logf, failf = sys.argv[1:]
+with open(logf, 'a') as fh:
+    fh.write(seed + '\\n')
+if os.path.exists(failf) and open(failf).read().strip() == seed:
+    os.remove(failf)
+    sys.exit(3)
+open(replay, 'w').write('replay of seed ' + seed)
+json.dump({'winner': 'red' if int(seed) % 2 else 'blue', 'reason': 'castles', 'rounds': 100 + int(seed), 'teams': []},
+          open(out, 'w'))
+"""
+
+
+class FakeRuntime(saturn.Runtime):
+    """run_game.js stand-in: a python script that logs each seed it plays and fails once on the seed in failf."""
+
+    def __init__(self, d):
+        super().__init__(root=d, sandbox=[])
+        self.script, self.logf, self.failf = touch(d, 'fake_game.py', FAKE_GAME), os.path.join(d, 'played'), \
+            os.path.join(d, 'fail')
+
+    def game_argv(self, red, blue, seed, replay, out_json):
+        return [sys.executable, '-I', self.script, red, blue, str(seed), replay, out_json, self.logf, self.failf]
+
+    def played(self):
+        if not os.path.exists(self.logf):
+            return []
+        with open(self.logf) as fh:
+            return fh.read().split()
+
+
+class Resume(unittest.TestCase):
+    def payload(self, match):
+        b = 'bc19-replica-secure'
+        for key in ('a', 'b'):
+            saturn.storage.write_bytes(b, f'm{match}/{key}.zip', zbytes({'bundle.js': f'// {key}'}))
+        return {'metadata': {'report-url': f'https://x/api/compete/bc19/match/{match}/report/', 'task-type': 'execute'},
+                'details': {'maps': ['seed-1', 'seed-2', 'seed-3'], 'alternate-order': True,
+                            'replay': {'bucket': b, 'name': f'm{match}/replay.bc19'},
+                            'a': {'team-name': 'ta', 'binary': {'bucket': b, 'name': f'm{match}/a.zip'}},
+                            'b': {'team-name': 'tb', 'binary': {'bucket': b, 'name': f'm{match}/b.zip'}}}}
+
+    def test_a_retry_plays_only_the_missing_games(self):
+        from test_galaxy19 import FakeReporter
+        with tempfile.TemporaryDirectory() as d:
+            rt, rep = FakeRuntime(d), FakeReporter()
+            ex, p, w = saturn.Executor(runtime=rt, reporter=rep), self.payload(31), os.path.join(d, 'w')
+            touch(d, 'fail', '2')
+            self.assertFalse(ex.handle(p, w))                   # game 2 crashes: TRY, nack
+            self.assertEqual(rep.reports[-1]['invocation']['status'], 'TRY')
+            self.assertEqual(rt.played(), ['1', '2'])
+            self.assertTrue(ex.handle(p, w))                    # the retry keeps game 1
+            self.assertEqual(rt.played(), ['1', '2', '2', '3'])
+            self.assertEqual(rep.reports[-1]['scores'], [3, 0])  # odd seeds: red wins (A red on 1, 3); even: blue (A)
+            self.assertIn('Game 1/3: seed 1, finished by an earlier attempt -> ta (red) by castles in 101 rounds',
+                          rep.reports[-1]['invocation']['logs'])
+            with zipfile.ZipFile(io.BytesIO(saturn.storage.read_bytes('bc19-replica-secure', 'm31/replay.bc19'))) as z:
+                self.assertEqual(z.read('game-01-seed1.bc19'), b'replay of seed 1')
+                games = json.loads(z.read('match.json'))['games']
+                self.assertEqual([g['winner_team'] for g in games], ['ta', 'ta', 'ta'])
+            self.assertTrue(os.path.isdir(saturn.resume_dir(p)))
+            other = self.payload(32)                            # another match never reuses these games
+            self.assertNotEqual(saturn.resume_dir(other), saturn.resume_dir(p))
+            saturn.forget_games(p)                              # on ack
+            self.assertFalse(os.path.exists(saturn.resume_dir(p)))
+            self.assertTrue(ex.handle(p, w))                    # nothing kept: all three play again
+            self.assertEqual(rt.played()[4:], ['1', '2', '3'])
+            saturn.forget_games(p)
+
+    def test_kept_game_checks_seed_and_sides_and_prune_drops_old_dirs(self):
+        with tempfile.TemporaryDirectory() as d:
+            replay = touch(d, 'r.bc19', 'r')
+            g = os.path.join(d, 'k', 'game-01')
+            os.makedirs(os.path.dirname(g))
+            saturn.keep_game(g, {'seed': 5, 'red': 'A', 'blue': 'B'}, replay)
+            self.assertEqual(saturn.kept_game(g, 5, 'A', 'B')['seed'], 5)
+            self.assertIsNone(saturn.kept_game(g, 6, 'A', 'B'))
+            self.assertIsNone(saturn.kept_game(g, 5, 'B', 'A'))
+            os.remove(os.path.join(g, 'replay.bc19'))
+            self.assertIsNone(saturn.kept_game(g, 5, 'A', 'B'))
+        root = saturn.config.galaxy_home('saturn', 'resume')
+        os.makedirs(os.path.join(root, 'old'), exist_ok=True)
+        os.makedirs(os.path.join(root, 'new'), exist_ok=True)
+        os.utime(os.path.join(root, 'old'), (1, 1))
+        self.assertEqual(saturn.prune_resume(), 1)
+        self.assertEqual(sorted(os.listdir(root)), ['new'])
 
 
 class Field(unittest.TestCase):

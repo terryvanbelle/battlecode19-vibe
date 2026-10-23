@@ -25,7 +25,8 @@ Failures of the user's code are OK! with accepted=false; infrastructure failures
 
 Execute recipe: Hello world; Prepare scaffold; Download binary (A and B); Run match (one run_game.js process per map,
 sequentially, the 2019 contest clock: 100 ms initial + 20 ms per turn, no timescale; with alternate order, the odd
-games swap sides: A is red on games 1, 3, ... and blue on 2, 4, ...); Upload replay (a ZIP_STORED archive holding
+games swap sides: A is red on games 1, 3, ... and blue on 2, 4, ...; a game an earlier attempt of the same message
+finished is kept, not replayed: RESUME_DAYS); Upload replay (a ZIP_STORED archive holding
 game-NN-seed<seed>.bc19 per game plus match.json, at siarnaq's replay path <uuid>.bc19); Determine scores
 ([games A won, games B won]).
 
@@ -35,6 +36,7 @@ import argparse
 import base64
 import http.client
 import io
+import hashlib
 import json
 import logging
 import os
@@ -59,8 +61,11 @@ MAX_EXTRACTED = 64 * 1024 * 1024
 MAX_BUNDLE = 16 * 1024 * 1024
 MAX_EXECUTE_SLOTS = 6
 # V8 heap cap per game process (both bots share it: the engine's own memory check is disabled). A runaway bot then
-# ends its game (the match retries, then errors) instead of driving the VM into reclaim thrash.
-GAME_HEAP_MB = int(os.environ.get('GALAXY_GAME_HEAP_MB', '2048'))
+# ends its game (the match retries, then errors) instead of driving the VM into reclaim thrash. 3072 since 2026-10-22
+# (2048 before): big-map games of two full armies sat at 1.9-2.0 GB, match 227 died "Ineffective mark-compacts near
+# heap limit" in game 2 and 404 segfaulted in game 2; a game near the cap spends its robots' turns in full GCs, which
+# the chess clock charges to the robot.
+GAME_HEAP_MB = int(os.environ.get('GALAXY_GAME_HEAP_MB', '3072'))
 # V8 young generation per game (--max-semi-space-size, MB; 0 = node's default): fewer scavenges, about 8% less CPU
 # per game on this VM (TRAINING_LOG 2026-10-22 20:37). GC inside a turn is charged to that robot's clock, so this
 # only takes noise off the clock.
@@ -81,6 +86,10 @@ FAST_VIEW = os.environ.get('GALAXY_FAST_VIEW', '1') == '1'
 # (robots whose sandbox failed to start) and err_kinds (the five commonest error kinds) tell a replica fault from a bot's
 TEAM_KEYS = ('team', 'errors', 'frozen', 'timeouts', 'init_fail', 'init_robots', 'exceptions', 'err_kinds', 'units',
              'health', 'turns', 'ms_mean', 'ms_max', 'init_ms_max', 'slow_turns')
+# A match's finished games survive a failed or interrupted attempt (a crashed game, a saturn restart): the retry plays
+# only the games still missing. Kept per message under $GALAXY_HOME/saturn/resume until the message is acked; a
+# directory nobody acked (a message dropped from the spool) is removed after RESUME_DAYS.
+RESUME_DAYS = 3
 REVISION = 'bc19-replica tools/galaxy19/saturn.py'
 MAP_RE = re.compile(r'^seed-([1-9][0-9]{0,9})$')
 
@@ -96,6 +105,62 @@ def game_timeout():
 
 def nack_delay():
     return float(os.environ.get('GALAXY_NACK_DELAY') or 10)
+
+
+def resume_dir(payload):
+    """Where an execute message's finished games wait for its next attempt: one directory per (report url, details)."""
+    key = json.dumps([(payload.get('metadata') or {}).get('report-url'), payload.get('details')], sort_keys=True)
+    return config.galaxy_home('saturn', 'resume', hashlib.sha256(key.encode()).hexdigest()[:24])
+
+
+def forget_games(payload):
+    shutil.rmtree(resume_dir(payload), ignore_errors=True)
+
+
+def prune_resume(now=None, days=RESUME_DAYS):
+    root, n = config.galaxy_home('saturn', 'resume'), 0
+    for f in os.listdir(root) if os.path.isdir(root) else []:
+        p = os.path.join(root, f)
+        if os.path.getmtime(p) < (now or time.time()) - days * 86400:
+            shutil.rmtree(p, ignore_errors=True)
+            n += 1
+    return n
+
+
+def kept_game(gdir, seed, red, blue):
+    """The row of a game an earlier attempt finished in gdir (the same seed and sides), or None."""
+    try:
+        with open(os.path.join(gdir, 'row.json')) as fh:
+            row = json.load(fh)
+    except (OSError, ValueError):
+        return None
+    if (row.get('seed'), row.get('red'), row.get('blue')) != (seed, red, blue) or \
+            not os.path.isfile(os.path.join(gdir, 'replay.bc19')):
+        return None
+    return row
+
+
+def game_row(i, seed, red, blue, names, res, wall_s):
+    """match.json's record of game i (0-based) from run_game.js's result.json."""
+    win = {'red': red, 'blue': blue}.get(res.get('winner'))
+    return {'game': i + 1, 'seed': seed, 'map': f'seed-{seed}', 'red': red, 'blue': blue,
+            'red_team': names[red], 'blue_team': names[blue], 'winner_color': res.get('winner'),
+            'winner_label': win, 'winner_team': names.get(win), 'reason': res.get('reason'),
+            'rounds': res.get('rounds'), 'wall_s': round(wall_s, 1), 'file': f'game-{i + 1:02d}-seed{seed}.bc19',
+            'teams': [{k: v for k, v in tm.items() if k in TEAM_KEYS} for tm in res.get('teams') or []]}
+
+
+def keep_game(gdir, row, replay):
+    """Store a finished game for later attempts: written beside gdir, then renamed into place."""
+    tmp = gdir + '.tmp'
+    shutil.rmtree(tmp, ignore_errors=True)
+    os.makedirs(tmp)
+    shutil.copyfile(replay, os.path.join(tmp, 'replay.bc19'))
+    with open(os.path.join(tmp, 'row.json'), 'w') as fh:
+        json.dump(row, fh)
+    shutil.rmtree(gdir, ignore_errors=True)
+    os.replace(tmp, gdir)
+    return os.path.join(gdir, 'replay.bc19')
 
 
 class TaskFinished(Exception):
@@ -511,8 +576,16 @@ class Runners:
                 bundles[key] = p
 
         def run_match(t):
+            kept = resume_dir(task.payload)
             for i, seed in enumerate(seeds):
                 red, blue = sides(i, alternate)
+                kdir = os.path.join(kept, f'game-{i + 1:02d}')
+                row = kept_game(kdir, seed, red, blue)
+                if row is not None:
+                    results.append((row, os.path.join(kdir, 'replay.bc19')))
+                    t.debug(f'Game {i + 1}/{len(seeds)}: seed {seed}, finished by an earlier attempt -> '
+                            f'{row["winner_team"]} ({row["winner_color"]}) by {row["reason"]} in {row["rounds"]} rounds')
+                    continue
                 gdir = os.path.join(data, f'game-{i + 1:02d}')
                 os.makedirs(gdir)
                 replay = os.path.join(gdir, 'replay.bc19')
@@ -524,16 +597,9 @@ class Runners:
                 if rc != 0 or not os.path.isfile(out_json) or not os.path.isfile(replay):
                     t.debug(err[-2000:])
                     raise RuntimeError(f'game {i + 1} failed: exit status {rc}' + (' (time limit)' if rc == 124 else ''))
-                res = json.load(open(out_json))
-                win = {'red': red, 'blue': blue}.get(res.get('winner'))
-                row = {'game': i + 1, 'seed': seed, 'map': f'seed-{seed}', 'red': red, 'blue': blue,
-                       'red_team': names[red], 'blue_team': names[blue], 'winner_color': res.get('winner'),
-                       'winner_label': win, 'winner_team': names.get(win), 'reason': res.get('reason'),
-                       'rounds': res.get('rounds'), 'wall_s': round(time.time() - t0, 1),
-                       'file': f'game-{i + 1:02d}-seed{seed}.bc19',
-                       'teams': [{k: v for k, v in tm.items() if k in TEAM_KEYS}
-                                 for tm in res.get('teams') or []]}
-                results.append((row, replay))
+                with open(out_json) as fh:
+                    row = game_row(i, seed, red, blue, names, json.load(fh), time.time() - t0)
+                results.append((row, keep_game(kdir, row, replay)))
                 t.debug(f'  -> {row["winner_team"]} ({row["winner_color"]}) by {row["reason"]} in {row["rounds"]} '
                         f'rounds, {row["wall_s"]} s')
 
@@ -612,6 +678,7 @@ class Executor:
             if ok:
                 q.ack(msg_id)
                 shutil.rmtree(workdir, ignore_errors=True)     # disk is scarce: keep nothing once reported
+                forget_games(payload)
             else:
                 msg = dict(msg, delivery_attempt=int(msg.get('delivery_attempt') or 0) + 1)
                 q.nack(msg_id, msg, delay=0 if self.stop.is_set() else nack_delay())
@@ -622,6 +689,9 @@ class Executor:
             n = spool.topic_queue(topic).ensure().recover()
             if n:
                 log.info('returned %d unacknowledged %s message(s) to the queue', n, topic)
+        n = prune_resume()
+        if n:
+            log.info('removed %d finished-game director(ies) older than %d days', n, RESUME_DAYS)
         log.info('saturn: %d compile + %d execute slots; %s; relay %s', self.compile_slots, self.execute_slots,
                  self.runtime.describe(), config.relay_socket())
         threads = [threading.Thread(target=self.slot, args=(config.TOPIC_COMPILE, k), daemon=True)

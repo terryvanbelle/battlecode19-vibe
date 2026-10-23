@@ -142,3 +142,11 @@
    them (0.19 vs 0.125 ms a turn); copying one row with slice cost 0.061, 6% of the game. The engine's own
    per-turn checks are fair game too (its game-over scan of every robot, 4%), and so is the VM's young generation:
    a 64 MB semi-space cut GC enough for 10% more. (TRAINING_LOG 2026-10-22 18:46, 18:56, 19:50, 20:15, 20:37)
+26. **Size the game runner for the biggest games the field plays, and let its finished work survive its own crashes and
+   restarts.** The replica capped each game's V8 heap at 2 GB, sized from our own games; the top benchmark bots fill
+   big maps with 300-800 robots a side, each a vm2 sandbox, and those games sat at the cap: one died in GC ("heap out
+   of memory") and one segfaulted after an hour, and every game near the cap spends robots' turns in full GCs that the
+   chess clock charges to them. Each failure, and each of three deploy restarts, re-ran its match from game 1 (up to
+   1.6 h lost per match). saturn now keeps every finished game until its message is acked and replays only the
+   missing ones; the heap is 3 GB. Watch per-game RSS against the cap, not only the VM's free memory.
+   (TRAINING_LOG 2026-10-22 23:31)
