@@ -52,7 +52,10 @@ python3 tools/galaxy19/contest19.py matches
 python3 tools/galaxy19/contest19.py fetch --new  # match archives -> ~/projects/vibe/bc19-galaxy-replays/<id>/
 python3 tools/galaxy19/contest19.py results
 
-# our matches first (the field's matches against each other get the spare cycles); on the VM, as root
+# our matches first (the field's matches against each other get the spare cycles): from the driver, owner-approved
+# for unattended use (PROMPTS 27); it runs the next line on the VM, digit ids or vibe19 only, never --drop
+tools/bump_ours.sh [--dry-run] (--ours | 616 617 ...)
+# on the VM, as root
 sudo python3 -I tools/galaxy19/spool_bump.py --match 199,200 [--team vibe19] [--dry-run]
 
 # dropping a team from the ladder (a bot whose games hold the slots): its waiting matches go to dead/, are marked

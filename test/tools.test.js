@@ -555,3 +555,22 @@ test('move_stale.sh: moves only named pending jobs to superseded and back; refus
     assert.deepStrictEqual([ls('pending'), ls('running')], [['a1.sh', 'b2.sh'], ['c3.sh']]);
   } finally { fs.rmSync(q, { recursive: true, force: true }); }
 });
+
+test('bump_ours.sh: reorders only, by digit ids or our team; refuses anything else', () => {
+  const { spawnSync } = require('child_process');
+  const run = (...a) => spawnSync('bash', [path.join(__dirname, '..', 'tools', 'bump_ours.sh'), ...a],
+    { env: { ...process.env, BUMP_OURS_ECHO: '1' }, encoding: 'utf8' });
+  const SB = 'sudo -n python3 -I /opt/bc19-galaxy/galaxy19/spool_bump.py';
+  let r = run('616', '617', '553');
+  assert.strictEqual(r.status, 0, r.stderr);
+  assert.strictEqual(r.stdout.trim(), `${SB} --match 616,617,553`);
+  r = run('--ours', '--dry-run');
+  assert.strictEqual(r.stdout.trim(), `${SB} --team vibe19 --dry-run`);
+  r = run('--dry-run', '490', '--ours');
+  assert.strictEqual(r.stdout.trim(), `${SB} --team vibe19 --match 490 --dry-run`);
+  for (const bad of [['--drop', '616'], ['616;rm'], ['--team', 'x'], ['-1'], [''], ['12345678'], []]) {
+    r = run(...bad);
+    assert.strictEqual(r.status, 2, JSON.stringify(bad));
+    assert.strictEqual(r.stdout, '', JSON.stringify(bad));
+  }
+});
