@@ -2194,3 +2194,24 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   200 from pilgrims its castle sends in waves (rounds 4, 13, 62-64, 100-101; each churches 16-25 turns after
   birth, the first at round 22 eighteen tiles out), and each new church builds 3 prophets and 3-6 pilgrims at
   once. Our cap is MAX_PIONEERS 2 per castle in flight: h77 (PIONEERS_TEAM 6, delivery running) is the test.
+
+## 2026-10-22 18:27 — h77's delivery: criteria 1-3 met by far, 4 on the edge; h82 = h77 + DEF_RESERVE_K 30 pre-registered
+- h77 vs h50 on 1375, 826, 1706, 70 both sides: **h77 wins 8 of 8** (bar 5); pilgrims at r100 summed 200 vs 108
+  (185%, bar 150%); K mined by r200 28,002 vs 15,930 (176%, bar 130%; 1375: 3,940-4,018 vs 1,716-1,864, as much as
+  wololo and IanCoolidge0 mined on the replica). Its no-op v6o was IDENTICAL; symcheck shows the known contest.
+- (4) vs rush4 (castle losses; a 200-round game with no winner is a hold): h50 6 of 40 (1706, 1755, 1699, both
+  sides); h77 8 in its first 26, the limit of h50 + 2 (adds 1756 both sides). On 1756 h77's fifth pilgrim (a pioneer,
+  PIONEERS_TEAM 6) churches (38,1) at round 12 and the church spends the bank on two pilgrims (rounds 12-13) as
+  rush4's crusaders arrive; the castle has nothing for a threat response and falls at 24. h50 built preachers at
+  13 and 14 and held. One more castle loss in h77's last 14 games fails its delivery.
+- h82 = h77's four switches + DEF_RESERVE_K 30 (every spend but a threat response leaves a preacher's karbonite;
+  b0156206e827). Driver, 1756 red vs rush4, --det, 200 rounds: h82 holds; h77r (h77's switches rebuilt on the
+  current src, d711c99da54b) falls at 24 as h77 did. **h82 delivery pre-registered** (VM job ...a3d577100012, before
+  any game on its panel): no-op v6q (current src defaults, 9ec43f5c4c81) vs h50 --det on 1828 byte-identical;
+  symcheck h82 on 1, 2, 3, 1756 to 250; h82 vs rush4 on h20v6's 20 maps both sides at 200 rounds; h82 vs h50 on 1375
+  and 826 both sides. PASS needs all 3: (1) rush4 castle losses <= h50's + 2 (h50: 6 of 40); (2) K mined by r200
+  >= 130% of h50's over the 4 full games; (3) h82 wins >= 3 of 4. Falsifier: (2), the reserve starves the early
+  economy that won h77's games. On PASS: gate h82 vs h50 (20 random cells, seed0 5000).
+- 18:31: h77's last 14 rush4 games add no castle loss: **8 of 40** (1706, 1755, 1756, 1699, both sides) = h50's 6
+  + 2, so (4) holds and **h77's delivery PASSES** (all 4). Its gate is queued as pre-registered (VM job
+  ...a3d577100016, after h82's delivery, running, and h78's): h77 vs h50, 20 random cells from seed0 5000, par 2.

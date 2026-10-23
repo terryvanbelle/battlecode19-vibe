@@ -14,11 +14,12 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 16:52:
-  **h77**'s delivery running (...a3d57710001: v6 + ECON_UNTIL 100 + PIONEERS_TEAM 6 + PEACE_RESERVE_K 60 +
-  PLAN_VALUE 10, wololo's expansion; no-op v6o, symcheck, vs h50 on 1375, 826, 1706, 70 both sides, h50 and h77 vs
-  rush4 on 20 one-castle maps, then timelines; TRAINING_LOG 16:12; on PASS its gate goes first), **h78** delivery
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 18:31:
+  **h82**'s delivery running (...a3d577100012: h77 + DEF_RESERVE_K 30; no-op v6q, symcheck, vs rush4 on 20 maps,
+  vs h50 on 1375 and 826 both sides; TRAINING_LOG 18:27; on PASS gate h82 vs h50), **h78** delivery
   (...a3d577100015: h68 + PIONEER_HOME 1 + PILGRIM_STALL 25 vs h50 on 418, 1325, 2542, 2072; TRAINING_LOG 17:10),
+  **h77**'s gate (...a3d577100016: v6 + ECON_UNTIL 100 + PIONEERS_TEAM 6 + PEACE_RESERVE_K 60 + PLAN_VALUE 10,
+  wololo's expansion; delivery PASSED 18:31, 8/8 wins and K by r200 176%, rush4 castle losses 8 of 40 = h50 + 2),
   **h64**'s gate (PIONEER_FAST vs h50, renamed ...a3d5771001 and moved up at 17:21: replica losses are economy
   first, and 391-1 is a lost pioneer race), **h70** delivery
   (PEACE_RESERVE_K 60: no-op v6k, symcheck, 8 games vs h50 on 70, 520, 2591, 1592, ...a3d5771005; TRAINING_LOG 13:04),
