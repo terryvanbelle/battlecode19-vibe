@@ -3254,3 +3254,28 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   over the 40 games: pioneer idle turns at sites with no enemy attacker within r2 100, to r200 (a scratch census,
   out/st_h118.txt), at most 0.7 of h87's; churches built (dlv) at least h87's; castles lost not above h87's. Bars as
   at 07:28 (look at D 12; accept t >= 2 with the mechanism, reject t <= -1, else a replica panel, two-block rule).
+
+## 2026-10-23 10:46 — territory census: we mine our ground, it is half the field's; PIONEER_CALL switch (h119)
+- Territory (v7's 18 control games, at r100: resource tiles nearer, in king steps, to a side's structures than to the
+  other side's): ours 202 tiles in all, the field's 366. We mined 179 of ours in r76-100 (unmined: 2 beside a
+  structure, 21 farther, in 420-1, 420-3, 421-3, 424-2); the field mined 260 and left 106 unmined. So the gap is ground,
+  not staffing: 2644 (420-2, 425-2) 6 and 3 tiles to 16 and 19, 2591 (422-1) 2 to 12, 2321 (422-3) 8 to 27.
+- 2644 (42x42, one castle a side, two cluster pairs): IanCoolidge0 (425-2, red) churched (28,22), the centre cluster
+  on our side of the axis, at r44 and (20,33), our side's flank cluster, at r56, its own two only at r110-113; wololo
+  (420-2) took (28,19) on our side at r53. Our r14 pioneer #2509 for (28,22) had Ian's crusader #3802 standing at
+  (28,21) from r20: it circled at r2 50-68 (outside a crusader's threat range) for 100 turns and died at r120. h103's
+  escorts (443-2) changed nothing: Ian churched (28,22) at r44 again; the escort is owed only once a pioneer is
+  ESCORT_SLACK (10) turns past its distance.
+- New switch CFG.PIONEER_CALL (0 = v7; works with ESCORT): a pioneer that sees a mobile enemy attacker within r2
+  PIONEER_CALL of its site talks CT.BLOCKED (77); its castle, matching the talker's id to its pioneer, opens the
+  escort at once. Unit tests: castle (default deaf; BLOCKED opens the escort before overdue; a quiet pioneer opens
+  none), pilgrim (crusader or prophet by the site calls; pilgrim, castle or nothing does not; default silent), CT
+  ranges disjoint. **h119** = v7 + ESCORT 2 + ESCORT_UNIT 3 + PIONEER_CALL 100 (h103 plus the call).
+
+## 2026-10-23 10:47 — h104 REJECTED on the replica (block 1 net 0); h114's gate at 9 of 20 cells t -1.73
+- h104 (v7 + no general attack) block 1, 432-437, complete: gained 3 (IanCoolidge0 2644, bot1v43 2321, uvafan 1653
+  on health), lost 3 (botfinalsafe 203, awesomelemonade 1712 and 2797: v7 won both on castles, h104 lost 1712 on
+  castles at r1000 and 2797 on health), net 0, t 0.00, 6/18 as v7: rejected by the two-block rule (net <= 0). Without
+  the general attack it loses the games v7 wins by pushing, and wins the ones v7 loses pushing; the attack stays.
+- h114 (v7 + CHAIN_GUARD 1) at 9 of 20 cells: gained 0, lost 3, D 3, t -1.73 (read in full when it ends).
+- Replica: 153 waiting (147 ranked). Still no new requests.

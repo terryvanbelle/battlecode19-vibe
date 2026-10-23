@@ -27,11 +27,11 @@
 - **Replica panels** (progress/panels/v7-m1.json: h82-b1's maps against six field bots, wololo, botfinalsafe, bot1v43,
   uvafan, awesomelemonade, IanCoolidge0 ~69ce88): **v7** measurement 420-425 (submission 99, the control, 6/18);
   h96 (v7 + ATTACK_LATE 1001) block 1 426-431 **REJECTED** 08:35 (net -3); **h104** (v7 + ATTACK_ROUND 1001 +
-  ATTACK_LATE 1001: no general attack; submission 102) block 1 432-437 at 15 of 18 (436 running): gained 3, lost 1;
+  ATTACK_LATE 1001: no general attack; submission 102) block 1 432-437 **REJECTED** 10:47 (net 0);
   **h103** (v7 + ESCORT 2 + ESCORT_UNIT 3; submission 104) block 1 438-443 final: gained 3, lost 2, net +1, t 0.45 ->
   block 2 due; **h111** (v7 + SAFE_BUILD 2; submission 106) block 1 616-621, queued behind the autoscrim's ranked
-  matches (159 waiting at 10:20); **h112** (DEF_SEEN 1) block 1 not yet requested. Block 2s (h103, h104 unless its
-  last match settles it) and h112's block 1 go in once fewer than 30 wait: submit, scrim `--panel
+  matches (153 waiting at 10:47); **h112** (DEF_SEEN 1) block 1 not yet requested. h103's block 2 and h112's block 1
+  go in once fewer than 30 wait: submit, scrim `--panel
   progress/panels/v7-m1.json`, resubmit bots/v7, add the submissions.tsv row. Reading: `contest19.py fetch --new`,
   then `contest19.py compare 420-425 <block>` by the two-block rule. v7 against v6 (414-419: 3 wins in 18) and h82
   (408-413: 5 in 18); rerun the economy, composition and stillborn censuses on v7's
@@ -51,7 +51,8 @@
   our-side bottom clusters; we built no church between r53 and the chain at r310. Field census (09:55): the field's
   pilgrims outnumber ours 1.2-4.9x at r76-100 by standing on more tiles beside more structures (StoneT2000 7-9 by r100
   to our 1-5); 1,119 pioneer turns held by enemy attackers within r2 100 (the held case: h59, h78, h88 all failed).
-- Closed on 2026-10-23 (TRAINING_LOG, progress/ATTEMPTS.md): h113 REJECTED 10:38 (CHAIN_CLEAR 2: t -1.73); h110 REJECTED
+- Closed on 2026-10-23 (TRAINING_LOG, progress/ATTEMPTS.md): h104 REJECTED on the replica 10:47 (no general attack: net
+  0); h113 REJECTED 10:38 (CHAIN_CLEAR 2: t -1.73); h110 REJECTED
   09:20 (RECALL 30: t -1.73); h96 REJECTED on the replica 08:35; h100 REJECTED 08:14 (ESCORT_FIRST 1: D-48 look t -0.29); h107 FAILED 06:46 (DEF_FAR_UNIT 3: t -1.89, D 7,
   mechanism missed, castles lost 34 vs 26); h101 FAILED 03:50 (MELEE_BACK 2: t -0.63, mechanism 0.78 vs bar 0.75);
   h97 and h91 deliveries FAILED; h87 ACCEPTED as v7; h82 superseded; h88 REJECTED; h64 inconclusive, not extended.
