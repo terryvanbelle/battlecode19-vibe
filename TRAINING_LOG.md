@@ -3507,3 +3507,10 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   before its chain at r311). Delivery: modest (one live added church per game by r300), not the corners.
 - Gate ...19v: symcheck 1, 2, 3, 2321; h125 vs h87, 20 cells of seed0 5000, par 2. Mechanism, summed over the 40
   games: churches built (dlv) at least 1.05 of h87's; castles lost not above h87's. Bars as for h124.
+
+## 2026-10-23 15:40 — h124 REJECTED: the lean cut the idle turns and lost the churches
+- Gate h124 (v7 + PIONEER_HOLD 64 + PIONEER_LEAN 1) vs h87, 20 cells, 40 games: 18 wins, gained 2, lost 4, D 6,
+  net -2, t -0.82. Mechanism: pioneer idle turns 178 vs 264 = 0.67 (bar 0.7) met; churches 798 vs 858 (bar: at
+  least h87's) missed; castles lost 60 vs 60 -> **REJECTED**. With h118 (LEAN 3: churches 910 vs 828, idle 0.78):
+  leaning after one turn spends the reserve the castle would have built other churches with. The hold-and-lean
+  line is closed at both doses; h118's church gain was not in the wins (D 4, net 0).
