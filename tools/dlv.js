@@ -13,7 +13,8 @@
 // karbEnd / fuelEnd, win; idleContact / idleContactP (military / prophet turns in from..to with no action while an
 // enemy attacker within r2 196, out of the unit's own attack range, has a friend of the unit in its attack range);
 // atCastle450 (military units whose nearest own structure, in king steps, is a castle within 6, at round 450),
-// churchesLost, churchesLost100 (by round 100), mines450 (pilgrim mine actions to round 450).
+// churchesLost, churchesLost100 (by round 100), mines450 (pilgrim mine actions to round 450), stillborn (military units
+// that died before their first turn: built in reach of enemies that act later in the round).
 'use strict';
 const fs = require('fs'), path = require('path');
 const R = require('./replay');
@@ -51,13 +52,14 @@ function contact(g, r) {
 const COLS = ['milBuilt', 'milLost', 'milLostUnfired', 'meleeLost', 'meleeLostUnfired', 'deathsOn3', 'killsByMelee',
   'killsByProphet', 'shots', 'atkFuel', 'dmgDealt', 'shotsW', 'moveW', 'moveMilW', 'castlesLost', 'churchesBuilt', 'spots',
   'recalls', 'fuel500', 'fuelTo', 'karbEnd', 'fuelEnd', 'win', 'idleContact', 'idleContactP', 'atCastle450', 'churchesLost',
-  'churchesLost100', 'mines450'];
+  'churchesLost100', 'mines450', 'stillborn'];
 
 function stats(buf, { from = 0, to = 1000 } = {}) {
   const s = [0, 1].map(() => Object.fromEntries(COLS.map(c => [c, 0])));
-  const fired = new Set(), tiles = [new Map(), new Map()];
+  const fired = new Set(), acted = new Set(), tiles = [new Map(), new Map()];
   const res = R.simulate(buf, {
     onTurn({ round, robot, rec, born, died, damage, error, game }) {
+      acted.add(robot.id);
       if (robot.unit >= 3 && round >= from && round <= to && (error || !rec.action) && contact(game, robot)) {
         s[robot.team].idleContact++; if (robot.unit === 4) s[robot.team].idleContactP++;
       }
@@ -83,6 +85,7 @@ function stats(buf, { from = 0, to = 1000 } = {}) {
         if (d.unit < 3) continue;
         T.milLost++;
         if (!fired.has(d.id)) T.milLostUnfired++;
+        if (!acted.has(d.id)) T.stillborn++;
         if (d.unit !== 4) { T.meleeLost++; if (!fired.has(d.id)) T.meleeLostUnfired++; }
         const k = d.y * 64 + d.x; tiles[d.team].set(k, (tiles[d.team].get(k) || 0) + 1);
         if (d.team !== robot.team) {

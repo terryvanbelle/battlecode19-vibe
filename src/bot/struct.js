@@ -83,11 +83,31 @@ function enemyNear(B, x, y) {
   return false;
 }
 
+// CFG.SAFE_BUILD: the damage the visible enemy attackers can deal to a robot on (x, y) with one shot each: prophets and
+// castles in their band, crusaders within r2 16, preachers whose 3x3 splash reaches it. A newborn acts after every
+// robot already in the round's queue (replica 414-3, seed 836: in r66-69 a church built four prophets on one tile and
+// each died before its first turn; 414-1, seed 2013: nine on our castle's build tile in r169-180).
+export function exposure(w, x, y) {
+  let dmg = 0;
+  for (const e of w.enemies) {
+    const S = STATS[e.unit]; if (!S.damage) continue;
+    let hit = false;
+    if (e.unit === PREACHER) {
+      for (let dy = -1; dy <= 1 && !hit; dy++) for (let dx = -1; dx <= 1; dx++) if (d2(x + dx, y + dy, e.x, e.y) <= S.atkMax) { hit = true; break; }
+    } else { const r = d2(x, y, e.x, e.y); hit = r >= S.atkMin && r <= S.atkMax; }
+    if (hit) dmg += S.damage;
+  }
+  return dmg;
+}
+
 // Build `unit` on the free adjacent tile closest to (tx, ty); avoid depots when possible. Returns the action or null.
+// CFG.SAFE_BUILD: never on a tile whose exposure would kill the newborn before its first turn (null if every tile would).
 export function buildToward(B, unit, tx, ty, signal) {
   const w = B.w, me = w.me; let best = null, bd = 1e9;
+  const safe = CFG.SAFE_BUILD && w.enemies.some(e => STATS[e.unit].damage > 0);
   for (const [dx, dy] of ADJ) {
     const x = me.x + dx, y = me.y + dy; if (!w.free(x, y)) continue;
+    if (safe && exposure(w, x, y) >= STATS[unit].hp) continue;
     const dd = d2(x, y, tx, ty) * 4 + (w.isDepot(x, y) ? 3 : 0);
     if (dd < bd) { bd = dd; best = [dx, dy]; }
   }

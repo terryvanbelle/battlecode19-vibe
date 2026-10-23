@@ -418,6 +418,32 @@ test('struct: DEF_FAR_UNIT answers a prophet beyond r2 36 with a crusader; neare
   } finally { CFG.DEF_FAR_UNIT = saved; }
 });
 
+test('struct: SAFE_BUILD never builds onto a tile where the enemies in sight would kill the newborn before it acts', () => {
+  const saved = CFG.SAFE_BUILD;
+  try {
+    const g = new Game(3, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0);
+    const dy = castle.y + 7 < g.map.length ? 7 : -7;   // two prophets 7 rows out: r2 37-64 to the near tiles
+    const foes = [-1, 1].map((ox, i) => ({ id: 4990 + i, team: 1, unit: S.PROPHET, x: castle.x + ox, y: castle.y + dy, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 }));
+    const hits = (x, y) => foes.filter(e => { const r = d2(x, y, e.x, e.y); return r >= 16 && r <= 64; }).length * 10;
+    const turn1 = (safe, wall) => {
+      CFG.SAFE_BUILD = safe; castle.turn = 1;
+      const all = g.robots, map = g.map;
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100).concat(foes);
+      if (wall) g.map = map.map((row, y) => row.map((v, x) => (Math.abs(x - castle.x) <= 1 && Math.abs(y - castle.y) <= 1 && hits(x, y) < 20) ? false : v));
+      const w = worldFor(g, castle); g.robots = all; g.map = map;
+      const B = { api: w.api, w, round: 1, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 100; w.fuel = 500;
+      return castleTurn(B);
+    };
+    const a0 = turn1(0), a1 = turn1(1);
+    assert.strictEqual(a0.u, S.PROPHET); assert.strictEqual(hits(castle.x + a0.dx, castle.y + a0.dy), 20);   // default: toward them
+    assert.strictEqual(a1.u, S.PROPHET); assert.ok(hits(castle.x + a1.dx, castle.y + a1.dy) < 20, 'a tile the pair cannot both reach');
+    const a2 = turn1(1, true);   // only deadly tiles left: no prophet (the castle shoots instead)
+    assert.strictEqual(a2.action, 'attack', JSON.stringify(a2));
+  } finally { CFG.SAFE_BUILD = saved; }
+});
+
 testPreV7('struct: ECON_UNTIL keeps the peacetime army out before that round, not a threat response', () => {
   const saved = [CFG.ECON_UNTIL, CFG.SERVE_MOVES];
   try {

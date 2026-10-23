@@ -180,6 +180,9 @@ export const CFG = {
                              // and inside a prophet's dead zone (r2 < 16) once it closes (replica 414-1, seed 2013:
                              // wololo's prophets just outside our castle's reach shot 9 newborn prophets on its build
                              // tile in rounds 169-180, then the castle)
+  SAFE_BUILD: 0,             // 1: structures never build a robot on a tile where the enemy attackers in sight could kill it
+                             // before its first turn (struct.js exposure; replica 414-3, seed 836: four prophets in a row
+                             // died unborn on one church tile)
   PLAN_SERVE_PILGRIM: 0,     // 1: church planning counts a depot as served by pilgrim moves (as staffing does), and
                              // churches a cluster with >= 2 unserved depots (or all, if smaller); 0: any depot within
                              // 2*SERVE_MOVES king steps marks the whole cluster served (seed 1755: never staffed)

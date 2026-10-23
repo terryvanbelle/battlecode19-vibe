@@ -2900,3 +2900,18 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   a recall sets st.target = null, so a chain-born unit (st.target = st.chainT) never resumes its line after the
   recall ends: the recall that answers a probe kills our own chain push. Not gated; to revisit, a recall must leave
   chain-born units' targets (they hold the recall ring, then march again).
+
+## 2026-10-23 05:37 — stillborn units (the field feeds on our newborns); SAFE_BUILD (h109); dlv.js stillborn column
+- Scratch feed/stillborn.js on 24 replica losses (408, 410, 411, 413, 414, 416, 417, 419): our military units that
+  died before their first turn (a newborn acts after every robot already in the round's queue, so enemies in reach
+  that act later kill it unborn): 414-1 (wololo, 2013) 10 of 53 built (250 K), all on (16,15), the castle's build
+  tile; 414-3 (wololo, 836) **24 of 105 (600 K)**, 15 on (23,18); 414-2 3; 417-3 (uvafan, 1712) 19 (2 before r300);
+  411-3 11 (late); 410-3 5; 408-1 2; elsewhere 0-1. About 76 units and 1,900 K in 24 games, most against wololo,
+  whose prophets park in reach of our structures. The field's own stillborns: 0 but 408-3 (wololo 31) and 408-1.
+- Switch SAFE_BUILD (struct.js buildToward; default 0 = v7): a structure never builds onto a free adjacent tile whose
+  exposure (one shot from each visible enemy attacker that reaches it: prophets and castles in their band, crusaders
+  within r2 16, preachers whose 3x3 splash covers it) is at least the unit's HP; with every tile deadly it builds
+  nothing (a castle then shoots). h109 = v7 + SAFE_BUILD 1 (a934ad374fb8). Unit test 'struct: SAFE_BUILD never
+  builds onto a tile ...'. No-op: the defaults build out/v7chk7 replays h87 on 799 to 300 IDENTICAL; 121 + 57 tests.
+- tools/dlv.js gains the column stillborn (military units that died before their first turn; tested <=
+  milLostUnfired); on 414-1 it gives 10 / 0 as the scratch census.

@@ -433,6 +433,7 @@ test('dlv: delivery numbers agree with the replay analysis and with each other',
     assert.strictEqual(T.atkFuel, A.fuel_attack);
     assert.strictEqual(T.dmgDealt, A.dmg_dealt);
     assert.ok(T.milLostUnfired <= T.milLost && T.meleeLostUnfired <= T.meleeLost && T.meleeLost <= T.milLost);
+    assert.ok(T.stillborn <= T.milLostUnfired);          // a unit that never took a turn never fired
     assert.ok(T.killsByMelee + T.killsByProphet <= o.milLost);
     assert.ok(T.shotsW <= T.shots && T.moveMilW <= T.moveW);
   }
