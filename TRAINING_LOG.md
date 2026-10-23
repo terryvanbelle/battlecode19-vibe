@@ -3404,3 +3404,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   standing by r100 98 vs 94 and castles lost 32 vs 32 (dlv) pass. The signature fell short of its bar, so no panel:
   REJECTED. The driver diagnostics (r13-18 vs r22-26) were the four seeds where it fires best.
 - VM: h116's gate (...19r) running, then h118 (...19s). Replica: 553, 499, 490 running; 616-621 next.
+
+## 2026-10-23 13:04 — h123 (CHAIN_FAILS 2) built, delivered on 2046, gate pre-registered and queued (...19t)
+- CHAIN_FAILS (default 0): a chainer that fires talks CT.CHAINFIRE (78) for one turn; castles count the fires
+  since the last enemy castle reported destroyed (CT.DEAD); at CHAIN_FAILS they launch no more lines and their
+  peacetime army stops leaving CHAIN_K in the bank (churches keep theirs; the bank is shared). A later kill resets
+  the count. From the 12:3x chain census (uvafan: 9 lines, no kill). Unit tests 134 node + 58 Python pass; no-op
+  out/v7chk19 IDENTICAL alone. h123 = v7 + CHAIN_FAILS 2, sha 0e0c30f2f808.
+- Delivery (driver, one game at a time, seed 2046 to r1000, red vs h87): h87 red lines r352 and r575, no kill, then
+  blue's 12-church line at r871 took both its castles (lost r927); h123 red the same two lines, then none, and held:
+  lost one castle (r589), killed one (r972), reached r1000. It fires where designed.
+- Gate (...19t, after h116 and h118): symcheck 1, 2, 3, 2321; h123 vs h87, 20 cells of seed0 5000, par 2. Mechanism,
+  summed over the 40 games: lines (3+ churches born in one round, ~/scratch19/lines.js -> out/ln_h123.txt) at most
+  0.8 of h87's; castles lost (dlv) not above h87's. Field-aimed bars: look at D 12, accept t >= 2 with the
+  mechanism, reject t <= -1, else a replica panel (two-block rule).

@@ -152,6 +152,11 @@ export const CFG = {
   CHAIN_PATIENCE: 10,        // a chainer that got no nearer for this many turns counts as staged within
   CHAIN_SLACK: 6,            // ...CHAIN_STAGE + this king steps of the target; farther out it quits after
   CHAIN_GIVEUP: 30,          // ...this many such turns
+  CHAIN_FAILS: 0,            // >0: after this many lines fired (CT.CHAINFIRE, any castle's) with no enemy castle seen
+                             // destroyed since (CT.DEAD), castles launch no more chains and their peacetime army stops
+                             // leaving CHAIN_K in the bank; a later kill resumes them (replica, v7's 21 games: 34
+                             // lines made 10 of our 14 castle kills, but uvafan's 9 made none and took 2,085-5,420 K
+                             // a game, 3,410 of 4,670 spent on 2046)
   CHAIN_FIRE_NEAR: 0,        // 1: a threatened chainer starts its line early only within that band too (else it flees)
   CHAIN_HOLD_R2: 0,          // >0: from CHAIN_ROUND a church's threat response leaves CHAIN_K in the bank unless the
                              // nearest attacker is within this r2 (struct.js; castles always answer)

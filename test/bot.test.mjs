@@ -16,7 +16,7 @@ import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, he
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, canHit, PRIORITY } from '../src/bot/combat.js';
-import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch } from '../src/bot/chain.js';
+import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch, chainsFailed } from '../src/bot/chain.js';
 const require = createRequire(import.meta.url);
 const SPECS = require('../engine/node_modules/bc19/specs.json');
 const Game = require('../engine/node_modules/bc19/game.js');
@@ -2207,6 +2207,10 @@ testPreV7('chain: a staged chainer waits for CHAIN_K and CHAIN_F, then builds th
     assert.ok(go.B.st.chainF[cy * X.n + cx] < go.B.st.chainF[X.me.y * X.n + X.me.x]);
     assert.deepStrictEqual(go.log.sent, [[encXY(SIG.CHAIN, X.far[0], X.far[1]), 2]]);
     assert.strictEqual(go.B.st.chain, null, 'an ordinary pilgrim from now on');
+    assert.deepStrictEqual(go.log.talk, [CT.CHAINER, CT.UNIT + S.PILGRIM], 'CHAIN_FAILS off: no fire report');
+    const savedFails = CFG.CHAIN_FAILS;
+    try { CFG.CHAIN_FAILS = 2; assert.deepStrictEqual(run(X.far, 300, CFG.CHAIN_F).log.talk, [CT.CHAINER, CT.CHAINFIRE]); }
+    finally { CFG.CHAIN_FAILS = savedFails; }
     assert.strictEqual(run(X.farther, 300, 3000).act, 'walk', '20 steps out: walks on');
     // An enemy prophet that can shoot it: the line starts now, from here, if a church is affordable.
     const [ex, ey] = X.g.robots.length ? [X.ours[0] + 5, X.ours[1]] : [0, 0];
@@ -2300,6 +2304,20 @@ testPreV7('chain: a unit born with the chain radio targets the castle and learns
     learnRound(R);
     assert.deepStrictEqual([R.birthRound, R.round], [237, 240]);
   } finally { CFG.CHAIN_ROUND = saved; }
+});
+
+test('chain: CHAIN_FAILS holds the lines after that many fired with no enemy castle destroyed since', () => {
+  const saved = [CFG.CHAIN_ROUND, CFG.CHAIN_FAILS];
+  try {
+    CFG.CHAIN_ROUND = 200;
+    const st = { order: [{ x: 0, y: 0 }], chainMiss: 2 };
+    const B = { w: { me: { x: 0, y: 0 } }, st, round: 500 };
+    CFG.CHAIN_FAILS = 0; assert.strictEqual(chainsFailed(st), false, 'off');
+    CFG.CHAIN_FAILS = 3; assert.strictEqual(chainsFailed(st), false, '2 misses of 3');
+    CFG.CHAIN_FAILS = 2; assert.strictEqual(chainsFailed(st), true);
+    assert.strictEqual(chainLaunch(B, () => { throw new Error('built'); }), null, 'no chainer');
+    st.chainMiss = 0; assert.strictEqual(chainsFailed(st), false, 'a kill reset the count');
+  } finally { [CFG.CHAIN_ROUND, CFG.CHAIN_FAILS] = saved; }
 });
 
 test('chain: with CHAIN_ROUND 0 castles never launch a chainer and the peacetime reserve is unchanged', () => {

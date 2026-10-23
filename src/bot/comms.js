@@ -30,6 +30,7 @@ export const CT = {
   TAKEN: 88,     // + cluster index (< 40): a pioneer saw an enemy structure at that cluster's site (CFG.EXPAND_ROUND)
   CHAINER: 70,   // a chainer still walking or waiting (CFG.CHAIN_ROUND, chain.js)
   CHAINGONE: 71, // a chainer saw its target castle gone
+  CHAINFIRE: 78, // a chainer built its line's first church this turn (CFG.CHAIN_FAILS)
 };
 
 // Far messages (to robots that may not see the sender, so cannot check its team): the message type is the exact

@@ -6,6 +6,7 @@ import { bfs, econ } from './mapinfo.js';
 import { SIG, encXY, encNum } from './comms.js';
 import { isAttacker, pickTarget, canHit, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
 import { watchDeaths } from './military.js';
+import { chainsFailed } from './chain.js';
 
 const PILGRIM_OFFS = offsets(4);
 
@@ -210,7 +211,8 @@ function structAct(B, allIds, extra, first) {
   // Past CHAIN_ROUND, or (CFG.CHAIN_KEEP) a church that never learned the round: a line church, or one whose builder
   // was shot before the church's first turn. Its army spent the bank the next line needs (seed 799: church #505, its
   // chainer killed in between, built 136 units in r246-450 and no line fired).
-  const chainOn = CFG.CHAIN_ROUND && (B.round >= CFG.CHAIN_ROUND || (CFG.CHAIN_KEEP && me.unit === CHURCH && !B.round));
+  const chainOn = CFG.CHAIN_ROUND && (B.round >= CFG.CHAIN_ROUND || (CFG.CHAIN_KEEP && me.unit === CHURCH && !B.round)) &&
+    !(me.unit === CASTLE && chainsFailed(st));   // CFG.CHAIN_FAILS
   const reserveK = defReserveK(B) + CFG.PEACE_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
     (CFG.FRONT_ROUND && st.frontAt !== undefined && B.round - st.frontAt < 40 ? STATS[CHURCH].costK : 0) +
     (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0) +

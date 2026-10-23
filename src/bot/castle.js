@@ -45,6 +45,7 @@ export function castleTurn(B) {
     const ct = r.castle_talk;
     if (CFG.CHAIN_ROUND && r.id === st.chainId) { if (ct === CT.CHAINER) st.chainLive = true; else if (ct === CT.CHAINGONE) st.chainOff = true; }
     if (ct >= CT.UNIT && ct < CT.UNIT + 6) st.count[ct - CT.UNIT]++;
+    else if (ct === CT.CHAINFIRE && CFG.CHAIN_FAILS) { st.count[PILGRIM]++; st.chainMiss = (st.chainMiss || 0) + 1; }
     else if (ct >= CT.MARCH && ct < CT.MARCH + 6) { st.count[ct - CT.MARCH]++; st.march++; }
     else if (ct === CT.WAIT && CFG.PIONEER_HOLD) { st.count[PILGRIM]++; st.waitN++; }
     else if (ct === CT.BLOCKED && CFG.PIONEER_CALL) {
@@ -61,6 +62,7 @@ export function castleTurn(B) {
     else if (me.turn > 3 && r.castle_talk >= CT.DEAD && r.castle_talk < CT.DEAD + 4) st.deadE.add(r.castle_talk - CT.DEAD);
     else if (me.turn > 3 && ct >= CT.TAKEN && ct < CT.TAKEN + 40) st.taken.set(ct - CT.TAKEN, me.turn);
   }
+  if (CFG.CHAIN_FAILS && st.deadE.size > (st.killsSeen || 0)) { st.killsSeen = st.deadE.size; st.chainMiss = 0; }
   // Our castles in canonical order (fixed at turn 3): enemy castle i is the mirror of st.order[i].
   if (me.turn === 3) st.order = [...st.castles.values()].sort((a, b) => (a.y * w.n + a.x) - (b.y * w.n + b.x));
   if (me.turn === 3) { planClusters(B); if (CFG.ESCORT_FIRST) escortFirst(B); }

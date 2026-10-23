@@ -104,7 +104,7 @@ export function pilgrimChain(B, go) {
   const crowded = CFG.CHAIN_CLEAR && w.enemies.filter(e => e.unit >= CRUSADER).length >= CFG.CHAIN_CLEAR;   // castles not counted
   if (!exposed && !crowded && ((staged && ready) || early)) {
     const a = link(B, CHURCH);
-    if (a) { st.chain = null; st.chainer = false; w.talk(CT.UNIT + PILGRIM); return a; }
+    if (a) { st.chain = null; st.chainer = false; w.talk(CFG.CHAIN_FAILS ? CT.CHAINFIRE : CT.UNIT + PILGRIM); return a; }
   }
   if (threatened) return undefined;   // flee as any pilgrim; the chain resumes from wherever it gets to
   if (staged) return null;
@@ -137,12 +137,17 @@ export function churchChain(B) {
   return w.build(unit, best[0], best[1]);
 }
 
+// CFG.CHAIN_FAILS: castles hold their lines after that many fired with no enemy castle destroyed since (castle.js).
+export function chainsFailed(st) {
+  return CFG.CHAIN_FAILS > 0 && (st.chainMiss || 0) >= CFG.CHAIN_FAILS;
+}
+
 // Castle: send a chainer at the mirror castle from CHAIN_ROUND (staggered by castle order), again CHAIN_EVERY rounds
 // after the last one left unless it still walks or waits (it reports CT.CHAINER); never again once one reported the
 // target gone (CT.CHAINGONE). Returns {act, x, y} like buildToward, or null.
 export function chainLaunch(B, buildToward) {
   const w = B.w, me = w.me, st = B.st;
-  if (!CFG.CHAIN_ROUND || !st.order || st.chainOff || st.chainLive) return null;
+  if (!CFG.CHAIN_ROUND || !st.order || st.chainOff || st.chainLive || chainsFailed(st)) return null;
   const idx = Math.max(0, st.order.findIndex(c => c.x === me.x && c.y === me.y));
   if (B.round < CFG.CHAIN_ROUND + idx * CFG.CHAIN_STAGGER) return null;
   if (st.chainAt !== undefined && B.round - st.chainAt < CFG.CHAIN_EVERY) return null;

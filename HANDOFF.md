@@ -17,13 +17,13 @@
 - **VM queue** (`~/jobq`: the runner takes pending jobs in locale `sort` order of their names; gates run from the
   shadow tree ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree,
   outputs in the main tree's out/). Gates at par 2 while saturn runs its 6 slots (8 vCPUs; owner, PROMPTS 18). Now:
-  **h116**'s gate running (...19r, pre-registered 09:40), then **h118** (...19s, 10:38),
+  **h116**'s gate running (...19r, pre-registered 09:40), then **h118** (...19s, 10:38) and **h123** (...19t, 13:04: CHAIN_FAILS 2),
   with field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject t <= -1, else a replica panel). Done:
   h121 REJECTED 12:47 (t -0.28, first church 4.4 rounds earlier, bar 5), h115 REJECTED 11:58 (t 0.58, mechanism opposite: fuelEnd 3.5 times h87's in r1000 games, karbonite binds),
   h114 REJECTED 11:24 (t -1.63, churches built 312 vs 400), h113 REJECTED 10:38 (t -1.73), h112 (t 0.71 -> replica panel, waiting), h111 (t 0.82
   -> replica panel), h110 REJECTED 09:20 (t -1.73, castles lost 35 vs 24).
   The 21 stale v6-era jobs are in ~/jobq/superseded (PROMPTS 22-24; `tools/move_stale.sh` does such moves now).
-  Next job name ...19t. The locale sort ignores punctuation, so ...19qa runs before ...19q and ...19r: a longer
+  Next job name ...19u. The locale sort ignores punctuation, so ...19qa runs before ...19q and ...19r: a longer
   name jumps the queue, used on purpose only while the shorter one is already running (h121's ...19qa).
 - **Replica panels** (progress/panels/v7-m1.json: h82-b1's maps against six field bots, wololo, botfinalsafe, bot1v43,
   uvafan, awesomelemonade, IanCoolidge0 ~69ce88): **v7** measurement 420-425 (submission 99, the control, 6/18);
@@ -44,7 +44,7 @@
   reserves builds the army: v7 banked 245-863 K at r75/r100 in 10 of 18 field games, army 0-3); **h118** = v7 +
   PIONEER_HOLD 64 + PIONEER_LEAN 3 (a pioneer waiting at its site talks CT.WAIT, castles keep the church in the bank;
   after 3 turns it builds without DEF_RESERVE_K: 603 such waiting turns in v7's 18 field games, 356 in 420-3; h117 =
-  the hold alone, parked). h116, h118 are gating (above); h121 rejected 12:47; h119 (PIONEER_CALL) waits for a replica panel (no local build triggers it). Parked: h117, h109 (SAFE_BUILD 1: blocked chain
+  the hold alone, parked). h116, h118, h123 (v7 + CHAIN_FAILS 2: no more church lines after two fired with no castle kill; uvafan's 9 lines made none) are gating (above); h121 rejected 12:47; h119 (PIONEER_CALL) waits for a replica panel (no local build triggers it). Parked: h117, h109 (SAFE_BUILD 1: blocked chain
   launches, worse in 2 of 4 cells), h108 (RECALL before the fix), h102 (PIONEER_DETOUR 50: inert), h98 / h99
   (MIL_ROTATION null / [4]), h105 = dist/turtle and h106 (the prophet doctrine lost every self-play test, TRAINING_LOG
   04:22). Open: 1036 (57x57): IanCoolidge0 had 26 pilgrims at r100 and 39 at r200 to our 14 and took the shared and
