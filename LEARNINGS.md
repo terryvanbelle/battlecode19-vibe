@@ -130,7 +130,9 @@
    only in the bot. (TRAINING_LOG 2026-10-22 16:29)
 25. **Profile the harness, not only the bot: a game's wall time is mostly the engine's sandbox plumbing.** A CPU
    profile of a 300-round self-play game on the VM put our bot's functions at a few percent; vm2's timed
-   runInContext (a watchdog per call) took 43% and the engine's per-turn state dump 24%. The cheap win was outside
-   both: vm2 transformed and compiled the whole 50 KB bundle anew for every robot (43 ms each, 523 robots a game);
-   one compiled script per bundle (`run_game.js --fast-init`) replays byte for byte and cut the game 16%. Check
-   any such shortcut with a --det replay compare before trusting it. (TRAINING_LOG 2026-10-22 18:46)
+   runInContext took 43% and the engine's per-turn state dump 24%. Two shortcuts halved the game (252 s -> 129 s)
+   with the same replay byte for byte: compile the bundle once for all robot sandboxes (vm2 recompiled 50 KB per
+   robot, 43 ms each; `--fast-init`), and drop the per-turn kill in our own-build batches (vm2 starts a watchdog
+   thread per timed call, ~1.3 ms a turn on a loaded host; `--no-kill`, with a per-game wall cap instead). Check any
+   such shortcut with a --det replay compare before trusting it, and keep the engine's path wherever time is the
+   thing measured. (TRAINING_LOG 2026-10-22 18:46, 18:56)
