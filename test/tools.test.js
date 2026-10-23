@@ -245,10 +245,11 @@ test('replay: timeline snapshots match the tally and the final state', () => {
     assert.strictEqual(last.move_fuel, T.fuel_move);
     assert.deepStrictEqual([last.castle, last.church, last.pilgrim, last.army, last.karbonite, last.fuel],
       [F.units[0], F.units[1], F.units[2], F.units[3] + F.units[4] + F.units[5], F.karbonite, F.fuel]);
+    assert.deepStrictEqual([last.crusader, last.prophet, last.preacher], [F.units[3], F.units[4], F.units[5]]);
     const r25 = rows.find(r => r.team === team && r.round === 25);
     assert.ok(r25.mined_k <= last.mined_k && r25.mined_f <= last.mined_f);
   }
-  assert.match(replay.timelineText(rows), /^== RED\nround\tcastle\tchurch\tpilgrim\tarmy/);
+  assert.match(replay.timelineText(rows), /^== RED\nround\tcastle\tchurch\tpilgrim\tarmy\tcrusader\tprophet\tpreacher\tmined_k/);
 });
 
 // A generous clock (timescale 20): on a throttled machine a frozen robot would part the two games for clock reasons.

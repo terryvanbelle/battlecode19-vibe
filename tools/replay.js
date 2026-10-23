@@ -12,7 +12,7 @@
 //   node tools/replay.js talk     <replay> [--team T]      # castle-talk and radio telemetry per turn
 //   node tools/replay.js threat   <replay> [--json]        # each structure's first enemy combat unit in view: stores, response
 //   node tools/replay.js fire     <replay> [--from R --to R]  # per team and shooter type: shots, fuel, damage per fuel
-//   node tools/replay.js timeline <replay> [--at 25,50,...]   # per team at checkpoints: structures, pilgrims, army, mined, bank
+//   node tools/replay.js timeline <replay> [--at 25,50,...]   # per team at checkpoints: structures, pilgrims, army (and by type), mined, bank
 //   node tools/replay.js moves    <replay> [--every N]     # per team and window of rounds: movement fuel by unit type
 // Teams: 0 red, 1 blue. Unit codes: 0 castle, 1 church, 2 pilgrim, 3 crusader, 4 prophet, 5 preacher.
 'use strict';
@@ -331,7 +331,8 @@ function timeline(buf, at = [25, 50, 75, 100, 150, 200, 300, 500, 700, 1000]) {
   const snap = (round, g) => {
     for (const team of [0, 1]) {
       const s = teamState(g, team), u = s.units;
-      rows.push({ round, team, castle: u[0], church: u[1], pilgrim: u[2], army: u[3] + u[4] + u[5], mined_k: mined[team][0],
+      rows.push({ round, team, castle: u[0], church: u[1], pilgrim: u[2], army: u[3] + u[4] + u[5], crusader: u[3],
+        prophet: u[4], preacher: u[5], mined_k: mined[team][0],
         mined_f: mined[team][1], karbonite: s.karbonite, fuel: s.fuel, move_fuel: moveF[team] });
     }
   };
@@ -349,7 +350,8 @@ function timeline(buf, at = [25, 50, 75, 100, 150, 200, 300, 500, 700, 1000]) {
 }
 
 function timelineText(rows) {
-  const cols = ['round', 'castle', 'church', 'pilgrim', 'army', 'mined_k', 'mined_f', 'karbonite', 'fuel', 'move_fuel'];
+  const cols = ['round', 'castle', 'church', 'pilgrim', 'army', 'crusader', 'prophet', 'preacher', 'mined_k', 'mined_f',
+    'karbonite', 'fuel', 'move_fuel'];
   const out = [];
   for (const team of [0, 1]) {
     out.push(`== ${['RED', 'BLUE'][team]}`, cols.join('\t'));
