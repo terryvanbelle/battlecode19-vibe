@@ -2407,7 +2407,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   411/417 uvafan: 1653, 1712, 2046; 412/418 awesomelemonade: 1712, 2797, 2518; 413/419 IanCoolidge0: 1036, 203,
   2644); player order shuffled per match. All 12 bumped to the front (spool_bump). vibe19's active build is v6.
 
-## 2026-10-22 22:05 — a new robot's first turn: World build 4x faster, bfs on flat offsets; the same games
+## 2026-10-22 21:50 — a new robot's first turn: World build 4x faster, bfs on flat offsets; the same games
 - Basics: our replica games show a few clock overdraws (403-2: 4 frozen in 72,243 turns, ms_max 236; 391-1: 3;
   406-3: 1 timeout). h82's gate errlogs (capped at 200 lines a team a game): 961 turns over 30 ms, 14 over 100;
   256 of 315 crusader and 256 of 378 prophet slow turns were the unit's first or second turn.
