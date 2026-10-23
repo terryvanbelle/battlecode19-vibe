@@ -2867,3 +2867,14 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   DEF_FAR_UNIT answers a prophet beyond r2 36 with a crusader ...'.
 - (04:59) No-op: the defaults build out/v7chk6 replays h87 vs h87 on 799 to 300 IDENTICAL (--det); 120 node + 57 Python
   tests pass. dist/h107 = v7 + DEF_FAR_UNIT 3 (06ee0603d863). Driver diagnostic h107 vs h87 on 2013 next.
+
+## 2026-10-23 05:04 — h107 diagnostic on 2013; gate pre-registered (VM job ...19i)
+- Driver, 2013 to 400 (--det): h107 red vs h87 blue and h87 vs h87 are the same game to r200; by r250 h107 has 11
+  crusaders, 18 prophets (h87 8, 23), r300 7 and 19 (8, 28): the switch fires. Both games end at r310, red (the first
+  mover) killing blue's castle through its church chain (red 4 -> 11 churches in r300-310, 32-36 preachers), the same
+  result; h107 had 1 frozen robot (driver load).
+- Gate (VM job ...19i, after h100's extension 2): symcheck 1, 2, 3, 2013 to 300; h107 vs h87 on the 20 cells of
+  seed0 5000, par 2; dlv.js on the gate replays -> out/dlv_gate_h107.txt. Field-aimed: looks when D first reaches 12;
+  accept t >= 2 with the mechanism (SUM: h107's deathsOn3 / milBuilt below h87's: fewer units fed onto one tile);
+  reject t <= -1; in between, a replica panel on v7-m1's maps decides (two-block rule). Falsifier: crusaders sent
+  at distant prophets die walking in (h107's milLostUnfired / milBuilt above h87's) and castles fall more.
