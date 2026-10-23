@@ -83,7 +83,7 @@ export function castleTurn(B) {
   callAttack(B);
   st.pioneerDue = pioneerDue(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
   const act = structTurn(B, allIds, () => (CFG.ESCORT_FIRST ? escort(B) : null) || pioneer(B) || (CFG.ESCORT ? escort(B) : null) ||
-    (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null));
+    (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null), CFG.PIONEER_EARLY ? () => earlyPioneer(B) : null);
   if (CFG.CASTLE_POST) callPost(B);   // after the build, so a newborn's radio comes first
   return act;
 }
@@ -184,10 +184,29 @@ function pioneerDue(B) {
 }
 
 function pioneer(B) {
-  const w = B.w, st = B.st;
+  const w = B.w;
   const next = nextPioneer(B);
   if (!next) return null;
   if (!w.canAfford(PILGRIM, CFG.PIONEER_DEPART_K + defReserveK(B), 200)) return null;
+  return sendPioneer(B, next);
+}
+
+// CFG.PIONEER_EARLY: through its turn PIONEER_EARLY a castle whose plan opens with a contested cluster sends that one
+// pioneer ahead of the economy pilgrims, on the pilgrim's cost alone (replica 420-425: the field's first pilgrims
+// reached the centre clusters at r11-23 and churched them by r14-53; ours left at r12-16, waiting for the bank to
+// hold PIONEER_DEPART_K + DEF_RESERVE_K after the economy pilgrims of turns 1-5).
+function earlyPioneer(B) {
+  const w = B.w, st = B.st;
+  if (st.earlySent || w.me.turn > CFG.PIONEER_EARLY) return null;
+  const next = nextPioneer(B);
+  if (!next || !(next.m <= CFG.PLAN_CONTEST_FIRST) || !w.canAfford(PILGRIM, 0, 200)) return null;
+  const a = sendPioneer(B, next);
+  if (a) st.earlySent = true;
+  return a;
+}
+
+function sendPioneer(B, next) {
+  const w = B.w, st = B.st;
   const c = B.clusters[next.cluster];
   const b = buildToward(B, PILGRIM, c.site[0], c.site[1], encXY(SIG.CHURCH, c.site[0], c.site[1]));
   if (!b) return null;

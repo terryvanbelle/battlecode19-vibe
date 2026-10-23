@@ -218,6 +218,10 @@ export const CFG = {
   PIONEER_LEAN: 0,           // >0: a pioneer that has waited this many turns beside its free site builds the church on its
                              // cost alone, without DEF_RESERVE_K (420-3: in 401 waiting turns the bank held 80 K 8 times
                              // and 50-79 K 74 times; churches, which hear no castle talk, spent half of it)
+  PIONEER_EARLY: 0,          // >0: through its turn PIONEER_EARLY a castle whose plan opens with a contested cluster (m <=
+                             // PLAN_CONTEST_FIRST) sends that pioneer first, ahead of the economy pilgrims and without
+                             // PIONEER_DEPART_K (replica 420-425: our first pioneers left at r12-16, the field's first
+                             // pilgrims reached the centre clusters at r11-23; castle.js earlyPioneer)
   PIONEER_DEPART_K: 50,      // a castle sends a pioneer once the bank holds a pilgrim, DEF_RESERVE_K and this much more;
                              // the pioneer builds its church only when the bank holds the church and DEF_RESERVE_K (it
                              // waits at the site), so 0 starts the walk on the reserve's surplus and the mining on the way

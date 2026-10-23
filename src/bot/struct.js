@@ -179,12 +179,13 @@ function seers(B, e) {
   return c;
 }
 
-// The structure's turn after role bookkeeping. extra(): castle-only builds (pioneers). Returns an action or null.
-export function structTurn(B, allIds, extra) {
-  if (!CFG.KILL_ZONE) return structAct(B, allIds, extra);
+// The structure's turn after role bookkeeping. extra(): castle-only builds (pioneers); first(): castle-only builds
+// ahead of the economy pilgrims (CFG.PIONEER_EARLY). Returns an action or null.
+export function structTurn(B, allIds, extra, first) {
+  if (!CFG.KILL_ZONE) return structAct(B, allIds, extra, first);
   watchDeaths(B);
   B.st.built = -1;
-  const a = structAct(B, allIds, extra);
+  const a = structAct(B, allIds, extra, first);
   sayZone(B);
   return a;
 }
@@ -201,7 +202,7 @@ export function sayZone(B) {
   w.signal(encXY(SIG.ZONE, z.x, z.y), 25); st.zoneSay = 0;
 }
 
-function structAct(B, allIds, extra) {
+function structAct(B, allIds, extra, first) {
   const st = B.st, w = B.w, me = w.me;
   resolvePending(B);
   refreshAssign(B, allIds);
@@ -268,6 +269,7 @@ function structAct(B, allIds, extra) {
   }
 
   // 3. Economy: a pilgrim for every served depot.
+  if (first) { const a = first(); if (a) return a; }
   const dep = nextDepot(B);
   if (dep && w.canAfford(PILGRIM, Math.max(defReserveK(B), waitK), 2)) {
     const b = buildToward(B, PILGRIM, dep.x, dep.y, encXY(SIG.MINE, dep.x, dep.y));

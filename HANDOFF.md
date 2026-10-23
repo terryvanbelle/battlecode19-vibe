@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 10:38 PDT)
+## State (2026-10-23 11:24 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run built
@@ -17,9 +17,9 @@
 - **VM queue** (`~/jobq`: the runner takes pending jobs in locale `sort` order of their names; gates run from the
   shadow tree ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree,
   outputs in the main tree's out/). Gates at par 2 while saturn runs its 6 slots (8 vCPUs; owner, PROMPTS 18). Now:
-  **h114**'s gate running (...19p), then **h115** (...19q; both pre-registered 09:04), **h116** (...19r, 09:40) and
-  **h118** (...19s, 10:38), with field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject t <= -1,
-  else a replica panel). Done: h113 REJECTED 10:38 (t -1.73), h112 (t 0.71 -> replica panel, waiting), h111 (t 0.82
+  **h115**'s gate running (...19q, pre-registered 09:04), then **h116** (...19r, 09:40) and **h118** (...19s, 10:38),
+  with field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject t <= -1, else a replica panel). Done:
+  h114 REJECTED 11:24 (t -1.63, churches built 312 vs 400), h113 REJECTED 10:38 (t -1.73), h112 (t 0.71 -> replica panel, waiting), h111 (t 0.82
   -> replica panel), h110 REJECTED 09:20 (t -1.73, castles lost 35 vs 24).
   The 21 stale v6-era jobs are in ~/jobq/superseded (PROMPTS 22-24; `tools/move_stale.sh` does such moves now).
   Next job name ...19t (never a longer name such as ...19ga: the locale sort ignores punctuation and puts it before
@@ -30,7 +30,7 @@
   ATTACK_LATE 1001: no general attack; submission 102) block 1 432-437 **REJECTED** 10:47 (net 0);
   **h103** (v7 + ESCORT 2 + ESCORT_UNIT 3; submission 104) block 1 438-443 final: gained 3, lost 2, net +1, t 0.45 ->
   block 2 due; **h111** (v7 + SAFE_BUILD 2; submission 106) block 1 616-621, queued behind the autoscrim's ranked
-  matches (153 waiting at 10:47); **h112** (DEF_SEEN 1) block 1 not yet requested. h103's block 2 and h112's block 1
+  matches (145 waiting at 11:24); **h112** (DEF_SEEN 1) block 1 not yet requested. h103's block 2 and h112's block 1
   go in once fewer than 30 wait: submit, scrim `--panel
   progress/panels/v7-m1.json`, resubmit bots/v7, add the submissions.tsv row. Reading: `contest19.py fetch --new`,
   then `contest19.py compare 420-425 <block>` by the two-block rule. v7 against v6 (414-419: 3 wins in 18) and h82
@@ -39,19 +39,18 @@
   107 (= bots/v7), rated first (1711 at 06:00).
 - **Candidates in hand** (from v7's replica losses and the field censuses, TRAINING_LOG 07:39-10:38): **h112** = v7 +
   DEF_SEEN 1 (threat responses count only defenders that see the attacker; gate t 0.71, mechanism met narrowly ->
-  replica panel when the queue is short); **h114** = v7 + CHAIN_GUARD 1 (the guard quota does not wait for CHAIN_K);
-  **h115** = v7 + ENDGAME_FUEL 900; **h116** = v7 + ECON_RICH 100 (before ECON_UNTIL the bank past 100 K + the
+  replica panel when the queue is short); **h115** = v7 + ENDGAME_FUEL 900; **h116** = v7 + ECON_RICH 100 (before ECON_UNTIL the bank past 100 K + the
   reserves builds the army: v7 banked 245-863 K at r75/r100 in 10 of 18 field games, army 0-3); **h118** = v7 +
   PIONEER_HOLD 64 + PIONEER_LEAN 3 (a pioneer waiting at its site talks CT.WAIT, castles keep the church in the bank;
   after 3 turns it builds without DEF_RESERVE_K: 603 such waiting turns in v7's 18 field games, 356 in 420-3; h117 =
-  the hold alone, parked). h114, h115, h116, h118 are gating (above). Parked: h117, h109 (SAFE_BUILD 1: blocked chain
+  the hold alone, parked). h115, h116, h118 are gating (above); h119 (PIONEER_CALL) waits for a replica panel (no local build triggers it). Parked: h117, h109 (SAFE_BUILD 1: blocked chain
   launches, worse in 2 of 4 cells), h108 (RECALL before the fix), h102 (PIONEER_DETOUR 50: inert), h98 / h99
   (MIL_ROTATION null / [4]), h105 = dist/turtle and h106 (the prophet doctrine lost every self-play test, TRAINING_LOG
   04:22). Open: 1036 (57x57): IanCoolidge0 had 26 pilgrims at r100 and 39 at r200 to our 14 and took the shared and
   our-side bottom clusters; we built no church between r53 and the chain at r310. Field census (09:55): the field's
   pilgrims outnumber ours 1.2-4.9x at r76-100 by standing on more tiles beside more structures (StoneT2000 7-9 by r100
   to our 1-5); 1,119 pioneer turns held by enemy attackers within r2 100 (the held case: h59, h78, h88 all failed).
-- Closed on 2026-10-23 (TRAINING_LOG, progress/ATTEMPTS.md): h104 REJECTED on the replica 10:47 (no general attack: net
+- Closed on 2026-10-23 (TRAINING_LOG, progress/ATTEMPTS.md): h114 REJECTED 11:24 (CHAIN_GUARD 1: t -1.63); h104 REJECTED on the replica 10:47 (no general attack: net
   0); h113 REJECTED 10:38 (CHAIN_CLEAR 2: t -1.73); h110 REJECTED
   09:20 (RECALL 30: t -1.73); h96 REJECTED on the replica 08:35; h100 REJECTED 08:14 (ESCORT_FIRST 1: D-48 look t -0.29); h107 FAILED 06:46 (DEF_FAR_UNIT 3: t -1.89, D 7,
   mechanism missed, castles lost 34 vs 26); h101 FAILED 03:50 (MELEE_BACK 2: t -0.63, mechanism 0.78 vs bar 0.75);

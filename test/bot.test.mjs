@@ -1509,6 +1509,39 @@ test('castle: PIONEER_CALL opens the escort when its pioneer talks BLOCKED, befo
   } finally { Object.assign(CFG, saved); }
 });
 
+test('castle: PIONEER_EARLY sends a contested first pioneer at the plan ahead of the economy, once', () => {
+  const saved = { ...CFG };
+  try {
+    // A map whose red castle plans a contested cluster first (m <= PLAN_CONTEST_FIRST); the enemy is out of sight.
+    let g = null, castle = null, B = null;
+    for (let seed = 1; seed < 80 && !B; seed++) {
+      g = new Game(seed, 100, 20, false, false); castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+      if (!castle) continue;
+      g.robots = g.robots.filter(r => r.team === 0);
+      const b = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+      CFG.PIONEER_EARLY = 0;
+      for (const t of [1, 2, 3]) { castle.turn = t; const w = worldFor(g, castle); b.w = w; b.api = w.api; b.round = t; castleTurn(b); }
+      if (b.st.plan && b.st.plan.length && b.st.plan[0].m <= CFG.PLAN_CONTEST_FIRST) B = b;
+    }
+    assert.ok(B, 'a map with a contested first cluster');
+    const st = B.st, turn = (early, t, k) => {
+      CFG.PIONEER_EARLY = early; st.pending = null; st.pioneers = []; st.earlySent = undefined;
+      castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; B.round = t; w.karbonite = k; castleTurn(B);
+      return st.pending && st.pending.kind;
+    };
+    assert.notStrictEqual(turn(0, 4, 60), 'pioneer');  // v7: the pioneer waits for DEPART_K + reserve (90 K)
+    assert.strictEqual(turn(6, 4, 60), 'pioneer');     // early: the contested pioneer goes first
+    assert.strictEqual(st.earlySent, true);
+    assert.strictEqual(turn(6, 4, 10), 'pioneer');     // ...on the pilgrim's cost alone
+    assert.notStrictEqual(turn(0, 4, 10), 'pioneer');  // (which the v7 rule never sends on)
+    assert.notStrictEqual(turn(6, 7, 10), 'pioneer');  // past its turn, the v7 rule again
+    assert.strictEqual(turn(6, 4, 10), 'pioneer');
+    st.pending = null; st.pioneers = []; castle.turn = 5; B.w = worldFor(g, castle); B.api = B.w.api; B.w.karbonite = 10;
+    castleTurn(B);                                      // st.earlySent stays: one early pioneer per castle
+    assert.notStrictEqual(st.pending && st.pending.kind, 'pioneer');
+  } finally { Object.assign(CFG, saved); }
+});
+
 test('pilgrim: PIONEER_CALL a pioneer that sees a mobile enemy attacker by its site talks BLOCKED', () => {
   const saved = CFG.PIONEER_CALL;
   try {

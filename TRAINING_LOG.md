@@ -3293,3 +3293,30 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   an attacker on our site by r20 as IanCoolidge0 does, so the call never fires locally; h119 waits for a replica
   panel (the only test with the trigger) once the queue is short. dist/block is kept beside dist/camp.
 - h114 (CHAIN_GUARD 1) at 14 of 20 cells: 10 wins of 28, gained 1, lost 5, D 6, t -1.63 (look at D 12).
+
+## 2026-10-23 11:23 — cluster race census: the field takes the rich centre clusters by r14-53, our first pioneer leaves at r12-16; PIONEER_EARLY switch
+- Census (scratch econ/clust.mjs, race.mjs; v7's 18 field games 420-425; clusters by the bot's own clustering; a
+  depot's side by BFS king steps from the two sides' castles; "remote" = no castle within 4 king steps of a depot;
+  held = a castle or church within 2 king steps of a depot). Remote depots held at r150: on our side we 91, they 56
+  (none 10); in the middle they 62, we 6; on their side they 133, we 4. At r50 they already held 32 of our side's.
+- The losses are the big centre clusters (6-12 depots, 17 in the 18 games): the field churched 16 of them, 12 by r53
+  (r14, 22, 23, 23, 27, 27, 29, 40, 41, 44, 46, 53; then 88, 99, 100, 119), its first pilgrim there at r11-45; we
+  churched one (424-2, (28,44), r41). Our pilgrims never came within 2 king steps of 12 of the 17 (on 2591 our
+  pioneer waited out of a prophet's reach at the choke). Our openings (open.js): every castle builds economy pilgrims on turns 1-5 (1-7
+  of them, bank down to 30-80 K), then its first pioneer (SIG.CHURCH) waits for pilgrim + PIONEER_DEPART_K 50 +
+  DEF_RESERVE_K 30 = 90 K: born r12-r16 in all 18 games. The field's first pilgrims leave at r1-r5 (bot1v43: P r1, P
+  r2, prophet r3; IanCoolidge0 crusaders r2-r3, wololo crusader r1).
+- New switch CFG.PIONEER_EARLY (0 = v7): through its turn PIONEER_EARLY a castle whose plan opens with a contested
+  cluster (m <= PLAN_CONTEST_FIRST) sends that one pioneer ahead of the economy pilgrims, on the pilgrim's cost alone
+  (struct.js structAct takes a `first` builder before the economy; castle.js earlyPioneer / sendPioneer). Unit test:
+  default never sends at 10-60 K on turn 4, early sends at 10 K, not after its turn, once per castle.
+
+## 2026-10-23 11:24 — h114 REJECTED (gate t -1.63)
+- h114 (v7 + CHAIN_GUARD 1: the guard quota does not wait for CHAIN_K) vs h87, 20 cells: 16-24, gained 1, lost 5,
+  split 14, D 6, t -1.63 <= -1: rejected by the field-aimed bar. dlv SUM: churches built 312 vs h87's 400 (the guard
+  spends the chain's bank), churches lost 116 vs 168, castles lost 32 vs 29, milBuilt 8,225 vs 7,806. Symcheck 1, 2,
+  3, 2321: contest/combat divergences only. CHAIN_GUARD stays off. h115's gate runs (...19q, 6 of 20 cells).
+- Replica: 145 waiting (139 ranked); no new requests.
+- 11:27: no-op for the PIONEER_EARLY source: out/v7chk17 IDENTICAL, 131 node tests + Python pass. **h120** = v7 +
+  PIONEER_EARLY 6 (fabfb6c8ba10); **h121** = h120 + PIONEER_HOLD 64 + PIONEER_LEAN 3 (8f22f616fcf1: the early
+  pioneer's church is held for, and built on its cost after 3 turns of waiting). Driver diagnostics vs h87 next.
