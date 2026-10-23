@@ -47,6 +47,10 @@ export const CFG = {
   GUARD_BASE: 2,             // peacetime prophets wanted per structure at round 0
   GUARD_ROUNDS: 40,          // one more wanted per this many rounds
   GUARD_MAX: 25,
+  RICH_K: 200,               // past its guard quota a structure's peacetime army still builds while the bank holds more
+                             // than this above the reserves (replica 409-2, seed 1706: h82's castle sat on 225-285 K
+                             // from r100 to r300, its guard full, army 2-9; botfinalsafe built 40-49 units, chained
+                             // churches to our castle and took it at r347)
   ECON_UNTIL: 0,             // >0: no peacetime army before this round (threat responses still build), so karbonite goes
                              // to pilgrims and church pioneers (replica seed 826 vs CometsTech, round 100: eigthbot 8
                              // churches, 47 pilgrims, no military; v3 3 churches, 21 pilgrims, 19 military)

@@ -247,7 +247,7 @@ function structAct(B, allIds, extra) {
   if ((B.round || 0) < CFG.ECON_UNTIL) return null;
   const want = Math.min(CFG.GUARD_MAX, CFG.GUARD_BASE + Math.floor((B.round || 0) / CFG.GUARD_ROUNDS));
   const have = defenders(B, 100);
-  if (have < want || w.karbonite > 200 + reserveK) {
+  if (have < want || w.karbonite > CFG.RICH_K + reserveK) {
     const unit = mixByStock(w) || (CFG.MIL_ROTATION ? CFG.MIL_ROTATION[st.nDef % CFG.MIL_ROTATION.length]
       : (st.nDef % CFG.PREACHER_EVERY === CFG.PREACHER_EVERY - 1) ? PREACHER : PROPHET);
     const army = st.count ? st.count[3] + st.count[4] + st.count[5] : have;

@@ -2437,3 +2437,36 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   fixed round. Re-open: a reserve released only until the rush could first arrive (the mirror castle's crusader
   travel time), or a pioneer paid from the reserve's surplus only. h85 (PIONEER_FAST alone) stays built, waiting:
   h90's K bar suggests it is no economy gain by itself.
+
+## 2026-10-22 22:55 — anti-chain delivery FAILS (h83, h84); h87 delivery PASSES; h91 (RICH_K 0) pre-registered
+- Anti-chain delivery (...a3d577100017, as pre-registered 19:30), each vs h76 on 799, 1706, 2013, 2924 both sides,
+  full games: castles lost h82 6 (2 on 799 twice, 1 on 2924 twice), h83 6, h84 6; wins 4 / 4 / 4. (1) needs <= 3:
+  **h83 and h84 FAIL.** The falsifier held: neither the hunt nor the strike saves a castle from the chain (the same
+  castles fall in the same games). Symcheck h83, h84 on 1, 2, 3, 2013: stops at an axis-tile contest (1) or combat
+  after the first attack. Swapping sides often replays the mirror game for our builds: 799 and 1706 here give equal
+  per-team numbers both ways, and in h82's gate all 20 cells had one winner on both sides (14 the same length).
+- Disclosure: a script measuring that also read h88's running gate file (...a3d577100019): 4 cells done, 1 with one
+  winner on both sides, 3 split; it did not print who won. The gate's bars are unchanged and it is read only when done.
+- h87 delivery (...a3d577100018, as pre-registered 19:40), h87 vs h82 on the same maps: (1) a line of >= 5 churches on
+  h87's side in 7 of 8 (bar 6; census --chain-min 5; 1706 with h87 red had none); (2) h87 wins 6 of 8 (bar 5);
+  (3) castles lost h87 1, h82 8. **PASSES 3/3.** Symcheck h87 on 1, 2, 3, 799: an axis contest at r45 (1), combat
+  after the first attack (2, 3), 799 clean to 300. Gate queued (...a3d577100019b) vs the incumbent h50, 20 random
+  cells from seed0 5000; rebased onto h82 if h82 is accepted before it starts.
+- Replica panel losses so far (block 1, h82's arm): 410-1 (2591) is the opening race (TRAINING_LOG 20:10): pioneer
+  built r14, killed r25 at the centre choke by bot1v43's early prophet; the cluster then rests 100 rounds; the bank
+  sat at 110-140 K from r30 to r95, under the reserves (DEF 30 + PEACE 60 + pioneer due 60 = 150) and ECON_UNTIL.
+  409-2 (1706, h82 red vs botfinalsafe, castle lost r347): from r100 to r300 h82's bank held 225-285 K with an army of
+  2-9, botfinalsafe's 16-49. The castle's guard was full (want 2 + r/40), so struct.js built more only above 200 +
+  reserves (340); the church at (25,11) fed ~20 single units into botfinalsafe's prophets at (23,13); the enemy
+  chained 7 churches up x = 31 to our castle at (31,4).
+- CFG.RICH_K (struct.js step 4; default 200 = the old constant): past its guard quota a structure's peacetime army
+  builds while the bank holds more than RICH_K above the reserves. Unit test: a church with its guard full builds
+  nothing at RICH_K 200 / bank 150, a unit at RICH_K 100 / bank 150, nothing at bank 90. h91 = h82 + RICH_K 0
+  (debe32012d0a). One driver game, h91 red vs h82 on 1706 to 400 (driver loaded: 60 / 103 frozen turns): h91's bank
+  91-116 from r150, h82's 282-302; army at r400 48 vs 102 (h91 lost its contested church at r106: one game).
+- **h91 delivery pre-registered** (VM job ...a3d577100019c, after h87's gate, before any game on its panel; not
+  field-aimed: h82 hoards in self-play too): symcheck h91 on 1, 2, 3, 1706 to 300; h91 vs h82 on 1706, 2740, 203,
+  2591, 2321, 388, 836, 2644 both sides, full games; per-25-round CSVs. PASS needs all 3: (1) h91's mean K bank over
+  r100-400 (every 25 rounds) <= 60% of h82's; (2) h91's mean army over r100-400 >= 115% of h82's; (3) h91 wins >= 8 of
+  16 and loses no more castles than h82. Falsifier: (3), the army spends what the economy needed. On PASS: gate h91
+  vs the incumbent.

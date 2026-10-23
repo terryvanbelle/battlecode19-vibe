@@ -1507,6 +1507,42 @@ test('struct: CHURCH_GUARD_D: a church near its mirror image builds the guard un
   } finally { [CFG.CHURCH_GUARD_D, CFG.CHURCH_GUARD_UNIT, CFG.ECON_UNTIL] = saved; }
 });
 
+test('struct: RICH_K: past its guard quota a church builds army only while the bank exceeds the reserves by RICH_K', () => {
+  const saved = CFG.RICH_K;
+  try {
+    let done = false;
+    for (let seed = 1; seed <= 12 && !done; seed++) {
+      const g = new Game(seed, 100, 20, false, false), n = g.map.length;
+      const pass = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x];
+      let at = null;   // a passable tile with a free ring, no depot within 8 king steps, far from every robot
+      for (let y = 2; y < n - 2 && !at; y++) for (let x = 2; x < n - 2 && !at; x++) {
+        if (!pass(x, y) || !offsets(2).every(([dx, dy]) => pass(x + dx, y + dy)) || g.robots.some(r => king(r.x, r.y, x, y) <= 10)) continue;
+        let dep = false;
+        for (let yy = Math.max(0, y - 8); yy <= Math.min(n - 1, y + 8) && !dep; yy++)
+          for (let xx = Math.max(0, x - 8); xx <= Math.min(n - 1, x + 8); xx++) if (g.karbonite_map[yy][xx] || g.fuel_map[yy][xx]) { dep = true; break; }
+        if (!dep && pass(x + 3, y) && pass(x - 3, y)) at = [x, y];
+      }
+      if (!at) continue;
+      done = true;
+      const run = (rich, k) => {
+        CFG.RICH_K = rich;
+        const church = { id: 4100, team: 0, unit: S.CHURCH, x: at[0], y: at[1], turn: 5, health: 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+        const guard = (id, x) => ({ id, team: 0, unit: S.PROPHET, x, y: at[1], turn: 3, health: 20, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+        const all = g.robots;
+        g.robots = [church, guard(4101, at[0] + 3), guard(4102, at[0] - 3)];   // round 20: want 2, have 2
+        const w = worldFor(g, church); g.robots = all;
+        const B = { api: w.api, w, round: 20, birthRound: 15, st: {}, deps: null, clusters: null, rnd: rng(1) };
+        w.karbonite = k; w.fuel = 2000;
+        return churchTurn(B) || {};
+      };
+      assert.ok(![S.PROPHET, S.PREACHER, S.CRUSADER].includes(run(200, 150).u), 'RICH_K 200, bank 150: guard full, nothing');
+      assert.ok([S.PROPHET, S.PREACHER, S.CRUSADER].includes(run(100, 150).u), 'RICH_K 100, bank 150: a unit');
+      assert.ok(![S.PROPHET, S.PREACHER, S.CRUSADER].includes(run(100, 90).u), 'RICH_K 100, bank 90: nothing');
+    }
+    assert.ok(done, 'a site with no depot near');
+  } finally { CFG.RICH_K = saved; }
+});
+
 test('struct: CHAIN_HOLD_R2: from CHAIN_ROUND a church answers a far attacker only above the chain bank, a near one always', () => {
   const saved = [CFG.CHAIN_HOLD_R2, CFG.CHAIN_ROUND, CFG.CHAIN_K, CFG.ECON_UNTIL, CFG.CHAIN_KEEP, CFG.SERVE_MOVES];
   try {
