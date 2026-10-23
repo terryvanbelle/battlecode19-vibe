@@ -182,7 +182,7 @@ export const CFG = {
                              // tile in rounds 169-180, then the castle)
   SAFE_BUILD: 0,             // 1: structures never build a robot on a tile where the enemy attackers in sight could kill it
                              // before its first turn (struct.js exposure; replica 414-3, seed 836: four prophets in a row
-                             // died unborn on one church tile)
+                             // died unborn on one church tile); 2: counting only attackers with no other target of ours
   PLAN_SERVE_PILGRIM: 0,     // 1: church planning counts a depot as served by pilgrim moves (as staffing does), and
                              // churches a cluster with >= 2 unserved depots (or all, if smaller); 0: any depot within
                              // 2*SERVE_MOVES king steps marks the whole cluster served (seed 1755: never staffed)

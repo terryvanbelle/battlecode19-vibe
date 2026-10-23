@@ -426,10 +426,10 @@ test('struct: SAFE_BUILD never builds onto a tile where the enemies in sight wou
     const dy = castle.y + 7 < g.map.length ? 7 : -7;   // two prophets 7 rows out: r2 37-64 to the near tiles
     const foes = [-1, 1].map((ox, i) => ({ id: 4990 + i, team: 1, unit: S.PROPHET, x: castle.x + ox, y: castle.y + dy, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 }));
     const hits = (x, y) => foes.filter(e => { const r = d2(x, y, e.x, e.y); return r >= 16 && r <= 64; }).length * 10;
-    const turn1 = (safe, wall) => {
+    const turn1 = (safe, wall, extra = []) => {
       CFG.SAFE_BUILD = safe; castle.turn = 1;
       const all = g.robots, map = g.map;
-      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100).concat(foes);
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100).concat(foes, extra);
       if (wall) g.map = map.map((row, y) => row.map((v, x) => (Math.abs(x - castle.x) <= 1 && Math.abs(y - castle.y) <= 1 && hits(x, y) < 20) ? false : v));
       const w = worldFor(g, castle); g.robots = all; g.map = map;
       const B = { api: w.api, w, round: 1, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
@@ -441,6 +441,14 @@ test('struct: SAFE_BUILD never builds onto a tile where the enemies in sight wou
     assert.strictEqual(a1.u, S.PROPHET); assert.ok(hits(castle.x + a1.dx, castle.y + a1.dy) < 20, 'a tile the pair cannot both reach');
     const a2 = turn1(1, true);   // only deadly tiles left: no prophet (the castle shoots instead)
     assert.strictEqual(a2.action, 'attack', JSON.stringify(a2));
+    // SAFE_BUILD 2 counts only attackers with no other target of ours: alone, the pair is counted (as 1)...
+    const b1 = turn1(2), b2 = turn1(2, true);
+    assert.deepStrictEqual([b1.u, b1.dx, b1.dy], [a1.u, a1.dx, a1.dy]); assert.strictEqual(b2.action, 'attack');
+    // ...but with a crusader of ours in both prophets' band they have another target: the default tile again.
+    const cru = { id: 4995, team: 0, unit: S.CRUSADER, x: castle.x, y: castle.y + dy - Math.sign(dy) * 4, turn: 5, health: 40, signal: 0, signal_radius: 0, castle_talk: 0 };
+    assert.ok(foes.every(e => { const r = d2(cru.x, cru.y, e.x, e.y); return r >= 16 && r <= 64; }));
+    const b3 = turn1(2, false, [cru]);
+    assert.strictEqual(b3.u, S.PROPHET); assert.strictEqual(hits(castle.x + b3.dx, castle.y + b3.dy), 20);
   } finally { CFG.SAFE_BUILD = saved; }
 });
 

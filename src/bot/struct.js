@@ -4,7 +4,7 @@ import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './s
 import { d2, ADJ, offsets } from './util.js';
 import { bfs, econ } from './mapinfo.js';
 import { SIG, encXY, encNum } from './comms.js';
-import { isAttacker, pickTarget, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
+import { isAttacker, pickTarget, canHit, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
 import { watchDeaths } from './military.js';
 
 const PILGRIM_OFFS = offsets(4);
@@ -87,10 +87,14 @@ function enemyNear(B, x, y) {
 // castles in their band, crusaders within r2 16, preachers whose 3x3 splash reaches it. A newborn acts after every
 // robot already in the round's queue (replica 414-3, seed 836: in r66-69 a church built four prophets on one tile and
 // each died before its first turn; 414-1, seed 2013: nine on our castle's build tile in r169-180).
-export function exposure(w, x, y) {
+// only (CFG.SAFE_BUILD 2): count only attackers that can hit no mobile robot of ours in sight, whose one target the
+// newborn would be (414's campers; in a contest the enemy has other targets, and one prophet in reach of every tile
+// stopped h109's chain launches on 2013).
+export function exposure(w, x, y, only) {
   let dmg = 0;
   for (const e of w.enemies) {
     const S = STATS[e.unit]; if (!S.damage) continue;
+    if (only && w.friends.some(f => f.unit >= PILGRIM && canHit(e, f.x, f.y))) continue;
     let hit = false;
     if (e.unit === PREACHER) {
       for (let dy = -1; dy <= 1 && !hit; dy++) for (let dx = -1; dx <= 1; dx++) if (d2(x + dx, y + dy, e.x, e.y) <= S.atkMax) { hit = true; break; }
@@ -107,7 +111,7 @@ export function buildToward(B, unit, tx, ty, signal) {
   const safe = CFG.SAFE_BUILD && w.enemies.some(e => STATS[e.unit].damage > 0);
   for (const [dx, dy] of ADJ) {
     const x = me.x + dx, y = me.y + dy; if (!w.free(x, y)) continue;
-    if (safe && exposure(w, x, y) >= STATS[unit].hp) continue;
+    if (safe && exposure(w, x, y, CFG.SAFE_BUILD >= 2) >= STATS[unit].hp) continue;
     const dd = d2(x, y, tx, ty) * 4 + (w.isDepot(x, y) ? 3 : 0);
     if (dd < bd) { bd = dd; best = [dx, dy]; }
   }

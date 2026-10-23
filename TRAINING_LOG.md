@@ -2951,3 +2951,19 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   are unchanged. The unit test 'military: RECALL sends a unit ...' now also checks a chain-born unit keeps its target
   and still walks to the ring (it fails on the old code); 121 node + 57 Python tests pass.
 - h110 = v7 + RECALL 30 (the fixed code). Driver diagnostic on 2013 (h108's case) after h109's.
+
+## 2026-10-23 06:37 — h109 (SAFE_BUILD 1) diagnostic: stillborn gone, chain launches blocked; SAFE_BUILD 2 (h111)
+- Driver, 836 and 2013 to r400 (--det), h87 vs h87 / h109 vs h87 / h87 vs h109 (scratch h109d/out.txt, dlv rows):
+  stillborn h109 0 in all four games (h87 0-5; 15 for h87 blue facing h109 red on 2013). Results: 836 h87 mirror
+  blue lost a castle; h109 red lost one instead (blue h87 then built 420 military to 283); h109 blue lost one like
+  h87 blue. 2013 h87 mirror red wins at r310 through its chain (churches 4 -> 11, preachers 9 -> 34 in r300-310);
+  **h109 red never launched that push** (churches 4 -> 6 by r400, no winner); h109 blue lost at r311 like h87 blue.
+  Worse in 2 of 4 cells, better in none.
+- Cause: exposure() counts every visible attacker, so one enemy prophet that reaches all of a castle's build tiles
+  blocks every build there, the chain's launch pilgrim (chainLaunch -> buildToward, 10 hp) included. In a contest the
+  enemy has other targets; in 414-1 / 414-3 the campers had none but the newborn.
+- SAFE_BUILD 2 (struct.js exposure(w, x, y, only)): an attacker counts only if it can hit no mobile robot of ours in
+  sight (combat.js canHit). Unit test extended (alone the pair still counts; with a crusader of ours in both
+  prophets' band, the default tile again). h111 = v7 + SAFE_BUILD 2 (39be56a5794b). h109 parked. No-op: the defaults
+  build out/v7chk8 replays h87 vs h87 on 799 to 300 IDENTICAL; 121 node + 58 Python tests pass. Driver diagnostic
+  (the same four games against h87) next, then h110's on 2013.

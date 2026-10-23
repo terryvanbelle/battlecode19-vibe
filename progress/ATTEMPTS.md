@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 91 other, 25 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped, 2 sparring partners (147 rows).
+Totals: 92 other, 25 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped, 2 sparring partners (148 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -152,7 +152,7 @@ Totals: 91 other, 25 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped,
 | `h106` | 2026-10-23 | v7 | structural: the field's army doctrine on v7, MIL_ROTATION [4] + ATTACK_ROUND 1001 + ATTACK_LATE 1001 (chain kept) |  |  |  |  | BUILT, NOT QUEUED: lost its lone castle to h87 on 2644 at r279 (as h98 at r277) |
 | `h107` | 2026-10-23 | v7 | v7 + a threat response against a closest attacker beyond r2 36 that is no crusader builds a crusader, not a prophet (DEF_FAR_UNIT=3) |  |  |  |  | QUEUED: VM job ...19i (after h100's extension 2), 20 cells vs h87, field-aimed bars (t >= 2 + deathsOn3/milBuilt below h87's; reject t <= -1; else replica panel); diagnostic on 2013 changes moves from r200, same result |
 | `h108` | 2026-10-23 | v7 | v7 + castle recall (h43 rebased): a castle whose visible attackers outnumber half its defenders radios its position (50 tiles) every 10 rounds; units that hear it come home for 30 rounds (RECALL=30) |  |  |  |  | PARKED: diagnostic on 2013 turned h87's win as red into a castle loss (a recall clears chain-born units' targets for good); not gated |
-| `h109` | 2026-10-23 | v7 | v7 + structures never build onto a tile where the visible enemy attackers could kill the newborn before its first turn (SAFE_BUILD=1) |  |  |  |  | BUILT: no-op IDENTICAL; diagnostic next |
+| `h109` | 2026-10-23 | v7 | v7 + structures never build onto a tile where the visible enemy attackers could kill the newborn before its first turn (SAFE_BUILD=1) |  |  |  |  | PARKED (diagnostic: blocks chain launches; worse 2 of 4 cells; -> h111) |
 | `h94` | 2026-10-23 | h82 | h82 + ATTACK_LATE 1001: prophets and preachers never take attack orders (the all-out march from round 900 is off); crusaders still march from 450 |  |  |  |  | REBASED 2026-10-23 00:45 onto v7 as h96 (its gate job ...a3d577100019d now plays h96 vs h87) |
 | `h95` | 2026-10-23 | h82 | h82 + PIONEER_DEPART_K 0: a pioneer leaves once the bank holds a pilgrim and DEF_RESERVE_K, and builds its church when it holds church + reserve |  |  |  |  | REBASED 2026-10-23 00:45 onto v7 as h97 before its delivery ran |
 | `h96` | 2026-10-23 | v7 | v7 + ATTACK_LATE 1001 (h94 rebased): prophets and preachers never take attack orders; crusaders still march from 450 | 21-19 vs h87 after 20 cells (out/h96_h87.jsonl): gained 2, lost 1, split 17, net +1, t 0.58 |  |  |  | INCONCLUSIVE at 20 cells (D 3 of the 12 the first look needs); extension ranked below h100 |
@@ -161,3 +161,4 @@ Totals: 91 other, 25 queued, 12 accepted, 10 in progress, 4 rejected, 3 dropped,
 | `h99` | 2026-10-23 | v7 | v7 + MIL_ROTATION [4]: peacetime army all prophets |  |  |  |  | BUILT, NOT QUEUED (h98's diagnostic: crusaders win close contests in self-play) |
 | `v7` | 2026-10-23 00:30 | v6 | Frozen snapshot of h87 (bots/v7): v6 + h82's economy switches (ECON_UNTIL 100, PIONEERS_TEAM 6, PEACE_RESERVE_K 60, PLAN_VALUE 10, DEF_RESERVE_K 30) + h76's church chain from round 200; the replica build since submission 99 |  |  | submission 99 | vs v6 29-11; vs h82 6-2 | ACCEPTED 00:30 as v7 (h87 row: gate vs h50) |
 | `h110` | 2026-10-23 06:17 | v7 | castles under attack recall the army (RECALL 30), chain-born units keep their line target (h108 fixed) |  |  |  |  | BUILT |
+| `h111` | 2026-10-23 06:37 | v7 | never build where attackers with no other target of ours would kill the newborn before it acts |  |  |  |  | BUILT |
