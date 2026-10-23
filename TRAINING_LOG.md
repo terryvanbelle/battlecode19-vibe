@@ -3378,3 +3378,11 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - What it shows: at r1000 karbonite, not fuel, is the binding resource for health. Per karbonite a crusader is 40 HP
   for 15 K (2.7 HP/K), a preacher 60 for 30 (2.0), a prophet 20 for 25 (0.8); per fuel the preacher leads (1.2 HP/F
   vs 0.8). So the dump should pick by the bank's F/K ratio: crusaders while F/K > 50/15, preachers when fuel binds.
+
+## 2026-10-23 12:01 — waiters that matched themselves; v7's r1000 replica losses were karbonite-bound
+- Seven background waiters (`until ! pgrep -f "<pattern>"`) had looped since before 11:00: each one's own shell
+  carries its pattern, so pgrep always found it. Stopped; LEARNINGS 30.
+- v7's eight r1000 games in panel 420-425 (dlv on the replica replays): the four losses on health (wololo 836,
+  uvafan 2046, 1653, 1712) end with karbonite 8-28 and fuel 44 / 29,477 / 42 / 16,678. Health 2,910 vs 18,130,
+  970 vs 6,040, 2,330 vs 5,080, 1,800 vs 17,670: the field builds 5-40 times our military (military units ever
+  built: wololo 549 vs our 43 on 836; uvafan 670 vs 17 on 1712). Not a tiebreak margin: an economy one.

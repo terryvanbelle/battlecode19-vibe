@@ -165,3 +165,7 @@
    hand-edited row with an unquoted comma split into 11 fields; four rows (h117, h118, h120, h121) carried their
    sources into the wrong column for hours and the renderer said nothing. `attempts.py` now refuses such a file.
    (TRAINING_LOG 2026-10-23 11:37)
+30. **A waiter must not match itself.** `until ! pgrep -f "unit-tests.sh"; do sleep 5; done` never ends: the waiter's
+   own shell carries the pattern in its command line. Seven such waiters looped for hours unseen. Write the pattern
+   so it cannot match its own text (`pgrep -f "[u]nit-tests.sh"`), or wait on the output file or a PID.
+   (TRAINING_LOG 2026-10-23 12:01)
