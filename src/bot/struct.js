@@ -172,6 +172,12 @@ function defenders(B, r2) {
   for (const r of B.w.friends) if (r.unit >= CRUSADER && d2(me.x, me.y, r.x, r.y) <= r2) c++;
   return c;
 }
+// CFG.DEF_SEEN: our military that see enemy e (and so engage it).
+function seers(B, e) {
+  let c = 0;
+  for (const r of B.w.friends) if (r.unit >= CRUSADER && d2(e.x, e.y, r.x, r.y) <= STATS[r.unit].vision) c++;
+  return c;
+}
 
 // The structure's turn after role bookkeeping. extra(): castle-only builds (pioneers). Returns an action or null.
 export function structTurn(B, allIds, extra) {
@@ -213,7 +219,7 @@ function structAct(B, allIds, extra) {
   if (attackers.length) {
     let closest = attackers[0], cd = 1e9;
     for (const e of attackers) { const r = d2(me.x, me.y, e.x, e.y); if (r < cd) { cd = r; closest = e; } }
-    const ours = defenders(B, 100);
+    const ours = CFG.DEF_SEEN ? seers(B, closest) : defenders(B, 100);
     // CFG.CHAIN_HOLD_R2: from CHAIN_ROUND a church answers attackers farther than this out of what exceeds the chain's
     // bank (seed 799: a front church's answers took 136 of 211 military builds in r200-400 and no line ever fired).
     const hold = CFG.CHAIN_HOLD_R2 && me.unit === CHURCH && chainOn && cd > CFG.CHAIN_HOLD_R2 ? CFG.CHAIN_K : 0;

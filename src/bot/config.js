@@ -180,6 +180,10 @@ export const CFG = {
                              // and inside a prophet's dead zone (r2 < 16) once it closes (replica 414-1, seed 2013:
                              // wololo's prophets just outside our castle's reach shot 9 newborn prophets on its build
                              // tile in rounds 169-180, then the castle)
+  DEF_SEEN: 0,               // 1: a threat response counts as defenders only our military that see the closest attacker
+                             // (0: all within r2 100 of the structure; replica 422-3, seed 2321: bot1v43's prophets
+                             // one at a time at r2 61 shot our castle to death in r112-214 while 42 units of a church
+                             // 11 tiles behind it, out of their sight, counted as its defenders: it built pilgrims)
   SAFE_BUILD: 0,             // 1: structures never build a robot on a tile where the enemy attackers in sight could kill it
                              // before its first turn (struct.js exposure; replica 414-3, seed 836: four prophets in a row
                              // died unborn on one church tile); 2: counting only attackers with no other target of ours

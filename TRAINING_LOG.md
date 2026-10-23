@@ -3018,3 +3018,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   and the 20 cells of seed0 5000 at par 2 (dlv -> out/dlv_gate_hN.txt). Looks when D first reaches 12; accept t >= 2
   with its mechanism; reject t <= -1; in between, a replica panel. Mechanisms (dlv SUM): h111 stillborn below h87's
   and churches built within 5% of h87's (no blocked chains); h110 castles lost below h87's.
+
+## 2026-10-23 07:39 — replica 422 (v7 vs bot1v43): our castle on 2321 shot down by single prophets its 42-unit army never saw; h112 (DEF_SEEN 1)
+- v7's control block so far (421, 422, 425 fetched): against v6's 414-419 on the same cells, gained 3, lost 0
+  (botfinalsafe 2740, bot1v43 388, IanCoolidge0 203); v7 4 wins in 9 cells, v6 3 in 18.
+- 422-3 (seed 2321, 45x45, one castle a side; we blue, lost on castles at r214): bot1v43's prophets came one at a
+  time to (27,14), r2 61 from our castle (33,9): each fired once, the castle killed it with two shots (r112-132 a
+  group of 4-5, then singles r168-214); 10 hp a visit took the castle. Our army stood 5-11 tiles **behind** the
+  castle, on the lattice of our church at the map edge (44,9), which built 42 of our 47 military; their vision
+  (49 / 64 / 16) never reached (27,14). Our combat units made 8 attacks all game; crusaders idle 1,143 of 1,238
+  turns. The castle saw the threat from r109 but counted those units (within r2 100) as defenders and built only
+  pilgrims (r183-212) while it was shot.
+- h112 = v7 + DEF_SEEN 1 (6761211d7809): a threat response counts as defenders only our military that see the
+  closest attacker, so the castle builds a prophet toward a shooter its army cannot see. Unit test; defaults-only
+  build replays h87 vs h87 on 799 IDENTICAL; unit tests 123 pass.

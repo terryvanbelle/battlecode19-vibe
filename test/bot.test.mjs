@@ -418,6 +418,34 @@ test('struct: DEF_FAR_UNIT answers a prophet beyond r2 36 with a crusader; neare
   } finally { CFG.DEF_FAR_UNIT = saved; }
 });
 
+test('struct: DEF_SEEN counts as defenders only our military that see the attacker', () => {
+  const saved = CFG.DEF_SEEN;
+  try {
+    const g = new Game(3, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0), n = g.map.length;
+    const dy = castle.y + 7 < n ? 7 : -7, sx = castle.x + 9 < n ? 1 : -1;
+    const foe = { id: 4990, team: 1, unit: S.PROPHET, x: castle.x, y: castle.y + dy, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 };
+    const pro = (id, x, y) => ({ id, team: 0, unit: S.PROPHET, x, y, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 });
+    // three prophets of ours 7-9 tiles to the side: within r2 100 of the castle, r2 98-130 from the foe (vision 64)
+    const side = [7, 8, 9].map((k, i) => pro(4991 + i, castle.x + sx * k, castle.y));
+    // three between: r2 16-25 from the foe
+    const near = [-1, 0, 1].map((ox, i) => pro(4995 + i, castle.x + ox, castle.y + dy - Math.sign(dy) * 4));
+    assert.ok(side.every(r => d2(r.x, r.y, castle.x, castle.y) <= 100 && d2(r.x, r.y, foe.x, foe.y) > 64));
+    const turn1 = (seen, ours) => {
+      CFG.DEF_SEEN = seen; castle.turn = 1;
+      const all = g.robots;
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100).concat([foe], ours);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round: 1, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 100; w.fuel = 500;
+      return castleTurn(B);
+    };
+    assert.strictEqual(turn1(0, side).action, 'attack');   // default: three defenders counted, the castle shoots
+    assert.strictEqual(turn1(1, side).u, S.PROPHET);       // none of them sees the foe: a prophet toward it
+    assert.strictEqual(turn1(1, near).action, 'attack');   // three that see it
+  } finally { CFG.DEF_SEEN = saved; }
+});
+
 test('struct: SAFE_BUILD never builds onto a tile where the enemies in sight would kill the newborn before it acts', () => {
   const saved = CFG.SAFE_BUILD;
   try {
