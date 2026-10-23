@@ -214,6 +214,8 @@ function structAct(B, allIds, extra) {
     (CFG.FRONT_ROUND && st.frontAt !== undefined && B.round - st.frontAt < 40 ? STATS[CHURCH].costK : 0) +
     (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0) +
     (chainOn ? CFG.CHAIN_K : 0);   // peacetime army only
+  // CFG.PIONEER_HOLD: a castle that hears a pioneer waiting at its site leaves the church's karbonite in the bank.
+  const waitK = CFG.PIONEER_HOLD && st.waitN ? STATS[CHURCH].costK + defReserveK(B) : 0;
 
   // 1. Defence: answer visible attackers with a defender while they outnumber ours; otherwise shoot.
   if (attackers.length) {
@@ -222,7 +224,8 @@ function structAct(B, allIds, extra) {
     const ours = CFG.DEF_SEEN ? seers(B, closest) : defenders(B, 100);
     // CFG.CHAIN_HOLD_R2: from CHAIN_ROUND a church answers attackers farther than this out of what exceeds the chain's
     // bank (seed 799: a front church's answers took 136 of 211 military builds in r200-400 and no line ever fired).
-    const hold = CFG.CHAIN_HOLD_R2 && me.unit === CHURCH && chainOn && cd > CFG.CHAIN_HOLD_R2 ? CFG.CHAIN_K : 0;
+    const hold = Math.max(CFG.CHAIN_HOLD_R2 && me.unit === CHURCH && chainOn && cd > CFG.CHAIN_HOLD_R2 ? CFG.CHAIN_K : 0,
+      waitK && cd > CFG.PIONEER_HOLD ? waitK : 0);
     if (ours < attackers.length * 2 + 1) {
       const unit = cd <= 36 || closest.unit === CRUSADER ? PREACHER : (CFG.DEF_FAR_UNIT || PROPHET);
       if (w.canAfford(unit, hold)) { const b = buildToward(B, unit, closest.x, closest.y); if (b) return b.act; }
@@ -266,7 +269,7 @@ function structAct(B, allIds, extra) {
 
   // 3. Economy: a pilgrim for every served depot.
   const dep = nextDepot(B);
-  if (dep && w.canAfford(PILGRIM, defReserveK(B), 2)) {
+  if (dep && w.canAfford(PILGRIM, Math.max(defReserveK(B), waitK), 2)) {
     const b = buildToward(B, PILGRIM, dep.x, dep.y, encXY(SIG.MINE, dep.x, dep.y));
     if (b) { st.pending = { x: b.x, y: b.y, unit: PILGRIM, kind: 'mine', ref: dep.i }; st.assign.set(dep.i, { id: -1, seen: me.turn }); return b.act; }
   }

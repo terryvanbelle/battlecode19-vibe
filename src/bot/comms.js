@@ -24,6 +24,7 @@ export const CT = {
   CHURCH: 128,   // + cluster index (< 128): a pilgrim built a church at that cluster's site this turn
   UNIT: 64,      // + unit type: the default status byte of every robot from round 4 (castles count the army)
   DEAD: 72,      // + enemy castle index (< 4, see castle.js): a unit saw that enemy castle gone
+  WAIT: 76,      // a pioneer at its free site waiting for the church's karbonite (CFG.PIONEER_HOLD)
   MARCH: 80,     // + unit type: status byte of a military unit not free for a wave: marching, or home guard (CFG.WAVE)
   TAKEN: 88,     // + cluster index (< 40): a pioneer saw an enemy structure at that cluster's site (CFG.EXPAND_ROUND)
   CHAINER: 70,   // a chainer still walking or waiting (CFG.CHAIN_ROUND, chain.js)

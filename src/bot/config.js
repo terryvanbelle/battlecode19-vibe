@@ -206,6 +206,11 @@ export const CFG = {
                              // maps the peacetime army spent every 25 K and no church was ever built: seed 1755);
                              // 2: every castle, while no church stands and any castle planned one (castle.js pioneerDue)
   PIONEER_RESERVE_UNTIL: 100,  // ...mode 2 only before this round
+  PIONEER_HOLD: 0,           // >0: a pioneer at its free site that cannot afford the church says so (CT.WAIT); while one
+                             // does, castles leave the church and DEF_RESERVE_K in the bank when they build pilgrims or
+                             // answer an attacker farther than r2 PIONEER_HOLD (replica 420-3, seed 836: four pioneers
+                             // stood at their sites r24-r121+ while the bank averaged 26 K: castles answered wololo's
+                             // harassers with 20 prophets and staffed depots at 40 K; 356 such turns to r150, 420-1 138)
   PIONEER_DEPART_K: 50,      // a castle sends a pioneer once the bank holds a pilgrim, DEF_RESERVE_K and this much more;
                              // the pioneer builds its church only when the bank holds the church and DEF_RESERVE_K (it
                              // waits at the site), so 0 starts the walk on the reserve's surplus and the mining on the way

@@ -35,6 +35,7 @@ export function castleTurn(B) {
   const allIds = new Set();
   st.count = [1, 0, 0, 0, 0, 0];   // our robots by type, from their status bytes (castles: self + talkers)
   st.march = 0;                    // ...of which military units not free for a wave (CFG.WAVE)
+  st.waitN = 0;                    // pioneers waiting at their sites for the church's karbonite (CFG.PIONEER_HOLD)
   const all = w.robots.concat(w.unplaced);
   st.chainLive = false;            // CFG.CHAIN_ROUND: our chainer still walks or waits
   for (const r of all) {
@@ -45,6 +46,7 @@ export function castleTurn(B) {
     if (CFG.CHAIN_ROUND && r.id === st.chainId) { if (ct === CT.CHAINER) st.chainLive = true; else if (ct === CT.CHAINGONE) st.chainOff = true; }
     if (ct >= CT.UNIT && ct < CT.UNIT + 6) st.count[ct - CT.UNIT]++;
     else if (ct >= CT.MARCH && ct < CT.MARCH + 6) { st.count[ct - CT.MARCH]++; st.march++; }
+    else if (ct === CT.WAIT && CFG.PIONEER_HOLD) { st.count[PILGRIM]++; st.waitN++; }
     if (me.turn <= 3 && r.castle_talk > 0 && r.castle_talk <= 64) {
       const p = st.partial.get(r.id) || {};
       if (r.turn === 1) p.x = r.castle_talk - 1; else if (r.turn === 2) p.y = r.castle_talk - 1;

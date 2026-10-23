@@ -175,6 +175,7 @@ function pilgrimAct(B) {
       }
       // Wait for resources; mine meanwhile if standing on a depot.
       if (st.site) {
+        if (CFG.PIONEER_HOLD && occ === 0) w.talk(CT.WAIT);
         const i = me.y * w.n + me.x;
         if ((w.karb[i] && me.karbonite < KARB_CAP) || (w.fuelD[i] && me.fuel < FUEL_CAP)) return w.fuel >= 1 ? w.mine() : null;
         return null;

@@ -3199,3 +3199,13 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   spent the bank on 20 prophets answering wololo's harassers and on pilgrims at 40 K. In r76-100 the field's
   pilgrims sit by more structures (StoneT2000 7-9 by r100 to our 1-5; mean r2 from a mined tile to its nearest
   structure 1.5-1.9 to our 2-5).
+
+## 2026-10-23 10:00 — PIONEER_HOLD switch (h117); no-op IDENTICAL
+- From the 09:55 census (pioneers starving at free sites while castles spend the bank): CFG.PIONEER_HOLD (0 = v7). A
+  pioneer beside its free site that cannot afford the church talks CT.WAIT (76) instead of its unit byte; a castle
+  that hears one leaves the church and DEF_RESERVE_K (80 K) in the bank when it builds a pilgrim or answers an
+  attacker farther than r2 PIONEER_HOLD (64: out of a prophet's reach of the castle). Churches do not hear castle talk
+  and spend as before; the peacetime army already leaves more (DEF + PEACE_RESERVE_K 90). Unit tests: castle (pilgrim
+  held and released at 90 K, a far prophet answered only at 105 K, a near one at once), pilgrim (talks WAIT, builds
+  when affordable), CT ranges disjoint; 127 node + 58 Python pass. No-op: defaults build out/v7chk14 replays h87 vs
+  h87 on 799 to 300 IDENTICAL (alone on the driver). Built **h117** = v7 + PIONEER_HOLD 64, dist/h117 a50b972763c3.

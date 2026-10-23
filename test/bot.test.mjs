@@ -280,8 +280,10 @@ test('comms: encode/decode', () => {
   const g = decFarRobot({ signal: encXY(3, 7, 50), signal_radius: FAR.WIDE });   // map-wide ATTACK, castle index 2
   assert.deepStrictEqual([g.type, g.x, g.y, g.extra], [SIG.ATTACK, 7, 50, 3]);
   assert.ok(FAR.WIDE <= 2 * 63 * 63 && Math.ceil(Math.sqrt(FAR.WIDE)) === 90);
-  // castle talk ranges never overlap: unit status 64..69, kill reports 72..75, march 80..85, taken 88..127, churches 128+
-  assert.ok(CT.UNIT + 5 < CT.DEAD && CT.DEAD + 3 < CT.MARCH && CT.MARCH + 5 < CT.TAKEN && CT.TAKEN + 39 < CT.CHURCH);
+  // castle talk ranges never overlap: unit status 64..69, chainer 70..71, kill reports 72..75, a waiting pioneer 76,
+  // march 80..85, taken 88..127, churches 128+
+  assert.ok(CT.UNIT + 5 < CT.CHAINER && CT.CHAINGONE < CT.DEAD && CT.DEAD + 3 < CT.WAIT && CT.WAIT < CT.MARCH &&
+    CT.MARCH + 5 < CT.TAKEN && CT.TAKEN + 39 < CT.CHURCH);
 });
 
 test('world: a signal lowers the fuel that later affordability checks see', () => {
@@ -563,6 +565,77 @@ test('struct: ECON_RICH builds the peacetime army before ECON_UNTIL from the ban
     assert.ok([S.CRUSADER, S.PROPHET, S.PREACHER].includes((turn1(100, 600) || {}).u));       // a rich bank builds one
     assert.strictEqual(turn1(100, 100 + reserve), null);                                      // at the threshold: waits
   } finally { [CFG.ECON_RICH, CFG.SERVE_MOVES] = saved; }
+});
+
+test('struct: PIONEER_HOLD keeps the church in the bank from pilgrims and far threat responses while a pioneer waits', () => {
+  const saved = CFG.PIONEER_HOLD;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let P = null;   // the waiting pioneer, somewhere in the castle's sight
+    for (let r = 3; r <= 6 && !P; r++) for (let dx = -r; dx <= r && !P; dx++) if (free(castle.x + dx, castle.y + r)) P = [castle.x + dx, castle.y + r];
+    if (!P) for (let r = 3; r <= 6 && !P; r++) for (let dx = -r; dx <= r && !P; dx++) if (free(castle.x + dx, castle.y - r)) P = [castle.x + dx, castle.y - r];
+    const pio = { id: 4100, team: 0, unit: S.PILGRIM, x: P[0], y: P[1], turn: 30, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    const dy = castle.y + 9 < n ? 9 : -9, dy8 = Math.sign(dy) * 8;   // an enemy prophet at r2 81 / 64
+    const foe = y => ({ id: 4990, team: 1, unit: S.PROPHET, x: castle.x, y: castle.y + y, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const turn1 = (hold, k, wait, enemy) => {
+      CFG.PIONEER_HOLD = hold; castle.turn = 50; pio.castle_talk = wait ? CT.WAIT : CT.UNIT + S.PILGRIM;
+      const all = g.robots;
+      g.robots = all.filter(r => d2(r.x, r.y, castle.x, castle.y) <= 100).concat([pio], enemy ? [foe(enemy)] : []);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round: 50, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = k; w.fuel = 2000;
+      const a = castleTurn(B);
+      return a && a.action === 'build' ? a.u : a ? a.action : null;
+    };
+    const church = S.STATS[S.CHURCH].costK + CFG.DEF_RESERVE_K, pil = S.STATS[S.PILGRIM].costK, pro = S.STATS[S.PROPHET].costK;
+    assert.strictEqual(turn1(0, 50, true), S.PILGRIM);                 // default: the depot gets its pilgrim
+    assert.strictEqual(turn1(64, 50, false), S.PILGRIM);               // no pioneer waits: as before
+    assert.strictEqual(turn1(64, pil + church - 1, true), null);        // one waits: the bank keeps its church
+    assert.strictEqual(turn1(64, pil + church, true), S.PILGRIM);
+    let ran = 0;
+    if (g.map[castle.y + dy] && g.map[castle.y + dy][castle.x] && free(castle.x, castle.y + dy)) {
+      ran++;
+      assert.strictEqual(turn1(0, pro + 10, true, dy), S.PROPHET);     // a far attacker: answered by default
+      assert.notStrictEqual(turn1(64, pro + church - 1, true, dy), S.PROPHET);   // held while a pioneer waits
+      assert.strictEqual(turn1(64, pro + church, true, dy), S.PROPHET);
+    }
+    if (g.map[castle.y + dy8] && g.map[castle.y + dy8][castle.x] && free(castle.x, castle.y + dy8)) {
+      ran++;
+      assert.strictEqual(turn1(64, pro + 10, true, dy8), S.PROPHET);   // one in reach of the castle (r2 64): answered
+    }
+    assert.strictEqual(ran, 2, 'both attacker tiles open on this map');
+  } finally { CFG.PIONEER_HOLD = saved; }
+});
+
+test('pilgrim: PIONEER_HOLD a pioneer beside its free site that cannot afford the church says it waits', () => {
+  const saved = CFG.PIONEER_HOLD;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    g.robots = g.robots.filter(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let P = null, site = null;   // a pilgrim on plain ground next to a free plain tile, out of every castle's way
+    for (let y = Math.floor(n / 2) - 3; y <= Math.floor(n / 2) + 3 && !P; y++) for (let x = 1; x < n - 1 && !P; x++)
+      if (free(x, y) && free(x + 1, y) && g.robots.every(q => d2(q.x, q.y, x, y) > 9)) { P = [x, y]; site = [x + 1, y]; }
+    const pil = { id: 4001, team: 0, unit: S.PILGRIM, x: P[0], y: P[1], turn: 30, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    g.robots.push(pil);
+    const run = (hold, k) => {
+      CFG.PIONEER_HOLD = hold;
+      const w = worldFor(g, pil); let talked = 0; w.api.castleTalk = v => { talked = v; };
+      const B = { api: w.api, w, round: 40, birthRound: 11, st: {}, deps: null, clusters: null, rnd: rng(2) };
+      B.offs = offsets(4); B.nav = new Nav(w, B.offs, B.rnd);
+      pilgrimTurn(B);                                            // setup
+      B.st.site = site.slice(); B.st.cluster = 0; talked = 0;
+      w.karbonite = k; w.fuel = 1000;
+      return { a: pilgrimTurn(B), talked };
+    };
+    const church = S.STATS[S.CHURCH].costK + CFG.DEF_RESERVE_K;
+    assert.deepStrictEqual(run(0, church - 1), { a: null, talked: 0 });       // default: waits in silence
+    assert.deepStrictEqual(run(64, church - 1), { a: null, talked: CT.WAIT });
+    const b = run(64, church);                                                // affordable: builds and reports it
+    assert.strictEqual(b.a.action, 'build'); assert.strictEqual(b.a.u, S.CHURCH); assert.strictEqual(b.talked, CT.CHURCH + 0);
+  } finally { CFG.PIONEER_HOLD = saved; }
 });
 
 testPreV7('struct: PEACE_RESERVE_K holds karbonite back from the peacetime army, not from pilgrims or a threat response', () => {
