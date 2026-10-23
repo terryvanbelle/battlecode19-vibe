@@ -3320,3 +3320,16 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - 11:27: no-op for the PIONEER_EARLY source: out/v7chk17 IDENTICAL, 131 node tests + Python pass. **h120** = v7 +
   PIONEER_EARLY 6 (fabfb6c8ba10); **h121** = h120 + PIONEER_HOLD 64 + PIONEER_LEAN 3 (8f22f616fcf1: the early
   pioneer's church is held for, and built on its cost after 3 turns of waiting). Driver diagnostics vs h87 next.
+
+## 2026-10-23 11:33 — h120 / h121 driver diagnostics: the first church 8-11 rounds earlier; h121's gate queued next (...19qa)
+- h120 and h121 red vs h87 to r150 (scratch h120d; open1.js births, starve1 church rounds). The early pioneer is born
+  at r3 on every seed (two of them on 836, one per castle); first church, candidate vs h87: 2644 r13 vs r24 (both
+  builds); 2591 r18 vs r26 (both; red's pioneer held 19 turns by blue's units); 2013 r13 vs r22 (both); 836 h120
+  r24 vs r22 (the two early pioneers waited for a bank the economy pilgrims of r4 and r12 had spent; churches
+  24,35,48,50,60,60,61 vs 22,41,44,47,55,55,59), h121 r14 (14,33,51,52,53,61,64). h121 makes the race on every seed
+  without h120's two-castle stall, so h121 is gated and h120 is not.
+- h121's gate pre-registered (job ...19qa: the runner's locale sort puts it after the running ...19q and before
+  ...19r): mechanism over the 40 games (starve1 to r150, out/st_h121.txt) - the candidate's first church at least 5
+  rounds earlier than h87's on the mean, churches standing by r100 at least h87's, castles lost (dlv) not above
+  h87's; field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject t <= -1, else a replica panel).
+  dist/h121 on the VM: 8f22f616fcf1.
