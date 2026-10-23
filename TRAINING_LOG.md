@@ -3168,3 +3168,16 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   point (containment by 1-2 prophets in r20-100).
 - No-op: the defaults build out/v7chk13 (src with ECON_RICH) replays h87 vs h87 on 799 to 300 IDENTICAL, alone on the
   driver; unit tests 125 node + 58 Python pass. dist/h116 = v7 + ECON_RICH 100 (1f518954affb).
+
+## 2026-10-23 09:40 — h116's driver diagnostic: the switch moves the army earlier; gate pre-registered and queued (...19r)
+- h116 (v7 + ECON_RICH 100) red vs h87 blue to r150 (--det, alone on the driver). Seed 1653 (no cluster to claim;
+  uvafan's 423-2): at r50 / r75 / r100 red holds K 173 / 178 / 203 with army 11 / 22 / 34, blue K 418 / 658 / 863 with
+  army 0 / 0 / 3; both reach army 43 at r125 and 54 at r150 with the same mined karbonite (the fuel caps the total),
+  so on such maps the switch only brings the army forward. Seed 2321: neither bank passes 100 + reserves before r100
+  (K 22-50), the switch hardly fires; red ends r150 with 5 churches and 24 pilgrims to blue's 1 and 14 (the game
+  parts on contest and combat, not on the switch).
+- Gate **h116** ...19r: 20 cells of seed0 5000 vs h87 at par 2 after a symcheck (1, 2, 3, 2321). Mechanism, summed
+  over the 40 games: at r100 our army above h87's and our bank below it (replay timelines, out/tl_h116.txt); churches
+  built (dlv) at least 95% of h87's; castles lost not above h87's. Bars as at 07:28 (look when D first reaches 12;
+  accept t >= 2 with the mechanism, reject t <= -1, in between a replica panel by the two-block rule).
+- h112's gate (...19n) at 11 of 20 cells: 22 games, 14 wins, gained 3, lost 0, D 3, t 1.73 (no look yet).
