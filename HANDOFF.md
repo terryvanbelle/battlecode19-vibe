@@ -17,10 +17,9 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait; 63 at 03:30). Order at 03:30:
-  **h101**'s gate running (...a3d577100019f: v7 + MELEE_BACK 2, crusaders and preachers stay off lattice tiles ahead
-  of home, vs h87; field-aimed bars; TRAINING_LOG 02:20), then the **time audit** (...19fz: v7 vs v7 on 2740 and 1712
-  under the replica's flags with --logs; TRAINING_LOG 03:45), then **h100**'s extension (...19fzz: the next 20 cells;
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait; 63 at 03:30). Order at 03:50:
+  the **time audit** running (...19fz: v7 vs v7 on 2740 and 1712 under the replica's flags with --logs; TRAINING_LOG
+  03:45), then **h100**'s extension (...19fzz: the next 20 cells;
   after 20 cells 22-18, D 8, t 0.71, mechanism passed). Everything after it is a stale v6 job; new jobs are named to sort ahead of them (between ...19fzz and ...10055, e.g.
   ...19g; draft in scratch: ...19h = h103's gate). **v7 on the replica**: measurement block 420-425 (created 03:27,
   progress/panels/v7-m1.json = h82-b1's maps, the same 6 opponents as 408-413 / 414-419), waiting in queue order (the
@@ -32,7 +31,7 @@
   arrive); sparring bot dist/camp = v7 + ESCORT_FIRST 1 + ESCORT_MIRROR 1 (bot1v43's round-3 prophet on our contested
   site; h87 out-expands it 5 churches to 2 on 2321); both wait for v7's replica block; h98 (MIL_ROTATION null) and h99
   ([4]), after the combat census (01:45: 92% of our lost crusaders never fired on the replica) and h98's driver loss
-  on 2644. Closed: h97 delivery FAILED 01:25 (PIONEER_DEPART_K 0: 1 of 3 bars); h91 delivery FAILED 01:10 (RICH_K 0:
+  on 2644. Closed: **h101** (MELEE_BACK 2) FAILED 03:50 (gate t -0.63, D 10; mechanism 0.78, bar 0.75); h97 delivery FAILED 01:25 (PIONEER_DEPART_K 0: 1 of 3 bars); h91 delivery FAILED 01:10 (RICH_K 0:
   wins 7 of 16); **h87 ACCEPTED as v7** 00:30 (gate vs h50 t 2.06); h82 superseded by it (its field-aimed panel
   block 1, replica matches 408-413 (h82, sub 97) vs 414-419 (v6, sub 98), final at 01:00: net +2 over 18 cells,
   gained 3, lost 1; progress/panels/h82-b1.json); h88 REJECTED 00:00 (net -2, t -1.41; dist/h93 = h88 + ESCORT 2
