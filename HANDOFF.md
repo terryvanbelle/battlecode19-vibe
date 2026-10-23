@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 09:13 PDT)
+## State (2026-10-23 09:20 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run built
@@ -17,9 +17,9 @@
 - **VM queue** (`~/jobq`: the runner takes pending jobs in locale `sort` order of their names; gates run from the
   shadow tree ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree,
   outputs in the main tree's out/). Gates at par 2 while saturn runs its 6 slots (8 vCPUs; owner, PROMPTS 18). Now:
-  **h110**'s gate running (...19m, pre-registered 07:28: castles lost below h87's), then **h112** (...19n), **h113**
-  (...19o), **h114** (...19p), **h115** (...19q), all pre-registered at 09:04 with field-aimed bars (look at D 12;
-  accept t >= 2 with the mechanism, reject t <= -1, else a replica panel). h111's gate is done (t 0.82 -> panel).
+  **h112**'s gate running (...19n), then **h113** (...19o), **h114** (...19p), **h115** (...19q), all pre-registered
+  at 09:04 with field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject t <= -1, else a replica
+  panel). Done: h111 (t 0.82 -> replica panel), h110 REJECTED 09:20 (t -1.73, castles lost 35 vs 24).
   The 21 stale v6-era jobs are in ~/jobq/superseded (PROMPTS 22-24; `tools/move_stale.sh` does such moves now).
   Next job name ...19r (never a longer name such as ...19ga: the locale sort ignores punctuation and puts it before
   ...19g).
@@ -40,7 +40,7 @@
   death unseen by 42 units behind it; driver diagnostic: as blue on 2013 it won where h87's blue loses); **h113** = v7
   + CHAIN_CLEAR 2 (no chain line while the chainer sees 2+ enemy units; census: such lines kept 4 of 44 churches);
   **h114** = v7 + CHAIN_GUARD 1 (the guard quota does not wait for CHAIN_K; the army stood still r200-400 in 5 of 9 v7
-  field games); **h115** = v7 + ENDGAME_FUEL 900. All four gate after **h110** (above). Parked: h109 (SAFE_BUILD 1: blocked chain launches, worse in
+  field games); **h115** = v7 + ENDGAME_FUEL 900. All four are gating (above). Parked: h109 (SAFE_BUILD 1: blocked chain launches, worse in
   2 of 4 cells), h108 (RECALL before the fix), h102 (PIONEER_DETOUR 50: inert), h98 / h99 (MIL_ROTATION null / [4]),
   h105 = dist/turtle and h106 (the prophet doctrine lost every self-play test, TRAINING_LOG 04:22). Open: 1036
   (57x57): IanCoolidge0 had 26 pilgrims at r100 and 39 at r200 to our 14 and took the shared and our-side bottom

@@ -3136,3 +3136,13 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   LEARNINGS 8). Inflow: the autoscrim stays held while 30+ wait; no new replica requests from us until the queue is
   short (h111's block went in before the fire showed). h103's block 438-443 is running now; h104's 432-437 has 436
   left; h111's 616-621 runs last.
+
+## 2026-10-23 09:20 — h110 REJECTED (gate t -1.73, castles lost 35 vs 24); h96's replica block final net -3; h103 at 9 of 18
+- h110 (v7 + RECALL 30, chain-born units keep their line target) vs h87, 20 cells: 17-23, gained 0, lost 3, split 17,
+  D 3, t -1.73 <= -1: rejected by the field-aimed bar. Mechanism opposite: dlv SUM castles lost 35 vs h87's 24 (the
+  recall pulls the army home and the push it was making fails), milLost 5,232 vs 4,715. Symcheck: contest/combat
+  divergences only. RECALL stays off; the 2013 diagnostic's split (red lost, blue won) was the whole story.
+- h96's block 426-431 complete (430 in): gained 0, lost 3, net -3, t -1.73; h96 3/18 vs v7 6/18 (rejected at 08:35).
+- h103 (ESCORT 2, ESCORT_UNIT 3) block 438-443, 9 of 18 games (438, 439, 440): gained 1 (bot1v43 seed 2591: v7 lost
+  its castles at r214, h103 won at r758), lost 1 (botfinalsafe seed 203: v7 won at r1000, h103 lost at r939), net 0.
+- VM: h112's gate (...19n) running, then h113, h114, h115. Replica: 176 waiting (170 ranked); fetched 430, 438, 439.
