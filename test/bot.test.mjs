@@ -8,7 +8,7 @@ import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile } from '../src/bot/military.js';
-import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
+import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
@@ -20,6 +20,15 @@ import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch } from '..
 const require = createRequire(import.meta.url);
 const SPECS = require('../engine/node_modules/bc19/specs.json');
 const Game = require('../engine/node_modules/bc19/game.js');
+// v7 (2026-10-23) turned on h82's economy switches and h76's chain. Tests written against v6's defaults for other
+// switches pin those v6 values (the peacetime army builds from round 1, no reserves, no chain) and restore everything.
+const PRE_V7 = { ECON_UNTIL: 0, PIONEERS_TEAM: 0, PEACE_RESERVE_K: 0, PLAN_VALUE: 0, DEF_RESERVE_K: 0, CHAIN_ROUND: 0,
+  CHAIN_STAGE: 12, CHAIN_K: 300, CHAIN_F: 1200, CHAIN_END_R2: 49, CHAIN_MIX: [5, 3], CHAIN_KEEP: 0, CHAIN_SAFE: 0 };
+const testPreV7 = (name, fn) => test(name, () => {
+  const saved = { ...CFG };
+  Object.assign(CFG, PRE_V7);
+  try { fn(); } finally { Object.assign(CFG, saved); }
+});
 
 test('specs.js matches the engine', () => {
   for (let u = 0; u < 6; u++) {
@@ -387,7 +396,7 @@ test('struct: DEF_RESERVE_K holds karbonite back from pilgrims and the guard, no
   } finally { CFG.DEF_RESERVE_K = saved; }
 });
 
-test('struct: ECON_UNTIL keeps the peacetime army out before that round, not a threat response', () => {
+testPreV7('struct: ECON_UNTIL keeps the peacetime army out before that round, not a threat response', () => {
   const saved = [CFG.ECON_UNTIL, CFG.SERVE_MOVES];
   try {
     const g = new Game(3, 100, 20, false, false), n = g.map.length;
@@ -413,7 +422,7 @@ test('struct: ECON_UNTIL keeps the peacetime army out before that round, not a t
   } finally { [CFG.ECON_UNTIL, CFG.SERVE_MOVES] = saved; }
 });
 
-test('struct: PEACE_RESERVE_K holds karbonite back from the peacetime army, not from pilgrims or a threat response', () => {
+testPreV7('struct: PEACE_RESERVE_K holds karbonite back from the peacetime army, not from pilgrims or a threat response', () => {
   const saved = [CFG.PEACE_RESERVE_K, CFG.SERVE_MOVES];
   try {
     const turn1 = (g, castle, reserve, k, enemy) => {
@@ -440,7 +449,7 @@ test('struct: PEACE_RESERVE_K holds karbonite back from the peacetime army, not 
   } finally { [CFG.PEACE_RESERVE_K, CFG.SERVE_MOVES] = saved; }
 });
 
-test('struct: MIX_BY_STOCK builds crusaders when karbonite binds, preachers when fuel binds, else the rotation', () => {
+testPreV7('struct: MIX_BY_STOCK builds crusaders when karbonite binds, preachers when fuel binds, else the rotation', () => {
   const saved = [CFG.MIX_BY_STOCK, CFG.SERVE_MOVES];
   try {
     const g = new Game(3, 100, 20, false, false), n = g.map.length;
@@ -1150,7 +1159,7 @@ test('castle: PIONEER_LOST_DOUBLE doubles the rest before re-sending a pioneer w
   } finally { Object.assign(CFG, saved); }
 });
 
-test('castle: PIONEERS_TEAM lets a lone castle keep more pioneers in flight; off, MAX_PIONEERS per castle', () => {
+testPreV7('castle: PIONEERS_TEAM lets a lone castle keep more pioneers in flight; off, MAX_PIONEERS per castle', () => {
   const saved = { ...CFG };
   try {
     const g = new Game(1205, 100, 20, false, false);   // one castle a side, 12 clusters
@@ -1171,6 +1180,30 @@ test('castle: PIONEERS_TEAM lets a lone castle keep more pioneers in flight; off
     assert.strictEqual(maxPioneers(st), 2);
     st.castles.delete(7002);
     assert.strictEqual(maxPioneers(st), 3);
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('castle: PIONEER_DEPART_K 0 sends a pioneer on the pilgrim and the reserve; the default waits for the church too', () => {
+  const saved = { ...CFG };
+  try {
+    const g = new Game(1205, 100, 20, false, false);   // one castle a side, 12 clusters
+    const castle = g.robots.find(r => r.team === 0);
+    const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    for (const t of [1, 2, 3]) { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; castleTurn(B); }
+    const st = B.st, w = B.w;
+    st.pioneers = []; st.pending = null; B.round = 3; w.fuel = 500;
+    CFG.DEF_RESERVE_K = 30;
+    w.karbonite = 89;
+    assert.strictEqual(pioneer(B), null);                 // default: pilgrim 10 + church 50 + reserve 30
+    CFG.PIONEER_DEPART_K = 0;
+    w.karbonite = 39;
+    assert.strictEqual(pioneer(B), null);                 // the reserve still holds
+    w.karbonite = 40;
+    const act = pioneer(B);
+    assert.ok(act, 'a pioneer leaves on 40 K');
+    assert.strictEqual(st.pioneers.length, 1);
+    assert.strictEqual(st.pioneers[0].cluster, st.plan[0].cluster);
+    assert.strictEqual(st.pending.kind, 'pioneer');
   } finally { Object.assign(CFG, saved); }
 });
 
@@ -1240,7 +1273,7 @@ test('military: ESCORT a unit born hearing SIG.GUARD holds the lattice around th
   } finally { Object.assign(CFG, saved); }
 });
 
-test('castle: PLAN_CONTEST_FIRST plans the clusters the enemy nearly reaches before nearer safe ones, mirror-identical', () => {
+testPreV7('castle: PLAN_CONTEST_FIRST plans the clusters the enemy nearly reaches before nearer safe ones, mirror-identical', () => {
   const saved = CFG.PLAN_CONTEST_FIRST;
   try {
     const plan = (team, cf) => {
@@ -1512,7 +1545,7 @@ test('struct: CHURCH_GUARD_D: a church near its mirror image builds the guard un
   } finally { [CFG.CHURCH_GUARD_D, CFG.CHURCH_GUARD_UNIT, CFG.ECON_UNTIL] = saved; }
 });
 
-test('struct: RICH_K: past its guard quota a church builds army only while the bank exceeds the reserves by RICH_K', () => {
+testPreV7('struct: RICH_K: past its guard quota a church builds army only while the bank exceeds the reserves by RICH_K', () => {
   const saved = CFG.RICH_K;
   try {
     let done = false;
@@ -1646,7 +1679,7 @@ function chainFixture() {
   return { g, n, ours, mk, world, me: w0.me, far, near, farther, mid, mine, castleAt };
 }
 
-test('chain: a church born in a chain builds the next pilgrim one step nearer, or military aimed at the castle when near', () => {
+testPreV7('chain: a church born in a chain builds the next pilgrim one step nearer, or military aimed at the castle when near', () => {
   const saved = CFG.CHAIN_ROUND;
   try {
     const X = chainFixture();
@@ -1677,7 +1710,7 @@ test('chain: a church born in a chain builds the next pilgrim one step nearer, o
   } finally { CFG.CHAIN_ROUND = saved; }
 });
 
-test('chain: a staged chainer waits for CHAIN_K and CHAIN_F, then builds the first church; it fires early when threatened', () => {
+testPreV7('chain: a staged chainer waits for CHAIN_K and CHAIN_F, then builds the first church; it fires early when threatened', () => {
   const saved = CFG.CHAIN_ROUND;
   try {
     CFG.CHAIN_ROUND = 150;
@@ -1732,7 +1765,7 @@ test('chain: a staged chainer waits for CHAIN_K and CHAIN_F, then builds the fir
   } finally { CFG.CHAIN_ROUND = saved; }
 });
 
-test('chain: a chainer that gets no nearer stages near the line, and quits far from it', () => {
+testPreV7('chain: a chainer that gets no nearer stages near the line, and quits far from it', () => {
   const saved = CFG.CHAIN_ROUND;
   try {
     CFG.CHAIN_ROUND = 150;
@@ -1761,7 +1794,7 @@ test('chain: a chainer that gets no nearer stages near the line, and quits far f
   } finally { CFG.CHAIN_ROUND = saved; }
 });
 
-test('chain: a unit born with the chain radio targets the castle and learns the round from a castle in sight', () => {
+testPreV7('chain: a unit born with the chain radio targets the castle and learns the round from a castle in sight', () => {
   const saved = CFG.CHAIN_ROUND;
   try {
     CFG.CHAIN_ROUND = 150;

@@ -2551,3 +2551,56 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   h82 first, h94 is rebased onto v6.
 - Panel block 1: 419 (v6 vs IanCoolidge0) 0-3 like h82's 413, so those 3 cells are 0; net +2 over 12 cells; 412, 417
   and 418 run (417 kept 2 games across the 23:30 restart).
+
+## 2026-10-23 00:15 — h95 (pioneers leave on the reserve's surplus) pre-registered
+- Replica 411-3 (seed 1712, 62x62, h82 vs uvafan): to round 110 the two sides built alike (h82 26 pilgrims, 5
+  churches, 25 military; uvafan 35, 6, 26); the gap opened in r100-200 (pilgrims 24 -> 26 vs 31 -> 42). uvafan held
+  both clusters on the axis, churched at r27 (31,15) and r40 (31,45), with pilgrims on the depots of our half beside
+  them through round 300. Our castle (21,3) built 4 pilgrims in r1-4, then nothing until r23: h82's pioneer needs
+  pilgrim 10 + church 50 + DEF_RESERVE_K 30 = 90 K in the shared bank before it leaves; our first churches came at
+  r30 (6,33) and r41 (21,22), the centre at r50 (25,12). In 391-3 (seed 70) uvafan's centre church (40,26) at r31
+  built 9 pilgrims in r33-47, and two of its churches went up next to ours on our half and built preachers.
+- CFG.PIONEER_DEPART_K (castle.js pioneer; default 50 = the old 50 + reserve): the karbonite beyond a pilgrim and
+  DEF_RESERVE_K a castle needs to send a pioneer. The pioneer already waits at its site until the bank holds church
+  + reserve (pilgrim.js), so at 0 the walk starts on the reserve's surplus and the mining on the way pays the church;
+  the 30 K threat reserve stays in the bank throughout (h89 released it before round 30 and lost castles to rush4).
+  Unit test (seed 1205): with DEF_RESERVE_K 30 the default needs 90 K, 0 needs 40 K and refuses at 39. No-op:
+  today's src with h82's cfg vs dist/h82 --det on 1712 to 150 replays h82 vs h82 IDENTICAL.
+- Driver diagnostic, h95 = h82 + PIONEER_DEPART_K 0, red vs h82 on 1712 to 150 (--det): centre church (30,12) at
+  r24 (h82 in the same seat: r44); first church r24 vs r30; K mined by r150 2,928 vs h82's 2,458 in the same seat
+  (+19%; vs this game's h82 blue 2,328), fuel 13,210 vs 11,650, pilgrims 30 vs 29. The church at (6,33) came at r55
+  instead of r30: waiting pioneers build in arrival order, not plan order.
+- **Delivery pre-registered** (VM job ...a3d577100019cz, after the h91 delivery, before h94's gate), h89's maps and
+  bars: symcheck h95 on 1, 2, 3, 2591 to 200; race: h95 vs h82 on 2591, 2965, 1915, 1592, 70, 1241, 836, 493 both
+  sides to 150; rush: h95 vs bots/rush4 on h82's 20 poor one-castle maps both sides to 200 (h82: 0 castles lost of
+  40). PASS needs all 3: (1) first church round on h95's side, mean over the 16 race games, <= h82's side mean - 3;
+  (2) K mined by r150 on h95's side >= 105% of h82's side; (3) castles h95 loses to rush4 <= 2 of 40. Falsifier: (2),
+  pioneers that wait at their sites mine less than depot pilgrims would. On PASS: gate h95 vs the incumbent.
+
+## 2026-10-23 00:45 — h87 ACCEPTED (t 2.06): frozen as v7, now the src defaults; h94 / h95 rebased as h96 / h97
+- Gate h87 (h82 + h76's church chain) vs h50 (= v6), 20 cells from seed0 5000 (out/h87_h50.jsonl, finished 00:22):
+  29-11; gained 14, lost 5, split 1, net +9, **t 2.06** (pre-registered accept at t >= 2). h87's wins: 25 on
+  castles, 4 on health; losses 4 castles, 7 health. h87 0 errors, 0 frozen, 0 timeouts (h50: 27 frozen turns).
+  **ACCEPTED** as v7.
+- bots/v7 = dist/h87 (gate hash 9ce9cf4845c9; ROSTER.tsv). Replica submission 99 ("v7 (h87): ..."), accepted:
+  matches created from now play v7. h82's panel block 1 (412, 417, 418 still running) keeps the builds it was
+  created with and finishes for the record; h82 itself is superseded by h87, which contains it.
+- src defaults now ECON_UNTIL 100, PIONEERS_TEAM 6, PEACE_RESERVE_K 60, PLAN_VALUE 10, DEF_RESERVE_K 30, CHAIN_ROUND
+  200, CHAIN_STAGE 15, CHAIN_END_R2 2, CHAIN_K 1000, CHAIN_F 3500, CHAIN_MIX [5], CHAIN_KEEP 1, CHAIN_SAFE 1. Ten unit
+  tests of other switches assumed v6's values; they now pin them (test/bot.test.mjs testPreV7). Identity, --det on
+  799 to 300 (a chain fires at r258): the defaults-only build dist/v7d (37,563 bytes, the minifier drops the dead
+  branches; dist/h87 52,379) and today's src with h87's cfg (out/h87chk) each replay h87 vs h87 IDENTICAL.
+- Rebased before they ran (the incumbent changed): h94 -> **h96** = v7 + ATTACK_LATE 1001, gate vs h87 (job
+  ...a3d577100019d rewritten, same cells and bars); h95 -> **h97** = v7 + PIONEER_DEPART_K 0, delivery vs h87 (job
+  ...a3d577100019cz rewritten; the race control is h87, rush4 and the bars as pre-registered at 00:15). The h91
+  delivery (running, vs h82) reads as pre-registered; if it passes, its gate is v7 + RICH_K 0 vs h87.
+- The v6 gates still in ~/jobq/pending (h64, h71, h76, h20v6, h15v6, h65, h79, the anti-chain panel, h8v6, h55's
+  and h24v5's extensions, the rebased-to-v6 group) are stale now; new jobs go in ahead of them (job names sort
+  first) until the owner decides on moving them.
+
+## 2026-10-23 01:00 — h82's panel block 1, final (for the record; h82 is superseded by v7)
+- Replica 408-413 (h82, sub 97) vs 414-419 (v6, sub 98), 6 opponents x 3 maps, both builds on the same cells
+  (progress/panels/h82-b1.json): h82 won 5 of 18, v6 3 of 18. Gained 3 (botfinalsafe seed 2740, bot1v43 seed 388,
+  awesomelemonade seed 2797), lost 1 (awesomelemonade seed 2518), 14 split; **net +2**. Block 1 alone cannot meet the
+  two-block accept (net >= +3); no block 2: h82 is closed. Swept both ways: m-schier wololo, uvafan, IanCoolidge0
+  (each build won 0 of the 3 cells against each), bot1v43 on 2591 and 2321.

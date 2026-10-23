@@ -11,7 +11,7 @@ import { chainLaunch } from './chain.js';
 
 const KING = offsets(2), PILGRIM_OFFS = offsets(4);
 
-export { callDue, planClusters, expandPlan, nextPioneer, pioneerDue };
+export { callDue, planClusters, expandPlan, nextPioneer, pioneerDue, pioneer };
 
 export function castleTurn(B) {
   const w = B.w, me = w.me, st = B.st;
@@ -180,7 +180,7 @@ function pioneer(B) {
   const w = B.w, st = B.st;
   const next = nextPioneer(B);
   if (!next) return null;
-  if (!w.canAfford(PILGRIM, 50 + defReserveK(B), 200)) return null;
+  if (!w.canAfford(PILGRIM, CFG.PIONEER_DEPART_K + defReserveK(B), 200)) return null;
   const c = B.clusters[next.cluster];
   const b = buildToward(B, PILGRIM, c.site[0], c.site[1], encXY(SIG.CHURCH, c.site[0], c.site[1]));
   if (!b) return null;

@@ -5,11 +5,11 @@ export const CFG = {
   CLUSTER_LINK_R2: 10,       // depots within this r2 of each other form one cluster
   CLAIM_MARGIN: 1,           // church a remote cluster if our distance <= enemy's + margin (moves)
   MAX_PIONEERS: 2,           // church pioneers in flight per castle
-  PIONEERS_TEAM: 0,          // >0: ...at least ceil(this / our castles) per castle (replica 406-3, seed 53, one castle a side:
+  PIONEERS_TEAM: 6,          // >0: ...at least ceil(this / our castles) per castle (replica 406-3, seed 53, one castle a side:
                              // our 2 pioneers went to contested sites 34 and 47 steps out and the castle built nothing
                              // from round 5 to 67 with 90 karbonite reserved; StoneT2000 had 8 churches at 80 to our 3)
   PLAN_CONTEST_FIRST: 6,     // >0: planned clusters the enemy reaches within this many moves of us are pioneered first
-  PLAN_VALUE: 0,             // >0: within those classes, fewest (king steps + this) per depot first, not nearest first
+  PLAN_VALUE: 10,            // >0: within those classes, fewest (king steps + this) per depot first, not nearest first
                              // (replica 403, seed 1375: wololo churched the two 7-depot clusters at 42 steps at r32
                              // and r49; we planned them 6th and 7th behind 3-depot ones)
   PIONEER_MIN_ROUND: 2,
@@ -51,7 +51,7 @@ export const CFG = {
                              // than this above the reserves (replica 409-2, seed 1706: h82's castle sat on 225-285 K
                              // from r100 to r300, its guard full, army 2-9; botfinalsafe built 40-49 units, chained
                              // churches to our castle and took it at r347)
-  ECON_UNTIL: 0,             // >0: no peacetime army before this round (threat responses still build), so karbonite goes
+  ECON_UNTIL: 100,           // >0: no peacetime army before this round (threat responses still build), so karbonite goes
                              // to pilgrims and church pioneers (replica seed 826 vs CometsTech, round 100: eigthbot 8
                              // churches, 47 pilgrims, no military; v3 3 churches, 21 pilgrims, 19 military)
   MIL_FUEL_RESERVE: 300,     // peacetime military builds keep this much fuel back (movement and mining need it)
@@ -113,16 +113,16 @@ export const CFG = {
   STRIKE_R2: 0,              // >0: a structure that sees an enemy church within this r2 and no enemy attacker builds a
                              // preacher toward it first (struct.js strike; seeds 1915, 2030, 2924: mirror churches 1-5
                              // tiles apart, won by whichever side's preacher acted first)
-  CHAIN_ROUND: 0,            // >0: from this round castles build church chains at their mirror castles (chain.js: a
+  CHAIN_ROUND: 200,          // >0: from this round castles build church chains at their mirror castles (chain.js: a
                              // pilgrim waits CHAIN_STAGE king steps out until the bank holds CHAIN_K and CHAIN_F, then
                              // church, pilgrim, church... one tile nearer each, all in one round, up to CHAIN_END_R2 of
                              // the castle; each church builds CHAIN_MIX units aimed at it for CHAIN_BURST turns.
                              // Replica scrim 200, seed 2924: StoneT2000's bot1v43 took all three of our castles so)
-  CHAIN_STAGE: 12,
-  CHAIN_K: 300,              // ...and from CHAIN_ROUND the peacetime army leaves this much karbonite in the bank
-  CHAIN_F: 1200,
-  CHAIN_END_R2: 49,
-  CHAIN_MIX: [5, 3],
+  CHAIN_STAGE: 15,
+  CHAIN_K: 1000,             // ...and from CHAIN_ROUND the peacetime army leaves this much karbonite in the bank
+  CHAIN_F: 3500,
+  CHAIN_END_R2: 2,
+  CHAIN_MIX: [5],
   CHAIN_BURST: 40,
   CHAIN_FUEL_KEEP: 100,      // ...burst builds leave this much fuel
   CHAIN_EVERY: 100,          // a castle sends its next chainer this many rounds after the last (none while one waits)
@@ -133,10 +133,10 @@ export const CFG = {
   CHAIN_FIRE_NEAR: 0,        // 1: a threatened chainer starts its line early only within that band too (else it flees)
   CHAIN_HOLD_R2: 0,          // >0: from CHAIN_ROUND a church's threat response leaves CHAIN_K in the bank unless the
                              // nearest attacker is within this r2 (struct.js; castles always answer)
-  CHAIN_KEEP: 0,             // 1: a church that never learned the round (a line church; one whose builder died before
+  CHAIN_KEEP: 1,             // 1: a church that never learned the round (a line church; one whose builder died before
                              // its first turn) counts as past CHAIN_ROUND: its peacetime army (and CHAIN_HOLD_R2)
                              // leaves CHAIN_K in the bank
-  CHAIN_SAFE: 0,             // 1: a chainer within a visible attacker's reach this turn neither starts its line nor
+  CHAIN_SAFE: 1,             // 1: a chainer within a visible attacker's reach this turn neither starts its line nor
                              // waits: it flees (chain.js; a church acts after every robot already in the round)
   CHURCH_FIRST_R2: 0,        // >0: an enemy church within this r2 of a unit's home structure is its first target
   CHURCH_FIRST_V: 3,         // (military.js churchFirst); preachers count it this much in the splash
@@ -153,11 +153,11 @@ export const CFG = {
                              // per fuel); the rotation between (h35 lost gate seeds 905 and 2855 with K 0 and F
                              // 12,540 / 13,916 unspent; it won 2202, 241, 357 with K 3,000-8,700 and F ~60)
   RESERVE_CHURCH_K: 50,      // karbonite kept back while a pioneer is out
-  PEACE_RESERVE_K: 0,        // >0: every structure's peacetime army leaves this much karbonite in the bank (castles act
+  PEACE_RESERVE_K: 60,       // >0: every structure's peacetime army leaves this much karbonite in the bank (castles act
                              // first in a round, so the churches' army had spent it before a castle's turn: replica
                              // 394-2, seed 70: after round 24 neither castle afforded a pioneer (60 K), bank 0-40, 2 of 4
                              // planned sites never churched, 2.7x fewer mines than awesomelemonade by round 450)
-  DEF_RESERVE_K: 0,          // >0: every karbonite spend but a threat response (pilgrims, pioneers, churches, the
+  DEF_RESERVE_K: 30,         // >0: every karbonite spend but a threat response (pilgrims, pioneers, churches, the
                              // peacetime army) leaves this much in the bank, so a structure that sees attackers can
                              // build a preacher (30 K) at once (replica seed 1915: the castle had spent its karbonite
                              // on a church and fell to five crusaders at round 29)
@@ -172,6 +172,11 @@ export const CFG = {
                              // maps the peacetime army spent every 25 K and no church was ever built: seed 1755);
                              // 2: every castle, while no church stands and any castle planned one (castle.js pioneerDue)
   PIONEER_RESERVE_UNTIL: 100,  // ...mode 2 only before this round
+  PIONEER_DEPART_K: 50,      // a castle sends a pioneer once the bank holds a pilgrim, DEF_RESERVE_K and this much more;
+                             // the pioneer builds its church only when the bank holds the church and DEF_RESERVE_K (it
+                             // waits at the site), so 0 starts the walk on the reserve's surplus and the mining on the way
+                             // pays the church (replica 411-3, seed 1712: castle (21,3) built nothing r5-22 waiting for
+                             // 90 K, our centre church came at r50, uvafan's at r27; h89's open bank lost castles to rush4)
   FRONT_ROUND: 0,            // >0: from this round a structure with none of ours ahead in sight sends a pilgrim to build
                              // a church FRONT_STEP rows toward the enemy (struct.js frontPioneer), at most every
   FRONT_EVERY: 50,           // ...this many rounds (replica seed 2924: StoneT2000's church lines took our castles)

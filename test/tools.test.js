@@ -297,7 +297,7 @@ test('run_game: --fast-init compiles a bundle once, runs it in fresh sandboxes, 
   const root = path.join(__dirname, '..');
   const probe = `const { fastInit } = require('./tools/run_game.js'), { VM } = require('./engine/node_modules/vm2');
     const code = 'var n = (typeof n === "number" ? n : 0) + 1; n', s = fastInit([code]).get(code);
-    const r = [new VM().run(code), new VM({ timeout: 50 }).run(code), new VM().run(code + ' ')];
+    const r = [new VM().run(code), new VM({ timeout: 1000 }).run(code), new VM().run(code + ' ')];   // 50 ms timed out under load
     console.log(JSON.stringify([r, !!s._compiledVM]));`;
   assert.deepStrictEqual(JSON.parse(execFileSync(process.execPath, ['-e', probe], { cwd: root, encoding: 'utf8' })),
     [[1, 1, 1], true]);
