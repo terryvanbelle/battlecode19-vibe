@@ -139,7 +139,7 @@ IPAddressAllow=localhost
 EOF
   # replica games keep their CPU when the main session's batches (timescale 2, user.slice, weight 100) load the VM: a
   # robot's code load has a wall-clock budget, and big transpiled bundles fail it on a contended VM. The weight sits on
-  # the parent bc19.slice, the level that competes with user.slice; saturn's CPUQuota still caps games at 6 cores.
+  # the parent bc19.slice, the level that competes with user.slice; saturn's CPUQuota still caps games at 7 cores.
   install -d -m 0755 /etc/systemd/system/bc19.slice.d
   printf '[Slice]\nCPUWeight=400\n' > /etc/systemd/system/bc19.slice.d/cpu-weight.conf
   systemctl daemon-reload
@@ -266,7 +266,7 @@ DJANGO_SETTINGS_MODULE=replica_settings
 DJANGO_CONFIGURATION=Replica
 SIARNAQ_REVISION=galaxy-f343088-bc19-replica
 GALAXY_COMPILE_SLOTS=1
-GALAXY_EXECUTE_SLOTS=5
+GALAXY_EXECUTE_SLOTS=6
 GALAXY_INIT_MS=1000
 GALAXY_GAME_TIMEOUT=10800
 GALAXY_SCHED_MAX_WAITING=30
@@ -359,12 +359,12 @@ PrivateNetwork=yes
 ExecStart=/usr/bin/python3 $OPT/galaxy19/saturn.py run
 KillMode=mixed
 TimeoutStopSec=60
-# 5 games + 1 compile at most (GALAXY_EXECUTE_SLOTS; saturn caps it at 5): the main session's A/B batches (--par 2
-# while the replica queue is long; owner, PROMPTS 18) share the VM, and the 5th slot is the session's extra lane,
-# paused while the queue is long (PROMPTS 17). The CPU cap is a backstop above 5 single-threaded games (node's GC/JIT
-# threads add bursts): a tighter quota would throttle in 100 ms periods and turn into chess-clock timeouts.
-MemoryMax=12G
-CPUQuota=600%
+# 6 games + 1 compile at most (GALAXY_EXECUTE_SLOTS; saturn caps it at 6): the main session's A/B batches (--par 2
+# while the replica queue is long; owner, PROMPTS 17-18) share the VM, 8 games on its 8 vCPUs. The CPU cap is a
+# backstop above 6 single-threaded games (node's GC/JIT threads add bursts): a tighter quota would throttle in 100 ms
+# periods and turn into chess-clock timeouts.
+MemoryMax=14G
+CPUQuota=700%
 Restart=on-failure
 RestartSec=30s
 

@@ -57,10 +57,14 @@ from replica_gcp import config, spool, storage  # noqa: E402
 
 MAX_EXTRACTED = 64 * 1024 * 1024
 MAX_BUNDLE = 16 * 1024 * 1024
-MAX_EXECUTE_SLOTS = 5
+MAX_EXECUTE_SLOTS = 6
 # V8 heap cap per game process (both bots share it: the engine's own memory check is disabled). A runaway bot then
 # ends its game (the match retries, then errors) instead of driving the VM into reclaim thrash.
 GAME_HEAP_MB = int(os.environ.get('GALAXY_GAME_HEAP_MB', '2048'))
+# V8 young generation per game (--max-semi-space-size, MB; 0 = node's default): fewer scavenges, about 8% less CPU
+# per game on this VM (TRAINING_LOG 2026-10-22 20:37). GC inside a turn is charged to that robot's clock, so this
+# only takes noise off the clock.
+GAME_SEMI_MB = int(os.environ.get('GALAXY_GAME_SEMI_MB', '64'))
 # Wall-clock limit for creating a robot's sandbox (run_game.js --init-ms; 0 = the engine's rule, the 100 ms clock
 # bank). This shared VM is slower and busier than the official servers: under the batches' load most field bots lost
 # robots to init failures (replica-health 2026-10-21: 11 of 14 entrants, IvanGeffner eigthbot in 3 of 3 games). The
@@ -366,7 +370,8 @@ class Runtime:
         return f'bc19 engine {ver}, node {self.node}, sandbox {"on" if self.sandbox else "OFF"}'
 
     def game_argv(self, red, blue, seed, replay, out_json):
-        return [self.node, f'--max-old-space-size={GAME_HEAP_MB}', self.run_game, '--red', red, '--blue', blue,
+        return [self.node, f'--max-old-space-size={GAME_HEAP_MB}'] + \
+            ([f'--max-semi-space-size={GAME_SEMI_MB}'] if GAME_SEMI_MB else []) + [self.run_game, '--red', red, '--blue', blue,
                 '--seed', str(seed), '--replay', replay, '--json', out_json] + (['--init-ms', str(INIT_MS)] if INIT_MS else []) + \
             (['--fast-init'] if FAST_INIT else []) + (['--fast-view'] if FAST_VIEW else [])
 
