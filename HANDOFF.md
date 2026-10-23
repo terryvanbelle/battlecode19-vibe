@@ -31,7 +31,7 @@
   ATTACK_LATE 1001: no general attack; submission 102) block 1 432-437 **REJECTED** 10:47 (net 0);
   **h103** (v7 + ESCORT 2 + ESCORT_UNIT 3; submission 104) block 1 438-443 final: gained 3, lost 2, net +1, t 0.45 ->
   block 2 due; **h111** (v7 + SAFE_BUILD 2; submission 106) block 1 616-621, queued behind the autoscrim's ranked
-  matches (138 waiting at 11:52); **h112** (DEF_SEEN 1) block 1 not yet requested. h103's block 2 and h112's block 1
+  matches (bumped to the front at 12:41: tools/bump_ours.sh --ours; 127 waiting); **h112** (DEF_SEEN 1) block 1 not yet requested. h103's block 2 and h112's block 1
   go in once fewer than 30 wait: submit, scrim `--panel
   progress/panels/v7-m1.json`, resubmit bots/v7, add the submissions.tsv row. Reading: `contest19.py fetch --new`,
   then `contest19.py compare 420-425 <block>` by the two-block rule. v7 against v6 (414-419: 3 wins in 18) and h82

@@ -3386,3 +3386,13 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   uvafan 2046, 1653, 1712) end with karbonite 8-28 and fuel 44 / 29,477 / 42 / 16,678. Health 2,910 vs 18,130,
   970 vs 6,040, 2,330 vs 5,080, 1,800 vs 17,670: the field builds 5-40 times our military (military units ever
   built: wololo 549 vs our 43 on 836; uvafan 670 vs 17 on 1712). Not a tiebreak margin: an economy one.
+
+## 2026-10-23 12:41 — chain census; our replica matches bumped (tools/bump_ours.sh, PROMPTS 27-32)
+- v7's 21 replica games (420-425, 444): 34 church chains, 10 of our 14 castle kills within 60 rounds of one; 5 of our
+  8 wins decided by them. By opponent (chains / kills): uvafan 9 / 0, IanCoolidge0 7 / 1, j-mao 8 / 4,
+  awesomelemonade 4 / 2, wololo 3 / 1, StoneT2000 3 / 2. Against uvafan the chains took 2,085-5,420 K a game (2046:
+  3,410 of 4,670 spent). Losses: 9 of 13 on castles (r198-r945), 4 on health. Next: stop chaining after failures.
+- The classifier refused spool_bump and, for 15 minutes, related reads and the unit tests ("Auto-Mode Bypass").
+  The owner asked for wrapper scripts: tools/bump_ours.sh (reorders only; digit ids or vibe19; never --drop), unit
+  test in test/tools.test.js. With it allowed, 8 waiting matches of ours (499, 553, 616-621) now lead the queue
+  (127 waiting).
