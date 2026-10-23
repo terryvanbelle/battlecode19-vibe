@@ -3497,3 +3497,13 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   turn into more churches). In self-play our lines kill castles (most lines end in a kill at once), so two misses
   in a row are rare; the switch's case is the field's line-proof defences (uvafan), which self-play cannot show.
   Re-open condition: a local sparring partner that stops lines, or a replica panel slot with nothing better.
+
+## 2026-10-23 15:35 — h125 (EXPAND_ROUND 100 + EXPAND_KEEP 16) diagnosed on 1036 and queued (...19v)
+- Lead (HANDOFF, replica 1036 vs IanCoolidge0): no church between r53 and the chain at r310. h27 (EXPAND_ROUND 100 on
+  h19) failed delivery on 2026-10-21: the re-plan chose the enemy's corners and the pioneers died. h125 = v7 +
+  EXPAND_ROUND 100 + EXPAND_KEEP 16 (219139b944aa).
+- Driver, seed 1036 to r350, --det, both sides: h125 red adds a church at (29,27) on the axis cluster at r248 (h87
+  blue none before its chain at r317); h125 blue adds two at (28-30,27) at r215, one lost at r289 (h87 red none
+  before its chain at r311). Delivery: modest (one live added church per game by r300), not the corners.
+- Gate ...19v: symcheck 1, 2, 3, 2321; h125 vs h87, 20 cells of seed0 5000, par 2. Mechanism, summed over the 40
+  games: churches built (dlv) at least 1.05 of h87's; castles lost not above h87's. Bars as for h124.

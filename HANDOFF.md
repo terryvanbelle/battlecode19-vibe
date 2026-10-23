@@ -17,13 +17,13 @@
 - **VM queue** (`~/jobq`: the runner takes pending jobs in locale `sort` order of their names; gates run from the
   shadow tree ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree,
   outputs in the main tree's out/). Gates at par 2 while saturn runs its 6 slots (8 vCPUs; owner, PROMPTS 18). Now:
-  **h124**'s gate running (...19u, 14:18: PIONEER_HOLD 64 + PIONEER_LEAN 1, h118's lead); the time audit closed 14:18 (overruns are engine, GC and
+  **h124**'s gate running (...19u, 14:18: PIONEER_HOLD 64 + PIONEER_LEAN 1, h118's lead), then **h125** (...19v, 15:35: EXPAND_ROUND 100 + EXPAND_KEEP 16, the 1036 lead); the time audit closed 14:18 (overruns are engine, GC and
   load, about one turn each: LEARNINGS 31), with field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject
   t <= -1, else a replica panel). Done: h123 REJECTED 15:01 (mechanism short: lines 0.84 of h87's, bar 0.8; D 0), h118 REJECTED 13:47 (mechanism short: idle 0.78 of h87's, bar 0.7; churches +10%, a lead), h116 REJECTED 13:30 (t -1.07: r100 army 616 vs 165, castles lost 60 vs 52),
   h121 REJECTED 12:47 (t -0.28, first church 4.4 rounds earlier, bar 5), h115 REJECTED 11:58 (t 0.58, mechanism opposite: fuelEnd 3.5 times h87's in r1000 games, karbonite binds),
   h114 REJECTED 11:24 (t -1.63, churches built 312 vs 400), h113 REJECTED 10:38 (t -1.73), h112 (t 0.71 -> replica panel, waiting), h111 (t 0.82 -> replica net 0: REJECTED 14:48), h110 REJECTED 09:20 (t -1.73, castles lost 35 vs 24).
   The 21 stale v6-era jobs are in ~/jobq/superseded (PROMPTS 22-24; `tools/move_stale.sh` does such moves now).
-  Next job name ...19v. The locale sort ignores punctuation, so ...19qa runs before ...19q and ...19r: a longer
+  Next job name ...19w. The locale sort ignores punctuation, so ...19qa runs before ...19q and ...19r: a longer
   name jumps the queue, used on purpose only while the shorter one is already running (h121's ...19qa).
 - **Replica panels** (progress/panels/v7-m1.json: h82-b1's maps against six field bots, wololo, botfinalsafe, bot1v43,
   uvafan, awesomelemonade, IanCoolidge0 ~69ce88): **v7** measurement 420-425 (submission 99, the control, 6/18);
@@ -39,7 +39,7 @@
   107 (= bots/v7), rated first (1711 at 06:00).
 - **Candidates in hand** (from v7's replica losses and the field censuses, TRAINING_LOG 07:39-10:38): **h112** = v7 +
   DEF_SEEN 1 (threat responses count only defenders that see the attacker; gate t 0.71, mechanism met narrowly ->
-  replica panel when the queue is short); h124 is gating (above); h123 rejected 15:01, h118 13:47, h116 13:30, h121 12:47; h119 (PIONEER_CALL) waits for a replica panel (no local build triggers it). Parked: h117 (PIONEER_HOLD alone), h109 (SAFE_BUILD 1: blocked chain
+  replica panel when the queue is short); h124 and h125 are gating (above); h123 rejected 15:01, h118 13:47, h116 13:30, h121 12:47; h119 (PIONEER_CALL) waits for a replica panel (no local build triggers it). Parked: h117 (PIONEER_HOLD alone), h109 (SAFE_BUILD 1: blocked chain
   launches, worse in 2 of 4 cells), h108 (RECALL before the fix), h102 (PIONEER_DETOUR 50: inert), h98 / h99
   (MIL_ROTATION null / [4]), h105 = dist/turtle and h106 (the prophet doctrine lost every self-play test, TRAINING_LOG
   04:22). Open: 1036 (57x57): IanCoolidge0 had 26 pilgrims at r100 and 39 at r200 to our 14 and took the shared and
