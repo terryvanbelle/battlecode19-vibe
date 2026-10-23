@@ -2782,3 +2782,26 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   CHAIN_ROUND 0 (prophets only, never attacks). h104 = v7 + ATTACK_ROUND 1001 + ATTACK_LATE 1001 (holds; the endgame
   crusader build stays; h16r, the turtle of h19, lost its gate at t -1.07 with castles lost 23 vs 6). Driver
   diagnostics h87 and h104 vs turtle on 2046 to 1000 running.
+
+## 2026-10-23 04:22 — turtle diagnostics; h106 not gated; the time audit: freezes are the machine's
+- Driver diagnostics vs dist/turtle on 2046 to 1000 (--det): **h87** won on castles (2 vs 1, a turtle castle fell at
+  r602): its church chain (r353-473: 7 chain churches killed one by one) then 7 churches at r600 and 13 at r1000;
+  mined K 5,420 vs 3,240; the turtle kept 4-7 pilgrims and no church all game (2046 has nothing near to expand to;
+  uvafan and v6 had none there either). **h104** (no attack) won the same way (castle at ~r600; 9 churches at r1000,
+  army 64 vs h87's 126 after the endgame build). The turtle is a weak uvafan proxy: on the same map and economy
+  uvafan had 126 prophets at r900 (the turtle 41-61) and kept every pilgrim.
+- h106 = v7 + MIL_ROTATION [4] + ATTACK_ROUND 1001 + ATTACK_LATE 1001 (the field's doctrine, v7's chain kept):
+  driver diagnostic vs h87 on 2644 lost its lone castle at r279 (contested church lost r102; r200 8 pilgrims and 18
+  prophets vs 16 and 57; h87 had 9 churches at r279), as h98 (MIL_ROTATION null) did there at r277. With h16r's
+  rejection (t -1.07) and h87's win over the turtle, the prophet doctrine loses to v7 in self-play in every test;
+  not gated now (two VM hours); dist/h105 = dist/turtle and dist/h106 kept. The field's prophets beat us through
+  numbers (economy) and fire discipline, which our prophet copy does not have.
+- Time audit (VM job ...19fz, v7 vs v7 under the replica's flags, the VM at load 10-12 with 6 replica games):
+  2740 (1000 rounds, 384,742 robot turns): 98 turns over 30 ms in the bot's own measure (robot.js: the whole turn()
+  body), 69 of them a newborn's first turn (mean 39 ms, max 105); slowest later turn 170 ms (a crusader). Engine:
+  15 frozen-turn errors on 7 robots (4 robots overdrawn 59-72 ms, each frozen 4 turns) and 2 timeouts (200 ms
+  kill). **None of the frozen robots logged a slow turn**: their own code took <= 30 ms while the engine charged
+  bank + 59-72 ms, so the time went outside the bot (sandbox plumbing, GC, CPU starvation under load). 1712 (496
+  rounds, castles): 1 frozen turn, 34 slow turns, all first turns. Time overruns are a machine effect on the
+  loaded VM and cost a few robot turns per big game; no bot change. LEARNINGS 8 (never oversubscribe) applies to the
+  replica's fidelity: 8 games on 8 vCPUs is a load of 10-12, since each game uses more than one core.
