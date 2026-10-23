@@ -227,6 +227,16 @@ class TestAttempts(Base):
         with self.assertRaises(SystemExit):
             attempts.set_fields(rows, 'h9', ['=1'])
 
+    def test_load_refuses_a_split_row(self):
+        path = os.path.join(self.dir, 'attempts.csv')
+        with open(path, 'w') as f:
+            f.write(','.join(attempts.COLUMNS) + '\n' + 'h9,2026-10-23,v7,cand:h9,d,,,,QUEUED,TRAINING_LOG 11:23, 11:33\n')
+        with self.assertRaises(SystemExit):
+            attempts.load(path)
+        with open(path, 'w') as f:
+            f.write(','.join(attempts.COLUMNS) + '\n' + 'h9,2026-10-23,v7,cand:h9,d,,,,QUEUED,"TRAINING_LOG 11:23, 11:33"\n')
+        self.assertEqual(attempts.load(path)[0]['sources'], 'TRAINING_LOG 11:23, 11:33')
+
     def test_games_cell_and_missing(self):
         rows = sample_rows()
         self.assertEqual(attempts.games_cell('us:v1', rows),

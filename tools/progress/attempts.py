@@ -35,6 +35,8 @@ def load(path=CSV):
     with open(path, newline='') as f:
         rows = list(csv.DictReader(f))
     for r in rows:
+        if None in r:   # DictReader files a row's surplus fields under None: an unquoted comma split a field
+            sys.exit(f'{path}: row {r.get("codename")!r} has {len(COLUMNS) + len(r[None])} fields, not {len(COLUMNS)}')
         for c in COLUMNS:
             r[c] = (r.get(c) or '').strip()
     return rows

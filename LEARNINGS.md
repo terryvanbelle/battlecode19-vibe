@@ -161,3 +161,7 @@
    know.** `build_bot.js --cfg A=1 B=2` built h118 with A only (B was a stray argument, silently dropped), and its
    first diagnostic replayed h117's games move for move. build_bot now exits on any argument it does not parse; the
    bundle's `Object.assign(CFG, {...})` line is the record of what a build is. (TRAINING_LOG 2026-10-23 10:23)
+29. **Edit the ledger through its tool (`tools/progress/attempts.py set CODE field=value`), never by line edits.** A
+   hand-edited row with an unquoted comma split into 11 fields; four rows (h117, h118, h120, h121) carried their
+   sources into the wrong column for hours and the renderer said nothing. `attempts.py` now refuses such a file.
+   (TRAINING_LOG 2026-10-23 11:37)

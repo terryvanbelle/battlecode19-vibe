@@ -3333,3 +3333,10 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   rounds earlier than h87's on the mean, churches standing by r100 at least h87's, castles lost (dlv) not above
   h87's; field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject t <= -1, else a replica panel).
   dist/h121 on the VM: 8f22f616fcf1.
+
+## 2026-10-23 11:37 — ledger repair: 11 stale rows closed, 4 split rows fixed; attempts.py refuses split rows
+- progress/attempts.csv still read "queued" / "in progress" for attempts closed long ago: h6 (ACCEPTED as v4), h11,
+  h24v5, h51v6, h54, h55, h56, h57, h62, h78 (SUPERSEDED, each with its fate), h76 (in v7 through h87). Rule 9.
+- Four rows hand-edited today (h117, h118, h120, h121) had an unquoted comma and 11 fields; repaired with the csv
+  module. tools/progress/attempts.py load() now exits on a row with surplus fields (test_load_refuses_a_split_row).
+  LEARNINGS 29: edit the ledger with `attempts.py set`.
