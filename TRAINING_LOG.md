@@ -2831,3 +2831,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   on v7-m1's maps decides (two-block rule, control = v7's block 420-425).
 - Falsifier: h87 wins the cells where it out-trades h104 in the midgame and takes castles that h104 never threatens
   (h104 losing on castles at r1000 where h87 wins on health).
+
+## 2026-10-23 04:38 — h100 at its first look (D 12): t 1.15, inconclusive; extension 2 queued
+- Pooled h100 vs h87 (out/h100_h87.jsonl, block 1 + the running extension): D first reached 12 at game 56 (28
+  cells): gained 8, lost 4, split 16, net +4, **t 1.15**: neither bar (accept t >= 2, reject t <= 0). Next look
+  when D first reaches 24 (TRAINING_ALGORITHM: 12 / 24 / 48). At 33 cells: D 15, net +5, t 1.29.
+- VM job ...19h after h104's gate: cells 41-70 of seed0 5000 (2387, 1649, 2769, 2072, 2567, 1825, 1013, 1584, 2302,
+  870, 265, 2337, 2311, 1053, 2765, 662, 2985, 906, 1330, 252, 118, 2514, 1809, 2768, 2849, 2423, 1583, 2374, 238,
+  1101; scratch seeds.js reproduces batch.js's --random order), tag h100h87y. The mechanism is re-read on the
+  pooled replays if t reaches 2.
+- Field scale (replay.js timeline, 417-3, v6 vs uvafan on 1712): uvafan mined 1,224 K by r100 (ours 656), 4,618 by
+  r200 (1,954), 32,466 by r1000 (9,190); pilgrims r100 38 vs 15, r300 51 vs 20; its army r400 332 (325 prophets),
+  r1000 1,044; ours 31 and 22. Our karbonite stock stayed at 2-127 from r100 (we spend all we mine); fuel 12,682
+  banked at r1000. The gap is mining rate (pilgrims, churches), not spending. v7's self-play on 1712 has 31-33
+  pilgrims at r100 (TRAINING_LOG 03:50); its replica block (420-425, uvafan on 1712 among them) measures it.
