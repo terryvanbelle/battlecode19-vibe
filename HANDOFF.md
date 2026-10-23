@@ -79,4 +79,5 @@ python3 -I tools/galaxy19/field.py queue              # replica backlog (owner: 
 python3 -I tools/galaxy19/contest19.py scrim --vs A,B --panel progress/panels/X.json   # a panel block on recorded maps
 python3 -I tools/galaxy19/contest19.py fetch --new    # download our finished replica matches
 python3 -I tools/galaxy19/contest19.py compare 420-425 432-437   # control vs candidate block, per cell, t = net/sqrt(D)
+tools/move_stale.sh JOB...   # VM jobq: pending -> superseded (--back undoes); auto-approved; never starts the VM
 ```

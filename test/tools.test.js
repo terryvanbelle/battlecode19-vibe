@@ -529,3 +529,29 @@ test('census: pioneers, churches by round, mines; gate replay names sum by role'
   assert.deepStrictEqual(chains({ chainNear: 1 })[0], [2, 16, 0, 0]);
   assert.deepStrictEqual(chains({ to: 270 })[0], [0, 0, 0, 0]);
 });
+
+test('move_stale.sh: moves only named pending jobs to superseded and back; refuses names that are not plain', () => {
+  const { spawnSync } = require('child_process'), os = require('os');
+  const q = fs.mkdtempSync(path.join(os.tmpdir(), 'jobq-'));
+  try {
+    for (const d of ['pending', 'running', 'done']) fs.mkdirSync(path.join(q, d));
+    for (const [d, j] of [['pending', 'a1'], ['pending', 'b2'], ['running', 'c3']]) fs.writeFileSync(path.join(q, d, j + '.sh'), j);
+    const run = (...a) => spawnSync('bash', [path.join(__dirname, '..', 'tools', 'move_stale.sh'), ...a],
+      { env: { ...process.env, MOVE_STALE_JOBQ: q }, encoding: 'utf8' });
+    const ls = d => fs.readdirSync(path.join(q, d)).sort();
+    let r = run('a1.sh', 'c3', 'zz');
+    assert.strictEqual(r.status, 0, r.stderr);
+    assert.match(r.stdout, /moved a1: pending -> superseded/);
+    assert.match(r.stdout, /skipped c3/); assert.match(r.stdout, /skipped zz/);
+    assert.deepStrictEqual([ls('pending'), ls('superseded'), ls('running')], [['b2.sh'], ['a1.sh'], ['c3.sh']]);
+    r = run('--back', 'a1');
+    assert.strictEqual(r.status, 0, r.stderr);
+    assert.deepStrictEqual([ls('pending'), ls('superseded')], [['a1.sh', 'b2.sh'], []]);
+    for (const bad of ['../running/c3', 'a1;touch x', 'A1', '-r', '']) {
+      r = run(bad);
+      assert.strictEqual(r.status, 2, bad);
+    }
+    assert.strictEqual(run().status, 2);
+    assert.deepStrictEqual([ls('pending'), ls('running')], [['a1.sh', 'b2.sh'], ['c3.sh']]);
+  } finally { fs.rmSync(q, { recursive: true, force: true }); }
+});
