@@ -2892,3 +2892,11 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   seed0 5000, par 2; dlv.js -> out/dlv_gate_h103.txt. Field-aimed: looks when D first reaches 12; accept t >= 2;
   reject t <= -1; in between, a replica panel (2644 vs IanCoolidge0 among its maps) decides. Known cost: vs camp on
   2321 the escorts cut r200 karbonite mined from 2,712 to 2,098.
+
+## 2026-10-23 05:12 — h108 (v7 + RECALL 30, h43 rebased): parked after its diagnostic
+- Driver, 2013 to 400 (--det), against h87's self-play there (red wins at r310 on castles through its chain):
+  h108 red recalled once (dlv recalls 1) and **lost its castle at r345** (blue's chain reached it first; red's army
+  37-56 vs 67-79); h108 blue recalled once and lost at r310 like h87's blue. Cause in the code (military.js listen):
+  a recall sets st.target = null, so a chain-born unit (st.target = st.chainT) never resumes its line after the
+  recall ends: the recall that answers a probe kills our own chain push. Not gated; to revisit, a recall must leave
+  chain-born units' targets (they hold the recall ring, then march again).
