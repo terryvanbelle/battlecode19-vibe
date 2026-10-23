@@ -355,6 +355,31 @@ class Contest(unittest.TestCase):
         self.assertEqual(contest19.opponent({}, 1), (None, None))
 
 
+class Compare(unittest.TestCase):
+    def test_blocks_cell_by_cell(self):
+        root = tempfile.mkdtemp(dir=TMP)
+        def match(i, games):
+            os.makedirs(os.path.join(root, str(i)))
+            with open(os.path.join(root, str(i), 'match.json'), 'w') as f:
+                json.dump({'games': [{'red_team': r, 'blue_team': b, 'map': m, 'winner_team': w, 'rounds': 1000,
+                                      'reason': 'health'} for r, b, m, w in games]}, f)
+        us = contest19.TEAM
+        match(10, [(us, 'X', 'seed-1', us), ('X', us, 'seed-2', 'X'), (us, 'X', 'seed-3', 'X')])
+        match(11, [(us, 'Y', 'seed-4', us)])
+        match(20, [('X', us, 'seed-1', 'X'), (us, 'X', 'seed-2', us), ('X', us, 'seed-3', us)])
+        self.assertEqual(contest19.block_ids('10-11,13'), [10, 11, 13])
+        ctrl, miss = contest19.block_cells([10, 11], root)
+        cand, miss2 = contest19.block_cells([20, 21], root)
+        self.assertEqual((miss, miss2), ([], [21]))
+        self.assertEqual(ctrl[('X', 'seed-2')][:2], (False, 'blue'))
+        rows, g, l, t = contest19.compare_blocks(ctrl, cand)
+        self.assertEqual([r[3] for r in rows], ['-', '+', '+', ''])
+        self.assertEqual((g, l), (2, 1))
+        self.assertAlmostEqual(t, 1 / 3 ** 0.5)
+        self.assertEqual(rows[3][2], None)                      # seed-4 only in the control
+        self.assertEqual(contest19.compare_blocks({}, {})[1:], (0, 0, 0.0))
+
+
 class Client(unittest.TestCase):
     def test_neighbours(self):
         ladder = [team(1, 100), team(2, 100), team(3, 105), team(4, 95), team(5, None), team(6, 200, status='S')]

@@ -20,6 +20,9 @@ as a team on the official site would act. Standard library only; run on the driv
         download match archives and unpack their .bc19 replays + match.json into DIR/<id>/ (default
         ~/projects/vibe/bc19-galaxy-replays); --new = every finished match of ours not downloaded yet
   python3 tools/galaxy19/contest19.py results [--pages 3]  per-opponent W-L over our finished matches (games)
+  python3 tools/galaxy19/contest19.py compare CTRL CAND [--dir DIR]
+        two downloaded panel blocks (match ids, e.g. 420-425 and 432-437) cell by cell (opponent, map): our result,
+        side, rounds, reason in each; gained / lost / net and t = net / sqrt(D) for the two-block rule. Local files only
 """
 import argparse
 import json
@@ -90,6 +93,60 @@ def panel_maps(panel, name, maps, n, rnd):
     return panel[name]
 
 
+def block_ids(spec):
+    """'420-425' or '420,421,430-431' -> [420, ..., 425]."""
+    out = []
+    for part in spec.split(','):
+        a, _, b = part.partition('-')
+        out += range(int(a), int(b or a) + 1)
+    return out
+
+
+def block_cells(ids, root=REPLAYS, team=TEAM):
+    """({(opponent, map): (won, side, rounds, reason, match id)}, [ids not downloaded]) over the matches' games."""
+    cells, missing = {}, []
+    for i in ids:
+        f = os.path.join(root, str(i), 'match.json')
+        if not os.path.exists(f):
+            missing.append(i)
+            continue
+        for g in json.load(open(f))['games']:
+            side = 'red' if g['red_team'] == team else 'blue'
+            opp = g['blue_team'] if side == 'red' else g['red_team']
+            cells[(opp, g['map'])] = (g['winner_team'] == team, side, g['rounds'], g['reason'], i)
+    return cells, missing
+
+
+def compare_blocks(ctrl, cand):
+    """Cells of both blocks in order, each (key, ctrl cell or None, cand cell or None, '+' / '-' / ''); then gained,
+    lost and t = net / sqrt(gained + lost) (0 when no cell differs)."""
+    rows, gained, lost = [], 0, 0
+    for k in sorted(set(ctrl) | set(cand)):
+        a, b = ctrl.get(k), cand.get(k)
+        mark = ''
+        if a and b and a[0] != b[0]:
+            mark = '+' if b[0] else '-'
+            gained += b[0]
+            lost += a[0]
+        rows.append((k, a, b, mark))
+    d = gained + lost
+    return rows, gained, lost, (gained - lost) / d ** 0.5 if d else 0.0
+
+
+def compare_cmd(a):
+    ctrl, m1 = block_cells(block_ids(a.ctrl), a.dir)
+    cand, m2 = block_cells(block_ids(a.cand), a.dir)
+    if m1 or m2:
+        print(f'not downloaded (contest19.py fetch): {m1 + m2}')
+    cell = lambda c: f"{'W' if c[0] else 'L'} {c[1]:4} {c[2]:4} {c[3]:7} m{c[4]}" if c else '-'
+    rows, g, l, t = compare_blocks(ctrl, cand)
+    for (opp, mp), x, y, mark in rows:
+        print(f'{opp[:32]:32} {mp:10} ctrl {cell(x):27} cand {cell(y):27} {mark}')
+    print(f'gained {g} lost {l} D {g + l} net {g - l} t {t:.2f}; ctrl wins {sum(c[0] for c in ctrl.values())}/{len(ctrl)}, '
+          f'cand wins {sum(c[0] for c in cand.values())}/{len(cand)}')
+    return 0
+
+
 def opponent(m, my_id):
     ps = m.get('participants') or []
     me = next((p for p in ps if p.get('team') == my_id), None)
@@ -112,7 +169,10 @@ def main(argv=None):
     p = sub.add_parser('fetch'); p.add_argument('ids', type=int, nargs='*'); p.add_argument('--new', action='store_true')
     p.add_argument('--out', default=REPLAYS); p.add_argument('--pages', type=int, default=3)
     p = sub.add_parser('results'); p.add_argument('--pages', type=int, default=3)
+    p = sub.add_parser('compare'); p.add_argument('ctrl'); p.add_argument('cand'); p.add_argument('--dir', default=REPLAYS)
     a = ap.parse_args(argv)
+    if a.cmd == 'compare':
+        return compare_cmd(a)
     c = cl.Client(a.site)
     acc = cl.load_accounts()
     ep = c.episode

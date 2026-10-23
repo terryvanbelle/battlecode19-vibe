@@ -38,7 +38,7 @@
   newborn before it acts; replica losses lost ~76 stillborn units, TRAINING_LOG 05:37): driver diagnostic on 836 and
   2013 running (836: stillborn 0 vs 3-4 either side, h109 red lost a castle h87 red kept). **h110** = v7 + RECALL 30
   with the fixed recall (chain-born units keep their line target; h108 parked for that bug): built, on the VM;
-  diagnostic on 2013 after h109's. Scratch panel_cmp.py (scratchpad) compares two replica blocks per cell.
+  diagnostic on 2013 after h109's. `contest19.py compare CTRL CAND` (e.g. 420-425 432-437) compares two downloaded replica blocks per cell (two-block rule).
   Built, not queued (all on the VM's dist/): h105 = dist/turtle (sparring bot: prophets only, no attack, no
   chain) and h106 (prophets only, no attack, chain kept): the prophet doctrine lost to h87 in every self-play test
   (TRAINING_LOG 04:22); h102 (PIONEER_DETOUR 50; inert in self-play
@@ -191,4 +191,8 @@ node tools/summarize.js results.jsonl ; node tools/paired.js results.jsonl --can
 node tools/build_bot.js src/bot dist/h7 --cfg ATTACK_PERSIST=1   # a candidate: incumbent + one switch
 gssh 'cd ~/projects/vibe/2019 && bash tools/jobq.sh add "node tools/batch.js ..."; bash tools/jobq.sh status'
 tools/snapshot.sh v1 "note"                          # freeze an accepted build
+python3 -I tools/galaxy19/field.py queue              # replica backlog (owner: a long queue makes clearing it the priority)
+python3 -I tools/galaxy19/contest19.py scrim --vs A,B --panel progress/panels/X.json   # a panel block on recorded maps
+python3 -I tools/galaxy19/contest19.py fetch --new    # download our finished replica matches
+python3 -I tools/galaxy19/contest19.py compare 420-425 432-437   # control vs candidate block, per cell, t = net/sqrt(D)
 ```
