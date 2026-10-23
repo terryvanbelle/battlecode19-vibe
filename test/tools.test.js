@@ -292,6 +292,31 @@ test('run_game: --fast-turn replays byte for byte the game the engine path plays
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('run_game: --fast-init compiles a bundle once, runs it in fresh sandboxes, and replays the engine path\'s game', () => {
+  const { execFileSync } = require('child_process'), os = require('os');
+  const root = path.join(__dirname, '..');
+  const probe = `const { fastInit } = require('./tools/run_game.js'), { VM } = require('./engine/node_modules/vm2');
+    const code = 'var n = (typeof n === "number" ? n : 0) + 1; n', s = fastInit([code]).get(code);
+    const r = [new VM().run(code), new VM({ timeout: 50 }).run(code), new VM().run(code + ' ')];
+    console.log(JSON.stringify([r, !!s._compiledVM]));`;
+  assert.deepStrictEqual(JSON.parse(execFileSync(process.execPath, ['-e', probe], { cwd: root, encoding: 'utf8' })),
+    [[1, 1, 1], true]);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fastinit-'));
+  try {
+    const play = (...x) => {
+      const out = path.join(dir, (x.length ? 'fast' : 'slow') + '.bc19');
+      const line = execFileSync('unshare', ['-rn', process.execPath, path.join(root, 'tools', 'run_game.js'),
+        '--red', 'bots/v3', '--blue', 'bots/v2', '--seed', '2202', '--max-rounds', '40', '--det', '--timescale', '20',
+        '--init-ms', '10000', '--replay', out, ...x], { cwd: root, encoding: 'utf8' });
+      return [JSON.parse(line), fs.readFileSync(out)];
+    };
+    const [rs, bs] = play(), [rf, bf] = play('--fast-init');
+    assert.deepStrictEqual([rs.fast_init, rf.fast_init], [false, true]);
+    assert.ok(rf.teams.every(t => t.errors === 0 && t.turns > 100), 'clean games');
+    assert.ok(bs.equals(bf), 'same replay');
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('dlv: delivery numbers agree with the replay analysis and with each other', () => {
   const dlv = require('../tools/dlv');
   const buf = fs.readFileSync(path.join(FIX, 'rush_s2908_r80.bc19'));

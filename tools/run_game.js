@@ -4,7 +4,7 @@
 //
 //   node tools/run_game.js --red <bot dir | bundle.js> --blue <bot dir | bundle.js> [--seed N]
 //        [--replay out.bc19] [--logs out.jsonl] [--json out.json] [--det] [--chi 100] [--che 20]
-//        [--max-rounds N] [--timescale K] [--init-ms MS] [--fast-turn]
+//        [--max-rounds N] [--timescale K] [--init-ms MS] [--fast-turn] [--fast-init]
 //
 // --det        deterministic mode: seeds Math.random in the engine (the per-turn shuffle of visible robots) from
 //              the game seed. Bots that use their own seeded PRNG then replay identically except for clock effects.
@@ -17,6 +17,9 @@
 // --fast-turn  hand each turn to the sandbox through one precompiled script instead of fresh source text (see
 //              fastTurn): same view, same vm2 kill. Turns then cost less than in the official engine, so time audits
 //              run without it (owner approval, PROMPTS 14).
+// --fast-init  compile each bundle once and run that compiled script in every new robot sandbox (see fastInit)
+//              instead of the engine's fresh transform and compile of the bundle text per robot: the same code in the
+//              same fresh vm2 VM under the same kill. Like --fast-turn it makes the harness cheaper than the engine.
 // Prints one JSON line: {winner:"red"|"blue", win_condition, reason, rounds, seed, map:{w,castles}, teams:[...]}.
 'use strict';
 const fs = require('fs');
@@ -45,6 +48,7 @@ function parseArgs(argv) {
     else if (k === '--timescale') a.timescale = parseFloat(v());
     else if (k === '--init-ms') a.initMs = parseFloat(v());
     else if (k === '--fast-turn') a.fastTurn = true;
+    else if (k === '--fast-init') a.fastInit = true;
     else throw new Error('unknown argument ' + k);
   }
   if (!a.red || !a.blue) throw new Error('need --red and --blue');
@@ -90,6 +94,7 @@ async function main() {
   // initialisation limit and lose the game for a harness reason. Create and discard sandboxes for both bundles first.
   const CrossVM = require(path.join(ENGINE, 'vm'));
   if (a.fastTurn) fastTurn(CrossVM);
+  if (a.fastInit) fastInit([red, blue]);
   const create = a.initMs ? loadLimit(CrossVM, a.initMs) : fn => fn();
   // A bundle that throws (or times out) while loading is the engine's business (initializeRobot catches it and the
   // robot fails to initialise), so the warm-up must not let it crash the whole game.
@@ -188,7 +193,7 @@ async function main() {
   const result = {
     winner: g.winner === 0 ? 'red' : g.winner === 1 ? 'blue' : null,
     win_condition: g.win_condition, reason: REASONS[g.win_condition], rounds: g.round, seed,
-    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale, ...limits, fast_turn: !!a.fastTurn, net_isolated: netIsolated(),
+    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale, ...limits, fast_turn: !!a.fastTurn, fast_init: !!a.fastInit, net_isolated: netIsolated(),
     red: a.red, blue: a.blue,
     teams: [0, 1].map(i => ({ team: i === 0 ? 'red' : 'blue', ...counts[i], ...alive[i],
       turns: teams[i].turns, ms_mean: teams[i].turns ? +(teams[i].ms_total / teams[i].turns).toFixed(3) : 0,
@@ -246,6 +251,22 @@ function fastTurn(CrossVM) {
   };
 }
 
+// Every robot's sandbox runs its team's whole bundle (new CrossVM(code): vm2 VM.run of the text), and vm2 transforms
+// (acorn) and V8 compiles that text anew each time: 43 ms per robot for our 50 KB bundle on the driver, 3.4 ms with
+// the script compiled once (2026-10-22; a 300-round self-play game builds ~280 robots a team). fastInit gives vm2 one
+// VMScript per bundle, compiled on first use with the engine's file name, and VM.run uses it whenever it is handed
+// that bundle's text; any other code runs as before. Returns the scripts by bundle text.
+function fastInit(bundles) {
+  const { VM, VMScript } = require(path.join(ENGINE, '..', 'vm2'));
+  const scripts = new Map(), run = VM.prototype.run;
+  for (const code of bundles) if (!scripts.has(code)) scripts.set(code, new VMScript(code, 'vm.js'));
+  VM.prototype.run = function (code, options) {
+    const script = typeof code === 'string' && options === undefined ? scripts.get(code) : undefined;
+    return script ? run.call(this, script) : run.call(this, code, options);
+  };
+  return scripts;
+}
+
 // Bot code runs only without network (CLAUDE.md rule 6). batch.js starts every game inside `unshare -rn`; a direct
 // call outside a network namespace re-runs itself there, and refuses to run if it cannot.
 // A sandbox that forbids netlink sockets cannot list addresses (systemd RestrictAddressFamilies, the replica's saturn
@@ -267,4 +288,4 @@ if (require.main === module) {
   }
   main().catch(e => { console.error(String(e && e.stack || e)); process.exit(2); });
 }
-module.exports = { setLimits, parseArgs, fastTurn, loadLimit, netIsolated };
+module.exports = { setLimits, parseArgs, fastTurn, fastInit, loadLimit, netIsolated };

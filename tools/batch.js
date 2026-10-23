@@ -2,7 +2,7 @@
 // Parallel game batches. Every game runs in its own process inside `unshare -rn` (no network), on the VM.
 //
 //   node tools/batch.js --a <bot dir> --b <bot dir> --seeds 1,2,3 | --seed-file f | --random N [--seed0 S]
-//        [--sides both|a-red] [--par 6] [--timescale K] [--init-ms MS] [--fast-turn] --out results.jsonl [--replays dir]
+//        [--sides both|a-red] [--par 6] [--timescale K] [--init-ms MS] [--fast-turn] [--fast-init] --out results.jsonl [--replays dir]
 //        [--tag name] [--max-rounds N]
 //
 // One JSON row per game: {tag, a, b, a_hash, b_hash, seed, a_side, winner_is_a, reason, rounds, ...runner fields}.
@@ -40,6 +40,7 @@ function parse(argv) {
     else if (k === '--timescale') a.timescale = v();
     else if (k === '--init-ms') a.initMs = v();
     else if (k === '--fast-turn') a.fastTurn = true;
+    else if (k === '--fast-init') a.fastInit = true;
     else if (k === '--max-rounds') a.maxRounds = v();
     else throw new Error('unknown ' + k);
   }
@@ -83,6 +84,7 @@ async function main() {
       if (o.timescale) args.push('--timescale', o.timescale);
       if (o.initMs) args.push('--init-ms', o.initMs);
       if (o.fastTurn) args.push('--fast-turn');
+      if (o.fastInit) args.push('--fast-init');
       if (o.maxRounds) args.push('--max-rounds', o.maxRounds);
       const p = spawn('unshare', args, { stdio: ['ignore', 'pipe', 'pipe'] });
       let so = '', se = '';
