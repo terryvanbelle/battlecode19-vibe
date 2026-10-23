@@ -2818,3 +2818,16 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   accept after block 1 at t >= 1.5 and net >= +3, reject at net <= 0, otherwise block 2 (same maps, sides swapped).
   Falsifier: games v7 wins on castles after round 900 become losses on health. The block waits in queue order behind
   v7's (about 55 matches ahead at 9 an hour).
+
+## 2026-10-23 04:28 — h104 gate pre-registered (VM job ...19g, after h100's extension)
+- h104 = v7 + ATTACK_ROUND 1001 + ATTACK_LATE 1001 (91021963a275): no general attack at all; the church chain,
+  threat responses and the endgame crusader build stay. Field case (TRAINING_LOG 03:50): against the field's prophet
+  walls our marches lose the army (2046 vs uvafan: 24 crusaders at r450, re-fed to r900, 45 units in the all-in);
+  h96 drops only the all-in, h104 every march. Self-play risk: h16r's turtle was REJECTED (t -1.07), but h104 keeps
+  v7's chain and beat dist/turtle on 2046 on castles like h87 (TRAINING_LOG 04:22).
+- Gate: symcheck (1, 2, 3, 2046; 300 rounds), then h104 vs h87 on the 20 cells of seed0 5000, par 2, the standard
+  flags; dlv.js on the gate replays -> out/dlv_gate_h104.txt. Looks when D first reaches 12. Field-aimed: accept
+  t >= 2 with the mechanism (h104's milLost / milBuilt <= 85% of h87's); reject t <= -1; in between, a replica panel
+  on v7-m1's maps decides (two-block rule, control = v7's block 420-425).
+- Falsifier: h87 wins the cells where it out-trades h104 in the midgame and takes castles that h104 never threatens
+  (h104 losing on castles at r1000 where h87 wins on health).
