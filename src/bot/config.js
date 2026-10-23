@@ -222,6 +222,10 @@ export const CFG = {
                              // PLAN_CONTEST_FIRST) sends that pioneer first, ahead of the economy pilgrims and without
                              // PIONEER_DEPART_K (replica 420-425: our first pioneers left at r12-16, the field's first
                              // pilgrims reached the centre clusters at r11-23; castle.js earlyPioneer)
+  CHURCH_SAVE: 0,            // >0: before this round a church's economy pilgrims leave a church's karbonite (50) in the
+                             // bank: a waiting pioneer's CT.WAIT reaches castles only (replica 420-1, seed 2013: churches
+                             // built 11 pilgrims in r40-100 while three pioneers waited 35-55 turns at free sites, the
+                             // bank at 10-77 K)
   PIONEER_DEPART_K: 50,      // a castle sends a pioneer once the bank holds a pilgrim, DEF_RESERVE_K and this much more;
                              // the pioneer builds its church only when the bank holds the church and DEF_RESERVE_K (it
                              // waits at the site), so 0 starts the walk on the reserve's surplus and the mining on the way

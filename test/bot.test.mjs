@@ -2026,6 +2026,33 @@ testPreV7('struct: RICH_K: past its guard quota a church builds army only while 
   } finally { CFG.RICH_K = saved; }
 });
 
+test('struct: CHURCH_SAVE a church leaves a church\'s karbonite in the bank before that round (or that many turns of its own)', () => {
+  const saved = CFG.CHURCH_SAVE;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const pass = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x];
+    let at = null;   // a church tile beside a depot, with a free ring, far from every robot
+    for (let y = 2; y < n - 2 && !at; y++) for (let x = 2; x < n - 2 && !at; x++)
+      if (pass(x, y) && offsets(2).some(([dx, dy]) => g.karbonite_map[y + dy][x + dx]) && g.robots.every(r => king(r.x, r.y, x, y) > 10)) at = [x, y];
+    assert.ok(at, 'site');
+    const run = (save, round, k, turn = 5) => {
+      CFG.CHURCH_SAVE = save;
+      const church = { id: 4100, team: 0, unit: S.CHURCH, x: at[0], y: at[1], turn, health: 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      const all = g.robots; g.robots = [church];
+      const w = worldFor(g, church); g.robots = all;
+      const B = { api: w.api, w, round, birthRound: round && round - turn + 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = k; w.fuel = 2000;
+      return (churchTurn(B) || {}).u;
+    };
+    assert.strictEqual(run(0, 50, 60), S.PILGRIM, 'off: a pilgrim from 40 K');
+    assert.notStrictEqual(run(150, 50, 60), S.PILGRIM, 'save: not from 60 K at round 50');
+    assert.strictEqual(run(150, 50, 90), S.PILGRIM, 'save: from 90 K');
+    assert.strictEqual(run(150, 160, 60), S.PILGRIM, 'save: not past its round');
+    assert.notStrictEqual(run(150, 0, 60, 5), S.PILGRIM, 'save: a church without the round counts its own turns');
+    assert.strictEqual(run(150, 0, 60, 160), S.PILGRIM, '...and stops past them');
+  } finally { CFG.CHURCH_SAVE = saved; }
+});
+
 test('struct: CHAIN_HOLD_R2: from CHAIN_ROUND a church answers a far attacker only above the chain bank, a near one always', () => {
   const saved = [CFG.CHAIN_HOLD_R2, CFG.CHAIN_ROUND, CFG.CHAIN_K, CFG.ECON_UNTIL, CFG.CHAIN_KEEP, CFG.SERVE_MOVES];
   try {

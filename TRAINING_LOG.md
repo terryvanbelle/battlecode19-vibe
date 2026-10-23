@@ -3340,3 +3340,14 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - Four rows hand-edited today (h117, h118, h120, h121) had an unquoted comma and 11 fields; repaired with the csv
   module. tools/progress/attempts.py load() now exits on a row with surplus fields (test_load_refuses_a_split_row).
   LEARNINGS 29: edit the ledger with `attempts.py set`.
+
+## 2026-10-23 11:44 — churches spend what waiting pioneers need; CHURCH_SAVE switch (h122)
+- 420-1 (seed 2013, wololo, we blue, one castle; scratch econ/pio.js): pioneers born r23, r24, r34, r35 reached
+  their free sites by r37-51; one built at once (r37), three waited 35, 44 and 55 turns (churches r83, r94, r106)
+  with the bank at 10-77 K. In r40-100 our churches built 11 pilgrims (calm) and 2 preachers, the castle 2 preachers
+  and a prophet (threats). Of the our-side clusters we churched in v7's 18 field games, 13 of 34 stood after r90
+  (r94-147), at 13-19 king steps. PIONEER_HOLD (h118, h121) cannot stop this: CT.WAIT reaches castles only.
+- New switch CFG.CHURCH_SAVE (0 = v7): before that round (a church that never learned it counts its own turns) a
+  church's economy pilgrims leave a church's karbonite (50) in the bank. Unit test (off / below / above / past the
+  round / unknown round). No-op out/v7chk18 IDENTICAL, 132 node tests + Python pass. **h122** = h121 + CHURCH_SAVE
+  150 (526ec74e2442); driver diagnostics vs h87 (2013, 836, 2644) running.

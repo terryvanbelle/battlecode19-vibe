@@ -270,8 +270,11 @@ function structAct(B, allIds, extra, first) {
 
   // 3. Economy: a pilgrim for every served depot.
   if (first) { const a = first(); if (a) return a; }
+  // CFG.CHURCH_SAVE: before that round (a church that never learned it counts its own turns) a church's economy
+  // pilgrims leave a church's karbonite in the bank for pioneers waiting at their sites, whom only castles hear.
+  const saveK = CFG.CHURCH_SAVE && me.unit === CHURCH && (B.round || me.turn) < CFG.CHURCH_SAVE ? STATS[CHURCH].costK : 0;
   const dep = nextDepot(B);
-  if (dep && w.canAfford(PILGRIM, Math.max(defReserveK(B), waitK), 2)) {
+  if (dep && w.canAfford(PILGRIM, Math.max(defReserveK(B), waitK) + saveK, 2)) {
     const b = buildToward(B, PILGRIM, dep.x, dep.y, encXY(SIG.MINE, dep.x, dep.y));
     if (b) { st.pending = { x: b.x, y: b.y, unit: PILGRIM, kind: 'mine', ref: dep.i }; st.assign.set(dep.i, { id: -1, seen: me.turn }); return b.act; }
   }
