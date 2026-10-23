@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 62 other, 28 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected, 1 sparring partners (117 rows).
+Totals: 63 other, 28 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected, 1 sparring partners (118 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -125,6 +125,7 @@ Totals: 62 other, 28 queued, 10 accepted, 10 in progress, 3 dropped, 3 rejected,
 | `h79` | 2026-10-22 | h50 | v6 + ENDGAME_FUEL 900 + h76's chain (CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5], CHAIN_KEEP 1, CHAIN_SAFE 1) |  |  |  |  | QUEUED (...a3d57717): symcheck, gate vs h50 |
 | `h7v5` | 2026-10-22 | h35 | v5 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | REBASED onto v6 as h7v6 (gate vs h35 withdrawn) |
 | `h7v6` | 2026-10-22 | h50 | v6 + attack persistence: kill reports, map-wide next target, wait at the front (ATTACK_PERSIST=1); rebased from h7r |  |  |  |  | QUEUED: 40 games vs h50 |
+| `h80` | 2026-10-22 | h50 | v6 + a lattice no preacher splash covers more than 2 tiles of (LATTICE_SPARSE=1: x + 2y a multiple of 5) + LATTICE_R=18 for room |  |  |  |  | BUILT, NOT QUEUED: driver h76 vs h80 on 1706 falls at 288 as h50 at 289 (economy and turn order decide 1706) |
 | `h8v5` | 2026-10-22 | h35 | v5 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8r |  |  |  | vs v5 31-17 | DELIVERY PASSED 3 of 3 vs h35: preachers built r900-1000 377 vs 9 (bar 3x), final health 136% (bar 120%), wins 7/8 (bar 5); gate moved up (par 2); gate vs h35: 20 cells D 4 net +4, below the first look (D 12): undecided; REBASED onto v6 as h8v6 |
 | `h8v6` | 2026-10-22 | h50 | v6 + endgame fuel: from round 900 all fuel into preachers (ENDGAME_FUEL=900); rebased from h8v5 |  |  |  |  | QUEUED: 40 games vs h50 |
 | `h9v5` | 2026-10-22 | h35 | v5 + church planning counts depots served by pilgrim moves (PLAN_SERVE_PILGRIM=1); rebased from h9r |  |  |  |  | REBASED onto v6 as h9v6 (gate vs h35 withdrawn) |

@@ -2137,3 +2137,19 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   (8 full games); census --to 450. PASS needs all 3: (1) mine actions to 450 on h78's side >= 108% of h50's side,
   summed over the 8 games; (2) churches built by 450, h78's side >= h50's; (3) h78 wins >= 4 of 8. Falsifier: (1),
   the give-ups lead nowhere productive. On PASS: gate vs h50 (20 random cells, seed0 5000) after h76's.
+
+## 2026-10-22 17:18 — replica 407 on 1706: one preacher kills four lattice prophets; LATTICE_SPARSE (h80) inert on 1706
+- 407 game 2 (seed 1706, we red; replica events 295-316): botfinalsafe fires two parallel lines at round 306 from
+  (31-32, 17-19) to (31-32, 11-12), 7 tiles from our castle (31,4); the end churches' newborn preachers splash at
+  once: one shot kills prophets (30,6), (29,7), (31,7), (30,8) (all four orthogonal neighbours of (30,7), our
+  (x + y) even lattice), the other hits three crusaders, dead at 307. 8 churches then build 8 preachers a round
+  (307, 308); the castle falls at 316. Castle-to-fall after the killing line on 407's three maps: 9, 10, <= 8 rounds.
+- CFG.LATTICE_SPARSE (military.js latticeTile; default 0): lattice tiles have x + 2y a multiple of 5 (a fifth of
+  the tiles; any 3x3 splash covers at most 2, unit test, Node 108 pass). h80 = v6 + LATTICE_SPARSE 1 + LATTICE_R 18
+  (about the slots of the (x + y) lattice at 12; 117b89b1a9d0). Driver, h76 red vs blue on 1706 --det: h50 falls at
+  289, h80 at 288. Not a lattice game: blue had 6 pilgrims and 3 army at round 100 against red's 13 and 12 (K mined
+  by 200: 694 vs 1,522; 9 blue prophets and its church died 150-284), and h76's line ends with a church adjacent to
+  the castle (31,31) whose preacher hits it in the line's own round. Symcheck h50 on 1706: mirror-identical to
+  round 45, then the first prophet duel is decided by the engine's turn order (red #14 kills its twin #1773 at
+  (24,22) before it acts, round 46), so 1706 is a red map for every build. h80: built, not queued (no evidence; it
+  needs a chain map where the lattice, not the economy, decides).
