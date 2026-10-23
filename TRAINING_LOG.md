@@ -3489,3 +3489,11 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   D 4, net 0, 6/18 wins each -> **REJECTED** by the two-block rule (net <= 0 after block 1).
 - h123's gate at 15 of 20 cells: 30 games, every cell split, D 0 (CHAIN_FAILS rarely changes a self-play result).
 - Replica queue 90 (101 at 14:2x): falling about 20 an hour.
+
+## 2026-10-23 15:01 — h123 REJECTED (mechanism short, D 0)
+- Gate h123 (v7 + CHAIN_FAILS 2) vs h87, 20 cells, 40 games: every cell split, D 0 (read as is at 20 cells).
+  Mechanism: church lines (3+ churches in one round, out/ln_h123.txt) 41 vs h87's 49 = 0.84, bar 0.8 -> **REJECTED**
+  (short of its bar: no replica panel). Castles lost 62 vs 62; churches built 730 vs 816 (the held lines' K did not
+  turn into more churches). In self-play our lines kill castles (most lines end in a kill at once), so two misses
+  in a row are rare; the switch's case is the field's line-proof defences (uvafan), which self-play cannot show.
+  Re-open condition: a local sparring partner that stops lines, or a replica panel slot with nothing better.
