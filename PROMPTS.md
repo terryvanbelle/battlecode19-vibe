@@ -98,3 +98,6 @@ drop Nydroam.BatteredCod and any other bots you deem necessary to drop
 
 ## 22. 2026-10-23 06:10 PDT
 Good morning!  What blocked you in the night that you need permissions for?
+
+## 23. 2026-10-23 06:12 PDT
+confirm permissions
