@@ -3239,3 +3239,18 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - h103 (escorts) replica block 1 (438-443) complete: gained 3, lost 2 (442-3 awesomelemonade seed 2797, v7's win on
   castles at r1000 turned to a loss on health), net +1, t 0.45 -> a second block by the two-block rule, when fewer
   than 30 wait (159 now). h113's gate at 13 of 20 cells: gained 0, lost 3, D 3, t -1.73.
+
+## 2026-10-23 10:38 — h113 REJECTED (t -1.73); h118's diagnostics; gate h118 pre-registered and queued (...19s)
+- h113 (v7 + CHAIN_CLEAR 2) vs h87, 20 cells: 17-23, gained 0, lost 3, split 17, D 3, t -1.73 <= -1: rejected.
+  Mechanism (churches lost / built below h87's) met only in ratio, 131 / 374 = 0.35 vs 187 / 478 = 0.39: it built
+  22% fewer churches (the lines it skips were most of the chain's churches) and lost 32 castles to 26. Symcheck:
+  contest/combat divergences only. CHAIN_CLEAR stays off.
+- h118 (21d5ea5d4597) vs h87 to r200, alone on the driver: 836 red, churches at r54 and r57 where h87 built at r55 and
+  r59, pioneer idle at sites 10 turns to 17; 2013 red, churches at r60, 65, 73 vs r61, 69, 77, idle 25 vs 35; 836 with
+  sides swapped (h118 blue): r54 / r57 again, idle 11 vs 13. Both sides fell behind on 836 after r100 by side, not by
+  build: h87 vs h87 on 836 gives red 31 pilgrims at r100 to blue's 34, 5 churches at r200 to 7, and mined 3,884 K to
+  5,214, the same gap h117 and h118 showed as red.
+- Gate **h118** ...19s: 20 cells of seed0 5000 vs h87 at par 2 after a symcheck (1, 2, 3, 2321). Mechanism, summed
+  over the 40 games: pioneer idle turns at sites with no enemy attacker within r2 100, to r200 (a scratch census,
+  out/st_h118.txt), at most 0.7 of h87's; churches built (dlv) at least h87's; castles lost not above h87's. Bars as
+  at 07:28 (look at D 12; accept t >= 2 with the mechanism, reject t <= -1, else a replica panel, two-block rule).
