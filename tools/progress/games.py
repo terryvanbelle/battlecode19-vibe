@@ -11,8 +11,8 @@
 
 Players are named by code hash through bots/ROSTER.tsv (elolib's docstring); a candidate bundle dist/<x> not in the
 roster is cand:<x> (cand:<x>@<hash> when one name had several bundles). Our replica submissions are named by
-tools/progress/submissions.tsv, else the first word of the submission's description when it is a roster name, else
-us:sub<id>. The file is rebuilt from scratch on every run (rows sorted by play time).
+tools/progress/submissions.tsv (a roster name, or cand:<x> for a ladder-panel candidate), else the first word of the
+submission's description when it is a roster name, else us:sub<id>. The file is rebuilt from scratch on every run (rows sorted by play time).
 
   python3 tools/progress/games.py [--cache DIR] [--replays DIR]
 """
@@ -95,6 +95,9 @@ def local_rows(sources, by_hash):
                 skipped['load (robot init failures)'] += 1; continue
             if r.get('winner_is_a') not in (0, 1, True, False) or not r.get('a_hash') or not r.get('b_hash'):
                 skipped['malformed'] += 1; continue
+            # A game cut by --max-rounds before any verdict has no reason (and winner_is_a 0): no result.
+            if not r.get('reason'):
+                skipped['cut before a verdict'] += 1; continue
             seed = r.get('seed', '')
             out.append({'run': run, 'seq': r['_line'], 'teamA': name(r.get('a'), r['a_hash']),
                         'teamB': name(r.get('b'), r['b_hash']), 'map': f'seed-{seed}' if seed != '' else '',
@@ -137,7 +140,8 @@ def submission_players(submissions, overrides, roster_names):
         else:
             first = ((s.get('description') or '').split() or [''])[0].rstrip(':,;')
             n = first if first in roster_names else None
-        out[sid] = elolib.roster_player(n) if n in roster_names else (f'us:{n}' if n else f'us:sub{sid}')
+        out[sid] = elolib.roster_player(n) if n in roster_names else n if n and n.startswith('cand:') else \
+            (f'us:{n}' if n else f'us:sub{sid}')   # cand:<x>: a panel candidate, one player with its local games
     return out
 
 
