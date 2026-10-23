@@ -2164,3 +2164,33 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   56. Ours (#977, round 3) walks 1 tile a turn and stops at (17,13), 8 tiles short, at round 20; home has one
   karbonite depot, so we mine 156 K by round 100 and build a unit every ~40 rounds. h64 (PIONEER_FAST) is this fix:
   its gate (job renamed ...a3d5771001) now runs right after h78's delivery, before h70's and h71's.
+
+## 2026-10-22 17:32 — basics audit of our replica games; churches are the gap; a pioneer waits all game by a held site
+- Basics (match.json of all 261 vibe19 replica games): the 31,098 exceptions and their "not initialized" twins are
+  all v3's (matches 13-140, fixed in v4; HANDOFF). Since match 181 (60 games, v4-v6): 0 exceptions, 3 vm2 timeouts
+  (one robot-turn each: 181-60, 298-836, 406-53) and 10 frozen robot-turns (205-826, 391-70, 403-826, 406-53).
+  ms_max median 100 ms, worst 576 (287-826), init_ms_max up to 544 ms (under the replica's 1000 ms init grant).
+  The slowest turns lie on the loaded replica host; a driver game with --logs on 826 (scratch t826) names which.
+- Churches, ours vs the winner's, in the 12 games of 391, 298, 394 and 406 (timeline): at round 100 we trail in 10
+  (equal in 394-520 and 394-1592); at 200: 1241 4 vs 11 (uvafan: 46 pilgrims to our 19), 70 2 vs 5 and 2 vs 6,
+  1915 1 vs 5, 705 1 vs 5, 2591 0 vs 1, 2965 0 vs 1. Our plans (tools/plan.mjs) are not the limit on 1241 (10
+  clusters planned) or 53 (7): the pioneers are. On 1915 the two pioneers in flight go first to the contested
+  clusters (PLAN_CONTEST_FIRST 6: c3 m1, c2 m3) and the safe one 12 steps away (c1, m17) waits.
+- 298-2 (seed 2965, we red, left-right mirror): our only pioneer (#78, built round 34 by castle (5,32) for site
+  ~(12,22)) reaches (4,24) at round 41 and stays there to round 200+ in a 5-turn cycle (3 idle turns, a step, the step
+  back): blue's crusaders (11,22), (11,23) and prophet (13,22) stand on the site's depots from round ~55, and
+  PILGRIM_SAFE_STEP keeps it out of their range. Nothing of ours comes: the army holds the home lattice 10+ tiles
+  away, out of sight. h78's give-up would send it home; h65 (ESCORT 2) would send two units; neither clears a held
+  site. Lead: a pioneer that waits by a site held by enemy attackers reports it, and the castle's army clears it.
+- Driver, seed 2591 (h50 red vs each as blue, 200 rounds, the 391-1 map): K mined by 200 h50 1,242, h77 1,320,
+  h81 (h77 + PIONEER_FAST) 1,270. Self-play gives blue the centre with any of the three: no signal there.
+- Replica queue 141 waiting (108 TRY, 33 QUE), no nacks in 3 h, ~6 acks an hour (matches of awesomelemonade,
+  uvafan and wololo take 1-2 h). Gates stay at par 2.
+- Pioneer census of the 30 v5/v6 replica games (matches 298-407; census.js --to 450, scratch census450.txt): we
+  built 179 pioneers; 82 built churches (46%, born-to-church 20.8 turns on average), 49 died (27%), 34 stuck 30+
+  turns (19%). Churches by 450: ours 87, the opponents' 297 (StoneT2000's lines included); at round 200 we trail
+  in 23 of the 30 games, mines to 450 122,168 vs 153,957. Opponents send almost no SIG.CHURCH pioneers, so their
+  churches come from ordinary pilgrims: uvafan on 1241 (391-2, one castle at (50,38)) builds 11 churches by round
+  200 from pilgrims its castle sends in waves (rounds 4, 13, 62-64, 100-101; each churches 16-25 turns after
+  birth, the first at round 22 eighteen tiles out), and each new church builds 3 prophets and 3-6 pilgrims at
+  once. Our cap is MAX_PIONEERS 2 per castle in flight: h77 (PIONEERS_TEAM 6, delivery running) is the test.
