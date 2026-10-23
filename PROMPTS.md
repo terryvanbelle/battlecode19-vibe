@@ -119,3 +119,6 @@ Let me know if you have any more trouble running tools or editing source files
 
 ## 29. 2026-10-23 12:33 PDT
 Also run through your history and tell me if you've accessed anything off the battlecode-dev or claude-driver servers, apart from setting up Galaxy, downloading bots, or interfacing with our github repositories
+
+## 30. 2026-10-23 12:37 PDT
+OK, thanks.  Any theories on why the classifier is suddenly refusing operations at such a high rate?  It doesn't appear that it caused any problems in previous years
