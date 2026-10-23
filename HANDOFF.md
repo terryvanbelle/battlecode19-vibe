@@ -48,7 +48,10 @@
   19:06 by h82 (h77 + DEF_RESERVE_K 30, delivery PASSED): h77's gate, not run.
   Built on h82, waiting for its verdict: h85 (h82 + PIONEER_FAST 1; its effect is read in h90's delivery), h86 (h82 + ESCORT 2). When h82 is accepted the
   queued v6 gates (h64, h76, h20v6, h15v6, h65, h79, h8v6, ...) are stale: rebase them on h82 or supersede them.
-  Superseded job files are in ~/jobq/superseded.
+  Superseded job files are in ~/jobq/superseded. Stale since 22:45, still in ~/jobq/pending (moving them was
+  refused by this session's permission check; the owner was asked): ...a3d5773 / ...a3d5774 (h54v6 / h56v6 vs h76:
+  the same strike and hunt failed on h82 at 22:45), ...a3d585 (h55's chain vs v5; the chain line is h76 / h87) and
+  ...a3d597 (h24v5 vs v5; ECON_UNTIL 100 is in h82). Leave them unrun.
 - The extra lane (retired 11:52; `tools/xbatch.js`, out/dlv_chain*.sh) ran the no-op checks, symchecks and
   deliveries of h21-h62; each result is in TRAINING_LOG. A failed delivery: move that gate's job to ~/jobq/superseded.
   Symmetry checks stop only at axis-tile contests or combat after the first attack, as accepted.
