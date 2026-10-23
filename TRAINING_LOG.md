@@ -3283,3 +3283,13 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   {ESCORT: 2, ESCORT_UNIT: 3, PIONEER_CALL: 100}. Self-play vs h87 to r150: on 2644 h119 and h103 play the same game
   (h87 parks nothing on our sites, so the call never fires); on 2591 no change either. Next: against dist/camp (our
   sparring build whose first prophet holds the mirror of its first contested site, as bot1v43's does).
+
+## 2026-10-23 11:02 — h119's call cannot be tested in self-play: camp and block never hold our site; h114 at 14 cells t -1.63
+- Against dist/camp (2591, 2644, to r150) h87, h103 and h119 play identical games: camp's first prophet (built r4,
+  holding the mirror of its contested site) was still at (33,24) at r20 and our pioneer churched (28,19) at r28 (on
+  2591 at r26, unopposed). A new sparring build, dist/block (v7 + ESCORT_FIRST 1 + ESCORT_MIRROR 1 + ESCORT_UNIT 3: a
+  crusader sent to the mirror of its first pioneer's site), does no better: on 2644 our churches at r24 and r72, on
+  2591 at r26, identical for all three builds (red army 43 at r150 on 2644, 2 on 2591). None of our own builds parks
+  an attacker on our site by r20 as IanCoolidge0 does, so the call never fires locally; h119 waits for a replica
+  panel (the only test with the trigger) once the queue is short. dist/block is kept beside dist/camp.
+- h114 (CHAIN_GUARD 1) at 14 of 20 cells: 10 wins of 28, gained 1, lost 5, D 6, t -1.63 (look at D 12).
