@@ -125,3 +125,6 @@ OK, thanks.  Any theories on why the classifier is suddenly refusing operations 
 
 ## 31. 2026-10-23 12:40 PDT
 That sounds good.  And just to confirm:  the remote host that spool_bump was calling to was battlecode-dev, right?
+
+## 32. 2026-10-23 12:40 PDT
+OK, great, thanks.  Let me know if you have any more problems with the classifier
