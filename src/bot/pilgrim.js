@@ -125,6 +125,10 @@ export function huntSpot(B) {
 
 export function pilgrimTurn(B) {
   const a = pilgrimAct(B);
+  // CFG.PIONEER_CALL: a pioneer that sees a mobile enemy attacker by its site calls its castle's escort (CT.BLOCKED).
+  const s = B.st.site;
+  if (CFG.PIONEER_CALL && s && B.w.enemies.some(e => isAttacker(e.unit) && e.unit !== CASTLE && d2(e.x, e.y, s[0], s[1]) <= CFG.PIONEER_CALL))
+    B.w.talk(CT.BLOCKED);
   if (CFG.HUNT) huntSpot(B);
   return a;
 }

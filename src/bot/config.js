@@ -37,6 +37,10 @@ export const CFG = {
                              // the edge of two StoneT2000 prophets' range beside its site and died; vs StoneT2000 46 of
                              // our 114 pioneers died or stalled 30+ turns)
   ESCORT_SLACK: 10,
+  PIONEER_CALL: 0,           // >0 (with ESCORT): a pioneer that sees a mobile enemy attacker within r2 PIONEER_CALL of its
+                             // site talks CT.BLOCKED and its castle opens the escort at once, not ESCORT_SLACK turns late
+                             // (replica 425-2 / 443-2, seed 2644: IanCoolidge0's lone crusader stood on the centre site
+                             // from r20; our r14 pioneer circled at r2 50-68 for 100 turns, Ian churched it at r44)
   ESCORT_FIRST: 0,           // >0: this many ESCORT_UNITs go ahead of the castle's first contested pioneer (its first
                              // planned cluster the enemy reaches within PLAN_CONTEST_FIRST moves of us), built before it
                              // (replica 410-1, seed 2591: StoneT2000's round-3 prophet killed our centre pioneer at r25,

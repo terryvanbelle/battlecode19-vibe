@@ -47,6 +47,11 @@ export function castleTurn(B) {
     if (ct >= CT.UNIT && ct < CT.UNIT + 6) st.count[ct - CT.UNIT]++;
     else if (ct >= CT.MARCH && ct < CT.MARCH + 6) { st.count[ct - CT.MARCH]++; st.march++; }
     else if (ct === CT.WAIT && CFG.PIONEER_HOLD) { st.count[PILGRIM]++; st.waitN++; }
+    else if (ct === CT.BLOCKED && CFG.PIONEER_CALL) {
+      st.count[PILGRIM]++;
+      const p = CFG.ESCORT && st.pioneers.find(q => q.id === r.id);
+      if (p && !p.esc) { p.esc = true; openEscort(B, p.cluster); }
+    }
     if (me.turn <= 3 && r.castle_talk > 0 && r.castle_talk <= 64) {
       const p = st.partial.get(r.id) || {};
       if (r.turn === 1) p.x = r.castle_talk - 1; else if (r.turn === 2) p.y = r.castle_talk - 1;

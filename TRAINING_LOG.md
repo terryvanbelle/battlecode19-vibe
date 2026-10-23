@@ -3279,3 +3279,7 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   the general attack it loses the games v7 wins by pushing, and wins the ones v7 loses pushing; the attack stays.
 - h114 (v7 + CHAIN_GUARD 1) at 9 of 20 cells: gained 0, lost 3, D 3, t -1.73 (read in full when it ends).
 - Replica: 153 waiting (147 ranked). Still no new requests.
+- 10:52: no-op for the PIONEER_CALL source: out/v7chk16 IDENTICAL, 130 node tests pass; h119 add0db593cc3
+  {ESCORT: 2, ESCORT_UNIT: 3, PIONEER_CALL: 100}. Self-play vs h87 to r150: on 2644 h119 and h103 play the same game
+  (h87 parks nothing on our sites, so the call never fires); on 2591 no change either. Next: against dist/camp (our
+  sparring build whose first prophet holds the mirror of its first contested site, as bot1v43's does).

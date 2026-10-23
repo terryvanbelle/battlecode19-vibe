@@ -281,8 +281,8 @@ test('comms: encode/decode', () => {
   assert.deepStrictEqual([g.type, g.x, g.y, g.extra], [SIG.ATTACK, 7, 50, 3]);
   assert.ok(FAR.WIDE <= 2 * 63 * 63 && Math.ceil(Math.sqrt(FAR.WIDE)) === 90);
   // castle talk ranges never overlap: unit status 64..69, chainer 70..71, kill reports 72..75, a waiting pioneer 76,
-  // march 80..85, taken 88..127, churches 128+
-  assert.ok(CT.UNIT + 5 < CT.CHAINER && CT.CHAINGONE < CT.DEAD && CT.DEAD + 3 < CT.WAIT && CT.WAIT < CT.MARCH &&
+  // a blocked one 77, march 80..85, taken 88..127, churches 128+
+  assert.ok(CT.UNIT + 5 < CT.CHAINER && CT.CHAINGONE < CT.DEAD && CT.DEAD + 3 < CT.WAIT && CT.WAIT < CT.BLOCKED && CT.BLOCKED < CT.MARCH &&
     CT.MARCH + 5 < CT.TAKEN && CT.TAKEN + 39 < CT.CHURCH);
 });
 
@@ -1482,6 +1482,62 @@ test('castle: PIONEER_DEPART_K 0 sends a pioneer on the pilgrim and the reserve;
     assert.strictEqual(st.pioneers[0].cluster, st.plan[0].cluster);
     assert.strictEqual(st.pending.kind, 'pioneer');
   } finally { Object.assign(CFG, saved); }
+});
+
+test('castle: PIONEER_CALL opens the escort when its pioneer talks BLOCKED, before it is overdue', () => {
+  const saved = { ...CFG };
+  try {
+    CFG.ESCORT = 2;
+    const g = new Game(1205, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    for (const t of [1, 2, 3]) { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; castleTurn(B); }
+    const st = B.st, c = st.plan[0].cluster, site = B.clusters[c].site;
+    let P = null;   // the pioneer, alive somewhere on the map
+    for (let y = 0; y < n && !P; y++) for (let x = 0; x < n && !P; x++) if (g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y)) P = [x, y];
+    const pio = { id: 4321, team: 0, unit: S.PILGRIM, x: P[0], y: P[1], turn: 5, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: CT.BLOCKED };
+    g.robots.push(pio);
+    const turn = (call, t) => {
+      CFG.PIONEER_CALL = call; st.escorts = []; st.pioneers = [{ id: pio.id, cluster: c, since: t - 2, d: 30 }];   // not overdue
+      castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; w.karbonite = 0; castleTurn(B);
+      return st.escorts.map(e => e.cluster);
+    };
+    assert.deepStrictEqual(turn(0, 10), []);                // default: the talk is not heard
+    assert.deepStrictEqual(turn(100, 11), [c]);             // heard: the escort is owed at once
+    pio.castle_talk = CT.UNIT + S.PILGRIM;
+    assert.deepStrictEqual(turn(100, 12), []);              // a pioneer that sees nothing calls nothing
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('pilgrim: PIONEER_CALL a pioneer that sees a mobile enemy attacker by its site talks BLOCKED', () => {
+  const saved = CFG.PIONEER_CALL;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    g.robots = g.robots.filter(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let P = null;   // a pilgrim in open ground away from the castles, its site 6 tiles off, an enemy beside the site
+    for (let y = 2; y < n - 2 && !P; y++) for (let x = 2; x < n - 8 && !P; x++)
+      if (free(x, y) && free(x + 6, y) && free(x + 7, y) && g.robots.every(q => d2(q.x, q.y, x, y) > 64)) P = [x, y];
+    const pil = { id: 4001, team: 0, unit: S.PILGRIM, x: P[0], y: P[1], turn: 30, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    const foe = u => ({ id: 4990, team: 1, unit: u, x: P[0] + 7, y: P[1], turn: 5, health: 40, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const run = (call, u) => {
+      CFG.PIONEER_CALL = call;
+      const all = g.robots; g.robots = all.concat([pil], u === undefined ? [] : [foe(u)]);
+      const w = worldFor(g, pil); g.robots = all;
+      let talked = 0; w.api.castleTalk = v => { talked = v; };
+      const B = { api: w.api, w, round: 40, birthRound: 11, st: {}, deps: null, clusters: null, rnd: rng(2) };
+      B.offs = offsets(4); B.nav = new Nav(w, B.offs, B.rnd);
+      B.st.site = [P[0] + 6, P[1]]; B.st.cluster = 0;
+      pilgrimTurn(B);
+      return talked;
+    };
+    assert.notStrictEqual(run(0, S.CRUSADER), CT.BLOCKED);   // default: silent
+    assert.strictEqual(run(100, S.CRUSADER), CT.BLOCKED);    // a crusader beside the site
+    assert.strictEqual(run(100, S.PROPHET), CT.BLOCKED);
+    assert.notStrictEqual(run(100, S.PILGRIM), CT.BLOCKED);  // no attacker
+    assert.notStrictEqual(run(100), CT.BLOCKED);             // nothing in sight
+    assert.notStrictEqual(run(100, S.CASTLE), CT.BLOCKED);   // a castle does not walk away: no call
+  } finally { CFG.PIONEER_CALL = saved; }
 });
 
 test('castle: ESCORT owes escorts to an overdue or lost pioneer and builds them radioing SIG.GUARD at the site', () => {
