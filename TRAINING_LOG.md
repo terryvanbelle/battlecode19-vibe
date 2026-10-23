@@ -3351,3 +3351,15 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   church's economy pilgrims leave a church's karbonite (50) in the bank. Unit test (off / below / above / past the
   round / unknown round). No-op out/v7chk18 IDENTICAL, 132 node tests + Python pass. **h122** = h121 + CHURCH_SAVE
   150 (526ec74e2442); driver diagnostics vs h87 (2013, 836, 2644) running.
+
+## 2026-10-23 11:48 — h122 parked (mixed); red wins 61% of v7-era gate games; h115 at 17 cells t 0.58
+- h122 (h121 + CHURCH_SAVE 150) vs h121, both red vs h87 to r150: 2013 better (churches 13,51,58,64,66,75 vs
+  13,51,59,63,69; r100 pilgrims 27 vs 23; r150 army 43 vs 24, mined K 1,948 vs 1,702); 836 worse (r100 mined K
+  1,748 vs 2,052, pilgrims 29 vs 31; pioneer idle far 9 vs 3); 2644 slightly worse (r100 pilgrims 7 vs 8). The save
+  costs church pilgrims on every map and pays only where pioneers wait at free sites: PARKED, not gated.
+- Side bias: in the five v7-era gates (h110-h114 vs h87, 40 games each) red won 25, 22, 22, 29, 24 = 122 of 200
+  (61%; 50% +- 3.5% at one sd); the v6-era gates (h82, h87 vs h50, h88 vs h82) 20, 21, 20 of 40. The red side
+  acts first in a round for robots of equal age and takes contested tiles (symcheck's CONTEST divergences: "red
+  took axis tile"). It is why 14-17 of a gate's 20 cells split by side (D 3-8). Pairing both sides keeps the gate
+  fair; on the replica sides alternate per game.
+- h115 (ENDGAME_FUEL 900) at 17 of 20 cells: gained 2, lost 1, D 3, t 0.58. Replica 140 waiting (134 ranked).
