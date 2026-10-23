@@ -2392,3 +2392,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   after block 1 at t >= 1.5 and net >= +3; reject at net <= 0; otherwise block 2 (a fresh draw of maps, the same
   rule on the cumulative count). Falsifier: the economy gain does not survive the field's early pressure (castles
   lost before r300 up in h82's games).
+
+## 2026-10-22 21:25 — h82's gate: non-inferior (t 0.89); its ladder panel is on the replica
+- Gate h82 vs h50 (...a3d577100016, 20 random cells from seed0 5000, par 2): 40 games, cells +12 -8, net +4, t 0.89
+  (local accept bar 2: not met; field-aimed screen t <= -1: passed). Basics: 0 errors, frozen, timeouts, init
+  failures or exceptions on either side; games lost on castles: h82 6, h50 17. Turn wall max 451 ms (h50 308)
+  under --no-kill on the loaded VM (load 12-14).
+- Driver, h50 red vs h82 blue on 1706 (403-3's map, where wololo's 16 pilgrims and 33 army at r200 beat v6's 7 and
+  15) to 300: h82 13-14 pilgrims, 2 churches, K mined 1,516 by r200 (wololo 1,444, h50 724), army 37 (h50 13).
+- Panel block 1 as pre-registered (TRAINING_LOG 21:05): submission 97 = dist/h82 (b0156206e827); requests
+  181-186 -> matches 408-413 (DB: vibe19 submission 97 in each); submission 98 = bots/v6 (v6 again) -> requests
+  187-192 -> matches 414-419 (submission 98). Maps per opponent in progress/panels/h82-b1.json, the same for both
+  arms (408/414 wololo: 2644, 836, 2013; 409/415 botfinalsafe: 2740, 1706, 203; 410/416 bot1v43: 2591, 2321, 388;
+  411/417 uvafan: 1653, 1712, 2046; 412/418 awesomelemonade: 1712, 2797, 2518; 413/419 IanCoolidge0: 1036, 203,
+  2644); player order shuffled per match. All 12 bumped to the front (spool_bump). vibe19's active build is v6.

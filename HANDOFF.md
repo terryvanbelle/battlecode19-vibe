@@ -14,11 +14,13 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 20:05:
-  **h82**'s gate running (...a3d577100016: h77 + DEF_RESERVE_K 30 = v6 + ECON_UNTIL 100 + PIONEERS_TEAM 6
-  + PEACE_RESERVE_K 60 + PLAN_VALUE 10 + DEF_RESERVE_K 30, wololo's expansion with a preacher's karbonite kept for a
-  rush; delivery PASSED 19:06: 4/4 wins, K by r200 169%, rush4 castle losses 0 of 40; it replaced h77's gate), the
-  **h89 / h90 delivery** (...a3d577100016b: h89 = h82 + DEF_RESERVE_FROM 30, the opening race on the whole bank; h90 =
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 21:25:
+  **h82** (h77 + DEF_RESERVE_K 30 = v6 + ECON_UNTIL 100 + PIONEERS_TEAM 6 + PEACE_RESERVE_K 60 + PLAN_VALUE 10 +
+  DEF_RESERVE_K 30) is field-aimed (TRAINING_ALGORITHM §2.6): its gate ended 21:15 non-inferior (+12 -8, t 0.89)
+  and its **ladder panel** decides: block 1 = replica matches 408-413 (h82, sub 97) vs 414-419 (v6, sub 98) on the
+  same maps (progress/panels/h82-b1.json), at the queue's front; accept at t >= 1.5 and net >= +3 over the 18
+  (opponent, game) cells, reject at net <= 0, else block 2 (TRAINING_LOG 21:05). Then the
+  **h89 / h90 delivery** (running, ...a3d577100016b: h89 = h82 + DEF_RESERVE_FROM 30, the opening race on the whole bank; h90 =
   h89 + PIONEER_FAST 1; race vs h82 on 8 replica loss maps to 150 and rush vs rush4 on 20 poor maps; TRAINING_LOG
   20:10), the **anti-chain delivery on h82** (...a3d577100017: h82, h83 = h82 + HUNT 2, h84 = h82 + STRIKE_R2 36 + PREACHER_SELF 4
   + PREACHER_MIL 2.5, each vs h76 on 799, 1706, 2013, 2924 both sides; TRAINING_LOG 19:30: StoneT2000's chains take
