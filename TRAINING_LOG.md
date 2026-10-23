@@ -2995,3 +2995,26 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   are in ~/jobq/superseded; pending holds only h100's extension 3 (...19k), behind h103's running gate.
 - HANDOFF's State section rewritten to current facts (82 lines, was 210): the stale-job queue text, v5/v6 candidate
   lists and old replica history removed (they live here by date).
+
+## 2026-10-23 07:28 — h103 gate: D 1 in 20 cells, to the replica panel; h111 / h110 diagnostics; their gates queued (...19l, ...19m)
+- Gate h103 (v7 + ESCORT 2 + ESCORT_UNIT 3) vs h87, the 20 cells of seed0 5000 (out/h103_h87.jsonl): 21-19;
+  gained 1, lost 0, split 19, **D 1**, net +1, t 1.00. Symcheck 1, 2, 3, 2321: contest / combat divergences only.
+  dlv SUM (2019-next/out/dlv_gate_h103.txt) h103 vs h87: churches built 437 vs 403, stillborn 292 vs 441, castles
+  lost 29 vs 31, karbonite at the end 36,832 vs 29,158. The escorts fire only for an overdue or lost pioneer, which
+  h87 rarely causes: at 0.05 discordant cells per cell, D 12 would take about 240 cells. The pre-registered middle
+  zone applies: the replica panel decides (its case, IanCoolidge0's squatters on 2644, is in v7-m1).
+- Replica block 1 for h103: submission = dist/h103 (406a9d0dc3b3), against v7-m1's six opponents on their maps,
+  then bots/v7 resubmitted as the ladder's build. Control = v7's block 420-425. Two-block rule: accept after block 1
+  at t >= 1.5 and net >= +3, reject at net <= 0, otherwise block 2 (same maps, sides swapped). Falsifier: the
+  escorts' 100 karbonite each cost the early economy and the cells against non-squatters go down.
+- h111 (v7 + SAFE_BUILD 2) driver diagnostic to r400 (--det) against h87's mirror games (scratch h109d): on 2013
+  h111 red **launched its chain** and won at r310 like h87 red (h109 did not): SAFE_BUILD 2 lifts the chain block.
+  On 836 h111 red still lost a castle (h87 red kept its own; h109 red lost one too); stillborn h111 3 red, 2 blue
+  vs h87's mirror 4 and 3.
+- h110 (v7 + RECALL 30, fixed) diagnostic on 2013: h110 red **lost** (h87 blue won on castles at r377; h87 red wins
+  this cell at r310), and h110 blue **won** at r354 (h87 blue loses it). The recall now trades red's push for blue's
+  defence on this map: one cell, net 0.
+- Gates, field-aimed, pre-registered: VM job ...19l h111 vs h87 and ...19m h110 vs h87, each symcheck 1, 2, 3, 2321
+  and the 20 cells of seed0 5000 at par 2 (dlv -> out/dlv_gate_hN.txt). Looks when D first reaches 12; accept t >= 2
+  with its mechanism; reject t <= -1; in between, a replica panel. Mechanisms (dlv SUM): h111 stillborn below h87's
+  and churches built within 5% of h87's (no blocked chains); h110 castles lost below h87's.

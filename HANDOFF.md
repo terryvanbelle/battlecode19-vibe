@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 06:53 PDT)
+## State (2026-10-23 07:40 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run built
@@ -16,27 +16,26 @@
 - **VM queue** (`~/jobq`: the runner takes pending jobs in locale `sort` order of their names; gates run from the
   shadow tree ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree,
   outputs in the main tree's out/). Gates at par 2 while the replica queue is long (owner, PROMPTS 18; par 4 below 30
-  waiting). Now: **h103**'s gate running (...19j: v7 + ESCORT 2 + ESCORT_UNIT 3, crusader escorts for overdue
-  pioneers; field case 419-2, IanCoolidge0's squatters on 2644; TRAINING_LOG 05:07), then **h100**'s extension 3
-  (...19k: cells 71-100 of seed0 5000; ESCORT_FIRST 1; at 70 cells net +1, t 0.17, D 35; its D-24 look gave t 1.63;
-  next look at D 48; TRAINING_LOG 05:50, 06:12). Nothing else pending: the 21 stale v6-era jobs went to
-  ~/jobq/superseded at 06:55 (the owner ran the move; PROMPTS 22-24). Next job name ...19l (never a longer name such
-  as ...19ga: the locale sort ignores punctuation and puts it before ...19g).
-- **Replica panels** (progress/panels/v7-m1.json: h82-b1's maps against six field bots, wololo, uvafan, IanCoolidge0
-  ~69ce88, bot1v43, botfinalsafe, awesomelemonade), all queued, next in line at 06:53: **v7** measurement 420-425
+  waiting). Now: **h100**'s extension 3 running (...19k: cells 71-100 of seed0 5000; ESCORT_FIRST 1; at 70 cells
+  net +1, t 0.17, D 35; its D-24 look gave t 1.63; next look at D 48; TRAINING_LOG 05:50, 06:12), then **h111**'s
+  gate (...19l) and **h110**'s (...19m), both pre-registered at 07:28 (field-aimed bars; mechanisms: h111 stillborn
+  below h87's with churches within 5%, h110 castles lost below h87's). The 21 stale v6-era jobs are in
+  ~/jobq/superseded (PROMPTS 22-24; `tools/move_stale.sh` does such moves now). Next job name ...19n (never a longer
+  name such as ...19ga: the locale sort ignores punctuation and puts it before ...19g).
+- **Replica panels** (progress/panels/v7-m1.json: h82-b1's maps against six field bots, wololo, botfinalsafe, bot1v43,
+  uvafan, awesomelemonade, IanCoolidge0 ~69ce88), matches 420-427 running or done at 07:26: **v7** measurement 420-425
   (submission 99, the control); **h96** (v7 + ATTACK_LATE 1001; local gate t 0.58) block 1 426-431 (submission 100);
   **h104** (v7 + ATTACK_ROUND 1001 + ATTACK_LATE 1001: no general attack; local gate t 1.00, D 4, mechanism missed)
-  block 1 432-437 (submission 102). When they finish: `contest19.py fetch --new`, then `contest19.py compare 420-425
-  426-431` and `... 432-437` by the two-block rule; v7 against v6 (414-419: 3 wins in 18) and h82 (408-413: 5 in 18);
-  rerun the economy, composition and stillborn censuses on v7's games. Sides alternate per game (420/426 list the
-  opponent first, 432 vibe19). The ladder's vibe19 is submission 103 (= bots/v7), rated first (1711 at 06:00).
-- **Candidates in hand**: **h111** = v7 + SAFE_BUILD 2 (structures never build where attackers that have no other
-  target of ours would kill the newborn before it acts; TRAINING_LOG 06:37): no-op IDENTICAL, on the VM; driver
-  diagnostic vs h87 on 836 and 2013 running (scratch diag.sh; h87's mirror games are in scratch h109d). **h110** = v7
-  + RECALL 30 with the fixed recall (chain-born units keep their line target; TRAINING_LOG 06:17): on the VM;
-  diagnostic on 2013 after h111's. Parked: h109 (SAFE_BUILD 1: blocked chain launches, worse in 2 of 4 cells), h108
-  (RECALL before the fix), h102 (PIONEER_DETOUR 50: inert), h98 / h99 (MIL_ROTATION null / [4]), h105 = dist/turtle
-  and h106 (the prophet doctrine lost every self-play test, TRAINING_LOG 04:22).
+  block 1 432-437 (submission 102); **h103** (v7 + ESCORT 2 + ESCORT_UNIT 3: crusader escorts for overdue pioneers;
+  local gate 21-19, D 1 in 20 cells) block 1 438-443 (submission 104). When they finish: `contest19.py fetch --new`,
+  then `contest19.py compare 420-425 426-431`, `... 432-437` and `... 438-443` by the two-block rule; v7 against v6
+  (414-419: 3 wins in 18) and h82 (408-413: 5 in 18); rerun the economy, composition and stillborn censuses on v7's
+  games. Sides alternate per game (420/426/438 list the opponent first, 432 vibe19). The ladder's vibe19 is submission
+  105 (= bots/v7), rated first (1711 at 06:00).
+- **Candidates in hand**: **h111** = v7 + SAFE_BUILD 2 and **h110** = v7 + RECALL 30 (fixed recall) are queued
+  (above); their driver diagnostics are in TRAINING_LOG 07:28. Parked: h109 (SAFE_BUILD 1: blocked chain launches,
+  worse in 2 of 4 cells), h108 (RECALL before the fix), h102 (PIONEER_DETOUR 50: inert), h98 / h99 (MIL_ROTATION null
+  / [4]), h105 = dist/turtle and h106 (the prophet doctrine lost every self-play test, TRAINING_LOG 04:22).
 - Closed on 2026-10-23 (TRAINING_LOG, progress/ATTEMPTS.md): h107 FAILED 06:46 (DEF_FAR_UNIT 3: t -1.89, D 7,
   mechanism missed, castles lost 34 vs 26); h101 FAILED 03:50 (MELEE_BACK 2: t -0.63, mechanism 0.78 vs bar 0.75);
   h97 and h91 deliveries FAILED; h87 ACCEPTED as v7; h82 superseded; h88 REJECTED; h64 inconclusive, not extended.
