@@ -3,7 +3,10 @@
 //
 //   node tools/batch.js --a <bot dir> --b <bot dir> --seeds 1,2,3 | --seed-file f | --random N [--seed0 S]
 //        [--sides both|a-red] [--par 6] [--timescale K] [--init-ms MS] [--fast-turn] [--fast-init] --out results.jsonl [--replays dir]
-//        [--tag name] [--max-rounds N]
+//        [--tag name] [--max-rounds N] [--no-kill] [--game-cap S]
+//
+// --no-kill passes run_game.js --no-kill (no per-turn vm2 kill); a game then has a wall-clock cap, --game-cap seconds
+// (default 3600 with --no-kill, none without), after which its process is killed and the cell is an error row.
 //
 // One JSON row per game: {tag, a, b, a_hash, b_hash, seed, a_side, winner_is_a, reason, rounds, ...runner fields}.
 // Rows are keyed by (a_hash, b_hash, seed, a_side): the same cell is never played twice into one file.
@@ -41,6 +44,8 @@ function parse(argv) {
     else if (k === '--init-ms') a.initMs = v();
     else if (k === '--fast-turn') a.fastTurn = true;
     else if (k === '--fast-init') a.fastInit = true;
+    else if (k === '--no-kill') a.noKill = true;
+    else if (k === '--game-cap') a.gameCap = +v();
     else if (k === '--max-rounds') a.maxRounds = v();
     else throw new Error('unknown ' + k);
   }
@@ -85,17 +90,22 @@ async function main() {
       if (o.initMs) args.push('--init-ms', o.initMs);
       if (o.fastTurn) args.push('--fast-turn');
       if (o.fastInit) args.push('--fast-init');
+      if (o.noKill) args.push('--no-kill');
       if (o.maxRounds) args.push('--max-rounds', o.maxRounds);
       const p = spawn('unshare', args, { stdio: ['ignore', 'pipe', 'pipe'] });
       let so = '', se = '';
       p.stdout.on('data', d => { so += d; }); p.stderr.on('data', d => { se += d; });
+      const capS = o.gameCap || (o.noKill ? 3600 : 0);
+      const cap = capS ? setTimeout(() => { se += `\nkilled: over the game cap of ${capS} s`; p.kill('SIGKILL'); }, capS * 1000) : null;
       p.on('close', code => {
+        if (cap) clearTimeout(cap);
         let row;
         try {
           const r = JSON.parse(so.trim().split('\n').pop());
           const ai = j.side === 'red' ? 0 : 1;
           row = { tag: o.tag, a: o.a, b: o.b, a_hash: ah, b_hash: bh, seed: j.seed, a_side: j.side,
             winner_is_a: r.winner === j.side ? 1 : 0, reason: r.reason, rounds: r.rounds, wall_s: r.wall_s, fast_turn: r.fast_turn,
+            fast_init: r.fast_init, no_kill: r.no_kill,
             a_team: r.teams[ai], b_team: r.teams[1 - ai], map: r.map, t: new Date().toISOString() };
         } catch (e) { row = { tag: o.tag, a_hash: ah, b_hash: bh, seed: j.seed, a_side: j.side, error: (se || so).slice(-500), code }; }
         // A castle that misses the init clock before round 1 says nothing about the bots: retry the game (machine

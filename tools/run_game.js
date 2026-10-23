@@ -4,7 +4,7 @@
 //
 //   node tools/run_game.js --red <bot dir | bundle.js> --blue <bot dir | bundle.js> [--seed N]
 //        [--replay out.bc19] [--logs out.jsonl] [--json out.json] [--det] [--chi 100] [--che 20]
-//        [--max-rounds N] [--timescale K] [--init-ms MS] [--fast-turn] [--fast-init]
+//        [--max-rounds N] [--timescale K] [--init-ms MS] [--fast-turn] [--fast-init] [--no-kill]
 //
 // --det        deterministic mode: seeds Math.random in the engine (the per-turn shuffle of visible robots) from
 //              the game seed. Bots that use their own seeded PRNG then replay identically except for clock effects.
@@ -20,6 +20,10 @@
 // --fast-init  compile each bundle once and run that compiled script in every new robot sandbox (see fastInit)
 //              instead of the engine's fresh transform and compile of the bundle text per robot: the same code in the
 //              same fresh vm2 VM under the same kill. Like --fast-turn it makes the harness cheaper than the engine.
+// --no-kill    no vm2 kill on a turn (sandbox creation keeps --init-ms's bound): vm2 starts a watchdog thread for every
+//              timed call, the largest cost of a game on the loaded VM. The chess clock still charges each turn, so a
+//              slow robot still freezes; a turn that never returns hangs the game, so batch.js caps each game's wall
+//              time. Only for batches of our own builds (strategy gates); time audits and the replica keep the kill.
 // Prints one JSON line: {winner:"red"|"blue", win_condition, reason, rounds, seed, map:{w,castles}, teams:[...]}.
 'use strict';
 const fs = require('fs');
@@ -49,6 +53,7 @@ function parseArgs(argv) {
     else if (k === '--init-ms') a.initMs = parseFloat(v());
     else if (k === '--fast-turn') a.fastTurn = true;
     else if (k === '--fast-init') a.fastInit = true;
+    else if (k === '--no-kill') a.noKill = true;
     else throw new Error('unknown argument ' + k);
   }
   if (!a.red || !a.blue) throw new Error('need --red and --blue');
@@ -193,7 +198,7 @@ async function main() {
   const result = {
     winner: g.winner === 0 ? 'red' : g.winner === 1 ? 'blue' : null,
     win_condition: g.win_condition, reason: REASONS[g.win_condition], rounds: g.round, seed,
-    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale, ...limits, fast_turn: !!a.fastTurn, fast_init: !!a.fastInit, net_isolated: netIsolated(),
+    map: { w: mapW, castles: castleCount }, wall_s: wall, det: a.det, timescale: a.timescale, ...limits, fast_turn: !!a.fastTurn, fast_init: !!a.fastInit, no_kill: !!a.noKill, net_isolated: netIsolated(),
     red: a.red, blue: a.blue,
     teams: [0, 1].map(i => ({ team: i === 0 ? 'red' : 'blue', ...counts[i], ...alive[i],
       turns: teams[i].turns, ms_mean: teams[i].turns ? +(teams[i].ms_total / teams[i].turns).toFixed(3) : 0,
@@ -207,7 +212,7 @@ async function main() {
 // Time limits for game g (see --timescale, --init-ms). Returns them for the result line.
 const TURN_MAX_TIME = SPECS.TURN_MAX_TIME;
 function setLimits(g, a) {
-  SPECS.TURN_MAX_TIME = TURN_MAX_TIME * a.timescale;   // read by each new CrossVM (engine vm.js)
+  SPECS.TURN_MAX_TIME = a.noKill ? 0 : TURN_MAX_TIME * a.timescale;   // read by each new CrossVM (engine vm.js); 0: none
   const clock0 = g.chess_initial;
   if (a.initMs) {
     g.chess_initial = a.initMs;   // runtime.js initializeRobot compares sandbox creation time with this

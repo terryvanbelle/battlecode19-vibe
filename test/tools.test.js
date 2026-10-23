@@ -317,6 +317,31 @@ test('run_game: --fast-init compiles a bundle once, runs it in fresh sandboxes, 
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('run_game --no-kill replays the killed path\'s game; batch.js caps a game whose turn never returns', () => {
+  const { execFileSync } = require('child_process'), os = require('os');
+  const root = path.join(__dirname, '..');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'nokill-'));
+  try {
+    const play = (...x) => {
+      const out = path.join(dir, (x.length ? 'nokill' : 'kill') + '.bc19');
+      const line = execFileSync('unshare', ['-rn', process.execPath, path.join(root, 'tools', 'run_game.js'),
+        '--red', 'bots/v3', '--blue', 'bots/v2', '--seed', '2202', '--max-rounds', '40', '--det', '--timescale', '20',
+        '--init-ms', '10000', '--fast-turn', '--replay', out, ...x], { cwd: root, encoding: 'utf8' });
+      return [JSON.parse(line), fs.readFileSync(out)];
+    };
+    const [rk, bk] = play(), [rn, bn] = play('--no-kill');
+    assert.deepStrictEqual([rk.no_kill, rk.turn_kill_ms, rn.no_kill, rn.turn_kill_ms], [false, 4000, true, 0]);
+    assert.ok(rn.teams.every(t => t.errors === 0 && t.turns > 100), 'clean games');
+    assert.ok(bk.equals(bn), 'same replay');
+    const res = path.join(dir, 'cap.jsonl'), t0 = Date.now();
+    execFileSync(process.execPath, [path.join(root, 'tools', 'batch.js'), '--a', 'test/fixtures/loopbot', '--b', 'bots/v2',
+      '--seeds', '2202', '--sides', 'a-red', '--par', '1', '--no-kill', '--game-cap', '3', '--out', res], { cwd: root, stdio: 'ignore' });
+    const row = JSON.parse(fs.readFileSync(res, 'utf8').trim());
+    assert.match(row.error, /over the game cap of 3 s/);
+    assert.ok(Date.now() - t0 < 30000, 'capped promptly');
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('dlv: delivery numbers agree with the replay analysis and with each other', () => {
   const dlv = require('../tools/dlv');
   const buf = fs.readFileSync(path.join(FIX, 'rush_s2908_r80.bc19'));
