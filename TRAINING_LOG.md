@@ -3366,3 +3366,15 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   14-17 of a gate's 20 cells split by side (D 3-8). Pairing both sides keeps the gate fair; on the replica sides
   alternate per game.
 - h115 (ENDGAME_FUEL 900) at 17 of 20 cells: gained 2, lost 1, D 3, t 0.58. Replica 140 waiting (134 ranked).
+
+## 2026-10-23 11:58 — h115's gate: t 0.58, mechanism opposite (karbonite binds, not fuel) -> rejected
+- h115 (v7 + ENDGAME_FUEL 900) vs h87, 20 cells of seed0 5000: 21-19, gained 2, lost 1, split 17, D 3, net +1,
+  t 0.58 (never reached the D 12 look). Pre-registered mechanism (09:04): in games that reach r1000, dlv fuelEnd at most
+  half of h87's. Measured over the 20 games of each that reached r1000: fuelEnd 136,008 vs h87's 38,353 (3.5 times),
+  karbEnd 1-72 in 15 of h115's 20 (h87 kept 400-7,800 in 14). From r900 the dump spends the karbonite on preachers,
+  then crusaders, then nothing; with no pilgrims built and units standing still, fuel piles up. It won 12 of the 20
+  r1000 games against h87's 8, but a candidate whose mechanism moves the other way does not go to the replica
+  (TRAINING_ALGORITHM §2, delivery): REJECTED. Ledger row added (it was missing).
+- What it shows: at r1000 karbonite, not fuel, is the binding resource for health. Per karbonite a crusader is 40 HP
+  for 15 K (2.7 HP/K), a preacher 60 for 30 (2.0), a prophet 20 for 25 (0.8); per fuel the preacher leads (1.2 HP/F
+  vs 0.8). So the dump should pick by the bank's F/K ratio: crusaders while F/K > 50/15, preachers when fuel binds.

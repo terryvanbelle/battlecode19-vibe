@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 120 other, 14 accepted, 10 rejected, 6 in progress, 3 dropped, 3 queued, 2 sparring partners (158 rows).
+Totals: 120 other, 14 accepted, 11 rejected, 6 in progress, 3 dropped, 3 queued, 2 sparring partners (159 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -158,6 +158,7 @@ Totals: 120 other, 14 accepted, 10 rejected, 6 in progress, 3 dropped, 3 queued,
 | `h112` | 2026-10-23 | v7 | v7 + a threat response counts as defenders only our military that see the closest attacker (DEF_SEEN=1) | 22-18 vs h87 (out/h112_h87.jsonl) |  |  |  | REPLICA PANEL (waits for the queue < 30): gate t 0.71, D 8, gained 5 lost 3; mechanism met (castles lost 30 vs 32); churches lost 123 vs 207, stillborn 115 vs 530 |
 | `h113` | 2026-10-23 | v7 | v7 + a chainer that sees 2 or more enemy crusaders, prophets or preachers starts no line (CHAIN_CLEAR=2) | 17-23 vs h87 (out/h113_h87.jsonl) |  |  |  | REJECTED 10:38: gate t -1.73, gained 0 lost 3 (D 3); churches lost/built 0.35 vs 0.39, churches built 374 vs 478, castles lost 32 vs 26 |
 | `h114` | 2026-10-23 | v7 | v7 + a structure's guard quota builds without waiting for the chain's bank (CHAIN_GUARD=1) | 16-24 vs h87 (out/h114_h87.jsonl) |  |  |  | REJECTED 11:24: gate t -1.63, gained 1 lost 5 (D 6); churches built 312 vs 400, castles lost 32 vs 29 |
+| `h115` | 2026-10-23 | v7 | v7 + from r900 all fuel into preachers (crusaders when karbonite is short), no pilgrims or churches, units away from home stand still (ENDGAME_FUEL=900) | vs h87 20 cells: 21-19, gained 2, lost 1, D 3, t 0.58 |  |  |  | REJECTED 11:58 (731c03953b9a): mechanism opposite; in the 20 games that reached r1000 fuelEnd 136,008 vs h87's 38,353 (pre-registered: at most half), karbEnd 1-72 in 15 of 20: karbonite binds, not fuel |
 | `h116` | 2026-10-23 | v7 | v7 + before ECON_UNTIL the peacetime army builds from the bank past ECON_RICH + the reserves (ECON_RICH=100) |  |  |  |  | QUEUED (1f518954affb): gate ...19r vs h87 20 cells; no-op IDENTICAL; driver diagnostic 1653: army 34 vs 3 at r100 |
 | `h117` | 2026-10-23 | v7 | v7 + a pioneer waiting at its free site for the church's karbonite says so (CT.WAIT); castles then leave the church + DEF_RESERVE_K in the bank for pilgrims and threat responses beyond r2 64 (PIONEER_HOLD=64) |  |  |  |  | PARKED (a50b972763c3): self-play diagnostic 836/2013 churches unchanged, 2-3 fewer pilgrims at r100; the churches spend while pioneers wait; folded into h118 |
 | `h118` | 2026-10-23 | v7 | v7 + PIONEER_HOLD 64 + a pioneer that has waited 3 turns beside its free site builds on the church's cost alone (PIONEER_LEAN=3) |  |  |  |  | QUEUED (21d5ea5d4597, rebuilt: the first build dropped PIONEER_LEAN): gate ...19s vs h87 20 cells; self-play diagnostics 836 (both sides) and 2013: churches 1-4 rounds sooner |
