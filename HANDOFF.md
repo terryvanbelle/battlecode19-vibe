@@ -35,8 +35,10 @@
   diagnostic on 2013 changes moves from r200 (same result); gate queued (...19i, after h100's extension 2;
   TRAINING_LOG 05:04).
   **h109** = v7 + SAFE_BUILD 1 (structures never build onto a tile where the enemy attackers in sight would kill the
-  newborn before it acts; replica losses lost ~76 stillborn units, TRAINING_LOG 05:37): driver diagnostic on 836 and
-  2013 running (836: stillborn 0 vs 3-4 either side, h109 red lost a castle h87 red kept). **h110** = v7 + RECALL 30
+  newborn before it acts; replica losses lost ~76 stillborn units, TRAINING_LOG 05:37): parked after its diagnostic
+  (stillborn 0, but one prophet in reach of every build tile blocked the chain launch: worse in 2 of 4 cells).
+  **h111** = v7 + SAFE_BUILD 2 (only attackers with no other target of ours count): no-op IDENTICAL, on the VM; driver
+  diagnostic on 836 and 2013 running (scratch diag.sh). **h110** = v7 + RECALL 30
   with the fixed recall (chain-born units keep their line target; h108 parked for that bug): built, on the VM;
   diagnostic on 2013 after h109's. `contest19.py compare CTRL CAND` (e.g. 420-425 432-437) compares two downloaded replica blocks per cell (two-block rule).
   Built, not queued (all on the VM's dist/): h105 = dist/turtle (sparring bot: prophets only, no attack, no
