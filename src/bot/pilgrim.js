@@ -196,21 +196,31 @@ export function siteStalled(B) {
     if (++st.siteStall < CFG.PIONEER_GIVEUP) return false;
   }
   if (st.cluster >= 0 && st.cluster < 40) w.talk(CT.TAKEN + st.cluster);
-  const h = CFG.PIONEER_HOME && nearestStruct(st.structs, me) || me;
-  st.site = null; st.target = freeDepotNear(B, h.x, h.y, null);
+  st.site = null; st.target = CFG.PIONEER_HOME ? homeDepot(B) : freeDepotNear(B, me.x, me.y, null);
   return true;
 }
 
-function nearestStruct(structs, me) {
-  let best = null, bd = 1e9;
-  for (const s of structs) { const k = king(s.x, s.y, me.x, me.y); if (k < bd) { bd = k; best = s; } }
+// The free depot (none seen on it, not given up by CFG.PILGRIM_STALL) on ground we hold: fewest of 4 x king steps to
+// the nearest structure we know plus king steps from us; karbonite first on ties. Seed 418 (h78 driver game): with
+// the home cluster's depots all taken, the depot nearest the nearest structure lay under the enemy's army.
+function homeDepot(B) {
+  const w = B.w, me = w.me, st = B.st, gave = CFG.PILGRIM_STALL && st.stallGave; let best = null, bv = 1e9;
+  for (const d of B.deps) {
+    const occ = w.occ(d.x, d.y);
+    if (occ > 0 && occ !== me.id) continue;
+    if (gave && gave.has(d.i) && me.turn - gave.get(d.i) <= CFG.PILGRIM_HOT_MEM) continue;
+    let h = st.structs.length ? 1e9 : 0;
+    for (const s of st.structs) h = Math.min(h, king(s.x, s.y, d.x, d.y));
+    const v = (4 * h + king(me.x, me.y, d.x, d.y)) * 2 + (d.k ? 0 : 1);
+    if (v < bv) { bv = v; best = d; }
+  }
   return best;
 }
 
 // CFG.PILGRIM_STALL: a pilgrim off its target depot that has gone PILGRIM_STALL turns (flight included) no nearer it
-// (king steps) than its best since taking it gives it up for PILGRIM_HOT_MEM turns, for the free depot nearest its
-// nearest structure. h68 on seed 418: #1936 hovered 11 king steps short of a depot under the enemy's guards for 140
-// turns, then the fuel-to-karbonite switch sent it back to the same ground; it never mined.
+// (king steps) than its best since taking it gives it up for PILGRIM_HOT_MEM turns, for homeDepot. h68 on seed 418:
+// #1936 hovered 11 king steps short of a depot under the enemy's guards for 140 turns, then the fuel-to-karbonite
+// switch sent it back to the same ground; it never mined.
 export function stallRetarget(B) {
   const w = B.w, me = w.me, st = B.st, t = st.target;
   if (me.x === t.x && me.y === t.y) { st.stallFor = null; return; }
@@ -218,8 +228,7 @@ export function stallRetarget(B) {
   if (st.stallFor !== t || k < st.stallBest) { st.stallFor = t; st.stallBest = k; st.stallT = me.turn; return; }
   if (me.turn - st.stallT < CFG.PILGRIM_STALL) return;
   (st.stallGave || (st.stallGave = new Map())).set(t.i, me.turn); st.stallFor = null;
-  const h = nearestStruct(st.structs, me) || me;
-  const alt = freeDepotNear(B, h.x, h.y, null);
+  const alt = homeDepot(B);
   if (alt) st.target = alt;
 }
 

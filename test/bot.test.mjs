@@ -859,15 +859,15 @@ test('pilgrim: PIONEER_GIVEUP drops a site it gets no nearer to under enemy eyes
     const B3 = { ...B2, st: { site: B.clusters[far].site.slice(), cluster: far } };
     assert.deepStrictEqual([1, 2, 3, 4, 5].map(() => siteStalled(B3)), [false, false, false, false, true]);
     assert.strictEqual(B3.st.site, null); assert.strictEqual(talked, CT.TAKEN + far); assert.ok(B3.st.target);
-    // CFG.PIONEER_HOME: the depot it then takes is the free one nearest its nearest structure, not nearest itself
-    // (a structure of ours known at the far site, the castle beside us left out of the list).
+    // CFG.PIONEER_HOME: the depot it then takes is one by a structure of ours, not the one nearest itself (a
+    // structure known at the far site, the castle beside us left out of the list).
     const [hx, hy] = B.clusters[far].site, kh = d => king(d.x, d.y, hx, hy);
     const best = Math.min(...B.deps.filter(d => w2.occ(d.x, d.y) <= 0).map(kh));
     for (const ph of [0, 1]) {
       CFG.PIONEER_HOME = ph;
       const B4 = { ...B2, st: { site: B.clusters[far].site.slice(), cluster: far, structs: [{ x: hx, y: hy }] } };
       assert.deepStrictEqual([1, 2, 3, 4, 5].map(() => siteStalled(B4)), [false, false, false, false, true]);
-      if (ph) assert.strictEqual(kh(B4.st.target), best); else assert.ok(kh(B4.st.target) > best + 3);
+      if (ph) assert.ok(kh(B4.st.target) <= best + 1); else assert.ok(kh(B4.st.target) > best + 3);
     }
   } finally { CFG.PIONEER_GIVEUP = saved; CFG.PIONEER_STALL_ANY = savedAny; CFG.PIONEER_HOME = 0; }
 });
@@ -1714,7 +1714,7 @@ test('pilgrim: PILGRIM_STALL gives up a depot it gets no nearer to, for the free
     const deps = [{ i: 0, x: 20, y: 20, k: true }, { i: 1, x: 3, y: 3, k: true }, { i: 2, x: 9, y: 9, k: false }];
     const B = { deps, st: { target: deps[0], structs: [{ x: 2, y: 2 }] } };
     const turn = (t, x = 10, y = 10) => { B.w = { me: { id: 9, x, y, turn: t }, occ: () => -1 }; stallRetarget(B); return B.st.target.i; };
-    // Best set at turn 1; no nearer through turn 4: given up for depot 1, nearest the structure (depot 2 is nearer us).
+    // Best set at turn 1; no nearer through turn 4: given up for depot 1, by the structure (depot 2 is nearer us).
     assert.deepStrictEqual([1, 2, 3, 4].map(t => turn(t)), [0, 0, 0, 1]);
     // Getting nearer resets the count; standing on the target is not a stall.
     assert.deepStrictEqual([5, 6, 7, 8, 9].map(t => turn(t, 10 - (t - 5), 10 - (t - 5))), [1, 1, 1, 1, 1]);
@@ -1726,6 +1726,12 @@ test('pilgrim: PILGRIM_STALL gives up a depot it gets no nearer to, for the free
     // Every free depot given up: it keeps its target.
     B.st.target = deps[0]; B.st.stallFor = null; B.st.stallGave = new Map([[1, 70], [2, 70]]);
     assert.deepStrictEqual([70, 71, 72, 73, 74].map(t => turn(t, 30, 30)), [0, 0, 0, 0, 0]);
+    // Ground we hold beats a depot near us: with a second structure by depot 3, a pilgrim at (12,12) takes depot 3
+    // (2 king steps from a structure, 9 from us) over depot 2 (7 from the nearest structure, 3 from us).
+    const deps2 = [...deps, { i: 3, x: 20, y: 3, k: true }];
+    const B2 = { deps: deps2, st: { target: deps2[0], structs: [{ x: 2, y: 2 }, { x: 22, y: 3 }], stallGave: new Map([[1, 100]]) } };
+    const turn2 = t => { B2.w = { me: { id: 9, x: 12, y: 12, turn: t }, occ: () => -1 }; stallRetarget(B2); return B2.st.target.i; };
+    assert.deepStrictEqual([100, 101, 102, 103].map(turn2), [0, 0, 0, 3]);
   } finally { [CFG.PILGRIM_STALL, CFG.PILGRIM_HOT_MEM] = saved; }
 });
 

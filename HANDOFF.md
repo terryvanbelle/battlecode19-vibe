@@ -75,8 +75,11 @@
 - Church bomb (TRAINING_LOG 08:56, replica 205-2): StoneT2000 builds a 16-link church chain in one round from
   pilgrims parked just past our castle's vision, then ~13 preachers at our castle (lone castle dead at 233). Our
   counters h54 (STRIKE) and h56 (HUNT) cannot be rated in self-play, so an anti-chain panel runs: h54v6 and h56v6
-  each vs h72 (our chain bomber since its delivery passed) on 20 cells, with h72's gate vs h50 as the control cell
-  (VM jobs ...a3d5773-4 and ...a3d5771001; read with paired.js --cand --ctrl --opp). h54's h2h extensions were withdrawn.
+  each vs h76 (our chain bomber since its delivery passed at 16:52; h72 before) on 20 cells, with h76's gate vs h50
+  as the control cell (VM jobs ...a3d5773-4 and ...a3d57710056; read with paired.js --cand --ctrl --opp). h54's h2h
+  extensions were withdrawn. Replica 407 (botfinalsafe 3-0 on 799, 1706, 2013, 16:52): lines of 7-17 churches; the
+  castle each line reached fell 8-10 rounds later (799: line r285, castle r294; 1706: r306, r316; 2013: r274, game
+  over r282).
 - Idle on safe depots (TRAINING_LOG 08:43, replica 206-3): a pilgrim mines only on its target; when the target is
   taken or under an enemy attacker it never takes the depot it stands on, so seven pilgrims of castle (0,14) mined
   nothing for 200+ rounds beside StoneT2000's prophets. CFG.PILGRIM_HERE (h63 = 1): gate vs h50 is next in the job
