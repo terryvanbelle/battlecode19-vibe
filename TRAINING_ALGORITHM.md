@@ -76,8 +76,14 @@ the ladder and calibrated with a full field block the same day. Then run a corre
    never reaches a gate. Tools refuse to gate without a delivery PASS.
 6. **Local gate** (paired self-play): candidate and incumbent on the same random (map, side, seed) cells; only
    discordant pairs count. Also the archetype roster and the frozen roster, as screens that can block but not accept.
-7. **Ladder confirmation**: candidates that pass locally get an unranked panel against field bots near our rating,
-   paired with the incumbent's own panel. Accept by the two-block rule (§4).
+   A candidate **aimed at the field** (its target is a failure seen in ladder games that self-play does not show,
+   such as resources the field takes and our builds leave idle) is declared so before its gate; the gate is then a
+   non-inferiority screen (reject at t <= -1 or any basics regression), and acceptance comes only from step 7.
+7. **Ladder confirmation**: candidates that pass locally get an unranked panel against field bots near our rating
+   in strength (the bots that beat or split with the incumbent lately, not the rating list alone), paired with the
+   incumbent's own panel created at the same time. Where a match keeps the build it was created with, submit the
+   candidate only while its matches are created, then resubmit the incumbent. Without map choice, pair by
+   (opponent, game number). Accept by the two-block rule (§4).
 8. **On accept**: snapshot; submit as the active build; run the progress refresh (ratings, charts, attempts table,
    handoff); commit and push the same hour; mine the new ladder games for the next target.
 9. **On reject**: restore the working bot from the snapshot, log the closing number, its kind (refuted, below

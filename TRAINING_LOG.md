@@ -2368,3 +2368,27 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - Restarted 03:57:41 UTC when one game was 39 min old and four were under 4 min (in-flight matches re-run): all six
   slots leased at once (404, 217, 221, 223, 224, 225), each node with the semi-space flag. Expect ~+20% slots and
   ~-13% CPU a game; read the ack rate at the next check-ins.
+
+## 2026-10-22 21:05 — field-aimed candidates: the ladder panel decides; h82's panel pre-registered
+- No build has had step 7 (ladder confirmation) yet: v4-v6 were submitted on self-play gates alone, and v6 then
+  lost 0-3, 0-3, 1-2, 0-3, 1-2 to wololo, botfinalsafe, bot1v43, uvafan and awesomelemonade (403-407, 385-394).
+  Self-play is blind to changes aimed at the field (TRAINING_ALGORITHM §0). Diagnostic, driver, seed 1375 (403-1's
+  map, 61x61, where wololo built 54 pilgrims and 10 churches by r200 and mined 4,202 K to our 1,424): h82 vs h50 to
+  200 rounds, h82 47 pilgrims and 11 churches, h50 16 and 2, HP 6,460 vs 1,440. The gate's random maps are mostly
+  ones where h50 already fills its half, so its cells are close.
+- TRAINING_ALGORITHM §2 steps 6-7 now: a candidate declared field-aimed before its gate is screened locally for
+  non-inferiority (reject at t <= -1 or a basics regression) and accepted only on the ladder panel; the panel pairs
+  the candidate with the incumbent's own panel created at the same time.
+- **h82 is declared field-aimed now.** Disclosure: its gate (...a3d577100016) was looked at mid-run (16 of 20
+  cells, net +2, t 0.5), which the protocol forbids; the panel's numbers are unseen. Either way h82 needs the
+  panel (a local accept leads to step 7 too); the gate's result matters only at t <= -1.
+- **h82 ladder panel pre-registered** (created when the gate ends, unless it rejects at t <= -1): opponents = the
+  six that beat v5/v6 in their last match: m-schier.battlecode-2019-wololo, StoneT2000.BC19-botfinalsafe,
+  StoneT2000.BC19-bot1v43, uvafan.bc2019, awesomelemonade.Battlecode2019, IanCoolidge0.battlecode20~69ce88. Block 1:
+  one unranked match each (3 maps drawn at random once per opponent, `contest19.py scrim --vs ... --panel
+  progress/panels/h82-b1.json`, player order '?') for h82 (submitted only while its 6 matches are created), then the
+  same 6 requests for v6 (submission 96's bundle, resubmitted at once); the 12 bumped to the front of the replica
+  queue (spool_bump). Cells = (opponent, game number), 18; D = cells where the two arms' results differ. Accept
+  after block 1 at t >= 1.5 and net >= +3; reject at net <= 0; otherwise block 2 (a fresh draw of maps, the same
+  rule on the cumulative count). Falsifier: the economy gain does not survive the field's early pressure (castles
+  lost before r300 up in h82's games).

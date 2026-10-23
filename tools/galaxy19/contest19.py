@@ -13,6 +13,8 @@ as a team on the official site would act. Standard library only; run on the driv
         order) and just below us (unranked on --maps random maps: galaxy refuses ranked requests downward),
         alternating above/below, nearest first; skips opponents we already have a match waiting against.
         --vs: one scrimmage against each named team instead (exact name or a unique substring)
+        --panel FILE: unranked, on the maps FILE holds for that opponent; an opponent not in FILE gets a random draw
+        that is written there, so a candidate's panel and the incumbent's control play the same maps in the same order
   python3 tools/galaxy19/contest19.py matches [--pages 1] [--all]   our scrimmages (or everyone's), newest first
   python3 tools/galaxy19/contest19.py fetch [ID ...] [--new] [--out DIR]
         download match archives and unpack their .bc19 replays + match.json into DIR/<id>/ (default
@@ -81,6 +83,13 @@ def named(ladder, my_id, names):
     return out
 
 
+def panel_maps(panel, name, maps, n, rnd):
+    """The maps a panel plays against `name`: the recorded draw, else a random draw of n, recorded."""
+    if name not in panel:
+        panel[name] = rnd.sample(maps, n)
+    return panel[name]
+
+
 def opponent(m, my_id):
     ps = m.get('participants') or []
     me = next((p for p in ps if p.get('team') == my_id), None)
@@ -98,7 +107,7 @@ def main(argv=None):
     sub.add_parser('ladder')
     p = sub.add_parser('scrim'); p.add_argument('--n', type=int, default=1); p.add_argument('--band', type=int, default=3)
     p.add_argument('--maps', type=int, default=3); p.add_argument('--dry-run', action='store_true')
-    p.add_argument('--vs', default='')
+    p.add_argument('--vs', default=''); p.add_argument('--panel', default='')
     p = sub.add_parser('matches'); p.add_argument('--pages', type=int, default=1); p.add_argument('--all', action='store_true')
     p = sub.add_parser('fetch'); p.add_argument('ids', type=int, nargs='*'); p.add_argument('--new', action='store_true')
     p.add_argument('--out', default=REPLAYS); p.add_argument('--pages', type=int, default=3)
@@ -150,8 +159,12 @@ def main(argv=None):
         maps = cl.public_maps(c)
         import random
         rnd = random.Random()
+        panel = json.load(open(a.panel)) if a.panel and os.path.exists(a.panel) else {}
         for t, ranked in plan:
-            mp = [] if ranked else rnd.sample(maps, a.maps)
+            if a.panel:
+                ranked, mp = False, panel_maps(panel, t['name'], maps, a.maps, rnd)
+            else:
+                mp = [] if ranked else rnd.sample(maps, a.maps)
             if a.dry_run:
                 print(f'would request {"ranked" if ranked else "unranked"} vs {t["name"]} (rated {t["rating"] or 0:.0f}) {mp}')
                 continue
@@ -160,6 +173,9 @@ def main(argv=None):
                 print(f'request {r["id"]}: vs {t["name"]} ({"ranked" if ranked else "unranked"}, rated {t["rating"] or 0:.0f})')
             except cl.ApiError as e:
                 print(f'refused: vs {t["name"]}: {e}')
+        if a.panel and not a.dry_run:
+            with open(a.panel, 'w') as f:
+                json.dump(panel, f, indent=1)
     elif a.cmd == 'matches':
         for m in cl.matches(c, None if a.all else my_id, a.pages):
             print(cl.fmt_match(m))

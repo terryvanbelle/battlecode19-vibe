@@ -233,6 +233,17 @@ class Field(unittest.TestCase):
 
 
 class Contest(unittest.TestCase):
+    def test_panel_maps(self):
+        import random
+        panel, maps = {}, ['m%d' % i for i in range(10)]
+        a = contest19.panel_maps(panel, 'X', maps, 3, random.Random(1))
+        self.assertEqual(len(set(a)), 3)
+        self.assertTrue(set(a) <= set(maps))
+        self.assertEqual(contest19.panel_maps(panel, 'X', maps, 3, random.Random(2)), a)   # the control replays the draw
+        self.assertEqual(panel, {'X': a})
+        contest19.panel_maps(panel, 'Y', maps, 3, random.Random(3))
+        self.assertEqual(sorted(panel), ['X', 'Y'])
+
     def test_plan(self):
         ladder = [team(i, 100 + 10 * i) for i in range(1, 8)]
         plan = contest19.plan_scrims(ladder, 4, 4, 3)
