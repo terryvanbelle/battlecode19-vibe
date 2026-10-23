@@ -2246,3 +2246,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   All four replays byte for byte the same. The 22 pending jobs in 2019-next carry all three flags.
 - Note for the replica (unchanged): its bots' clocks pay that ~1.3 ms per turn on this loaded VM, about 6% of the
   20 ms a turn adds; the official servers were idler.
+
+## 2026-10-22 19:06 — h82's delivery PASSES (3 of 3); its gate replaces h77's
+- h82 vs h50: **4 of 4 wins** (1375 both sides by castles at round 459; 826 both sides on health at 1000). K mined
+  by r200 summed **17,796 vs 10,560 (169%, bar 130%)**: 1375 4,634-4,642 vs 1,212 (11 churches vs 1 at r200), 826
+  4,260 vs 4,068 (8 churches each). Pilgrims at r100 136 vs 74. With (1) rush4 castle losses 0 of 40, all three
+  hold: the 30 K reserve did not starve the early economy (the falsifier).
+- As pre-registered, the gate is h82 vs h50 (20 random cells from seed0 5000, par 2): VM job ...a3d577100016 now
+  holds h82's gate; h77's (same name, not run) is in ~/jobq/superseded. h82 is h77 plus the reserve, the rush-safe
+  superset; h77's own gate is not run. h20v6 (DEF_RESERVE_K 30 alone on v6, ...a3d577101) stays queued until h82's
+  verdict.
+- Profile of a fast-path game (VM, h50 self-play 300 rounds on 826, --fast-turn --fast-init --no-kill --fast-view,
+  130.7 s): engine getGameStateDump 26% (the O(robots) scan per turn and the JSON of the view), our fastView 15% (a
+  fresh 64x64 view per turn), the sandbox's JSON.parse of the view 11%, GC 9%, insulate 9% (castles copy every
+  robot); our bot's code ~18%. The next harness win is the dump.
