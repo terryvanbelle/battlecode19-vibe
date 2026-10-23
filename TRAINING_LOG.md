@@ -2878,3 +2878,17 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   accept t >= 2 with the mechanism (SUM: h107's deathsOn3 / milBuilt below h87's: fewer units fed onto one tile);
   reject t <= -1; in between, a replica panel on v7-m1's maps decides (two-block rule). Falsifier: crusaders sent
   at distant prophets die walking in (h107's milLostUnfired / milBuilt above h87's) and castles fall more.
+
+## 2026-10-23 05:07 — IanCoolidge0's site squatters on 2644 (419-2); h103's gate queued (VM job ...19j)
+- 419-2 (v6 vs IanCoolidge0, 2644; it played red, we blue): its castle built crusaders on r2 and r3; by r30 one stood
+  on the centre cluster (28,21), one on our second cluster (18,33) and one at (36,10). Our pilgrims stopped short
+  ((28,29), (25,31)) and no church of ours stood by r130; it churched our side's centre site (28,22) at r44 and
+  (20,33) at r56, and its prophets from r120 killed our pilgrims. No death before r120: the squatters blocked our
+  pioneers without a shot (the stalled-pioneer pattern of the 03:05 census). In v7's self-play on 2644 the centre
+  church stands at r24.
+- h103 (v7 + ESCORT 2 + ESCORT_UNIT 3; built 03:20, 406a9d0dc3b3): a castle whose pioneer is 10 turns overdue or
+  lost builds 2 crusaders that hold the lattice at its site and close on enemies there; a crusader beats a lone
+  crusader squatter 2 to 1. Gate (VM job ...19j, after h107's): symcheck 1, 2, 3, 2321; h103 vs h87, the 20 cells of
+  seed0 5000, par 2; dlv.js -> out/dlv_gate_h103.txt. Field-aimed: looks when D first reaches 12; accept t >= 2;
+  reject t <= -1; in between, a replica panel (2644 vs IanCoolidge0 among its maps) decides. Known cost: vs camp on
+  2321 the escorts cut r200 karbonite mined from 2,712 to 2,098.

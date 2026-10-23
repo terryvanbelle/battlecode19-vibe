@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 05:04 PDT)
+## State (2026-10-23 05:07 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -22,8 +22,9 @@
   after 20 cells 22-18, D 8, t 0.71, mechanism passed; at its D-12 look t 1.15, net +4: inconclusive, TRAINING_LOG
   04:38), then the **h104** gate (...19g: v7 with no general attack, 20 cells vs h87, field-aimed bars; TRAINING_LOG
   04:28), then **h100**'s extension 2 (...19h: cells 41-70, look when pooled D first reaches 24). Everything after it
-  is a stale v6 job; new jobs are named to sort ahead of them (after ...19i and before ...10055, e.g. ...19j; never a
-  longer name such as ...19ga, which the locale sort puts before ...19g; draft in scratch: ...19j = h103's gate). **v7 on the replica**: measurement block 420-425 (created 03:27,
+  is a stale v6 job; new jobs are named to sort ahead of them (after ...19j and before ...10055, e.g. ...19k; never a
+  longer name such as ...19ga, which the locale sort puts before ...19g). **h103**'s gate (...19j, after h107's;
+  escorts for overdue pioneers; field case 419-2, IanCoolidge0's crusader squatters on 2644; TRAINING_LOG 05:07). **v7 on the replica**: measurement block 420-425 (created 03:27,
   progress/panels/v7-m1.json = h82-b1's maps, the same 6 opponents as 408-413 / 414-419), waiting in queue order (the
   spool_bump to the front was refused by the permission check; owner told); read v7 vs v6 and h82 per cell and rerun
   the economy census on its games. **h96**'s panel block 1 (v7 + ATTACK_LATE 1001, gate inconclusive t 0.58):
@@ -36,8 +37,7 @@
   Built, not queued (all on the VM's dist/): h105 = dist/turtle (sparring bot: prophets only, no attack, no
   chain) and h106 (prophets only, no attack, chain kept): the prophet doctrine lost to h87 in every self-play test
   (TRAINING_LOG 04:22); h102 (PIONEER_DETOUR 50; inert in self-play
-  and vs camp on 2321 and 2591) and h103 (ESCORT 2, ESCORT_UNIT 3; vs camp on 2321 its escorts cost h87's pace, on
-  2591 inert), aimed at our stalled pioneers (economy census 03:05, v6's games: in losses half our pioneers never
+  and vs camp on 2321 and 2591; h103, ESCORT 2, ESCORT_UNIT 3, is now queued), aimed at our stalled pioneers (economy census 03:05, v6's games: in losses half our pioneers never
   arrive); sparring bot dist/camp = v7 + ESCORT_FIRST 1 + ESCORT_MIRROR 1 (bot1v43's round-3 prophet on our contested
   site; h87 out-expands it 5 churches to 2 on 2321); both wait for v7's replica block; h98 (MIL_ROTATION null) and h99
   ([4]), after the combat census (01:45: 92% of our lost crusaders never fired on the replica) and h98's driver loss
