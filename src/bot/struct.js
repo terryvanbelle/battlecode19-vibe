@@ -281,7 +281,9 @@ function structAct(B, allIds, extra) {
     const unit = mixByStock(w) || (CFG.MIL_ROTATION ? CFG.MIL_ROTATION[st.nDef % CFG.MIL_ROTATION.length]
       : (st.nDef % CFG.PREACHER_EVERY === CFG.PREACHER_EVERY - 1) ? PREACHER : PROPHET);
     const army = st.count ? st.count[3] + st.count[4] + st.count[5] : have;
-    if (w.canAfford(unit, reserveK, CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army)) {
+    // CFG.CHAIN_GUARD: the guard quota does not wait for the chain's bank; only the army past it does.
+    const resK = CFG.CHAIN_GUARD && chainOn && have < want ? reserveK - CFG.CHAIN_K : reserveK;
+    if (w.canAfford(unit, resK, CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army)) {
       const [ex, ey] = w.mirror(me.x, me.y);
       const sig = B.round ? encNum(SIG.ROUND, B.round) : undefined;
       const b = buildToward(B, unit, ex, ey, sig); if (b) { st.nDef++; return b.act; }

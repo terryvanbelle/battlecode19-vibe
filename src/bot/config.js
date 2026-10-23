@@ -130,6 +130,10 @@ export const CFG = {
                              // Replica scrim 200, seed 2924: StoneT2000's bot1v43 took all three of our castles so)
   CHAIN_STAGE: 15,
   CHAIN_K: 1000,             // ...and from CHAIN_ROUND the peacetime army leaves this much karbonite in the bank
+  CHAIN_GUARD: 0,            // 1: ...except a structure's guard quota (GUARD_BASE + round / GUARD_ROUNDS within r2 100,
+                             // at most GUARD_MAX), which only the other reserves hold back (replica, v7: our army stood
+                             // still from r200 to r400 in 5 of 9 games, the bank under CHAIN_K; seed 1706: 6-7 units to
+                             // r585 against botfinalsafe's 124, the chain never fired)
   CHAIN_F: 3500,
   CHAIN_END_R2: 2,
   CHAIN_MIX: [5],
@@ -148,6 +152,10 @@ export const CFG = {
                              // leaves CHAIN_K in the bank
   CHAIN_SAFE: 1,             // 1: a chainer within a visible attacker's reach this turn neither starts its line nor
                              // waits: it flees (chain.js; a church acts after every robot already in the round)
+  CHAIN_CLEAR: 0,            // >0: a chainer that sees this many enemy crusaders, prophets and preachers or more starts
+                             // no line, staged or early: it flees if threatened, else holds (replica, v7's 9 games in
+                             // 421/422/425: lines started with 2-6 of them in the chainer's sight kept 4 of 44 churches
+                             // 20 rounds later, with 0-1, 27 of 35; seed 1036: 13 churches gone in rounds 311-320)
   CHURCH_FIRST_R2: 0,        // >0: an enemy church within this r2 of a unit's home structure is its first target
   CHURCH_FIRST_V: 3,         // (military.js churchFirst); preachers count it this much in the splash
   HUNT: 0,                   // >0: a pilgrim radios an enemy pilgrim that has stood this many turns on one tile in

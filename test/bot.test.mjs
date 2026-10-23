@@ -506,6 +506,38 @@ testPreV7('struct: ECON_UNTIL keeps the peacetime army out before that round, no
   } finally { [CFG.ECON_UNTIL, CFG.SERVE_MOVES] = saved; }
 });
 
+test('struct: CHAIN_GUARD lets the guard quota past the chain reserve, not the army beyond it', () => {
+  const saved = [CFG.CHAIN_GUARD, CFG.SERVE_MOVES];
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    CFG.SERVE_MOVES = 1;   // every served depot is in sight and staffed below: the economy has nothing to build
+    let id = 4100;
+    for (let y = castle.y - 2; y <= castle.y + 2; y++) for (let x = castle.x - 2; x <= castle.x + 2; x++)
+      if (x >= 0 && y >= 0 && x < n && y < n && (g.karbonite_map[y][x] || g.fuel_map[y][x]) && !g.robots.some(q => q.x === x && q.y === y))
+        g.robots.push({ id: id++, team: 0, unit: S.PILGRIM, x, y, turn: 3, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const turn1 = (guard, guards) => {
+      CFG.CHAIN_GUARD = guard; castle.turn = 300;   // a castle's round is its turn
+      const all = g.robots;
+      const mine = all.filter(r => d2(r.x, r.y, castle.x, castle.y) <= 100);
+      const free = [];   // our prophets on free tiles in sight: the guard we have
+      for (let r2 = 4; r2 <= 100 && free.length < guards; r2++) for (let y = 0; y < n; y++) for (let x = 0; x < n; x++)
+        if (free.length < guards && d2(x, y, castle.x, castle.y) === r2 && g.map[y][x] && !mine.some(q => q.x === x && q.y === y))
+          free.push({ id: 4900 + free.length, team: 0, unit: S.PROPHET, x, y, turn: 9, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 });
+      g.robots = mine.concat(free);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round: 300, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 200; w.fuel = 2000;   // past CHAIN_ROUND, far below CHAIN_K
+      return castleTurn(B);
+    };
+    const want = Math.min(CFG.GUARD_MAX, CFG.GUARD_BASE + Math.floor(300 / CFG.GUARD_ROUNDS));
+    assert.ok(CFG.CHAIN_ROUND && CFG.CHAIN_ROUND <= 300 && 200 < CFG.CHAIN_K, 'v7 values');
+    assert.strictEqual(turn1(0, 0), null);                                         // default: the chain's bank waits
+    assert.ok([S.CRUSADER, S.PROPHET, S.PREACHER].includes((turn1(1, 0) || {}).u)); // below the quota: the guard
+    assert.strictEqual(turn1(1, want), null);                                      // the quota met: waits again
+  } finally { [CFG.CHAIN_GUARD, CFG.SERVE_MOVES] = saved; }
+});
+
 testPreV7('struct: PEACE_RESERVE_K holds karbonite back from the peacetime army, not from pilgrims or a threat response', () => {
   const saved = [CFG.PEACE_RESERVE_K, CFG.SERVE_MOVES];
   try {
@@ -1954,6 +1986,19 @@ testPreV7('chain: a staged chainer waits for CHAIN_K and CHAIN_F, then builds th
         CFG.CHAIN_SAFE = 0;
         assert.strictEqual(run(X.far, 1000, CFG.CHAIN_F, threat).act.u, S.CHURCH, 'off: in reach and ready, it fires');
       } finally { CFG.CHAIN_SAFE = savedSafe; }
+      // CHAIN_CLEAR 2: two attackers in sight (out of reach) and no line, staged and ready or early; one, the line starts.
+      const [fx, fy] = [ex + 1, ey], savedClear = CFG.CHAIN_CLEAR;
+      if (X.g.map[fy] && X.g.map[fy][fx]) {
+        try {
+          CFG.CHAIN_SAFE = 1; CFG.CHAIN_CLEAR = 2;
+          const two = [X.mk(4102, 1, S.CRUSADER, ex, ey), X.mk(4103, 1, S.CRUSADER, fx, fy)];
+          assert.strictEqual(run(X.far, 1000, CFG.CHAIN_F, two).act, undefined, 'CHAIN_CLEAR: two in sight, it flees');
+          assert.strictEqual(run(X.farther, 60, 300, two).act, undefined, 'CHAIN_CLEAR: no early line either');
+          assert.strictEqual(run(X.far, 1000, CFG.CHAIN_F, two.slice(0, 1)).act.u, S.CHURCH, 'CHAIN_CLEAR: one, the line starts');
+          CFG.CHAIN_CLEAR = 0;
+          assert.strictEqual(run(X.far, 1000, CFG.CHAIN_F, two).act.u, S.CHURCH, 'CHAIN_CLEAR off: two, the line starts');
+        } finally { CFG.CHAIN_SAFE = savedSafe; CFG.CHAIN_CLEAR = savedClear; }
+      } else assert.fail('fixture: the second crusader tile is a wall');
     }
   } finally { CFG.CHAIN_ROUND = saved; }
 });

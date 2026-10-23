@@ -47,7 +47,10 @@
 13. **Never time anything on the driver.** It is an e2-small (shared core, bursts then throttles): the same 100-round
    self-play game used 12 s of CPU once and 50 s the next, and under that load robots overran their clocks so even
    `--det` replays parted. Speed comparisons run on the VM, over many games (a gate's per-game wall time), never as a
-   driver pair. Profiles are still useful for where time goes (the shares), not for how much. (2026-10-21)
+   driver pair. Profiles are still useful for where time goes (the shares), not for how much. (2026-10-21) The same
+   holds for no-op checks: run them with nothing else on the driver. A replay census beside one froze a castle's
+   round-3 turn (an empty record), the replay parted and read as a behaviour change; alone it was IDENTICAL.
+   (2026-10-23)
 14. **Over gssh, `pkill -f`/`pgrep -f` patterns match the remote command line that runs them.** A command that both
    names `dlv_chain6.sh` and kills processes matching it killed its own ssh session halfway (exit 255), leaving a
    child of the chain running. Kill by PID, or send the script on stdin (`gssh 'bash -s' < script`) so the pattern

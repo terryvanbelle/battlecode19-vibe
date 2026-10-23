@@ -8,7 +8,7 @@
 // there (replica scrim 200, seed 2924: StoneT2000's bot1v43 built such lines 5-13 tiles from each of our castles at
 // rounds 235, 341 and 541, then a preacher from each church each round, and took the three castles).
 import { CFG, defReserveK } from './config.js';
-import { STATS, CASTLE, CHURCH, PILGRIM } from './specs.js';
+import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER } from './specs.js';
 import { d2, ADJ, offsets } from './util.js';
 import { bfs } from './mapinfo.js';
 import { SIG, CT, encXY, dec } from './comms.js';
@@ -101,7 +101,8 @@ export function pilgrimChain(B, go) {
   // chainer shot in between leaves it without the target: a one-church line in the enemy half that spends the bank
   // (seed 799 r246, #1453 and #505; h72's delivery, 3 of 8 games). Exposed, it flees and the chain resumes later.
   const exposed = CFG.CHAIN_SAFE && w.enemies.some(e => canHit(e, me.x, me.y));
-  if (!exposed && ((staged && ready) || early)) {
+  const crowded = CFG.CHAIN_CLEAR && w.enemies.filter(e => e.unit >= CRUSADER).length >= CFG.CHAIN_CLEAR;   // castles not counted
+  if (!exposed && !crowded && ((staged && ready) || early)) {
     const a = link(B, CHURCH);
     if (a) { st.chain = null; st.chainer = false; w.talk(CT.UNIT + PILGRIM); return a; }
   }

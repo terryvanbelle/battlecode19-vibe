@@ -3032,3 +3032,107 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - h112 = v7 + DEF_SEEN 1 (6761211d7809): a threat response counts as defenders only our military that see the
   closest attacker, so the castle builds a prophet toward a shooter its army cannot see. Unit test; defaults-only
   build replays h87 vs h87 on 799 IDENTICAL; unit tests 123 pass.
+
+## 2026-10-23 07:52 — v7's field losses 422-1 (2591), 425-3 (1036); chain census; h113 (CHAIN_CLEAR 2)
+- 422-1 (seed 2591, 32x32, vs bot1v43, we blue, lost on castles r214): our castle built 3 pilgrims (r1, r2, r14) and
+  then nothing until r84, its bank at 80-170 K from r10 to r75. Its pioneer (#109, r14) for our half of the shared
+  top cluster met bot1v43's lone prophet at the choke (16,14) and waited out of its reach at (15,22) for 200 turns;
+  bot1v43 churched the cluster (13,7) at r23 and held it with 2 prophets until r150 (mined K 1,044 F 10,100 vs our
+  248 / 1,800). This is h103's case (escorts for an overdue pioneer); its panel (438-443) has bot1v43 on 2591.
+- 425-3 (seed 1036, 57x57, vs IanCoolidge0, we red, lost on castles r543): IanCoolidge0 had 26 pilgrims at r100
+  and 39 at r200 to our 14; our chain fired 5 churches at r310 and 8 at r314 (the second line into the enemy half,
+  y 26-27) and lost all but 1 of each line within 10 rounds to its ~170-unit army; 13 of our 16 churches died.
+- Chain census (scratch chain/census.js; our pilgrims building 3+ churches in a round), v7's 9 games in 421, 422,
+  425: 11 lines. With 2-6 enemy crusaders / prophets / preachers within r2 100 of the first builder at the end of
+  the round before: 6 lines, 4 of 44 churches alive 20 rounds later (all IanCoolidge0). With 0-1: 5 lines, 27 of
+  35 alive (botfinalsafe 203 twice, bot1v43 388 (won at r298), IanCoolidge0 203 r506 (3 of 7)).
+- h113 = v7 + CHAIN_CLEAR 2 (a55af4e40949): a chainer that sees 2 or more enemy crusaders, prophets or preachers
+  starts no line, staged or early; it flees if threatened, else holds (castles not counted: the line's target).
+  Unit test (chain: one in sight, the line starts; two, it flees; off, it starts). Known cost: a held chain keeps
+  CHAIN_K in the bank; the peacetime army spends only above it.
+
+## 2026-10-23 08:14 — h100 REJECTED at its D-48 look (t -0.29)
+- h100 (v7 + ESCORT_FIRST 1) vs h87, cells 1-100 of seed0 5000 (out/h100_h87.jsonl, extension 3 = cells 71-100,
+  tag h100h87z): at the pre-registered look (D first 48, cell 95) gained 23, lost 25, net -2, **t -0.29**: reject
+  (t <= 0). All 100 cells: 97-103, gained 24, lost 27, D 51, t -0.42. The D-24 look's t 1.63 (cell 48) was noise:
+  cells 49-100 went 7-17. Closed; ESCORT_FIRST stays 0.
+
+## 2026-10-23 08:15 — 421-2 (1706, botfinalsafe): the chain's bank froze our army; h114 (CHAIN_GUARD 1); h112's diagnostic
+- 421-2 (seed 1706, 37x37, we red, lost on castles r585): from r200 (CHAIN_ROUND) the peacetime army leaves CHAIN_K
+  1,000 in the bank; our income was about 2 K a round, the bank stayed at 126-446, the chain never fired, and our
+  army stood at 6-7 units from r200 to r585 (fuel 19,276 unspent) while botfinalsafe's grew to 124.
+- v7's 9 field games (421, 422, 425), our army at r200 / r300 / r400: 14 / 13 / 12 (203), 7 / 6 / 6 (1706),
+  33 / 49 / 110 (2740, the bank above 1,250), 29 / 44 at r298 (388), 20 / 18 / 18 (203), 6 / 2 (2644), 47 / 45 / 49
+  (1036); 2591 and 2321 ended at r214. The army grew past r200 only where the bank passed CHAIN_K.
+- h114 = v7 + CHAIN_GUARD 1 (9c796932649e): a structure's guard quota (GUARD_BASE 2 + round / 40 within r2 100, at
+  most 25) builds without waiting for CHAIN_K; the army past the quota still waits. Unit test (default: waits;
+  below the quota: a guard; quota met: waits).
+- Final builds from the same code (new switches off by default): h112 825744f9accb (DEF_SEEN 1), h113 bec2daebe604
+  (CHAIN_CLEAR 2), h114 9c796932649e. Unit tests 124 node + 58 Python pass.
+- h112's driver diagnostic to r400 (--det) against h87's mirror games: 2013 h112 red won at r310 (as h87), h112
+  blue **won** at r395 (h87's blue loses at r310); 836 h112 red lost a castle (h87's red keeps it; h109 and h111 red
+  lost it too, so this cell's red castle falls to most perturbations); 2321 h112 red won at r255 (h87's mirror on
+  2321 is running as the baseline).
+
+## 2026-10-23 08:35 — h96 REJECTED on the replica (block 1 426-431: net -2 with 3 games left)
+- `contest19.py compare 420-425 426-431`, 15 of 18 games (430's 3 against awesomelemonade still running): gained 0,
+  lost 2 (IanCoolidge0 seed 203: v7 won on castles at r1000, h96 lost on health; StoneT2000 botfinalsafe seed 203:
+  v7 won at r1000, h96 lost its castles at r752), D 2, net -2; h96 2/15 vs v7 6/18. The control's awesomelemonade
+  cells are W, L, W, so h96 can gain at most one: best case net -1 <= 0, a rejection by the two-block rule. Holding
+  prophets and preachers back from the r900 all-out march did not help in the field. h104 (no general attack) stands
+  at gained 1, lost 0 over 6 of 18 games (432, 434 in; 433, 435-437 running).
+- 08:36: h112's 2321 baseline done (h87 vs h87, --det, r400): no winner at r400; red milBuilt 84 / milLost 67,
+  stillborn 25; blue 91 / 55, 0. With h112 red (vs h87 blue): red **won at r255**, milBuilt 101 / milLost 13,
+  stillborn 0, and blue lost a castle; h87 red vs h112 blue: no winner at r400 (85 / 76 vs 94 / 64), as the baseline.
+  So on 2321 DEF_SEEN changes red's game a lot (red's castle builds defenders it used to think it had) and blue's
+  not at all. The gate decides.
+
+## 2026-10-23 08:58 — v7's field economy census: at r100 the field holds 80 clusters to our 60; no-op check redo
+- v7's 18 control games (420-425), r100, from the replays (scratch chain/clusters.js: depots linked within r2 10;
+  a cluster's half is that of the nearer starting castle, ties ours; held = a structure within r2 25 of a depot).
+  Our half: 92 clusters, we hold 59, the opponent 22. Their half: 75, they hold 58, we hold 1. Clusters held at
+  r100: opponents 80, us 60. Pilgrims 295 to our 214 (+38%), 3.7 vs 3.6 per held cluster: the gap is clusters
+  held, not staffing. Churches at r100 behind in 16 of 18 games (StoneT2000 seed 2321: 1 to 8; 388: 1 to 6). Big
+  maps leave half our own side empty at r100: 2013 3 of 6, 836 3 of 9, 2740 4 of 8, 2321 3 of 6. Our castles plan
+  pioneers once, at turn 3, for our half only, and churches never send any. Wololo (420-1, seed 2013, we blue,
+  lost r198): its pilgrims 6 at r50, 18 at r80, 40 at r150 (ours 10, 11, 12); its pilgrim #228 built a church at
+  (40,21) beside ours at (40,20) at r97 and the church's first preacher killed 3 of our pilgrims that round; our
+  church fell at r100, the next ones at r116 (to a prophet), 138, 153, 196, the castle at r198.
+- The 08:4x no-op check printed DIFFERENT: the check game parted from h87's replay at round 3, the blue castle's turn
+  an empty record (no build, no radio), while the census replays ran beside it on the driver. Two reruns of the
+  check build alone to r5 build at round 3 as h87 does: a frozen turn (the chess clock still freezes a slow robot
+  under --no-kill; LEARNINGS 13). Redo alone (out/v7chk12), nothing else on the driver.
+
+## 2026-10-23 09:04 — no-op IDENTICAL alone; gates h112-h115 pre-registered and queued (...19n-...19q); stale ledger rows closed
+- Redo alone: the defaults build out/v7chk12 (src with DEF_SEEN, CHAIN_CLEAR, CHAIN_GUARD) replays h87 vs h87 on 799
+  to 300 IDENTICAL; unit tests 124 node + 58 Python pass. So the 08:4x DIFFERENT was the loaded driver (LEARNINGS 13).
+- Gates, field-aimed, each 20 cells of seed0 5000 vs h87 at par 2 after a symcheck (1, 2, 3, 2321), queued after
+  h110's ...19m in this order (the strongest diagnostic first): **h112** ...19n (DEF_SEEN 1; mechanism: castles lost
+  below h87's), **h113** ...19o (CHAIN_CLEAR 2; churches lost / churches built below h87's), **h114** ...19p
+  (CHAIN_GUARD 1; military built above h87's with castles lost not above), **h115** ...19q (v7 + ENDGAME_FUEL 900,
+  sha 731c03953b9a: from r900 all fuel into preachers, crusaders when karbonite is short; v7's field losses on
+  health at r1000 left 16-29k fuel unspent in 2 of 4; on v5, h8v5's gate went D 4 net +4 and was never finished;
+  mechanism: in games that reach r1000, dlv fuelEnd at most half of h87's). Bars as at 07:28: looks when D first
+  reaches 12, accept t >= 2 with the mechanism, reject t <= -1, in between a replica panel (two-block rule).
+- Ledger: 14 v6-era rows still read QUEUED although their jobs went to ~/jobq/superseded this morning (h7v6-h20v6,
+  h43v6, h54v6, h56v6, h65, h71, h79): now SUPERSEDED (v7 accepted over their base, never run). The seven h*r rows
+  read QUEUED before their REBASED note: now the note alone. h80, h85, h86 (built on h50 / h82, never queued):
+  PARKED. ATTEMPTS.md rendered.
+
+## 2026-10-23 09:13 — h111's gate: t 0.82, mechanism met -> replica panel (616-621); the autoscrim fired (179 waiting)
+- h111 (v7 + SAFE_BUILD 2) vs h87, 20 cells of seed0 5000: 22-18, gained 4, lost 2, split 14, D 6, net +2, t 0.82
+  (never reached the D 12 look). Field-aimed middle zone (-1 < t < 2) -> replica panel. Mechanism met (dlv SUM over
+  40 games): stillborn 79 vs h87's 374, churches built 420 vs 412 (within 5%), churches lost 143 vs 136, castles
+  lost 30 vs 30, milLost 5,281 vs 5,535. Symcheck 1, 2, 3, 2321: contest/combat divergences only (as h87's).
+  Submission 106 = dist/h111 (39be56a5794b), requests 217-222 -> matches 616-621 on v7-m1's maps; bots/v7
+  resubmitted (107) as the ladder's build. Control 420-425 (v7, 6/18).
+- Replica queue: the daily autoscrim fired between 08:35 (5 waiting) and 09:10: 179 waiting (172 ranked, ids
+  443-621), spread over 86 teams (about 4 each; ours 11: the h111 block and 5 ranked). The five slow bots
+  (awesomelemonade 1,610 s a game in our matches, uvafan 1,238, wololo 1,132, botfinalsafe 580, IanCoolidge0 ~69ce88
+  509; starter 53) are in 25 of the 179, so no bot holds the lion's share and none is dropped. The last 50 minutes
+  cleared 4 matches because all six slots played our panel blocks against those slow bots; the field's matches are
+  faster, so the backlog should clear in roughly 12-15 h. Throughput is at its limit: the VM's 8 vCPUs run 6 replica
+  slots (saturn's hard cap) and our 2 gate games, load 12-13 (more would cost the replica's fidelity: frozen turns,
+  LEARNINGS 8). Inflow: the autoscrim stays held while 30+ wait; no new replica requests from us until the queue is
+  short (h111's block went in before the fire showed). h103's block 438-443 is running now; h104's 432-437 has 436
+  left; h111's 616-621 runs last.
