@@ -3514,3 +3514,9 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   least h87's) missed; castles lost 60 vs 60 -> **REJECTED**. With h118 (LEAN 3: churches 910 vs 828, idle 0.78):
   leaning after one turn spends the reserve the castle would have built other churches with. The hold-and-lean
   line is closed at both doses; h118's church gain was not in the wins (D 4, net 0).
+
+## 2026-10-23 16:19 — h125 REJECTED (re-planned expansion adds no churches over 40 games)
+- Gate h125 (v7 + EXPAND_ROUND 100 + EXPAND_KEEP 16) vs h87, 20 cells: 18 wins of 40, gained 2, lost 4, D 6, net -2,
+  t -0.82. Mechanism missed: churches 766 vs 772 (bar 1.05x), castles lost 64 vs 62 -> **REJECTED**. 1036's added
+  axis church was the exception: across the field of seeds the turn-3 plan plus the chains already church what
+  is safe to church. Re-open: only with a defended expansion (an escort or a church line to the site).
