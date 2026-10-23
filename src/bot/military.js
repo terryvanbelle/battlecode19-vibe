@@ -157,8 +157,13 @@ function edgeAvoid(B) {
 function latticeOk(B, x, y) {
   const w = B.w, h = B.st.home;
   return latticeTile(x, y) && w.passable(x, y) && !w.isDepot(x, y) && d2(x, y, h.x, h.y) >= CFG.LATTICE_MIN_R2 &&
-    !(CFG.KEEP_CLEAR && keepClear(B, x, y)) && !(CFG.KILL_ZONE && inZone(B, x, y));
+    !(CFG.KEEP_CLEAR && keepClear(B, x, y)) && !(CFG.KILL_ZONE && inZone(B, x, y)) &&
+    !(meleeBack(B) && y > latticeCentre(B).y);
 }
+
+// CFG.MELEE_BACK: this unit is a crusader or preacher, which see less far than a prophet shoots: it holds the lattice
+// behind the centre's row (latticeOk, latticeTarget).
+function meleeBack(B) { const u = B.w.me.unit; return CFG.MELEE_BACK > 0 && (u === CRUSADER || u === PREACHER); }
 
 // The pattern alone. A preacher's 3x3 splash covers up to 5 tiles of the (x + y) even one (4 prophets of a lattice
 // killed by one shot: replica 407, seed 1706, round 306, from a chain line's newborn preacher) and at most 2 of the
@@ -264,7 +269,7 @@ function latticeR(B) { return B.st.post ? CFG.CASTLE_POST_R : CFG.LATTICE_R; }
 // CFG.LATTICE_STICKY >= 2: a tile out of sight that this unit saw taken in the last LATTICE_MEMORY turns is not free.
 function latticeTarget(B) {
   const w = B.w, me = w.me, h = latticeCentre(B), n = w.n, LATTICE_R = latticeR(B);
-  const ay = h.y + (B.st.home.y < n / 2 ? 2 : 0);
+  const ay = meleeBack(B) ? h.y - CFG.MELEE_BACK : h.y + (B.st.home.y < n / 2 ? 2 : 0);
   const mem = CFG.LATTICE_STICKY >= 2 ? (B.st.ltSeen || (B.st.ltSeen = new Int16Array(n * n))) : null;
   let best = null, bd = 1e9;
   for (let dy = -LATTICE_R; dy <= LATTICE_R; dy++) for (let dx = -LATTICE_R; dx <= LATTICE_R; dx++) {

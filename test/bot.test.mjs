@@ -1033,6 +1033,29 @@ test('military: LATTICE_STICKY keeps a lattice target that only looked worse fro
   } finally { CFG.LATTICE_STICKY = saved; }
 });
 
+test('military: MELEE_BACK keeps crusaders and preachers off lattice tiles ahead of home, prophets unchanged', () => {
+  // Open 24x24 board, home (10,6); the enemy is toward +y. Default: every type anchors 2 rows ahead.
+  const saved = { ...CFG };
+  try {
+    CFG.LATTICE_STICKY = 0;
+    const w = { n: 24, me: null, friends: [], passable: () => true, isDepot: () => false, occ: () => 0 };
+    const pick = (unit, back) => {
+      CFG.MELEE_BACK = back; w.me = { id: 5, unit, x: 10, y: 8, turn: 1 };
+      return holdTarget({ w, st: { home: { x: 10, y: 6 } } });
+    };
+    for (const u of [S.CRUSADER, S.PREACHER, S.PROPHET]) assert.ok(pick(u, 0)[1] > 6, 'default ahead: ' + u);
+    for (const u of [S.CRUSADER, S.PREACHER]) { const t = pick(u, 2); assert.ok(t[1] <= 6, 'melee behind: ' + t); }
+    assert.deepStrictEqual(pick(S.PROPHET, 2), pick(S.PROPHET, 0));
+    // A crusader standing on a tile ahead of home moves; one on a tile behind holds.
+    CFG.MELEE_BACK = 2;
+    const turnAt = (x, y) => {
+      const ww = { ...w, me: { id: 5, unit: S.CRUSADER, x, y, turn: 1 } };
+      return holdTarget({ w: ww, st: { home: { x: 10, y: 6 } } });
+    };
+    assert.ok(turnAt(10, 10)[1] <= 6);
+  } finally { Object.assign(CFG, saved); }
+});
+
 test('military: LATTICE_STICKY 2 remembers lattice tiles seen taken, so two taken tiles do not trade places', () => {
   // A (12,2) and B (6,2) are both taken, C (2,2) is free. A preacher (vision r2 16) at (11,4) sees A taken, not B;
   // at (8,4) it sees B taken, not A. Row 4 is a depot corridor (no lattice).

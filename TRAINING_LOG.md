@@ -2664,3 +2664,29 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   before r200 <= 80% of h87's, and h100's mean first church <= h87's + 5 rounds (scratch combat/econ.js on the
   replays). Reject t <= 0. Falsifier: the escort's 25 K delays the pioneer (r24 vs r14 on 2591) more than the escort
   saves.
+
+## 2026-10-23 02:20 — where our melee units die; MELEE_BACK (h101)
+- Scratch combat/where.js on our 12 latest replica losses (matches 415-419): our crusaders and preachers that died
+  without ever firing, by the half they died in (nearer our starting castles or theirs) and round window <450 /
+  450-899 / >=900: own half 363 / 511 / 144, enemy half 2 / 49 / 17. **950 of 1,018 died in our own half**; marches
+  are not where they die (crusaders obey attack orders from round 450, MARCH_MASK 8). They stand on our lattice,
+  which grows 2 rows ahead of home toward the enemy, and enemy prophets hit them from r2 64, beyond their vision.
+- Switch MELEE_BACK (military.js latticeOk / latticeTarget, default 0): crusaders and preachers hold no lattice tile
+  ahead of the lattice centre's row and fill tiles nearest a point MELEE_BACK rows behind it; prophets keep the
+  front. Their "engage enemies near home" step is unchanged, so they still close on what comes into their view.
+  Unit test 'military: MELEE_BACK keeps crusaders and preachers off lattice tiles ahead of home'. h101 = v7 +
+  MELEE_BACK 2.
+- Driver diagnostic h101 red vs h87 on 2046, 1000 rounds (--det): lost on castles at r1000 (1 vs 2); K mined r200
+  1012 vs 982, r1000 4866 vs 4834; melee lost unfired 35 vs 36 of 98 vs 84 lost (dlv.js). It changes moves; one
+  self-play game says nothing about the replica's unfired deaths, where the opponents are prophet lattices.
+- No-op check: the defaults build out/v7chk3 replays h87 vs h87 on 799 to 300 IDENTICAL.
+- **Gate pre-registered** (VM job ...a3d577100019f, after h100's): symcheck h101 on 1, 2, 3, 2046 to 300; h101 vs
+  h87 on the 20 cells of seed0 5000, par 2; looks when D first reaches 12, extensions on the next 20 cells (02:05).
+  Field-aimed (the replica census): accept t >= 2 with the mechanism (dlv.js on the gate replays, out/
+  dlv_gate_h101.txt: h101's meleeLostUnfired <= 75% of h87's); reject t <= -1; in between, the replica panel decides
+  (two-block rule). Falsifier: melee held back arrives late to the fights at the front and the lattice loses tiles.
+
+## 2026-10-23 02:55 — stale h64 gate (v6 + PIONEER_FAST 1 vs h50) finished: inconclusive
+- out/h64_h50.jsonl (40 games, the 20 cells of seed0 5000): 22-18, gained 8, lost 6, split 6, D 14, net +2, t 0.53.
+  0 < t < 2: inconclusive. Its base v6 is no longer the incumbent, so it is not extended; a port (v7 +
+  PIONEER_FAST 1) ranks behind h100 and h101.

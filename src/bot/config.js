@@ -187,6 +187,10 @@ export const CFG = {
   FRONT_EVERY: 50,           // ...this many rounds (replica seed 2924: StoneT2000's church lines took our castles)
   FRONT_STEP: 8,
   // lattice
+  MELEE_BACK: 0,             // >0: crusaders and preachers hold no lattice tile ahead of the lattice centre's row, and
+                             // fill tiles nearest a point this many rows behind it; prophets hold the front (replica
+                             // census 02:15: 1,018 of our melee units in 12 losses died without firing, 950 of them in
+                             // our half; crusader vision r2 49, preacher 16, a prophet hits from r2 64)
   LATTICE_MIN_R2: 5,         // lattice tiles at least this far (r2) from the home structure
   KEEP_CLEAR: 0,             // 1: idle military units keep off depots, tiles next to our structures and chokepoints
   LATTICE_SPARSE: 0,         // 1: lattice tiles are those with x + 2y a multiple of 5 (any 3x3 preacher splash covers at
