@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 00:45 PDT)
+## State (2026-10-23 02:05 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`. Games run built bundles (`tools/build_bot.js`), never the source directory. Every candidate
@@ -9,7 +9,7 @@
   DEF_RESERVE_K 30) + h76's church chain from round 200 (CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX
   [5], KEEP 1, SAFE 1): gate vs h50 20 cells +14 -5, t 2.06, 29-11, ACCEPTED 00:30 2026-10-23; these are the src
   defaults now (unit tests of other switches pin v6's values: testPreV7). Replica submission 99. Candidates are
-  switches on v7 built with h87's --cfg keys plus their own, gated against dist/h87 (= bots/v7). The defaults-only
+  switches on v7 built from src with their own --cfg keys only (src defaults = v7), gated against dist/h87 (= bots/v7). The defaults-only
   build dist/v7d replays h87 IDENTICAL (--det, 799 to 300).
 - v6 = h50 = v5 (h35) + PIONEER_RESERVE 2 (every castle keeps the pioneer's karbonite until the first church
   stands) + MARCH_MASK 8 (only crusaders obey attack orders before round 900; prophets and preachers hold the
@@ -17,16 +17,19 @@
   v5 = h35 = v4 + SERVE_MOVES 2, PLAN_CONTEST_FIRST 6, RELAY 1, NAV_FIT 1, LATTICE_STICKY 2, PILGRIM_SAFE_STEP 1.
 - VM queue (`~/jobq`, in order; gates run from the shadow tree ~/projects/vibe/2019-next: newer tools, engine/maps/
   bots/dist linked to the main tree, outputs in the main tree's out/). **Every gate job runs at par 2 while the
-  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 00:45:
-  the **h91 delivery** (running, ...a3d577100019c: h91 = h82 + RICH_K 0 vs h82, as pre-registered 22:45; if it
-  passes, its gate is v7 + RICH_K 0 vs h87), the **h97 delivery** (...a3d577100019cz: v7 + PIONEER_DEPART_K 0 vs h87,
-  race on 8 replica loss maps to 150 + rush vs rush4; TRAINING_LOG 00:15, 00:45), **h96**'s gate (...a3d577100019d:
-  v7 + ATTACK_LATE 1001 vs h87; TRAINING_LOG 00:00, 00:45). Everything after them is a stale v6 job (below); new
-  jobs are named to sort ahead of them. Closed: **h87 ACCEPTED as v7** 00:30 (gate vs h50 t 2.06); h82 superseded by
-  it (its field-aimed panel block 1, replica matches 408-413 (h82, sub 97) vs 414-419 (v6, sub 98), finishes for the
-  record: final at 01:00, net +2 over 18 cells, gained 3, lost 1; progress/panels/h82-b1.json); h88 REJECTED 00:00
-  (net -2, t -1.41; dist/h93 = h88 + ESCORT 2 goes with it); h89 / h90 delivery FAILED 21:55; the anti-chain
-  delivery FAILED 22:45 for h83 (HUNT 2) and h84 (STRIKE_R2). Stale v6 jobs, in queue order: **h64**'s gate (PIONEER_FAST vs h50, renamed ...a3d5771001 and moved up at 17:21: replica losses are economy
+  replica queue is long** (owner, PROMPTS 18; back to par 4 when fewer than 30 replica matches wait). Order at 02:05:
+  the stale h64 job (running since ~01:50; v6-based, cannot be moved: see below), then **h100**'s gate
+  (...a3d577100019e: v7 + ESCORT_FIRST 1, a prophet ahead of each castle's first contested pioneer, vs h87; looks at
+  D 12; TRAINING_LOG 02:05). Everything after it is a stale v6 job; new jobs are named to sort ahead of them (between
+  ...19e and ...1001). Open: **h96** (v7 + ATTACK_LATE 1001) inconclusive after 20 cells (21-19, net +1, t 0.58,
+  D 3), its extension ranked below h100 (TRAINING_LOG 01:45). Built, not queued: h98 (MIL_ROTATION null) and h99
+  ([4]), after the combat census (01:45: 92% of our lost crusaders never fired on the replica) and h98's driver loss
+  on 2644. Closed: h97 delivery FAILED 01:25 (PIONEER_DEPART_K 0: 1 of 3 bars); h91 delivery FAILED 01:10 (RICH_K 0:
+  wins 7 of 16); **h87 ACCEPTED as v7** 00:30 (gate vs h50 t 2.06); h82 superseded by it (its field-aimed panel
+  block 1, replica matches 408-413 (h82, sub 97) vs 414-419 (v6, sub 98), final at 01:00: net +2 over 18 cells,
+  gained 3, lost 1; progress/panels/h82-b1.json); h88 REJECTED 00:00 (net -2, t -1.41; dist/h93 = h88 + ESCORT 2
+  goes with it); h89 / h90 delivery FAILED 21:55; the anti-chain delivery FAILED 22:45 for h83 (HUNT 2) and h84
+  (STRIKE_R2). Stale v6 jobs, in queue order: **h64**'s gate (PIONEER_FAST vs h50, renamed ...a3d5771001 and moved up at 17:21: replica losses are economy
   first, and 391-1 is a lost pioneer race), **h71** delivery (CHURCH_GUARD_D 8 preacher + PREACHER_SELF 4 + PREACHER_MIL 2.5: no-op v6l, symcheck, 8 games vs
   h50 on 2591, 1915, 2030, 2924, ...a3d57710055; TRAINING_LOG 13:20), then **h76**'s gate vs h50 (StoneT2000's long
   church line: h72 = CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX [5], delivery PASSED 14:41; h76 = h72 +

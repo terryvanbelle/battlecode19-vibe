@@ -56,7 +56,7 @@ export function castleTurn(B) {
   }
   // Our castles in canonical order (fixed at turn 3): enemy castle i is the mirror of st.order[i].
   if (me.turn === 3) st.order = [...st.castles.values()].sort((a, b) => (a.y * w.n + a.x) - (b.y * w.n + b.x));
-  if (me.turn === 3) planClusters(B);
+  if (me.turn === 3) { planClusters(B); if (CFG.ESCORT_FIRST) escortFirst(B); }
   // A castle that disappeared from the id list is dead.
   if (me.turn > 3) for (const id of [...st.castles.keys()]) if (id !== me.id && !allIds.has(id)) st.castles.delete(id);
   if (CFG.EXPAND_ROUND && st.plan && me.turn >= CFG.EXPAND_ROUND && (me.turn - CFG.EXPAND_ROUND) % 50 === 0) expandPlan(B);
@@ -75,7 +75,7 @@ export function castleTurn(B) {
   if (CFG.RECALL) callRecall(B);
   callAttack(B);
   st.pioneerDue = pioneerDue(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
-  const act = structTurn(B, allIds, () => pioneer(B) || (CFG.ESCORT ? escort(B) : null) ||
+  const act = structTurn(B, allIds, () => (CFG.ESCORT_FIRST ? escort(B) : null) || pioneer(B) || (CFG.ESCORT ? escort(B) : null) ||
     (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null));
   if (CFG.CASTLE_POST) callPost(B);   // after the build, so a newborn's radio comes first
   return act;
@@ -189,11 +189,18 @@ function pioneer(B) {
   return b.act;
 }
 
-// CFG.ESCORT: owe ESCORT units to a cluster's site (once per cluster while any are still owed).
-export function openEscort(B, cluster) {
+// CFG.ESCORT: owe `left` units (ESCORT) to a cluster's site (once per cluster while any are still owed).
+export function openEscort(B, cluster, left = CFG.ESCORT) {
   const st = B.st, c = B.clusters[cluster];
   if (!c || st.churched.has(cluster) || st.escorts.some(e => e.cluster === cluster)) return;
-  st.escorts.push({ cluster, x: c.site[0], y: c.site[1], left: CFG.ESCORT });
+  st.escorts.push({ cluster, x: c.site[0], y: c.site[1], left });
+}
+
+// CFG.ESCORT_FIRST: owe ESCORT_FIRST units to the first contested cluster of this castle's plan, so they are built
+// (escort before pioneer in the castle's build order) and walk out ahead of its pioneer.
+export function escortFirst(B) {
+  const p = B.st.plan.find(q => q.m <= CFG.PLAN_CONTEST_FIRST);
+  if (p) openEscort(B, p.cluster, CFG.ESCORT_FIRST);
 }
 
 // Build the next escort unit owed, radioing it the site (a turn whose radio is taken waits: the unit must hear it).

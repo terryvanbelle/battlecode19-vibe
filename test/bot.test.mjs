@@ -1246,6 +1246,39 @@ test('castle: ESCORT owes escorts to an overdue or lost pioneer and builds them 
   } finally { Object.assign(CFG, saved); }
 });
 
+test('castle: ESCORT_FIRST owes escorts to the first contested cluster at planning and builds them before its pioneer', () => {
+  const saved = { ...CFG };
+  try {
+    CFG.ESCORT_FIRST = 1;
+    const g = new Game(1915, 100, 20, false, false);   // one castle a side; the centre cluster straddles the axis
+    const castle = g.robots.find(r => r.team === 0);
+    const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    for (const t of [1, 2, 3]) { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; castleTurn(B); }
+    const st = B.st, hot = st.plan.find(p => p.m <= CFG.PLAN_CONTEST_FIRST);
+    assert.ok(hot, 'seed 1915 has a contested cluster');
+    const site = B.clusters[hot.cluster].site;
+    assert.deepStrictEqual(st.escorts, [{ cluster: hot.cluster, x: site[0], y: site[1], left: 1 }]);
+    // Turn 4, no depot due and no enemy in view (the helper shows every robot): the escort (a prophet radioing its
+    // site) comes before the pioneer.
+    st.served = []; st.pending = null; st.pioneers = [];
+    g.robots = g.robots.filter(r => r.team === 0);
+    const sent = []; castle.turn = 4;
+    const w = worldFor(g, castle); B.w = w; B.api = w.api; w.api.signal = (v, r2) => sent.push([v, r2]);
+    w.karbonite = 100; w.fuel = 500;
+    const a = castleTurn(B);
+    assert.strictEqual(a.action, 'build'); assert.strictEqual(a.u, S.PROPHET);
+    assert.deepStrictEqual(sent, [[encXY(SIG.GUARD, site[0], site[1]), 2]]);
+    assert.strictEqual(st.pioneers.length, 0);
+    assert.strictEqual(st.escorts.length, 1); assert.strictEqual(st.escorts[0].left, 0);
+    // Off (the default): no escort owed at planning.
+    CFG.ESCORT_FIRST = 0;
+    const g2 = new Game(1915, 100, 20, false, false), castle2 = g2.robots.find(r => r.team === 0);
+    const B2 = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    for (const t of [1, 2, 3]) { castle2.turn = t; const w2 = worldFor(g2, castle2); B2.w = w2; B2.api = w2.api; castleTurn(B2); }
+    assert.deepStrictEqual(B2.st.escorts, []);
+  } finally { Object.assign(CFG, saved); }
+});
+
 test('military: ESCORT a unit born hearing SIG.GUARD holds the lattice around that site, not home', () => {
   const saved = { ...CFG };
   try {

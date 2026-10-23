@@ -2604,3 +2604,63 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   awesomelemonade seed 2797), lost 1 (awesomelemonade seed 2518), 14 split; **net +2**. Block 1 alone cannot meet the
   two-block accept (net >= +3); no block 2: h82 is closed. Swept both ways: m-schier wololo, uvafan, IanCoolidge0
   (each build won 0 of the 3 cells against each), bot1v43 on 2591 and 2321.
+
+## 2026-10-23 01:10 — h91 delivery FAILED (RICH_K 0): the bank goes into the army, the wins do not follow
+- h91 (h82 + RICH_K 0) vs h82, 8 seeds both sides, full games (VM out/dlv_h91_h82.jsonl, out/dlv_h91.txt,
+  out/rounds_dlv_h91.txt), against the bars pre-registered 22:45: (1) mean K bank r100-400 150 vs 285, **53%** (bar
+  <= 60%: pass); (2) mean army r100-400 66.0 vs 56.3, **117%** (bar >= 115%: pass); (3) h91 wins **7 of 16** (bar >= 8:
+  fail), castles lost 6 vs 6. The pre-registered falsifier happened: the army spends what the economy needed. No
+  gate; RICH_K stays 200.
+- From dlv.js on the same 32 sides: of 3,348 melee units lost, 2,271 (68%) died without ever firing (h91 1,180 of
+  1,691, h82 1,091 of 1,657). The combat census that follows checks this on the replica.
+
+## 2026-10-23 01:25 — h97 delivery FAILED (PIONEER_DEPART_K 0): 1 of 3 bars
+- h97 (v7 + PIONEER_DEPART_K 0) vs h87, VM out/dlv_h97_race.jsonl, out/dlv_h97_rush4.jsonl, 2019-next out/race_h97.txt;
+  symcheck 1, 2, 3, 2591 to 200: seed 2 ok, 3 and 2591 combat-order only, as every build since v4. Bars (00:15,
+  rebased 00:45): (1) first church mean over the 16 race games 24.1 vs h87's 25.4, -1.3 (bar <= -3: **fail**);
+  (2) K mined by r150 23,088 vs 24,492, **94%** (bar >= 105%: **fail**); (3) castles lost to rush4 **0 of 40** (pass).
+- By map: earlier on 1592, 2965 (13 vs 22), 2591 (18 vs 26), 1915, 70 with K equal or +4-9%; **later on 1241** (48 vs
+  27, K 1,968 vs 2,600: the pioneer that leaves on 40 K waits at its site while its castle spends the bank on depot
+  pilgrims) and 836 (24 vs 22, K -6%). The 411-3 gap (driver diagnostic +19% K) does not generalise. No gate;
+  PIONEER_DEPART_K stays 50.
+
+## 2026-10-23 01:45 — h96 gate, first 20 cells: inconclusive and rarely live (D 3); the combat census
+- Gate h96 (v7 + ATTACK_LATE 1001) vs h87, 20 cells from seed0 5000 (VM out/h96_h87.jsonl): 21-19; gained 2, lost 1,
+  split 17, net +1, t 0.58. Neither bar (accept t >= 2, reject t <= 0). By the gate rule (TRAINING_ALGORITHM: looks
+  when D first reaches 12) it extends, but at D 3 per 20 cells that is ~80 more cells; ranked below h100.
+- Combat census of our replica games from match 380 (scratch combat/census.js: per type built, lost, lost without
+  ever firing, shots), 27 losses: we built 1,927 crusaders / 2,537 prophets / 917 preachers, the opponents 1,404 /
+  5,897 / 744. We lost 1,522 / 2,098 / 719, they 175 / 1,644 / 275. **Of our lost crusaders 1,393 (92%) never fired**
+  (preachers 636 of 719, 88%; prophets 759 of 2,098); our crusaders fired 318 shots in 27 games, our prophets 5,206,
+  theirs 14,132. Our 14 wins: crusaders 890 of 988 lost unfired. A crusader sees r2 49 and a preacher r2 16; a
+  prophet shoots from r2 64: our melee units on the lattice front and on marches die to prophets they cannot see
+  (411-1: deaths at (6,12) by prophets at (6,20), r2 64; 408-3: 30 prophets of ours died on our castle's build tiles
+  at r31-160, built one at a time toward wololo prophets that had a church at (34,32) on our half since r55).
+- Census complete at 01:55, 61 games (45 L, 16 W): in losses our crusaders 2,302 of 2,507 lost unfired (92%), 472
+  shots in 45 games; preachers 1,051 of 1,179; prophets 1,039 of 3,188. Built 3,175 / 3,963 / 1,501 to the
+  opponents' 2,225 / 9,798 / 1,898; their prophets fired 22,668 shots to our 12,295.
+- Opening, 410-1 (seed 2591, StoneT2000 bot1v43, castles at r161): StoneT2000 built a prophet at r3, before its 3rd
+  and 4th pilgrims; it killed our centre pioneer at r25 and StoneT2000 churched the centre (r23, r35, 3 churches by
+  r100). Our castle kept 2 pilgrims all game (mined 218 K to 732) and built 10 prophets that died one at a time.
+- Driver diagnostic h98 (v7 + MIL_ROTATION null: no peacetime crusaders) vs h87 on 2644 to 500: identical to r75,
+  then h98 lost a contested church at r100-125 to h87's cheaper crusaders (army 10 vs 21 at r125) and its castle at
+  r277. Crusaders win close contests in self-play; the field's prophet walls kill them unseen. h98 and h99 (MIL_ROTATION
+  [4]) are built, not queued.
+
+## 2026-10-23 02:05 — h100 (ESCORT_FIRST: a prophet goes ahead of the first contested pioneer) pre-registered
+- Switch ESCORT_FIRST (src/bot/castle.js escortFirst; default 0): at planning (turn 3) a castle owes ESCORT_FIRST
+  ESCORT_UNITs (prophet) to the first cluster of its plan the enemy reaches within PLAN_CONTEST_FIRST moves of us;
+  in its build order the escort comes before the pioneer (after depot pilgrims, as pioneers do); the newborn hears
+  SIG.GUARD and holds the lattice around the site. Motivation: 410-1 (StoneT2000's r3 prophet), uvafan's and
+  wololo's guarded contested sites (01:45). Unit test 'castle: ESCORT_FIRST owes escorts ...' (seed 1915); 117 + 57
+  tests pass. No-op: the defaults build out/v7chk2 replays h87 vs h87 on 799 to 300 IDENTICAL.
+- h100 = v7 + ESCORT_FIRST 1 (e9c662e84838). Driver diagnostic h100 red vs h87 on 2591 to 300 (--det): prophet at
+  r3, pioneer r24 (h87's r14), centre churches at (15,5) r33 and (16,5) r26, both gone by r150; K mined r100 442 vs
+  368, r300 808 vs 676; pilgrims at r300 6 vs 11. It changes moves; the direction is open.
+- **Gate pre-registered** (VM job ...a3d577100019e, next after the running stale h64 job): symcheck h100 on 1, 2, 3,
+  1915 to 200; h100 vs h87 on the 20 cells of seed0 5000, par 2. Looks when D first reaches 12 (extensions: the next
+  20 cells of seed0 5000, 385, 2545, 206, 284, 562, 2262, 321, 1866, 1787, 1961, 1159, 781, 309, 718, 2441, 1765,
+  2502, 90, 2587, 1252, then onward). Accept t >= 2 with the mechanism: over the gate games, pilgrims h100 loses
+  before r200 <= 80% of h87's, and h100's mean first church <= h87's + 5 rounds (scratch combat/econ.js on the
+  replays). Reject t <= 0. Falsifier: the escort's 25 K delays the pioneer (r24 vs r14 on 2591) more than the escort
+  saves.

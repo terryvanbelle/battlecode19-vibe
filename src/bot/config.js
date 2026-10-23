@@ -37,6 +37,11 @@ export const CFG = {
                              // the edge of two StoneT2000 prophets' range beside its site and died; vs StoneT2000 46 of
                              // our 114 pioneers died or stalled 30+ turns)
   ESCORT_SLACK: 10,
+  ESCORT_FIRST: 0,           // >0: this many ESCORT_UNITs go ahead of the castle's first contested pioneer (its first
+                             // planned cluster the enemy reaches within PLAN_CONTEST_FIRST moves of us), built before it
+                             // (replica 410-1, seed 2591: StoneT2000's round-3 prophet killed our centre pioneer at r25,
+                             // took the centre with 3 churches and we mined 218 K to its 732 by r161; uvafan and wololo
+                             // guard contested sites with prophets too)
   ESCORT_UNIT: 4,            // prophet
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,

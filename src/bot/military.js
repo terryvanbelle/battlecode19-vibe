@@ -19,7 +19,7 @@ function init(B) {
       const m = dec(r.signal);
       if (m.type === SIG.ROUND) B.birthRound = m.v;
       else if (m.type === SIG.CHAIN && CFG.CHAIN_ROUND) st.chainT = [m.x, m.y];   // born in a church chain (chain.js)
-      else if (m.type === SIG.GUARD && CFG.ESCORT) st.guardAt = { x: m.x, y: m.y };   // escort: a pioneer's site
+      else if (m.type === SIG.GUARD && (CFG.ESCORT || CFG.ESCORT_FIRST)) st.guardAt = { x: m.x, y: m.y };   // escort: a pioneer's site
     }
   }
   if (st.chainT) learnRound(B);
