@@ -3433,3 +3433,18 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   bank}; unit test. Job ...19ra runs next (after h118's gate ...19s, now running; before h123's ...19t):
   v7 vs h87 on seeds 60, 2644, 836, 1712, 2046, 1653, both sides, one game at a time under the replica's flags
   (kill on, contest clock) -> out/ta_v7/. Then: fix the slow paths that log over ~150 ms.
+
+## 2026-10-23 13:35 — replica time census: 44 of 393 vibe19 games froze robots or hit the vm2 kill; 490 read
+- Census over every fetched match (match.json per game, our team only): 44 of 393 games have `frozen` (chess clock
+  overdrawn: the robot skips turns until its bank refills) or vm2 `timeouts` > 0, up to 24 frozen robots in one
+  game (436-2, seed 1712), 17 in 409-3 and 435-2. They cluster in r1000 games on big maps (1712, 2740, 836) with
+  armies of hundreds on the board, so CPU and GC pressure is in it. Hypothesis to test with the audit (...19ra):
+  newborns (120 ms bank, a fresh sandbox with cold JIT) doing all their map analysis on turn 1. Seed 2740 added to
+  the audit's seeds.
+- 490 (mvpatel2000 3-0): games 2 and 3 are one-castle maps whose economy is one rich cluster on the axis (2644:
+  8 K + 2 F at (27-30, 19-22); 2518: 4 K + 4 F at (16-19, 15-19)), with one depot pair beside each castle. 2518: their
+  pilgrim left r6 and churched the centre at r18, and its first prophet killed our pioneer (left r12) on the way at
+  (23,23); we then built 3 preachers (r23-25) and sat on 70-145 K with 3 pilgrims to r100 (mined 220 K to their
+  786). 2644: their crusaders (r3, r4) went ahead of the pilgrims and held the centre; our two later pioneers died
+  at r65 and r72. On axis-rich maps the race is decided by the armed arrival. Panels in line: h103 (ESCORT 2
+  crusaders) block 2 and h119 (PIONEER_CALL); h100 (ESCORT_FIRST 1 prophet) was rejected in self-play, t -0.29.
