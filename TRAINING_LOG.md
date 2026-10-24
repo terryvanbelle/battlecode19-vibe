@@ -3722,3 +3722,9 @@ h123 (CHAIN_FAILS 2) block 1 652-657 vs v7's 420-425: 3/18 to 6/18, gained 0, lo
 awesomelemonade 1712 at r1000 and 2797 on health: all games v7 won), D 3, net -3, t -1.73 -> REJECTED. Holding the
 chain after two failed lines gives up the late lines that win r1000 games; it frees karbonite that does not turn
 into enough health. The chain line is closed for now (h123, h133, h134); SIEGE (h135) is the next field-aimed test.
+
+## 2026-10-24 00:55 PDT: h112 to the replica panel (673-678)
+
+h112 (v7 + DEF_SEEN 1: threat responses count only defenders that see the attacker; local gate t 0.71, mechanism
+met narrowly, waiting since 2026-10-23) takes the free replica lane: submission 119 (dist/h112, 825744f9accb), block
+1 = matches 673-678 (v7 resubmitted, 120; bumped).
