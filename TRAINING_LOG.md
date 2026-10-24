@@ -3710,3 +3710,8 @@ IDENTICAL (noop/run.sh: 799 to r300, --det --timescale 10 --init-ms 5000 --fast-
 h135 = v7 + SIEGE 30 + SAFE_BUILD 2 (dist/h135, a5aa75edd7a6): built safe and kept out of unseen reach. Delivery on the driver
 against dist/turtle (the prophet doctrine, our closest local stand-in for the field) on 2046, h87 the baseline:
 prophet deaths at ages 1-3 must fall to half of h87's, with no rise at age 0.
+
+## 2026-10-24 00:42 PDT: h134 REJECTED (no chains: t -1.60)
+
+h134 (CHAIN_ROUND 0) vs h87, 20 cells seed0 11000: 14/40, gained 4, lost 10, D 14, net -6, t -1.60 -> REJECTED by
+the screen (t <= -1). The chain is v7's main weapon at home; the field-side question stays h123's panel (656 left).
