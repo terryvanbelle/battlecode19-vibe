@@ -2083,6 +2083,49 @@ test('struct: STRIKE_R2: a church that sees an enemy church 4 tiles off and no a
   } finally { CFG.STRIKE_R2 = saved; }
 });
 
+test('struct: INTERCEPT_R2 / INTERCEPT_DWELL: a structure builds a unit that hits an enemy pilgrim in its birth round', () => {
+  const saved = [CFG.INTERCEPT_R2, CFG.INTERCEPT_DWELL];
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const pass = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x];
+    let ours = null;   // a passable tile with a free ring, 9 rows of map ahead, away from the castles
+    for (let y = 2; y < n - 10 && !ours; y++) for (let x = 2; x < n - 2 && !ours; x++)
+      if (pass(x, y) && offsets(2).every(([dx, dy]) => pass(x + dx, y + dy)) && g.robots.every(r => king(r.x, r.y, x, y) > 12)) ours = [x, y];
+    assert.ok(ours, 'site');
+    const mk = (id, team, unit, x, y) => ({ id, team, unit, x, y, turn: 5, health: S.STATS[unit].hp || 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const st = {};
+    const run = (r2, dwell, dy, extra = [], turn = 5, keep = false) => {
+      CFG.INTERCEPT_R2 = r2; CFG.INTERCEPT_DWELL = dwell;
+      const church = { ...mk(4100, 0, S.CHURCH, ours[0], ours[1]), turn };
+      const all = g.robots;
+      g.robots = all.filter(r => d2(r.x, r.y, church.x, church.y) <= 100).concat([church, mk(4101, 1, S.PILGRIM, ours[0], ours[1] + dy), ...extra]);
+      const w = worldFor(g, church); g.robots = all;
+      const B = { api: w.api, w, round: 50, birthRound: 46, st: keep ? st : {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 100; w.fuel = 1000;
+      const act = churchTurn(B);
+      return { act, at: act && act.u ? [ours[0] + act.dx, ours[1] + act.dy] : null };
+    };
+    const p4 = [ours[0], ours[1] + 4], p7 = [ours[0], ours[1] + 7];
+    const c = run(64, 0, 4);                                  // r2 16: a crusader within r2 16 of it
+    assert.strictEqual((c.act || {}).u, S.CRUSADER);
+    assert.ok(d2(c.at[0], c.at[1], p4[0], p4[1]) <= 16);
+    const pr = run(64, 0, 7);                                 // r2 49: no adjacent tile is within 16, so a prophet in its band
+    assert.strictEqual((pr.act || {}).u, S.PROPHET);
+    const r = d2(pr.at[0], pr.at[1], p7[0], p7[1]); assert.ok(r >= 16 && r <= 64, 'band ' + r);
+    assert.ok(![S.CRUSADER, S.PROPHET].includes((run(0, 0, 4).act || {}).u));          // off
+    assert.ok(![S.CRUSADER, S.PROPHET].includes((run(36, 0, 7).act || {}).u));         // r2 49 > 36
+    // A miner at its own church, or one our crusader already reaches: left alone.
+    const theirs = mk(4102, 1, S.CHURCH, p4[0] + 1, p4[1] + 2);
+    if (pass(theirs.x, theirs.y)) assert.ok(![S.CRUSADER, S.PROPHET].includes((run(64, 0, 4, [theirs]).act || {}).u));
+    const guard = mk(4103, 0, S.CRUSADER, p4[0] + 1, p4[1] - 1);
+    if (pass(guard.x, guard.y)) assert.ok(![S.CRUSADER, S.PROPHET].includes((run(64, 0, 4, [guard]).act || {}).u));
+    // DWELL: a pilgrim r2 81 off, out of INTERCEPT_R2, is answered once it has stood 3 turns on its tile.
+    const seq = [5, 6, 7, 8].map(t => (run(16, 3, 9, [], t, true).act || {}).u);
+    assert.ok(!seq.slice(0, 3).includes(S.PROPHET) && !seq.slice(0, 3).includes(S.CRUSADER), 'early ' + seq);
+    assert.strictEqual(seq[3], S.PROPHET);
+  } finally { [CFG.INTERCEPT_R2, CFG.INTERCEPT_DWELL] = saved; }
+});
+
 test('struct: CHURCH_GUARD_D: a church near its mirror image builds the guard unit first, one far from it does not', () => {
   const saved = [CFG.CHURCH_GUARD_D, CFG.CHURCH_GUARD_UNIT, CFG.ECON_UNTIL];
   try {

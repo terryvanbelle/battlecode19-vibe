@@ -140,6 +140,13 @@ export const CFG = {
   STRIKE_R2: 0,              // >0: a structure that sees an enemy church within this r2 and no enemy attacker builds a
                              // preacher toward it first (struct.js strike; seeds 1915, 2030, 2924: mirror churches 1-5
                              // tiles apart, won by whichever side's preacher acted first)
+  INTERCEPT_R2: 0,           // >0: an enemy pilgrim within this r2 of a structure (or one that has stood INTERCEPT_DWELL
+  INTERCEPT_DWELL: 0,        // turns on one tile in its sight), more than 2 king steps from every enemy structure in
+                             // sight and out of reach of our military, gets a unit built that hits it in its birth round:
+                             // a crusader within r2 16 of it, else a prophet at r2 16-64 (struct.js intercept; replica
+                             // 726, 758: each of four wololo strike churches checked was built by a pilgrim our structure
+                             // saw first; seed 836: #3961 stood 16 turns at r2 80 from a castle, then built the church
+                             // whose prophets killed it)
   CHAIN_ROUND: 200,          // >0: from this round castles build church chains at their mirror castles (chain.js: a
                              // pilgrim waits CHAIN_STAGE king steps out until the bank holds CHAIN_K and CHAIN_F, then
                              // church, pilgrim, church... one tile nearer each, all in one round, up to CHAIN_END_R2 of

@@ -4119,3 +4119,22 @@ as blue (758) the r5 crusader acts after red's r5 prophet in the build order and
 (r14-18); as red (634, 646, 726) the same crusader acts first and won. Both off by default (the default build replays
 h128's game byte for byte; 142 unit tests). Screens: h154 = v8 + ESCORT_HOLD_R 2 + ESCORT_EARLY 1 (31000; stacked,
 so one panel block tests both) and h155 = v8 + ESCORT_HOLD_R 2 alone (32000), queued behind h153.
+
+## 2026-10-24 10:08 PDT: h151 rejected; the VM goes to the replica until its queue clears; INTERCEPT built (h156)
+
+h151 (v8 + CHAIN_FAILS 1) vs bots/v8, 20 cells seed0 28000: 18/40, gained 1, lost 3, D 4, t -1.00; castles lost 31 vs
+19, churches 314 vs 593 (held chain lines). Rejected at the screen; the pre-registered exception needed t > 0.
+
+Queue: 185 replica matches waited (173 ranked, the 09:00 autoscrim), about 15 h at 6 slots with a mean match of 1,700 s.
+No team dominates it (the slowest, NielsKornerup at 5,060 s a match, holds 4 of the 185), so dropping bots would not
+help. Per the owner's queue rule (PROMPTS 17) the VM now belongs to the replica: the pending screens h152-h155 moved to
+~/jobq/superseded at 09:52, and at 10:06 saturn restarted with 8 execute slots (MAX_EXECUTE_SLOTS 6 -> 8, the unit's
+MemoryMax 22G -> 27G, CPUQuota 700% -> 800%; 8 games on 8 vCPUs, as 6 + our 2 gate games were). About 11 h at 8
+slots. When fewer than 30 wait: back to 6 slots and `tools/move_stale.sh --back` the held screens.
+
+INTERCEPT_R2 / INTERCEPT_DWELL (the third candidate of the wololo study): a structure that sees an enemy pilgrim
+within INTERCEPT_R2, or standing INTERCEPT_DWELL turns on one tile, more than 2 king steps from every enemy structure
+in sight and out of reach of our military, builds a unit that hits it in its birth round: a crusader on an adjacent
+tile within r2 16, else a prophet at r2 16-64. Off by default (h128's game replays byte for byte; 143 unit tests). One
+driver game, h156 (R2 64, DWELL 3) vs v8 on 2013: prophets #925 (r88) and #3261 (r106) killed blue pilgrims on their
+first turn. h156's screen (33000) waits with the others.

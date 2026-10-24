@@ -19,7 +19,7 @@ is not handled here: tools/galaxy19/contest19.py submits and plays for it.
         RANKED request (galaxy's rule: ranked only upward; 3 random maps chosen by galaxy, alternating order); the top
         team instead challenges one of the 3 closest below it, unranked, on 3 random maps. Any team can be the
         opponent, ours included. A 429 (hourly limit) rests the challenger for an hour, a 409 for 10 minutes.
-        saturn runs at most GALAXY_EXECUTE_SLOTS (4) games at once whatever the queue holds.
+        saturn runs at most GALAXY_EXECUTE_SLOTS games at once whatever the queue holds.
   python3 tools/galaxy19/field.py boost --teams A,B [--n 5] [--dry-run]
         extra ranked matches for chosen field teams whose rating has not settled (owner request, PROMPTS 15): each
         team challenges --n opponents that have played, at or above its rating, spread from the top of the ladder

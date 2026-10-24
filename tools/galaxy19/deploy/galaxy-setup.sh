@@ -266,7 +266,7 @@ DJANGO_SETTINGS_MODULE=replica_settings
 DJANGO_CONFIGURATION=Replica
 SIARNAQ_REVISION=galaxy-f343088-bc19-replica
 GALAXY_COMPILE_SLOTS=1
-GALAXY_EXECUTE_SLOTS=6
+GALAXY_EXECUTE_SLOTS=8
 GALAXY_INIT_MS=1000
 GALAXY_GAME_TIMEOUT=10800
 GALAXY_SCHED_MAX_WAITING=30
@@ -346,7 +346,7 @@ WantedBy=multi-user.target
 EOF
   cat > "/etc/systemd/system/$U_SATURN" <<EOF
 [Unit]
-Description=bc19 galaxy replica: saturn (compile submissions, run matches with the bc19 engine; no network; at most 6 games)
+Description=bc19 galaxy replica: saturn (compile submissions, run matches with the bc19 engine; no network; at most 8 games, one per vCPU)
 $head $U_RELAY
 Wants=$U_RELAY
 
@@ -359,14 +359,14 @@ PrivateNetwork=yes
 ExecStart=/usr/bin/python3 $OPT/galaxy19/saturn.py run
 KillMode=mixed
 TimeoutStopSec=60
-# 6 games + 1 compile at most (GALAXY_EXECUTE_SLOTS; saturn caps it at 6): the main session's A/B batches (--par 2
-# while the replica queue is long; owner, PROMPTS 17-18) share the VM, 8 games on its 8 vCPUs. The CPU cap is a
-# backstop above 6 single-threaded games (node's GC/JIT threads add bursts): a tighter quota would throttle in 100 ms
-# periods and turn into chess-clock timeouts. Memory: 6 games under saturn's 3 GB V8 heap cap each (GALAXY_GAME_HEAP_MB;
-# 2 GB until 2026-10-22 23:30 PDT, when big-map games ran out of heap) plus code and buffers; the VM has 32 GB, the batches
-# about 1-2 GB a game.
-MemoryMax=22G
-CPUQuota=700%
+# GALAXY_EXECUTE_SLOTS games + 1 compile at most (saturn caps it at 8, the VM's vCPUs): 6 while the main session's
+# A/B gates run beside it at --par 2 (owner, PROMPTS 18), 8 while the gates are held to clear a long replica queue
+# (owner, PROMPTS 17). The CPU cap is a backstop above the games (node's GC/JIT threads add bursts): a tighter quota
+# would throttle in 100 ms periods and turn into chess-clock timeouts. Memory: 8 games under saturn's 3 GB V8 heap cap
+# each (GALAXY_GAME_HEAP_MB; 2 GB until 2026-10-22 23:30 PDT, when big-map games ran out of heap) plus code and buffers;
+# the VM has 32 GB, a gate game about 1-2 GB (22G until 2026-10-24, with 6 slots).
+MemoryMax=27G
+CPUQuota=800%
 Restart=on-failure
 RestartSec=30s
 

@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 127 other, 37 rejected, 16 accepted, 6 in progress, 5 dropped, 4 sparring partners (195 rows).
+Totals: 127 other, 38 rejected, 16 accepted, 6 in progress, 5 dropped, 4 sparring partners (196 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -204,8 +204,9 @@ Totals: 127 other, 37 rejected, 16 accepted, 6 in progress, 5 dropped, 4 sparrin
 | `h148` | 2026-10-24 07:58 | v8 | v8 + CHAIN_LIVE 1: castles hold the chain reserve only while a chainer walks or waits (dist/h148 862603dc8a9f) | vs v8 20 cells seed0 25000: +3 -0, D 3, t 1.73; castles lost 35 vs 39 |  | block 1 = matches 777-782 | vs v8 23-17 | REPLICA PANEL (screen passed) |
 | `h149` | 2026-10-24 07:58 | v8 | v8 + CHAIN_LIVE 2: castles hold the chain reserve only while a chainer waits staged (dist/h149 4470c323357d) | vs v8 20 cells seed0 26000: +3 -3, D 6, t 0.00; castles lost 35 vs 34 |  | block 1 = matches 955-960 | vs v8 20-20 | REPLICA PANEL (screen passed) |
 | `h150` | 2026-10-24 08:40 | v8 | v8 + WATCH 2: a structure radios an enemy attacker within r2 100 that none of our military units sees; melee units engage it (dist/h150 9b6aad548767) | vs v8 20 cells seed0 27000: +8 -3, D 11, t 1.51; castles lost 24 vs 38 |  | block 1 = matches 961-966 | vs v8 25-15 | REPLICA PANEL (screen passed) |
-| `h151` | 2026-10-24 08:42 | v8 | v8 + CHAIN_FAILS 1: castles hold chain lines after one fired with no enemy castle destroyed (h133 rebased; field-aimed) (dist/h151 8feb4e1832d3) |  |  |  | vs v8 0-2 | SCREEN QUEUED (vs bots/v8) |
-| `h152` | 2026-10-24 09:37 | v8 | v8 + CHAIN_LIVE 1 + WATCH 2: h148 and h150 stacked (dist/h152 fdbddfe8dde9) |  |  |  |  | SCREEN QUEUED (vs bots/v8) |
-| `h153` | 2026-10-24 09:37 | v8 | v8 + WATCH 2 + SPOT_MASK 56: prophets also answer structure spots (dist/h153 56ad0f09aebf) |  |  |  |  | SCREEN QUEUED (vs bots/v8) |
-| `h154` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_EARLY 1: escorts built turns 3-4 ahead of the economy pilgrims and holding within 2 steps of the site (dist/h154 ae2b4ac88687) |  |  |  |  | SCREEN QUEUED (vs bots/v8) |
-| `h155` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2: escorts hold within 2 steps of the site (dist/h155 562d81eddf8a) |  |  |  |  | SCREEN QUEUED (vs bots/v8) |
+| `h151` | 2026-10-24 08:42 | v8 | v8 + CHAIN_FAILS 1: castles hold chain lines after one fired with no enemy castle destroyed (h133 rebased; field-aimed) (dist/h151 8feb4e1832d3) | vs v8 20 cells seed0 28000: +1 -3, D 4, t -1.00; castles lost 31 vs 19 |  |  | vs v8 0-2 | REJECTED (screen: t -1.00, castles 31 vs 19) |
+| `h152` | 2026-10-24 09:37 | v8 | v8 + CHAIN_LIVE 1 + WATCH 2: h148 and h150 stacked (dist/h152 fdbddfe8dde9) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |
+| `h153` | 2026-10-24 09:37 | v8 | v8 + WATCH 2 + SPOT_MASK 56: prophets also answer structure spots (dist/h153 56ad0f09aebf) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |
+| `h154` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_EARLY 1: escorts built turns 3-4 ahead of the economy pilgrims and holding within 2 steps of the site (dist/h154 ae2b4ac88687) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |
+| `h155` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2: escorts hold within 2 steps of the site (dist/h155 562d81eddf8a) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |
+| `h156` | 2026-10-24 10:08 | v8 | v8 + INTERCEPT_R2 64 + INTERCEPT_DWELL 3: a structure builds a unit that hits an enemy pilgrim within r2 64 (or standing 3 turns in sight) in its birth round (dist/h156 e37dfe78da27) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |

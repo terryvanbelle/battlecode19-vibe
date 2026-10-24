@@ -7,7 +7,7 @@ Its only way out is the relay's unix socket ($GALAXY_HOME/run/relay.sock); the r
 siarnaq on 127.0.0.1:8019 with an ID token. Every compile and every game additionally runs under `unshare -rnm`: a new
 user, network and mount namespace in which everything except the task's own work directory is remounted read-only.
 
-  python3 tools/galaxy19/saturn.py run [--compile-slots 1] [--execute-slots 4]     (the service)
+  python3 tools/galaxy19/saturn.py run [--compile-slots 1] [--execute-slots N]     (the service; GALAXY_EXECUTE_SLOTS)
   python3 tools/galaxy19/saturn.py status                                          (queue counts)
 
 Pub/Sub, the task protocol and the step logs are the 2023 replica's (galaxy saturn pkg/saturn): a slot leases the
@@ -59,7 +59,9 @@ from replica_gcp import config, spool, storage  # noqa: E402
 
 MAX_EXTRACTED = 64 * 1024 * 1024
 MAX_BUNDLE = 16 * 1024 * 1024
-MAX_EXECUTE_SLOTS = 6
+# One game per execute slot, at most as many as the VM's 8 vCPUs: 6 while the session's local gates run beside the
+# replica (par 2; owner, PROMPTS 18), 8 while they are held to clear a long replica queue (owner, PROMPTS 17).
+MAX_EXECUTE_SLOTS = 8
 # V8 heap cap per game process (both bots share it: the engine's own memory check is disabled). A runaway bot then
 # ends its game (the match retries, then errors) instead of driving the VM into reclaim thrash. 3072 since 2026-10-22
 # (2048 before): big-map games of two full armies sat at 1.9-2.0 GB, match 227 died "Ineffective mark-compacts near
@@ -718,8 +720,8 @@ def main(argv=None):
         for topic in (config.TOPIC_COMPILE, config.TOPIC_EXECUTE):
             print(topic, spool.topic_queue(topic).counts())
         return 0
-    # the owner's cap: at most 4 replica games at once on the shared VM (one game per execute slot), so the
-    # 2019 chess clock (100 ms + 20 ms per turn, wall time) is not eaten by CPU contention
+    # at most one game per vCPU on the shared VM, so the 2019 chess clock (100 ms + 20 ms per turn, wall time) is not
+    # eaten by CPU contention
     if not (0 <= a.compile_slots <= 1 and 0 <= a.execute_slots <= MAX_EXECUTE_SLOTS):
         ap.error(f'slots: compile 0..1, execute 0..{MAX_EXECUTE_SLOTS} (at most {MAX_EXECUTE_SLOTS} games at once on the shared VM)')
     ex = Executor(a.compile_slots, a.execute_slots)

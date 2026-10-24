@@ -1,7 +1,7 @@
 // Shared logic of castles and churches: depot service, pilgrim assignment, defence, peacetime army, endgame dump.
 import { CFG, defReserveK } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './specs.js';
-import { d2, ADJ, offsets } from './util.js';
+import { d2, king, ADJ, offsets } from './util.js';
 import { bfs, econ } from './mapinfo.js';
 import { SIG, FAR, encXY, encNum } from './comms.js';
 import { isAttacker, pickTarget, canHit, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
@@ -270,6 +270,7 @@ function structAct(B, allIds, extra, first) {
     const t = pickTarget(CASTLE, me.x, me.y, w.enemies, w.n, CFG.FOCUS ? w.friends : null, cf && (e => cf(e) ? 7 : PRIORITY[e.unit]));
     if (t) return w.attack(t.x - me.x, t.y - me.y);
   }
+  if (CFG.INTERCEPT_R2 || CFG.INTERCEPT_DWELL) { const a = intercept(B); if (a) return a; }
   if (CFG.STRIKE_R2 && !attackers.length) { const a = strike(B); if (a) return a; }
 
   // Endgame fuel (CFG.ENDGAME_FUEL): fuel is the binding resource late (karbonite floats), so it all becomes HP.
@@ -330,6 +331,40 @@ function structAct(B, allIds, extra, first) {
       const sig = B.round ? encNum(SIG.ROUND, B.round) : undefined;
       const b = buildToward(B, unit, ex, ey, sig); if (b) { st.nDef++; return b.act; }
     }
+  }
+  return null;
+}
+
+// CFG.INTERCEPT_R2 / INTERCEPT_DWELL: the nearest enemy pilgrim within INTERCEPT_R2, or standing INTERCEPT_DWELL turns on
+// one tile in sight, that is more than 2 king steps from every enemy structure in sight (not a miner at its own church)
+// and that no military unit of ours can hit, gets a unit that hits it in its birth round (newborns act in the round they
+// are built): a crusader on a free adjacent tile within r2 16 of it, else a prophet at r2 16-64. Pilgrims have 10 HP.
+function intercept(B) {
+  const w = B.w, me = w.me, st = B.st, n = w.n, now = new Map();
+  let best = null, bd = 1e9;
+  for (const e of w.enemies) {
+    if (e.unit !== PILGRIM) continue;
+    const p = st.icpt && st.icpt.get(e.id), t0 = p && p.x === e.x && p.y === e.y ? p.t : me.turn;
+    now.set(e.id, { x: e.x, y: e.y, t: t0 });
+    const d = d2(e.x, e.y, me.x, me.y);
+    if (d > CFG.INTERCEPT_R2 && !(CFG.INTERCEPT_DWELL && me.turn - t0 >= CFG.INTERCEPT_DWELL)) continue;
+    if (w.enemies.some(s => (s.unit === CASTLE || s.unit === CHURCH) && king(s.x, s.y, e.x, e.y) <= 2)) continue;
+    if (w.friends.some(f => f.unit >= CRUSADER && canHit(f, e.x, e.y))) continue;
+    if (d < bd || (d === bd && e.y * n + e.x < best.y * n + best.x)) { bd = d; best = e; }
+  }
+  st.icpt = now;
+  if (!best) return null;
+  for (const unit of [CRUSADER, PROPHET]) {
+    if (!w.canAfford(unit)) continue;
+    let tile = null, td = 1e9;
+    for (const [dx, dy] of ADJ) {
+      const x = me.x + dx, y = me.y + dy;
+      if (!w.free(x, y) || !canHit({ unit, x, y }, best.x, best.y)) continue;
+      if (CFG.SAFE_BUILD && exposure(w, x, y, CFG.SAFE_BUILD >= 2) >= STATS[unit].hp) continue;
+      const dd = d2(x, y, best.x, best.y) * 4 + (w.isDepot(x, y) ? 3 : 0);
+      if (dd < td) { td = dd; tile = [dx, dy]; }
+    }
+    if (tile) { st.pending = null; st.built = unit; return w.build(unit, tile[0], tile[1]); }
   }
   return null;
 }
