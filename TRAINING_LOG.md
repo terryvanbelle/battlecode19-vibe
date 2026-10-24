@@ -3545,3 +3545,12 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   in between a replica panel.
 - Lesson pending its gate: partners built to imitate a field opening can beat the incumbent. Self-play against the
   incumbent alone is blind to them; a partner census belongs in the loop after every accept.
+
+## 2026-10-23 17:55 — h126 to the replica panel: gate t 1.00, mechanism met, churches +16%
+- Gate h126 (v7 + ESCORT_FIRST 1 + ESCORT_MIRROR 1) vs h87, 20 cells: 23 wins of 40, gained 6, lost 3, split 11,
+  D 9, net +3, t 1.00 (ends at 20 cells below D 12: read as is -> middle zone). Mechanism met: castles lost 56 vs
+  60; churches built 876 vs 758 (+16%: the escort on the enemy's site costs us nothing and slows their expansion);
+  the census's 20 games replayed exactly (h126 = dist/camp in play). Symcheck: mirror-identical to combat on 1, 2, 3
+  and to the first contest on 2321.
+- -> **REPLICA PANEL**, block 1 first in line (ahead of h103's block 2, h112 and h119) once fewer than 30 wait (46).
+  h127 (the crusader form) gates next (...19y).
