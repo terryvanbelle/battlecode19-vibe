@@ -56,7 +56,7 @@ function listen(B) {
       continue;
     }
     if (m && m.type === SIG.POST) { if (st.toCastle && w.passable(m.x, m.y)) hearPost(B, m.x, m.y); continue; }
-    if (m && m.type === SIG.ENEMY) { if (CFG.SPOT && (CFG.SPOT_MASK >> me.unit & 1)) hearSpot(B, m.x, m.y); continue; }
+    if (m && m.type === SIG.ENEMY) { if ((CFG.SPOT || CFG.WATCH) && (CFG.SPOT_MASK >> me.unit & 1)) hearSpot(B, m.x, m.y); continue; }
     if (m && m.type === SIG.HUNT) { if (CFG.HUNT && me.unit !== PROPHET) hearHunt(B, m.x, m.y); continue; }
     if (CFG.RECALL && st.recall && me.turn <= st.recall.until) continue;   // recalled: attack orders wait
     if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || ((st.guard || !(CFG.MARCH_MASK >> me.unit & 1)) && B.round < CFG.ATTACK_LATE)) continue;
@@ -377,7 +377,7 @@ export function militaryTurn(B) {
       if (!near) continue;
       const r = d2(me.x, me.y, x.x, x.y) - (cf && cf(x) ? 1e6 : 0); if (r < ed) { ed = r; e = x; }
     }
-    const sp = CFG.SPOT && st.spot;
+    const sp = (CFG.SPOT || CFG.WATCH) && st.spot;   // CFG.WATCH: structures radio spots too
     if (!e && sp && me.turn - sp.t <= 1 && d2(sp.x, sp.y, marching ? me.x : c.x, marching ? me.y : c.y) <= 196) e = sp;
     const hu = CFG.HUNT && st.hunt;
     if (!e && hu && !marching && me.turn - hu.t <= CFG.HUNT_EVERY && d2(hu.x, hu.y, me.x, me.y) <= CFG.HUNT_R2) e = hu;

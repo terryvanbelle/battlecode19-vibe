@@ -294,6 +294,12 @@ export const CFG = {
                              // at most every SPOT turns while a crusader or preacher of ours is in its sight; melee
                              // units that hear it engage it as if seen (gate 2924: 79 of 115 crusaders and 65 of 83
                              // preachers lost never fired; they see 7 and 4 tiles, prophets reach 8)
+  WATCH: 0,                  // >0: a structure that sees an enemy crusader, prophet or preacher within r2 100 that no
+                             // military unit of ours sees radios it as a spot (FAR.ENEMY, 10 fuel) at most every WATCH
+                             // turns, when its radio is free after its build; the SPOT_MASK types that hear it engage
+                             // it (replica, v8 on bot1v43 2321: red prophet #953 stood at r2 65 from our castle, out of
+                             // its reach, and shot our chainers on their build tile at r200, r300 and r400; our 40
+                             // units stood 7-11 tiles east of the castle and never saw it; the castle fell at r444)
   SPOT_MASK: 40,             // unit types (bit 3 crusader, 4 prophet, 5 preacher) that hear spots; prophets radio
                              // while one of them is in sight. A prophet that hears one steps to its firing band (r2
                              // 16-64) and holds (replica 2924 r240-272: bot1v43's preachers and prophets took a castle

@@ -4001,3 +4001,18 @@ IanCoolidge0 1036 (five). Two never-won cells are one pattern: a single central 
 2591, 32x32: home clusters of two depots each; awesomelemonade 2518, 36x36): the castle builds 2-3 home pilgrims, the
 two escort crusaders (r3-r5, 30 K) and its pioneer only at r23-24, which dies at r30-31; the enemy has a church there
 by r23 (2591) / two by r40 (2518), and we mine 180-336 K by r100 to its 700+.
+
+## 2026-10-24 08:42 PDT: h148 passes its screen and goes to the replica; CFG.WATCH built, h150 queued
+
+h148 (v8 + CHAIN_LIVE 1) vs bots/v8, 20 cells seed0 25000: 23/40, gained 3, lost 0, D 3, net 3, t 1.73; castles lost
+35 vs 39: passes. Its block 1 goes to the replica now (queue 12 waiting). Bank at the end, summed over the 40 games:
+199 K vs v8's 209 K; stillborn units 217 vs 269.
+
+CFG.WATCH (default 0, no-op IDENTICAL on 799, 140 node tests): every WATCH turns at most, a castle or church that
+sees an enemy crusader, prophet or preacher within r2 100 that none of our military units sees radios the nearest
+one as a spot (FAR.ENEMY, the SPOT signal), when its radio is free after its build; the SPOT_MASK types (melee by
+default) that hear it engage it as they engage a prophet's spot. The case: bot1v43 2321 (636), red prophet #953
+stood at r2 65 from our castle, outside its reach, and shot our chainers on their build tile at r200, r300 and
+r400, while our 40 units stood 7-11 tiles east and never saw it; the castle fell at r444. Screen h150 (WATCH 2) vs
+bots/v8, seed0 27000. Pre-registered: passes the screen, then the v8-pool panel decides (bot1v43 2321 is a panel
+cell).

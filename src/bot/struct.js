@@ -3,7 +3,7 @@ import { CFG, defReserveK } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, ADJ, offsets } from './util.js';
 import { bfs, econ } from './mapinfo.js';
-import { SIG, encXY, encNum } from './comms.js';
+import { SIG, FAR, encXY, encNum } from './comms.js';
 import { isAttacker, pickTarget, canHit, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
 import { watchDeaths } from './military.js';
 import { chainsFailed } from './chain.js';
@@ -183,12 +183,28 @@ function seers(B, e) {
 // The structure's turn after role bookkeeping. extra(): castle-only builds (pioneers); first(): castle-only builds
 // ahead of the economy pilgrims (CFG.PIONEER_EARLY). Returns an action or null.
 export function structTurn(B, allIds, extra, first) {
-  if (!CFG.KILL_ZONE && !CFG.SIEGE) return structAct(B, allIds, extra, first);
+  if (!CFG.KILL_ZONE && !CFG.SIEGE && !CFG.WATCH) return structAct(B, allIds, extra, first);
   if (CFG.KILL_ZONE) watchDeaths(B);
   B.st.built = -1;
   const a = structAct(B, allIds, extra, first);
-  if (CFG.KILL_ZONE) sayZone(B); else sayThreat(B);
+  if (CFG.KILL_ZONE) sayZone(B); else if (CFG.SIEGE) sayThreat(B);
+  if (CFG.WATCH) sayWatch(B);
   return a;
+}
+
+// CFG.WATCH: radio, as a spot, the nearest enemy attacker within r2 100 that no military unit of ours sees.
+export function sayWatch(B) {
+  const st = B.st, w = B.w, me = w.me;
+  if (w.sentR2 || w.fuel < 60 || me.turn - (st.watchAt || -99) < CFG.WATCH) return;
+  let e = null, ed = 101;
+  for (const x of w.enemies) {
+    if (x.unit < CRUSADER) continue;
+    const q = d2(x.x, x.y, me.x, me.y);
+    if (q >= ed || w.friends.some(f => f.unit >= CRUSADER && d2(f.x, f.y, x.x, x.y) <= STATS[f.unit].vision)) continue;
+    ed = q; e = x;
+  }
+  if (!e) return;
+  st.watchAt = me.turn; w.signal(encXY(0, e.x, e.y), FAR.ENEMY);
 }
 
 // CFG.SIEGE: the turn after building a military unit (that turn's radio carries its birth round), tell it, and

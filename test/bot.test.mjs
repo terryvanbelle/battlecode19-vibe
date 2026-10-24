@@ -10,7 +10,7 @@ import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot } from '../src/bot/military.js';
 import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
-import { structInit, frontSite, frontPioneer, sayZone, sayThreat } from '../src/bot/struct.js';
+import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -908,7 +908,9 @@ test('military: SPOT: a firing prophet radios its target for melee units in sigh
     assert.ok(on.B.st.spot && on.a && on.a.action === 'move');
     assert.ok(e2(at[0] + on.a.dx, at[1] + on.a.dy) < e2(at[0], at[1]));
     assert.strictEqual(run(0).B.st.spot, undefined);
-  } finally { CFG.SPOT = saved; }
+    CFG.WATCH = 2; const wa = run(0);   // WATCH alone: the crusader hears a structure's spot and walks to it
+    assert.ok(wa.B.st.spot && wa.a && wa.a.action === 'move' && e2(at[0] + wa.a.dx, at[1] + wa.a.dy) < e2(at[0], at[1]));
+  } finally { CFG.SPOT = saved; CFG.WATCH = 0; }
 });
 
 test('hunt: a pilgrim radios an enemy pilgrim that stood HUNT turns still in our half off depots; melee units go for it', () => {
@@ -1957,6 +1959,25 @@ test('struct: SIEGE: the turn after a military build the structure radios the ne
     w.me = { ...w.me, turn: 33 }; w.sentR2 = 0; sayThreat(B); assert.strictEqual(sent.length, 1);   // once
     B.st.built = S.PILGRIM; sayThreat(B); w.sentR2 = 0; B.st.built = -1; sayThreat(B); assert.strictEqual(sent.length, 1);   // pilgrims: no
   } finally { CFG.SIEGE = saved; }
+});
+
+test('struct: WATCH: a structure radios the nearest enemy attacker within r2 100 that no military unit of ours sees', () => {
+  const saved = CFG.WATCH;
+  try {
+    CFG.WATCH = 2;
+    const sent = [], w = { me: { x: 5, y: 5, turn: 30, unit: S.CASTLE }, sentR2: 0, fuel: 500, signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; },
+      enemies: [{ unit: S.PROPHET, x: 5, y: 14 }, { unit: S.PILGRIM, x: 6, y: 6 }, { unit: S.CRUSADER, x: 9, y: 11 }, { unit: S.PREACHER, x: 15, y: 6 }],
+      friends: [{ unit: S.PROPHET, x: 13, y: 11 }, { unit: S.PILGRIM, x: 5, y: 12 }] };
+    const B = { w, st: {} };
+    sayWatch(B);   // the crusader (r2 52) is in our prophet's sight; pilgrims are no one's concern; the prophet (r2 81) beats r2 101
+    assert.deepStrictEqual(sent, [[encXY(0, 5, 14), FAR.ENEMY]]);
+    w.me = { ...w.me, turn: 31 }; w.sentR2 = 0; sayWatch(B); assert.strictEqual(sent.length, 1);   // within WATCH turns
+    w.me = { ...w.me, turn: 32 }; w.sentR2 = 2; sayWatch(B); assert.strictEqual(sent.length, 1);   // radio busy (a build)
+    w.sentR2 = 0; w.fuel = 59; sayWatch(B); assert.strictEqual(sent.length, 1);                       // fuel
+    w.fuel = 500; w.friends.push({ unit: S.CRUSADER, x: 6, y: 13 }); sayWatch(B);                     // all seen: the preacher r2 101 is out
+    assert.strictEqual(sent.length, 1);
+    w.friends = []; sayWatch(B); assert.deepStrictEqual(sent[1], [encXY(0, 9, 11), FAR.ENEMY]);
+  } finally { CFG.WATCH = saved; }
 });
 
 test('military: CREEP_ROUND moves the lattice a unit holds toward the enemy over time; guards and the default stay', () => {
