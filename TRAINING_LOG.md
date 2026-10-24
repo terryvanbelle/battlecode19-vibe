@@ -4159,3 +4159,10 @@ ESCORT_FAST_R2 9 (new: an escort walks with steps up to r2 9 until it first hold
 game replays byte for byte, 143 unit tests) they arrive at r16-17, for about 125 more fuel by r25. h157 = v8 +
 ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 (34000). The held screens now run in this order when the VM returns: h157, h155,
 h154, h156, h152, h153.
+
+## 2026-10-24 10:30 PDT: h148 (CHAIN_LIVE 1) passes panel block 1, z 2.20; block 2 = 967-972
+
+h148's block 1 (777-782) against the v8 pool (control 726-731 + the five v8-m1 blocks): 11 of 18 against a pooled
+expectation of 7.6, z 2.20. It won three rarely-won cells (bot1v43 2321, botfinalsafe 203, uvafan 1712: uvafan's
+castles fell at r573) and lost one usually-won cell (botfinalsafe 2740); the four never-won cells stayed lost. Block 2
+(submission 166, ladder build resubmitted as 167) = matches 967-972, run first with our other panel matches.
