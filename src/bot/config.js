@@ -41,13 +41,14 @@ export const CFG = {
                              // site talks CT.BLOCKED and its castle opens the escort at once, not ESCORT_SLACK turns late
                              // (replica 425-2 / 443-2, seed 2644: IanCoolidge0's lone crusader stood on the centre site
                              // from r20; our r14 pioneer circled at r2 50-68 for 100 turns, Ian churched it at r44)
-  ESCORT_FIRST: 0,           // >0: this many ESCORT_UNITs go ahead of the castle's first contested pioneer (its first
+  ESCORT_FIRST: 2,           // >0: this many ESCORT_UNITs go ahead of the castle's first contested pioneer (its first
                              // planned cluster the enemy reaches within PLAN_CONTEST_FIRST moves of us), built before it
                              // (replica 410-1, seed 2591: StoneT2000's round-3 prophet killed our centre pioneer at r25,
                              // took the centre with 3 churches and we mined 218 K to its 732 by r161; uvafan and wololo
                              // guard contested sites with prophets too)
-  ESCORT_UNIT: 4,            // prophet
-  ESCORT_MIRROR: 0,          // 1 (sparring partners only, bots/camp): ESCORT_FIRST's units hold the enemy's mirror site
+  ESCORT_UNIT: 3,            // crusader (v8; 4 prophet)
+  ESCORT_MIRROR: 1,          // 1: ESCORT_FIRST's units hold the enemy's mirror site (v8 = h128: two crusaders there; replica
+                             // panel, three blocks 23 of 54 against the pooled 16.1, z 2.54: wololo 2644 3/3, never won before)
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short

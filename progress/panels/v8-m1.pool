@@ -1,0 +1,4 @@
+# The v7-m1 panel (progress/panels/v7-m1.json) with v8 = h128 as the incumbent: its blocks pooled with the control
+# 726-731 (tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK...). Rejected v8-based blocks join it.
+634-639
+646-651

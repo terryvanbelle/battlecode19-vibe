@@ -3899,3 +3899,27 @@ Both blocks join progress/panels/v7-m1.pool.
 - h143 vs h87, 20 cells seed0 20000: 24/40, gained 11, lost 7, D 18, t 0.94; castles lost 40 vs 55, churches 531 vs
   545: non-inferior. Its panel follows the single leads' (h139 block 2, h141, h140).
 - h144 = v7 + ECON_RICH 250 (dist/h144) brackets h139 from above; screen on seed0 21000.
+
+## 2026-10-24 09:3x PDT: h128 ACCEPTED on the replica (pooled rule, z 2.54): frozen as v8; h136 and h144 REJECTED
+
+- h128 (v7 + ESCORT_FIRST 2, ESCORT_MIRROR 1, ESCORT_UNIT 3: two crusaders hold the enemy's mirror image of our first
+  contested site) block 3 726-731: 8 of 18 against the pooled 5.6 (z 1.48 alone); three blocks 634-639 + 646-651 +
+  726-731: 23 of 54 against 16.1, **z 2.54** (pre-registered 05:5x: a third block accepted at z >= 2): **ACCEPTED**.
+  Cells won in every block: wololo 2644 3/3 (the pool 0 of 13), IanCoolidge0 2644 3/3 (2 of 13) and 1036 3/3 (3 of
+  13), awesomelemonade 1712 3/3 (5 of 13); lost every time: botfinalsafe 203 (6 of 13), bot1v43 2321 (4 of 13).
+  Caveat: h128 was reopened because its first two blocks scored best of thirteen candidates (a selection); the third
+  block, played after the rule was written, carries the confirmation alone at z 1.48.
+- bots/v8 = dist/h128 (cd4c900d6216; bots/ROSTER.tsv). src defaults now ESCORT_FIRST 2, ESCORT_UNIT 3, ESCORT_MIRROR
+  1; three escort tests pin v7's values (test/bot.test.mjs testPreV8). Identity, --det on 799 to 300: dist/h128, the
+  defaults-only build out/v8d and today's src with h128's cfg (out/v8chk) replay IDENTICAL; the no-op reference is
+  now h128's replay. Unit tests 137 node + Python pass.
+- Replica: submission 149 = bots/v8, our ladder build (tools/panel_submit.sh restores $LADDER, default bots/v8). v8's
+  panel record is h128's three blocks: progress/panels/v8-m1.pool with control 726-731
+  (`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK...`). Local screens are now against bots/v8.
+- h136 (SIEGE 30) blocks 694-699 + 720-725: 12 of 36 against 11.2, z 0.33: REJECTED (joins the v7 pool). The SIEGE
+  line closes; h138 (SIEGE 60) is not played.
+- h144 (ECON_RICH 250) vs h87, 20 cells seed0 21000: 15/40, +1 -6, D 7, t -1.89; castles lost 44 vs 33: REJECTED.
+- In flight on the v7 pool, read for the idea, not for acceptance: h139 (ECON_RICH 150) block 2 732-737 (cumulative
+  so far z 1.22), h141 (church strike) 738-743, h140 (early fast pioneer) 744-749; h142, h143 (stacks on v7) are
+  dropped. Rebased onto v8, screens vs bots/v8 queued: h145 = v8 + ECON_RICH 150 (seed0 22000), h146 = v8 + the
+  church strike (23000), h147 = v8 + h140's pioneer switches (24000).

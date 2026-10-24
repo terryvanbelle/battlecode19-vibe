@@ -1,49 +1,44 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 02:30 PDT)
+## State (2026-10-24 09:4x PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
-  teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
-  partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run built
-  bundles (`tools/build_bot.js`), never the source directory. Every candidate change is a CFG switch whose default is
-  the incumbent; candidates are built from src with their own `--cfg KEY=JSON` only into `dist/hN` and gated against
-  dist/h87 (= bots/v7). No-op check after every code change: a defaults-only build replays h87 vs h87 on 799 to r300
-  (--det --timescale 10 --init-ms 5000 --fast-turn --fast-init --fast-view --no-kill; the default 100 ms init fails on the driver) IDENTICAL, with nothing else running on the driver (a replay census beside it froze a castle's turn and
-  the replay parted, 2026-10-23 08:4x; LEARNINGS 13).
-- v7 = h87 = v6 + h82's economy switches (ECON_UNTIL 100, PIONEERS_TEAM 6, PEACE_RESERVE_K 60, PLAN_VALUE 10,
-  DEF_RESERVE_K 30) + h76's church chain from round 200 (CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX
-  [5], KEEP 1, SAFE 1): gate vs h50 20 cells +14 -5, t 2.06, ACCEPTED 00:30 2026-10-23 (unit tests of older
-  switches pin v6's values: testPreV7). v6 = h50 = v5 + PIONEER_RESERVE 2 + MARCH_MASK 8 (only crusaders obey attack
-  orders before ATTACK_LATE 900), ACCEPTED 08:00 2026-10-22.
-- **VM queue** (`~/jobq`: the runner takes pending jobs in locale `sort` order of their names; gates run from the
-  shadow tree ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree,
-  outputs in the main tree's out/). Gates at par 2 while saturn runs its 6 slots (8 vCPUs; owner, PROMPTS 18). Now:
-  h126 REJECTED on the replica (20:32, net 0); h127 REJECTED on the replica (20:35, net -3); h127 vs h126 head-to-head even (+4 -4, t 0); **h128** (ESCORT_FIRST 2, mirror, crusaders) gate t 0.90, mechanism met -> replica panel 634-639 (20:20); h129 (the same with preachers) REJECTED 20:52 (t -2.71); h130 local gate t 1.67 but replica net -2: REJECTED 22:09 (LEARNINGS 32); h131 REJECTED 22:23 (t 0.38); h132 REJECTED 22:47 (t 0.90); h133 REJECTED 23:47 (screen: castles lost 1.17x); h134 (no chains) REJECTED 00:42 (t -1.60); **h135** (SIEGE 30 + SAFE_BUILD 2, new switch) delivery passed 01:03 (vs h130), screen passed (t 0, castles even), replica block 1 679-684 net 0: REJECTED 02:30 (prophet-on-prophet deaths 1593 -> 1099, no extra wins); **h136** (SIEGE alone) screen passed (t 0, castles 25 vs 27) -> replica 694-699; h137 (SIEGE 10) REJECTED 05:0x (screen t -1.00); **h138** (SIEGE 60) screen passed (t 0.45, castles 1.09x), its panel waits on h136's; **h140** (h121 + PIONEER_FAST) screen passed (t 1.29, castles 32 vs 38), panel 744-749; **h141** (church strike, STRIKE_R2 36) screen +5 -0, t 2.24, castles 29 vs 39 -> panel 738-743; **h142** (h139 + h141) screen passed (t 0.58, castles 36 vs 38), panel after h139 and h141; **h143** (h139 + h140 + h141) screen passed (t 0.94, castles 40 vs 55), panel after the single leads; **h144** (ECON_RICH 250) screen queued; **h139** (ECON_RICH 150, aimed at the never-won cells) screen passed (t 0.58, castles 29 vs 35), replica block 1 706-711 z 2.07 (botfinalsafe 1706 won) -> block 2 = 732-737; panels are read against the pooled per-cell record (LEARNINGS 33); the time audit closed 14:18 (overruns are engine, GC and
-  load, about one turn each: LEARNINGS 31), with field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject
-  t <= -1, else a replica panel). Done: h125 REJECTED 16:19 (t -0.82; churches 766 vs 772, bar 1.05x), h124 REJECTED 15:40 (t -0.82; idle 0.67 met, churches 798 vs 858 missed), h123 REJECTED 15:01 (mechanism short: lines 0.84 of h87's, bar 0.8; D 0), h118 REJECTED 13:47 (mechanism short: idle 0.78 of h87's, bar 0.7; churches +10%, a lead), h116 REJECTED 13:30 (t -1.07: r100 army 616 vs 165, castles lost 60 vs 52),
-  h121 REJECTED 12:47 (t -0.28, first church 4.4 rounds earlier, bar 5), h115 REJECTED 11:58 (t 0.58, mechanism opposite: fuelEnd 3.5 times h87's in r1000 games, karbonite binds),
-  h114 REJECTED 11:24 (t -1.63, churches built 312 vs 400), h113 REJECTED 10:38 (t -1.73), h112 (t 0.71 -> replica panel, waiting), h111 (t 0.82 -> replica net 0: REJECTED 14:48), h110 REJECTED 09:20 (t -1.73, castles lost 35 vs 24).
-  The 21 stale v6-era jobs are in ~/jobq/superseded (PROMPTS 22-24; `tools/move_stale.sh` does such moves now).
-  Next job name ...10000019zzzzzzzz (locale order: check with `ls | sort` first). The locale sort ignores punctuation, so ...19qa runs before ...19q and ...19r: a longer
-  name jumps the queue, used on purpose only while the shorter one is already running (h121's ...19qa).
-- **Replica panels** (progress/panels/v7-m1.json: h82-b1's maps against six field bots, wololo, botfinalsafe, bot1v43,
-  uvafan, awesomelemonade, IanCoolidge0 ~69ce88): **v7** measurement 420-425 (submission 99, the control, 6/18);
-  h96 (v7 + ATTACK_LATE 1001) block 1 426-431 **REJECTED** 08:35 (net -3); **h104** (v7 + ATTACK_ROUND 1001 +
-  ATTACK_LATE 1001: no general attack; submission 102) block 1 432-437 **REJECTED** 10:47 (net 0);
-  **h103** (v7 + ESCORT 2 + ESCORT_UNIT 3; submission 104) block 1 438-443 final: gained 3, lost 2, net +1, t 0.45 ->
-  block 2 700-705: pooled z 0.35, **REJECTED** 08:4x; h111 (SAFE_BUILD 2) block 1 616-621 **REJECTED** 14:48 (net 0); h112 (DEF_SEEN 1) block 1 673-678 **REJECTED** 03:2x (net 0); h135 679-684 **REJECTED** (net 0); **h136** (SIEGE 30) block 1 694-699 z 0.81 -> block 2; **h128** reopened (two blocks pooled z 1.79) -> block 3; h136 block 2 = 720-725, h128 block 3 = 726-731 (06:5x). Panels are scored with `tools/panel_pool.sh 420-425 progress/panels/v7-m1.pool BLOCK...` (rejected blocks join the pool file). h103 block 2 700-705; **h139** block 1 706-711 (submission 127). h121 (early centre pioneer) block 1 712-713 + 716-719 **REJECTED** 08:4x (z -0.45) (requested after the replica's hourly scrimmage limit (HTTP 429: 20 requests went through in the hour before the refusal). h126 block 1 622-627 **REJECTED** (net 0), h127 628-633 **REJECTED** (net -3), h128 two blocks net +3, t 0.90: **REJECTED** 22:36, h130 640-645 **REJECTED** (net -2), h123 652-657 **REJECTED** (net -3), then h119's block 1
-  goes in once fewer than 30 wait: submit, scrim `--panel
-  progress/panels/v7-m1.json`, resubmit bots/v7, add the submissions.tsv row. Reading: `contest19.py fetch --new --pages 6` (one page misses slow matches),
-  then `contest19.py compare 420-425 <block>` by the two-block rule. v7 against v6 (414-419: 3 wins in 18) and h82
-  (408-413: 5 in 18); rerun the economy, composition and stillborn censuses on v7's
-  games. Sides alternate per game (420/426/438 list the opponent first, 432 vibe19). The ladder's vibe19 is submission
-  107 (= bots/v7), rated first (1711 at 06:00).
-- **Candidates in hand** (from v7's replica losses and the field censuses, TRAINING_LOG 07:39-10:38): h112 (DEF_SEEN 1) REJECTED on the replica (net 0); h126 REJECTED on the replica 20:32; h127 REJECTED on the replica 20:35 (net -3); h128 REJECTED on the replica 22:36 (two blocks t 0.90); the mirror-escort line is closed; h125 rejected 16:19, h124 15:40, h123 15:01, h118 13:47, h116 13:30, h121 12:47; h119 (PIONEER_CALL) waits for a replica panel (no local build triggers it). Parked: h117 (PIONEER_HOLD alone; the hold-and-lean line closed with h124), h109 (SAFE_BUILD 1: blocked chain
-  launches, worse in 2 of 4 cells), h108 (RECALL before the fix), h102 (PIONEER_DETOUR 50: inert), h98 / h99
-  h105 = dist/turtle and h106 (the prophet doctrine lost every self-play test, TRAINING_LOG
-  04:22). Open: 1036 (57x57): IanCoolidge0 had 26 pilgrims at r100 and 39 at r200 to our 14 and took the shared and
-  our-side bottom clusters; we built no church between r53 and the chain at r310. Field census (09:55): the field's
-  pilgrims outnumber ours 1.2-4.9x at r76-100 by standing on more tiles beside more structures (StoneT2000 7-9 by r100
-  to our 1-5); 1,119 pioneer turns held by enemy attackers within r2 100 (the held case: h59, h78, h88 all failed).
+  teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
+  sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
+  built bundles (`tools/build_bot.js src/bot dist/hN --cfg KEY=JSON ...`, one --cfg per key), never the source
+  directory. Every candidate change is a CFG switch whose default is the incumbent.
+- No-op check after every bot code change: a defaults-only build replays the champion against itself on 799 to r300
+  (--det --seed 799 --max-rounds 300 --timescale 10 --init-ms 5000 --fast-turn --fast-init --fast-view --no-kill; the
+  default 100 ms init fails on the driver) IDENTICAL to h128's replay, with nothing else running on the driver
+  (LEARNINGS 13); then `tools/unit-tests.sh`.
+- v8 = h128 = v7 + ESCORT_FIRST 2, ESCORT_MIRROR 1, ESCORT_UNIT 3 (two crusaders hold the enemy's mirror image of our
+  first contested site), ACCEPTED 09:3x 2026-10-24 on the replica panel: three blocks 23 of 54 against the pooled
+  16.1, z 2.54 (escort tests pin v7's values: testPreV8). v7 = h87 = v6 + h82's economy switches + h76's church
+  chain, ACCEPTED 2026-10-23 00:30 (testPreV7 pins v6's values).
+- **Acceptance** (TRAINING_ALGORITHM step 6-7, §4; LEARNINGS 32, 33): a local screen vs the champion only rejects
+  (t <= -1, or castles lost above 1.1x the champion's; 20 cells, par 2); the replica panel accepts by the pooled
+  rule: block 1 reject at z < 0.5; two blocks accept at z >= 2, reject at z < 1, else a third block at z >= 2.
+- **VM queue** (`~/jobq`; the runner takes pending jobs in locale `ls | sort` order; gates run from the shadow tree
+  ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
+  main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
+  ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzz.sh (h145). Last job name ...19 + 22 z's (h147); the next adds a z. Now:
+  screens vs bots/v8 for **h145** (v8 + ECON_RICH 150, seed0 22000), **h146** (v8 + church strike STRIKE_R2 36,
+  PREACHER_SELF 4, PREACHER_MIL 2.5; 23000), **h147** (v8 + PIONEER_EARLY 6, HOLD 64, LEAN 3, FAST 1; 24000).
+  Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h`, castles from out/dlv_gate_hN.txt on the
+  VM (awk on columns 18-19, a = candidate).
+- **Replica panels** (progress/panels/v7-m1.json: six field bots, wololo, botfinalsafe, bot1v43, uvafan,
+  awesomelemonade, IanCoolidge0 ~69ce88, three maps each). Ladder build: submission 149 = bots/v8. Play a block with
+  `tools/panel_submit.sh dist/hN "message"` (submits, scrims, resubmits $LADDER = bots/v8, bumps; retries what the
+  hourly limit refuses (HTTP 429, about 20 requests an hour) every 15 min; a lock keeps blocks apart); add the
+  tools/progress/submissions.tsv row. Read: `contest19.py fetch --new --pages 6` (one page misses slow matches), then
+  for v8-based candidates `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK...`, for v7-based ones
+  `tools/panel_pool.sh 420-425 progress/panels/v7-m1.pool BLOCK...`; rejected blocks join their pool file.
+  In flight on the v7 pool (read for the idea, not acceptance): h139 (ECON_RICH 150) blocks 706-711 + 732-737
+  (block 1 z 2.07, botfinalsafe 1706 won), h141 (church strike) 738-743, h140 (early fast pioneer) 744-749.
+- **Never-won panel cells** (LEARNINGS 33): wololo 2013, 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
+  2518; uvafan 2046; bot1v43 2591. Studies: botfinalsafe 1706 (castles idle r33-93, the centre cluster lost); wololo
+  2013 (church-beside-church preacher fights from r97). TRAINING_LOG 2026-10-24 04:1x, 06:2x.
+- **Candidates parked**: h119 (PIONEER_CALL; no local build triggers it), h117, h109, h108, h102, h98/h99, h105,
+  h106. Closed lines: SIEGE (h135-h138), the v7 stacks h142/h143, ECON_RICH 100/250 (h116, h144).
 - Closed on 2026-10-23 (TRAINING_LOG, progress/ATTEMPTS.md): h114 REJECTED 11:24 (CHAIN_GUARD 1: t -1.63); h104 REJECTED on the replica 10:47 (no general attack: net
   0); h113 REJECTED 10:38 (CHAIN_CLEAR 2: t -1.73); h110 REJECTED
   09:20 (RECALL 30: t -1.73); h96 REJECTED on the replica 08:35; h100 REJECTED 08:14 (ESCORT_FIRST 1: D-48 look t -0.29); h107 FAILED 06:46 (DEF_FAR_UNIT 3: t -1.89, D 7,

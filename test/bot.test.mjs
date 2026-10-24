@@ -29,6 +29,13 @@ const testPreV7 = (name, fn) => test(name, () => {
   Object.assign(CFG, PRE_V7);
   try { fn(); } finally { Object.assign(CFG, saved); }
 });
+// v8 (2026-10-24) turned on h128's mirror escort; tests of the escort switches written against v7 pin v7's values.
+const PRE_V8 = { ESCORT_FIRST: 0, ESCORT_UNIT: 4, ESCORT_MIRROR: 0 };
+const testPreV8 = (name, fn) => test(name, () => {
+  const saved = { ...CFG };
+  Object.assign(CFG, PRE_V8);
+  try { fn(); } finally { Object.assign(CFG, saved); }
+});
 
 test('specs.js matches the engine', () => {
   for (let u = 0; u < 6; u++) {
@@ -1573,7 +1580,7 @@ test('pilgrim: PIONEER_CALL a pioneer that sees a mobile enemy attacker by its s
   } finally { CFG.PIONEER_CALL = saved; }
 });
 
-test('castle: ESCORT owes escorts to an overdue or lost pioneer and builds them radioing SIG.GUARD at the site', () => {
+testPreV8('castle: ESCORT owes escorts to an overdue or lost pioneer and builds them radioing SIG.GUARD at the site', () => {
   const saved = { ...CFG };
   try {
     CFG.ESCORT = 2;
@@ -1612,7 +1619,7 @@ test('castle: ESCORT owes escorts to an overdue or lost pioneer and builds them 
   } finally { Object.assign(CFG, saved); }
 });
 
-test('castle: ESCORT_FIRST owes escorts to the first contested cluster at planning and builds them before its pioneer', () => {
+testPreV8('castle: ESCORT_FIRST owes escorts to the first contested cluster at planning and builds them before its pioneer', () => {
   const saved = { ...CFG };
   try {
     CFG.ESCORT_FIRST = 1;
@@ -1636,13 +1643,13 @@ test('castle: ESCORT_FIRST owes escorts to the first contested cluster at planni
     assert.deepStrictEqual(sent, [[encXY(SIG.GUARD, site[0], site[1]), 2]]);
     assert.strictEqual(st.pioneers.length, 0);
     assert.strictEqual(st.escorts.length, 1); assert.strictEqual(st.escorts[0].left, 0);
-    // Off (the default): no escort owed at planning.
+    // Off (v7's value, pinned): no escort owed at planning.
     CFG.ESCORT_FIRST = 0;
     const g2 = new Game(1915, 100, 20, false, false), castle2 = g2.robots.find(r => r.team === 0);
     const B2 = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
     for (const t of [1, 2, 3]) { castle2.turn = t; const w2 = worldFor(g2, castle2); B2.w = w2; B2.api = w2.api; castleTurn(B2); }
     assert.deepStrictEqual(B2.st.escorts, []);
-    // ESCORT_MIRROR (sparring): the same escort holds the mirror image of the site.
+    // ESCORT_MIRROR (v8): the same escort holds the mirror image of the site.
     Object.assign(CFG, { ESCORT_FIRST: 1, ESCORT_MIRROR: 1 });
     const g3 = new Game(1915, 100, 20, false, false), castle3 = g3.robots.find(r => r.team === 0);
     const B3 = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
@@ -1653,7 +1660,7 @@ test('castle: ESCORT_FIRST owes escorts to the first contested cluster at planni
   } finally { Object.assign(CFG, saved); }
 });
 
-test('military: ESCORT a unit born hearing SIG.GUARD holds the lattice around that site, not home', () => {
+testPreV8('military: ESCORT a unit born hearing SIG.GUARD holds the lattice around that site, not home', () => {
   const saved = { ...CFG };
   try {
     const g = new Game(1205, 100, 20, false, false), n = g.map.length;
