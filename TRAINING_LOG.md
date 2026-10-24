@@ -3840,3 +3840,13 @@ h135 679 0.19. Every rejection stands except h128 (two blocks between 1 and 2): 
 h136 (SIEGE 30) block 1 694-699: 7 of 18 against 5.7, z 0.81 (won IanCoolidge0 203, bot1v43 2321, uvafan 1712,
 awesomelemonade 1712; no never-won cell turned) -> block 2. Both blocks go in after the rate window (~06:5x), behind
 h121's last four.
+
+## 2026-10-24 06:2x PDT: wololo 2013 read; h141 (church strike) screen queued
+
+v7's r198 loss to wololo on 2013 (420, `replay.js threat`): wololo's first army came at r97 as preachers against our
+contested churches: its church (40,21) stood beside ours (40,20); ours saw the preacher at r97 with 63 K, built two
+preachers and died at r100; (40,33) died r116, (26,53) r138, (34,49) r153, the castle r198. Our pilgrims died to
+those preachers and then prophets from r97 (22 lost). Our bank was 3 K at r100 (karbonite all in pilgrims and
+churches), so h139's ECON_RICH does not fire on this map; the fights over neighbouring churches decide it.
+h141 = v7 + h84's church strike (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5; dist/h141, 04e1af62e9bf), never
+measured on the field (h84 failed a local delivery against h76): screen on seed0 18000, then the panel.

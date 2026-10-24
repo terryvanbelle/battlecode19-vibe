@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 124 other, 28 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (177 rows).
+Totals: 125 other, 28 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (178 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -191,3 +191,4 @@ Totals: 124 other, 28 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparrin
 | `h138` | 2026-10-24 03:4x | v7 | SIEGE 60: h136 with a longer prophet memory | vs h87 20 cells seed0 15000: +3 -2, D 5, t 0.45; castles lost 35 vs 32 |  |  |  | SCREEN PASSED (panel waits on h136) |
 | `h139` | 2026-10-24 04:2x | v7 | ECON_RICH 150: before r100 the bank past 150 K + reserves builds the peacetime army (h116 at 100) |  |  | block 1 = matches 706-711 |  | SCREEN QUEUED + REPLICA PANEL |
 | `h140` | 2026-10-24 05:2x | v7 | h121 + PIONEER_FAST 1: the early centre pioneer at full speed |  |  |  |  | SCREEN QUEUED |
+| `h141` | 2026-10-24 06:2x | v7 | h84's church strike on v7: a structure seeing an enemy church within r2 36 and no attacker builds a preacher toward it (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) |  |  |  |  | SCREEN QUEUED |
