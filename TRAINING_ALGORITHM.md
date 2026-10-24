@@ -79,6 +79,9 @@ the ladder and calibrated with a full field block the same day. Then run a corre
    A candidate **aimed at the field** (its target is a failure seen in ladder games that self-play does not show,
    such as resources the field takes and our builds leave idle) is declared so before its gate; the gate is then a
    non-inferiority screen (reject at t <= -1 or any basics regression), and acceptance comes only from step 7.
+   Once a ladder panel exists, every candidate is accepted only by step 7: self-play wins that exploit the
+   incumbent's own habits are reversed by the field often enough that a local t >= 2 is a pass to the panel, not
+   an accept.
 7. **Ladder confirmation**: candidates that pass locally get an unranked panel against field bots near our rating
    in strength (the bots that beat or split with the incumbent lately, not the rating list alone), paired with the
    incumbent's own panel created at the same time. Where a match keeps the build it was created with, submit the
@@ -185,7 +188,7 @@ A closure says an implementation failed; only a ceiling (arithmetic, engine) lic
 | Parameter | Value |
 |---|---|
 | Delivery block | 24 paired cells, extend to 48 |
-| Local paired gate | looks when D first reaches 12 / 24 / 48 discordant cells (at most 200 cells); accept t ≥ 2.0, reject t ≤ 0 |
+| Local paired gate | looks when D first reaches 12 / 24 / 48 discordant cells (at most 200 cells); pass to the ladder panel at t ≥ 2.0, reject t ≤ 0 |
 | Ladder panel block | 100 cells (10 field bots near our rating × 10 maps), two-block rule of §4 |
 | Rating pair cap | 200 games per pair |
 | Area switch | 3 consecutive rejects |
