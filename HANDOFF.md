@@ -21,7 +21,7 @@
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
   ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzz.sh (h145). Last job name ...19 + 22 z's (h147); the next adds a z. Now:
-  screens vs bots/v8 for **h145** (v8 + ECON_RICH 150, seed0 22000), **h146** (v8 + church strike STRIKE_R2 36,
+  h145 (v8 + ECON_RICH 150) screen passed (t 1.00, castles 30 vs 34); screens vs bots/v8 for **h146** (v8 + church strike STRIKE_R2 36,
   PREACHER_SELF 4, PREACHER_MIL 2.5; 23000), **h147** (v8 + PIONEER_EARLY 6, HOLD 64, LEAN 3, FAST 1; 24000).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h`, castles from out/dlv_gate_hN.txt on the
   VM (awk on columns 18-19, a = candidate).

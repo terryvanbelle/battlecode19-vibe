@@ -3937,3 +3937,8 @@ awesomelemonade 1712 2/2, uvafan 1653 2/2, botfinalsafe 1706 1/2 against the poo
 
 Submission 150 (dist/h145, de5c9212eb2a), block 1 = matches 750-755 (bots/v8 resubmitted, 151; bumped). Read with
 `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 750-755`; a screen rejection voids it.
+
+## 2026-10-24 10:4x PDT: h145 passes its screen vs v8; its panel 750-755 stands
+
+h145 (v8 + ECON_RICH 150) vs bots/v8, 20 cells seed0 22000: 23/40, gained 6, lost 3, D 9, net 3, t 1.00; castles
+lost 30 vs 34, churches 506 vs 419: non-inferior. h146 (church strike on v8) screen running.
