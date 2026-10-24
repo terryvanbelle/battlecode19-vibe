@@ -4067,3 +4067,23 @@ between ladder teams, 190 waiting in all. At the recent 10-11 matches an hour it
 matches (h147's 767-769, the v8 field scrims 770-776, h148's 777-782, h149's 955-960, autoscrim 887 uvafan) are
 bumped to the front (tools/bump_ours.sh --ours), the activity service adds nothing while matches wait, and the next
 autoscrim is held until fewer than 30 wait. These ranked matches are what moves the rating history graphs.
+
+## 2026-10-24 09:25 PDT: h147 REJECTED on the replica (z 0.34); the early pioneer wins the centre only when the bank can pay
+
+h147 (v8 + PIONEER_EARLY 6, HOLD 64, LEAN 3, FAST 1) block 1 764-769 against the v8 pool: 8 of 18 against 7.5, z
+0.34: REJECTED (joins the v8 pool). It won three cells the pool rarely wins (awesomelemonade 2518, 0 of 5; bot1v43
+2321, 0 of 5; botfinalsafe 203, 0 of 5) and lost IanCoolidge0 2644 (5 of 5).
+
+awesomelemonade 2518 (one castle each, the karbonite in a central cluster): h147 (blue, 768) had a church by r25 and 8
+pilgrims by r50, awesomelemonade 4 pilgrims and no church; its castle fell at r288. v8 (blue, 730) had no church and
+3-4 pilgrims to r150 while awesomelemonade had 11 pilgrims and 2 churches by r50 (lost r723). h140, the same switch on
+v7, won 2518 too (748, r274). On this map the central cluster is the game.
+
+IanCoolidge0 2644 (h147 red, 769, lost r423): IanCoolidge0 sends two crusaders at r2-3; our castle answers with two
+preachers at r14-15 (60 K); two of our four opening pilgrims are pioneers (#2508 from r3, #3802) and wander at
+(25-37, 11-18) for 40+ rounds with a bank of 20-60 K, never able to build; IanCoolidge0 churches the cluster at
+(28,19) at r42 and (20,9) at r55. Two pilgrims mine: 176 K by r100 against 548 K for v8's build (763), which had a
+church by r50, 13 pilgrims by r100 and killed the castle at r265. The early pioneer wins the race when the bank can
+pay for the church on arrival and costs half the opening economy when an early rush drains the bank. A refinement
+to try: send it early only while the bank can pay for the church by its arrival, and turn a waiting pioneer into a
+miner when the castle spends on defence.
