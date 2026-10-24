@@ -3609,3 +3609,10 @@ evidence favours it (92% of our lost crusaders never fired; the strong bots mass
 v7 + MIL_ROTATION null (dist/h130, 0467e38596bc: peacetime prophets, every 4th a preacher; h98's switch on today's src) goes to
 the replica without a gate: submission 113, block 1 = matches 640-645 (v7 resubmitted, 114; bumped). Driver check,
 2046 r300 vs v7: built prophets 17 / crusaders 0 (v7 11 / 11), no bot exceptions. Two-block rule as usual.
+
+## 2026-10-23 20:52 PDT: h129 REJECTED (gate t -2.71)
+
+h129 (ESCORT_FIRST 2 + ESCORT_MIRROR 1 + ESCORT_UNIT 5, preachers) vs h87, 20 cells seed0 7000: 11/40, gained 1,
+lost 10, split 9, D 11, net -9, t -2.71 -> REJECTED. Mechanism missed both ways: castles lost 48 vs 29, churches
+built 435 vs 643 (0.68x): two preachers (30 karbonite each) out of the opening cost the economy what two crusaders
+did not. The mirror-escort line is closed (h126, h127 replica-rejected; h128 on the replica 634-639, read as is).
