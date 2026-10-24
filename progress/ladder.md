@@ -1,6 +1,6 @@
 # Galaxy replica ladder
 
-Snapshot of the Rankings page of our private galaxy replica (https://galaxy19.136-86-167-127.sslip.io/bc19/rankings), taken Oct 24 08:42 PDT. Written by `tools/progress/ladder.py` (`tools/progress-refresh.sh`): regenerate it, do not edit it. How to open the live site, with replays: `ACCESS.md`.
+Snapshot of the Rankings page of our private galaxy replica (https://galaxy19.136-86-167-127.sslip.io/bc19/rankings), taken Oct 24 08:51 PDT. Written by `tools/progress/ladder.py` (`tools/progress-refresh.sh`): regenerate it, do not edit it. How to open the live site, with replays: `ACCESS.md`.
 
 **Rating is the replica's displayed rating**: siarnaq's penalized Elo, mean − 1500·0.85^n after n rated matches, so every team starts at 0 and climbs over its first ~20 ranked matches. **BT** is the Bradley-Terry rating of `progress/ELO.md` (± 95%; for our team, the build of our latest submission). Games W-L counts the replica games in `progress/games.csv`. 86 teams; our team is **vibe19**. The field of public 2019 bots is entered (BENCHMARK.md); the replica plays a few matches an hour, so most teams have played few games yet and their ratings are still rising toward their level.
 
@@ -8,97 +8,102 @@ Snapshot of the Rankings page of our private galaxy replica (https://galaxy19.13
 
 | # | Team | Rating | BT | Games W-L | Submission |
 |---:|---|---:|---:|---|---|
-| 1 | **vibe19** (v8) | 1711.0 | 1748 ± 102 | 363-370 | accepted |
-| 2 | CometsTech.battlecode2019 | 1542.2 | 1240 ± 111 | 92-106 | accepted |
-| 3 | CS554-software-engineerin\~a575dc | 1504.2 | 1278 ± 105 | 147-101 | accepted |
-| 4 | bc19-starter | 1379.1 | 408 ± 227 | 57-215 | accepted |
-| 5 | 18dcb01.Battlecode19-robot2 | 1315.0 | 1079 ± 221 | 19-20 | accepted |
-| 6 | 18dcb01.Battlecode19-prea\~fb5c48 | 1270.0 | 1366 ± 150 | 25-23 | accepted |
-| 7 | IanCoolidge0.battlecode20\~69ce88 | 1221.2 | 1817 ± 89 | 79-41 | accepted |
-| 8 | CometsTech.battlecode2019\~187e8c | 1184.2 | 859 ± 238 | 14-22 | accepted |
-| 9 | DivyanshuSaxena.Battlecode | 1163.5 | 524 ± 255 | 18-21 | accepted |
-| 10 | TestSubjector.BattleCode2\~fb22c7 | 1130.8 | 1096 ± 264 | 18-18 | accepted |
-| 11 | NielsKornerup.Battlecode-2019 | 1129.6 | 1576 ± 148 | 30-21 | accepted |
-| 12 | UpperArlingtonHighSchool.\~5e7875 | 1113.8 | 1231 ± 273 | 15-9 | accepted |
-| 13 | TestSubjector.BattleCode2\~e6de74 | 1103.3 | 1043 ± 221 | 17-22 | accepted |
-| 14 | dgh2.bc19-t1 | 1070.4 | 994 ± 276 | 9-15 | accepted |
-| 15 | bovard.battlecode-2019-un\~8822c3 | 1070.3 | 670 ± 388 | 9-15 | accepted |
-| 16 | haydenshively.Battle-Code\~e37b3e | 1063.4 | 1060 ± 217 | 8-16 | accepted |
-| 17 | asunathanr.asu\_bc | 1063.3 | 884 ± 281 | 8-16 | accepted |
-| 18 | IanCoolidge0.battlecode20\~f649f3 | 1059.7 | 1673 ± 157 | 33-12 | accepted |
-| 19 | StoneT2000.BC19-botfinalsafe | 1057.2 | 1766 ± 82 | 89-49 | accepted |
-| 20 | Tom-CCS.BC19 | 1049.6 | 1468 ± 191 | 17-16 | accepted |
-| 21 | howard36.Battlecode2019-sprint | 1044.9 | 502 ± 429 | 6-18 | accepted |
-| 22 | jbiewend.Battlecode2019 | 1021.5 | 98 ± 462 | 3-21 | accepted |
-| 23 | twitu.bc19-tsp | 1021.5 | 1099 ± 239 | 17-13 | accepted |
-| 24 | vishwasns99.BC\_2019 | 1021.3 | 457 ± 384 | 3-27 | accepted |
-| 25 | jshin313.battlecodebot | 1016.1 | -246 ± 386 | 2-22 | accepted |
-| 26 | moreda-a.BC2019-t15 | 1008.6 | 1168 ± 235 | 12-15 | accepted |
-| 27 | RyanSharafuddin.Battlecode\_2019 | 1007.1 | 167 ± 268 | 5-49 | accepted |
-| 28 | TheRobotCarlson.battlehac\~323871 | 1003.9 | -55 ± 321 | 3-33 | accepted |
-| 29 | OmarTahoun.battle-code | 997.5 | 654 ± 265 | 10-23 | accepted |
-| 30 | VictorButoi.BattleCode201\~c4576b | 971.2 | 655 ± 264 | 9-18 | accepted |
-| 31 | djkeyes.bc19 | 961.1 | -15 ± 419 | 3-21 | accepted |
-| 32 | unrevre.battlecode | 958.4 | 1565 ± 206 | 13-11 | accepted |
-| 33 | ryanhzhao.Battlecode-2019 | 941.8 | 240 ± 445 | 3-21 | accepted |
-| 34 | jackliu612.Battlecode19 | 941.4 | 1024 ± 324 | 10-14 | accepted |
-| 35 | ovkulkarni.battlecode2019\~06c610 | 935.1 | 1366 ± 225 | 15-9 | accepted |
-| 36 | cvxluo.battlecode19 | 934.2 | 1289 ± 201 | 19-11 | accepted |
-| 37 | spachava753.bc19 | 933.8 | 959 ± 228 | 9-15 | accepted |
-| 38 | vicennial.BattleCode19 | 920.2 | 1130 ± 247 | 13-14 | accepted |
-| 39 | jyurkanin.corn\_bc19 | 916.8 | 638 ± 336 | 7-26 | accepted |
-| 40 | nhard.examplefuncsplayer | 904.2 | 333 ± 350 | 9-15 | accepted |
-| 41 | yujinwunz.battlecode\_2019 | 889.9 | 1879 ± 273 | 26-4 | accepted |
-| 42 | arya-k.bc19 | 883.3 | 1827 ± 286 | 20-4 | accepted |
-| 43 | ldcWV.Battlecode-2019 | 875.5 | 1684 ± 198 | 18-9 | accepted |
-| 44 | UpperArlingtonHighSchool.\~682aa9 | 874.3 | 1640 ± 228 | 17-13 | accepted |
-| 45 | cemondr.BC19pdxgroup4 | 867.6 | 1624 ± 208 | 15-9 | accepted |
-| 46 | bqi343.cp-notebook | 866.4 | 1736 ± 241 | 16-8 | accepted |
-| 47 | bayoumi17m.BattleCode-2019 | 846.2 | 1139 ± 213 | 11-13 | accepted |
-| 48 | programjames.BC19Bot-root | 846.0 | 1376 ± 218 | 15-9 | accepted |
-| 49 | sunanth123.battlecode19-prorush | 839.0 | 1280 ± 196 | 14-10 | accepted |
-| 50 | ipercyNC.group6-battlecode | 837.8 | 1286 ± 200 | 11-13 | accepted |
-| 51 | haydenshively.Battle-Code\~e1c2fb | 835.6 | 1092 ± 220 | 10-14 | accepted |
-| 52 | programjames.BC19Bot-seeding | 830.9 | 1475 ± 188 | 11-13 | accepted |
-| 53 | dndoja.battlecode19 | 830.0 | 919 ± 236 | 11-16 | accepted |
-| 54 | roy-love.onshoreBattleCode2019 | 822.8 | 670 ± 253 | 7-17 | accepted |
-| 55 | rooneyshuman.Battlecode | 821.7 | 859 ± 246 | 19-14 | accepted |
-| 56 | waylon531.scala\_starter | 808.5 | 484 ± 367 | 4-26 | accepted |
-| 57 | yunaganyh.bc19 | 793.7 | -119 ± 352 | 4-20 | accepted |
-| 58 | VoidMercy.battlecode-2019-bot | 776.3 | 366 ± 336 | 8-16 | accepted |
-| 59 | jamesrayman.HCN-basic-bot | 775.2 | -112 ± 351 | 3-21 | accepted |
-| 60 | j-mao.battlecode-2019 | 763.4 | 1865 ± 195 | 18-6 | accepted |
-| 61 | StoneT2000.BC19-bot1v43 | 763.4 | 1798 ± 85 | 88-47 | accepted |
-| 62 | mvpatel2000.Battlecode2019 | 762.0 | 2225 ± 277 | 22-2 | accepted |
-| 63 | rafekruse.Battlecode-2019-bc19 | 762.0 | 1953 ± 261 | 20-4 | accepted |
-| 64 | sunanth123.battlecode19-mainbot | 755.4 | 1466 ± 250 | 13-8 | accepted |
-| 65 | uvafan.bc2019 | 754.9 | 1954 ± 100 | 91-20 | accepted |
-| 66 | awesomelemonade.Battlecode2019 | 754.6 | 1751 ± 88 | 66-45 | accepted |
-| 67 | VoidMercy.battlecode-2019\~e7dc06 | 754.2 | 1873 ± 238 | 21-3 | accepted |
-| 68 | rafekruse.Battlecode-2019\~2680d4 | 747.2 | 1697 ± 212 | 19-5 | accepted |
-| 69 | Nischay-Pro.BattleCode2019 | 740.7 | 1587 ± 223 | 17-4 | accepted |
-| 70 | howard36.Battlecode2019-eco6 | 740.3 | 1646 ± 212 | 15-9 | accepted |
-| 71 | virenvshah.Battlecode2019 | 740.3 | 1703 ± 218 | 19-5 | accepted |
-| 72 | moreda-a.BC2019-a31 | 734.5 | 1799 ± 213 | 18-9 | accepted |
-| 73 | lschaberg.bc19 | 733.8 | 1534 ± 188 | 19-14 | accepted |
-| 74 | SethKitchen.examplefuncsplayer | 733.2 | 724 ± 340 | 8-28 | accepted |
-| 75 | vineetparikh.BigRedBattle\~fe3459 | 733.0 | 1697 ± 205 | 19-8 | accepted |
-| 76 | dmunozc.bc19-g8-davjasdiv | 730.9 | 1485 ± 187 | 22-11 | accepted |
-| 77 | m4reko.bc2019-tmores-angels | 730.8 | 1500 ± 203 | 17-10 | accepted |
-| 78 | dmunozc.bc19-g8-bots | 726.0 | 1443 ± 211 | 12-12 | accepted |
-| 79 | m-schier.battlecode-2019-wololo | 725.5 | 2132 ± 132 | 104-10 | accepted |
-| 80 | JasonLarson44.2019-Battle\~1c7639 | 717.2 | 1149 ± 201 | 14-22 | accepted |
-| 81 | ovkulkarni.battlecode2019\~0aa607 | 716.4 | 1533 ± 202 | 18-6 | accepted |
-| 82 | jamesrayman.HCN-bot | 710.9 | 1201 ± 204 | 13-20 | accepted |
-| 83 | evanyeyeye.battlecode2019\~af562c | 710.1 | 1180 ± 201 | 12-12 | accepted |
-| 84 | liwanlin41.examplefuncsplayer | 709.4 | 923 ± 282 | 7-20 | accepted |
-| 85 | abcdefguan.battlecode2019 | 708.6 | 1552 ± 223 | 22-8 | accepted |
-| 86 | nthistle.battlecode-2019 | 700.3 | 1349 ± 175 | 19-17 | accepted |
+| 1 | **vibe19** (v8) | 1659.5 | 1736 ± 100 | 364-375 | accepted |
+| 2 | CS554-software-engineerin\~a575dc | 1514.5 | 1278 ± 105 | 147-101 | accepted |
+| 3 | CometsTech.battlecode2019 | 1483.2 | 1240 ± 111 | 92-106 | accepted |
+| 4 | StoneT2000.BC19-botfinalsafe | 1477.4 | 1766 ± 82 | 89-49 | accepted |
+| 5 | IanCoolidge0.battlecode20\~f649f3 | 1452.0 | 1674 ± 157 | 33-12 | accepted |
+| 6 | NielsKornerup.Battlecode-2019 | 1440.2 | 1577 ± 148 | 30-21 | accepted |
+| 7 | StoneT2000.BC19-bot1v43 | 1424.3 | 1797 ± 85 | 88-47 | accepted |
+| 8 | IanCoolidge0.battlecode20\~69ce88 | 1401.9 | 1816 ± 89 | 79-41 | accepted |
+| 9 | 18dcb01.Battlecode19-prea\~fb5c48 | 1395.4 | 1367 ± 150 | 25-23 | accepted |
+| 10 | bc19-starter | 1393.0 | 409 ± 227 | 57-215 | accepted |
+| 11 | uvafan.bc2019 | 1374.1 | 1962 ± 100 | 94-20 | accepted |
+| 12 | m-schier.battlecode-2019-wololo | 1373.7 | 2131 ± 132 | 104-10 | accepted |
+| 13 | awesomelemonade.Battlecode2019 | 1353.5 | 1755 ± 87 | 68-46 | accepted |
+| 14 | 18dcb01.Battlecode19-robot2 | 1315.0 | 1080 ± 221 | 19-20 | accepted |
+| 15 | nthistle.battlecode-2019 | 1298.2 | 1350 ± 175 | 19-17 | accepted |
+| 16 | DivyanshuSaxena.Battlecode | 1297.3 | 525 ± 255 | 18-21 | accepted |
+| 17 | TestSubjector.BattleCode2\~e6de74 | 1291.8 | 1044 ± 221 | 17-22 | accepted |
+| 18 | RyanSharafuddin.Battlecode\_2019 | 1284.9 | 168 ± 268 | 5-49 | accepted |
+| 19 | dmunozc.bc19-g8-davjasdiv | 1283.5 | 1487 ± 187 | 22-11 | accepted |
+| 20 | TestSubjector.BattleCode2\~fb22c7 | 1283.0 | 1097 ± 264 | 18-18 | accepted |
+| 21 | yujinwunz.battlecode\_2019 | 1280.1 | 1880 ± 273 | 26-4 | accepted |
+| 22 | lschaberg.bc19 | 1271.1 | 1535 ± 188 | 19-14 | accepted |
+| 23 | JasonLarson44.2019-Battle\~1c7639 | 1269.8 | 1150 ± 201 | 14-22 | accepted |
+| 24 | rooneyshuman.Battlecode | 1262.2 | 860 ± 246 | 19-14 | accepted |
+| 25 | CometsTech.battlecode2019\~187e8c | 1258.8 | 860 ± 238 | 14-22 | accepted |
+| 26 | abcdefguan.battlecode2019 | 1253.1 | 1554 ± 224 | 22-8 | accepted |
+| 27 | Tom-CCS.BC19 | 1250.5 | 1469 ± 191 | 17-16 | accepted |
+| 28 | cvxluo.battlecode19 | 1233.6 | 1290 ± 202 | 19-11 | accepted |
+| 29 | jamesrayman.HCN-bot | 1229.2 | 1202 ± 204 | 13-20 | accepted |
+| 30 | SethKitchen.examplefuncsplayer | 1219.8 | 725 ± 340 | 8-28 | accepted |
+| 31 | UpperArlingtonHighSchool.\~682aa9 | 1218.7 | 1641 ± 229 | 17-13 | accepted |
+| 32 | twitu.bc19-tsp | 1213.5 | 1100 ± 239 | 17-13 | accepted |
+| 33 | OmarTahoun.battle-code | 1197.1 | 655 ± 265 | 10-23 | accepted |
+| 34 | vineetparikh.BigRedBattle\~fe3459 | 1194.8 | 1699 ± 206 | 19-8 | accepted |
+| 35 | moreda-a.BC2019-a31 | 1187.3 | 1800 ± 213 | 18-9 | accepted |
+| 36 | ldcWV.Battlecode-2019 | 1186.3 | 1686 ± 198 | 18-9 | accepted |
+| 37 | jyurkanin.corn\_bc19 | 1181.4 | 639 ± 336 | 7-26 | accepted |
+| 38 | m4reko.bc2019-tmores-angels | 1176.8 | 1502 ± 203 | 17-10 | accepted |
+| 39 | mvpatel2000.Battlecode2019 | 1172.4 | 2224 ± 277 | 22-2 | accepted |
+| 40 | TheRobotCarlson.battlehac\~323871 | 1169.8 | -54 ± 321 | 3-33 | accepted |
+| 41 | VoidMercy.battlecode-2019\~e7dc06 | 1159.8 | 1876 ± 238 | 21-3 | accepted |
+| 42 | rafekruse.Battlecode-2019-bc19 | 1151.7 | 1953 ± 261 | 20-4 | accepted |
+| 43 | arya-k.bc19 | 1150.5 | 1828 ± 286 | 20-4 | accepted |
+| 44 | vicennial.BattleCode19 | 1150.0 | 1131 ± 247 | 13-14 | accepted |
+| 45 | virenvshah.Battlecode2019 | 1145.6 | 1705 ± 218 | 19-5 | accepted |
+| 46 | moreda-a.BC2019-t15 | 1143.7 | 1169 ± 235 | 12-15 | accepted |
+| 47 | j-mao.battlecode-2019 | 1143.5 | 1864 ± 195 | 18-6 | accepted |
+| 48 | rafekruse.Battlecode-2019\~2680d4 | 1142.6 | 1698 ± 212 | 19-5 | accepted |
+| 49 | ovkulkarni.battlecode2019\~0aa607 | 1135.7 | 1534 ± 202 | 18-6 | accepted |
+| 50 | dndoja.battlecode19 | 1134.4 | 921 ± 236 | 11-16 | accepted |
+| 51 | waylon531.scala\_starter | 1126.9 | 485 ± 367 | 4-26 | accepted |
+| 52 | bqi343.cp-notebook | 1122.0 | 1737 ± 241 | 16-8 | accepted |
+| 53 | VictorButoi.BattleCode201\~c4576b | 1117.9 | 656 ± 264 | 9-18 | accepted |
+| 54 | howard36.Battlecode2019-eco6 | 1116.8 | 1647 ± 212 | 15-9 | accepted |
+| 55 | vishwasns99.BC\_2019 | 1115.4 | 458 ± 384 | 3-27 | accepted |
+| 56 | cemondr.BC19pdxgroup4 | 1114.1 | 1626 ± 208 | 15-9 | accepted |
+| 57 | ovkulkarni.battlecode2019\~06c610 | 1114.0 | 1367 ± 225 | 15-9 | accepted |
+| 58 | UpperArlingtonHighSchool.\~5e7875 | 1113.8 | 1232 ± 273 | 15-9 | accepted |
+| 59 | programjames.BC19Bot-root | 1112.5 | 1377 ± 218 | 15-9 | accepted |
+| 60 | liwanlin41.examplefuncsplayer | 1105.9 | 924 ± 282 | 7-20 | accepted |
+| 61 | sunanth123.battlecode19-prorush | 1105.8 | 1281 ± 196 | 14-10 | accepted |
+| 62 | unrevre.battlecode | 1100.2 | 1567 ± 206 | 13-11 | accepted |
+| 63 | dmunozc.bc19-g8-bots | 1095.2 | 1444 ± 211 | 12-12 | accepted |
+| 64 | evanyeyeye.battlecode2019\~af562c | 1092.8 | 1182 ± 201 | 12-12 | accepted |
+| 65 | programjames.BC19Bot-seeding | 1087.3 | 1476 ± 188 | 11-13 | accepted |
+| 66 | ipercyNC.group6-battlecode | 1083.2 | 1288 ± 200 | 11-13 | accepted |
+| 67 | bayoumi17m.BattleCode-2019 | 1082.7 | 1140 ± 213 | 11-13 | accepted |
+| 68 | jackliu612.Battlecode19 | 1076.9 | 1025 ± 324 | 10-14 | accepted |
+| 69 | haydenshively.Battle-Code\~e1c2fb | 1074.1 | 1093 ± 220 | 10-14 | accepted |
+| 70 | dgh2.bc19-t1 | 1070.4 | 995 ± 276 | 9-15 | accepted |
+| 71 | bovard.battlecode-2019-un\~8822c3 | 1070.3 | 671 ± 388 | 9-15 | accepted |
+| 72 | Nischay-Pro.BattleCode2019 | 1067.5 | 1588 ± 223 | 17-4 | accepted |
+| 73 | spachava753.bc19 | 1067.3 | 960 ± 228 | 9-15 | accepted |
+| 74 | nhard.examplefuncsplayer | 1065.3 | 334 ± 350 | 9-15 | accepted |
+| 75 | haydenshively.Battle-Code\~e37b3e | 1063.4 | 1061 ± 217 | 8-16 | accepted |
+| 76 | asunathanr.asu\_bc | 1063.3 | 886 ± 281 | 8-16 | accepted |
+| 77 | VoidMercy.battlecode-2019-bot | 1062.3 | 368 ± 336 | 8-16 | accepted |
+| 78 | roy-love.onshoreBattleCode2019 | 1051.8 | 671 ± 253 | 7-17 | accepted |
+| 79 | howard36.Battlecode2019-sprint | 1044.9 | 503 ± 429 | 6-18 | accepted |
+| 80 | sunanth123.battlecode19-mainbot | 1037.0 | 1467 ± 250 | 13-8 | accepted |
+| 81 | yunaganyh.bc19 | 1028.9 | -118 ± 352 | 4-20 | accepted |
+| 82 | ryanhzhao.Battlecode-2019 | 1026.9 | 242 ± 445 | 3-21 | accepted |
+| 83 | jbiewend.Battlecode2019 | 1021.5 | 100 ± 462 | 3-21 | accepted |
+| 84 | djkeyes.bc19 | 1021.4 | -14 ± 419 | 3-21 | accepted |
+| 85 | jamesrayman.HCN-basic-bot | 1017.0 | -110 ± 351 | 3-21 | accepted |
+| 86 | jshin313.battlecodebot | 1016.1 | -245 ± 386 | 2-22 | accepted |
 
 ## Latest matches
 
 | Match | Created | Player 0 | Score | Player 1 | Maps | Type | Status |
 |---:|---|---|---|---|---|---|---|
+| 782 | Oct 24 08:50 PDT | **vibe19** | ?–? | IanCoolidge0.battlecode20\~69ce88 | seed-1036, seed-203, seed-2644 | unranked | QUE |
+| 781 | Oct 24 08:50 PDT | awesomelemonade.Battlecode2019 | ?–? | **vibe19** | seed-1712, seed-2797, seed-2518 | unranked | QUE |
+| 780 | Oct 24 08:50 PDT | uvafan.bc2019 | ?–? | **vibe19** | seed-1653, seed-1712, seed-2046 | unranked | QUE |
+| 779 | Oct 24 08:50 PDT | **vibe19** | ?–? | StoneT2000.BC19-bot1v43 | seed-2591, seed-2321, seed-388 | unranked | QUE |
+| 778 | Oct 24 08:50 PDT | StoneT2000.BC19-botfinalsafe | ?–? | **vibe19** | seed-2740, seed-1706, seed-203 | unranked | QUE |
 | 777 | Oct 24 08:34 PDT | m-schier.battlecode-2019-wololo | ?–? | **vibe19** | seed-2644, seed-836, seed-2013 | unranked | QUE |
 | 776 | Oct 24 08:29 PDT | **vibe19** | ?–? | j-mao.battlecode-2019 | seed-2740, seed-1706, seed-2057 | unranked | QUE |
 | 775 | Oct 24 08:29 PDT | moreda-a.BC2019-a31 | ?–? | **vibe19** | seed-705, seed-493, seed-2057 | unranked | QUE |
@@ -106,16 +111,11 @@ Snapshot of the Rankings page of our private galaxy replica (https://galaxy19.13
 | 773 | Oct 24 08:29 PDT | **vibe19** | ?–? | VoidMercy.battlecode-2019\~e7dc06 | seed-799, seed-2733, seed-2674 | unranked | QUE |
 | 772 | Oct 24 08:29 PDT | yujinwunz.battlecode\_2019 | ?–? | **vibe19** | seed-2518, seed-1712, seed-2822 | unranked | QUE |
 | 771 | Oct 24 08:29 PDT | **vibe19** | ?–? | rafekruse.Battlecode-2019-bc19 | seed-203, seed-1626, seed-520 | unranked | QUE |
-| 770 | Oct 24 08:29 PDT | **vibe19** | ?–? | mvpatel2000.Battlecode2019 | seed-799, seed-826, seed-2330 | unranked | QUE |
-| 769 | Oct 24 07:58 PDT | IanCoolidge0.battlecode20\~69ce88 | ?–? | **vibe19** | seed-1036, seed-203, seed-2644 | unranked | QUE |
+| 770 | Oct 24 08:29 PDT | **vibe19** | ?–? | mvpatel2000.Battlecode2019 | seed-799, seed-826, seed-2330 | unranked | RUN |
+| 769 | Oct 24 07:58 PDT | IanCoolidge0.battlecode20\~69ce88 | ?–? | **vibe19** | seed-1036, seed-203, seed-2644 | unranked | RUN |
 | 768 | Oct 24 07:58 PDT | awesomelemonade.Battlecode2019 | ?–? | **vibe19** | seed-1712, seed-2797, seed-2518 | unranked | RUN |
 | 767 | Oct 24 07:58 PDT | uvafan.bc2019 | ?–? | **vibe19** | seed-1653, seed-1712, seed-2046 | unranked | RUN |
 | 766 | Oct 24 07:58 PDT | **vibe19** | 2–1 | StoneT2000.BC19-bot1v43 | seed-2591, seed-2321, seed-388 | unranked | OK! |
 | 765 | Oct 24 07:58 PDT | StoneT2000.BC19-botfinalsafe | ?–? | **vibe19** | seed-2740, seed-1706, seed-203 | unranked | RUN |
 | 764 | Oct 24 07:58 PDT | **vibe19** | ?–? | m-schier.battlecode-2019-wololo | seed-2644, seed-836, seed-2013 | unranked | RUN |
 | 763 | Oct 24 07:45 PDT | IanCoolidge0.battlecode20\~69ce88 | 1–2 | **vibe19** | seed-1036, seed-203, seed-2644 | unranked | OK! |
-| 762 | Oct 24 07:45 PDT | awesomelemonade.Battlecode2019 | ?–? | **vibe19** | seed-1712, seed-2797, seed-2518 | unranked | RUN |
-| 761 | Oct 24 07:45 PDT | uvafan.bc2019 | ?–? | **vibe19** | seed-1653, seed-1712, seed-2046 | unranked | RUN |
-| 760 | Oct 24 07:45 PDT | StoneT2000.BC19-bot1v43 | 2–1 | **vibe19** | seed-2591, seed-2321, seed-388 | unranked | OK! |
-| 759 | Oct 24 07:45 PDT | **vibe19** | 1–2 | StoneT2000.BC19-botfinalsafe | seed-2740, seed-1706, seed-203 | unranked | OK! |
-| 758 | Oct 24 07:45 PDT | **vibe19** | 0–3 | m-schier.battlecode-2019-wololo | seed-2644, seed-836, seed-2013 | unranked | OK! |
