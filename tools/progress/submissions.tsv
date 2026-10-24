@@ -29,3 +29,4 @@ submission	build	note
 141	cand:h139	panel candidate dist/h139 (105f222fabb6), block 2 last two of 732-737 (TRAINING_LOG 2026-10-24 07:2x)
 145	cand:h141	panel candidate dist/h141 (04e1af62e9bf), block 1 last four of 738-743 (TRAINING_LOG 2026-10-24 07:2x)
 149	v8	the ladder build: bots/v8 = h128 (TRAINING_LOG 2026-10-24 09:3x)
+150	cand:h145	panel candidate dist/h145 (de5c9212eb2a), block 1 = matches 750-755 (TRAINING_LOG 2026-10-24 10:2x)

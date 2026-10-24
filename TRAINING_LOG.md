@@ -3932,3 +3932,8 @@ awesomelemonade 1712 2/2, uvafan 1653 2/2, botfinalsafe 1706 1/2 against the poo
 (z 0.58). By the rule h139 would get a third block, but v7 is no longer the champion: the idea is carried by h145
 (v8 + ECON_RICH 150, screen vs bots/v8 at 24 of 40), whose panel goes in when the screen passes. h141 so far 4 of 12
 (z 0.59), h140 2 of 3 (z 1.10).
+
+## 2026-10-24 10:2x PDT: h145 (v8 + ECON_RICH 150) to the replica panel beside its screen (750-755)
+
+Submission 150 (dist/h145, de5c9212eb2a), block 1 = matches 750-755 (bots/v8 resubmitted, 151; bumped). Read with
+`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 750-755`; a screen rejection voids it.
