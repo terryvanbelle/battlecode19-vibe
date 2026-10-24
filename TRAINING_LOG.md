@@ -3715,3 +3715,10 @@ prophet deaths at ages 1-3 must fall to half of h87's, with no rise at age 0.
 
 h134 (CHAIN_ROUND 0) vs h87, 20 cells seed0 11000: 14/40, gained 4, lost 10, D 14, net -6, t -1.60 -> REJECTED by
 the screen (t <= -1). The chain is v7's main weapon at home; the field-side question stays h123's panel (656 left).
+
+## 2026-10-24 00:54 PDT: h123 REJECTED on the replica (block 1 net -3)
+
+h123 (CHAIN_FAILS 2) block 1 652-657 vs v7's 420-425: 3/18 to 6/18, gained 0, lost 3 (IanCoolidge0 203 on health,
+awesomelemonade 1712 at r1000 and 2797 on health: all games v7 won), D 3, net -3, t -1.73 -> REJECTED. Holding the
+chain after two failed lines gives up the late lines that win r1000 games; it frees karbonite that does not turn
+into enough health. The chain line is closed for now (h123, h133, h134); SIEGE (h135) is the next field-aimed test.
