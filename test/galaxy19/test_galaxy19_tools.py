@@ -6,6 +6,7 @@ Run: python3 test/galaxy19/test_galaxy19_tools.py (also run by test/galaxy19.tes
 """
 import io
 import json
+import math
 import os
 import random
 import subprocess
@@ -29,6 +30,7 @@ import client as cl  # noqa: E402
 import contest19  # noqa: E402
 import field  # noqa: E402
 import maps as mp  # noqa: E402
+import panelsim  # noqa: E402
 import saturn  # noqa: E402
 
 
@@ -357,6 +359,21 @@ class Contest(unittest.TestCase):
         self.assertEqual([(t['id'], r) for t, r in got], [(6, True), (1, False)])   # ranked only upward
         with self.assertRaises(SystemExit):
             contest19.named(ladder, 4, ['no such team'])
+
+    def test_panelsim(self):
+        prior = [('o', 'm1', 'red', 1), ('o', 'm1', 'red', 0), ('o', 'm1', 'blue', 0), ('o', 'm2', 'red', 1)]
+        cells = panelsim.truth(prior)
+        # Both sides of every (opponent, map), with the pool's games on that side; m2 blue has none.
+        self.assertEqual(sorted((c, n) for c, (q, n) in cells.items()),
+                         [(('o', 'm1', 'blue'), 1), (('o', 'm1', 'red'), 2), (('o', 'm2', 'blue'), 0), (('o', 'm2', 'red'), 1)])
+        rates = [.2, .5, .8]
+        s = panelsim.shift_for(rates, 0.3)
+        self.assertAlmostEqual(sum(1 / (1 + math.exp(-(math.log(p / (1 - p)) + s))) for p in rates) - sum(rates), 0.3, 6)
+        rnd = random.Random(1)
+        self.assertEqual(panelsim.trial(cells, -12, 'both', rnd), ('reject', 1))   # loses everything: block 1
+        self.assertEqual(panelsim.trial(cells, 12, 'both', rnd), ('accept', 3))    # wins all: 8 games stay below z 2
+        (d, acc, blocks), = panelsim.simulate(prior, [0], 50, 'mixed')
+        self.assertTrue(0 <= acc <= 1 and 1 <= blocks <= 3)
 
     def test_split_order(self):
         self.assertEqual([contest19.split_order(s) for s in ('a~b@+', 'a~b@-', 'a~b', 'x@')],

@@ -46,6 +46,8 @@
   for v8-based candidates `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK...`, for v7-based ones
   `tools/panel_pool.sh 420-425 progress/panels/v7-m1.pool BLOCK...`; decide on its side-aware z (it refuses a block
   with a match unfinished); a rejected block joins its pool file only when its own z lies within +-1.
+  The rule's false-accept rate and power: `python3 -I tools/galaxy19/panelsim.py 726-731 progress/panels/v8-m1.pool`
+  (TRAINING_LOG 12:55: 7% neutral; 45 / 70 / 85% at +1 / +1.5 / +2 wins per 18 games).
   v7-based panels (read for the idea, not acceptance): h139 (ECON_RICH 150) 706-711 + 732-737 z 1.96 against v7
   (h145 on v8: 750-755 z 0.00, REJECTED; the line closes), h141 (church strike) 738-743 REJECTED (z 0.43), h140 (early
   fast pioneer) 744-749 REJECTED (z -0.24; won awesomelemonade 2518). v8-pool blocks 1: h146 (v8 + church strike) 758-763 REJECTED (z -1.98; the strike line closes),

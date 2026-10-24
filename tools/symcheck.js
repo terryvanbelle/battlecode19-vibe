@@ -64,6 +64,15 @@ function diff(g, mir) {
 // The tile an action claims (move, build), or null.
 const claim = (r, a) => a && (a.action === 'move' || a.action === 'build') ? (r.x + a.dx) + ',' + (r.y + a.dy) : null;
 
+// Indices of twins (red and blue at one pairing key) whose pre-round claims name the same tile: an axis tile.
+function contested(actors, claims, key0) {
+  const byKey = new Map(), out = new Set();
+  actors.forEach((r, i) => { if (claims[i]) byKey.set(key0[i], [...(byKey.get(key0[i]) || []), i]); });
+  for (const l of byKey.values()) for (const i of l) for (const j of l)
+    if (actors[i].team === 0 && actors[j].team === 1 && claims[i] === claims[j]) { out.add(i); out.add(j); }
+  return out;
+}
+
 async function check(code, seed, rounds) {
   const g = new Game(seed, 1e9, 1e9, false, false);
   const mir = mirrorFn(g);
@@ -93,7 +102,7 @@ async function check(code, seed, rounds) {
     const n = g.map.length, key = r => { const [x, y] = r.team === 0 ? [r.x, r.y] : mir(r.x, r.y); return y * n + x; };
     const key0 = actors.map(key), order = actors.map((r, i) => i).sort((a, b) => key0[a] - key0[b] || actors[a].team - actors[b].team);
     const errs = [];
-    const pre = actors.map(r => [r.x, r.y]), spent = [];
+    const pre = actors.map(r => [r.x, r.y]), spent = [], claims = actors.map((r, i) => claim(r, acts[i]));   // pre-round
     if (!firstAttack && acts.some(a => a && a.action === 'attack')) firstAttack = round;
     const apply = (i, a) => { const r = actors[i];
       const rec = new ActionRecord(g, r), k0 = g.karbonite.slice(), f0 = g.fuel.slice();
@@ -112,10 +121,10 @@ async function check(code, seed, rounds) {
     for (const r of dead) realDelete.call(g, r);
     if (dead.size || firstAttack === round) { const d = diff(g, mir); if (d) mid = describe('after the attacks: ' + d, order.filter(i => acts[i] && acts[i].action === 'attack')); }
     // The rest, in twin pairs; the killed do not act. Twins claiming one tile both stay put (signal and talk kept).
+    const cont = contested(actors, claims, key0);
     order.forEach((i, idx) => { const r = actors[i], a = acts[i];
       if (a && a.action === 'attack' || !g.robots.includes(r)) return;
-      const c = claim(r, a), twin = c && pairOf(i).find(q => q !== i && actors[q].team !== r.team);
-      if (twin !== undefined && twin !== null && claim(actors[twin], acts[twin]) === c) { const { action, ...rest } = a; apply(i, rest); errs[i] = 'contested ' + c; }
+      if (cont.has(i)) { const { action, ...rest } = a; apply(i, rest); errs[i] = 'contested ' + claims[i]; }
       else apply(i, a);
       const nx = order[idx + 1];
       if (!mid && (nx === undefined || key0[nx] !== key0[i])) { const d = diff(g, mir); if (d) mid = describe(d, pairOf(i)); }
@@ -141,5 +150,5 @@ async function main() {
   for (const s of seeds) { const r = await check(code, s, rounds); if (r.ok === false) bad++; console.log(JSON.stringify(r)); }
   process.exit(bad ? 1 : 0);
 }
-module.exports = { check, compile, claim };
+module.exports = { check, compile, claim, contested };
 if (require.main === module) main().catch(e => { console.error(e.stack || e); process.exit(2); });

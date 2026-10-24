@@ -516,6 +516,11 @@ test('symcheck: claimed tiles; v5 stays a mirror image for 12 rounds (run withou
   assert.strictEqual(claim({ x: 3, y: 4 }, { action: 'build', dx: 0, dy: 1, build_unit: 2 }), '3,5');
   assert.strictEqual(claim({ x: 3, y: 4 }, { action: 'attack', dx: 2, dy: 0 }), null);
   assert.strictEqual(claim({ x: 3, y: 4 }, null), null);
+  // Twins at key 5 both claim the axis tile 3,4; at key 7 they claim mirrored tiles (no contest); the red at key 9
+  // claims the tile its blue twin left (pre-round claims only, so no contest either).
+  const { contested } = require('../tools/symcheck');
+  const T = t => ({ team: t });
+  assert.deepStrictEqual([...contested([T(0), T(1), T(0), T(1), T(0), T(1)], ['3,4', '3,4', '1,1', '5,1', '2,2', null], [5, 5, 7, 7, 9, 9])].sort(), [0, 1]);
   const r = require('child_process').spawnSync('unshare', ['-rn', process.execPath, path.join(__dirname, '..', 'tools', 'symcheck.js'),
     '--bot', path.join(__dirname, '..', 'bots', 'v5'), '--seeds', '2', '--rounds', '12'], { encoding: 'utf8', timeout: 120000 });
   assert.strictEqual(r.status, 0, r.stderr);
@@ -531,6 +536,10 @@ test('gatesim: certain outcomes decide at the first look; no discordance stays o
   // q 0.5: D reaches 12 within one block about half the time; a look only on block boundaries
   const x = gate({ ...o, q: 0.5, p: 0.5 }, rng(7));
   assert.strictEqual(x.cells % 20, 0);
+  // The screen (one look at 20 cells, reject only): a neutral candidate is rejected 3-13% of the time.
+  const sc = simulate({ q: 0.3, p: 0.5, looks: [0], maxCells: 20, accept: Infinity, reject: -1.5, trials: 4000, seed: 5 });
+  assert.strictEqual(sc.accept, 0);
+  assert.ok(sc.reject > 0.03 && sc.reject < 0.13, String(sc.reject));
   const s = simulate({ q: 0.5, p: 0.5, trials: 4000, seed: 3 });
   assert.ok(s.accept > 0.01 && s.accept < 0.08, JSON.stringify(s));
   assert.ok(Math.abs(s.accept + s.reject + s.open - 1) < 1e-9);

@@ -4245,3 +4245,19 @@ side-aware (k 2) 16.6, z 1.79. Neither both >= 2 nor both below 1, so by the rul
 downloaded. Block 2 alone: won the rarely-won uvafan 1712 as blue; lost wololo 2013 and 836 (never won).
 Block 3 = matches 973-984 (submission 168; each opponent @+ and @-), requested 12:30; the ladder build is v8 again
 (submission 169).
+
+## 2026-10-24 12:55 PDT: the panel rule simulated; the screen's t bar simulated; symcheck's first v8 run was a tool bug
+
+`tools/galaxy19/panelsim.py` (new): truth = the v8 pool's side-aware cell rates; every trial redraws the pool's 126
+games, plays candidate blocks shifted on the logit scale to a given gain, and applies the pooled rule (0.5; 2 and 1;
+2). 4000 trials each. 36-game both-sides blocks: accept 7.3% at no gain, 44.8% at +1 win per 18 games, 69.5% at +1.5,
+85.0% at +2 (mean 1.45-2.05 blocks). 18-game blocks with a random side per cell: 6.2%, 27.7%, 45.9%, 65.9%. The
+both-sides design buys about 17-20 points of power for 1 point of false accepts; the bars stay.
+`tools/gatesim.js` now defaults to the screen (one look at 20 cells, reject at t <= -1.5): a neutral candidate is
+rejected 5.2% (discordance 0.15) to 7.3% (0.55) of the time, one at p 0.6 per discordant cell 1.7-2.4%.
+symcheck on v8 (seed 1) stopped at round 208 on a bug of the new stepper, not the bot: it judged an axis contest from
+the red twin's position after the red twin had moved. Claims are now taken from the pre-round board
+(`contested()`, unit-tested); the four-seed run to round 1000 restarted at 12:50.
+New switch PIONEER_TIMEOUT_REST (default 0 = v8): a pioneer still alive 80 turns out without its church rests its
+cluster PIONEER_LOST_REST rounds, as a lost one does (v8 forgets it and may send a second pioneer to the same site at
+once). Unit test; the no-op replay waits for the driver.

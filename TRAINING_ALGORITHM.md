@@ -129,7 +129,9 @@ its trigger fires elsewhere.
 - **Pooled rule**: after block 1 reject at z < 0.5; after block 2 accept at cumulative z ≥ 2, reject at z < 1, else a
   third block, accepted at z ≥ 2. A rejected candidate's block joins the pool only when its own z lay within ±1 (a
   clearly worse candidate's block lowers every later expectation). A fix that removes a basics failure may be
-  accepted at z ≥ 0.
+  accepted at z ≥ 0. Simulated on a real pool redrawn every trial (so the pool's own noise counts), these bars on
+  36-game both-sides blocks accept a neutral candidate 7% of the time and one worth +1 / +1.5 / +2 wins per 18 games
+  45% / 70% / 85% of the time, in about two blocks; 18-game blocks with one random side per cell reach 28% / 46% / 66%.
 - **The pool is not a test set.** A candidate designed from particular panel cells lists them in its pre-registration;
   it is accepted only if its z over the other cells is ≥ 0 as well. Version the panel (§5) before every cell has
   been studied.

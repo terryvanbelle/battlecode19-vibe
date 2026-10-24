@@ -178,8 +178,8 @@ def compare_cmd(a):
 def pool_score(prior, cand, k=2.0):
     """Candidate cells scored against prior blocks' cells; each cell (opponent, map, side, won). Side-blind p per
     (opponent, map) = (w + .5) / (n + 1); side-aware p per (opponent, map, side) = (w_s + k p) / (n_s + k), the side's
-    own record shrunk toward the side-blind p while it is thin (red moves first and wins about twice as often on the
-    replica, and '?' scrims draw each block's sides at random). Returns rows (opponent, map, side, w, n, w_s, n_s,
+    own record shrunk toward the side-blind p while it is thin (red moves first: in v8's blocks it wins about 13 points
+    more often within a cell, and '?' scrims drew each block's sides at random). Returns rows (opponent, map, side, w, n, w_s, n_s,
     cand wins, cand games, p, p_s) and {'blind': (W, N, E, z), 'side': (W, N, E, z)}."""
     def tally(cells, key):
         t = {}
