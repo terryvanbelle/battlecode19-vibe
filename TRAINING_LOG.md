@@ -3746,3 +3746,11 @@ The replica lane is short and the local screen only rejects (LEARNINGS 32), so h
 submission 121 (dist/h135, a5aa75edd7a6), block 1 = matches 679-684 (v7 resubmitted, 122; bumped). A screen
 rejection voids the panel. Read the mechanism on the replica: prophet deaths at ages 0-3 and unfired walk-ins
 (scratch an/pdeath.js) against v7's 368 + 165 in 420-425.
+
+## 2026-10-24 01:47 PDT: h135 passes its screen; h136 (SIEGE alone) queued
+
+h135 vs h87, 20 cells seed0 12000: 20/40, gained 4, lost 4, D 8, net 0, t 0; castles lost 37 vs 37, churches 453 vs
+457: non-inferior; its replica block 679-684 stands (so far 679 wololo 0-3 =, 681 bot1v43 1-2 =). Symmetry check:
+the same first divergences as h133's (contests and combat). h112's block 673-678 so far: 675 bot1v43 2-1 (+1), 676
+uvafan 1-2 (+1: the panel's first win against uvafan), 678 IanCoolidge0 0-3 (-1). h136 = v7 + SIEGE 30 (dist/h136,
+4d8e4bab9982), screen on seed0 13000, to part SIEGE from SAFE_BUILD 2.
