@@ -57,6 +57,9 @@ export const CFG = {
   ESCORT_EARLY: 0,           // 1: the castle builds ESCORT_FIRST's units ahead of its economy pilgrims (turns 3-4, not 4-5:
                              // replica 758, seed 2644: a blue crusader built r5 acts after red's r5 prophet and lost the
                              // duel by one shot, r14-18; as red the same crusader acts first and won, 634, 646, 726)
+  ESCORT_FAST_R2: 0,         // >0: a unit that heard SIG.GUARD walks to its site with steps up to this r2, not CRUISE_R2,
+                             // until it first holds there (replica 778, seed 1706: v8's escorts walked one tile a turn
+                             // from r4 and stood 10 steps short from r27; botfinalsafe churched the site at r29)
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short

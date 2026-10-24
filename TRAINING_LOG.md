@@ -4138,3 +4138,24 @@ in sight and out of reach of our military, builds a unit that hits it in its bir
 tile within r2 16, else a prophet at r2 16-64. Off by default (h128's game replays byte for byte; 143 unit tests). One
 driver game, h156 (R2 64, DWELL 3) vs v8 on 2013: prophets #925 (r88) and #3261 (r106) killed blue pilgrims on their
 first turn. h156's screen (33000) waits with the others.
+
+## 2026-10-24 10:24 PDT: the never-won cells share one flaw: v8's escorts stop short of the contested site; h157 queued
+
+The v8 pool (control 726-731 + five blocks) has four cells v8 never won: bot1v43 2591, botfinalsafe 1706, wololo
+2013 and 836 (0 of 6 each). Three of them show the flaw the wololo study found on 2013: ESCORT_MIRROR sends the two
+r4-5 escort crusaders to the contested site, and they stop on the first lattice tile within LATTICE_R 12 of it.
+- 2591 (779, lost r120 by castles; 32x32, one castle each): the site is 11 king steps from home, so the escorts never
+  left home; they died there at r40-43. The 30 K they cost delayed our pioneer to r24 (bank 50 K at r4, 90 K needed);
+  bot1v43's pilgrim churched the 10-depot centre cluster at r23 with a prophet at once. Our castle then built one
+  prophet a turn (r34-38, r107-109) while two enemy prophets stood at r2 82-85 from it, out of its range; each
+  newborn stepped onto the lattice tile (7,14), inside both, and died the next turn.
+- 1706 (778, lost r336; 37x37, one castle each): the escorts walked one tile a turn (CRUISE_R2 2) from r4 and stood
+  at (13,9) and (12,10) from r27, 10 steps from the site (7,19) and out of its sight; botfinalsafe churched it at r29
+  and held it with 13+ prophets. Our pioneer #1228 then stood 9 tiles off for 100+ rounds, and we mined 920 K to its
+  2,658 (7 pilgrims and one church against 16 and 14). h147's early pioneer (765) got within 5 tiles by r20 and was
+  driven off by botfinalsafe's early prophet.
+One driver game each on 1706 vs v8: h155 (ESCORT_HOLD_R 2) brings the escorts to (9,17) and (9,21) by r31; with
+ESCORT_FAST_R2 9 (new: an escort walks with steps up to r2 9 until it first holds at its site; off by default, h128's
+game replays byte for byte, 143 unit tests) they arrive at r16-17, for about 125 more fuel by r25. h157 = v8 +
+ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 (34000). The held screens now run in this order when the VM returns: h157, h155,
+h154, h156, h152, h153.

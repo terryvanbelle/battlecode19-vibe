@@ -410,10 +410,12 @@ export function militaryTurn(B) {
     CFG.EDGE ? edgeAvoid(B) : undefined);
 
   // Hold the lattice.
-  if (latticeOk(B, me.x, me.y) && king(me.x, me.y, c.x, c.y) <= latticeR(B)) return null;
+  if (latticeOk(B, me.x, me.y) && king(me.x, me.y, c.x, c.y) <= latticeR(B)) { st.held = true; return null; }
   const t = holdTarget(B);
   if (!t) return CFG.KEEP_CLEAR ? stepClear(B) : null;
-  const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2, CFG.SIEGE ? siegeAvoid(B) : undefined);
+  // CFG.ESCORT_FAST_R2: an escort hurries to its site until it first holds there.
+  const cap = CFG.ESCORT_FAST_R2 && st.guardAt && !st.held ? CFG.ESCORT_FAST_R2 : CFG.CRUISE_R2;
+  const a = go(B, 'l' + t[0] + ',' + t[1], [t], cap, CFG.SIEGE ? siegeAvoid(B) : undefined);
   return a || (CFG.KEEP_CLEAR ? stepClear(B) : null);
 }
 export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke, holdTarget, latticeOk, edgeAvoid, spot, hearPost };

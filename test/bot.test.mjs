@@ -1682,8 +1682,8 @@ test('military: ESCORT_HOLD_R: an escort holds within that many king steps of it
       if (sy >= 0 && sy < n) site = { x: m.x, y: sy };
     }
     assert.ok(site);
-    const turns = (holdR, escort) => {   // the first action in three turns (a cruise step may wait a turn or two first)
-      CFG.ESCORT_HOLD_R = holdR;
+    const turns = (holdR, escort, fast = 0) => {   // the first action in three turns (a cruise step may wait a turn or two first)
+      CFG.ESCORT_HOLD_R = holdR; CFG.ESCORT_FAST_R2 = fast;
       const w = world(), B = { api: w.api, w, round: 20, birthRound: 18, rnd: rng(2), deps: null, clusters: null,
         st: { ready: true, home: site, guardAt: escort ? site : undefined, target: null, tIdx: -1, known: [], dead: new Set(),
           reports: [], waitUntil: 0, guard: false } };
@@ -1694,6 +1694,25 @@ test('military: ESCORT_HOLD_R: an escort holds within that many king steps of it
     assert.strictEqual(turns(0, true), null);                     // v8: 6 king steps out, inside LATTICE_R 12: holds
     assert.strictEqual((turns(3, true) || {}).action, 'move');   // an escort 6 steps out heads for its site
     assert.strictEqual(turns(3, false), null);                    // a unit that heard no SIG.GUARD holds as before
+    // ESCORT_FAST_R2: the escort reaches its site in fewer turns (steps up to r2 9, not CRUISE_R2 2) and then holds.
+    const walk = fast => {   // turns until it holds, moving the crusader on the board
+      const x0 = cru.x, y0 = cru.y, t0 = cru.turn;
+      CFG.ESCORT_HOLD_R = 3; CFG.ESCORT_FAST_R2 = fast;
+      const st = { ready: true, home: site, guardAt: site, target: null, tIdx: -1, known: [], dead: new Set(), reports: [], waitUntil: 0, guard: false };
+      let k = 0, maxR2 = 0;
+      for (; k < 20; k++, cru.turn++) {
+        const w = world(), B = { api: w.api, w, round: 20 + k, birthRound: 18, rnd: rng(2), deps: null, clusters: null, st };
+        B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        const a = militaryTurn(B);
+        if (!a) { if (st.held) break; continue; }
+        assert.strictEqual(a.action, 'move');
+        maxR2 = Math.max(maxR2, a.dx * a.dx + a.dy * a.dy); cru.x += a.dx; cru.y += a.dy;
+      }
+      cru.x = x0; cru.y = y0; cru.turn = t0;
+      return { k, maxR2 };
+    };
+    const slow = walk(0), fast = walk(9);
+    assert.ok(slow.maxR2 <= 2 && fast.maxR2 > 2 && fast.maxR2 <= 9 && fast.k < slow.k, JSON.stringify([slow, fast]));
   } finally { Object.assign(CFG, saved); }
 });
 

@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 127 other, 38 rejected, 16 accepted, 6 in progress, 5 dropped, 4 sparring partners (196 rows).
+Totals: 128 other, 38 rejected, 16 accepted, 6 in progress, 5 dropped, 4 sparring partners (197 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -210,3 +210,4 @@ Totals: 127 other, 38 rejected, 16 accepted, 6 in progress, 5 dropped, 4 sparrin
 | `h154` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_EARLY 1: escorts built turns 3-4 ahead of the economy pilgrims and holding within 2 steps of the site (dist/h154 ae2b4ac88687) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |
 | `h155` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2: escorts hold within 2 steps of the site (dist/h155 562d81eddf8a) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |
 | `h156` | 2026-10-24 10:08 | v8 | v8 + INTERCEPT_R2 64 + INTERCEPT_DWELL 3: a structure builds a unit that hits an enemy pilgrim within r2 64 (or standing 3 turns in sight) in its birth round (dist/h156 e37dfe78da27) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |
+| `h157` | 2026-10-24 10:24 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9: escorts hurry to the contested site (steps up to r2 9 until they first hold) and hold within 2 steps of it (dist/h157 a5eba191475e) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |

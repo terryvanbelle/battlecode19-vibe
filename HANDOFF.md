@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 10:09 PDT)
+## State (2026-10-24 10:26 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -20,13 +20,15 @@
 - **VM queue** (`~/jobq`; the runner takes pending jobs in locale `ls | sort` order; gates run from the shadow tree
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
-  ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 31 z's (h156); the next adds a z.
-  **Held for the replica queue (TRAINING_LOG 2026-10-24 10:08):** saturn runs 8 slots and no gate runs; the screens
-  h152 (CHAIN_LIVE 1 + WATCH 2; 29000), h153 (WATCH 2 + SPOT_MASK 56; 30000), h154 (ESCORT_HOLD_R 2 + ESCORT_EARLY 1;
-  31000), h155 (ESCORT_HOLD_R 2; 32000) and h156 (INTERCEPT_R2 64 + INTERCEPT_DWELL 3; 33000) wait in ~/jobq/superseded.
-  When fewer than 30 replica matches wait: GALAXY_EXECUTE_SLOTS=6 and MAX_EXECUTE_SLOTS back to 6 in
-  tools/galaxy19/deploy/galaxy-setup.sh and saturn.py (MemoryMax may stay 27G), `deploy.sh app`, `env`, `units`,
-  `sudo systemctl restart bc19-galaxy-saturn`, then `tools/move_stale.sh --back` the five jobs.
+  ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 32 z's; the next adds a z.
+  **Held for the replica queue (TRAINING_LOG 2026-10-24 10:08):** saturn runs 8 slots and no gate runs; six screens
+  wait in ~/jobq/superseded, named to run in this order (27-32 z's): h157 (ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9; 34000),
+  h155 (ESCORT_HOLD_R 2; 32000), h154 (ESCORT_HOLD_R 2 + ESCORT_EARLY 1; 31000), h156 (INTERCEPT_R2 64 +
+  INTERCEPT_DWELL 3; 33000), h152 (CHAIN_LIVE 1 + WATCH 2; 29000), h153 (WATCH 2 + SPOT_MASK 56; 30000).
+  When fewer than 30 replica matches wait (waiter armed): GALAXY_EXECUTE_SLOTS=6 in
+  tools/galaxy19/deploy/galaxy-setup.sh (saturn's cap MAX_EXECUTE_SLOTS stays 8, the unit's MemoryMax 27G),
+  `tools/galaxy19/deploy/deploy.sh env`, `sudo systemctl restart bc19-galaxy-saturn`, then `tools/move_stale.sh --back`
+  the six jobs.
   Screens passed: h148 (CHAIN_LIVE 1; +3 -0, t 1.73, castles 35 vs 39), h149 (CHAIN_LIVE 2; +3 -3, t 0.00, 35 vs 34),
   h150 (WATCH 2; +8 -3, t 1.51, 24 vs 38). Rejected: h151 (CHAIN_FAILS 1; +1 -3, t -1.00, 31 vs 19).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h`, castles from 2019-next/out/dlv_gate_hN.txt on the
