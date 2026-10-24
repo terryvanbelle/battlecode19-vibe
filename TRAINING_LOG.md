@@ -3778,3 +3778,8 @@ uvafan 1653 turned for both: the panel's noise floor is about 2 cells each way p
 h103 (ESCORT 2 + ESCORT_UNIT 3; block 1 438-443: +3 -2, net +1, t 0.45) gets its block 2 on the same cells while the
 queue is short: submission 125 (dist/h103, 406a9d0dc3b3), matches 700-705 (v7 resubmitted, 126; bumped). Accept at
 cumulative t >= 1.5 and net >= +3.
+
+## 2026-10-24 03:4x PDT: h138 (SIEGE 60) screen queued behind h137
+
+h138 = v7 + SIEGE 60 (dist/h138, 97ddd12a883e) brackets h136's memory from above as h137 (SIEGE 10) does from below;
+screen vs h87 on seed0 15000. h137's screen is at 33/40 games.

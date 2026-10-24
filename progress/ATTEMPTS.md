@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 120 other, 29 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (174 rows).
+Totals: 121 other, 29 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (175 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -188,3 +188,4 @@ Totals: 120 other, 29 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparrin
 | `h135` | 2026-10-24 00:33 | v7 | SIEGE 30 + SAFE_BUILD 2: structures radio the nearest enemy prophet to newborns; units remember prophets and keep out of their reach while holding the lattice | vs h87 20 cells seed0 12000: +4 -4, D 8, t 0; castles lost 37 vs 37 |  | block 1 679-684: +2 -2, D 4, net 0, t 0 (prophet-on-prophet deaths 1593 -> 1099) |  | REJECTED (replica net 0) |
 | `h136` | 2026-10-24 01:47 | v7 | SIEGE 30 alone (h135 without SAFE_BUILD 2) | vs h87 20 cells seed0 13000: +2 -2, D 4, t 0; castles lost 25 vs 27 |  | block 1 = matches 694-699 |  | REPLICA PANEL (screen passed) |
 | `h137` | 2026-10-24 02:30 | v7 | SIEGE 10: h136 with a shorter prophet memory |  |  |  |  | SCREEN QUEUED |
+| `h138` | 2026-10-24 03:4x | v7 | SIEGE 60: h136 with a longer prophet memory |  |  |  |  | SCREEN QUEUED |
