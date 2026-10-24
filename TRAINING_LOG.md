@@ -4051,3 +4051,11 @@ cells lean (bot1v43 2321 red 4/7, blue 1/9; awesomelemonade 1712 red 1/7, blue 5
 is won 3 of 3 as red and lost 2 of 2 as blue, about what chance gives over 18 cells. The side adds variance to the
 panel, not bias; the rule stays. Open: fixing the order per opponent in progress/panels/v7-m1.json (as its maps are)
 would make every block play each cell on the same side; to be decided before a block is requested, not after.
+
+## 2026-10-24 09:07 PDT: h149 passes its screen and goes to the replica
+
+h149 (v8 + CHAIN_LIVE 2: castles hold the chain reserve only while a chainer waits staged) vs bots/v8, 20 cells
+seed0 26000: 20/40, gained 3, lost 3, D 6, t 0.00; castles lost 35 vs 34 (1.03x): passes. Churches built 442 vs 560;
+bank at the end 38 K vs 48 K over the 40 games. Its block 1 goes to the replica behind h148's (777-782). The panel
+order stays shuffled: with a pool that mixes sides, a fixed side would bias the expectation wherever a side effect
+is real, while shuffled keeps the pooled expectation unbiased (TRAINING_LOG 08:52).

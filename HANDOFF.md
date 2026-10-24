@@ -21,10 +21,9 @@
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
   ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 26 z's (h151); the next adds a z. Now:
-  **h149** (v8 + CHAIN_LIVE 2: castles hold the chain reserve only while a chainer waits staged; 26000) runs, then
   **h150** (v8 + WATCH 2: a structure radios an enemy attacker within r2 100 that none of our military units sees;
-  melee units engage it; 27000), then **h151** (v8 + CHAIN_FAILS 1; 28000; pre-registered screen exception:
-  castles alone with t > 0 still goes to the panel, TRAINING_LOG 2026-10-24 08:42). h148 (CHAIN_LIVE 1) passed (+3 -0, t 1.73, castles 35 vs 39).
+  melee units engage it; 27000) runs, then **h151** (v8 + CHAIN_FAILS 1; 28000; pre-registered screen exception:
+  castles alone with t > 0 still goes to the panel, TRAINING_LOG 2026-10-24 08:42). h148 (CHAIN_LIVE 1) passed (+3 -0, t 1.73, castles 35 vs 39); h149 (CHAIN_LIVE 2) passed (+3 -3, t 0.00, castles 35 vs 34).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h`, castles from out/dlv_gate_hN.txt on the
   VM (awk on columns 18-19, a = candidate).
 - **Replica panels** (progress/panels/v7-m1.json: six field bots, wololo, botfinalsafe, bot1v43, uvafan,
@@ -37,7 +36,7 @@
   v7-based panels (read for the idea, not acceptance): h139 (ECON_RICH 150) 706-711 + 732-737 z 1.96 against v7
   (h145 on v8: 750-755 z 0.00, REJECTED; the line closes), h141 (church strike) 738-743 REJECTED (z 0.43), h140 (early
   fast pioneer) 744-749 REJECTED (z -0.24; won awesomelemonade 2518). v8-pool blocks 1: h146 (v8 + church strike) 758-763 REJECTED (z -1.98; the strike line closes),
-  **h147** (v8 + early fast centre pioneer; screen t 1.41) = 764-769, **h148** (CHAIN_LIVE 1; screen t 1.73) = 777-782.
+  **h147** (v8 + early fast centre pioneer; screen t 1.41) = 764-769, **h148** (CHAIN_LIVE 1; screen t 1.73) = 777-782, **h149** (CHAIN_LIVE 2; screen t 0.00) submitting.
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013, 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
   2518; uvafan 2046; bot1v43 2591. Studies: botfinalsafe 1706 (castles idle r33-93, the centre cluster lost); wololo
   2013 (church-beside-church preacher fights from r97). TRAINING_LOG 2026-10-24 02:52, 03:48.
