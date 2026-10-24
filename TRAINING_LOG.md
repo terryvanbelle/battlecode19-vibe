@@ -4087,3 +4087,14 @@ church by r50, 13 pilgrims by r100 and killed the castle at r265. The early pion
 pay for the church on arrival and costs half the opening economy when an early rush drains the bank. A refinement
 to try: send it early only while the bank can pay for the church by its arrival, and turn a waiting pioneer into a
 miner when the castle spends on defence.
+
+## 2026-10-24 09:27 PDT: v8's first field scrims against unplayed top bots: arya-k 3-0, rafekruse 0-3
+
+774 arya-k (1829): won 1712, 2321, 70 by castles (r362-481). 771 rafekruse (1955): lost 520, 203, 1626, all at
+r1000 on castles or health. 520 (red): a castle lost near r700 with our fuel bank 87 (26 at r1000). 203 (blue):
+rafekruse's first church r14, ours r308; it built 274 crusaders and lost 257, we killed them with 114 preachers
+(damage dealt 12,140 vs 11,180) but our fuel ran to 2 at r900 and a castle fell at the end. On 203 our side has 10
+depots (plan.mjs: our castles staff 8, one cluster planned, c3@(29,18)); our 8 pilgrims were out by r12, the pioneer
+to c3 died at r34, and from r40 to r100 the castles built nothing (ECON_UNTIL 100) while the bank rose to 495 K
+(950 at r300). That is ECON_RICH's case (closed on v8 at z 0.00); with no depot left to staff, a saturated economy
+could end ECON_UNTIL at once. 1626 (red): even castles; rafekruse's army 107 against our 25, mined K 11,480 vs 5,770.
