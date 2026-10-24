@@ -3656,3 +3656,12 @@ CHAIN_K) was built from this diagnosis (TRAINING_LOG 13:04) and gated even local
 self-play mechanism bar (lines 0.84 of h87's, bar 0.8), and self-play is where chains succeed. As a field-aimed
 candidate (TRAINING_ALGORITHM step 6) whose gate passed the non-inferiority screen, it goes to the replica panel:
 submission 117, block 1 = matches 652-657 (v7 resubmitted, 118; bumped).
+
+## 2026-10-23 22:23 PDT: h131 closed (t 0.38; its doctrine failed on the replica); h133 queued
+
+h131 (MIL_ROTATION [4], all prophets) vs h87, 20 cells seed0 9000: 21/40, gained 4, lost 3, D 7, net +1, t 0.38;
+castles lost 37 vs 38, churches 571 vs 436. Below the panel pass (t >= 2), and its doctrine's panel (h130) was
+net -2: REJECTED. h132 (h130 without the attack) is running: 14 games, +3 -2. h133 = v7 + CHAIN_FAILS 1 (dist/h133,
+5b0fb2fa8bb5): h123's stop rule after one failed line; a non-inferiority screen vs h87 on seed0 10000 (reject at t <= -1 or
+castles lost above 1.1x h87's), ready for a panel if h123's block (652-657) shows the stop rule pays in the field.
+h128 block 2 so far: 648 bot1v43 1-2, 650 awesomelemonade 2-1, 651 IanCoolidge0 2-1; 649 running.
