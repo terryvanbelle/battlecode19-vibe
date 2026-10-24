@@ -37,3 +37,4 @@ submission	build	note
 162	cand:h149	panel candidate dist/h149 (4470c323357d), block 1 = matches 955-960 (TRAINING_LOG 2026-10-24 09:07)
 164	cand:h150	panel candidate dist/h150 (9b6aad548767), block 1 = matches 961-966 (TRAINING_LOG 2026-10-24 09:37)
 166	cand:h148	panel candidate dist/h148 (862603dc8a9f), block 2 = matches 967-972 (TRAINING_LOG 2026-10-24 10:30)
+168	cand:h148	panel candidate dist/h148 (862603dc8a9f), block 3 = matches 973-984, both sides (TRAINING_LOG 2026-10-24 12:29)

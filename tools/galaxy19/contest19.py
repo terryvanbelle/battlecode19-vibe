@@ -121,7 +121,9 @@ def block_cells(ids, root=REPLAYS, team=TEAM):
         if not os.path.exists(f):
             missing.append(i)
             continue
-        for g in json.load(open(f))['games']:
+        with open(f) as fh:
+            games = json.load(fh)['games']
+        for g in games:
             side = 'red' if g['red_team'] == team else 'blue'
             opp = g['blue_team'] if side == 'red' else g['red_team']
             cells[(opp, g['map'])] = (g['winner_team'] == team, side, g['rounds'], g['reason'], i)
@@ -311,7 +313,10 @@ def main(argv=None):
         maps = cl.public_maps(c)
         import random
         rnd = random.Random()
-        panel = json.load(open(a.panel)) if a.panel and os.path.exists(a.panel) else {}
+        panel = {}
+        if a.panel and os.path.exists(a.panel):
+            with open(a.panel) as fh:
+                panel = json.load(fh)
         for (t, ranked), order in zip(plan, orders):
             tag = t['name'] + ('' if order == '?' else '@' + order)
             if a.panel:

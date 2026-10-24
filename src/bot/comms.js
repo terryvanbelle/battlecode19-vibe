@@ -14,6 +14,7 @@ export const SIG = {
   HUNT: 11,   // pilgrim -> melee units (far, FAR.HUNT): an enemy pilgrim loiters in our half at (x, y) (CFG.HUNT)
   GUARD: 12,  // castle -> newborn military: hold the lattice around a pioneer's site (x, y) (CFG.ESCORT)
   THREAT: 13, // structure -> newborn military (r2 25, the turn after the build): an enemy prophet stands at (x, y) (CFG.SIEGE)
+  WALL: 14,   // line church -> the rest of its line (far, FAR.WALL): the line ends, it faces a wall (CFG.CHAIN_WALL)
 };
 export function encXY(type, x, y) { return (type << 12) | (x << 6) | y; }
 export function encNum(type, v) { return (type << 12) | (v & 4095); }
@@ -33,17 +34,19 @@ export const CT = {
   CHAINGONE: 71, // a chainer saw its target castle gone
   CHAINFIRE: 78, // a chainer built its line's first church this turn (CFG.CHAIN_FAILS)
   STAGED: 79,    // a chainer staged, waiting for the bank (CFG.CHAIN_LIVE 2; otherwise it reports CHAINER)
+  WALL: 86,      // a line church ended its line facing a wall (CFG.CHAIN_WALL)
 };
 
 // Far messages (to robots that may not see the sender, so cannot check its team): the message type is the exact
 // signal radius, which every receiver sees (game.js:675-700). Unusual radii make enemy radio almost never pass.
 // Payload: encXY(0, x, y) | extra bits in the top 4 bits (ATTACK: enemy castle index + 1, 0 = none).
-// WIDE is an ATTACK to the whole map (max r2 2*63^2 = 7938); RECALL reaches 50 tiles, POST 60, HUNT 20.
-export const FAR = { ATTACK: 398, ENEMY: 99, WIDE: 7930, RECALL: 2501, POST: 3601, HUNT: 403 };   // ceil(sqrt) costs: 20, 10, 90, 51, 61, 21
+// WIDE is an ATTACK to the whole map (max r2 2*63^2 = 7938); RECALL reaches 50 tiles, POST 60, HUNT 20, WALL 17.
+export const FAR = { ATTACK: 398, ENEMY: 99, WIDE: 7930, RECALL: 2501, POST: 3601, HUNT: 403, WALL: 290 };   // ceil(sqrt) costs: 20, 10, 90, 51, 61, 21, 18
 export function decFarRobot(r) {
   if (!(r.signal >= 0)) return null;
   const type = r.signal_radius === FAR.ATTACK || r.signal_radius === FAR.WIDE ? SIG.ATTACK : r.signal_radius === FAR.ENEMY ? SIG.ENEMY
-    : r.signal_radius === FAR.RECALL ? SIG.RECALL : r.signal_radius === FAR.POST ? SIG.POST : r.signal_radius === FAR.HUNT ? SIG.HUNT : 0;
+    : r.signal_radius === FAR.RECALL ? SIG.RECALL : r.signal_radius === FAR.POST ? SIG.POST : r.signal_radius === FAR.HUNT ? SIG.HUNT
+    : r.signal_radius === FAR.WALL ? SIG.WALL : 0;
   if (!type) return null;
   return { type, x: (r.signal >> 6) & 63, y: r.signal & 63, extra: r.signal >> 12 };
 }

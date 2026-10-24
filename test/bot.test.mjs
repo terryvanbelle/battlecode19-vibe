@@ -16,7 +16,7 @@ import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, he
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, canHit, PRIORITY } from '../src/bot/combat.js';
-import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch, chainsFailed } from '../src/bot/chain.js';
+import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch, chainsFailed, chainsWalled } from '../src/bot/chain.js';
 const require = createRequire(import.meta.url);
 const SPECS = require('../engine/node_modules/bc19/specs.json');
 const Game = require('../engine/node_modules/bc19/game.js');
@@ -328,6 +328,29 @@ test('castle: attack calls every ATTACK_EVERY rounds, or (WAVE) 3 rounds once en
     assert.ok(callDue(B));
   } finally { Object.assign(CFG, saved); }
 });
+
+// A castle that launches a chainer on an attack-call round: the call holds the radio, so v8 builds the chainer deaf and
+// counts the launch; RADIO_WAIT launches the next turn, with its message.
+test('chain: RADIO_WAIT: a launch waits a turn while the attack call holds the radio', () => {
+  const saved = CFG.RADIO_WAIT;
+  try {
+    const run = (wait, sentR2) => {
+      CFG.RADIO_WAIT = wait;
+      const B = { w: { me: { x: 3, y: 4 }, sentR2, canAfford: () => true, mirror: (x, y) => [x, 60 - y] },
+        st: { order: [{ x: 3, y: 4 }] }, round: 500 };
+      const built = [];
+      const b = chainLaunch(B, (B2, unit, tx, ty, signal) => { built.push([unit, signal]); return { act: 'build', x: 3, y: 5 }; });
+      return { b, built, chainAt: B.st.chainAt };
+    };
+    const v8 = run(0, true);
+    assert.deepStrictEqual([v8.built, v8.chainAt], [[[S.PILGRIM, encXY(SIG.CHAIN, 3, 56)]], 500], 'v8: built (deaf) and counted');
+    const wait = run(1, true);
+    assert.deepStrictEqual([wait.b, wait.built, wait.chainAt], [null, [], undefined], 'radio taken: no launch, not counted');
+    const free = run(1, false);
+    assert.deepStrictEqual([free.built, free.chainAt], [[[S.PILGRIM, encXY(SIG.CHAIN, 3, 56)]], 500], 'radio free: launched');
+  } finally { CFG.RADIO_WAIT = saved; }
+});
+
 
 test('military: chokepoints are tiles whose passable neighbours fall apart without them', () => {
   const rows = ['#########',
@@ -2019,7 +2042,7 @@ test('military: SIEGE: units remember enemy prophets seen or radioed, forget the
 });
 
 test('struct: SIEGE: the turn after a military build the structure radios the nearest enemy prophet (r2 25), once', () => {
-  const saved = CFG.SIEGE;
+  const saved = CFG.SIEGE, now = CFG.SIEGE_NOW;
   try {
     CFG.SIEGE = 30;
     const sent = [], w = { me: { x: 5, y: 5, turn: 30 }, sentR2: 0, fuel: 500, signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; },
@@ -2032,7 +2055,14 @@ test('struct: SIEGE: the turn after a military build the structure radios the ne
     sayThreat(B); assert.deepStrictEqual(sent, [[encXY(SIG.THREAT, 9, 11), 25]]);   // r2 52 beats r2 81; crusaders do not count
     w.me = { ...w.me, turn: 33 }; w.sentR2 = 0; sayThreat(B); assert.strictEqual(sent.length, 1);   // once
     B.st.built = S.PILGRIM; sayThreat(B); w.sentR2 = 0; B.st.built = -1; sayThreat(B); assert.strictEqual(sent.length, 1);   // pilgrims: no
-  } finally { CFG.SIEGE = saved; }
+    // SIEGE_NOW: a military build with the radio free (a threat response) radios at once; one whose radio carries the
+    // round still waits.
+    CFG.SIEGE_NOW = 1;
+    w.me = { ...w.me, turn: 40 }; w.sentR2 = 0; B.st.built = S.PROPHET; sayThreat(B);
+    assert.deepStrictEqual(sent.slice(1), [[encXY(SIG.THREAT, 9, 11), 25]]);
+    w.me = { ...w.me, turn: 41 }; w.sentR2 = 2; B.st.built = S.PROPHET; sayThreat(B); assert.strictEqual(sent.length, 2);
+    w.me = { ...w.me, turn: 42 }; w.sentR2 = 0; B.st.built = -1; sayThreat(B); assert.strictEqual(sent.length, 3, 'the next free turn');
+  } finally { CFG.SIEGE = saved; CFG.SIEGE_NOW = now; }
 });
 
 test('struct: WATCH: a structure radios the nearest enemy attacker within r2 100 that no military unit of ours sees', () => {
@@ -2568,6 +2598,56 @@ test('chain: CHAIN_LIVE 2: a staged chainer reports CT.STAGED, a walking one CT.
     assert.strictEqual(walk.act, 'walk');
     assert.deepStrictEqual(walk.log.talk, [CT.CHAINER]);
   } finally { [CFG.CHAIN_ROUND, CFG.CHAIN_LIVE] = saved; }
+});
+
+test('chain: CHAIN_WALL ends a line church\'s chain at a wall (radio + CT.WALL) or on the radio; castles rest', () => {
+  const saved = [CFG.CHAIN_ROUND, CFG.CHAIN_WALL, CFG.CHAIN_WALL_REST, CFG.CHAIN_END_R2];
+  try {
+    // A line end 4 steps out (r2 49, as v7 had it), so the castle and the wall stand in the church's sight.
+    CFG.CHAIN_ROUND = 150; CFG.CHAIN_WALL_REST = 300; CFG.CHAIN_END_R2 = 49;
+    const X = chainFixture();
+    const adj = offsets(2).map(([dx, dy]) => [X.ours[0] + dx, X.ours[1] + dy]).find(([x, y]) => X.g.map[y][x]);
+    // Enemy prophets on free passable tiles r2 9-100 from the church (in its sight), the first k of them.
+    const spots = [];
+    for (let y = 0; y < X.n; y++) for (let x = 0; x < X.n; x++) {
+      const r2 = d2(x, y, X.ours[0], X.ours[1]);
+      if (r2 >= 9 && r2 <= 100 && X.g.map[y][x] && !X.g.robots.some(r => r.x === x && r.y === y)) spots.push([x, y]);
+    }
+    const run = (wall, k, radio) => {
+      CFG.CHAIN_WALL = wall;
+      const church = X.mk(4100, 0, S.CHURCH, X.ours[0], X.ours[1], 1), pil = X.mk(4101, 0, S.PILGRIM, adj[0], adj[1]);
+      pil.signal = encXY(SIG.CHAIN, X.near[0], X.near[1]); pil.signal_radius = 2;
+      const foes = spots.filter(([x, y]) => !(x === X.near[0] && y === X.near[1])).slice(0, k).map(([x, y], i) => X.mk(4200 + i, 1, S.PROPHET, x, y));
+      const { w, log } = X.world([church, pil, X.castleAt(X.near)].concat(foes), church);
+      // A line church out of sight radioing FAR.WALL (the engine keeps x, y and team of a robot in radio range).
+      if (radio) w.robots.push({ id: 4300, team: 0, unit: undefined, signal: encXY(0, 3, 3), signal_radius: FAR.WALL, castle_talk: 0, x: 3, y: 3, seen: false });
+      w.karbonite = 1000; w.fuel = 3000;
+      const B = { api: w.api, w, round: 0, birthRound: 0, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      const act = churchTurn(B);
+      return { act, B, log };
+    };
+    assert.ok(X.near && spots.length >= 6, 'fixture');
+    const off = run(0, 5, true);
+    assert.strictEqual(off.act.u, CFG.CHAIN_MIX[0], 'off: the burst goes on');
+    assert.ok(off.B.st.chain, 'off: still in the chain');
+    const below = run(6, 5, false);
+    assert.strictEqual(below.act.u, CFG.CHAIN_MIX[0], '5 of 6 in sight: the burst goes on');
+    assert.ok(below.B.st.chain && !below.log.talk.includes(CT.WALL), '5 of 6: still in the chain, castles not told');
+    const at = run(5, 5, false);
+    assert.strictEqual(at.B.st.chain, null, '5 of 5: the line ends');
+    assert.ok(at.log.talk.includes(CT.WALL), 'castles told');
+    assert.ok(at.log.sent.some(([, r]) => r === FAR.WALL), 'the line told');
+    const heard = run(6, 0, true);
+    assert.strictEqual(heard.B.st.chain, null, 'heard the radio: the line ends');
+    assert.ok(!heard.log.talk.includes(CT.WALL) && !heard.log.sent.some(([, r]) => r === FAR.WALL), 'a hearer does not repeat it');
+    // Castles: no launch and no chain bank for CHAIN_WALL_REST rounds after a CT.WALL.
+    const B = { w: { me: { x: 0, y: 0 } }, st: { order: [{ x: 0, y: 0 }], wallAt: 400 }, round: 500 };
+    CFG.CHAIN_WALL = 0; assert.strictEqual(chainsWalled(B), false, 'off');
+    CFG.CHAIN_WALL = 28; assert.strictEqual(chainsWalled(B), true);
+    assert.strictEqual(chainLaunch(B, () => { throw new Error('built'); }), null, 'resting: no chainer');
+    B.round = 700; assert.strictEqual(chainsWalled(B), false, 'rested');
+    delete B.st.wallAt; assert.strictEqual(chainsWalled(B), false, 'never walled');
+  } finally { [CFG.CHAIN_ROUND, CFG.CHAIN_WALL, CFG.CHAIN_WALL_REST, CFG.CHAIN_END_R2] = saved; }
 });
 
 test('chain: with CHAIN_ROUND 0 castles never launch a chainer and the peacetime reserve is unchanged', () => {

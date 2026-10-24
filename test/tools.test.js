@@ -131,6 +131,35 @@ test('paired: --h2h pairs the two sides of a seed; load-contaminated rows are sk
   fs.rmSync(dir, { recursive: true });
 });
 
+test('paired: screen verdict: castles lost by sign-flip, exceptions against the control, t <= -1.5', () => {
+  const { h2hRead, signFlip } = require('../tools/paired.js');
+  // [2, -1, 0, 3]: of the 8 sign patterns on 2, 1, 3, two reach the observed sum 4.
+  assert.deepStrictEqual(signFlip([2, -1, 0, 3]), { cells: 4, nonzero: 3, sum: 4, p: 0.25 });
+  assert.strictEqual(signFlip([]).p, 1);
+  const team = (alive, extra = {}) => ({ init_fail: 0, units: { 0: alive }, turns: 1000, ...extra });
+  // Five seeds, both sides; the candidate (a) loses one castle more than the control in every seed's red game.
+  const row = (seed, side, w, a, b) => ({ a_hash: 'c', b_hash: 'k', seed, a_side: side, winner_is_a: w, reason: 'castles',
+    rounds: 400, map: { castles: 3 }, a_team: a, b_team: b });
+  const rows = [];
+  for (let s = 1; s <= 5; s++) rows.push(row(s, 'red', 1, team(2), team(3)), row(s, 'blue', 0, team(3), team(3)));
+  let r = h2hRead(rows);
+  assert.deepStrictEqual([r.castles.cand_lost, r.castles.ctrl_lost, r.castles.nonzero, r.castles.p], [5, 0, 5, 0.0313]);
+  assert.strictEqual(r.verdict, 'REJECT: castles lost +5 (sign-flip p 0.0313)');
+  // A caught exception the control does not have rejects; frozen turns are reported per million turns, not judged.
+  rows[0].a_team = team(3, { exc_caught: 1 }); rows[1].b_team = team(3, { frozen: 4 });
+  for (const x of rows) if (x.a_side === 'red') x.a_team = { ...x.a_team, units: { 0: 3 } };
+  r = h2hRead(rows);
+  assert.strictEqual(r.verdict, 'REJECT: exc_caught 1 vs 0');
+  assert.strictEqual(r.basics.ctrl.frozen_per_M, 400);
+  rows[0].a_team.exc_caught = 0;
+  assert.strictEqual(h2hRead(rows).verdict, 'pass to the panel');
+  // Rows without unit counts: no castles test.
+  assert.strictEqual(h2hRead(rows.map(x => ({ ...x, a_team: { init_fail: 0 } }))).castles, null);
+  // t <= -1.5: three seeds lost from both sides, none gained.
+  for (let s = 1; s <= 3; s++) for (const x of rows) if (x.seed === s) x.winner_is_a = 0;
+  assert.ok(/^REJECT: t -1\.73/.test(h2hRead(rows).verdict));
+});
+
 test('run_game: --timescale stretches the vm2 kill, --init-ms only the sandbox-creation limit', () => {
   const Game = require('../engine/node_modules/bc19/game.js'), SPECS = require('../engine/node_modules/bc19/specs.json');
   const { setLimits, parseArgs } = require('../tools/run_game.js');
@@ -481,16 +510,12 @@ test('dlv: delivery numbers agree with the replay analysis and with each other',
   assert.strictEqual(dlv.atCastle(g, 1, 6), 0);
 });
 
-test('symcheck: verdicts; v5 stays a mirror image for 12 rounds (run without network)', () => {
-  const { verdict } = require('../tools/symcheck');
-  const duel = { pair: [{ id: 1, spent: 'K0 F-25' }, { id: 2 }] };
-  assert.strictEqual(verdict('CONTEST red 2#5 took axis tile (3,4)', 9, 0, {}, null), 'contest');
-  assert.strictEqual(verdict('red #5 (1,2) vs blue #6: health 40 vs 60', 50, 40, {}, null), 'combat');
-  assert.strictEqual(verdict('red #5 (1,2) vs blue #6: health 40 vs 60', 50, 0, {}, null), false);   // no attack yet
-  assert.strictEqual(verdict('red 3#5 at (1,2) has no blue twin at (8,2)', 9, 0, { 5: { err: 'Error: occupied' } }, null), 'contest');
-  assert.strictEqual(verdict('stores red K0 F580 vs blue K0 F605', 215, 131, {}, duel), 'combat');
-  assert.strictEqual(verdict('stores red K0 F580 vs blue K0 F605', 215, 0, {}, duel), false);
-  assert.strictEqual(verdict('stores red K0 F580 vs blue K0 F605', 215, 131, {}, { pair: [{ spent: 'K0 F0' }, { spent: 'K0 F-25' }] }), false);
+test('symcheck: claimed tiles; v5 stays a mirror image for 12 rounds (run without network)', () => {
+  const { claim } = require('../tools/symcheck');
+  assert.strictEqual(claim({ x: 3, y: 4 }, { action: 'move', dx: 1, dy: -1 }), '4,3');
+  assert.strictEqual(claim({ x: 3, y: 4 }, { action: 'build', dx: 0, dy: 1, build_unit: 2 }), '3,5');
+  assert.strictEqual(claim({ x: 3, y: 4 }, { action: 'attack', dx: 2, dy: 0 }), null);
+  assert.strictEqual(claim({ x: 3, y: 4 }, null), null);
   const r = require('child_process').spawnSync('unshare', ['-rn', process.execPath, path.join(__dirname, '..', 'tools', 'symcheck.js'),
     '--bot', path.join(__dirname, '..', 'bots', 'v5'), '--seeds', '2', '--rounds', '12'], { encoding: 'utf8', timeout: 120000 });
   assert.strictEqual(r.status, 0, r.stderr);
@@ -548,6 +573,10 @@ test('census: pioneers, churches by round, mines; gate replay names sum by role'
   assert.deepStrictEqual(chains({ chainMin: 13 })[0], [0, 0, 0, 0]);
   assert.deepStrictEqual(chains({ chainNear: 1 })[0], [2, 16, 0, 0]);
   assert.deepStrictEqual(chains({ to: 270 })[0], [0, 0, 0, 0]);
+  // Military built, died, and died within 2 rounds of the build (count, karbonite); pinned from an independent count
+  const mil = census(cb).map(t => [t.mil_born, t.mil_dead, t.newborn_dead, t.newborn_dead_k]);
+  assert.deepStrictEqual(mil, [[88, 18, 5, 130], [135, 26, 5, 150]]);
+  assert.deepStrictEqual(census(cb, { to: 100 }).map(t => t.newborn_dead <= t.mil_dead && t.mil_dead <= t.mil_born), [true, true]);
 });
 
 test('move_stale.sh: moves only named pending jobs to superseded and back; refuses names that are not plain', () => {

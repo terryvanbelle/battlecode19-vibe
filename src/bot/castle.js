@@ -2,7 +2,7 @@
 // plans and sends church pioneers, calls attacks, and runs the structure loop.
 // Enemy castles are exactly the mirrors of ours (canonical frame: (x, n-1-y)).
 import { CFG, defReserveK } from './config.js';
-import { PILGRIM, CRUSADER } from './specs.js';
+import { CHURCH, PILGRIM, CRUSADER } from './specs.js';
 import { SIG, encXY, CT, FAR } from './comms.js';
 import { bfs } from './mapinfo.js';
 import { offsets, d2 } from './util.js';
@@ -48,6 +48,7 @@ export function castleTurn(B) {
     if (ct === CT.STAGED || (ct === CT.CHAINER && CFG.CHAIN_LIVE === 1)) st.chainAny = true;
     if (ct >= CT.UNIT && ct < CT.UNIT + 6) st.count[ct - CT.UNIT]++;
     else if (ct === CT.CHAINFIRE && CFG.CHAIN_FAILS) { st.count[PILGRIM]++; st.chainMiss = (st.chainMiss || 0) + 1; }
+    else if (ct === CT.WALL && CFG.CHAIN_WALL) { st.count[CHURCH]++; st.wallAt = B.round; }
     else if (ct >= CT.MARCH && ct < CT.MARCH + 6) { st.count[ct - CT.MARCH]++; st.march++; }
     else if (ct === CT.WAIT && CFG.PIONEER_HOLD) { st.count[PILGRIM]++; st.waitN++; }
     else if (ct === CT.BLOCKED && CFG.PIONEER_CALL) {
@@ -212,6 +213,7 @@ function earlyPioneer(B) {
 
 function sendPioneer(B, next) {
   const w = B.w, st = B.st;
+  if (CFG.RADIO_WAIT && w.sentR2) return null;   // the attack call took the radio: build next turn, not deaf
   const c = B.clusters[next.cluster];
   const b = buildToward(B, PILGRIM, c.site[0], c.site[1], encXY(SIG.CHURCH, c.site[0], c.site[1]));
   if (!b) return null;
@@ -233,7 +235,7 @@ export function escortFirst(B) {
   const p = B.st.plan.find(q => q.m <= CFG.PLAN_CONTEST_FIRST);
   if (!p) return;
   openEscort(B, p.cluster, CFG.ESCORT_FIRST);
-  // CFG.ESCORT_MIRROR (sparring partners only): the escort holds the mirror image of the site, the enemy's own site
+  // CFG.ESCORT_MIRROR (on in v8): the escort holds the mirror image of the site, the enemy's own site
   // for that cluster pair, as bot1v43's round-3 prophet does (replica 410-1, 416-1, 416-3).
   const e = CFG.ESCORT_MIRROR && B.st.escorts.find(q => q.cluster === p.cluster);
   if (e) [e.x, e.y] = B.w.mirror(e.x, e.y);

@@ -74,7 +74,8 @@
    turn, which run_game.js counts as init_fail: StoneT2000's bot1v43 logged 4,509 of them (and 35 timeouts) in the
    one game we took from it (scrim 200, seed 520). Across our 201 replica games, 57 had more than 50 opponent clock
    failures and we won 49 of those, on a VM running 7 engine processes on 8 vCPUs. Our 33 KB bundle loads in a few
-   ms. Read replica wins over a bot with clock failures as inflated; our own VM games run at nice 10
+   ms (v8's is 56.6 KB; its newborns' first turns take 105-122 ms of the 120 ms bank on the loaded VM, mostly the
+   sandbox's first run: TRAINING_LOG 2026-10-23 14:18). Read replica wins over a bot with clock failures as inflated; our own VM games run at nice 10
    (`tools/jobq.sh`, the extra lane) so the replica's games get whole cores. (2026-10-21) The same holds for the
    2-vCPU driver: replay analyses run beside a diagnostic game left 466 "not initialized" and 342 overdrawn-clock
    turns in it (h69, 2026-10-22), so the game measured the host, not the bot. While the driver plays, it does
@@ -112,7 +113,8 @@
    round acts in that round, so a church can build a pilgrim that builds the next church, and a whole line of up to
    16 churches appears in a single round, ending 1-2 tiles from a castle and building preachers there at once.
    StoneT2000 (the field's best, BT ~2,050) does this in 28 of its 33 replica games against us. About 20 of those
-   lines end within 4 king steps of one of our castles, and we lose that castle within 25 rounds; we never chain.
+   lines end within 4 king steps of one of our castles, and we lose that castle within 25 rounds; we never chain
+   (then: our own chains came with h55's switch, CHAIN_ROUND; v7 and v8 chain from round 200).
    It banks for the chain (1,345-1,555 K just before, against our 55-213) and keeps a smaller army (46 against our
    94 at round 250 of 407-3). No shooter can stop a line while it is being built; only units already beside the
    castle, or the bank, can answer it. Census: scratch chains.js over replica matches 199-407. (2026-10-22)
@@ -170,7 +172,9 @@
    so it cannot match its own text (`pgrep -f "[u]nit-tests.sh"`), or wait on the output file or a PID.
    (TRAINING_LOG 2026-10-23 12:01)
 31. **Read a replica freeze before chasing it.** "Script execution timed out" is vm2's 200 ms kill on one turn and
-   "clock overdrawn" freezes a robot only until its bank refills (+20 ms a turn), so each costs about one turn. In
+   "clock overdrawn" freezes a robot only until its bank refills (+20 ms a turn). For an old robot (thousands of ms
+   banked) each costs about one turn; a killed turn's 200+ ms freezes a young one (bank about 120 ms) for 4-5 turns,
+   and a frozen or killed turn also loses its radio and castle talk (RULES §6). In
    2019 a turn's time is mostly the engine (the turn message is compiled as a script every turn), GC and load; our
    code was ~2 ms a turn. Profile before rewriting: `node --cpu-prof` on one game with an unminified build.
    (TRAINING_LOG 2026-10-23 14:18)
@@ -200,3 +204,22 @@
    participations, the rating history graphs frozen a day until the owner noticed. Change another system's state
    through its own methods, or follow a bulk change with what its methods would have done
    (tools/galaxy19/rating_unstick.py). Check what the replica's pages show, not only its queue. (2026-10-24 08:49)
+
+36. **Two senders on one radio, each on a fixed schedule, can silence one of them for good.** A castle radios the
+   attack call before it builds, and a newborn built that turn hears nothing (buildToward drops its message but
+   builds). Chain launches run on multiples of 10 and the call on multiples of 5, so after round 450 every launch
+   of a castle went out deaf and still counted as launched: replica 731 game 3, 5 of 5 chain launches and 3 pioneer
+   re-sends (re-simulated twice). escort() already waited for a free radio; chainLaunch and sendPioneer did not. Check
+   every periodic schedule against every other one on the same channel. (2026-10-24 12:17)
+
+37. **Count which side each game was played on, and balance sides by design.** Panel scrims used galaxy's order '?':
+   each match alternates sides from a random start, so each block draws its own side mix. Stratified by cell, v8
+   blocks show a red-blue gap of about 13 points (z 2.18) and v7 blocks none. The raw split (61% as red, 31% as blue)
+   overstates it, because the cells a block plays red differ. Blocks now play every cell on both sides (36 games),
+   scored per (opponent, map, side) with the side's record shrunk toward the cell's. (2026-10-24 12:17)
+
+38. **No agent reads a running block, and a symmetry check must outlive the first fight.** An audit agent rescored the
+   downloaded part of a running panel block and reported its z, so h148's rule had to be amended after a look (TRAINING_LOG
+   11:58). Brief every agent that touches replica data: finished matches only. The same audit found symcheck stops at
+   the first divergence and excuses everything after the first attack, so it checked only the opening (rounds 31-60
+   on 3 of 4 seeds), and it was last run on h127: v8 itself was never side-checked. (2026-10-24 12:17)

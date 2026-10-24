@@ -7,16 +7,18 @@
   built bundles (`tools/build_bot.js src/bot dist/hN --cfg KEY=JSON ...`, one --cfg per key), never the source
   directory. Every candidate change is a CFG switch whose default is the incumbent.
 - No-op check after every bot code change: a defaults-only build replays the champion against itself on 799 to r300
-  (--det --seed 799 --max-rounds 300 --timescale 10 --init-ms 5000 --fast-turn --fast-init --fast-view --no-kill; the
-  default 100 ms init fails on the driver) IDENTICAL to h128's replay, with nothing else running on the driver
-  (LEARNINGS 13); then `tools/unit-tests.sh`.
+  (--det --seed 799 --max-rounds 300 --timescale 100 --init-ms 5000 --fast-turn --fast-init --fast-view --no-kill; the
+  default 100 ms init fails on the driver, and timescale 10 freezes robots when anything else runs) IDENTICAL to
+  h128's replay, with nothing else running on the driver (LEARNINGS 13); then `tools/unit-tests.sh`.
 - v8 = h128 = v7 + ESCORT_FIRST 2, ESCORT_MIRROR 1, ESCORT_UNIT 3 (two crusaders hold the enemy's mirror image of our
   first contested site), ACCEPTED 06:41 2026-10-24 on the replica panel: three blocks 23 of 54 against the pooled
   16.1, z 2.54 (escort tests pin v7's values: testPreV8). v7 = h87 = v6 + h82's economy switches + h76's church
   chain, ACCEPTED 2026-10-23 00:30 (testPreV7 pins v6's values).
 - **Acceptance** (TRAINING_ALGORITHM step 6-7, §4; LEARNINGS 32, 33): a local screen vs the champion only rejects
-  (t <= -1, or castles lost above 1.1x the champion's; 20 cells, par 2); the replica panel accepts by the pooled
-  rule: block 1 reject at z < 0.5; two blocks accept at z >= 2, reject at z < 1, else a third block at z >= 2.
+  (20 cells, par 2; from h154 on: t <= -1.5, castles lost at sign-flip p < 0.05, or an exception the champion lacks,
+  printed by `tools/paired.js --h2h` as its verdict; it replaced t <= -1 and the 1.1x castles ratio, audit 2026-10-24,
+  same verdicts on h145-h151); the replica panel accepts by the pooled side-aware z: block 1 reject at z < 0.5; two
+  blocks accept at z >= 2, reject at z < 1, else a third block at z >= 2.
 - **VM queue** (`~/jobq`; the runner takes pending jobs in locale `ls | sort` order; gates run from the shadow tree
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
@@ -32,12 +34,12 @@
   the four jobs h157, h155, h154, h156.
   Screens passed: h148 (CHAIN_LIVE 1; +3 -0, t 1.73, castles 35 vs 39), h149 (CHAIN_LIVE 2; +3 -3, t 0.00, 35 vs 34),
   h150 (WATCH 2; +8 -3, t 1.51, 24 vs 38). Rejected: h151 (CHAIN_FAILS 1; +1 -3, t -1.00, 31 vs 19).
-  Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h`, castles from 2019-next/out/dlv_gate_hN.txt on the
-  VM (awk on columns 18-19, a = candidate).
+  Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h` (t, castles lost and the verdict).
 - **Replica panels** (progress/panels/v7-m1.json: six field bots, wololo, botfinalsafe, bot1v43, uvafan,
   awesomelemonade, IanCoolidge0 ~69ce88, three maps each). Ladder build: submission 149 = bots/v8. Play a block with
   `tools/panel_submit.sh dist/hN "message"` (submits, scrims each opponent twice, NAME@+ and NAME@-, so the block's 36
-  games play every cell on both sides (we win 61% as red, 31% as blue: TRAINING_LOG 11:58); resubmits $LADDER =
+  games play every cell on both sides (in v8's blocks red wins about 13 points more often within a cell; the raw
+  61% / 31% split of TRAINING_LOG 11:58 mixes in which cells drew which side: LEARNINGS 37); resubmits $LADDER =
   bots/v8, bumps; retries what the hourly limit refuses (HTTP 429, about 20 requests an hour) every 15 min; a lock
   keeps blocks apart); add the
   tools/progress/submissions.tsv row. Read: `contest19.py fetch --new --pages 6` (one page misses slow matches), then
@@ -47,7 +49,7 @@
   v7-based panels (read for the idea, not acceptance): h139 (ECON_RICH 150) 706-711 + 732-737 z 1.96 against v7
   (h145 on v8: 750-755 z 0.00, REJECTED; the line closes), h141 (church strike) 738-743 REJECTED (z 0.43), h140 (early
   fast pioneer) 744-749 REJECTED (z -0.24; won awesomelemonade 2518). v8-pool blocks 1: h146 (v8 + church strike) 758-763 REJECTED (z -1.98; the strike line closes),
-  h147 (early fast centre pioneer) 764-769 REJECTED (z 0.34; won 2518, 2321, 203; lost IanCoolidge0 2644: the pioneers had no money after an early rush, TRAINING_LOG 09:25), **h148** (CHAIN_LIVE 1; screen t 1.73) block 1 777-782 11 of 18, E 7.9, z 2.02 (pool without 758-763); block 2 = 967-972, decided by the rule fixed in TRAINING_LOG 11:58 (both z's >= 2 accept, both < 1 reject, else a both-sides third block); h149 (CHAIN_LIVE 2) 955-960 REJECTED (z 0.28), h150 (WATCH 2) 961-966 REJECTED (z -0.37) (TRAINING_LOG 11:28).
+  h147 (early fast centre pioneer) 764-769 REJECTED (z 0.34; won 2518, 2321, 203; lost IanCoolidge0 2644: the pioneers had no money after an early rush, TRAINING_LOG 09:25), **h148** (CHAIN_LIVE 1; screen t 1.73) block 1 777-782 11 of 18, E 7.9, z 2.02 (pool without 758-763); block 2 967-972: cumulative 20 of 36, side-blind z 1.94, side-aware 1.79 (TRAINING_LOG 12:29) -> block 3 = 973-984 (submission 168, both sides, 36 games), decided by the side-aware z over all three blocks at >= 2 (`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 777-782 967-972 973-984` once all twelve are downloaded; waiter armed); h149 (CHAIN_LIVE 2) 955-960 REJECTED (z 0.28), h150 (WATCH 2) 961-966 REJECTED (z -0.37) (TRAINING_LOG 11:28).
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013, 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
   2518; uvafan 2046; bot1v43 2591. Studies: botfinalsafe 1706 (castles idle r33-93, the centre cluster lost); wololo
   2013 (church-beside-church preacher fights from r97). TRAINING_LOG 2026-10-24 02:52, 03:48.

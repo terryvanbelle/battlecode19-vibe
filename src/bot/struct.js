@@ -6,7 +6,7 @@ import { bfs, econ } from './mapinfo.js';
 import { SIG, FAR, encXY, encNum } from './comms.js';
 import { isAttacker, pickTarget, canHit, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
 import { watchDeaths } from './military.js';
-import { chainsFailed } from './chain.js';
+import { chainsFailed, chainsWalled } from './chain.js';
 
 const PILGRIM_OFFS = offsets(4);
 
@@ -211,9 +211,11 @@ export function sayWatch(B) {
 // whoever else is near, where the enemy prophet in sight nearest this structure stands; within 3 turns, radio free.
 export function sayThreat(B) {
   const st = B.st, w = B.w, me = w.me;
-  if (st.built >= CRUSADER) { st.threatSay = 3; return; }
-  if (!(st.threatSay > 0)) return;
-  st.threatSay--;
+  // CFG.SIEGE_NOW: a military build whose radio is free (a threat response carries no message) warns its newborn at once.
+  const now = CFG.SIEGE_NOW && st.built >= CRUSADER && !w.sentR2;
+  if (st.built >= CRUSADER && !now) { st.threatSay = 3; return; }
+  if (!now && !(st.threatSay > 0)) return;
+  if (!now) st.threatSay--;
   let e = null, ed = 1e9;
   for (const x of w.enemies) if (x.unit === PROPHET) { const q = d2(x.x, x.y, me.x, me.y); if (q < ed) { ed = q; e = x; } }
   if (!e || w.sentR2 || w.fuel < 10) return;
@@ -241,7 +243,7 @@ function structAct(B, allIds, extra, first) {
   // was shot before the church's first turn. Its army spent the bank the next line needs (seed 799: church #505, its
   // chainer killed in between, built 136 units in r246-450 and no line fired).
   const chainOn = CFG.CHAIN_ROUND && (B.round >= CFG.CHAIN_ROUND || (CFG.CHAIN_KEEP && me.unit === CHURCH && !B.round)) &&
-    !(me.unit === CASTLE && chainsFailed(st)) &&   // CFG.CHAIN_FAILS
+    !(me.unit === CASTLE && (chainsFailed(st) || chainsWalled(B))) &&   // CFG.CHAIN_FAILS, CFG.CHAIN_WALL
     !(CFG.CHAIN_LIVE && me.unit === CASTLE && !st.chainAny);
   const reserveK = defReserveK(B) + CFG.PEACE_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
     (CFG.FRONT_ROUND && st.frontAt !== undefined && B.round - st.frontAt < 40 ? STATS[CHURCH].costK : 0) +

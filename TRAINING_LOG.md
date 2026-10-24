@@ -4207,3 +4207,41 @@ and 971 finish, picks no side of that split: at `tools/panel_pool.sh 726-731 pro
 reject when both are below 1; otherwise a third block, both sides (36 games), decided by the side-aware z over all
 three blocks: accept at >= 2, else reject. From the next candidate on, panel decisions use the side-aware z only, with
 the existing bars (block 1 reject below 0.5; block 2 accept at >= 2, reject below 1; else a third block at >= 2).
+
+## 2026-10-24 12:25 PDT: audit (PROMPTS 34) acted on: bot switches, screen bars, side-effect correction, rules rewritten
+
+Correction to 11:58: the raw split (red 41 of 67, blue 24 of 77) mixes in which cells drew which side. Stratified by
+cell (Cochran-Mantel-Haenszel), red wins about 13 points more often than blue inside a cell in v8's blocks (z 2.18)
+and not at all in v7's. h148 block 1 side-aware with k 2 is 1.66 (side-blind 2.02); the audit agent's 1.15 and 0.69
+came from an unshrunk side estimator (p per side alone, (w_s + 1/2) / (n_s + 1)), not from `contest19.py pool`.
+Bot (all CFG switches defaulting to v8; the 799 r300 defaults build replays IDENTICAL to h128, 306350 bytes,
+errors 0): RADIO_WAIT (a castle's chain launch or pioneer waits a turn while the attack call holds the radio, as
+escort() does; in replica 731 game 3, 5 of 5 chain launches after r450 and 3 pioneer re-sends were built deaf),
+CHAIN_WALL (a chain that meets the enemy's wall reports CT.WALL and stops; castles count it), SIEGE_NOW. Removed
+before any game: ATTACK_LAST (moving the call after the builds starves it when builds carry messages every turn) and
+DUMP_HOLD.
+Screen bars, for h154 on (no held screen has run): t <= -1.5, castles lost at a one-sided sign-flip p < 0.05, or an
+exception (thrown or caught) the champion lacks; `tools/paired.js --h2h` prints them and its verdict. They replace
+t <= -1 and the 1.1x castles ratio; on h145-h151 the verdicts are the same (h151 rejected: castles 31 vs 19, p 0.013).
+Frozen turns and timeouts are printed per million turns (the machine causes most: LEARNINGS 31).
+TRAINING_ALGORITHM rewritten in step 5-7, §4, §5, §7, §8: the two-block rule and "never pooled history" go; the pooled
+side-aware z, the 36-game both-sides block, the +-1 join rule, the studied-cells rule (a candidate built from panel
+cells must score z >= 0 on the other cells too) and the no-reopen rule (no rejected candidate reopened under a later
+rule without fresh blocks) go in. v8's acceptance (06:41) came after reopening h128 under a rule written after its
+block 2: its third block alone scored z 1.71 side-blind and 2.04 side-aware against the v7 pool, and the three blocks
+side-aware 3.19, so v8 stays; the rule now forbids the reopening. Audit verdicts kept: canonical frame, CFG switches,
+pooled panels, the screen that only rejects. Pending from the audit: symcheck to round 1000 on v8 (it stopped at
+the first fight on h127, LEARNINGS 38), zombie pioneers (the castle re-sends a timed-out pioneer to the same cluster),
+the sandbox failing open when a remount fails, a v8 control block on both sides, and the panel design's simulated
+false-accept rate and power.
+
+## 2026-10-24 12:29 PDT: h148 block 2 (967-972) scored: a third block, both sides
+
+All six matches downloaded at 12:29. `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 777-782 967-972` (the
+scorer of 979998a plus only the 12:25 file-closing fixes): 20 of 36 against the pooled 15.8, side-blind z 1.94;
+side-aware (k 2) 16.6, z 1.79. Neither both >= 2 nor both below 1, so by the rule of 11:58: a third block, both sides
+(36 games, 12 matches), decided by the side-aware z over all three blocks, accept at >= 2, else reject:
+`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 777-782 967-972 BLOCK3` once every match of block 3 is
+downloaded. Block 2 alone: won the rarely-won uvafan 1712 as blue; lost wololo 2013 and 836 (never won).
+Block 3 = matches 973-984 (submission 168; each opponent @+ and @-), requested 12:30; the ladder build is v8 again
+(submission 169).

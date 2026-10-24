@@ -8,7 +8,10 @@ Where the specs and the engine disagree, the engine wins and the difference is m
 ## 1. Game, rounds and turn order
 
 - Two teams, RED (0) and BLUE (1). Each starts with 1–3 Castles, 100 Karbonite and 500 Fuel (specs.json; `game.js:49-50`).
-- Up to 1000 rounds (`MAX_ROUNDS`). A round is one pass through the robot queue. The queue starts with the castles
+- Up to 1000 rounds (`MAX_ROUNDS`). A round is one pass through the robot queue; the round counter goes up when the
+  queue wraps (`game.js:747-749`, from round 1), and `isOver` runs before every turn, so rounds 1-999 are full passes
+  and round 1000 is a single turn, by the robot at the head of the queue (red's first castle while it lives), before
+  the tiebreak. The queue starts with the castles
   alternating red, blue, red, blue... (`game.js:321-333`). **A robot built during a round is appended to the queue and
   acts in that same round** (`game.js:461`, `action_record.js:253`).
 - At the start of every round each team gets +25 Fuel (`TRICKLE_FUEL`, `game.js:747-753`).
@@ -81,7 +84,8 @@ Where the specs and the engine disagree, the engine wins and the difference is m
 
 - **Radio**: `signal(value, r²)`: a 16-bit value to every robot (either team) within r² of the sender, costing
   ceil(√r²) Fuel (`action_record.js:329`). Receivers see it on **their next turn** together with the sender's id and
-  position (`game.js:675, 696-706`), not its team (unless visible). The signal stays attached to the sender until its
+  position and `turn` (`game.js:675, 696-706`), not its team (unless visible, or the receiver is a castle: castles
+  see the team of every robot listed, `game.js:708`). The signal stays attached to the sender until its
   next turn. Max r² = 2·63² (`game.js:834`). The JS API lowers the robot's own `this.fuel` by the cost at once
   (`starter/js_starter.js:108`), and its build/move/attack checks use that lowered value.
 - **Castle talk**: `castleTalk(value)`: 8 bits, free, visible to all own castles anywhere (`game.js:677-682, 710`).
@@ -95,19 +99,28 @@ Where the specs and the engine disagree, the engine wins and the difference is m
 - Each robot runs in its own vm2 sandbox (`vm.js`). Chess clock: **100 ms at creation, +20 ms every turn**
   (`runtime.js`; `game.js:759`). A turn's wall time is charged to the clock (`game.js:805`).
 - **Clock < 0: the robot is frozen** — its turns produce no action until the clock is positive again
-  (`game.js:806-807`). A single turn longer than **200 ms** (`TURN_MAX_TIME`) is killed by vm2 and does nothing (`vm.js:6`).
+  (`game.js:806-807`); at exactly 0 the hook is not called either (`game.js:766`). A single turn longer than **200 ms**
+  (`TURN_MAX_TIME`) is killed by vm2 and does nothing (`vm.js:6`), and its whole wall time is charged to the clock: a
+  young robot (bank about 120 ms) then sits frozen 4-5 turns, an old one (thousands of ms banked) loses only that turn.
+- **A frozen or killed turn loses its radio and castle talk too**, not just its action: the engine throws before it
+  records them, and the record defaults to 0 (`game.js:804-807`). Whatever the code wrote to its own sandbox state
+  during a killed turn stays. A message sent on one fixed turn (a castle's position on turns 1-2) is gone for good.
 - Initialisation (compiling the bot inside the sandbox) must finish within the initial clock (100 ms) or the robot never
   acts (`runtime.js:24-38`). Keep the bundle small and the module top level cheap.
 - Timing is wall clock: it depends on the machine and its load. Our runner reports per-team mean/max turn time, slow
   turns (> 20 ms), timeouts and freezes. Budget target: mean < 5 ms, max < 50 ms on the games VM.
 - Memory is not enforced in 0.4.7 (the check in `vm.js:16-21` is commented out).
+- Our runtime is not 2019's: bc19 0.4.7 (the final release) runs here on vm2 3.12.2 and Node 20 (`engine/package-lock.json`;
+  bc19 asks for vm2 ^3.6.3, which meant 3.6.x in January 2019). Both teams share it, so it moves absolute times, not
+  comparisons; vm2's newer code transformer is one reason the replica allows 1000 ms to create a robot.
 
 ## 7. What a robot sees each turn (`game.js:667-736`)
 
 - `getVisibleRobots()`: robots within vision (full info: id, team, unit, x, y, turn, signal if radioable,
-  castle_talk only for own castles' viewer) plus robots outside vision whose radio reaches it (id, x, y, signal; no
-  team, no unit). Castles additionally see every friendly robot (id, team, turn, castle_talk; no position unless in
-  vision/radio). The list order is shuffled each turn (engine `Math.random`).
+  castle_talk only for own castles' viewer) plus robots outside vision whose radio reaches it (id, x, y, turn, signal;
+  no unit, and no team unless the viewer is a castle). Castles additionally see every friendly robot (id, team, turn,
+  castle_talk; no position unless in vision/radio). `turn` is never hidden (`game.js:667-736`). The list order is
+  shuffled each turn (engine `Math.random`).
 - `getVisibleRobotMap()`: ids within vision, 0 empty, −1 outside vision.
 - Own health, karbonite, fuel, clock time: only on `this.me`. Enemy HP is never visible.
 - Team stores `this.karbonite`, `this.fuel` are global and current at the start of the turn.

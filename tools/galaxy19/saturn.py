@@ -86,8 +86,10 @@ FAST_VIEW = os.environ.get('GALAXY_FAST_VIEW', '1') == '1'
 # per-team stats copied from run_game.js into match.json: errors and clock health (timeouts = vm2 script timeouts,
 # frozen = out of chess-clock time, slow_turns = turns over 20 ms of wall time) to watch CPU contention; init_robots
 # (robots whose sandbox failed to start) and err_kinds (the five commonest error kinds) tell a replica fault from a bot's
+# bug; exc_caught and slow_logged count log lines starting EXC and TIME (our bot catches every exception and logs it, so
+# the engine's exceptions count stays 0 for us: these are the only record of our own bugs in field games)
 TEAM_KEYS = ('team', 'errors', 'frozen', 'timeouts', 'init_fail', 'init_robots', 'exceptions', 'err_kinds', 'units',
-             'health', 'turns', 'ms_mean', 'ms_max', 'init_ms_max', 'slow_turns')
+             'health', 'turns', 'ms_mean', 'ms_max', 'init_ms_max', 'slow_turns', 'exc_caught', 'slow_logged')
 # A match's finished games survive a failed or interrupted attempt (a crashed game, a saturn restart): the retry plays
 # only the games still missing. Kept per message under $GALAXY_HOME/saturn/resume until the message is acked; a
 # directory nobody acked (a message dropped from the spool) is removed after RESUME_DAYS.

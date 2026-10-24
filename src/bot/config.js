@@ -193,6 +193,13 @@ export const CFG = {
                              // bot1v43 2321, three chainers shot on their build tile at birth, the castle held 586-1,330
                              // K for 200 rounds and fell with 1,330 banked; botfinalsafe 2740, chainers walled off by
                              // our own church on the edge corridor, 1,200 K held from r300 to r600
+  CHAIN_WALL: 0,             // >0: a line church that sees this many enemy crusaders, prophets and preachers or more, or
+  CHAIN_WALL_REST: 300,      // hears that another did (FAR.WALL), ends its line: no link, no burst; the first radios it
+                             // (17 tiles, 18 fuel) and tells our castles (CT.WALL), which then launch no chain and keep no
+                             // chain bank for CHAIN_WALL_REST rounds (replica, v7-v8 lines within 6 king steps of an enemy
+                             // castle: the 7 whose nearest church saw 28 or more killed none and lost 8,020 K of units
+                             // there within 60 rounds, uvafan 2046, 1653 and IanCoolidge0 1036; the 9 that saw 10-25
+                             // killed 9 castles)
   CHURCH_FIRST_R2: 0,        // >0: an enemy church within this r2 of a unit's home structure is its first target
   CHURCH_FIRST_V: 3,         // (military.js churchFirst); preachers count it this much in the splash
   HUNT: 0,                   // >0: a pilgrim radios an enemy pilgrim that has stood this many turns on one tile in
@@ -234,6 +241,11 @@ export const CFG = {
                              // lattice tile in a remembered prophet's reach (r2 64) and do not step into it on the way
                              // (military.js threatHot; v7's 18 replica control games: 235 prophets died unfired on their
                              // first steps toward the lattice, into prophets they could not yet see; 2046 vs uvafan)
+  SIEGE_NOW: 0,              // 1: a military build whose radio is free (threat responses send none) radios the prophet
+                             // that turn, so the newborn hears it on its first turn (0: only on a turn with no military
+                             // build, so a structure building every turn into a parked prophet never warns: replica
+                             // m651-1, a church built 176 prophets and 163 units died on one tile to one prophet at
+                             // r2 65, out of the newborns' sight; audit 2026-10-24)
   SAFE_BUILD: 0,             // 1: structures never build a robot on a tile where the enemy attackers in sight could kill it
                              // before its first turn (struct.js exposure; replica 414-3, seed 836: four prophets in a row
                              // died unborn on one church tile); 2: counting only attackers with no other target of ours
@@ -326,6 +338,11 @@ export const CFG = {
   WAVE: 0,                   // >0: after the first attack call, call again only once this many military units are
   WAVE_GAP: 15,              // idle (units report marching over castle talk), on 3 rounds, then wait this many rounds
   ATTACK_EVERY: 5,           // castles repeat the attack call (20 fuel) every this many rounds (5: ~4,400 fuel a game)
+  RADIO_WAIT: 0,             // 1: a castle's chain launch or pioneer waits a turn while the attack call holds the radio,
+                             // as escort() does (0: built deaf, it wanders all game and the castle counts the launch:
+                             // CHAIN_ROUND, CHAIN_STAGGER, CHAIN_EVERY and ATTACK_EVERY are multiples of 5, so every
+                             // later launch of that castle falls on a call round; audit 2026-10-24, replica 731 game 3:
+                             // 5 of 5 chain launches after r450 and 3 pioneer re-sends went out deaf)
   ATTACK_PERSIST: 0,         // 1: units report destroyed enemy castles (CT.DEAD), castles drop them and radio the next
                              // target map-wide (FAR.WIDE); units without orders wait where they are, not at home
   ATTACK_WAIT: 40,           // ...for this many rounds

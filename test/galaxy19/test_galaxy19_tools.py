@@ -112,6 +112,14 @@ class Games(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             saturn.tally([{'winner_label': None}])
 
+    def test_game_row_keeps_our_caught_exceptions(self):
+        res = {'winner': 'blue', 'reason': 'castles', 'rounds': 400,
+               'teams': [{'team': 'red', 'exceptions': 0, 'exc_caught': 3, 'slow_logged': 7, 'logs': 12},
+                         {'team': 'blue', 'exceptions': 1, 'exc_caught': 0, 'slow_logged': 0, 'logs': 0}]}
+        row = saturn.game_row(0, 203, 'A', 'B', {'A': 'vibe19', 'B': 'X'}, res, 12.34)
+        self.assertEqual((row['winner_team'], row['map'], row['wall_s']), ('X', 'seed-203', 12.3))
+        self.assertEqual(row['teams'][0], {'team': 'red', 'exceptions': 0, 'exc_caught': 3, 'slow_logged': 7})
+
     def test_archive(self):
         with tempfile.TemporaryDirectory() as d:
             g = touch(d, 'g.bc19', 'replay')

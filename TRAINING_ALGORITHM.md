@@ -73,20 +73,20 @@ the ladder and calibrated with a full field block the same day. Then run a corre
    incumbent in behaviour (checked by identity games).
 5. **Delivery** (does it fire?): one logged game read against the incumbent on the same seed; then a small paired block
    whose counters show the mechanism fires in most games and its signature moves. A candidate that does not deliver
-   never reaches a gate. Tools refuse to gate without a delivery PASS.
-6. **Local gate** (paired self-play): candidate and incumbent on the same random (map, side, seed) cells; only
-   discordant pairs count. Also the archetype roster and the frozen roster, as screens that can block but not accept.
-   A candidate **aimed at the field** (its target is a failure seen in ladder games that self-play does not show,
-   such as resources the field takes and our builds leave idle) is declared so before its gate; the gate is then a
-   non-inferiority screen (reject at t <= -1 or any basics regression), and acceptance comes only from step 7.
-   Once a ladder panel exists, every candidate is accepted only by step 7: self-play wins that exploit the
-   incumbent's own habits are reversed by the field often enough that a local t >= 2 is a pass to the panel, not
-   an accept.
-7. **Ladder confirmation**: candidates that pass locally get an unranked panel against field bots near our rating
-   in strength (the bots that beat or split with the incumbent lately, not the rating list alone), paired with the
-   incumbent's own panel created at the same time. Where a match keeps the build it was created with, submit the
-   candidate only while its matches are created, then resubmit the incumbent. Without map choice, pair by
-   (opponent, game number). Accept by the two-block rule (§4).
+   never reaches a gate; the screen job prints the delivery counters beside its result.
+6. **Local screen** (paired self-play): candidate and incumbent on the same random (map, side, seed) cells; only
+   discordant pairs count. Also the archetype roster and the frozen roster. Once a ladder panel exists the screen
+   **only rejects**: self-play wins that exploit the incumbent's own habits are reversed by the field often enough
+   that no local number accepts. Reject at t <= -1.5, at a one-sided sign-flip test p < 0.05 on the per-cell
+   difference in the graded objective (castles lost), or at any exception the incumbent does not have; overruns and
+   frozen units are read per million turns against the incumbent's, since the machine causes most of them. Together
+   the bars reject roughly one neutral candidate in eight (the t bar alone 3-13%, swinging with D); a bar that rejects
+   one in three (an uncalibrated ratio) costs more good candidates than the panel time it saves. Everything else goes to step 7.
+7. **Ladder panel**: an unranked block against field bots near our rating in strength (the bots that beat or split
+   with the incumbent lately, not the rating list alone), on maps drawn once per opponent and kept, every cell played
+   **from both sides** (the side to move first can matter more than a candidate). Where a match keeps the build it was
+   created with, submit the candidate only while its matches are created, then resubmit the incumbent. Score by the
+   pooled rule (§4); a block is scored only once all its games have finished.
 8. **On accept**: snapshot; submit as the active build; run the progress refresh (ratings, charts, attempts table,
    handoff); commit and push the same hour; mine the new ladder games for the next target.
 9. **On reject**: restore the working bot from the snapshot, log the closing number, its kind (refuted, below
@@ -120,37 +120,44 @@ its trigger fires elsewhere.
 
 - The unit of evidence is the **paired cell** `(opponent, map, side, seed)`, candidate vs control on the same cell.
   Identical outcomes carry no information. With D discordant cells and net = gained − lost, t = net / √D.
-- **Two-block rule** for the ladder panel: accept after block 1 at t ≥ 1.5 and net ≥ +3; reject at net ≤ 0; otherwise
-  play block 2 (same cells, sides swapped) and accept at cumulative t ≥ 1.5 and net ≥ +3. A fix that removes a
-  basics failure may be accepted at net ≥ 0.
 - **The control is a sample too.** Where the ladder's games are not deterministic, one control block mislabels cells:
   a candidate "loses" the cells the control won by luck and "gains" those it lost by luck, and every neutral candidate
-  reads net ≈ 0. Keep each cell's win rate pooled over the control's blocks and the neutral (rejected) candidates;
-  score a candidate by wins minus the pooled expectation, and read flips of cells the pool never wins as the signal.
-  Pooled rule: after block 1 reject at z < 0.5 (the incumbent's own level, 6 of 18, reads 0.2); after block 2 accept at cumulative z ≥ 2, reject at z < 1, else a third
-  block, accepted at z ≥ 2. A rejected candidate's blocks join the pool.
+  reads net ≈ 0. Pool each cell's record over the incumbent's own blocks and the neutral rejected candidates' blocks,
+  and score a candidate by wins minus the pooled expectation: z = (W − E) / √V, E = Σ p, V = Σ p(1 − p).
+- **The cell includes the side.** p per (opponent, map, side) = (w_s + k·p_c) / (n_s + k), k = 2, where
+  p_c = (w + ½) / (n + 1) is the side-blind cell rate: the side's own record, shrunk toward the cell's while it is thin.
+- **Pooled rule**: after block 1 reject at z < 0.5; after block 2 accept at cumulative z ≥ 2, reject at z < 1, else a
+  third block, accepted at z ≥ 2. A rejected candidate's block joins the pool only when its own z lay within ±1 (a
+  clearly worse candidate's block lowers every later expectation). A fix that removes a basics failure may be
+  accepted at z ≥ 0.
+- **The pool is not a test set.** A candidate designed from particular panel cells lists them in its pre-registration;
+  it is accepted only if its z over the other cells is ≥ 0 as well. Version the panel (§5) before every cell has
+  been studied.
+- **No rule applies backwards.** A rejected candidate is never reopened under a rule written after its rejection
+  without fresh blocks, and a decision rule is fixed in the log before the block it decides is scored.
 - Where the season has a graded objective (score margin, structures killed, resources at the end), test the per-pair
   difference in that objective alongside wins: it carries several times more information per game.
-- Local paired gate: sequential looks, stop early only when decisive. Size looks by discordant cells, not games:
-  with a deterministic engine, a switch that never changes a decision on a map gives byte-identical games there, a
-  split by construction. Count them (compare the two replays of each cell) and keep adding cells until D reaches the
-  look's target (e.g. 12, then 24, then 48), then read t. Stopping on D, which says nothing about who won, does not
-  bias t; a switch that fires on few maps otherwise passes no gate at any real effect, and costs many cells to pass
-  one. Simulate every gate's false-accept rate and its power at a realistic effect before relying on it; a gate that
-  cannot pass a real gain is a defect.
+- Local paired reads: size by discordant cells, not games: with a deterministic engine, a switch that never changes a
+  decision on a map gives byte-identical games there, a split by construction. Count them (compare the two replays
+  of each cell); where D stays small, add cells until it reaches a fixed target before reading t. Stopping on D,
+  which says nothing about who won, does not bias t.
+- Simulate every bar's false-reject rate, and every panel design's false-accept rate and its power at a realistic
+  effect (one to two wins per 18 cells), before relying on it; a design that cannot pass a real gain is a defect.
 - Rating: batch Bradley-Terry over all ladder games, each build its own player, a weak prior, repeated cells counted
   once, a cap per pair. Report rating with interval, rank, and expected score against the whole field. The contest
   site's own sequential rating is for seeding only.
 - Never read a running batch. Never move a bar after seeing a number. Never reinterpret a null. A single fixed-seed
   game is a filter, never a verdict. Read the shape of a diff: one-directional on one map or side is real; scattered
-  and mixed is noise. Compare against controls from the same period, never pooled history.
+  and mixed is noise. Pool only the incumbent's lineage (its own blocks and its neutral candidates), never an older
+  champion's history. An agent given replica data gets finished matches only.
 
 ## 5. Using the ladder like a contestant
 
 - Only validated builds play ranked games. Candidates play unranked panels, timed so the candidate is active for as
   short a time as possible (park it as soon as its matches exist).
 - Rotate opponents from the band around our rating, random map and random side, so results inform in both directions.
-  Never choose a map or a side against an external bot for a rated or panel game.
+  Never pick a map or a side for advantage: panel maps are drawn at random once per opponent and kept, and every
+  panel cell is played from both sides.
 - Version the panel: refresh it when it saturates (any opponent at 0–10% or 90–100%, the whole panel above ~80%) or is
   map-narrow; play the control first; mark every version change on the charts. Never quote standing from panel games
   alone.
@@ -178,24 +185,24 @@ A closure says an implementation failed; only a ceiling (arithmetic, engine) lic
 - **Never idle.** Keep at least three jobs queued on the compute machine and an idle filler that plays the shipped
   build on fresh cells. A background watcher wakes the session on finished work, a stuck or dead component, low disk, or
   a heartbeat; it is re-armed at the end of every turn.
-- **Rules live in tools that refuse**, not in memory: no gate without delivery PASS, no paired read on mismatched
-  cells, no result row without code-hash provenance, no accept without the refresh.
+- **Rules live in tools that refuse**, not in memory: no paired read on mismatched cells, no pooled score of a block
+  with an unfinished game, no result row without code-hash provenance; the screen prints its own verdict.
 - **Records**: an append-only training log (one entry per attempt: target, trace, pre-registration, counters, gate
   numbers, decision, what it closed, next); a closed-directions ledger; `LEARNINGS.md` for durable lessons, each with
   its measurement; an attempts table with every funnel stage; `HANDOFF.md` as a closure map. Record the measurement,
   not the story. Nothing stale stays.
 - **Owner**: every prompt verbatim in `PROMPTS.md` (PDT); progress visible in the repository at every accept; a short
   owner question is an audit trigger, answered from data.
-- Kill ideas cheaply, in this order: engine read, census of replays on disk, one-map probe, small paired block, full
-  gate, ladder panel.
+- Kill ideas cheaply, in this order: engine read, census of replays on disk, one-map probe, small paired block, local
+  screen, ladder panel.
 
 ## 8. Defaults
 
 | Parameter | Value |
 |---|---|
 | Delivery block | 24 paired cells, extend to 48 |
-| Local paired gate | looks when D first reaches 12 / 24 / 48 discordant cells (at most 200 cells); pass to the ladder panel at t ≥ 2.0, reject t ≤ 0 |
-| Ladder panel block | 100 cells (10 field bots near our rating × 10 maps), two-block rule of §4 |
+| Local screen | 20 paired cells (both sides); rejects only: t ≤ −1.5, castles-lost sign-flip p < 0.05, a new exception |
+| Ladder panel block | 6-8 field bots near our rating × 3 maps × both sides; pooled side-aware z of §4 (0.5 / 2 and 1 / 2) |
 | Rating pair cap | 200 games per pair |
 | Area switch | 3 consecutive rejects |
 | Structural share | ≥ 1 in 4 attempts |

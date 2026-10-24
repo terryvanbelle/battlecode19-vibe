@@ -11,7 +11,7 @@ import { CFG, defReserveK } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER } from './specs.js';
 import { d2, ADJ, offsets } from './util.js';
 import { bfs } from './mapinfo.js';
-import { SIG, CT, encXY, dec } from './comms.js';
+import { SIG, CT, FAR, encXY, dec, decFarRobot } from './comms.js';
 import { isAttacker, canHit, THREAT_R2 } from './combat.js';
 
 const KING = offsets(2);
@@ -117,6 +117,7 @@ export function churchChain(B) {
   const w = B.w, me = w.me, st = B.st;
   if (!st.chain) return null;
   if (me.turn > CFG.CHAIN_BURST || gone(B)) { st.chain = null; return null; }
+  if (CFG.CHAIN_WALL && wallEnd(B)) return null;
   const [tx, ty] = st.chain;
   if (me.turn === 1 && d2(me.x, me.y, tx, ty) > CFG.CHAIN_END_R2 &&
       w.karbonite >= STATS[PILGRIM].costK + STATS[CHURCH].costK && w.fuel >= STATS[PILGRIM].costF + STATS[CHURCH].costF + 4) {
@@ -138,6 +139,25 @@ export function churchChain(B) {
   return w.build(unit, best[0], best[1]);
 }
 
+// CFG.CHAIN_WALL: a line church that sees CHAIN_WALL enemy crusaders, prophets and preachers, or hears another line
+// church's FAR.WALL, ends its line (true). The one that saw the wall radios it to the line and tells our castles.
+function wallEnd(B) {
+  const w = B.w, me = w.me, st = B.st;
+  const seen = w.enemies.filter(e => e.unit >= CRUSADER).length >= CFG.CHAIN_WALL;
+  if (!seen && !w.robots.some(r => r.id !== me.id && (decFarRobot(r) || {}).type === SIG.WALL)) return false;
+  st.chain = null;
+  if (seen) {
+    w.talk(CT.WALL);
+    if (!w.sentR2 && w.fuel >= Math.ceil(Math.sqrt(FAR.WALL))) w.signal(encXY(0, me.x, me.y), FAR.WALL);
+  }
+  return true;
+}
+
+// CFG.CHAIN_WALL: a castle that heard CT.WALL rests its chains (no launch, no chain bank) for CHAIN_WALL_REST rounds.
+export function chainsWalled(B) {
+  return CFG.CHAIN_WALL > 0 && B.st.wallAt !== undefined && B.round - B.st.wallAt < CFG.CHAIN_WALL_REST;
+}
+
 // CFG.CHAIN_FAILS: castles hold their lines after that many fired with no enemy castle destroyed since (castle.js).
 export function chainsFailed(st) {
   return CFG.CHAIN_FAILS > 0 && (st.chainMiss || 0) >= CFG.CHAIN_FAILS;
@@ -148,11 +168,12 @@ export function chainsFailed(st) {
 // target gone (CT.CHAINGONE). Returns {act, x, y} like buildToward, or null.
 export function chainLaunch(B, buildToward) {
   const w = B.w, me = w.me, st = B.st;
-  if (!CFG.CHAIN_ROUND || !st.order || st.chainOff || st.chainLive || chainsFailed(st)) return null;
+  if (!CFG.CHAIN_ROUND || !st.order || st.chainOff || st.chainLive || chainsFailed(st) || chainsWalled(B)) return null;
   const idx = Math.max(0, st.order.findIndex(c => c.x === me.x && c.y === me.y));
   if (B.round < CFG.CHAIN_ROUND + idx * CFG.CHAIN_STAGGER) return null;
   if (st.chainAt !== undefined && B.round - st.chainAt < CFG.CHAIN_EVERY) return null;
   if (!w.canAfford(PILGRIM, defReserveK(B), 2)) return null;
+  if (CFG.RADIO_WAIT && w.sentR2) return null;   // the attack call took the radio: launch next turn, not deaf
   const [tx, ty] = w.mirror(me.x, me.y);
   const b = buildToward(B, PILGRIM, tx, ty, encXY(SIG.CHAIN, tx, ty));
   if (!b) return null;

@@ -3,10 +3,16 @@
 // Plays the bot against itself with a *simultaneous* stepper: every round, all robots compute their actions from the
 // same pre-round state, then the actions are applied. The engine's own turn order (red first) and its shuffle of the
 // visible list are the only sources of side asymmetry in a real game; here each side's visible list is shuffled
-// independently, and the clock is not enforced. A side-symmetric bot keeps the game an exact mirror image:
-// every robot has a twin at the mirrored tile with the same unit, health, cargo, signal and castle talk, and the
-// team stores are equal. Reports the first round and robot where that fails.
-//   node tools/symcheck.js --bot src/bot --seeds 2,5,8 --rounds 150
+// independently, and the clock is not enforced. The stepper takes the engine's order out of the result:
+//   - attacks resolve first and together: every shot hits the pre-round board, and the dead are removed only after
+//     all have fired (the engine's order lets the first of two duelling twins kill the other before it shoots);
+//   - the other actions follow in twin pairs, red then its blue twin, so same-team conflicts resolve alike on both
+//     sides; twins that aim at one tile (a tile on the mirror axis is its own mirror) both stay put, keeping their
+//     signal and castle talk (the engine would give the tile to the first to act).
+// A side-symmetric bot then keeps the whole game an exact mirror image: every robot has a twin at the mirrored tile
+// with the same unit, health, cargo, signal and castle talk, and the team stores are equal. Any difference fails, at
+// any round; it reports the first, with the twin pair after whose actions the board stopped mirroring.
+//   node tools/symcheck.js --bot bots/v8 --seeds 1,2,3,2321 --rounds 1000
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -55,18 +61,8 @@ function diff(g, mir) {
   return null;
 }
 
-// How a split at the end of a round counts: 'contest' and 'combat' are decided by the engine's order, not the bot.
-// d: diff's message; detail: the robots it names; mid: the first twin pair after which the board stopped mirroring.
-function verdict(d, round, firstAttack, detail, mid) {
-  if (d.startsWith('CONTEST')) return 'contest';
-  if (firstAttack && firstAttack <= round && /health|karbonite|fuel|no (blue|red) twin|robot count/.test(d)) return 'combat';
-  // Both twins aimed at the same tile (a build or move onto the mirror axis): the engine's order decides.
-  if (Object.values(detail).filter(v => /occupied/i.test(v.err || '')).length === 1) return 'contest';
-  // A twin pair that shoot each other: the first to resolve kills the other before it acts (h55 seed 2, round 215:
-  // the board stays a mirror, the dead twin's unspent shot splits the stores).
-  if (firstAttack && mid && mid.pair.some(p => p.spent === undefined)) return 'combat';
-  return false;
-}
+// The tile an action claims (move, build), or null.
+const claim = (r, a) => a && (a.action === 'move' || a.action === 'build') ? (r.x + a.dx) + ',' + (r.y + a.dy) : null;
 
 async function check(code, seed, rounds) {
   const g = new Game(seed, 1e9, 1e9, false, false);
@@ -74,9 +70,7 @@ async function check(code, seed, rounds) {
   const vms = new Map();
   const ensure = () => { for (const r of g.robots) if (!vms.has(r.id)) { vms.set(r.id, new CrossVM(code)); r.initialized = true; r.hook = true; } g.init_queue = 0; };
   ensure();
-  const realRandom = Math.random;
-  // Once robots fight, sequential resolution (a robot killed earlier in the round does not act) breaks exact
-  // mirroring for reasons outside the bot; divergences in health/existence after the first attack are 'combat'.
+  const realRandom = Math.random, realDelete = g._deleteRobot;
   let firstAttack = 0;
   for (let round = 1; round <= rounds; round++) {
     g.round = round; g.fuel[0] += SPECS.TRICKLE_FUEL; g.fuel[1] += SPECS.TRICKLE_FUEL;
@@ -101,27 +95,39 @@ async function check(code, seed, rounds) {
     const errs = [];
     const pre = actors.map(r => [r.x, r.y]), spent = [];
     if (!firstAttack && acts.some(a => a && a.action === 'attack')) firstAttack = round;
+    const apply = (i, a) => { const r = actors[i];
+      const rec = new ActionRecord(g, r), k0 = g.karbonite.slice(), f0 = g.fuel.slice();
+      try { g.processAction(r, a, 0, rec); rec.enact(g, r); } catch (e) { errs[i] = String(e); /* invalid: does nothing */ }
+      spent[i] = `K${g.karbonite[r.team] - k0[r.team]} F${g.fuel[r.team] - f0[r.team]}` + (g.karbonite[1 - r.team] !== k0[1 - r.team] || g.fuel[1 - r.team] !== f0[1 - r.team] ? ' +other' : '');
+    };
+    const pairOf = i => order.filter(q => key0[q] === key0[i]);
+    const describe = (why, is) => ({ why, pair: is.map(q => ({ id: actors[q].id, unit: actors[q].unit, at: pre[q], spent: spent[q], err: errs[q], act: acts[q] && { ...acts[q], logs: undefined } })) });
     // mid: the first twin pair (one key) after whose actions the board stops being a mirror image.
     let mid = null;
-    order.forEach((i, idx) => { const r = actors[i];
-      if (g.robots.includes(r)) {   // else killed earlier this round
-        const rec = new ActionRecord(g, r), k0 = g.karbonite.slice(), f0 = g.fuel.slice();
-        try { g.processAction(r, acts[i], 0, rec); rec.enact(g, r); } catch (e) { errs[i] = String(e); /* invalid: does nothing */ }
-        spent[i] = `K${g.karbonite[r.team] - k0[r.team]} F${g.fuel[r.team] - f0[r.team]}` + (g.karbonite[1 - r.team] !== k0[1 - r.team] || g.fuel[1 - r.team] !== f0[1 - r.team] ? ' +other' : '');
-      }
+    // Attacks, together: the dead stay on the board (and keep taking hits) until every shot has landed.
+    const dead = new Set();
+    g._deleteRobot = r => dead.add(r);
+    try { for (const i of order) if (acts[i] && acts[i].action === 'attack') apply(i, acts[i]); }
+    finally { g._deleteRobot = realDelete; }
+    for (const r of dead) realDelete.call(g, r);
+    if (dead.size || firstAttack === round) { const d = diff(g, mir); if (d) mid = describe('after the attacks: ' + d, order.filter(i => acts[i] && acts[i].action === 'attack')); }
+    // The rest, in twin pairs; the killed do not act. Twins claiming one tile both stay put (signal and talk kept).
+    order.forEach((i, idx) => { const r = actors[i], a = acts[i];
+      if (a && a.action === 'attack' || !g.robots.includes(r)) return;
+      const c = claim(r, a), twin = c && pairOf(i).find(q => q !== i && actors[q].team !== r.team);
+      if (twin !== undefined && twin !== null && claim(actors[twin], acts[twin]) === c) { const { action, ...rest } = a; apply(i, rest); errs[i] = 'contested ' + c; }
+      else apply(i, a);
       const nx = order[idx + 1];
-      if (!mid && (nx === undefined || key0[nx] !== key0[i])) {
-        const d = diff(g, mir);
-        if (d) mid = { why: d, pair: order.filter(q => key0[q] === key0[i]).map(q => ({ id: actors[q].id, unit: actors[q].unit, at: pre[q], spent: spent[q], err: errs[q], act: acts[q] && { ...acts[q], logs: undefined } })) };
-      }
+      if (!mid && (nx === undefined || key0[nx] !== key0[i])) { const d = diff(g, mir); if (d) mid = describe(d, pairOf(i)); }
     });
     ensure();
+    for (const id of vms.keys()) if (!g.robots.some(r => r.id === id)) vms.delete(id);   // a dead robot's sandbox
     const d = diff(g, mir);
     if (d) {
       const st = ` [stores K${g.karbonite[0]}/${g.karbonite[1]} F${g.fuel[0]}/${g.fuel[1]}]`;
       const ids = (d.match(/#(\d+)/g) || []).map(t => +t.slice(1));
       const detail = {}; for (const id of ids) { const i = actors.findIndex(r => r.id === id); if (i >= 0) detail[id] = { unit: actors[i].unit, at: pre[i], spent: spent[i], act: acts[i] && { ...acts[i], logs: undefined }, logs: acts[i] && acts[i].logs, err: errs[i] }; }
-      return { seed, ok: verdict(d, round, firstAttack, detail, mid), round, why: d + st, firstAttack, detail, mid };
+      return { seed, ok: false, round, why: d + st, firstAttack, detail, mid };
     }
   }
   return { seed, ok: true, round: rounds, robots: g.robots.length };
@@ -135,5 +141,5 @@ async function main() {
   for (const s of seeds) { const r = await check(code, s, rounds); if (r.ok === false) bad++; console.log(JSON.stringify(r)); }
   process.exit(bad ? 1 : 0);
 }
-module.exports = { check, compile, verdict };
+module.exports = { check, compile, claim };
 if (require.main === module) main().catch(e => { console.error(e.stack || e); process.exit(2); });
