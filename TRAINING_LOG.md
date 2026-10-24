@@ -3826,3 +3826,17 @@ at t <= -1) it qualifies for a panel, and it aims at the never-won cells (LEARNI
 hourly scrimmage limit (HTTP 429, as on the official site) took only wololo (712) and botfinalsafe (713); the other
 four are requested again after the hour (a background retry), v7 resubmitted (130) each time.
 h140 = h121's switches + PIONEER_FAST 1 (dist/h140, 36e9cb230073, built from today's src) screen on seed0 17000.
+
+## 2026-10-24 05:5x PDT: the pooled panel rule (tools/panel_pool.sh); h136 -> block 2; h128 reopened for a third block
+
+tools/panel_pool.sh CONTROL POOLFILE BLOCK... scores candidate blocks against each cell's win rate pooled over the
+control and the neutral blocks (progress/panels/v7-m1.pool), z = (wins - E) / sqrt(sum p(1-p)); TRAINING_ALGORITHM §4
+now reads: after block 1 reject at z < 0.5 (v7's own 6 of 18 reads 0.2), after block 2 accept at cumulative z >= 2,
+reject at z < 1, else a third block. tools/panel_submit.sh plays one block (resubmitting the candidate and retrying
+scrims the replica's hourly limit refuses every 15 min, then restoring bots/v7). Unit tests pass.
+Every earlier block rescored (z): h96 426 -1.80, h104 432 0.20, h103 438 0.89, h111 616 0.19, h126 622 0.19, h127
+628 -1.83, h128 634 1.57 + 646 0.87 = 15 of 36 against 11.1, z 1.79, h130 640 -1.15, h123 652 -1.82, h112 673 0.19,
+h135 679 0.19. Every rejection stands except h128 (two blocks between 1 and 2): a third block.
+h136 (SIEGE 30) block 1 694-699: 7 of 18 against 5.7, z 0.81 (won IanCoolidge0 203, bot1v43 2321, uvafan 1712,
+awesomelemonade 1712; no never-won cell turned) -> block 2. Both blocks go in after the rate window (~06:5x), behind
+h121's last four.

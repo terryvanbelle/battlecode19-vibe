@@ -127,6 +127,8 @@ its trigger fires elsewhere.
   a candidate "loses" the cells the control won by luck and "gains" those it lost by luck, and every neutral candidate
   reads net ≈ 0. Keep each cell's win rate pooled over the control's blocks and the neutral (rejected) candidates;
   score a candidate by wins minus the pooled expectation, and read flips of cells the pool never wins as the signal.
+  Pooled rule: after block 1 reject at z < 0.5 (the incumbent's own level, 6 of 18, reads 0.2); after block 2 accept at cumulative z ≥ 2, reject at z < 1, else a third
+  block, accepted at z ≥ 2. A rejected candidate's blocks join the pool.
 - Where the season has a graded objective (score margin, structures killed, resources at the end), test the per-pair
   difference in that objective alongside wins: it carries several times more information per game.
 - Local paired gate: sequential looks, stop early only when decisive. Size looks by discordant cells, not games:
