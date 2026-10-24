@@ -3850,3 +3850,10 @@ those preachers and then prophets from r97 (22 lost). Our bank was 3 K at r100 (
 churches), so h139's ECON_RICH does not fire on this map; the fights over neighbouring churches decide it.
 h141 = v7 + h84's church strike (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5; dist/h141, 04e1af62e9bf), never
 measured on the field (h84 failed a local delivery against h76): screen on seed0 18000, then the panel.
+
+## 2026-10-24 06:4x PDT: h139 passes its screen; h140 leads its screen (t 1.29), tally pending
+
+- h139 (ECON_RICH 150) vs h87, 20 cells seed0 16000: 22/40, gained 7, lost 5, D 12, net 2, t 0.58; castles lost 29
+  vs 35, churches 558 vs 500: non-inferior; its panel 706-711 stands (706-708, 710 done).
+- h140 (h121 + PIONEER_FAST) vs h87, 20 cells seed0 17000: 25/40, gained 10, lost 5, D 15, net 5, t 1.29; the
+  castles tally is still running. Its panel follows once the tally clears and the hourly limit allows.

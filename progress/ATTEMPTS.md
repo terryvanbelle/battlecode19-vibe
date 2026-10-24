@@ -189,6 +189,6 @@ Totals: 125 other, 28 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparrin
 | `h136` | 2026-10-24 01:47 | v7 | SIEGE 30 alone (h135 without SAFE_BUILD 2) | vs h87 20 cells seed0 13000: +2 -2, D 4, t 0; castles lost 25 vs 27 |  | block 1 694-699: 7 of 18 vs pooled 5.7, z 0.81; block 2 queued |  | REPLICA BLOCK 2 |
 | `h137` | 2026-10-24 02:30 | v7 | SIEGE 10: h136 with a shorter prophet memory | vs h87 20 cells seed0 14000: +1 -3, D 4, t -1.00; castles lost 35 vs 35 |  |  |  | REJECTED (screen t -1.00) |
 | `h138` | 2026-10-24 03:4x | v7 | SIEGE 60: h136 with a longer prophet memory | vs h87 20 cells seed0 15000: +3 -2, D 5, t 0.45; castles lost 35 vs 32 |  |  |  | SCREEN PASSED (panel waits on h136) |
-| `h139` | 2026-10-24 04:2x | v7 | ECON_RICH 150: before r100 the bank past 150 K + reserves builds the peacetime army (h116 at 100) |  |  | block 1 = matches 706-711 |  | SCREEN QUEUED + REPLICA PANEL |
-| `h140` | 2026-10-24 05:2x | v7 | h121 + PIONEER_FAST 1: the early centre pioneer at full speed |  |  |  |  | SCREEN QUEUED |
+| `h139` | 2026-10-24 04:2x | v7 | ECON_RICH 150: before r100 the bank past 150 K + reserves builds the peacetime army (h116 at 100) | vs h87 20 cells seed0 16000: +7 -5, D 12, t 0.58; castles lost 29 vs 35 |  | block 1 = matches 706-711 |  | REPLICA PANEL (screen passed) |
+| `h140` | 2026-10-24 05:2x | v7 | h121 + PIONEER_FAST 1: the early centre pioneer at full speed | vs h87 20 cells seed0 17000: +10 -5, D 15, t 1.29 |  |  |  | SCREEN: t 1.29, tally pending |
 | `h141` | 2026-10-24 06:2x | v7 | h84's church strike on v7: a structure seeing an enemy church within r2 36 and no attacker builds a preacher toward it (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) |  |  |  |  | SCREEN QUEUED |
