@@ -4176,3 +4176,14 @@ Against the v8 pool (control 726-731 + the five v8-m1 blocks), block 1 each:
 - h150 (WATCH 2, structures radio attackers no military unit sees; 961-966): 7 of 18, E 7.6, z -0.37. All seven wins
   in cells the pool wins half the time or more; lost wololo 2644 and IanCoolidge0 203.
 Both blocks join progress/panels/v8-m1.pool (now control + 7 blocks). h148 (CHAIN_LIVE 1) block 2 (967-972) runs.
+
+## 2026-10-24 11:43 PDT: h148's block-2 decision fixed before 967-972 is scored; h146's block leaves the v8 pool
+
+The audit's evaluation lens (PROMPTS 34) found that a rejected block from a clearly worse candidate lowers the pooled
+expectation and inflates the z of later candidates: h146's block (758-763, own block-1 z -1.98) alone moved h148's
+block-1 z from 2.02 to 2.28. Rule from now on: a rejected candidate's block joins the pool only when its own z at its
+decision lies within +-1. 758-763 leaves progress/panels/v8-m1.pool; the other rejected blocks (750-755 z 0.00,
+764-769 0.34, 955-960 0.28, 961-966 -0.37) stay. h148 block 1 against this pool: 11 of 18, E 7.9, z 2.02.
+h148's decision, fixed before any of 967-972 is scored (the match list at 11:26 showed 969 at 2-1; nothing else
+read): `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 777-782 967-972` at this commit, read only once all
+six matches have finished; accept at cumulative z >= 2, reject below 1, otherwise a third block accepted at z >= 2.

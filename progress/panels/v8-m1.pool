@@ -3,7 +3,8 @@
 634-639
 646-651
 750-755
-758-763
+# 758-763 (h146, own block-1 z -1.98) left out from 2026-10-24 11:43: a rejected block joins only when its own z is
+# within +-1 (a clearly worse candidate pulls the pooled expectation down and inflates later z; audit 2026-10-24)
 764-769
 955-960
 961-966
