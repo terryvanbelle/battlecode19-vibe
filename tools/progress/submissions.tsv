@@ -18,4 +18,4 @@ submission	build	note
 123	cand:h136	panel candidate dist/h136 (4d8e4bab9982), block 1 = matches 694-699 (TRAINING_LOG 2026-10-24 02:30)
 125	cand:h103	panel candidate dist/h103 (406a9d0dc3b3), block 2 = matches 700-705 (TRAINING_LOG 2026-10-24 03:3x)
 127	cand:h139	panel candidate dist/h139 (105f222fabb6), block 1 = matches 706-711 (TRAINING_LOG 2026-10-24 04:2x)
-129	cand:h121	panel candidate dist/h121 (8f22f616fcf1), block 1 = matches 712-713 + four after the hourly limit (TRAINING_LOG 2026-10-24 05:2x)
+129	cand:h121	panel candidate dist/h121 (8f22f616fcf1), block 1 = matches 712-713 and 716-719 (the last four as submission 131) (TRAINING_LOG 2026-10-24 05:2x)
