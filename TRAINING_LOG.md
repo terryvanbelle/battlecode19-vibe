@@ -4449,3 +4449,10 @@ the driver, 15:58-16:03: node 154 of 154, galaxy19 python 63 of 63. Committed wi
 (h158), FEED_STOP (h159), ECON_NOPLAN (h160), build_bot.js --cfg, batch.js row conditions, `replay.js young`,
 panel_submit.sh PANEL, the noplan-m1 panel, and the log, ledger and HANDOFF entries since 12:53. symcheck on bots/v8
 (seeds 1, 2, 3, 2321 to r1000) runs alone on the driver from 16:03.
+
+## 2026-10-24 16:26 PDT: symcheck moves to the VM: alone on the driver it grew to 798 MB
+
+symcheck on bots/v8 (seeds 1, 2, 3, 2321 to r1000) started alone on the driver at 16:03 and reached 798 MB resident by
+16:23 with 285 MB left (no output yet); stopped by PID. It runs on the VM as job ...1000sym (from 2019-next, the
+driver's tools/symcheck.js 716a95d5, nice 15, unshare -rn; one process beside saturn's 8 slots), log
+out/sym_v8_r1000.log. LEARNINGS 13 extended: symcheck at 1000 rounds is a VM job, not a driver one.

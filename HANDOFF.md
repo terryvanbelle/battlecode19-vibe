@@ -23,6 +23,8 @@
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
   ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 32 z's; the next adds a z.
+  **Running on the VM:** job ...1000sym, symcheck on bots/v8 to r1000 (seeds 1, 2, 3, 2321; log
+  out/sym_v8_r1000.log; TRAINING_LOG 16:26; symcheck past a few hundred rounds never runs on the driver, LEARNINGS 13).
   **Held for the replica queue (TRAINING_LOG 2026-10-24 10:08):** saturn runs 8 slots and no gate runs; eight screens
   wait in ~/jobq/superseded, named to run in this order (26-32 z's): h159 (FEED_STOP 3; 35000; TRAINING_LOG 15:13),
   h160 (ECON_NOPLAN 1; 26 z's + y; the five no-plan maps both sides, 10 games; TRAINING_LOG 15:32), h157 (ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9; 34000),
