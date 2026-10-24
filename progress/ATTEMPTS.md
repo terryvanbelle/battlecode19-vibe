@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 122 other, 24 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (171 rows).
+Totals: 121 other, 25 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (171 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -183,5 +183,5 @@ Totals: 122 other, 24 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparrin
 | `h130` | 2026-10-23 20:41 | v7 | MIL_ROTATION null: peacetime prophets, every 4th a preacher (h98 on today's src), replica without a local gate | vs h87 20 cells seed0 8000: +7 -2, D 9, t 1.67; castles lost 24 vs 38 |  | block 1 640-645: +1 -3, net -2, t -1.00 |  | REJECTED |
 | `h131` | 2026-10-23 21:20 | v7 | MIL_ROTATION [4]: all-prophet peacetime army | vs h87 20 cells seed0 9000: +4 -3, D 7, t 0.38; castles lost 37 vs 38 |  |  |  | REJECTED (below the panel pass; the doctrine's panel h130 net -2) |
 | `h132` | 2026-10-23 21:20 | v7 | MIL_ROTATION null + ATTACK_ROUND 1001 + ATTACK_LATE 1001: prophet army, no general attack | vs h87 20 cells seed0 9500: +7 -4, D 11, t 0.90 |  |  |  | REJECTED (below the panel pass; the doctrine's panel h130 net -2) |
-| `h133` | 2026-10-23 22:23 | v7 | CHAIN_FAILS 1: castles hold chain lines after one fired with no enemy castle destroyed (field-aimed) |  |  |  |  | GATE QUEUED (non-inferiority screen) |
+| `h133` | 2026-10-23 22:23 | v7 | CHAIN_FAILS 1: castles hold chain lines after one fired with no enemy castle destroyed (field-aimed) | vs h87 20 cells seed0 10000: +4 -2, D 6, t 0.82; castles lost 35 vs 30 (1.17x), churches 346 vs 593 |  |  |  | REJECTED (screen: castles lost above 1.1x) |
 | `h134` | 2026-10-23 22:47 | v7 | CHAIN_ROUND 0: no church chains (field-aimed) |  |  |  |  | GATE QUEUED (non-inferiority screen) |

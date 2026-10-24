@@ -3684,3 +3684,12 @@ h132 (MIL_ROTATION null + no general attack) vs h87, 20 cells seed0 9500: 23/40,
 t 0.90: below the panel pass, and the prophet doctrine's panel (h130) was net -2: REJECTED. The prophet line is
 closed. h134 = v7 + CHAIN_ROUND 0 (dist/h134, 4223b655ef3a): no church chains, the limit of the stop rule; a non-inferiority
 screen on seed0 11000 behind h133's. h123's replica block 652-657: 654 bot1v43 1-2 (=), five running.
+
+## 2026-10-23 23:47 PDT: h133 REJECTED by its screen (castles lost 1.17x); h134 heading the same way
+
+h133 (CHAIN_FAILS 1) vs h87, 20 cells seed0 10000: 22/40, gained 4, lost 2, D 6, net +2, t 0.82, but castles lost
+35 vs 30 (1.17x, screen bar 1.1x) and churches 346 vs 593 -> REJECTED by the pre-registered screen. h134 (no chains)
+after 16 games: 2 wins, gained 0, lost 6, t -2.45: in self-play the chain is what takes castles. h123's replica
+block so far: 652 wololo 0-3 (=), 653 botfinalsafe 2-1 (=), 654 bot1v43 1-2 (=), 655 uvafan 0-3 (=), 657
+IanCoolidge0 0-3 (-1); 656 awesomelemonade running. Stopping the chain does not turn uvafan's games: our health
+deficit there outlasts the chain's cost.
