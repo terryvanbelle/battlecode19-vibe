@@ -179,3 +179,11 @@
    -2). A switch that exploits the incumbent's own habits (camping its mirror site, outranging its crusaders) buys
    nothing against bots without those habits. Use the local gate to reject; let only the replica panel accept.
    (2026-10-23 22:09)
+
+33. **One control block is a sample, not a baseline.** On the v7 panel (18 cells), twelve candidate blocks against
+   the single control 420-425 all read net -3..+2. Pooled over the twelve, the cells the control won include three
+   coin flips (IanCoolidge0 203 3/12, botfinalsafe 203 4/12, awesomelemonade 1712 5/12), so nearly every candidate
+   "lost" them; the cells it lost include four the pool wins 3-4 times in 12, which nearly every candidate "gained".
+   Pooled mean 5.4 wins in 18 against the control's 6: no candidate is distinguishable from v7. Six cells the pool
+   never wins (wololo 2013, 836; botfinalsafe 1706; awesomelemonade 2518; uvafan 2046; bot1v43 2591 once in 12) are
+   where an improvement shows. (2026-10-24 04:1x)

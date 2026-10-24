@@ -3783,3 +3783,29 @@ cumulative t >= 1.5 and net >= +3.
 
 h138 = v7 + SIEGE 60 (dist/h138, 97ddd12a883e) brackets h136's memory from above as h137 (SIEGE 10) does from below;
 screen vs h87 on seed0 15000. h137's screen is at 33/40 games.
+
+## 2026-10-24 04:1x PDT: the panel's per-cell record pooled over twelve blocks; the hard cells
+
+Every candidate block (426, 432, 438, 616, 622, 628, 634, 640, 646, 652, 673, 679) compared with v7's 420-425, wins
+per cell pooled: coin flips the control won (IanCoolidge0 203 3/12, botfinalsafe 203 4/12, awesomelemonade 1712 5/12)
+and lost (IanCoolidge0 1036 and 2644 4/12, bot1v43 2321 4/12, uvafan 1653 4/12, 1712 3/12) explain the net-0 blocks
+(LEARNINGS 33; TRAINING_ALGORITHM §4 now pools the control). Pooled mean 5.4 wins in 18, v7 6. Sure wins: bot1v43 388
+12/12, botfinalsafe 2740 11/12, awesomelemonade 2797 8/12. Never won: wololo 2013 (all lost r176-534 on castles),
+wololo 836, botfinalsafe 1706 (r276-621), awesomelemonade 2518 (r490-899), uvafan 2046, bot1v43 2591 (1/12, r147-421).
+Two looks:
+- wololo 2013 (v7, 420, one castle each, 54x54): lost at r198. Wololo had no army at r75 and 14 pilgrims to our 11,
+  20 to 14 at r100, 40 to 12 at r150 (it killed 22 of our pilgrims); mined K 2990 to 1158 by r198. Our bank held
+  4,000 fuel unused at the end: karbonite binds.
+- botfinalsafe 1706 (v7 red, 421): our castles built nothing from r33 to r93 while the bank rose to 186 K (no free
+  depot in our plan, no pioneer site, no army before ECON_UNTIL 100); botfinalsafe took the contested cluster on the
+  symmetry line (x 5-8, y 16-20) with a church and 5 pilgrims and had prophets in our half by r90. At r200 army 7 to
+  28, mined K 678 to 1276, our bank 261 K and 8,579 fuel idle. h116 (ECON_RICH 100, the idle bank to army before
+  r100) was rejected locally (t -1.07) before the protocol moved to the panel (LEARNINGS 32): a panel candidate now.
+
+## 2026-10-24 04:2x PDT: h139 (ECON_RICH 150) to its screen and the replica panel (706-711)
+
+h139 = v7 + ECON_RICH 150 (dist/h139, 105f222fabb6): before ECON_UNTIL 100 the bank past 150 K + the reserves builds the
+peacetime army (h116 used 100). Aimed at the never-won cells (botfinalsafe 1706: castles idle r33-93). Screen vs h87
+on seed0 16000 queued behind h137 and h138; replica submission 127, block 1 = matches 706-711 (v7 resubmitted, 128;
+bumped), read by LEARNINGS 33 (wins against the pooled expectation, flips of never-won cells). A screen rejection
+voids the panel.

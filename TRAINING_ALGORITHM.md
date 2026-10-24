@@ -123,6 +123,10 @@ its trigger fires elsewhere.
 - **Two-block rule** for the ladder panel: accept after block 1 at t ≥ 1.5 and net ≥ +3; reject at net ≤ 0; otherwise
   play block 2 (same cells, sides swapped) and accept at cumulative t ≥ 1.5 and net ≥ +3. A fix that removes a
   basics failure may be accepted at net ≥ 0.
+- **The control is a sample too.** Where the ladder's games are not deterministic, one control block mislabels cells:
+  a candidate "loses" the cells the control won by luck and "gains" those it lost by luck, and every neutral candidate
+  reads net ≈ 0. Keep each cell's win rate pooled over the control's blocks and the neutral (rejected) candidates;
+  score a candidate by wins minus the pooled expectation, and read flips of cells the pool never wins as the signal.
 - Where the season has a graded objective (score margin, structures killed, resources at the end), test the per-pair
   difference in that objective alongside wins: it carries several times more information per game.
 - Local paired gate: sequential looks, stop early only when decisive. Size looks by discordant cells, not games:
