@@ -331,6 +331,32 @@ class Field(unittest.TestCase):
         self.assertIn('vibe19', field.OUR_TEAMS)
 
 
+class Sandbox(unittest.TestCase):
+    """tools/galaxy19/sandbox.sh on this machine: only lo, everything read-only but the work directory, and a refusal
+    when a mount stays writable."""
+    SB = os.path.join(GALAXY, 'sandbox.sh')
+
+    def run_sb(self, work, script, **env):
+        return subprocess.run(['/bin/sh', self.SB, work, 'sh', '-c', script], capture_output=True, text=True, timeout=60,
+                              env={**os.environ, **env})
+
+    def test_sandbox(self):
+        with tempfile.TemporaryDirectory() as work:
+            probe = os.path.join(os.path.expanduser('~'), '.sandbox_test_probe')
+            r = self.run_sb(work, f'touch ok; touch {probe} 2>&1; tail -n +3 /proc/net/dev | cut -d: -f1 | tr -d " "; pwd')
+            if 'unshare' in r.stderr and r.returncode != 0:
+                self.skipTest('no user namespaces here: ' + r.stderr.strip())
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn('Read-only file system', r.stdout)
+            self.assertFalse(os.path.exists(probe))
+            self.assertTrue(os.path.exists(os.path.join(work, 'ok')))
+            self.assertEqual(r.stdout.strip().splitlines()[-2:], ['lo', os.path.realpath(work)])
+            r = self.run_sb(work, 'touch ran', SANDBOX_TEST_SKIP='/')
+            self.assertEqual(r.returncode, 3)
+            self.assertIn('still writable', r.stderr)
+            self.assertFalse(os.path.exists(os.path.join(work, 'ran')))
+
+
 class Contest(unittest.TestCase):
     def test_panel_maps(self):
         import random

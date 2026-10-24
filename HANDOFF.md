@@ -30,7 +30,9 @@
   superseded/: DROPPED 11:31 (WATCH rejected as h150; h153 never reads the spots), move back only the first four.
   When fewer than 30 replica matches wait (waiter armed): GALAXY_EXECUTE_SLOTS=6 in
   tools/galaxy19/deploy/galaxy-setup.sh (saturn's cap MAX_EXECUTE_SLOTS stays 8, the unit's MemoryMax 27G),
-  `tools/galaxy19/deploy/deploy.sh env`, `sudo systemctl restart bc19-galaxy-saturn`, then `tools/move_stale.sh --back`
+  `tools/galaxy19/deploy/deploy.sh env`, `tools/galaxy19/deploy/deploy.sh app` (saturn's exc_caught / slow_logged
+  keys and the fail-closed sandbox.sh of 2026-10-24, tried on the VM under saturn's unit settings),
+  `sudo systemctl restart bc19-galaxy-saturn`, then `tools/move_stale.sh --back`
   the four jobs h157, h155, h154, h156.
   Screens passed: h148 (CHAIN_LIVE 1; +3 -0, t 1.73, castles 35 vs 39), h149 (CHAIN_LIVE 2; +3 -3, t 0.00, 35 vs 34),
   h150 (WATCH 2; +8 -3, t 1.51, 24 vs 38). Rejected: h151 (CHAIN_FAILS 1; +1 -3, t -1.00, 31 vs 19).

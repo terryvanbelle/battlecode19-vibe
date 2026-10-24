@@ -4264,3 +4264,13 @@ once). Unit test; the no-op replay waits for the driver.
 Correction: the entry above, headed 12:55, was written at 12:36 PDT (`date`), and the symcheck restart it calls 12:50
 came a few minutes before 12:36. Those times were estimated, against LEARNINGS 34; HANDOFF's "TRAINING_LOG 12:55"
 points at that entry.
+
+## 2026-10-24 12:47 PDT: the replica sandbox fails closed
+
+`tools/galaxy19/sandbox.sh` (every replica compile and game) suppressed failed remounts, so a mount it could not make
+read-only stayed writable and the bot ran anyway (audit, infra lens). Now each remount keeps the mount's own flags
+(a user namespace may not clear an inherited nosuid / nodev / noexec), and afterwards any writable mount but the work
+directory and /proc, /sys, /dev stops it with exit 3 before the command runs. Unit test on the driver (only lo; home
+read-only; the refusal with a mount left writable on purpose); on the VM inside a transient unit with saturn's
+settings (ProtectSystem=strict, PrivateTmp, ReadWritePaths, PrivateNetwork): work directory writable, the replica's
+home, storage and /tmp read-only, only lo. Goes live with `deploy.sh app` at the saturn restart (HANDOFF).
