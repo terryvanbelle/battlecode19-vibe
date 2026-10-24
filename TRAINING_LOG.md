@@ -3592,3 +3592,11 @@ h126 (ESCORT_FIRST 1 + ESCORT_MIRROR 1, prophet) block 1 622-627 vs v7's 420-425
 net 0, t 0 -> REJECTED by the two-block rule. Gained IanCoolidge0 1036 and 2644; lost IanCoolidge0 203 and
 awesomelemonade 1712 (v7 won both; h126 lost both on health at r1000). Castles held longer in losses to wololo (2013: r518
 vs r198) without turning them: the escort delays the opening siege but does not break it.
+
+## 2026-10-23 20:35 PDT: h127 REJECTED on the replica (block 1 net -3)
+
+h127 (ESCORT_FIRST 1 + ESCORT_MIRROR 1 + ESCORT_UNIT 3) block 1 628-633 vs v7's 420-425: 3/18 to 6/18, gained 0,
+lost 3 (IanCoolidge0 203, botfinalsafe 203 and 2740: all r1000 games v7 won), D 3, net -3, t -1.73 -> REJECTED.
+The mirror escort now has two replica rejections (h126 net 0, h127 net -3) after local gates of t 1.00 and 1.26:
+the escort beats h87 by camping its mirror site, a site the field's bots do not depend on. h128 (two crusaders,
+634-639) is already queued and is read as is; h129 (preachers) goes to the replica only at t >= 2.
