@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 20:20 PDT)
+## State (2026-10-24 02:30 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run built
@@ -17,7 +17,7 @@
 - **VM queue** (`~/jobq`: the runner takes pending jobs in locale `sort` order of their names; gates run from the
   shadow tree ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree,
   outputs in the main tree's out/). Gates at par 2 while saturn runs its 6 slots (8 vCPUs; owner, PROMPTS 18). Now:
-  h126 REJECTED on the replica (20:32, net 0); h127 REJECTED on the replica (20:35, net -3); h127 vs h126 head-to-head even (+4 -4, t 0); **h128** (ESCORT_FIRST 2, mirror, crusaders) gate t 0.90, mechanism met -> replica panel 634-639 (20:20); h129 (the same with preachers) REJECTED 20:52 (t -2.71); h130 local gate t 1.67 but replica net -2: REJECTED 22:09 (LEARNINGS 32); h131 REJECTED 22:23 (t 0.38); h132 REJECTED 22:47 (t 0.90); h133 REJECTED 23:47 (screen: castles lost 1.17x); h134 (no chains) REJECTED 00:42 (t -1.60); **h135** (SIEGE 30 + SAFE_BUILD 2, new switch) delivery passed 01:03 (vs h130), screen passed (t 0, castles even), replica block 1 679-684; **h136** (SIEGE alone) screen queued; the time audit closed 14:18 (overruns are engine, GC and
+  h126 REJECTED on the replica (20:32, net 0); h127 REJECTED on the replica (20:35, net -3); h127 vs h126 head-to-head even (+4 -4, t 0); **h128** (ESCORT_FIRST 2, mirror, crusaders) gate t 0.90, mechanism met -> replica panel 634-639 (20:20); h129 (the same with preachers) REJECTED 20:52 (t -2.71); h130 local gate t 1.67 but replica net -2: REJECTED 22:09 (LEARNINGS 32); h131 REJECTED 22:23 (t 0.38); h132 REJECTED 22:47 (t 0.90); h133 REJECTED 23:47 (screen: castles lost 1.17x); h134 (no chains) REJECTED 00:42 (t -1.60); **h135** (SIEGE 30 + SAFE_BUILD 2, new switch) delivery passed 01:03 (vs h130), screen passed (t 0, castles even), replica block 1 679-684 net 0: REJECTED 02:30 (prophet-on-prophet deaths 1593 -> 1099, no extra wins); **h136** (SIEGE alone) screen passed (t 0, castles 25 vs 27) -> replica 694-699; **h137** (SIEGE 10) screen queued; the time audit closed 14:18 (overruns are engine, GC and
   load, about one turn each: LEARNINGS 31), with field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject
   t <= -1, else a replica panel). Done: h125 REJECTED 16:19 (t -0.82; churches 766 vs 772, bar 1.05x), h124 REJECTED 15:40 (t -0.82; idle 0.67 met, churches 798 vs 858 missed), h123 REJECTED 15:01 (mechanism short: lines 0.84 of h87's, bar 0.8; D 0), h118 REJECTED 13:47 (mechanism short: idle 0.78 of h87's, bar 0.7; churches +10%, a lead), h116 REJECTED 13:30 (t -1.07: r100 army 616 vs 165, castles lost 60 vs 52),
   h121 REJECTED 12:47 (t -0.28, first church 4.4 rounds earlier, bar 5), h115 REJECTED 11:58 (t 0.58, mechanism opposite: fuelEnd 3.5 times h87's in r1000 games, karbonite binds),
@@ -30,7 +30,7 @@
   h96 (v7 + ATTACK_LATE 1001) block 1 426-431 **REJECTED** 08:35 (net -3); **h104** (v7 + ATTACK_ROUND 1001 +
   ATTACK_LATE 1001: no general attack; submission 102) block 1 432-437 **REJECTED** 10:47 (net 0);
   **h103** (v7 + ESCORT 2 + ESCORT_UNIT 3; submission 104) block 1 438-443 final: gained 3, lost 2, net +1, t 0.45 ->
-  block 2 due; h111 (SAFE_BUILD 2) block 1 616-621 **REJECTED** 14:48 (net 0); **h112** (DEF_SEEN 1) block 1 673-678 (00:55). h126 block 1 622-627 **REJECTED** (net 0), h127 628-633 **REJECTED** (net -3), h128 two blocks net +3, t 0.90: **REJECTED** 22:36, h130 640-645 **REJECTED** (net -2), h123 652-657 **REJECTED** (net -3), then h103's block 2, h112's and h119's block 1
+  block 2 due; h111 (SAFE_BUILD 2) block 1 616-621 **REJECTED** 14:48 (net 0); **h112** (DEF_SEEN 1) block 1 673-678 (00:55; 677 still running at 02:30); h135 679-684 **REJECTED** (net 0); **h136** (SIEGE 30) block 1 694-699 (submission 123). h126 block 1 622-627 **REJECTED** (net 0), h127 628-633 **REJECTED** (net -3), h128 two blocks net +3, t 0.90: **REJECTED** 22:36, h130 640-645 **REJECTED** (net -2), h123 652-657 **REJECTED** (net -3), then h103's block 2, h112's and h119's block 1
   go in once fewer than 30 wait: submit, scrim `--panel
   progress/panels/v7-m1.json`, resubmit bots/v7, add the submissions.tsv row. Reading: `contest19.py fetch --new`,
   then `contest19.py compare 420-425 <block>` by the two-block rule. v7 against v6 (414-419: 3 wins in 18) and h82

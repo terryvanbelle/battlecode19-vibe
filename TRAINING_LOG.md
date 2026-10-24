@@ -3754,3 +3754,14 @@ h135 vs h87, 20 cells seed0 12000: 20/40, gained 4, lost 4, D 8, net 0, t 0; cas
 the same first divergences as h133's (contests and combat). h112's block 673-678 so far: 675 bot1v43 2-1 (+1), 676
 uvafan 1-2 (+1: the panel's first win against uvafan), 678 IanCoolidge0 0-3 (-1). h136 = v7 + SIEGE 30 (dist/h136,
 4d8e4bab9982), screen on seed0 13000, to part SIEGE from SAFE_BUILD 2.
+
+## 2026-10-24 02:30 PDT: h135 REJECTED on the replica (net 0); h136 passes its screen and goes to the panel; h137 queued
+
+h135 block 1 679-684 vs v7's 420-425: gained 2 (uvafan 1653 and 1712, both won on castles at r1000: the panel's first
+uvafan game wins), lost 2 (botfinalsafe 203 on castles at r1000, awesomelemonade 1712 on health at r1000), D 4, net 0,
+t 0, 6/18 each: REJECTED by the two-block rule. The mechanism fired: military deaths 2827 -> 2433 over the 18 games,
+prophets killed by prophets 1593 -> 1099; prophet deaths at age 0 368 -> 102, ages 1-3 165 -> 295 (scratch an/pdeath.js,
+deaths.js). Fewer losses of units did not turn into wins: the saved prophets hold back.
+h136 (SIEGE 30 alone) screen vs h87, 20 cells seed0 13000: +2 -2, D 4, t 0; castles lost 25 vs 27: non-inferior ->
+replica panel: submission 123 (dist/h136, 4d8e4bab9982), block 1 = matches 694-699 (v7 resubmitted, 124; bumped).
+h137 = v7 + SIEGE 10 (dist/h137, 081c8a6aacb4: a shorter memory, a less passive hold) screen queued, seed0 14000.
