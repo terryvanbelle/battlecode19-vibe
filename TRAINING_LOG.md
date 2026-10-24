@@ -3554,3 +3554,12 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
   and to the first contest on 2321.
 - -> **REPLICA PANEL**, block 1 first in line (ahead of h103's block 2, h112 and h119) once fewer than 30 wait (46).
   h127 (the crusader form) gates next (...19y).
+
+## 2026-10-23 18:32 — h127 to the replica panel too: gate t 1.26, castles lost 52 vs 64
+- Gate h127 (v7 + ESCORT_FIRST 1 + ESCORT_MIRROR 1 + ESCORT_UNIT 3) vs h87, 20 cells: 24 wins of 40, gained 7,
+  lost 3, split 10, D 10, net +4, t 1.26 (read as is at 20 cells -> middle zone). Mechanism met: castles lost 52 vs
+  64, churches 790 vs 770; the census's 20 games replayed exactly. Symcheck: mirror-identical to combat on 1, 2, 3
+  and to the first contest on 2321.
+- -> **REPLICA PANEL**. h126 and h127 are the first two candidates since v7 to clear a gate's mechanism with a
+  positive estimate; their block 1s go in together (12 matches) once fewer than 30 wait (38 now), ahead of h103
+  block 2, h112 and h119. If both pass, the one with the higher replica net is the next incumbent.
