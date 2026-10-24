@@ -3673,7 +3673,7 @@ h128 block 2 646-651 vs 420-425: 7/18, gained 3 (IanCoolidge0 1036 and 2644, wol
 -> REJECTED by the two-block rule. The cells repeat: every mirror-escort build (h126, h127, h128 twice) gains on 2644
 and 1036 and loses the r1000 game on 203. Study, 651-1 (h128 red vs IanCoolidge0, 203, lost on health): we mined
 more karbonite (7,626 vs 6,402) and ended with army 6 vs 92. Red military deaths by 200-round window: 46, 41, 68,
-55, 70; from r200 on 202 of 237 in IanCoolidge0's half (horizontal map, red upper), around our chain church and
+56, 70; from r200 on 202 of 235 in IanCoolidge0's half (horizontal map, red upper), around our chain church and
 pilgrims at rows 24-30, inside IanCoolidge0's prophet lattice (diagonal lines of prophets across the whole map at
 r500). Blue lost 105 preachers but only 39 prophets. As on 2046 against uvafan, karbonite turns into units that
 die in the enemy half after the chain starts; the stop rule (h123 panel 652-657, h133 screen) is the test.
