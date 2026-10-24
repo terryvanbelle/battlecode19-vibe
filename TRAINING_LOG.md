@@ -3529,3 +3529,19 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - Replica: 66 waiting (all ranked field matches, falling about 20 an hour). Our blocks (h103 block 2, h112 and h119
   block 1) go in under 30, as HANDOFF has it (the owner's < 30 answer, PROMPTS 18, was for the autoscrim; we hold
   ours with it while the queue clears).
+
+## 2026-10-23 17:16 — partner census: the mirror-camping escorts beat v7 12-8; gated as h126 and h127 (...19x, ...19y)
+- Census ...19w (v7 vs each sparring build, 10 cells of seed0 5000, 20 games each): rush4 0 wins in 20 against v7,
+  dist/turtle 4 (2 on castles, 2 on health), **dist/camp 12** and **dist/block 12**. By seed pairs, v7 lost both
+  sides to camp on 241, 418, 1250 and 357 and won both on 2855 and 2642; to block it lost both on 418, 1250, 357 and
+  2855 and won both on 241 and 2642. Both are v7 + ESCORT_FIRST 1 + ESCORT_MIRROR 1 (block: ESCORT_UNIT 3): the
+  first escort, built before the first contested pioneer, holds the enemy's own site of that cluster (bot1v43's
+  opening). Built as sparring partners ("for sparring builds only"), never gated as candidates; h100 (ESCORT_FIRST 1
+  holding our own site) was rejected at t -0.29, so the mirror hold is the active part.
+- h126 = camp's setting (9884fc8a4840), h127 = block's (d2caca3969e4), built from today's src (every later switch
+  defaults off). Gates ...19x, ...19y vs h87, the 20 cells of seed0 5000 (the census's 10 cells are the first half:
+  seen before this registration). Mechanism: castles lost not above h87's; churches built at least 0.95 of h87's;
+  the first 10 cells replay the census results. Bars: look at D 12; accept t >= 2 with the mechanism; reject t <= -1;
+  in between a replica panel.
+- Lesson pending its gate: partners built to imitate a field opening can beat the incumbent. Self-play against the
+  incumbent alone is blind to them; a partner census belongs in the loop after every accept.

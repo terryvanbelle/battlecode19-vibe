@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-23 16:19 PDT)
+## State (2026-10-23 17:16 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v7** (`bots/v7` = h87, ROSTER.tsv); frozen history v0-v7, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run built
@@ -17,13 +17,13 @@
 - **VM queue** (`~/jobq`: the runner takes pending jobs in locale `sort` order of their names; gates run from the
   shadow tree ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree,
   outputs in the main tree's out/). Gates at par 2 while saturn runs its 6 slots (8 vCPUs; owner, PROMPTS 18). Now:
-  the **partner census** ...19w running (16:20: v7 vs turtle, camp, block, rush4; out/pc_v7_*.jsonl); the time audit closed 14:18 (overruns are engine, GC and
+  **h126**'s gate (...19x, 17:16: ESCORT_FIRST 1 + ESCORT_MIRROR 1 = dist/camp, which beat v7 12-8 in the partner census ...19w) then **h127** (...19y: the same + ESCORT_UNIT 3 = dist/block, 12-8); the time audit closed 14:18 (overruns are engine, GC and
   load, about one turn each: LEARNINGS 31), with field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject
   t <= -1, else a replica panel). Done: h125 REJECTED 16:19 (t -0.82; churches 766 vs 772, bar 1.05x), h124 REJECTED 15:40 (t -0.82; idle 0.67 met, churches 798 vs 858 missed), h123 REJECTED 15:01 (mechanism short: lines 0.84 of h87's, bar 0.8; D 0), h118 REJECTED 13:47 (mechanism short: idle 0.78 of h87's, bar 0.7; churches +10%, a lead), h116 REJECTED 13:30 (t -1.07: r100 army 616 vs 165, castles lost 60 vs 52),
   h121 REJECTED 12:47 (t -0.28, first church 4.4 rounds earlier, bar 5), h115 REJECTED 11:58 (t 0.58, mechanism opposite: fuelEnd 3.5 times h87's in r1000 games, karbonite binds),
   h114 REJECTED 11:24 (t -1.63, churches built 312 vs 400), h113 REJECTED 10:38 (t -1.73), h112 (t 0.71 -> replica panel, waiting), h111 (t 0.82 -> replica net 0: REJECTED 14:48), h110 REJECTED 09:20 (t -1.73, castles lost 35 vs 24).
   The 21 stale v6-era jobs are in ~/jobq/superseded (PROMPTS 22-24; `tools/move_stale.sh` does such moves now).
-  Next job name ...19x. The locale sort ignores punctuation, so ...19qa runs before ...19q and ...19r: a longer
+  Next job name ...19z. The locale sort ignores punctuation, so ...19qa runs before ...19q and ...19r: a longer
   name jumps the queue, used on purpose only while the shorter one is already running (h121's ...19qa).
 - **Replica panels** (progress/panels/v7-m1.json: h82-b1's maps against six field bots, wololo, botfinalsafe, bot1v43,
   uvafan, awesomelemonade, IanCoolidge0 ~69ce88): **v7** measurement 420-425 (submission 99, the control, 6/18);
@@ -39,7 +39,7 @@
   107 (= bots/v7), rated first (1711 at 06:00).
 - **Candidates in hand** (from v7's replica losses and the field censuses, TRAINING_LOG 07:39-10:38): **h112** = v7 +
   DEF_SEEN 1 (threat responses count only defenders that see the attacker; gate t 0.71, mechanism met narrowly ->
-  replica panel when the queue is short); nothing is gating; h125 rejected 16:19, h124 15:40, h123 15:01, h118 13:47, h116 13:30, h121 12:47; h119 (PIONEER_CALL) waits for a replica panel (no local build triggers it). Parked: h117 (PIONEER_HOLD alone; the hold-and-lean line closed with h124), h109 (SAFE_BUILD 1: blocked chain
+  replica panel when the queue is short); h126 and h127 are gating (above); h125 rejected 16:19, h124 15:40, h123 15:01, h118 13:47, h116 13:30, h121 12:47; h119 (PIONEER_CALL) waits for a replica panel (no local build triggers it). Parked: h117 (PIONEER_HOLD alone; the hold-and-lean line closed with h124), h109 (SAFE_BUILD 1: blocked chain
   launches, worse in 2 of 4 cells), h108 (RECALL before the fix), h102 (PIONEER_DETOUR 50: inert), h98 / h99
   (MIL_ROTATION null / [4]), h105 = dist/turtle and h106 (the prophet doctrine lost every self-play test, TRAINING_LOG
   04:22). Open: 1036 (57x57): IanCoolidge0 had 26 pilgrims at r100 and 39 at r200 to our 14 and took the shared and
