@@ -4274,3 +4274,4 @@ directory and /proc, /sys, /dev stops it with exit 3 before the command runs. Un
 read-only; the refusal with a mount left writable on purpose); on the VM inside a transient unit with saturn's
 settings (ProtectSystem=strict, PrivateTmp, ReadWritePaths, PrivateNetwork): work directory writable, the replica's
 home, storage and /tmp read-only, only lo. Goes live with `deploy.sh app` at the saturn restart (HANDOFF).
+Correction: the entry above, headed 12:47, was written at 12:39 PDT (`date`; LEARNINGS 34). Checked at 12:39.
