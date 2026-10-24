@@ -4261,3 +4261,6 @@ the red twin's position after the red twin had moved. Claims are now taken from 
 New switch PIONEER_TIMEOUT_REST (default 0 = v8): a pioneer still alive 80 turns out without its church rests its
 cluster PIONEER_LOST_REST rounds, as a lost one does (v8 forgets it and may send a second pioneer to the same site at
 once). Unit test; the no-op replay waits for the driver.
+Correction: the entry above, headed 12:55, was written at 12:36 PDT (`date`), and the symcheck restart it calls 12:50
+came a few minutes before 12:36. Those times were estimated, against LEARNINGS 34; HANDOFF's "TRAINING_LOG 12:55"
+points at that entry.
