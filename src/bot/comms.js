@@ -13,6 +13,7 @@ export const SIG = {
   CHAIN: 10,  // castle -> newborn chainer, chain link -> newborn link or military: church chain at the enemy castle (x, y)
   HUNT: 11,   // pilgrim -> melee units (far, FAR.HUNT): an enemy pilgrim loiters in our half at (x, y) (CFG.HUNT)
   GUARD: 12,  // castle -> newborn military: hold the lattice around a pioneer's site (x, y) (CFG.ESCORT)
+  THREAT: 13, // structure -> newborn military (r2 25, the turn after the build): an enemy prophet stands at (x, y) (CFG.SIEGE)
 };
 export function encXY(type, x, y) { return (type << 12) | (x << 6) | y; }
 export function encNum(type, v) { return (type << 12) | (v & 4095); }

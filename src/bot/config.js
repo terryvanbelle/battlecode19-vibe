@@ -205,6 +205,11 @@ export const CFG = {
                              // (0: all within r2 100 of the structure; replica 422-3, seed 2321: bot1v43's prophets
                              // one at a time at r2 61 shot our castle to death in r112-214 while 42 units of a church
                              // 11 tiles behind it, out of their sight, counted as its defenders: it built pilgrims)
+  SIEGE: 0,                  // >0: military units remember the enemy prophets they see, or that a structure of ours in
+                             // sight radios after building them (SIG.THREAT), for this many turns; idle units hold no
+                             // lattice tile in a remembered prophet's reach (r2 64) and do not step into it on the way
+                             // (military.js threatHot; v7's 18 replica control games: 235 prophets died unfired on their
+                             // first steps toward the lattice, into prophets they could not yet see; 2046 vs uvafan)
   SAFE_BUILD: 0,             // 1: structures never build a robot on a tile where the enemy attackers in sight could kill it
                              // before its first turn (struct.js exposure; replica 414-3, seed 836: four prophets in a row
                              // died unborn on one church tile); 2: counting only attackers with no other target of ours

@@ -183,12 +183,25 @@ function seers(B, e) {
 // The structure's turn after role bookkeeping. extra(): castle-only builds (pioneers); first(): castle-only builds
 // ahead of the economy pilgrims (CFG.PIONEER_EARLY). Returns an action or null.
 export function structTurn(B, allIds, extra, first) {
-  if (!CFG.KILL_ZONE) return structAct(B, allIds, extra, first);
-  watchDeaths(B);
+  if (!CFG.KILL_ZONE && !CFG.SIEGE) return structAct(B, allIds, extra, first);
+  if (CFG.KILL_ZONE) watchDeaths(B);
   B.st.built = -1;
   const a = structAct(B, allIds, extra, first);
-  sayZone(B);
+  if (CFG.KILL_ZONE) sayZone(B); else sayThreat(B);
   return a;
+}
+
+// CFG.SIEGE: the turn after building a military unit (that turn's radio carries its birth round), tell it, and
+// whoever else is near, where the enemy prophet in sight nearest this structure stands; within 3 turns, radio free.
+export function sayThreat(B) {
+  const st = B.st, w = B.w, me = w.me;
+  if (st.built >= CRUSADER) { st.threatSay = 3; return; }
+  if (!(st.threatSay > 0)) return;
+  st.threatSay--;
+  let e = null, ed = 1e9;
+  for (const x of w.enemies) if (x.unit === PROPHET) { const q = d2(x.x, x.y, me.x, me.y); if (q < ed) { ed = q; e = x; } }
+  if (!e || w.sentR2 || w.fuel < 10) return;
+  w.signal(encXY(SIG.THREAT, e.x, e.y), 25); st.threatSay = 0;
 }
 
 // CFG.KILL_ZONE: the turn after building a military unit (that turn's radio carries its birth round), tell it, and

@@ -163,7 +163,7 @@ function edgeAvoid(B) {
 function latticeOk(B, x, y) {
   const w = B.w, h = B.st.home;
   return latticeTile(x, y) && w.passable(x, y) && !w.isDepot(x, y) && d2(x, y, h.x, h.y) >= CFG.LATTICE_MIN_R2 &&
-    !(CFG.KEEP_CLEAR && keepClear(B, x, y)) && !(CFG.KILL_ZONE && inZone(B, x, y)) &&
+    !(CFG.KEEP_CLEAR && keepClear(B, x, y)) && !(CFG.KILL_ZONE && inZone(B, x, y)) && !(CFG.SIEGE && threatHot(B, x, y)) &&
     !(meleeBack(B) && y > latticeCentre(B).y);
 }
 
@@ -200,6 +200,34 @@ export function hearZones(B) {
     const m = dec(r.signal); if (m.type === SIG.ZONE) addZone(B, m.x, m.y);
   }
 }
+// CFG.SIEGE: enemy prophets this unit sees, or that a structure of ours in sight radioed (SIG.THREAT), remembered
+// for CFG.SIEGE turns (map y * 64 + x -> turn); one whose tile is in sight with no enemy prophet on it is forgotten.
+export function watchThreats(B) {
+  const w = B.w, me = w.me, st = B.st, t = me.turn, V = STATS[me.unit].vision;
+  const m = st.threats || (st.threats = new Map());
+  for (const r of w.robots) if (r.seen && r.team === me.team && (r.unit === CASTLE || r.unit === CHURCH) && r.signal > 0 && r.signal_radius <= 25) {
+    const s = dec(r.signal); if (s.type === SIG.THREAT) m.set(s.y * 64 + s.x, t);
+  }
+  for (const e of w.enemies) if (e.unit === PROPHET) m.set(e.y * 64 + e.x, t);
+  for (const [k, at] of m) {
+    const x = k & 63, y = k >> 6;
+    if (t - at > CFG.SIEGE || (at < t && d2(x, y, me.x, me.y) <= V && !w.enemies.some(e => e.unit === PROPHET && e.x === x && e.y === y))) m.delete(k);
+  }
+}
+// In a remembered enemy prophet's reach (r2 64).
+export function threatHot(B, x, y) {
+  const m = B.st.threats; if (!m) return false;
+  for (const k of m.keys()) if (d2(x, y, k & 63, k >> 6) <= 64) return true;
+  return false;
+}
+// The tiles a lattice move avoids: undefined when nothing is remembered or this unit already stands in reach (it may
+// step out).
+function siegeAvoid(B) {
+  const m = B.st.threats, me = B.w.me;
+  if (!m || !m.size || threatHot(B, me.x, me.y)) return undefined;
+  return (x, y) => threatHot(B, x, y);
+}
+
 // Tiles near a fresh zone, except those well inside its distance from home (the enemy is beyond it, unseen).
 export function inZone(B, x, y) {
   const st = B.st, h = st.home, t = B.w.me.turn;
@@ -310,6 +338,7 @@ export function militaryTurn(B) {
   if (!st.ready) init(B);   // until it completes: a turn killed mid-init (200 ms) leaves it half done
   if (CFG.KILL_ZONE) watchDeaths(B);
   listen(B);
+  if (CFG.SIEGE) watchThreats(B);
   const enemies = w.enemies;
   const canShoot = w.fuel >= S.atkFuel + (u === PROPHET ? CFG.PROPHET_FLOOR : CFG.SHOOT_FLOOR);   // pilgrims must still mine
   const cf = churchFirst(st.home, CFG.CHURCH_FIRST_R2);
@@ -383,7 +412,7 @@ export function militaryTurn(B) {
   if (latticeOk(B, me.x, me.y) && king(me.x, me.y, c.x, c.y) <= latticeR(B)) return null;
   const t = holdTarget(B);
   if (!t) return CFG.KEEP_CLEAR ? stepClear(B) : null;
-  const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2);
+  const a = go(B, 'l' + t[0] + ',' + t[1], [t], CFG.CRUISE_R2, CFG.SIEGE ? siegeAvoid(B) : undefined);
   return a || (CFG.KEEP_CLEAR ? stepClear(B) : null);
 }
 export { isAttacker, PROPHET, PREACHER, nextTarget, isChoke, holdTarget, latticeOk, edgeAvoid, spot, hearPost };

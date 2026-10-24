@@ -7,7 +7,7 @@
   bundles (`tools/build_bot.js`), never the source directory. Every candidate change is a CFG switch whose default is
   the incumbent; candidates are built from src with their own `--cfg KEY=JSON` only into `dist/hN` and gated against
   dist/h87 (= bots/v7). No-op check after every code change: a defaults-only build replays h87 vs h87 on 799 to r300
-  (--det) IDENTICAL, with nothing else running on the driver (a replay census beside it froze a castle's turn and
+  (--det --timescale 10 --init-ms 5000 --fast-turn --fast-init --fast-view --no-kill; the default 100 ms init fails on the driver) IDENTICAL, with nothing else running on the driver (a replay census beside it froze a castle's turn and
   the replay parted, 2026-10-23 08:4x; LEARNINGS 13).
 - v7 = h87 = v6 + h82's economy switches (ECON_UNTIL 100, PIONEERS_TEAM 6, PEACE_RESERVE_K 60, PLAN_VALUE 10,
   DEF_RESERVE_K 30) + h76's church chain from round 200 (CHAIN_ROUND 200, STAGE 15, END_R2 2, K 1000, F 3500, MIX
@@ -17,7 +17,7 @@
 - **VM queue** (`~/jobq`: the runner takes pending jobs in locale `sort` order of their names; gates run from the
   shadow tree ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree,
   outputs in the main tree's out/). Gates at par 2 while saturn runs its 6 slots (8 vCPUs; owner, PROMPTS 18). Now:
-  h126 REJECTED on the replica (20:32, net 0); h127 REJECTED on the replica (20:35, net -3); h127 vs h126 head-to-head even (+4 -4, t 0); **h128** (ESCORT_FIRST 2, mirror, crusaders) gate t 0.90, mechanism met -> replica panel 634-639 (20:20); h129 (the same with preachers) REJECTED 20:52 (t -2.71); h130 local gate t 1.67 but replica net -2: REJECTED 22:09 (LEARNINGS 32); h131 REJECTED 22:23 (t 0.38); h132 REJECTED 22:47 (t 0.90); h133 REJECTED 23:47 (screen: castles lost 1.17x); **h134** (no chains) screen running (t -2.45 at 16 games); the time audit closed 14:18 (overruns are engine, GC and
+  h126 REJECTED on the replica (20:32, net 0); h127 REJECTED on the replica (20:35, net -3); h127 vs h126 head-to-head even (+4 -4, t 0); **h128** (ESCORT_FIRST 2, mirror, crusaders) gate t 0.90, mechanism met -> replica panel 634-639 (20:20); h129 (the same with preachers) REJECTED 20:52 (t -2.71); h130 local gate t 1.67 but replica net -2: REJECTED 22:09 (LEARNINGS 32); h131 REJECTED 22:23 (t 0.38); h132 REJECTED 22:47 (t 0.90); h133 REJECTED 23:47 (screen: castles lost 1.17x); **h134** (no chains) screen running (t -2.45 at 16 games); **h135** (SIEGE 30 + SAFE_BUILD 2, new switch) in delivery on the driver vs dist/turtle; the time audit closed 14:18 (overruns are engine, GC and
   load, about one turn each: LEARNINGS 31), with field-aimed bars (look at D 12; accept t >= 2 with the mechanism, reject
   t <= -1, else a replica panel). Done: h125 REJECTED 16:19 (t -0.82; churches 766 vs 772, bar 1.05x), h124 REJECTED 15:40 (t -0.82; idle 0.67 met, churches 798 vs 858 missed), h123 REJECTED 15:01 (mechanism short: lines 0.84 of h87's, bar 0.8; D 0), h118 REJECTED 13:47 (mechanism short: idle 0.78 of h87's, bar 0.7; churches +10%, a lead), h116 REJECTED 13:30 (t -1.07: r100 army 616 vs 165, castles lost 60 vs 52),
   h121 REJECTED 12:47 (t -0.28, first church 4.4 rounds earlier, bar 5), h115 REJECTED 11:58 (t 0.58, mechanism opposite: fuelEnd 3.5 times h87's in r1000 games, karbonite binds),

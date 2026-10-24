@@ -7,10 +7,10 @@ import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
-import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile } from '../src/bot/military.js';
+import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot } from '../src/bot/military.js';
 import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
-import { structInit, frontSite, frontPioneer, sayZone } from '../src/bot/struct.js';
+import { structInit, frontSite, frontPioneer, sayZone, sayThreat } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -1908,6 +1908,48 @@ test('struct/military: KILL_ZONE: the turn after a military build the structure 
       { id: 4, team: 1, seen: true, signal: encXY(SIG.ZONE, 7, 7), signal_radius: 25 }] }, st: {} };
     hearZones(U); assert.deepStrictEqual(U.st.zones.map(z => [z.x, z.y, z.t]), [[4, 9, 2]]);   // ours only, on our clock
   } finally { CFG.KILL_ZONE = saved; }
+});
+
+test('military: SIEGE: units remember enemy prophets seen or radioed, forget them seen gone or stale, and hold no lattice tile in their reach', () => {
+  const saved = CFG.SIEGE;
+  try {
+    CFG.SIEGE = 30;
+    const w = { n: 24, me: { id: 5, team: 0, unit: S.PROPHET, x: 10, y: 6, turn: 2 }, passable: () => true, isDepot: () => false, occ: () => 0,
+      friends: [], enemies: [{ id: 40, team: 1, unit: S.CRUSADER, x: 10, y: 9 }],
+      robots: [{ id: 3, team: 0, unit: S.CASTLE, x: 10, y: 5, seen: true, signal: encXY(SIG.THREAT, 10, 16), signal_radius: 25 },
+        { id: 4, team: 1, unit: S.CASTLE, x: 3, y: 3, seen: true, signal: encXY(SIG.THREAT, 2, 2), signal_radius: 25 },
+        { id: 6, team: 0, unit: S.PILGRIM, x: 9, y: 5, seen: true, signal: encXY(SIG.THREAT, 20, 2), signal_radius: 25 }] };
+    const B = { w, st: { home: { x: 10, y: 2 } } };
+    watchThreats(B);   // our structure's radio only; crusaders are not remembered
+    assert.deepStrictEqual([...B.st.threats.keys()], [16 * 64 + 10]);
+    assert.ok(threatHot(B, 10, 8) && threatHot(B, 18, 16) && !threatHot(B, 10, 7) && !threatHot(B, 19, 16));
+    const t = holdTarget(B); assert.ok(t && !threatHot(B, t[0], t[1]), 'holds ' + t);
+    // Seen: remembered at its new tile too; the old tile in sight and empty is forgotten.
+    w.robots = []; w.enemies = [{ id: 41, team: 1, unit: S.PROPHET, x: 12, y: 13 }]; w.me = { ...w.me, turn: 3 };
+    watchThreats(B); assert.deepStrictEqual([...B.st.threats.keys()].sort(), [13 * 64 + 12, 16 * 64 + 10].sort());   // (10,16) r2 100: out of sight
+    w.me = { ...w.me, x: 16, y: 9, turn: 4 }; w.enemies = [];
+    watchThreats(B); assert.deepStrictEqual([...B.st.threats.keys()], [16 * 64 + 10]);   // (12,13) in sight, empty
+    w.me = { ...w.me, x: 10, y: 6, turn: 2 + 31 }; watchThreats(B); assert.strictEqual(B.st.threats.size, 0);   // stale
+    CFG.SIEGE = 0; const H = { w, st: { home: { x: 10, y: 2 }, threats: new Map([[16 * 64 + 10, 33]]) } };
+    assert.deepStrictEqual(holdTarget(H), holdTarget({ w, st: { home: { x: 10, y: 2 } } }));   // off: as before
+  } finally { CFG.SIEGE = saved; }
+});
+
+test('struct: SIEGE: the turn after a military build the structure radios the nearest enemy prophet (r2 25), once', () => {
+  const saved = CFG.SIEGE;
+  try {
+    CFG.SIEGE = 30;
+    const sent = [], w = { me: { x: 5, y: 5, turn: 30 }, sentR2: 0, fuel: 500, signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; },
+      enemies: [{ unit: S.PROPHET, x: 5, y: 14 }, { unit: S.CRUSADER, x: 6, y: 7 }, { unit: S.PROPHET, x: 9, y: 11 }] };
+    const B = { w, st: { built: S.PROPHET } };
+    sayThreat(B); assert.deepStrictEqual(sent, []);                    // the build turn: the radio carries the round
+    w.me = { ...w.me, turn: 31 }; B.st.built = -1; w.sentR2 = 2;
+    sayThreat(B); assert.deepStrictEqual(sent, []);                    // radio busy
+    w.me = { ...w.me, turn: 32 }; w.sentR2 = 0;
+    sayThreat(B); assert.deepStrictEqual(sent, [[encXY(SIG.THREAT, 9, 11), 25]]);   // r2 52 beats r2 81; crusaders do not count
+    w.me = { ...w.me, turn: 33 }; w.sentR2 = 0; sayThreat(B); assert.strictEqual(sent.length, 1);   // once
+    B.st.built = S.PILGRIM; sayThreat(B); w.sentR2 = 0; B.st.built = -1; sayThreat(B); assert.strictEqual(sent.length, 1);   // pilgrims: no
+  } finally { CFG.SIEGE = saved; }
 });
 
 test('military: CREEP_ROUND moves the lattice a unit holds toward the enemy over time; guards and the default stay', () => {

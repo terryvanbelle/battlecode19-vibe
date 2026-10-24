@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 121 other, 25 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (171 rows).
+Totals: 122 other, 25 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (172 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -185,3 +185,4 @@ Totals: 121 other, 25 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparrin
 | `h132` | 2026-10-23 21:20 | v7 | MIL_ROTATION null + ATTACK_ROUND 1001 + ATTACK_LATE 1001: prophet army, no general attack | vs h87 20 cells seed0 9500: +7 -4, D 11, t 0.90 |  |  |  | REJECTED (below the panel pass; the doctrine's panel h130 net -2) |
 | `h133` | 2026-10-23 22:23 | v7 | CHAIN_FAILS 1: castles hold chain lines after one fired with no enemy castle destroyed (field-aimed) | vs h87 20 cells seed0 10000: +4 -2, D 6, t 0.82; castles lost 35 vs 30 (1.17x), churches 346 vs 593 |  |  |  | REJECTED (screen: castles lost above 1.1x) |
 | `h134` | 2026-10-23 22:47 | v7 | CHAIN_ROUND 0: no church chains (field-aimed) |  |  |  |  | GATE QUEUED (non-inferiority screen) |
+| `h135` | 2026-10-24 00:33 | v7 | SIEGE 30 + SAFE_BUILD 2: structures radio the nearest enemy prophet to newborns; units remember prophets and keep out of their reach while holding the lattice |  |  |  |  | IN DELIVERY (vs dist/turtle on 2046) |

@@ -3693,3 +3693,20 @@ after 16 games: 2 wins, gained 0, lost 6, t -2.45: in self-play the chain is wha
 block so far: 652 wololo 0-3 (=), 653 botfinalsafe 2-1 (=), 654 bot1v43 1-2 (=), 655 uvafan 0-3 (=), 657
 IanCoolidge0 0-3 (-1); 656 awesomelemonade running. Stopping the chain does not turn uvafan's games: our health
 deficit there outlasts the chain's cost.
+
+## 2026-10-24 00:33 PDT: how v7's units die in the field; CFG.SIEGE built; h135 in delivery
+
+Death census over v7's 18 replica control games (420-425, replay re-simulation, scratch an/deaths.js): 2,827 of
+our military died; 2,582 to prophets. Preachers 709 (588 unfired and blind: vision r2 16 against a reach of 64) and
+crusaders 336 (263 unfired, blind). 1,609 prophets, 625 of them unfired with the killer in sight: 368 at age 0
+(built into reach), 235 on turns 1-20 having stepped into reach of prophets they could not yet see (prophet vision =
+reach; only 43 prophet moves all census long left a target in band, nearly all melee retreats or fuel < 55).
+h111's replica block (SAFE_BUILD 2, 616-621) moved the deaths instead of saving the units: age 0 368 -> 99, ages 1-3
+165 -> 775. The castle sees r2 100; its newborns do not. CFG.SIEGE (new, default 0; comms SIG.THREAT 13): for 3
+turns after a military build a structure radios (r2 25) the enemy prophet in its sight nearest it; military units
+remember the prophets they see or hear for SIEGE turns, forget one whose tile they see empty, hold no lattice tile
+in a remembered prophet's reach (r2 64) and avoid that reach on lattice moves. Two unit tests; no-op out/v7chk20
+IDENTICAL (noop/run.sh: 799 to r300, --det --timescale 10 --init-ms 5000 --fast-*), 137 node tests pass.
+h135 = v7 + SIEGE 30 + SAFE_BUILD 2 (dist/h135, a5aa75edd7a6): built safe and kept out of unseen reach. Delivery on the driver
+against dist/turtle (the prophet doctrine, our closest local stand-in for the field) on 2046, h87 the baseline:
+prophet deaths at ages 1-3 must fall to half of h87's, with no rise at age 0.
