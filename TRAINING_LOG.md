@@ -3893,3 +3893,9 @@ fallen off it and were never fetched; `fetch --new --pages 6` took them (HANDOFF
   cells (awesomelemonade 2518, wololo 836) and lost a sure one (botfinalsafe 2740); h140 (h121 + PIONEER_FAST, panel
   744-749) reads the same idea again.
 Both blocks join progress/panels/v7-m1.pool.
+
+## 2026-10-24 09:0x PDT: h143 (three leads) passes its screen; h144 (ECON_RICH 250) queued
+
+- h143 vs h87, 20 cells seed0 20000: 24/40, gained 11, lost 7, D 18, t 0.94; castles lost 40 vs 55, churches 531 vs
+  545: non-inferior. Its panel follows the single leads' (h139 block 2, h141, h140).
+- h144 = v7 + ECON_RICH 250 (dist/h144) brackets h139 from above; screen on seed0 21000.

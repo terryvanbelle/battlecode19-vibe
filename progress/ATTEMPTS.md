@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 125 other, 30 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (180 rows).
+Totals: 126 other, 30 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (181 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -193,4 +193,5 @@ Totals: 125 other, 30 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparrin
 | `h140` | 2026-10-24 05:2x | v7 | h121 + PIONEER_FAST 1: the early centre pioneer at full speed | vs h87 20 cells seed0 17000: +10 -5, D 15, t 1.29; castles lost 32 vs 38 |  | block 1 = matches 744-749 |  | REPLICA PANEL (screen passed) |
 | `h141` | 2026-10-24 06:2x | v7 | h84's church strike on v7: a structure seeing an enemy church within r2 36 and no attacker builds a preacher toward it (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) | vs h87 20 cells seed0 18000: +5 -0, D 5, t 2.24; castles lost 29 vs 39 |  | block 1 = matches 738-743 |  | REPLICA PANEL (screen passed) |
 | `h142` | 2026-10-24 07:2x | v7 | h139 + h141 stacked: ECON_RICH 150 + church strike (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) | vs h87 20 cells seed0 19000: +7 -5, D 12, t 0.58; castles lost 36 vs 38 |  |  |  | SCREEN PASSED (panel after h139 and h141) |
-| `h143` | 2026-10-24 08:0x | v7 | h139 + h140 + h141 stacked: ECON_RICH 150, the early fast centre pioneer, the church strike |  |  |  |  | SCREEN QUEUED |
+| `h143` | 2026-10-24 08:0x | v7 | h139 + h140 + h141 stacked: ECON_RICH 150, the early fast centre pioneer, the church strike | vs h87 20 cells seed0 20000: +11 -7, D 18, t 0.94; castles lost 40 vs 55 |  |  |  | SCREEN PASSED (panel after the single leads) |
+| `h144` | 2026-10-24 09:0x | v7 | ECON_RICH 250: h139 with a higher idle-bank bar |  |  |  |  | SCREEN QUEUED |
