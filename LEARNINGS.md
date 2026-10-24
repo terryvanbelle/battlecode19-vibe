@@ -51,6 +51,9 @@
    holds for no-op checks: run them with nothing else on the driver. A replay census beside one froze a castle's
    round-3 turn (an empty record), the replay parted and read as a behaviour change; alone it was IDENTICAL.
    (2026-10-23)
+   Memory is the other limit: the driver has 2 GB and the session itself holds ~450 MB. symcheck to round 1000
+   (one vm2 sandbox per live robot, ~350 MB and growing) beside the tools suite (its own games) ran it out at 12:52,
+   and Claude Code reaped every background shell, the replica waiters too. One heavy job at a time. (2026-10-24 12:53)
 14. **Over gssh, `pkill -f`/`pgrep -f` patterns match the remote command line that runs them.** A command that both
    names `dlv_chain6.sh` and kills processes matching it killed its own ssh session halfway (exit 255), leaving a
    child of the chain running. Kill by PID, or send the script on stdin (`gssh 'bash -s' < script`) so the pattern

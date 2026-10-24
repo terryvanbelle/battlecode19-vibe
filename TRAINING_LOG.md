@@ -4285,3 +4285,13 @@ accepted only if, beside the pooled rule, its side-aware z over the other cells 
 `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCKS --studied
 m-schier.battlecode-2019-wololo:seed-2013,m-schier.battlecode-2019-wololo:seed-2644,m-schier.battlecode-2019-wololo:seed-836,StoneT2000.BC19-bot1v43:seed-2591,StoneT2000.BC19-botfinalsafe:seed-1706`
 (the "other cells" line). h148 (CHAIN_LIVE) was not designed from panel cells; its rule stands as fixed at 11:58.
+
+## 2026-10-24 12:53 PDT: driver out of memory; background jobs reaped
+
+At about 12:52 the driver (2 GB) ran short of memory with symcheck on v8 (seed 1, to round 1000) and the full tools
+suite running together, against LEARNINGS 13 (one heavy job at a time). Claude Code stopped every background shell:
+symcheck (no result: the new stepper's run had not reached a divergence or round 1000), the tools suite (unfinished;
+build_bot, batch and the other targeted tests had passed alone), the h148 block-3 waiter and the replica-queue waiter.
+Per the harness they are not restarted without the owner's word. The VM and the replica are not affected: block 3
+(973-984) plays on; check-ins read it by hand. Uncommitted until the suite and the no-op replay run:
+PIONEER_TIMEOUT_REST (bot), build_bot.js (--cfg into the CFG literal), batch.js (row conditions; error rows rerun).
