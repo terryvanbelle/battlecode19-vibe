@@ -3600,3 +3600,12 @@ lost 3 (IanCoolidge0 203, botfinalsafe 203 and 2740: all r1000 games v7 won), D 
 The mirror escort now has two replica rejections (h126 net 0, h127 net -3) after local gates of t 1.00 and 1.26:
 the escort beats h87 by camping its mirror site, a site the field's bots do not depend on. h128 (two crusaders,
 634-639) is already queued and is read as is; h129 (preachers) goes to the replica only at t >= 2.
+
+## 2026-10-23 20:41 PDT: h130 straight to the replica panel (prophet army)
+
+The local gate does not predict the field (h126 t 1.00 -> net 0, h127 t 1.26 -> net -3), and the prophet doctrine
+was set aside on self-play alone (h98/h99/h106, single driver games, TRAINING_LOG 01:45, 04:22) while the field
+evidence favours it (92% of our lost crusaders never fired; the strong bots mass prophets and win on health). h130 =
+v7 + MIL_ROTATION null (dist/h130, 0467e38596bc: peacetime prophets, every 4th a preacher; h98's switch on today's src) goes to
+the replica without a gate: submission 113, block 1 = matches 640-645 (v7 resubmitted, 114; bumped). Driver check,
+2046 r300 vs v7: built prophets 17 / crusaders 0 (v7 11 / 11), no bot exceptions. Two-block rule as usual.
