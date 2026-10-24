@@ -3677,3 +3677,10 @@ more karbonite (7,626 vs 6,402) and ended with army 6 vs 92. Red military deaths
 pilgrims at rows 24-30, inside IanCoolidge0's prophet lattice (diagonal lines of prophets across the whole map at
 r500). Blue lost 105 preachers but only 39 prophets. As on 2046 against uvafan, karbonite turns into units that
 die in the enemy half after the chain starts; the stop rule (h123 panel 652-657, h133 screen) is the test.
+
+## 2026-10-23 22:47 PDT: h132 closed (t 0.90); h134 (no chains) screen queued
+
+h132 (MIL_ROTATION null + no general attack) vs h87, 20 cells seed0 9500: 23/40, gained 7, lost 4, D 11, net +3,
+t 0.90: below the panel pass, and the prophet doctrine's panel (h130) was net -2: REJECTED. The prophet line is
+closed. h134 = v7 + CHAIN_ROUND 0 (dist/h134, 4223b655ef3a): no church chains, the limit of the stop rule; a non-inferiority
+screen on seed0 11000 behind h133's. h123's replica block 652-657: 654 bot1v43 1-2 (=), five running.
