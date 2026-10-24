@@ -3728,3 +3728,14 @@ into enough health. The chain line is closed for now (h123, h133, h134); SIEGE (
 h112 (v7 + DEF_SEEN 1: threat responses count only defenders that see the attacker; local gate t 0.71, mechanism
 met narrowly, waiting since 2026-10-23) takes the free replica lane: submission 119 (dist/h112, 825744f9accb), block
 1 = matches 673-678 (v7 resubmitted, 120; bumped).
+
+## 2026-10-24 01:03 PDT: h135 delivery: fires, and turns two losses against a prophet army; screen queued
+
+Against dist/turtle on 2046 neither build lost more than 3 prophets (the turtle never attacks): no reading. Against
+h130 (the attacking prophet army, our closest local stand-in for the field), --det, timescale 10:
+2046: h87 lost both castles at r980 (army 1 at the end); h135 reached r1000 (lost 1 castle to 2, army 1 vs 26).
+203: h87 lost at r569; h135 won at r921 (both h130 castles). Stillborn prophets 15 -> 5 (SAFE_BUILD 2).
+SIG.THREAT radios: 8 on 2046, 18 on 203. The pre-registered ages 1-3 bar is not measurable here (h87 lost no
+prophets on turns 1-3 against h130: self-play does not reproduce the field's walk-in deaths), so the delivery
+passes on firing and outcome; the replica panel reads the mechanism. Non-inferiority screen vs h87 queued
+(seed0 12000); tools/ and test/ synced to the shadow tree.
