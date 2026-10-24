@@ -3665,3 +3665,15 @@ net -2: REJECTED. h132 (h130 without the attack) is running: 14 games, +3 -2. h1
 5b0fb2fa8bb5): h123's stop rule after one failed line; a non-inferiority screen vs h87 on seed0 10000 (reject at t <= -1 or
 castles lost above 1.1x h87's), ready for a panel if h123's block (652-657) shows the stop rule pays in the field.
 h128 block 2 so far: 648 bot1v43 1-2, 650 awesomelemonade 2-1, 651 IanCoolidge0 2-1; 649 running.
+
+## 2026-10-23 22:36 PDT: h128 not accepted (two blocks net +3, t 0.90); 203 is the same attrition as uvafan's
+
+h128 block 2 646-651 vs 420-425: 7/18, gained 3 (IanCoolidge0 1036 and 2644, wololo 2644), lost 2 (IanCoolidge0
+203, botfinalsafe 203), net +1, t 0.45. Cumulative over both blocks: gained 7, lost 4, D 11, net +3, t 0.90 < 1.5
+-> REJECTED by the two-block rule. The cells repeat: every mirror-escort build (h126, h127, h128 twice) gains on 2644
+and 1036 and loses the r1000 game on 203. Study, 651-1 (h128 red vs IanCoolidge0, 203, lost on health): we mined
+more karbonite (7,626 vs 6,402) and ended with army 6 vs 92. Red military deaths by 200-round window: 46, 41, 68,
+55, 70; from r200 on 202 of 237 in IanCoolidge0's half (horizontal map, red upper), around our chain church and
+pilgrims at rows 24-30, inside IanCoolidge0's prophet lattice (diagonal lines of prophets across the whole map at
+r500). Blue lost 105 preachers but only 39 prophets. As on 2046 against uvafan, karbonite turns into units that
+die in the enemy half after the chain starts; the stop rule (h123 panel 652-657, h133 screen) is the test.

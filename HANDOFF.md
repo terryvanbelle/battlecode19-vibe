@@ -30,7 +30,7 @@
   h96 (v7 + ATTACK_LATE 1001) block 1 426-431 **REJECTED** 08:35 (net -3); **h104** (v7 + ATTACK_ROUND 1001 +
   ATTACK_LATE 1001: no general attack; submission 102) block 1 432-437 **REJECTED** 10:47 (net 0);
   **h103** (v7 + ESCORT 2 + ESCORT_UNIT 3; submission 104) block 1 438-443 final: gained 3, lost 2, net +1, t 0.45 ->
-  block 2 due; h111 (SAFE_BUILD 2) block 1 616-621 **REJECTED** 14:48 (net 0); **h112** (DEF_SEEN 1) block 1 not yet requested. h126 block 1 622-627 **REJECTED** (net 0), h127 628-633 **REJECTED** (net -3), h128 634-639 net +2 -> block 2 646-651 (21:24), h130 640-645 **REJECTED** (net -2), **h123** (CHAIN_FAILS 2, field-aimed) 652-657 (22:19), then h103's block 2, h112's and h119's block 1
+  block 2 due; h111 (SAFE_BUILD 2) block 1 616-621 **REJECTED** 14:48 (net 0); **h112** (DEF_SEEN 1) block 1 not yet requested. h126 block 1 622-627 **REJECTED** (net 0), h127 628-633 **REJECTED** (net -3), h128 two blocks net +3, t 0.90: **REJECTED** 22:36, h130 640-645 **REJECTED** (net -2), **h123** (CHAIN_FAILS 2, field-aimed) 652-657 (22:19), then h103's block 2, h112's and h119's block 1
   go in once fewer than 30 wait: submit, scrim `--panel
   progress/panels/v7-m1.json`, resubmit bots/v7, add the submissions.tsv row. Reading: `contest19.py fetch --new`,
   then `contest19.py compare 420-425 <block>` by the two-block rule. v7 against v6 (414-419: 3 wins in 18) and h82
@@ -39,7 +39,7 @@
   107 (= bots/v7), rated first (1711 at 06:00).
 - **Candidates in hand** (from v7's replica losses and the field censuses, TRAINING_LOG 07:39-10:38): **h112** = v7 +
   DEF_SEEN 1 (threat responses count only defenders that see the attacker; gate t 0.71, mechanism met narrowly ->
-  replica panel when the queue is short); h126 REJECTED on the replica 20:32; h127 REJECTED on the replica 20:35 (net -3); **h128** replica block 1 net +2 (t 0.82), block 2 646-651 queued; the mirror-escort line is closed; h125 rejected 16:19, h124 15:40, h123 15:01, h118 13:47, h116 13:30, h121 12:47; h119 (PIONEER_CALL) waits for a replica panel (no local build triggers it). Parked: h117 (PIONEER_HOLD alone; the hold-and-lean line closed with h124), h109 (SAFE_BUILD 1: blocked chain
+  replica panel when the queue is short); h126 REJECTED on the replica 20:32; h127 REJECTED on the replica 20:35 (net -3); h128 REJECTED on the replica 22:36 (two blocks t 0.90); the mirror-escort line is closed; h125 rejected 16:19, h124 15:40, h123 15:01, h118 13:47, h116 13:30, h121 12:47; h119 (PIONEER_CALL) waits for a replica panel (no local build triggers it). Parked: h117 (PIONEER_HOLD alone; the hold-and-lean line closed with h124), h109 (SAFE_BUILD 1: blocked chain
   launches, worse in 2 of 4 cells), h108 (RECALL before the fix), h102 (PIONEER_DETOUR 50: inert), h98 / h99
   h105 = dist/turtle and h106 (the prophet doctrine lost every self-play test, TRAINING_LOG
   04:22). Open: 1036 (57x57): IanCoolidge0 had 26 pilgrims at r100 and 39 at r200 to our 14 and took the shared and
