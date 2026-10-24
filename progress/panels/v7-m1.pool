@@ -1,13 +1,12 @@
 # Neutral (rejected) blocks on the v7-m1 panel, pooled with the control 420-425 (tools/panel_pool.sh, LEARNINGS 33).
+# h128 (634-639, 646-651, 726-731) left the pool when it was accepted as v8 (2026-10-24 09:3x).
 426-431
 432-437
 438-443
 616-621
 622-627
 628-633
-634-639
 640-645
-646-651
 652-657
 673-678
 679-684

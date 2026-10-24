@@ -32,8 +32,9 @@
   tools/progress/submissions.tsv row. Read: `contest19.py fetch --new --pages 6` (one page misses slow matches), then
   for v8-based candidates `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK...`, for v7-based ones
   `tools/panel_pool.sh 420-425 progress/panels/v7-m1.pool BLOCK...`; rejected blocks join their pool file.
-  In flight on the v7 pool (read for the idea, not acceptance): h139 (ECON_RICH 150) blocks 706-711 + 732-737
-  (block 1 z 2.07, botfinalsafe 1706 won), h141 (church strike) 738-743, h140 (early fast pioneer) 744-749.
+  v7-based panels (read for the idea, not acceptance): h139 (ECON_RICH 150) 706-711 + 732-737 z 1.96 against v7
+  (carried by h145: its panel goes in when its screen passes), h141 (church strike) 738-743, h140 (early fast
+  pioneer) 744-749.
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013, 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
   2518; uvafan 2046; bot1v43 2591. Studies: botfinalsafe 1706 (castles idle r33-93, the centre cluster lost); wololo
   2013 (church-beside-church preacher fights from r97). TRAINING_LOG 2026-10-24 04:1x, 06:2x.

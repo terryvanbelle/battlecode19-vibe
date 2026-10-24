@@ -3923,3 +3923,12 @@ Both blocks join progress/panels/v7-m1.pool.
   so far z 1.22), h141 (church strike) 738-743, h140 (early fast pioneer) 744-749; h142, h143 (stacks on v7) are
   dropped. Rebased onto v8, screens vs bots/v8 queued: h145 = v8 + ECON_RICH 150 (seed0 22000), h146 = v8 + the
   church strike (23000), h147 = v8 + h140's pioneer switches (24000).
+
+## 2026-10-24 10:1x PDT: h139 two blocks z 1.96 against v7; the idea moves to h145 on v8
+
+h128's blocks (634-639, 646-651) left progress/panels/v7-m1.pool: an accepted build is not neutral. Rescored on the
+v7 pool: h139 (ECON_RICH 150) blocks 706-711 + 732-737: 15 of 36 against 10.7, **z 1.96** (botfinalsafe 203 2/2,
+awesomelemonade 1712 2/2, uvafan 1653 2/2, botfinalsafe 1706 1/2 against the pool's 0 of 14); h136 stays rejected
+(z 0.58). By the rule h139 would get a third block, but v7 is no longer the champion: the idea is carried by h145
+(v8 + ECON_RICH 150, screen vs bots/v8 at 24 of 40), whose panel goes in when the screen passes. h141 so far 4 of 12
+(z 0.59), h140 2 of 3 (z 1.10).
