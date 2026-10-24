@@ -3625,3 +3625,11 @@ h106: TRAINING_LOG 01:45, 04:22) misread it: one map is not a measurement. Its r
 wololo 0-3 (=), 641 botfinalsafe 1-2 (-1), 642 bot1v43 2-1 (+1). Queued: h131 = v7 + MIL_ROTATION [4] (all
 prophets; dist/h131 a1720a8dbd6c) on seed0 9000, then h132 = h130 + ATTACK_ROUND 1001 + ATTACK_LATE 1001 (no general
 attack; dist/h132 8219f3cfe4bb) on seed0 9500; mechanism: castles lost below h87's; field-aimed bars.
+
+## 2026-10-23 21:24 PDT: h128 replica block 1 net +2 -> block 2 (646-651)
+
+h128 (ESCORT_FIRST 2 + ESCORT_MIRROR 1 + ESCORT_UNIT 3) block 1 634-639 vs v7's 420-425: 8/18 to 6/18, gained 4
+(IanCoolidge0 1036 and 2644, wololo 2644 at r260, uvafan 1712 on castles), lost 2 (IanCoolidge0 203, botfinalsafe
+203), D 6, net +2, t 0.82: neither bar of the two-block rule -> block 2 on the same cells, submission 115, matches
+646-651 (v7 resubmitted, 116; bumped). Galaxy assigns sides per match, so block 2 swaps them only where it happens to;
+compare reads both blocks cell by cell against 420-425 and the cumulative t needs >= 1.5 with net >= +3.
