@@ -20,10 +20,11 @@
 - **VM queue** (`~/jobq`; the runner takes pending jobs in locale `ls | sort` order; gates run from the shadow tree
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
-  ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 25 z's (h150); the next adds a z. Now:
+  ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 26 z's (h151); the next adds a z. Now:
   **h149** (v8 + CHAIN_LIVE 2: castles hold the chain reserve only while a chainer waits staged; 26000) runs, then
   **h150** (v8 + WATCH 2: a structure radios an enemy attacker within r2 100 that none of our military units sees;
-  melee units engage it; 27000). h148 (CHAIN_LIVE 1) passed (+3 -0, t 1.73, castles 35 vs 39).
+  melee units engage it; 27000), then **h151** (v8 + CHAIN_FAILS 1; 28000; pre-registered screen exception:
+  castles alone with t > 0 still goes to the panel, TRAINING_LOG 2026-10-24 08:42). h148 (CHAIN_LIVE 1) passed (+3 -0, t 1.73, castles 35 vs 39).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h`, castles from out/dlv_gate_hN.txt on the
   VM (awk on columns 18-19, a = candidate).
 - **Replica panels** (progress/panels/v7-m1.json: six field bots, wololo, botfinalsafe, bot1v43, uvafan,

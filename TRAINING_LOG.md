@@ -4016,3 +4016,12 @@ stood at r2 65 from our castle, outside its reach, and shot our chainers on thei
 r400, while our 40 units stood 7-11 tiles east and never saw it; the castle fell at r444. Screen h150 (WATCH 2) vs
 bots/v8, seed0 27000. Pre-registered: passes the screen, then the v8-pool panel decides (bot1v43 2321 is a panel
 cell).
+
+## 2026-10-24 08:42 PDT: h151 (CHAIN_FAILS 1 on v8) queued, with a pre-registered reading
+
+h133 (CHAIN_FAILS 1 on v7) read t 0.82 (+4 -2) on its screen and was rejected only on castles lost, 35 vs 30
+(1.17x). Against the incumbent the switch stops our lines while the incumbent's keep coming, so castles lost
+measures v8's own chain, which few field bots share (LEARNINGS 32; the census of v8's 54 field games noted one
+enemy church line, botfinalsafe on 203). h151 = v8 + CHAIN_FAILS 1, screen vs bots/v8 seed0 28000. Pre-registered: t <= -1 rejects as
+usual; if it fails only the castles criterion with t > 0, its block 1 goes to the replica anyway, flagged in the
+ledger as a screen exception, and the panel's block-1 rule (z < 0.5) is the guard.
