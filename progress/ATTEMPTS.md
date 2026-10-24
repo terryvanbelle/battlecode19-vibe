@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 125 other, 28 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (178 rows).
+Totals: 126 other, 28 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (179 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -189,6 +189,7 @@ Totals: 125 other, 28 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparrin
 | `h136` | 2026-10-24 01:47 | v7 | SIEGE 30 alone (h135 without SAFE_BUILD 2) | vs h87 20 cells seed0 13000: +2 -2, D 4, t 0; castles lost 25 vs 27 |  | block 1 694-699: 7 of 18 vs pooled 5.7, z 0.81; block 2 = 720-725 |  | REPLICA BLOCK 2 |
 | `h137` | 2026-10-24 02:30 | v7 | SIEGE 10: h136 with a shorter prophet memory | vs h87 20 cells seed0 14000: +1 -3, D 4, t -1.00; castles lost 35 vs 35 |  |  |  | REJECTED (screen t -1.00) |
 | `h138` | 2026-10-24 03:4x | v7 | SIEGE 60: h136 with a longer prophet memory | vs h87 20 cells seed0 15000: +3 -2, D 5, t 0.45; castles lost 35 vs 32 |  |  |  | SCREEN PASSED (panel waits on h136) |
-| `h139` | 2026-10-24 04:2x | v7 | ECON_RICH 150: before r100 the bank past 150 K + reserves builds the peacetime army (h116 at 100) | vs h87 20 cells seed0 16000: +7 -5, D 12, t 0.58; castles lost 29 vs 35 |  | block 1 = matches 706-711 |  | REPLICA PANEL (screen passed) |
+| `h139` | 2026-10-24 04:2x | v7 | ECON_RICH 150: before r100 the bank past 150 K + reserves builds the peacetime army (h116 at 100) | vs h87 20 cells seed0 16000: +7 -5, D 12, t 0.58; castles lost 29 vs 35 |  | block 1 706-711: 9 of 18 vs pooled 5.7, z 2.07 (botfinalsafe 1706 won); block 2 requested |  | REPLICA BLOCK 2 |
 | `h140` | 2026-10-24 05:2x | v7 | h121 + PIONEER_FAST 1: the early centre pioneer at full speed | vs h87 20 cells seed0 17000: +10 -5, D 15, t 1.29; castles lost 32 vs 38 |  |  |  | REPLICA PANEL QUEUED (screen passed) |
-| `h141` | 2026-10-24 06:2x | v7 | h84's church strike on v7: a structure seeing an enemy church within r2 36 and no attacker builds a preacher toward it (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) |  |  |  |  | SCREEN QUEUED |
+| `h141` | 2026-10-24 06:2x | v7 | h84's church strike on v7: a structure seeing an enemy church within r2 36 and no attacker builds a preacher toward it (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) | vs h87 20 cells seed0 18000: +5 -0, D 5, t 2.24; castles lost 29 vs 39 |  |  |  | REPLICA PANEL QUEUED (screen passed) |
+| `h142` | 2026-10-24 07:2x | v7 | h139 + h141 stacked: ECON_RICH 150 + church strike (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) |  |  |  |  | SCREEN QUEUED |

@@ -3863,3 +3863,14 @@ measured on the field (h84 failed a local delivery against h76): screen on seed0
 h140 vs h87, 20 cells seed0 17000: 25/40, +10 -5, D 15, t 1.29; castles lost 32 vs 38, churches 497 vs 453:
 non-inferior -> its panel block follows h136's block 2 and h128's block 3 (tools/panel_submit.sh now takes a lock, so
 blocks never interleave: a scrim plays the submission current when it was requested). Unit tests pass.
+
+## 2026-10-24 07:2x PDT: h139 block 1 z 2.07 (botfinalsafe 1706 won); h141 screen +5 -0; h142 (both) queued
+
+- h139 (ECON_RICH 150) block 1 706-711 against the pool: 9 of 18 against 5.7, z 2.07, the first win in 14 blocks on
+  botfinalsafe 1706, the cell it was aimed at (castles idle r33-93), plus botfinalsafe 203, awesomelemonade 1712, uvafan
+  1653 and 1712, IanCoolidge0 1036. Block 2 requested now (accept at cumulative z >= 2).
+- tools/panel_pool.sh counted a cell whose match was still running as a loss; it now skips them (unit tests pass).
+  h103 so far: block 2 700-705 5 of 15 (704 running), cumulative 12 of 33 against 10.0, z 0.94.
+- h141 (church strike) vs h87, 20 cells seed0 18000: 25/40, gained 5, lost 0, D 5, t 2.24; castles lost 29 vs 39,
+  churches 547 vs 466. Panel requested (after h139's block 2 and h140's block 1; tools/panel_submit.sh's lock).
+- h142 = v7 + h139's and h141's switches (dist/h142, de28240ef2f0): screen on seed0 19000.

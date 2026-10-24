@@ -4,13 +4,13 @@
 # CONTROL: the control block (e.g. 420-425); POOLFILE: one block per line (#-comments allowed), the neutral blocks
 # whose wins per cell, with the control's, make each cell's rate. Candidate blocks listed are left out of the pool.
 # Prints each cell (pool wins/n, candidate wins over its blocks) and the candidate's wins against the pooled
-# expectation as z = (wins - E) / sqrt(sum p(1-p)); p = (wins + 0.5) / (n + 1).
+# expectation as z (cells whose match has not finished are skipped) = (wins - E) / sqrt(sum p(1-p)); p = (wins + 0.5) / (n + 1).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 ctrl=$1; poolf=$2; shift 2
 cand=" $* "
 cmp() { python3 -I tools/galaxy19/contest19.py compare "$ctrl" "$1" 2>/dev/null |
-  awk -v tag="$2" 'NF>8 && $3=="ctrl"{print tag, $1, $2, ($0 ~ /cand W/) ? 1 : 0}'; }
+  awk -v tag="$2" 'NF>8 && $3=="ctrl" && $0 !~ /cand -/{print tag, $1, $2, ($0 ~ /cand W/) ? 1 : 0}'; }
 {
   python3 -I tools/galaxy19/contest19.py compare "$ctrl" "$ctrl" 2>/dev/null |
     awk 'NF>8 && $3=="ctrl"{print "P", $1, $2, ($4=="W") ? 1 : 0}'
