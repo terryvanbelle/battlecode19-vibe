@@ -3942,3 +3942,11 @@ Submission 150 (dist/h145, de5c9212eb2a), block 1 = matches 750-755 (bots/v8 res
 
 h145 (v8 + ECON_RICH 150) vs bots/v8, 20 cells seed0 22000: 23/40, gained 6, lost 3, D 9, net 3, t 1.00; castles
 lost 30 vs 34, churches 506 vs 419: non-inferior. h146 (church strike on v8) screen running.
+
+## 2026-10-24 11:1x PDT: h141 (church strike) REJECTED on the replica (pooled z 0.43)
+
+h141 block 1 738-743 against the v7 pool: 6 of 18 against 5.3, z 0.43 (< 0.5): REJECTED; joins the v7 pool. On its
+target, wololo 2013 (738, h141 red), the strike worked as built: wololo's churches beside ours died first ((40,32) at
+r103 to our preachers, (27,17) at r110), our castle lasted to r367 against v7's r198, army 22 vs 12 at r150; still
+lost. h146 (the strike on v8) finishes its screen; its panel waits behind the leads, as the field read is weak.
+h140 so far 3 of 12 (z -0.55), h145 1 of 3.

@@ -33,7 +33,7 @@
   for v8-based candidates `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK...`, for v7-based ones
   `tools/panel_pool.sh 420-425 progress/panels/v7-m1.pool BLOCK...`; rejected blocks join their pool file.
   v7-based panels (read for the idea, not acceptance): h139 (ECON_RICH 150) 706-711 + 732-737 z 1.96 against v7
-  (carried by **h145**: v8-pool block 1 = 750-755, beside its screen), h141 (church strike) 738-743, h140 (early fast
+  (carried by **h145**: v8-pool block 1 = 750-755, beside its screen), h141 (church strike) 738-743 REJECTED (z 0.43), h140 (early fast
   pioneer) 744-749.
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013, 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
   2518; uvafan 2046; bot1v43 2591. Studies: botfinalsafe 1706 (castles idle r33-93, the centre cluster lost); wololo
