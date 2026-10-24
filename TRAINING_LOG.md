@@ -3589,6 +3589,6 @@ h127 628 wololo 0-3 (=), 629 botfinalsafe 0-3 (-2), 630 bot1v43 1-2 (=). h129 = 
 ## 2026-10-23 20:32 PDT: h126 REJECTED on the replica (block 1 net 0)
 
 h126 (ESCORT_FIRST 1 + ESCORT_MIRROR 1, prophet) block 1 622-627 vs v7's 420-425: 6/18 each, gained 2, lost 2, D 4,
-net 0, t 0 -> REJECTED by the two-block rule. Lost: awesomelemonade 1712 (v7 won on castles at r474; h126 lost on
-health at r1000). Gained one cell each from IanCoolidge0 (627). Castles held longer in losses to wololo (2013: r518
+net 0, t 0 -> REJECTED by the two-block rule. Gained IanCoolidge0 1036 and 2644; lost IanCoolidge0 203 and
+awesomelemonade 1712 (v7 won both; h126 lost both on health at r1000). Castles held longer in losses to wololo (2013: r518
 vs r198) without turning them: the escort delays the opening siege but does not break it.
