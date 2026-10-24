@@ -231,6 +231,13 @@ def pool_cmd(a):
     print(f'~ cand wins {W} of {N}, pooled expectation {E:.1f}, z {z:.2f}')
     W, N, E, z = s['side']
     print(f'~ side-aware (k {a.k:g}): expectation {E:.1f}, z {z:.2f}')
+    if a.studied:
+        # TRAINING_ALGORITHM §4: a candidate designed from some cells must also hold its own (z >= 0) on the others.
+        marks = [x.split(':', 1) for x in a.studied.split(',')]
+        hit = lambda g: any(g[0].startswith(o) and g[1] == m for o, m in marks)
+        for name, part in (('studied', [g for g in cand if hit(g)]), ('other', [g for g in cand if not hit(g)])):
+            W, N, E, z = pool_score(prior, part, a.k)[1]['side']
+            print(f'~ {name} cells: wins {W} of {N}, side-aware expectation {E:.1f}, z {z:.2f}')
     return 0
 
 
@@ -260,6 +267,7 @@ def main(argv=None):
     p = sub.add_parser('pool'); p.add_argument('ctrl'); p.add_argument('poolfile'); p.add_argument('blocks', nargs='+')
     p.add_argument('--partial', action='store_true'); p.add_argument('--k', type=float, default=2.0)
     p.add_argument('--dir', default=REPLAYS)
+    p.add_argument('--studied', help='OPPONENT_PREFIX:MAP,... the cells the candidate was designed from')
     a = ap.parse_args(argv)
     if a.cmd == 'compare':
         return compare_cmd(a)

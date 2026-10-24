@@ -4275,3 +4275,13 @@ read-only; the refusal with a mount left writable on purpose); on the VM inside 
 settings (ProtectSystem=strict, PrivateTmp, ReadWritePaths, PrivateNetwork): work directory writable, the replica's
 home, storage and /tmp read-only, only lo. Goes live with `deploy.sh app` at the saturn restart (HANDOFF).
 Correction: the entry above, headed 12:47, was written at 12:39 PDT (`date`; LEARNINGS 34). Checked at 12:39.
+
+## 2026-10-24 12:51 PDT: studied cells of the held candidates, fixed before any of their screens or panels
+
+TRAINING_ALGORITHM §4 (the pool is not a test set): h154, h155, h157 (escort fixes) and h156 (INTERCEPT) were
+designed from the wololo study (replica 634, 646, 726, 758) and the never-won cells (TRAINING_LOG 09:48, 10:08,
+10:24). Their studied cells, both sides: wololo 2013, 2644 and 836; bot1v43 2591; botfinalsafe 1706. Each is
+accepted only if, beside the pooled rule, its side-aware z over the other cells is >= 0:
+`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCKS --studied
+m-schier.battlecode-2019-wololo:seed-2013,m-schier.battlecode-2019-wololo:seed-2644,m-schier.battlecode-2019-wololo:seed-836,StoneT2000.BC19-bot1v43:seed-2591,StoneT2000.BC19-botfinalsafe:seed-1706`
+(the "other cells" line). h148 (CHAIN_LIVE) was not designed from panel cells; its rule stands as fixed at 11:58.
