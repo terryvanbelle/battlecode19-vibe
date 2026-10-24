@@ -18,5 +18,5 @@ while [ -n "$todo" ]; do
   python3 -I $C submit "$LADDER" -m "$(basename "$LADDER") ladder build" | tail -1
   tools/bump_ours.sh --ours > /dev/null
   todo=$(echo "$out" | sed -n 's/^refused: vs \([^:]*\):.*/\1/p' | paste -sd, -)
-  [ -n "$todo" ] && { echo "refused, again in 15 min: $todo"; sleep 900; }
+  if [ -n "$todo" ]; then echo "refused, again in 15 min: $todo"; sleep 900; fi
 done

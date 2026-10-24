@@ -3766,25 +3766,25 @@ h136 (SIEGE 30 alone) screen vs h87, 20 cells seed0 13000: +2 -2, D 4, t 0; cast
 replica panel: submission 123 (dist/h136, 4d8e4bab9982), block 1 = matches 694-699 (v7 resubmitted, 124; bumped).
 h137 = v7 + SIEGE 10 (dist/h137, 081c8a6aacb4: a shorter memory, a less passive hold) screen queued, seed0 14000.
 
-## 2026-10-24 03:2x PDT: h112 REJECTED on the replica (net 0)
+## 2026-10-24 02:41 PDT: h112 REJECTED on the replica (net 0)
 
 h112 (DEF_SEEN 1) block 1 673-678 vs v7's 420-425: gained 2 (bot1v43 2321 at r278, uvafan 1653 on castles at r1000),
 lost 2 (IanCoolidge0 203 and awesomelemonade 1712, both on health at r1000), D 4, net 0, t 0, 6/18 each: REJECTED by
 the two-block rule. awesomelemonade 1712 (v7 won it at r474) went to health at r1000 for both h112 and h135, and
 uvafan 1653 turned for both: the panel's noise floor is about 2 cells each way per block.
 
-## 2026-10-24 03:3x PDT: h103's block 2 to the replica (700-705)
+## 2026-10-24 02:41 PDT: h103's block 2 to the replica (700-705)
 
 h103 (ESCORT 2 + ESCORT_UNIT 3; block 1 438-443: +3 -2, net +1, t 0.45) gets its block 2 on the same cells while the
 queue is short: submission 125 (dist/h103, 406a9d0dc3b3), matches 700-705 (v7 resubmitted, 126; bumped). Accept at
 cumulative t >= 1.5 and net >= +3.
 
-## 2026-10-24 03:4x PDT: h138 (SIEGE 60) screen queued behind h137
+## 2026-10-24 02:47 PDT: h138 (SIEGE 60) screen queued behind h137
 
 h138 = v7 + SIEGE 60 (dist/h138, 97ddd12a883e) brackets h136's memory from above as h137 (SIEGE 10) does from below;
 screen vs h87 on seed0 15000. h137's screen is at 33/40 games.
 
-## 2026-10-24 04:1x PDT: the panel's per-cell record pooled over twelve blocks; the hard cells
+## 2026-10-24 02:52 PDT: the panel's per-cell record pooled over twelve blocks; the hard cells
 
 Every candidate block (426, 432, 438, 616, 622, 628, 634, 640, 646, 652, 673, 679) compared with v7's 420-425, wins
 per cell pooled: coin flips the control won (IanCoolidge0 203 3/12, botfinalsafe 203 4/12, awesomelemonade 1712 5/12)
@@ -3802,7 +3802,7 @@ Two looks:
   28, mined K 678 to 1276, our bank 261 K and 8,579 fuel idle. h116 (ECON_RICH 100, the idle bank to army before
   r100) was rejected locally (t -1.07) before the protocol moved to the panel (LEARNINGS 32): a panel candidate now.
 
-## 2026-10-24 04:2x PDT: h139 (ECON_RICH 150) to its screen and the replica panel (706-711)
+## 2026-10-24 02:52 PDT: h139 (ECON_RICH 150) to its screen and the replica panel (706-711)
 
 h139 = v7 + ECON_RICH 150 (dist/h139, 105f222fabb6): before ECON_UNTIL 100 the bank past 150 K + the reserves builds the
 peacetime army (h116 used 100). Aimed at the never-won cells (botfinalsafe 1706: castles idle r33-93). Screen vs h87
@@ -3810,7 +3810,7 @@ on seed0 16000 queued behind h137 and h138; replica submission 127, block 1 = ma
 bumped), read by LEARNINGS 33 (wins against the pooled expectation, flips of never-won cells). A screen rejection
 voids the panel.
 
-## 2026-10-24 05:0x PDT: h137 (SIEGE 10) REJECTED on its screen; h138 (SIEGE 60) passes and waits on h136's panel
+## 2026-10-24 03:19 PDT: h137 (SIEGE 10) REJECTED on its screen; h138 (SIEGE 60) passes and waits on h136's panel
 
 - h137 vs h87, 20 cells seed0 14000: 18/40, gained 1, lost 3, D 4, net -2, t -1.00; castles lost 35 vs 35: REJECTED
   (t <= -1).
@@ -3818,7 +3818,7 @@ voids the panel.
   1.1x), churches 456 vs 510: non-inferior. Its panel waits for h136's (SIEGE 30, 694-699): the SIEGE line goes on
   only if h136 beats the pooled expectation (LEARNINGS 33).
 
-## 2026-10-24 05:2x PDT: h121 (early centre pioneer) to the replica panel; h140 (h121 + PIONEER_FAST) screen queued
+## 2026-10-24 03:21 PDT: h121 (early centre pioneer) to the replica panel; h140 (h121 + PIONEER_FAST) screen queued
 
 h121 (PIONEER_EARLY 6 + PIONEER_HOLD 64 + PIONEER_LEAN 3, dist/h121 8f22f616fcf1) was rejected locally on 2026-10-23
 (t -0.28, first church 4.4 rounds earlier against a 5-round bar) under the old protocol; under the screen (reject only
@@ -3827,7 +3827,7 @@ hourly scrimmage limit (HTTP 429, as on the official site) took only wololo (712
 four are requested again after the hour (a background retry), v7 resubmitted (130) each time.
 h140 = h121's switches + PIONEER_FAST 1 (dist/h140, 36e9cb230073, built from today's src) screen on seed0 17000.
 
-## 2026-10-24 05:5x PDT: the pooled panel rule (tools/panel_pool.sh); h136 -> block 2; h128 reopened for a third block
+## 2026-10-24 03:28 PDT: the pooled panel rule (tools/panel_pool.sh); h136 -> block 2; h128 reopened for a third block
 
 tools/panel_pool.sh CONTROL POOLFILE BLOCK... scores candidate blocks against each cell's win rate pooled over the
 control and the neutral blocks (progress/panels/v7-m1.pool), z = (wins - E) / sqrt(sum p(1-p)); TRAINING_ALGORITHM §4
@@ -3838,10 +3838,10 @@ Every earlier block rescored (z): h96 426 -1.80, h104 432 0.20, h103 438 0.89, h
 628 -1.83, h128 634 1.57 + 646 0.87 = 15 of 36 against 11.1, z 1.79, h130 640 -1.15, h123 652 -1.82, h112 673 0.19,
 h135 679 0.19. Every rejection stands except h128 (two blocks between 1 and 2): a third block.
 h136 (SIEGE 30) block 1 694-699: 7 of 18 against 5.7, z 0.81 (won IanCoolidge0 203, bot1v43 2321, uvafan 1712,
-awesomelemonade 1712; no never-won cell turned) -> block 2. Both blocks go in after the rate window (~06:5x), behind
+awesomelemonade 1712; no never-won cell turned) -> block 2. Both blocks go in after the rate window (~04:2x), behind
 h121's last four.
 
-## 2026-10-24 06:2x PDT: wololo 2013 read; h141 (church strike) screen queued
+## 2026-10-24 03:48 PDT: wololo 2013 read; h141 (church strike) screen queued
 
 v7's r198 loss to wololo on 2013 (420, `replay.js threat`): wololo's first army came at r97 as preachers against our
 contested churches: its church (40,21) stood beside ours (40,20); ours saw the preacher at r97 with 63 K, built two
@@ -3851,20 +3851,20 @@ churches), so h139's ECON_RICH does not fire on this map; the fights over neighb
 h141 = v7 + h84's church strike (STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5; dist/h141, 04e1af62e9bf), never
 measured on the field (h84 failed a local delivery against h76): screen on seed0 18000, then the panel.
 
-## 2026-10-24 06:4x PDT: h139 passes its screen; h140 leads its screen (t 1.29), tally pending
+## 2026-10-24 04:19 PDT: h139 passes its screen; h140 leads its screen (t 1.29), tally pending
 
 - h139 (ECON_RICH 150) vs h87, 20 cells seed0 16000: 22/40, gained 7, lost 5, D 12, net 2, t 0.58; castles lost 29
   vs 35, churches 558 vs 500: non-inferior; its panel 706-711 stands (706-708, 710 done).
 - h140 (h121 + PIONEER_FAST) vs h87, 20 cells seed0 17000: 25/40, gained 10, lost 5, D 15, net 5, t 1.29; the
   castles tally is still running. Its panel follows once the tally clears and the hourly limit allows.
 
-## 2026-10-24 06:5x PDT: h140 passes its screen; panel queued behind h136 and h128
+## 2026-10-24 04:24 PDT: h140 passes its screen; panel queued behind h136 and h128
 
 h140 vs h87, 20 cells seed0 17000: 25/40, +10 -5, D 15, t 1.29; castles lost 32 vs 38, churches 497 vs 453:
 non-inferior -> its panel block follows h136's block 2 and h128's block 3 (tools/panel_submit.sh now takes a lock, so
 blocks never interleave: a scrim plays the submission current when it was requested). Unit tests pass.
 
-## 2026-10-24 07:2x PDT: h139 block 1 z 2.07 (botfinalsafe 1706 won); h141 screen +5 -0; h142 (both) queued
+## 2026-10-24 04:48 PDT: h139 block 1 z 2.07 (botfinalsafe 1706 won); h141 screen +5 -0; h142 (both) queued
 
 - h139 (ECON_RICH 150) block 1 706-711 against the pool: 9 of 18 against 5.7, z 2.07, the first win in 14 blocks on
   botfinalsafe 1706, the cell it was aimed at (castles idle r33-93), plus botfinalsafe 203, awesomelemonade 1712, uvafan
@@ -3875,7 +3875,7 @@ blocks never interleave: a scrim plays the submission current when it was reques
   churches 547 vs 466. Panel requested (after h139's block 2 and h140's block 1; tools/panel_submit.sh's lock).
 - h142 = v7 + h139's and h141's switches (dist/h142, de28240ef2f0): screen on seed0 19000.
 
-## 2026-10-24 08:0x PDT: h142 passes its screen; h143 (all three leads) queued; h103 and h121 wait on awesomelemonade/uvafan
+## 2026-10-24 05:20 PDT: h142 passes its screen; h143 (all three leads) queued; h103 and h121 wait on awesomelemonade/uvafan
 
 - h142 (h139 + h141) vs h87, 20 cells seed0 19000: 22/40, +7 -5, D 12, t 0.58; castles lost 36 vs 38, churches 569
   vs 439: non-inferior. Its panel waits for h139's block 2 and h141's block 1 (the replica queue is near 25).
@@ -3883,7 +3883,7 @@ blocks never interleave: a scrim plays the submission current when it was reques
   against 5.1, z -0.07 (717 vs uvafan running).
 - h143 = v7 + h139's, h140's and h141's switches (dist/h143) screen on seed0 20000.
 
-## 2026-10-24 08:4x PDT: h103 and h121 REJECTED on the replica (pooled rule)
+## 2026-10-24 05:47 PDT: h103 and h121 REJECTED on the replica (pooled rule)
 
 `contest19.py fetch --new` reads one page of matches: the slow awesomelemonade and uvafan matches (704, 717) had
 fallen off it and were never fetched; `fetch --new --pages 6` took them (HANDOFF's reading command now says so).
@@ -3894,17 +3894,17 @@ fallen off it and were never fetched; `fetch --new --pages 6` took them (HANDOFF
   744-749) reads the same idea again.
 Both blocks join progress/panels/v7-m1.pool.
 
-## 2026-10-24 09:0x PDT: h143 (three leads) passes its screen; h144 (ECON_RICH 250) queued
+## 2026-10-24 05:56 PDT: h143 (three leads) passes its screen; h144 (ECON_RICH 250) queued
 
 - h143 vs h87, 20 cells seed0 20000: 24/40, gained 11, lost 7, D 18, t 0.94; castles lost 40 vs 55, churches 531 vs
   545: non-inferior. Its panel follows the single leads' (h139 block 2, h141, h140).
 - h144 = v7 + ECON_RICH 250 (dist/h144) brackets h139 from above; screen on seed0 21000.
 
-## 2026-10-24 09:3x PDT: h128 ACCEPTED on the replica (pooled rule, z 2.54): frozen as v8; h136 and h144 REJECTED
+## 2026-10-24 06:41 PDT: h128 ACCEPTED on the replica (pooled rule, z 2.54): frozen as v8; h136 and h144 REJECTED
 
 - h128 (v7 + ESCORT_FIRST 2, ESCORT_MIRROR 1, ESCORT_UNIT 3: two crusaders hold the enemy's mirror image of our first
   contested site) block 3 726-731: 8 of 18 against the pooled 5.6 (z 1.48 alone); three blocks 634-639 + 646-651 +
-  726-731: 23 of 54 against 16.1, **z 2.54** (pre-registered 05:5x: a third block accepted at z >= 2): **ACCEPTED**.
+  726-731: 23 of 54 against 16.1, **z 2.54** (pre-registered 03:28: a third block accepted at z >= 2): **ACCEPTED**.
   Cells won in every block: wololo 2644 3/3 (the pool 0 of 13), IanCoolidge0 2644 3/3 (2 of 13) and 1036 3/3 (3 of
   13), awesomelemonade 1712 3/3 (5 of 13); lost every time: botfinalsafe 203 (6 of 13), bot1v43 2321 (4 of 13).
   Caveat: h128 was reopened because its first two blocks scored best of thirteen candidates (a selection); the third
@@ -3924,7 +3924,7 @@ Both blocks join progress/panels/v7-m1.pool.
   dropped. Rebased onto v8, screens vs bots/v8 queued: h145 = v8 + ECON_RICH 150 (seed0 22000), h146 = v8 + the
   church strike (23000), h147 = v8 + h140's pioneer switches (24000).
 
-## 2026-10-24 10:1x PDT: h139 two blocks z 1.96 against v7; the idea moves to h145 on v8
+## 2026-10-24 06:47 PDT: h139 two blocks z 1.96 against v7; the idea moves to h145 on v8
 
 h128's blocks (634-639, 646-651) left progress/panels/v7-m1.pool: an accepted build is not neutral. Rescored on the
 v7 pool: h139 (ECON_RICH 150) blocks 706-711 + 732-737: 15 of 36 against 10.7, **z 1.96** (botfinalsafe 203 2/2,
@@ -3933,20 +3933,52 @@ awesomelemonade 1712 2/2, uvafan 1653 2/2, botfinalsafe 1706 1/2 against the poo
 (v8 + ECON_RICH 150, screen vs bots/v8 at 24 of 40), whose panel goes in when the screen passes. h141 so far 4 of 12
 (z 0.59), h140 2 of 3 (z 1.10).
 
-## 2026-10-24 10:2x PDT: h145 (v8 + ECON_RICH 150) to the replica panel beside its screen (750-755)
+## 2026-10-24 06:48 PDT: h145 (v8 + ECON_RICH 150) to the replica panel beside its screen (750-755)
 
 Submission 150 (dist/h145, de5c9212eb2a), block 1 = matches 750-755 (bots/v8 resubmitted, 151; bumped). Read with
 `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 750-755`; a screen rejection voids it.
 
-## 2026-10-24 10:4x PDT: h145 passes its screen vs v8; its panel 750-755 stands
+## 2026-10-24 07:03 PDT: h145 passes its screen vs v8; its panel 750-755 stands
 
 h145 (v8 + ECON_RICH 150) vs bots/v8, 20 cells seed0 22000: 23/40, gained 6, lost 3, D 9, net 3, t 1.00; castles
 lost 30 vs 34, churches 506 vs 419: non-inferior. h146 (church strike on v8) screen running.
 
-## 2026-10-24 11:1x PDT: h141 (church strike) REJECTED on the replica (pooled z 0.43)
+## 2026-10-24 07:20 PDT: h141 (church strike) REJECTED on the replica (pooled z 0.43)
 
 h141 block 1 738-743 against the v7 pool: 6 of 18 against 5.3, z 0.43 (< 0.5): REJECTED; joins the v7 pool. On its
 target, wololo 2013 (738, h141 red), the strike worked as built: wololo's churches beside ours died first ((40,32) at
 r103 to our preachers, (27,17) at r110), our castle lasted to r367 against v7's r198, army 22 vs 12 at r150; still
 lost. h146 (the strike on v8) finishes its screen; its panel waits behind the leads, as the field read is weak.
 h140 so far 3 of 12 (z -0.55), h145 1 of 3.
+
+## 2026-10-24 07:40 PDT: h146 (church strike on v8) passes its screen; time labels corrected
+
+h146 vs bots/v8, 20 cells seed0 23000: 23/40, gained 5, lost 2, D 7, net 3, t 1.13; castles lost 35 vs 38: passes.
+Its block 1 goes to the replica behind h145 (h141, the same strike on v7, read z 0.43 there). The headings of this
+log from 2026-10-24 02:41 to 07:20 were estimated and ran up to four hours fast; they, the ledger dates and the
+references to them now carry the commit times (LEARNINGS 34). v8 census of the never-won games under way: on
+bot1v43 2321 (636) all three chainers were born on (32,9) inside a camping prophet's reach and died at birth (r200,
+r300, r400) while the castle held 586-1,330 K for 200 rounds and fell at r444 with 1,330 banked.
+
+## 2026-10-24 07:58 PDT: h147 passes its screen; CFG.CHAIN_LIVE built, h148 and h149 queued
+
+h147 (v8 + h140's early fast centre pioneer) vs bots/v8, 20 cells seed0 24000: 26/40, gained 12, lost 6, D 18, net
+6, t 1.41; castles lost 23 vs 38: passes, and goes to the replica (block 1 behind h146), though h140, the same switch
+on v7, reads 3 of 15 there against 4.2 (z -0.89).
+
+The v8 census of the chain reserve (CHAIN_K 1000 from r200, held by every structure's peacetime army) in the field
+games: three ways it holds the bank for a chain that cannot fire. (1) Stillborn chainers: bot1v43 2321 (636), the
+castle at (33,9) built its chainer on (32,9) at r200, r300 and r400, each shot on its first turn by red prophet #953
+camping at (26,13) (r2 52 to the tile, 65 to the castle); the bank rose 586 -> 1,330 K over r250-444 with the army
+frozen at 40-50 behind the castle, which fell at r444. (2) Walled-off chainers: botfinalsafe 2740 (635), a chainer
+waits at (14,58) on the bottom-edge corridor, its way on blocked by our own pilgrim and church at (16,58)-(17,58),
+until CHAIN_GIVEUP; the castle relaunches every 100 rounds and the bank sits at 1,085-1,275 K from r300 to r600 (we
+won anyway). (3) Too little income: wololo 836 (634), no church, 5-9 pilgrims, 3.6 K a round: the bank never nears
+1,000 and the castle falls at r463 with 5 units. On botfinalsafe 203 (727) the enemy's own church line (churches 2
+tiles apart along row 7 at r388, a preacher born beside our castle) killed two of our castles holding 790-950 K.
+
+CFG.CHAIN_LIVE (default 0, no-op IDENTICAL on 799, 139 node tests): 1, a castle's peacetime army leaves CHAIN_K in
+the bank only while a chainer of ours walks or waits (castle talk CT.CHAINER from any robot); 2, only while one waits
+staged (new CT.STAGED 79). Churches unchanged. Screens vs bots/v8: h148 (CHAIN_LIVE 1, seed0 25000), h149 (CHAIN_LIVE
+2, 26000). Pre-registered: either passes the screen, then the v8-pool panel decides; the mechanism is visible if the
+bank above 600 K with no chainer live drops in the census games' cells (dlv per-game bank not yet measured).

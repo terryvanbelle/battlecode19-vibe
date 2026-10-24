@@ -32,6 +32,7 @@ export const CT = {
   CHAINER: 70,   // a chainer still walking or waiting (CFG.CHAIN_ROUND, chain.js)
   CHAINGONE: 71, // a chainer saw its target castle gone
   CHAINFIRE: 78, // a chainer built its line's first church this turn (CFG.CHAIN_FAILS)
+  STAGED: 79,    // a chainer staged, waiting for the bank (CFG.CHAIN_LIVE 2; otherwise it reports CHAINER)
 };
 
 // Far messages (to robots that may not see the sender, so cannot check its team): the message type is the exact

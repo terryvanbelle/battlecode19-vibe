@@ -225,7 +225,8 @@ function structAct(B, allIds, extra, first) {
   // was shot before the church's first turn. Its army spent the bank the next line needs (seed 799: church #505, its
   // chainer killed in between, built 136 units in r246-450 and no line fired).
   const chainOn = CFG.CHAIN_ROUND && (B.round >= CFG.CHAIN_ROUND || (CFG.CHAIN_KEEP && me.unit === CHURCH && !B.round)) &&
-    !(me.unit === CASTLE && chainsFailed(st));   // CFG.CHAIN_FAILS
+    !(me.unit === CASTLE && chainsFailed(st)) &&   // CFG.CHAIN_FAILS
+    !(CFG.CHAIN_LIVE && me.unit === CASTLE && !st.chainAny);
   const reserveK = defReserveK(B) + CFG.PEACE_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
     (CFG.FRONT_ROUND && st.frontAt !== undefined && B.round - st.frontAt < 40 ? STATS[CHURCH].costK : 0) +
     (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0) +

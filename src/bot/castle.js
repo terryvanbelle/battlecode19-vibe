@@ -38,12 +38,14 @@ export function castleTurn(B) {
   st.waitN = 0;                    // pioneers waiting at their sites for the church's karbonite (CFG.PIONEER_HOLD)
   const all = w.robots.concat(w.unplaced);
   st.chainLive = false;            // CFG.CHAIN_ROUND: our chainer still walks or waits
+  st.chainAny = false;             // CFG.CHAIN_LIVE: any castle's chainer walks or waits (1), or waits staged (2)
   for (const r of all) {
     if (r.team !== me.team) continue;
     allIds.add(r.id);
     if (r.id === me.id) continue;
     const ct = r.castle_talk;
-    if (CFG.CHAIN_ROUND && r.id === st.chainId) { if (ct === CT.CHAINER) st.chainLive = true; else if (ct === CT.CHAINGONE) st.chainOff = true; }
+    if (CFG.CHAIN_ROUND && r.id === st.chainId) { if (ct === CT.CHAINER || ct === CT.STAGED) st.chainLive = true; else if (ct === CT.CHAINGONE) st.chainOff = true; }
+    if (ct === CT.STAGED || (ct === CT.CHAINER && CFG.CHAIN_LIVE === 1)) st.chainAny = true;
     if (ct >= CT.UNIT && ct < CT.UNIT + 6) st.count[ct - CT.UNIT]++;
     else if (ct === CT.CHAINFIRE && CFG.CHAIN_FAILS) { st.count[PILGRIM]++; st.chainMiss = (st.chainMiss || 0) + 1; }
     else if (ct >= CT.MARCH && ct < CT.MARCH + 6) { st.count[ct - CT.MARCH]++; st.march++; }

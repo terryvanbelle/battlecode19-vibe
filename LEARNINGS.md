@@ -186,4 +186,9 @@
    "lost" them; the cells it lost include four the pool wins 3-4 times in 12, which nearly every candidate "gained".
    Pooled mean 5.4 wins in 18 against the control's 6: no candidate is distinguishable from v7. Six cells the pool
    never wins (wololo 2013, 836; botfinalsafe 1706; awesomelemonade 2518; uvafan 2046; bot1v43 2591 once in 12) are
-   where an improvement shows. (2026-10-24 04:1x)
+   where an improvement shows. (2026-10-24 02:52)
+
+34. **Take every timestamp from the clock.** Over a 24-hour session the log's hand-reckoned "HH:Mx PDT" headings
+   ran ahead of the commits that carried them by up to four hours (h141's rejection, committed 07:20 PDT, was headed
+   11:1x). Labels come from `TZ=America/Los_Angeles date` at the moment of writing; the commit time is the check.
+   (2026-10-24 07:40)

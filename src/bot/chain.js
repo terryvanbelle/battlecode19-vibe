@@ -93,6 +93,7 @@ export function pilgrimChain(B, go) {
   const near = f <= CFG.CHAIN_STAGE + CFG.CHAIN_SLACK;
   if (!near && st.chainStill >= CFG.CHAIN_GIVEUP) { st.chain = null; st.chainer = false; w.talk(CT.UNIT + PILGRIM); return undefined; }
   const staged = f <= CFG.CHAIN_STAGE || (near && st.chainStill >= CFG.CHAIN_PATIENCE);
+  if (staged && CFG.CHAIN_LIVE === 2) w.talk(CT.STAGED);
   const ready = w.karbonite >= CFG.CHAIN_K && w.fuel >= CFG.CHAIN_F;
   // CFG.CHAIN_FIRE_NEAR: a threatened chainer fires early only near the stage line (h55's delivery, 2924: one born
   // beside its castle under attack built four churches at home three turns later, 26 steps from any enemy castle).

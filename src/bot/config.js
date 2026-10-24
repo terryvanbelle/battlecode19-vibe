@@ -170,6 +170,11 @@ export const CFG = {
                              // no line, staged or early: it flees if threatened, else holds (replica, v7's 9 games in
                              // 421/422/425: lines started with 2-6 of them in the chainer's sight kept 4 of 44 churches
                              // 20 rounds later, with 0-1, 27 of 35; seed 1036: 13 churches gone in rounds 311-320)
+  CHAIN_LIVE: 0,             // 1: a castle's peacetime army leaves CHAIN_K in the bank only while a chainer of ours
+                             // walks or waits (CT.CHAINER); 2: only while one waits staged (CT.STAGED). Replica, v8:
+                             // bot1v43 2321, three chainers shot on their build tile at birth, the castle held 586-1,330
+                             // K for 200 rounds and fell with 1,330 banked; botfinalsafe 2740, chainers walled off by
+                             // our own church on the edge corridor, 1,200 K held from r300 to r600
   CHURCH_FIRST_R2: 0,        // >0: an enemy church within this r2 of a unit's home structure is its first target
   CHURCH_FIRST_V: 3,         // (military.js churchFirst); preachers count it this much in the splash
   HUNT: 0,                   // >0: a pilgrim radios an enemy pilgrim that has stood this many turns on one tile in

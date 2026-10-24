@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 09:4x PDT)
+## State (2026-10-24 07:59 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -11,7 +11,7 @@
   default 100 ms init fails on the driver) IDENTICAL to h128's replay, with nothing else running on the driver
   (LEARNINGS 13); then `tools/unit-tests.sh`.
 - v8 = h128 = v7 + ESCORT_FIRST 2, ESCORT_MIRROR 1, ESCORT_UNIT 3 (two crusaders hold the enemy's mirror image of our
-  first contested site), ACCEPTED 09:3x 2026-10-24 on the replica panel: three blocks 23 of 54 against the pooled
+  first contested site), ACCEPTED 06:41 2026-10-24 on the replica panel: three blocks 23 of 54 against the pooled
   16.1, z 2.54 (escort tests pin v7's values: testPreV8). v7 = h87 = v6 + h82's economy switches + h76's church
   chain, ACCEPTED 2026-10-23 00:30 (testPreV7 pins v6's values).
 - **Acceptance** (TRAINING_ALGORITHM step 6-7, §4; LEARNINGS 32, 33): a local screen vs the champion only rejects
@@ -20,9 +20,11 @@
 - **VM queue** (`~/jobq`; the runner takes pending jobs in locale `ls | sort` order; gates run from the shadow tree
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
-  ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzz.sh (h145). Last job name ...19 + 22 z's (h147); the next adds a z. Now:
-  h145 (v8 + ECON_RICH 150) screen passed (t 1.00, castles 30 vs 34); screens vs bots/v8 for **h146** (v8 + church strike STRIKE_R2 36,
-  PREACHER_SELF 4, PREACHER_MIL 2.5; 23000), **h147** (v8 + PIONEER_EARLY 6, HOLD 64, LEAN 3, FAST 1; 24000).
+  ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzz.sh (h145). Last job name ...19 + 24 z's (h149); the next adds a z. Now:
+  h145 (v8 + ECON_RICH 150) and h146 (v8 + church strike STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) screens
+  passed (t 1.00, castles 30 vs 34; t 1.13, 35 vs 38); h147 (v8 + PIONEER_EARLY 6, HOLD 64, LEAN 3, FAST
+  1) passed (t 1.41, castles 23 vs 38). Screens vs bots/v8 for **h148** (v8 + CHAIN_LIVE 1: castles hold the chain reserve
+  only while a chainer walks or waits; 25000) and **h149** (CHAIN_LIVE 2: only while one waits staged; 26000).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h`, castles from out/dlv_gate_hN.txt on the
   VM (awk on columns 18-19, a = candidate).
 - **Replica panels** (progress/panels/v7-m1.json: six field bots, wololo, botfinalsafe, bot1v43, uvafan,
@@ -34,10 +36,11 @@
   `tools/panel_pool.sh 420-425 progress/panels/v7-m1.pool BLOCK...`; rejected blocks join their pool file.
   v7-based panels (read for the idea, not acceptance): h139 (ECON_RICH 150) 706-711 + 732-737 z 1.96 against v7
   (carried by **h145**: v8-pool block 1 = 750-755, beside its screen), h141 (church strike) 738-743 REJECTED (z 0.43), h140 (early fast
-  pioneer) 744-749.
+  pioneer) 744-749. v8-pool blocks 1: **h146** (v8 + church strike; screen t 1.13) = 758-763,
+  **h147** (v8 + early fast centre pioneer; screen t 1.41) = 764-769.
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013, 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
   2518; uvafan 2046; bot1v43 2591. Studies: botfinalsafe 1706 (castles idle r33-93, the centre cluster lost); wololo
-  2013 (church-beside-church preacher fights from r97). TRAINING_LOG 2026-10-24 04:1x, 06:2x.
+  2013 (church-beside-church preacher fights from r97). TRAINING_LOG 2026-10-24 02:52, 03:48.
 - **Candidates parked**: h119 (PIONEER_CALL; no local build triggers it), h117, h109, h108, h102, h98/h99, h105,
   h106. Closed lines: SIEGE (h135-h138), the v7 stacks h142/h143, ECON_RICH 100/250 (h116, h144).
 - Closed on 2026-10-23 (TRAINING_LOG, progress/ATTEMPTS.md): h114 REJECTED 11:24 (CHAIN_GUARD 1: t -1.63); h104 REJECTED on the replica 10:47 (no general attack: net

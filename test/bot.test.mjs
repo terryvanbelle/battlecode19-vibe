@@ -2369,6 +2369,69 @@ test('chain: CHAIN_FAILS holds the lines after that many fired with no enemy cas
   } finally { [CFG.CHAIN_ROUND, CFG.CHAIN_FAILS] = saved; }
 });
 
+test('struct: CHAIN_LIVE holds the chain reserve only while a chainer walks or waits (1), or waits staged (2)', () => {
+  const saved = [CFG.CHAIN_LIVE, CFG.SERVE_MOVES];
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    CFG.SERVE_MOVES = 1;   // every served depot is in sight and staffed below: the economy has nothing to build
+    let id = 4100;
+    for (let y = castle.y - 2; y <= castle.y + 2; y++) for (let x = castle.x - 2; x <= castle.x + 2; x++)
+      if (x >= 0 && y >= 0 && x < n && y < n && (g.karbonite_map[y][x] || g.fuel_map[y][x]) && !g.robots.some(q => q.x === x && q.y === y))
+        g.robots.push({ id: id++, team: 0, unit: S.PILGRIM, x, y, turn: 3, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const want = Math.min(CFG.GUARD_MAX, CFG.GUARD_BASE + Math.floor(300 / CFG.GUARD_ROUNDS));
+    const turn1 = (live, talk) => {
+      CFG.CHAIN_LIVE = live; castle.turn = 300;   // a castle's round is its turn
+      const all = g.robots;
+      const mine = all.filter(r => d2(r.x, r.y, castle.x, castle.y) <= 100);
+      const free = [];   // the guard quota met by our prophets on free tiles in sight
+      for (let r2 = 4; r2 <= 100 && free.length < want; r2++) for (let y = 0; y < n; y++) for (let x = 0; x < n; x++)
+        if (free.length < want && d2(x, y, castle.x, castle.y) === r2 && g.map[y][x] && !mine.some(q => q.x === x && q.y === y))
+          free.push({ id: 4900 + free.length, team: 0, unit: S.PROPHET, x, y, turn: 9, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 });
+      // a chainer of another castle's, out of sight (castles hear every robot's status byte)
+      const chainer = talk ? [{ id: 4990, team: 0, unit: S.PILGRIM, castle_talk: talk, turn: 30 }] : [];
+      g.robots = mine.concat(free);
+      const w = worldFor(g, castle); g.robots = all;
+      for (const c of chainer) w.unplaced.push({ ...c, x: -1, y: -1, seen: false });
+      const B = { api: w.api, w, round: 300, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 600; w.fuel = 2000;   // past CHAIN_ROUND, below CHAIN_K, above RICH_K and the other reserves
+      return castleTurn(B);
+    };
+    assert.ok(CFG.CHAIN_ROUND && CFG.CHAIN_ROUND <= 300 && 600 < CFG.CHAIN_K && 600 > CFG.RICH_K + CFG.DEF_RESERVE_K + 60, 'v8 values');
+    const army = a => [S.CRUSADER, S.PROPHET, S.PREACHER].includes((a || {}).u);
+    assert.strictEqual(turn1(0, 0), null);                    // default: the chain's bank waits, chainer or none
+    assert.ok(army(turn1(1, 0)));                             // 1: no chainer anywhere: the army spends it
+    assert.strictEqual(turn1(1, CT.CHAINER), null);           // ...one walks or waits: the bank waits
+    assert.strictEqual(turn1(1, CT.STAGED), null);
+    assert.ok(army(turn1(2, CT.CHAINER)));                    // 2: one still walking: the army spends it
+    assert.strictEqual(turn1(2, CT.STAGED), null);            // ...staged: the bank waits
+  } finally { [CFG.CHAIN_LIVE, CFG.SERVE_MOVES] = saved; }
+});
+
+test('chain: CHAIN_LIVE 2: a staged chainer reports CT.STAGED, a walking one CT.CHAINER', () => {
+  const saved = [CFG.CHAIN_ROUND, CFG.CHAIN_LIVE];
+  try {
+    CFG.CHAIN_ROUND = 150;
+    const X = chainFixture();
+    const run = (t, live) => {
+      CFG.CHAIN_LIVE = live;
+      const pil = X.mk(4101, 0, S.PILGRIM, X.ours[0], X.ours[1]);
+      const { w, log } = X.world([pil, X.castleAt(t)], pil);
+      w.karbonite = 0; w.fuel = 0;
+      const B = { api: w.api, w, round: 200, birthRound: 150, st: { chainer: true }, deps: null, clusters: null, rnd: rng(1) };
+      chainStart(B, t);
+      return { act: pilgrimChain(B, () => 'walk'), log };
+    };
+    assert.deepStrictEqual(run(X.far, 0).log.talk, [CT.CHAINER], 'off');
+    const staged = run(X.far, 2);
+    assert.strictEqual(staged.act, null);
+    assert.deepStrictEqual(staged.log.talk, [CT.CHAINER, CT.STAGED]);
+    const walk = run(X.farther, 2);
+    assert.strictEqual(walk.act, 'walk');
+    assert.deepStrictEqual(walk.log.talk, [CT.CHAINER]);
+  } finally { [CFG.CHAIN_ROUND, CFG.CHAIN_LIVE] = saved; }
+});
+
 test('chain: with CHAIN_ROUND 0 castles never launch a chainer and the peacetime reserve is unchanged', () => {
   const saved = CFG.CHAIN_ROUND;
   try {
