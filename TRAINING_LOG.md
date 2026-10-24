@@ -3817,3 +3817,12 @@ voids the panel.
 - h138 vs h87, 20 cells seed0 15000: 21/40, gained 3, lost 2, D 5, net 1, t 0.45; castles lost 35 vs 32 (1.09x, bar
   1.1x), churches 456 vs 510: non-inferior. Its panel waits for h136's (SIEGE 30, 694-699): the SIEGE line goes on
   only if h136 beats the pooled expectation (LEARNINGS 33).
+
+## 2026-10-24 05:2x PDT: h121 (early centre pioneer) to the replica panel; h140 (h121 + PIONEER_FAST) screen queued
+
+h121 (PIONEER_EARLY 6 + PIONEER_HOLD 64 + PIONEER_LEAN 3, dist/h121 8f22f616fcf1) was rejected locally on 2026-10-23
+(t -0.28, first church 4.4 rounds earlier against a 5-round bar) under the old protocol; under the screen (reject only
+at t <= -1) it qualifies for a panel, and it aims at the never-won cells (LEARNINGS 33). Submission 129; the replica's
+hourly scrimmage limit (HTTP 429, as on the official site) took only wololo (712) and botfinalsafe (713); the other
+four are requested again after the hour (a background retry), v7 resubmitted (130) each time.
+h140 = h121's switches + PIONEER_FAST 1 (dist/h140, 36e9cb230073, built from today's src) screen on seed0 17000.
