@@ -9,6 +9,8 @@ cd "$(dirname "$0")/.."
 dist=$1; msg=$2
 todo=${3:-m-schier.battlecode-2019-wololo,StoneT2000.BC19-botfinalsafe,StoneT2000.BC19-bot1v43,uvafan.bc2019,awesomelemonade.Battlecode2019,IanCoolidge0.battlecode20~69ce88}
 C=tools/galaxy19/contest19.py
+# One block at a time: a scrim plays the submission current when it was requested, so two runs must not interleave.
+exec 9>"${TMPDIR:-/tmp}/panel_submit.lock"; flock 9
 while [ -n "$todo" ]; do
   python3 -I $C submit "$dist" -m "$msg" | tail -1
   out=$(python3 -I $C scrim --vs "$todo" --panel progress/panels/v7-m1.json 2>&1); echo "$out"

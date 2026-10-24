@@ -3857,3 +3857,9 @@ measured on the field (h84 failed a local delivery against h76): screen on seed0
   vs 35, churches 558 vs 500: non-inferior; its panel 706-711 stands (706-708, 710 done).
 - h140 (h121 + PIONEER_FAST) vs h87, 20 cells seed0 17000: 25/40, gained 10, lost 5, D 15, net 5, t 1.29; the
   castles tally is still running. Its panel follows once the tally clears and the hourly limit allows.
+
+## 2026-10-24 06:5x PDT: h140 passes its screen; panel queued behind h136 and h128
+
+h140 vs h87, 20 cells seed0 17000: 25/40, +10 -5, D 15, t 1.29; castles lost 32 vs 38, churches 497 vs 453:
+non-inferior -> its panel block follows h136's block 2 and h128's block 3 (tools/panel_submit.sh now takes a lock, so
+blocks never interleave: a scrim plays the submission current when it was requested). Unit tests pass.
