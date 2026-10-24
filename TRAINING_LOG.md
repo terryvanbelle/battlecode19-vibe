@@ -3772,3 +3772,9 @@ h112 (DEF_SEEN 1) block 1 673-678 vs v7's 420-425: gained 2 (bot1v43 2321 at r27
 lost 2 (IanCoolidge0 203 and awesomelemonade 1712, both on health at r1000), D 4, net 0, t 0, 6/18 each: REJECTED by
 the two-block rule. awesomelemonade 1712 (v7 won it at r474) went to health at r1000 for both h112 and h135, and
 uvafan 1653 turned for both: the panel's noise floor is about 2 cells each way per block.
+
+## 2026-10-24 03:3x PDT: h103's block 2 to the replica (700-705)
+
+h103 (ESCORT 2 + ESCORT_UNIT 3; block 1 438-443: +3 -2, net +1, t 0.45) gets its block 2 on the same cells while the
+queue is short: submission 125 (dist/h103, 406a9d0dc3b3), matches 700-705 (v7 resubmitted, 126; bumped). Accept at
+cumulative t >= 1.5 and net >= +3.
