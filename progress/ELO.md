@@ -1,8 +1,8 @@
 # Ratings (Bradley-Terry)
 
-Written by `tools/progress/elo.py` from `progress/games.csv` (`tools/progress-refresh.sh`): regenerate, do not edit. Latest game 2026-10-24 08:52 PDT.
+Written by `tools/progress/elo.py` from `progress/games.csv` (`tools/progress-refresh.sh`): regenerate, do not edit. Latest game 2026-10-24 09:09 PDT.
 
-5384 games: 3151 local (VM batches between our builds, candidates, sparring partners and the starter bot), 739 of ours on the galaxy replica and 1494 between field bots there (1491 replica games known only from match scores: no map, side or rounds). Rated by a batch Bradley-Terry fit on the Elo scale (`tools/progress/elolib.py`): every game counts, each pair of players at most 200 games, each build its own player, prior 0.1 virtual win and loss against 1500. Ratings are relative to the mean of all 188 players; compare them only within this fit.
+5408 games: 3169 local (VM batches between our builds, candidates, sparring partners and the starter bot), 745 of ours on the galaxy replica and 1494 between field bots there (1491 replica games known only from match scores: no map, side or rounds). Rated by a batch Bradley-Terry fit on the Elo scale (`tools/progress/elolib.py`): every game counts, each pair of players at most 200 games, each build its own player, prior 0.1 virtual win and loss against 1500. Ratings are relative to the mean of all 189 players; compare them only within this fit.
 
 **Thin field.** 89 rated field bots (mvpatel2000.Battlecode2019, m-schier.battlecode-2019-wololo, uvafan.bc2019, rafekruse.Battlecode-2019-bc19, yujinwunz.battlecode_2019, VoidMercy.battlecode-2019~e7dc06, j-mao.battlecode-2019, arya-k.bc19, IanCoolidge0.battlecode20~69ce88, moreda-a.BC2019-a31, StoneT2000.BC19-bot1v43, StoneT2000.BC19-botfinalsafe, awesomelemonade.Battlecode2019, bqi343.cp-notebook, virenvshah.Battlecode2019, vineetparikh.BigRedBattle~fe3459, rafekruse.Battlecode-2019~2680d4, IvanGeffner.BC19-bot6b, ldcWV.Battlecode-2019, IanCoolidge0.battlecode20~f649f3, howard36.Battlecode2019-eco6, UpperArlingtonHighSchool.~682aa9, cemondr.BC19pdxgroup4, Nischay-Pro.BattleCode2019, NielsKornerup.Battlecode-2019, unrevre.battlecode, abcdefguan.battlecode2019, lschaberg.bc19, ovkulkarni.battlecode2019~0aa607, IvanGeffner.BC19-eigthbot, m4reko.bc2019-tmores-angels, dmunozc.bc19-g8-davjasdiv, programjames.BC19Bot-seeding, Tom-CCS.BC19, sunanth123.battlecode19-mainbot, dmunozc.bc19-g8-bots, programjames.BC19Bot-root, ovkulkarni.battlecode2019~06c610, 18dcb01.Battlecode19-prea~fb5c48, nthistle.battlecode-2019, cvxluo.battlecode19, ipercyNC.group6-battlecode, sunanth123.battlecode19-prorush, CS554-software-engineerin~a575dc, CometsTech.battlecode2019, UpperArlingtonHighSchool.~5e7875, Nydroam.BatteredCod, jamesrayman.HCN-bot, evanyeyeye.battlecode2019~af562c, moreda-a.BC2019-t15, JasonLarson44.2019-Battle~1c7639, bayoumi17m.BattleCode-2019, vicennial.BattleCode19, twitu.bc19-tsp, TestSubjector.BattleCode2~fb22c7, haydenshively.Battle-Code~e1c2fb, 18dcb01.Battlecode19-robot2, haydenshively.Battle-Code~e37b3e, TestSubjector.BattleCode2~e6de74, jackliu612.Battlecode19, dgh2.bc19-t1, spachava753.bc19, liwanlin41.examplefuncsplayer, dndoja.battlecode19, asunathanr.asu_bc, rooneyshuman.Battlecode, CometsTech.battlecode2019~187e8c, SethKitchen.examplefuncsplayer, bovard.battlecode-2019-un~8822c3, roy-love.onshoreBattleCode2019, VictorButoi.BattleCode201~c4576b, OmarTahoun.battle-code, jyurkanin.corn_bc19, DivyanshuSaxena.Battlecode, howard36.Battlecode2019-sprint, waylon531.scala_starter, vishwasns99.BC_2019, bc19-starter, VoidMercy.battlecode-2019-bot, nhard.examplefuncsplayer, ryanhzhao.Battlecode-2019, RyanSharafuddin.Battlecode_2019, jbiewend.Battlecode2019, djkeyes.bc19, TheRobotCarlson.battlehac~323871, jamesrayman.HCN-basic-bot, yunaganyh.bc19, jshin313.battlecodebot, ArtemUstilov.bc19_CrazyTapok) out of the replica's 86 teams: the whole public field is entered (BENCHMARK.md), but the replica plays a few matches an hour, so only these have rated games against our builds and the field score below is an expected score against them alone, one of them the starter. With so few games the 95% intervals are wide, and ratings will move as the replica's games accumulate. Round-0 init failures (a bot that never started: machine load or a broken bot) are not games and are left out.
 
@@ -10,110 +10,111 @@ Our builds (accepted = bots/ROSTER.tsv v*, candidate = a dist/ bundle, sparring 
 
 | build | kind | rating | rank | games | record | field score | vs higher |
 |---|---|---|---|---|---|---|---|
-| v0 | accepted | 1588 ± 232 | 88 of 188 | 38 | 33-5 | 71.7% | 26.6% (vs 24) |
-| v1 | accepted | 1436 ± 151 | 128 of 188 | 154 | 128-26 | 62.1% | 22.3% (vs 36) |
-| v2 | accepted | 1423 ± 149 | 129 of 188 | 62 | 30-32 | 61.3% | 21.2% (vs 36) |
-| v3 | accepted | 1592 ± 111 | 85 of 188 | 191 | 140-51 | 72.0% | 26.0% (vs 23) |
-| v4 | accepted | 1373 ± 111 | 131 of 188 | 220 | 83-137 | 58.1% | 18.0% (vs 37) |
-| v5 | accepted | 1528 ± 80 | 103 of 188 | 439 | 202-237 | 68.0% | 25.3% (vs 29) |
-| v6 | accepted | 1560 ± 76 | 95 of 188 | 322 | 130-192 | 70.0% | 25.7% (vs 26) |
-| v7 | accepted | 1705 ± 63 | 47 of 188 | 1804 | 927-877 | 78.7% | 28.9% (vs 14) |
-| v8 | accepted | 1736 ± 100 | 37 of 188 | 228 | 102-126 | 80.5% | 32.4% (vs 14) |
-| block | candidate | 1773 ± 166 | 18 of 188 | 20 | 12-8 | 82.4% | 32.4% (vs 11) |
-| camp | candidate | 1773 ± 166 | 19 of 188 | 20 | 12-8 | 82.4% | 32.4% (vs 11) |
-| h100 | candidate | 1694 ± 79 | 52 of 188 | 200 | 97-103 | 78.1% | 31.5% (vs 17) |
-| h101 | candidate | 1669 ± 124 | 62 of 188 | 40 | 18-22 | 76.7% | 31.6% (vs 20) |
-| h103 | candidate | 1725 ± 100 | 40 of 188 | 76 | 33-43 | 79.9% | 31.1% (vs 14) |
-| h104 | candidate | 1737 ± 109 | 34 of 188 | 58 | 28-30 | 80.5% | 32.4% (vs 14) |
-| h107 | candidate | 1616 ± 127 | 76 of 188 | 40 | 15-25 | 73.4% | 28.5% (vs 23) |
-| h110 | candidate | 1652 ± 125 | 66 of 188 | 40 | 17-23 | 75.6% | 29.6% (vs 20) |
-| h111 | candidate | 1737 ± 109 | 35 of 188 | 58 | 28-30 | 80.5% | 32.4% (vs 14) |
-| h112 | candidate | 1737 ± 109 | 36 of 188 | 58 | 28-30 | 80.5% | 32.4% (vs 14) |
-| h113 | candidate | 1652 ± 125 | 67 of 188 | 40 | 17-23 | 75.6% | 29.6% (vs 20) |
-| h114 | candidate | 1634 ± 126 | 72 of 188 | 40 | 16-24 | 74.6% | 29.6% (vs 22) |
-| h115 | candidate | 1721 ± 124 | 41 of 188 | 40 | 21-19 | 79.6% | 30.7% (vs 14) |
-| h116 | candidate | 1634 ± 126 | 73 of 188 | 40 | 16-24 | 74.6% | 29.6% (vs 22) |
-| h118 | candidate | 1704 ± 124 | 49 of 188 | 40 | 20-20 | 78.7% | 30.2% (vs 15) |
-| h11c | candidate | 1551 ± 182 | 97 of 188 | 25 | 15-10 | 69.4% | 25.7% (vs 27) |
-| h121 | candidate | 1685 ± 110 | 56 of 188 | 58 | 24-34 | 77.6% | 32.5% (vs 19) |
-| h123 | candidate | 1672 ± 110 | 61 of 188 | 58 | 23-35 | 76.8% | 31.9% (vs 20) |
-| h124 | candidate | 1669 ± 124 | 63 of 188 | 40 | 18-22 | 76.7% | 31.6% (vs 20) |
-| h125 | candidate | 1669 ± 124 | 64 of 188 | 40 | 18-22 | 76.7% | 31.6% (vs 20) |
-| h126 | candidate | 1742 ± 97 | 30 of 188 | 98 | 49-49 | 80.8% | 31.7% (vs 13) |
-| h127 | candidate | 1731 ± 97 | 39 of 188 | 98 | 47-51 | 80.2% | 31.8% (vs 14) |
-| h128 | candidate | 1805 ± 115 | 11 of 188 | 54 | 23-31 | 84.1% | 32.9% (vs 9) |
-| h129 | candidate | 1536 ± 135 | 100 of 188 | 40 | 11-29 | 68.5% | 24.3% (vs 27) |
-| h130 | candidate | 1749 ± 109 | 26 of 188 | 58 | 29-29 | 81.2% | 32.6% (vs 13) |
-| h131 | candidate | 1721 ± 124 | 42 of 188 | 40 | 21-19 | 79.6% | 30.7% (vs 14) |
-| h132 | candidate | 1756 ± 125 | 24 of 188 | 40 | 23-17 | 81.5% | 32.0% (vs 12) |
-| h133 | candidate | 1739 ± 124 | 31 of 188 | 40 | 22-18 | 80.6% | 31.3% (vs 13) |
-| h134 | candidate | 1597 ± 128 | 83 of 188 | 40 | 14-26 | 72.3% | 26.5% (vs 23) |
-| h135 | candidate | 1711 ± 109 | 46 of 188 | 58 | 26-32 | 79.1% | 29.5% (vs 14) |
-| h136 | candidate | 1715 ± 100 | 44 of 188 | 76 | 32-44 | 79.3% | 30.0% (vs 14) |
-| h137 | candidate | 1669 ± 124 | 65 of 188 | 40 | 18-22 | 76.7% | 31.6% (vs 20) |
-| h138 | candidate | 1721 ± 124 | 43 of 188 | 40 | 21-19 | 79.6% | 30.7% (vs 14) |
-| h139 | candidate | 1765 ± 100 | 21 of 188 | 76 | 37-39 | 82.0% | 33.0% (vs 12) |
-| h140 | candidate | 1762 ± 109 | 22 of 188 | 58 | 30-28 | 81.8% | 32.6% (vs 12) |
-| h141 | candidate | 1775 ± 109 | 16 of 188 | 58 | 31-27 | 82.5% | 32.6% (vs 11) |
-| h142 | candidate | 1739 ± 124 | 32 of 188 | 40 | 22-18 | 80.6% | 31.3% (vs 13) |
-| h143 | candidate | 1774 ± 126 | 17 of 188 | 40 | 24-16 | 82.5% | 32.5% (vs 11) |
-| h144 | candidate | 1616 ± 127 | 77 of 188 | 40 | 15-25 | 73.4% | 28.5% (vs 23) |
-| h145 | candidate | 1797 ± 122 | 13 of 188 | 58 | 31-27 | 83.7% | 33.8% (vs 10) |
-| h146 | candidate | 1759 ± 122 | 23 of 188 | 58 | 28-30 | 81.7% | 32.3% (vs 12) |
-| h147 | candidate | 1848 ± 144 | 8 of 188 | 43 | 28-15 | 86.1% | 33.6% (vs 7) |
-| h148 | candidate | 1788 ± 147 | 15 of 188 | 40 | 23-17 | 83.2% | 34.1% (vs 11) |
-| h149 | candidate | 1735 ± 162 | 38 of 188 | 28 | 14-14 | 80.4% | 32.2% (vs 14) |
-| h16r | candidate | 1303 ± 155 | 135 of 188 | 40 | 16-24 | 53.8% | 15.4% (vs 40) |
-| h18 | candidate | 1283 ± 198 | 138 of 188 | 25 | 6-19 | 52.5% | 15.8% (vs 42) |
-| h2 | candidate | 1542 ± 159 | 98 of 188 | 54 | 25-29 | 68.9% | 24.8% (vs 27) |
-| h24 | candidate | 1480 ± 157 | 117 of 188 | 40 | 26-14 | 65.0% | 23.2% (vs 32) |
-| h24v5 | candidate | 1580 ± 134 | 89 of 188 | 40 | 23-17 | 71.3% | 25.8% (vs 24) |
-| h3 | candidate | 1523 ± 221 | 111 of 188 | 19 | 9-10 | 67.7% | 25.6% (vs 30) |
-| h31 | candidate | 1462 ± 156 | 122 of 188 | 40 | 25-15 | 63.8% | 23.9% (vs 35) |
-| h38 | candidate | 1493 ± 307 | 113 of 188 | 6 | 4-2 | 65.8% | 23.6% (vs 31) |
-| h40 | candidate | 1562 ± 292 | 94 of 188 | 8 | 6-2 | 70.1% | 25.9% (vs 26) |
-| h41 | candidate | 1441 ± 256 | 124 of 188 | 8 | 3-5 | 62.5% | 22.8% (vs 36) |
-| h42 | candidate | 1441 ± 256 | 125 of 188 | 8 | 3-5 | 62.5% | 22.8% (vs 36) |
-| h43 | candidate | 1528 ± 249 | 104 of 188 | 8 | 4-4 | 68.0% | 25.2% (vs 29) |
-| h44 | candidate | 1713 ± 282 | 45 of 188 | 8 | 6-2 | 79.2% | 29.7% (vs 14) |
-| h46 | candidate | 1441 ± 256 | 126 of 188 | 8 | 3-5 | 62.5% | 22.8% (vs 36) |
-| h47 | candidate | 1528 ± 249 | 105 of 188 | 8 | 4-4 | 68.0% | 25.2% (vs 29) |
-| h48 | candidate | 1528 ± 249 | 106 of 188 | 8 | 4-4 | 68.0% | 25.2% (vs 29) |
-| h49 | candidate | 1528 ± 249 | 107 of 188 | 8 | 4-4 | 68.0% | 25.2% (vs 29) |
-| h52 | candidate | 1441 ± 256 | 127 of 188 | 8 | 3-5 | 62.5% | 22.8% (vs 36) |
-| h53 | candidate | 1614 ± 256 | 79 of 188 | 8 | 5-3 | 73.4% | 28.3% (vs 23) |
-| h54 | candidate | 1601 ± 127 | 82 of 188 | 48 | 29-19 | 72.6% | 27.0% (vs 23) |
-| h55 | candidate | 1572 ± 126 | 92 of 188 | 56 | 32-24 | 70.7% | 25.9% (vs 25) |
-| h58 | candidate | 1483 ± 273 | 115 of 188 | 8 | 3-5 | 65.2% | 23.5% (vs 32) |
-| h59 | candidate | 1528 ± 249 | 108 of 188 | 8 | 4-4 | 68.0% | 25.2% (vs 29) |
-| h6 | candidate | 1481 ± 121 | 116 of 188 | 158 | 94-64 | 65.0% | 23.3% (vs 32) |
-| h60 | candidate | 1528 ± 249 | 109 of 188 | 8 | 4-4 | 68.0% | 25.2% (vs 29) |
-| h61 | candidate | 1645 ± 255 | 70 of 188 | 8 | 5-3 | 75.2% | 29.9% (vs 21) |
-| h63 | candidate | 1612 ± 132 | 80 of 188 | 40 | 23-17 | 73.2% | 28.1% (vs 23) |
-| h64 | candidate | 1594 ± 132 | 84 of 188 | 40 | 22-18 | 72.1% | 26.3% (vs 23) |
-| h68 | candidate | 1744 ± 281 | 27 of 188 | 8 | 6-2 | 80.9% | 31.9% (vs 13) |
-| h7 | candidate | 1541 ± 1376 | 99 of 188 | 8 | 8-0 | 68.8% | 24.7% (vs 27) |
-| h72 | candidate | 1744 ± 281 | 28 of 188 | 8 | 6-2 | 80.9% | 31.9% (vs 13) |
-| h76 | candidate | 1688 ± 188 | 54 of 188 | 32 | 18-14 | 77.8% | 31.8% (vs 18) |
-| h77 | candidate | 1573 ± 190 | 91 of 188 | 16 | 8-8 | 70.8% | 26.1% (vs 25) |
-| h78 | candidate | 1744 ± 281 | 29 of 188 | 8 | 6-2 | 80.9% | 31.9% (vs 13) |
-| h82 | candidate | 1650 ± 103 | 68 of 188 | 134 | 70-64 | 75.5% | 29.4% (vs 20) |
-| h83 | candidate | 1684 ± 301 | 59 of 188 | 8 | 4-4 | 77.5% | 32.3% (vs 19) |
-| h84 | candidate | 1684 ± 301 | 58 of 188 | 8 | 4-4 | 77.5% | 32.3% (vs 19) |
-| h88 | candidate | 1614 ± 148 | 78 of 188 | 40 | 18-22 | 73.4% | 28.4% (vs 23) |
-| h89 | candidate | 822 ± 1086 | 165 of 188 | 8 | 0-8 | 28.2% | 8.6% (vs 67) |
-| h8v5 | candidate | 1632 ± 129 | 74 of 188 | 48 | 31-17 | 74.4% | 29.3% (vs 22) |
-| h90 | candidate | 822 ± 1086 | 166 of 188 | 8 | 0-8 | 28.2% | 8.6% (vs 67) |
-| h91 | candidate | 1605 ± 198 | 81 of 188 | 16 | 7-9 | 72.8% | 27.3% (vs 23) |
-| h96 | candidate | 1685 ± 110 | 57 of 188 | 58 | 24-34 | 77.6% | 32.5% (vs 19) |
-| rush | sparring | 1283 ± 198 | 139 of 188 | 25 | 6-19 | 52.5% | 15.8% (vs 42) |
-| rush4 | sparring | 1588 ± 139 | 87 of 188 | 50 | 30-20 | 71.8% | 26.6% (vs 24) |
-| turtle | candidate | 1465 ± 198 | 121 of 188 | 20 | 4-16 | 64.0% | 24.2% (vs 35) |
+| v0 | accepted | 1586 ± 232 | 88 of 189 | 38 | 33-5 | 71.7% | 26.5% (vs 24) |
+| v1 | accepted | 1434 ± 151 | 129 of 189 | 154 | 128-26 | 62.1% | 22.3% (vs 36) |
+| v2 | accepted | 1421 ± 149 | 130 of 189 | 62 | 30-32 | 61.3% | 21.2% (vs 36) |
+| v3 | accepted | 1590 ± 111 | 86 of 189 | 191 | 140-51 | 72.0% | 26.0% (vs 23) |
+| v4 | accepted | 1371 ± 110 | 132 of 189 | 220 | 83-137 | 58.1% | 18.0% (vs 37) |
+| v5 | accepted | 1526 ± 80 | 104 of 189 | 439 | 202-237 | 68.0% | 25.2% (vs 29) |
+| v6 | accepted | 1558 ± 76 | 96 of 189 | 322 | 130-192 | 70.0% | 25.6% (vs 26) |
+| v7 | accepted | 1702 ± 63 | 49 of 189 | 1804 | 927-877 | 78.7% | 30.2% (vs 15) |
+| v8 | accepted | 1731 ± 98 | 38 of 189 | 246 | 110-136 | 80.2% | 31.9% (vs 14) |
+| block | candidate | 1771 ± 166 | 19 of 189 | 20 | 12-8 | 82.4% | 32.2% (vs 11) |
+| camp | candidate | 1771 ± 166 | 20 of 189 | 20 | 12-8 | 82.4% | 32.2% (vs 11) |
+| h100 | candidate | 1692 ± 79 | 53 of 189 | 200 | 97-103 | 78.1% | 31.4% (vs 17) |
+| h101 | candidate | 1667 ± 124 | 63 of 189 | 40 | 18-22 | 76.6% | 31.5% (vs 20) |
+| h103 | candidate | 1723 ± 100 | 41 of 189 | 76 | 33-43 | 79.8% | 31.1% (vs 14) |
+| h104 | candidate | 1734 ± 109 | 35 of 189 | 58 | 28-30 | 80.4% | 32.4% (vs 14) |
+| h107 | candidate | 1613 ± 127 | 77 of 189 | 40 | 15-25 | 73.4% | 28.4% (vs 23) |
+| h110 | candidate | 1649 ± 125 | 67 of 189 | 40 | 17-23 | 75.6% | 29.5% (vs 20) |
+| h111 | candidate | 1734 ± 109 | 36 of 189 | 58 | 28-30 | 80.4% | 32.4% (vs 14) |
+| h112 | candidate | 1734 ± 109 | 37 of 189 | 58 | 28-30 | 80.4% | 32.4% (vs 14) |
+| h113 | candidate | 1649 ± 125 | 68 of 189 | 40 | 17-23 | 75.6% | 29.5% (vs 20) |
+| h114 | candidate | 1631 ± 126 | 73 of 189 | 40 | 16-24 | 74.5% | 29.5% (vs 22) |
+| h115 | candidate | 1719 ± 124 | 42 of 189 | 40 | 21-19 | 79.6% | 30.6% (vs 14) |
+| h116 | candidate | 1631 ± 126 | 74 of 189 | 40 | 16-24 | 74.5% | 29.5% (vs 22) |
+| h118 | candidate | 1702 ± 124 | 50 of 189 | 40 | 20-20 | 78.6% | 30.1% (vs 15) |
+| h11c | candidate | 1549 ± 182 | 98 of 189 | 25 | 15-10 | 69.4% | 25.7% (vs 27) |
+| h121 | candidate | 1683 ± 110 | 57 of 189 | 58 | 24-34 | 77.6% | 32.4% (vs 19) |
+| h123 | candidate | 1670 ± 110 | 62 of 189 | 58 | 23-35 | 76.8% | 31.8% (vs 20) |
+| h124 | candidate | 1667 ± 124 | 64 of 189 | 40 | 18-22 | 76.6% | 31.5% (vs 20) |
+| h125 | candidate | 1667 ± 124 | 65 of 189 | 40 | 18-22 | 76.6% | 31.5% (vs 20) |
+| h126 | candidate | 1739 ± 97 | 31 of 189 | 98 | 49-49 | 80.7% | 31.6% (vs 13) |
+| h127 | candidate | 1729 ± 97 | 40 of 189 | 98 | 47-51 | 80.2% | 31.8% (vs 14) |
+| h128 | candidate | 1804 ± 115 | 12 of 189 | 54 | 23-31 | 84.1% | 32.9% (vs 9) |
+| h129 | candidate | 1534 ± 135 | 102 of 189 | 40 | 11-29 | 68.5% | 25.1% (vs 28) |
+| h130 | candidate | 1747 ± 109 | 27 of 189 | 58 | 29-29 | 81.1% | 32.5% (vs 13) |
+| h131 | candidate | 1719 ± 124 | 43 of 189 | 40 | 21-19 | 79.6% | 30.6% (vs 14) |
+| h132 | candidate | 1754 ± 125 | 25 of 189 | 40 | 23-17 | 81.5% | 31.9% (vs 12) |
+| h133 | candidate | 1736 ± 124 | 32 of 189 | 40 | 22-18 | 80.6% | 31.2% (vs 13) |
+| h134 | candidate | 1594 ± 128 | 84 of 189 | 40 | 14-26 | 72.2% | 26.4% (vs 23) |
+| h135 | candidate | 1709 ± 109 | 47 of 189 | 58 | 26-32 | 79.0% | 29.5% (vs 14) |
+| h136 | candidate | 1713 ± 100 | 45 of 189 | 76 | 32-44 | 79.3% | 29.9% (vs 14) |
+| h137 | candidate | 1667 ± 124 | 66 of 189 | 40 | 18-22 | 76.6% | 31.5% (vs 20) |
+| h138 | candidate | 1719 ± 124 | 44 of 189 | 40 | 21-19 | 79.6% | 30.6% (vs 14) |
+| h139 | candidate | 1763 ± 99 | 21 of 189 | 76 | 37-39 | 82.0% | 31.4% (vs 11) |
+| h140 | candidate | 1760 ± 109 | 23 of 189 | 58 | 30-28 | 81.8% | 32.6% (vs 12) |
+| h141 | candidate | 1773 ± 109 | 17 of 189 | 58 | 31-27 | 82.5% | 32.5% (vs 11) |
+| h142 | candidate | 1736 ± 124 | 33 of 189 | 40 | 22-18 | 80.6% | 31.2% (vs 13) |
+| h143 | candidate | 1772 ± 126 | 18 of 189 | 40 | 24-16 | 82.4% | 32.4% (vs 11) |
+| h144 | candidate | 1613 ± 127 | 78 of 189 | 40 | 15-25 | 73.4% | 28.4% (vs 23) |
+| h145 | candidate | 1793 ± 121 | 15 of 189 | 58 | 31-27 | 83.5% | 34.9% (vs 11) |
+| h146 | candidate | 1755 ± 121 | 24 of 189 | 58 | 28-30 | 81.5% | 32.0% (vs 12) |
+| h147 | candidate | 1838 ± 134 | 9 of 189 | 49 | 30-19 | 85.7% | 32.5% (vs 7) |
+| h148 | candidate | 1782 ± 146 | 16 of 189 | 40 | 23-17 | 83.0% | 33.6% (vs 11) |
+| h149 | candidate | 1730 ± 145 | 39 of 189 | 40 | 20-20 | 80.2% | 31.8% (vs 14) |
+| h150 | candidate | 1841 ± 304 | 8 of 189 | 6 | 4-2 | 85.8% | 32.9% (vs 7) |
+| h16r | candidate | 1301 ± 155 | 136 of 189 | 40 | 16-24 | 53.7% | 15.4% (vs 40) |
+| h18 | candidate | 1281 ± 198 | 139 of 189 | 25 | 6-19 | 52.5% | 15.7% (vs 42) |
+| h2 | candidate | 1540 ± 159 | 100 of 189 | 54 | 25-29 | 68.8% | 24.8% (vs 27) |
+| h24 | candidate | 1478 ± 157 | 118 of 189 | 40 | 26-14 | 64.9% | 23.2% (vs 32) |
+| h24v5 | candidate | 1578 ± 134 | 90 of 189 | 40 | 23-17 | 71.2% | 25.8% (vs 24) |
+| h3 | candidate | 1521 ± 221 | 112 of 189 | 19 | 9-10 | 67.7% | 25.6% (vs 30) |
+| h31 | candidate | 1459 ± 156 | 123 of 189 | 40 | 25-15 | 63.8% | 23.8% (vs 35) |
+| h38 | candidate | 1491 ± 307 | 114 of 189 | 6 | 4-2 | 65.8% | 23.6% (vs 31) |
+| h40 | candidate | 1559 ± 292 | 95 of 189 | 8 | 6-2 | 70.1% | 25.8% (vs 26) |
+| h41 | candidate | 1439 ± 256 | 125 of 189 | 8 | 3-5 | 62.4% | 22.7% (vs 36) |
+| h42 | candidate | 1439 ± 256 | 126 of 189 | 8 | 3-5 | 62.4% | 22.7% (vs 36) |
+| h43 | candidate | 1525 ± 249 | 105 of 189 | 8 | 4-4 | 67.9% | 25.2% (vs 29) |
+| h44 | candidate | 1711 ± 282 | 46 of 189 | 8 | 6-2 | 79.1% | 29.7% (vs 14) |
+| h46 | candidate | 1439 ± 256 | 127 of 189 | 8 | 3-5 | 62.4% | 22.7% (vs 36) |
+| h47 | candidate | 1525 ± 249 | 106 of 189 | 8 | 4-4 | 67.9% | 25.2% (vs 29) |
+| h48 | candidate | 1525 ± 249 | 107 of 189 | 8 | 4-4 | 67.9% | 25.2% (vs 29) |
+| h49 | candidate | 1525 ± 249 | 108 of 189 | 8 | 4-4 | 67.9% | 25.2% (vs 29) |
+| h52 | candidate | 1439 ± 256 | 128 of 189 | 8 | 3-5 | 62.4% | 22.7% (vs 36) |
+| h53 | candidate | 1612 ± 256 | 80 of 189 | 8 | 5-3 | 73.3% | 28.3% (vs 23) |
+| h54 | candidate | 1599 ± 127 | 83 of 189 | 48 | 29-19 | 72.5% | 26.9% (vs 23) |
+| h55 | candidate | 1569 ± 126 | 93 of 189 | 56 | 32-24 | 70.7% | 25.9% (vs 25) |
+| h58 | candidate | 1481 ± 273 | 116 of 189 | 8 | 3-5 | 65.1% | 23.5% (vs 32) |
+| h59 | candidate | 1525 ± 249 | 109 of 189 | 8 | 4-4 | 67.9% | 25.2% (vs 29) |
+| h6 | candidate | 1479 ± 121 | 117 of 189 | 158 | 94-64 | 65.0% | 23.3% (vs 32) |
+| h60 | candidate | 1525 ± 249 | 110 of 189 | 8 | 4-4 | 67.9% | 25.2% (vs 29) |
+| h61 | candidate | 1643 ± 255 | 71 of 189 | 8 | 5-3 | 75.2% | 29.8% (vs 21) |
+| h63 | candidate | 1610 ± 132 | 81 of 189 | 40 | 23-17 | 73.2% | 28.0% (vs 23) |
+| h64 | candidate | 1592 ± 132 | 85 of 189 | 40 | 22-18 | 72.1% | 26.2% (vs 23) |
+| h68 | candidate | 1742 ± 281 | 28 of 189 | 8 | 6-2 | 80.8% | 31.9% (vs 13) |
+| h7 | candidate | 1541 ± 1377 | 99 of 189 | 8 | 8-0 | 68.9% | 24.9% (vs 27) |
+| h72 | candidate | 1742 ± 281 | 29 of 189 | 8 | 6-2 | 80.8% | 31.9% (vs 13) |
+| h76 | candidate | 1686 ± 188 | 55 of 189 | 32 | 18-14 | 77.7% | 31.8% (vs 18) |
+| h77 | candidate | 1571 ± 190 | 92 of 189 | 16 | 8-8 | 70.8% | 26.0% (vs 25) |
+| h78 | candidate | 1742 ± 281 | 30 of 189 | 8 | 6-2 | 80.8% | 31.9% (vs 13) |
+| h82 | candidate | 1647 ± 103 | 69 of 189 | 134 | 70-64 | 75.5% | 29.3% (vs 20) |
+| h83 | candidate | 1682 ± 301 | 59 of 189 | 8 | 4-4 | 77.5% | 32.2% (vs 19) |
+| h84 | candidate | 1682 ± 301 | 60 of 189 | 8 | 4-4 | 77.5% | 32.2% (vs 19) |
+| h88 | candidate | 1612 ± 148 | 79 of 189 | 40 | 18-22 | 73.3% | 28.3% (vs 23) |
+| h89 | candidate | 820 ± 1086 | 166 of 189 | 8 | 0-8 | 28.2% | 8.5% (vs 67) |
+| h8v5 | candidate | 1630 ± 129 | 75 of 189 | 48 | 31-17 | 74.4% | 29.3% (vs 22) |
+| h90 | candidate | 820 ± 1086 | 167 of 189 | 8 | 0-8 | 28.2% | 8.5% (vs 67) |
+| h91 | candidate | 1603 ± 198 | 82 of 189 | 16 | 7-9 | 72.7% | 27.3% (vs 23) |
+| h96 | candidate | 1683 ± 110 | 58 of 189 | 58 | 24-34 | 77.6% | 32.4% (vs 19) |
+| rush | sparring | 1281 ± 198 | 140 of 189 | 25 | 6-19 | 52.5% | 15.7% (vs 42) |
+| rush4 | sparring | 1586 ± 138 | 89 of 189 | 50 | 30-20 | 71.7% | 26.5% (vs 24) |
+| turtle | candidate | 1462 ± 198 | 122 of 189 | 20 | 4-16 | 63.9% | 24.1% (vs 35) |
 
 Sources (`tools/progress/games.py`):
 
-- local: 3151 games from 119 batch files (skipped: 258 cut before a verdict, 23 init failure, 98 load (robot init failures), 150 malformed)
-- replica: 2233 games (11 archive games skipped, 237 matches from archives, 497 matches from scores), fetched 2026-10-24T15:53:16+00:00
+- local: 3169 games from 120 batch files (skipped: 258 cut before a verdict, 23 init failure, 98 load (robot init failures), 150 malformed)
+- replica: 2239 games (11 archive games skipped, 239 matches from archives, 497 matches from scores), fetched 2026-10-24T16:09:31+00:00
 
 ![ratings](elo.png)
 
@@ -125,194 +126,195 @@ All players. Our record = the incumbent's (v8) win rate and W-L against the bot,
 
 | rank | player | kind | rating | ± 95% | games | W-L | our record |
 |---|---|---|---|---|---|---|---|
-| 1 | mvpatel2000.Battlecode2019 | field | 2224 | 277 | 24 | 22-2 | 0% (v7 0-3) |
-| 2 | m-schier.battlecode-2019-wololo | field | 2131 | 132 | 114 | 104-10 | 0% (v7 0-3) |
-| 3 | uvafan.bc2019 | field | 1962 | 100 | 114 | 94-20 | 0% (v7 0-3) |
-| 4 | rafekruse.Battlecode-2019-bc19 | field | 1953 | 261 | 24 | 20-4 |  |
-| 5 | yujinwunz.battlecode_2019 | field | 1880 | 273 | 30 | 26-4 |  |
-| 6 | VoidMercy.battlecode-2019~e7dc06 | field | 1876 | 238 | 24 | 21-3 |  |
-| 7 | j-mao.battlecode-2019 | field | 1864 | 195 | 24 | 18-6 | 67% (v7 2-1) |
-| 8 | **cand:h147** | candidate | 1848 | 144 | 43 | 28-15 |  |
-| 9 | arya-k.bc19 | field | 1828 | 286 | 24 | 20-4 |  |
-| 10 | IanCoolidge0.battlecode20~69ce88 | field | 1816 | 89 | 120 | 79-41 | 67% (v7 4-2) |
-| 11 | **cand:h128** | candidate | 1805 | 115 | 54 | 23-31 |  |
-| 12 | moreda-a.BC2019-a31 | field | 1800 | 213 | 27 | 18-9 |  |
-| 13 | **cand:h145** | candidate | 1797 | 122 | 58 | 31-27 |  |
-| 14 | StoneT2000.BC19-bot1v43 | field | 1797 | 85 | 135 | 88-47 | 33% (v7 2-4) |
-| 15 | **cand:h148** | candidate | 1788 | 147 | 40 | 23-17 |  |
-| 16 | **cand:h141** | candidate | 1775 | 109 | 58 | 31-27 |  |
-| 17 | **cand:h143** | candidate | 1774 | 126 | 40 | 24-16 |  |
-| 18 | **cand:block** | candidate | 1773 | 166 | 20 | 12-8 |  |
-| 19 | **cand:camp** | candidate | 1773 | 166 | 20 | 12-8 |  |
-| 20 | StoneT2000.BC19-botfinalsafe | field | 1766 | 82 | 138 | 89-49 | 67% (v7 2-1) |
-| 21 | **cand:h139** | candidate | 1765 | 100 | 76 | 37-39 |  |
-| 22 | **cand:h140** | candidate | 1762 | 109 | 58 | 30-28 |  |
-| 23 | **cand:h146** | candidate | 1759 | 122 | 58 | 28-30 |  |
-| 24 | **cand:h132** | candidate | 1756 | 125 | 40 | 23-17 |  |
-| 25 | awesomelemonade.Battlecode2019 | field | 1755 | 87 | 114 | 68-46 | 67% (v7 2-1) |
-| 26 | **cand:h130** | candidate | 1749 | 109 | 58 | 29-29 |  |
-| 27 | **cand:h68** | candidate | 1744 | 281 | 8 | 6-2 |  |
-| 28 | **cand:h72** | candidate | 1744 | 281 | 8 | 6-2 |  |
-| 29 | **cand:h78** | candidate | 1744 | 281 | 8 | 6-2 |  |
-| 30 | **cand:h126** | candidate | 1742 | 97 | 98 | 49-49 |  |
-| 31 | **cand:h133** | candidate | 1739 | 124 | 40 | 22-18 |  |
-| 32 | **cand:h142** | candidate | 1739 | 124 | 40 | 22-18 |  |
-| 33 | bqi343.cp-notebook | field | 1737 | 241 | 24 | 16-8 |  |
-| 34 | **cand:h104** | candidate | 1737 | 109 | 58 | 28-30 |  |
-| 35 | **cand:h111** | candidate | 1737 | 109 | 58 | 28-30 |  |
-| 36 | **cand:h112** | candidate | 1737 | 109 | 58 | 28-30 |  |
-| 37 | **us:v8** | accepted | 1736 | 100 | 228 | 102-126 |  |
-| 38 | **cand:h149** | candidate | 1735 | 162 | 28 | 14-14 |  |
-| 39 | **cand:h127** | candidate | 1731 | 97 | 98 | 47-51 |  |
-| 40 | **cand:h103** | candidate | 1725 | 100 | 76 | 33-43 |  |
-| 41 | **cand:h115** | candidate | 1721 | 124 | 40 | 21-19 |  |
-| 42 | **cand:h131** | candidate | 1721 | 124 | 40 | 21-19 |  |
-| 43 | **cand:h138** | candidate | 1721 | 124 | 40 | 21-19 |  |
-| 44 | **cand:h136** | candidate | 1715 | 100 | 76 | 32-44 |  |
-| 45 | **cand:h44** | candidate | 1713 | 282 | 8 | 6-2 |  |
-| 46 | **cand:h135** | candidate | 1711 | 109 | 58 | 26-32 |  |
-| 47 | **us:v7** | accepted | 1705 | 63 | 1804 | 927-877 |  |
-| 48 | virenvshah.Battlecode2019 | field | 1705 | 218 | 24 | 19-5 |  |
-| 49 | **cand:h118** | candidate | 1704 | 124 | 40 | 20-20 |  |
-| 50 | vineetparikh.BigRedBattle~fe3459 | field | 1699 | 206 | 27 | 19-8 |  |
-| 51 | rafekruse.Battlecode-2019~2680d4 | field | 1698 | 212 | 24 | 19-5 |  |
-| 52 | **cand:h100** | candidate | 1694 | 79 | 200 | 97-103 |  |
-| 53 | IvanGeffner.BC19-bot6b | field | 1691 | 404 | 9 | 7-2 |  |
-| 54 | **cand:h76** | candidate | 1688 | 188 | 32 | 18-14 |  |
-| 55 | ldcWV.Battlecode-2019 | field | 1686 | 198 | 27 | 18-9 |  |
-| 56 | **cand:h121** | candidate | 1685 | 110 | 58 | 24-34 |  |
-| 57 | **cand:h96** | candidate | 1685 | 110 | 58 | 24-34 |  |
-| 58 | **cand:h84** | candidate | 1684 | 301 | 8 | 4-4 |  |
-| 59 | **cand:h83** | candidate | 1684 | 301 | 8 | 4-4 |  |
-| 60 | IanCoolidge0.battlecode20~f649f3 | field | 1674 | 157 | 45 | 33-12 | 67% (v3 2-1) |
-| 61 | **cand:h123** | candidate | 1672 | 110 | 58 | 23-35 |  |
-| 62 | **cand:h101** | candidate | 1669 | 124 | 40 | 18-22 |  |
-| 63 | **cand:h124** | candidate | 1669 | 124 | 40 | 18-22 |  |
-| 64 | **cand:h125** | candidate | 1669 | 124 | 40 | 18-22 |  |
-| 65 | **cand:h137** | candidate | 1669 | 124 | 40 | 18-22 |  |
-| 66 | **cand:h110** | candidate | 1652 | 125 | 40 | 17-23 |  |
-| 67 | **cand:h113** | candidate | 1652 | 125 | 40 | 17-23 |  |
-| 68 | **cand:h82** | candidate | 1650 | 103 | 134 | 70-64 |  |
-| 69 | howard36.Battlecode2019-eco6 | field | 1647 | 212 | 24 | 15-9 |  |
-| 70 | **cand:h61** | candidate | 1645 | 255 | 8 | 5-3 |  |
-| 71 | UpperArlingtonHighSchool.~682aa9 | field | 1641 | 229 | 30 | 17-13 |  |
-| 72 | **cand:h114** | candidate | 1634 | 126 | 40 | 16-24 |  |
-| 73 | **cand:h116** | candidate | 1634 | 126 | 40 | 16-24 |  |
-| 74 | **cand:h8v5** | candidate | 1632 | 129 | 48 | 31-17 |  |
-| 75 | cemondr.BC19pdxgroup4 | field | 1626 | 208 | 24 | 15-9 |  |
-| 76 | **cand:h107** | candidate | 1616 | 127 | 40 | 15-25 |  |
-| 77 | **cand:h144** | candidate | 1616 | 127 | 40 | 15-25 |  |
-| 78 | **cand:h88** | candidate | 1614 | 148 | 40 | 18-22 |  |
-| 79 | **cand:h53** | candidate | 1614 | 256 | 8 | 5-3 |  |
-| 80 | **cand:h63** | candidate | 1612 | 132 | 40 | 23-17 |  |
-| 81 | **cand:h91** | candidate | 1605 | 198 | 16 | 7-9 |  |
-| 82 | **cand:h54** | candidate | 1601 | 127 | 48 | 29-19 |  |
-| 83 | **cand:h134** | candidate | 1597 | 128 | 40 | 14-26 |  |
-| 84 | **cand:h64** | candidate | 1594 | 132 | 40 | 22-18 |  |
-| 85 | **us:v3** | accepted | 1592 | 111 | 191 | 140-51 |  |
-| 86 | Nischay-Pro.BattleCode2019 | field | 1588 | 223 | 21 | 17-4 |  |
-| 87 | **spar:rush4** | sparring | 1588 | 139 | 50 | 30-20 |  |
-| 88 | **us:v0** | accepted | 1588 | 232 | 38 | 33-5 |  |
-| 89 | **cand:h24v5** | candidate | 1580 | 134 | 40 | 23-17 |  |
-| 90 | NielsKornerup.Battlecode-2019 | field | 1577 | 148 | 51 | 30-21 |  |
-| 91 | **cand:h77** | candidate | 1573 | 190 | 16 | 8-8 |  |
-| 92 | **cand:h55** | candidate | 1572 | 126 | 56 | 32-24 |  |
-| 93 | unrevre.battlecode | field | 1567 | 206 | 24 | 13-11 |  |
-| 94 | **cand:h40** | candidate | 1562 | 292 | 8 | 6-2 |  |
-| 95 | **us:v6** | accepted | 1560 | 76 | 322 | 130-192 |  |
-| 96 | abcdefguan.battlecode2019 | field | 1554 | 224 | 30 | 22-8 |  |
-| 97 | **cand:h11c** | candidate | 1551 | 182 | 25 | 15-10 |  |
-| 98 | **cand:h2** | candidate | 1542 | 159 | 54 | 25-29 |  |
-| 99 | **cand:h7** | candidate | 1541 | 1376 | 8 | 8-0 |  |
-| 100 | **cand:h129** | candidate | 1536 | 135 | 40 | 11-29 |  |
-| 101 | lschaberg.bc19 | field | 1535 | 188 | 33 | 19-14 |  |
-| 102 | ovkulkarni.battlecode2019~0aa607 | field | 1534 | 202 | 24 | 18-6 |  |
-| 103 | **us:v5** | accepted | 1528 | 80 | 439 | 202-237 |  |
-| 104 | **cand:h43** | candidate | 1528 | 249 | 8 | 4-4 |  |
-| 105 | **cand:h47** | candidate | 1528 | 249 | 8 | 4-4 |  |
-| 106 | **cand:h48** | candidate | 1528 | 249 | 8 | 4-4 |  |
-| 107 | **cand:h49** | candidate | 1528 | 249 | 8 | 4-4 |  |
-| 108 | **cand:h59** | candidate | 1528 | 249 | 8 | 4-4 |  |
-| 109 | **cand:h60** | candidate | 1528 | 249 | 8 | 4-4 |  |
-| 110 | IvanGeffner.BC19-eigthbot | field | 1526 | 316 | 9 | 6-3 |  |
-| 111 | **cand:h3** | candidate | 1523 | 221 | 19 | 9-10 |  |
-| 112 | m4reko.bc2019-tmores-angels | field | 1502 | 203 | 27 | 17-10 |  |
-| 113 | **cand:h38** | candidate | 1493 | 307 | 6 | 4-2 |  |
-| 114 | dmunozc.bc19-g8-davjasdiv | field | 1487 | 187 | 33 | 22-11 |  |
-| 115 | **cand:h58** | candidate | 1483 | 273 | 8 | 3-5 |  |
-| 116 | **cand:h6** | candidate | 1481 | 121 | 158 | 94-64 |  |
-| 117 | **cand:h24** | candidate | 1480 | 157 | 40 | 26-14 |  |
-| 118 | programjames.BC19Bot-seeding | field | 1476 | 188 | 24 | 11-13 |  |
-| 119 | Tom-CCS.BC19 | field | 1469 | 191 | 33 | 17-16 |  |
-| 120 | sunanth123.battlecode19-mainbot | field | 1467 | 250 | 21 | 13-8 |  |
-| 121 | **cand:turtle** | candidate | 1465 | 198 | 20 | 4-16 |  |
-| 122 | **cand:h31** | candidate | 1462 | 156 | 40 | 25-15 |  |
-| 123 | dmunozc.bc19-g8-bots | field | 1444 | 211 | 24 | 12-12 |  |
-| 124 | **cand:h41** | candidate | 1441 | 256 | 8 | 3-5 |  |
-| 125 | **cand:h42** | candidate | 1441 | 256 | 8 | 3-5 |  |
-| 126 | **cand:h46** | candidate | 1441 | 256 | 8 | 3-5 |  |
-| 127 | **cand:h52** | candidate | 1441 | 256 | 8 | 3-5 |  |
-| 128 | **us:v1** | accepted | 1436 | 151 | 154 | 128-26 |  |
-| 129 | **us:v2** | accepted | 1423 | 149 | 62 | 30-32 |  |
-| 130 | programjames.BC19Bot-root | field | 1377 | 218 | 24 | 15-9 |  |
-| 131 | **us:v4** | accepted | 1373 | 111 | 220 | 83-137 |  |
-| 132 | ovkulkarni.battlecode2019~06c610 | field | 1367 | 225 | 24 | 15-9 |  |
-| 133 | 18dcb01.Battlecode19-prea~fb5c48 | field | 1367 | 150 | 48 | 25-23 |  |
-| 134 | nthistle.battlecode-2019 | field | 1350 | 175 | 36 | 19-17 | 100% (v5 3-0) |
-| 135 | **cand:h16r** | candidate | 1303 | 155 | 40 | 16-24 |  |
-| 136 | cvxluo.battlecode19 | field | 1290 | 202 | 30 | 19-11 |  |
-| 137 | ipercyNC.group6-battlecode | field | 1288 | 200 | 24 | 11-13 |  |
-| 138 | **cand:h18** | candidate | 1283 | 198 | 25 | 6-19 |  |
-| 139 | **spar:rush** | sparring | 1283 | 198 | 25 | 6-19 |  |
-| 140 | sunanth123.battlecode19-prorush | field | 1281 | 196 | 24 | 14-10 |  |
-| 141 | CS554-software-engineerin~a575dc | field | 1278 | 105 | 248 | 147-101 | 100% (v7 3-0) |
-| 142 | CometsTech.battlecode2019 | field | 1240 | 111 | 198 | 92-106 | 100% (v7 3-0) |
-| 143 | UpperArlingtonHighSchool.~5e7875 | field | 1232 | 273 | 24 | 15-9 |  |
-| 144 | Nydroam.BatteredCod | field | 1211 | 453 | 6 | 3-3 |  |
-| 145 | jamesrayman.HCN-bot | field | 1202 | 204 | 33 | 13-20 | 100% (v5 3-0) |
-| 146 | evanyeyeye.battlecode2019~af562c | field | 1182 | 201 | 24 | 12-12 |  |
-| 147 | moreda-a.BC2019-t15 | field | 1169 | 235 | 27 | 12-15 |  |
-| 148 | JasonLarson44.2019-Battle~1c7639 | field | 1150 | 201 | 36 | 14-22 | 100% (v3 3-0) |
-| 149 | bayoumi17m.BattleCode-2019 | field | 1140 | 213 | 24 | 11-13 |  |
-| 150 | vicennial.BattleCode19 | field | 1131 | 247 | 27 | 13-14 |  |
-| 151 | twitu.bc19-tsp | field | 1100 | 239 | 30 | 17-13 |  |
-| 152 | TestSubjector.BattleCode2~fb22c7 | field | 1097 | 264 | 36 | 18-18 |  |
-| 153 | haydenshively.Battle-Code~e1c2fb | field | 1093 | 220 | 24 | 10-14 |  |
-| 154 | 18dcb01.Battlecode19-robot2 | field | 1080 | 221 | 39 | 19-20 |  |
-| 155 | haydenshively.Battle-Code~e37b3e | field | 1061 | 217 | 24 | 8-16 |  |
-| 156 | TestSubjector.BattleCode2~e6de74 | field | 1044 | 221 | 39 | 17-22 |  |
-| 157 | jackliu612.Battlecode19 | field | 1025 | 324 | 24 | 10-14 |  |
-| 158 | dgh2.bc19-t1 | field | 995 | 276 | 24 | 9-15 |  |
-| 159 | spachava753.bc19 | field | 960 | 228 | 24 | 9-15 |  |
-| 160 | liwanlin41.examplefuncsplayer | field | 924 | 282 | 27 | 7-20 |  |
-| 161 | dndoja.battlecode19 | field | 921 | 236 | 27 | 11-16 |  |
-| 162 | asunathanr.asu_bc | field | 886 | 281 | 24 | 8-16 |  |
-| 163 | rooneyshuman.Battlecode | field | 860 | 246 | 33 | 19-14 |  |
-| 164 | CometsTech.battlecode2019~187e8c | field | 860 | 238 | 36 | 14-22 |  |
-| 165 | **cand:h89** | candidate | 822 | 1086 | 8 | 0-8 |  |
-| 166 | **cand:h90** | candidate | 822 | 1086 | 8 | 0-8 |  |
-| 167 | SethKitchen.examplefuncsplayer | field | 725 | 340 | 36 | 8-28 |  |
-| 168 | bovard.battlecode-2019-un~8822c3 | field | 671 | 388 | 24 | 9-15 |  |
-| 169 | roy-love.onshoreBattleCode2019 | field | 671 | 253 | 24 | 7-17 |  |
-| 170 | VictorButoi.BattleCode201~c4576b | field | 656 | 264 | 27 | 9-18 |  |
-| 171 | OmarTahoun.battle-code | field | 655 | 265 | 33 | 10-23 |  |
-| 172 | jyurkanin.corn_bc19 | field | 639 | 336 | 33 | 7-26 |  |
-| 173 | DivyanshuSaxena.Battlecode | field | 525 | 255 | 39 | 18-21 |  |
-| 174 | howard36.Battlecode2019-sprint | field | 503 | 429 | 24 | 6-18 |  |
-| 175 | waylon531.scala_starter | field | 485 | 367 | 30 | 4-26 |  |
-| 176 | vishwasns99.BC_2019 | field | 458 | 384 | 30 | 3-27 |  |
-| 177 | bc19-starter | field | 409 | 227 | 334 | 57-277 | 100% (v3 12-0) |
-| 178 | VoidMercy.battlecode-2019-bot | field | 368 | 336 | 24 | 8-16 |  |
-| 179 | nhard.examplefuncsplayer | field | 334 | 350 | 24 | 9-15 |  |
-| 180 | ryanhzhao.Battlecode-2019 | field | 242 | 445 | 24 | 3-21 |  |
-| 181 | RyanSharafuddin.Battlecode_2019 | field | 168 | 268 | 54 | 5-49 |  |
-| 182 | jbiewend.Battlecode2019 | field | 100 | 462 | 24 | 3-21 |  |
-| 183 | djkeyes.bc19 | field | -14 | 419 | 24 | 3-21 |  |
-| 184 | TheRobotCarlson.battlehac~323871 | field | -54 | 321 | 36 | 3-33 |  |
-| 185 | jamesrayman.HCN-basic-bot | field | -110 | 351 | 24 | 3-21 |  |
-| 186 | yunaganyh.bc19 | field | -118 | 352 | 24 | 4-20 |  |
-| 187 | jshin313.battlecodebot | field | -245 | 386 | 24 | 2-22 |  |
-| 188 | ArtemUstilov.bc19_CrazyTapok | field | -641 | 1096 | 81 | 0-81 |  |
+| 1 | mvpatel2000.Battlecode2019 | field | 2227 | 278 | 24 | 22-2 | 0% (v7 0-3) |
+| 2 | m-schier.battlecode-2019-wololo | field | 2139 | 132 | 117 | 107-10 | 0% (v7 0-3) |
+| 3 | uvafan.bc2019 | field | 1959 | 100 | 114 | 94-20 | 0% (v7 0-3) |
+| 4 | rafekruse.Battlecode-2019-bc19 | field | 1951 | 261 | 24 | 20-4 |  |
+| 5 | yujinwunz.battlecode_2019 | field | 1879 | 273 | 30 | 26-4 |  |
+| 6 | VoidMercy.battlecode-2019~e7dc06 | field | 1874 | 238 | 24 | 21-3 |  |
+| 7 | j-mao.battlecode-2019 | field | 1862 | 195 | 24 | 18-6 | 67% (v7 2-1) |
+| 8 | **cand:h150** | candidate | 1841 | 304 | 6 | 4-2 |  |
+| 9 | **cand:h147** | candidate | 1838 | 134 | 49 | 30-19 |  |
+| 10 | arya-k.bc19 | field | 1826 | 286 | 24 | 20-4 |  |
+| 11 | IanCoolidge0.battlecode20~69ce88 | field | 1814 | 89 | 120 | 79-41 | 67% (v7 4-2) |
+| 12 | **cand:h128** | candidate | 1804 | 115 | 54 | 23-31 |  |
+| 13 | moreda-a.BC2019-a31 | field | 1800 | 214 | 27 | 18-9 |  |
+| 14 | StoneT2000.BC19-bot1v43 | field | 1794 | 85 | 135 | 88-47 | 33% (v7 2-4) |
+| 15 | **cand:h145** | candidate | 1793 | 121 | 58 | 31-27 |  |
+| 16 | **cand:h148** | candidate | 1782 | 146 | 40 | 23-17 |  |
+| 17 | **cand:h141** | candidate | 1773 | 109 | 58 | 31-27 |  |
+| 18 | **cand:h143** | candidate | 1772 | 126 | 40 | 24-16 |  |
+| 19 | **cand:block** | candidate | 1771 | 166 | 20 | 12-8 |  |
+| 20 | **cand:camp** | candidate | 1771 | 166 | 20 | 12-8 |  |
+| 21 | **cand:h139** | candidate | 1763 | 99 | 76 | 37-39 |  |
+| 22 | StoneT2000.BC19-botfinalsafe | field | 1762 | 81 | 141 | 90-51 | 67% (v7 2-1) |
+| 23 | **cand:h140** | candidate | 1760 | 109 | 58 | 30-28 |  |
+| 24 | **cand:h146** | candidate | 1755 | 121 | 58 | 28-30 |  |
+| 25 | **cand:h132** | candidate | 1754 | 125 | 40 | 23-17 |  |
+| 26 | awesomelemonade.Battlecode2019 | field | 1752 | 87 | 114 | 68-46 | 67% (v7 2-1) |
+| 27 | **cand:h130** | candidate | 1747 | 109 | 58 | 29-29 |  |
+| 28 | **cand:h68** | candidate | 1742 | 281 | 8 | 6-2 |  |
+| 29 | **cand:h72** | candidate | 1742 | 281 | 8 | 6-2 |  |
+| 30 | **cand:h78** | candidate | 1742 | 281 | 8 | 6-2 |  |
+| 31 | **cand:h126** | candidate | 1739 | 97 | 98 | 49-49 |  |
+| 32 | **cand:h133** | candidate | 1736 | 124 | 40 | 22-18 |  |
+| 33 | **cand:h142** | candidate | 1736 | 124 | 40 | 22-18 |  |
+| 34 | bqi343.cp-notebook | field | 1735 | 241 | 24 | 16-8 |  |
+| 35 | **cand:h104** | candidate | 1734 | 109 | 58 | 28-30 |  |
+| 36 | **cand:h111** | candidate | 1734 | 109 | 58 | 28-30 |  |
+| 37 | **cand:h112** | candidate | 1734 | 109 | 58 | 28-30 |  |
+| 38 | **us:v8** | accepted | 1731 | 98 | 246 | 110-136 |  |
+| 39 | **cand:h149** | candidate | 1730 | 145 | 40 | 20-20 |  |
+| 40 | **cand:h127** | candidate | 1729 | 97 | 98 | 47-51 |  |
+| 41 | **cand:h103** | candidate | 1723 | 100 | 76 | 33-43 |  |
+| 42 | **cand:h115** | candidate | 1719 | 124 | 40 | 21-19 |  |
+| 43 | **cand:h131** | candidate | 1719 | 124 | 40 | 21-19 |  |
+| 44 | **cand:h138** | candidate | 1719 | 124 | 40 | 21-19 |  |
+| 45 | **cand:h136** | candidate | 1713 | 100 | 76 | 32-44 |  |
+| 46 | **cand:h44** | candidate | 1711 | 282 | 8 | 6-2 |  |
+| 47 | **cand:h135** | candidate | 1709 | 109 | 58 | 26-32 |  |
+| 48 | virenvshah.Battlecode2019 | field | 1704 | 218 | 24 | 19-5 |  |
+| 49 | **us:v7** | accepted | 1702 | 63 | 1804 | 927-877 |  |
+| 50 | **cand:h118** | candidate | 1702 | 124 | 40 | 20-20 |  |
+| 51 | vineetparikh.BigRedBattle~fe3459 | field | 1698 | 206 | 27 | 19-8 |  |
+| 52 | rafekruse.Battlecode-2019~2680d4 | field | 1697 | 212 | 24 | 19-5 |  |
+| 53 | **cand:h100** | candidate | 1692 | 79 | 200 | 97-103 |  |
+| 54 | IvanGeffner.BC19-bot6b | field | 1689 | 404 | 9 | 7-2 |  |
+| 55 | **cand:h76** | candidate | 1686 | 188 | 32 | 18-14 |  |
+| 56 | ldcWV.Battlecode-2019 | field | 1685 | 198 | 27 | 18-9 |  |
+| 57 | **cand:h121** | candidate | 1683 | 110 | 58 | 24-34 |  |
+| 58 | **cand:h96** | candidate | 1683 | 110 | 58 | 24-34 |  |
+| 59 | **cand:h83** | candidate | 1682 | 301 | 8 | 4-4 |  |
+| 60 | **cand:h84** | candidate | 1682 | 301 | 8 | 4-4 |  |
+| 61 | IanCoolidge0.battlecode20~f649f3 | field | 1671 | 157 | 45 | 33-12 | 67% (v3 2-1) |
+| 62 | **cand:h123** | candidate | 1670 | 110 | 58 | 23-35 |  |
+| 63 | **cand:h101** | candidate | 1667 | 124 | 40 | 18-22 |  |
+| 64 | **cand:h124** | candidate | 1667 | 124 | 40 | 18-22 |  |
+| 65 | **cand:h125** | candidate | 1667 | 124 | 40 | 18-22 |  |
+| 66 | **cand:h137** | candidate | 1667 | 124 | 40 | 18-22 |  |
+| 67 | **cand:h110** | candidate | 1649 | 125 | 40 | 17-23 |  |
+| 68 | **cand:h113** | candidate | 1649 | 125 | 40 | 17-23 |  |
+| 69 | **cand:h82** | candidate | 1647 | 103 | 134 | 70-64 |  |
+| 70 | howard36.Battlecode2019-eco6 | field | 1646 | 212 | 24 | 15-9 |  |
+| 71 | **cand:h61** | candidate | 1643 | 255 | 8 | 5-3 |  |
+| 72 | UpperArlingtonHighSchool.~682aa9 | field | 1639 | 229 | 30 | 17-13 |  |
+| 73 | **cand:h114** | candidate | 1631 | 126 | 40 | 16-24 |  |
+| 74 | **cand:h116** | candidate | 1631 | 126 | 40 | 16-24 |  |
+| 75 | **cand:h8v5** | candidate | 1630 | 129 | 48 | 31-17 |  |
+| 76 | cemondr.BC19pdxgroup4 | field | 1625 | 208 | 24 | 15-9 |  |
+| 77 | **cand:h107** | candidate | 1613 | 127 | 40 | 15-25 |  |
+| 78 | **cand:h144** | candidate | 1613 | 127 | 40 | 15-25 |  |
+| 79 | **cand:h88** | candidate | 1612 | 148 | 40 | 18-22 |  |
+| 80 | **cand:h53** | candidate | 1612 | 256 | 8 | 5-3 |  |
+| 81 | **cand:h63** | candidate | 1610 | 132 | 40 | 23-17 |  |
+| 82 | **cand:h91** | candidate | 1603 | 198 | 16 | 7-9 |  |
+| 83 | **cand:h54** | candidate | 1599 | 127 | 48 | 29-19 |  |
+| 84 | **cand:h134** | candidate | 1594 | 128 | 40 | 14-26 |  |
+| 85 | **cand:h64** | candidate | 1592 | 132 | 40 | 22-18 |  |
+| 86 | **us:v3** | accepted | 1590 | 111 | 191 | 140-51 |  |
+| 87 | Nischay-Pro.BattleCode2019 | field | 1587 | 224 | 21 | 17-4 |  |
+| 88 | **us:v0** | accepted | 1586 | 232 | 38 | 33-5 |  |
+| 89 | **spar:rush4** | sparring | 1586 | 138 | 50 | 30-20 |  |
+| 90 | **cand:h24v5** | candidate | 1578 | 134 | 40 | 23-17 |  |
+| 91 | NielsKornerup.Battlecode-2019 | field | 1575 | 148 | 51 | 30-21 |  |
+| 92 | **cand:h77** | candidate | 1571 | 190 | 16 | 8-8 |  |
+| 93 | **cand:h55** | candidate | 1569 | 126 | 56 | 32-24 |  |
+| 94 | unrevre.battlecode | field | 1566 | 206 | 24 | 13-11 |  |
+| 95 | **cand:h40** | candidate | 1559 | 292 | 8 | 6-2 |  |
+| 96 | **us:v6** | accepted | 1558 | 76 | 322 | 130-192 |  |
+| 97 | abcdefguan.battlecode2019 | field | 1552 | 224 | 30 | 22-8 |  |
+| 98 | **cand:h11c** | candidate | 1549 | 182 | 25 | 15-10 |  |
+| 99 | **cand:h7** | candidate | 1541 | 1377 | 8 | 8-0 |  |
+| 100 | **cand:h2** | candidate | 1540 | 159 | 54 | 25-29 |  |
+| 101 | lschaberg.bc19 | field | 1534 | 188 | 33 | 19-14 |  |
+| 102 | **cand:h129** | candidate | 1534 | 135 | 40 | 11-29 |  |
+| 103 | ovkulkarni.battlecode2019~0aa607 | field | 1532 | 202 | 24 | 18-6 |  |
+| 104 | **us:v5** | accepted | 1526 | 80 | 439 | 202-237 |  |
+| 105 | **cand:h43** | candidate | 1525 | 249 | 8 | 4-4 |  |
+| 106 | **cand:h47** | candidate | 1525 | 249 | 8 | 4-4 |  |
+| 107 | **cand:h48** | candidate | 1525 | 249 | 8 | 4-4 |  |
+| 108 | **cand:h49** | candidate | 1525 | 249 | 8 | 4-4 |  |
+| 109 | **cand:h59** | candidate | 1525 | 249 | 8 | 4-4 |  |
+| 110 | **cand:h60** | candidate | 1525 | 249 | 8 | 4-4 |  |
+| 111 | IvanGeffner.BC19-eigthbot | field | 1524 | 316 | 9 | 6-3 |  |
+| 112 | **cand:h3** | candidate | 1521 | 221 | 19 | 9-10 |  |
+| 113 | m4reko.bc2019-tmores-angels | field | 1500 | 203 | 27 | 17-10 |  |
+| 114 | **cand:h38** | candidate | 1491 | 307 | 6 | 4-2 |  |
+| 115 | dmunozc.bc19-g8-davjasdiv | field | 1485 | 187 | 33 | 22-11 |  |
+| 116 | **cand:h58** | candidate | 1481 | 273 | 8 | 3-5 |  |
+| 117 | **cand:h6** | candidate | 1479 | 121 | 158 | 94-64 |  |
+| 118 | **cand:h24** | candidate | 1478 | 157 | 40 | 26-14 |  |
+| 119 | programjames.BC19Bot-seeding | field | 1475 | 188 | 24 | 11-13 |  |
+| 120 | Tom-CCS.BC19 | field | 1468 | 191 | 33 | 17-16 |  |
+| 121 | sunanth123.battlecode19-mainbot | field | 1466 | 250 | 21 | 13-8 |  |
+| 122 | **cand:turtle** | candidate | 1462 | 198 | 20 | 4-16 |  |
+| 123 | **cand:h31** | candidate | 1459 | 156 | 40 | 25-15 |  |
+| 124 | dmunozc.bc19-g8-bots | field | 1443 | 212 | 24 | 12-12 |  |
+| 125 | **cand:h41** | candidate | 1439 | 256 | 8 | 3-5 |  |
+| 126 | **cand:h42** | candidate | 1439 | 256 | 8 | 3-5 |  |
+| 127 | **cand:h46** | candidate | 1439 | 256 | 8 | 3-5 |  |
+| 128 | **cand:h52** | candidate | 1439 | 256 | 8 | 3-5 |  |
+| 129 | **us:v1** | accepted | 1434 | 151 | 154 | 128-26 |  |
+| 130 | **us:v2** | accepted | 1421 | 149 | 62 | 30-32 |  |
+| 131 | programjames.BC19Bot-root | field | 1375 | 218 | 24 | 15-9 |  |
+| 132 | **us:v4** | accepted | 1371 | 110 | 220 | 83-137 |  |
+| 133 | ovkulkarni.battlecode2019~06c610 | field | 1366 | 225 | 24 | 15-9 |  |
+| 134 | 18dcb01.Battlecode19-prea~fb5c48 | field | 1365 | 150 | 48 | 25-23 |  |
+| 135 | nthistle.battlecode-2019 | field | 1349 | 175 | 36 | 19-17 | 100% (v5 3-0) |
+| 136 | **cand:h16r** | candidate | 1301 | 155 | 40 | 16-24 |  |
+| 137 | cvxluo.battlecode19 | field | 1288 | 202 | 30 | 19-11 |  |
+| 138 | ipercyNC.group6-battlecode | field | 1286 | 200 | 24 | 11-13 |  |
+| 139 | **cand:h18** | candidate | 1281 | 198 | 25 | 6-19 |  |
+| 140 | **spar:rush** | sparring | 1281 | 198 | 25 | 6-19 |  |
+| 141 | sunanth123.battlecode19-prorush | field | 1280 | 196 | 24 | 14-10 |  |
+| 142 | CS554-software-engineerin~a575dc | field | 1276 | 105 | 248 | 147-101 | 100% (v7 3-0) |
+| 143 | CometsTech.battlecode2019 | field | 1238 | 111 | 198 | 92-106 | 100% (v7 3-0) |
+| 144 | UpperArlingtonHighSchool.~5e7875 | field | 1231 | 273 | 24 | 15-9 |  |
+| 145 | Nydroam.BatteredCod | field | 1209 | 453 | 6 | 3-3 |  |
+| 146 | jamesrayman.HCN-bot | field | 1200 | 204 | 33 | 13-20 | 100% (v5 3-0) |
+| 147 | evanyeyeye.battlecode2019~af562c | field | 1180 | 201 | 24 | 12-12 |  |
+| 148 | moreda-a.BC2019-t15 | field | 1168 | 235 | 27 | 12-15 |  |
+| 149 | JasonLarson44.2019-Battle~1c7639 | field | 1148 | 201 | 36 | 14-22 | 100% (v3 3-0) |
+| 150 | bayoumi17m.BattleCode-2019 | field | 1138 | 213 | 24 | 11-13 |  |
+| 151 | vicennial.BattleCode19 | field | 1130 | 247 | 27 | 13-14 |  |
+| 152 | twitu.bc19-tsp | field | 1099 | 239 | 30 | 17-13 |  |
+| 153 | TestSubjector.BattleCode2~fb22c7 | field | 1096 | 264 | 36 | 18-18 |  |
+| 154 | haydenshively.Battle-Code~e1c2fb | field | 1092 | 220 | 24 | 10-14 |  |
+| 155 | 18dcb01.Battlecode19-robot2 | field | 1078 | 221 | 39 | 19-20 |  |
+| 156 | haydenshively.Battle-Code~e37b3e | field | 1060 | 217 | 24 | 8-16 |  |
+| 157 | TestSubjector.BattleCode2~e6de74 | field | 1042 | 222 | 39 | 17-22 |  |
+| 158 | jackliu612.Battlecode19 | field | 1024 | 324 | 24 | 10-14 |  |
+| 159 | dgh2.bc19-t1 | field | 993 | 276 | 24 | 9-15 |  |
+| 160 | spachava753.bc19 | field | 958 | 228 | 24 | 9-15 |  |
+| 161 | liwanlin41.examplefuncsplayer | field | 923 | 282 | 27 | 7-20 |  |
+| 162 | dndoja.battlecode19 | field | 919 | 236 | 27 | 11-16 |  |
+| 163 | asunathanr.asu_bc | field | 884 | 281 | 24 | 8-16 |  |
+| 164 | rooneyshuman.Battlecode | field | 858 | 246 | 33 | 19-14 |  |
+| 165 | CometsTech.battlecode2019~187e8c | field | 858 | 238 | 36 | 14-22 |  |
+| 166 | **cand:h89** | candidate | 820 | 1086 | 8 | 0-8 |  |
+| 167 | **cand:h90** | candidate | 820 | 1086 | 8 | 0-8 |  |
+| 168 | SethKitchen.examplefuncsplayer | field | 723 | 340 | 36 | 8-28 |  |
+| 169 | bovard.battlecode-2019-un~8822c3 | field | 670 | 388 | 24 | 9-15 |  |
+| 170 | roy-love.onshoreBattleCode2019 | field | 669 | 253 | 24 | 7-17 |  |
+| 171 | VictorButoi.BattleCode201~c4576b | field | 655 | 264 | 27 | 9-18 |  |
+| 172 | OmarTahoun.battle-code | field | 653 | 265 | 33 | 10-23 |  |
+| 173 | jyurkanin.corn_bc19 | field | 637 | 336 | 33 | 7-26 |  |
+| 174 | DivyanshuSaxena.Battlecode | field | 523 | 255 | 39 | 18-21 |  |
+| 175 | howard36.Battlecode2019-sprint | field | 501 | 430 | 24 | 6-18 |  |
+| 176 | waylon531.scala_starter | field | 484 | 367 | 30 | 4-26 |  |
+| 177 | vishwasns99.BC_2019 | field | 456 | 384 | 30 | 3-27 |  |
+| 178 | bc19-starter | field | 407 | 227 | 334 | 57-277 | 100% (v3 12-0) |
+| 179 | VoidMercy.battlecode-2019-bot | field | 366 | 337 | 24 | 8-16 |  |
+| 180 | nhard.examplefuncsplayer | field | 332 | 350 | 24 | 9-15 |  |
+| 181 | ryanhzhao.Battlecode-2019 | field | 240 | 445 | 24 | 3-21 |  |
+| 182 | RyanSharafuddin.Battlecode_2019 | field | 166 | 268 | 54 | 5-49 |  |
+| 183 | jbiewend.Battlecode2019 | field | 98 | 462 | 24 | 3-21 |  |
+| 184 | djkeyes.bc19 | field | -16 | 420 | 24 | 3-21 |  |
+| 185 | TheRobotCarlson.battlehac~323871 | field | -56 | 321 | 36 | 3-33 |  |
+| 186 | jamesrayman.HCN-basic-bot | field | -112 | 351 | 24 | 3-21 |  |
+| 187 | yunaganyh.bc19 | field | -119 | 352 | 24 | 4-20 |  |
+| 188 | jshin313.battlecodebot | field | -247 | 386 | 24 | 2-22 |  |
+| 189 | ArtemUstilov.bc19_CrazyTapok | field | -643 | 1096 | 81 | 0-81 |  |
 
 Every pairing (W-L of the first player; where the games were played):
 
@@ -326,6 +328,7 @@ Every pairing (W-L of the first player; where the games were played):
 | mvpatel2000.Battlecode2019 | UpperArlingtonHighSchool.~682aa9 | 3 | 3-0 | 100% | replica |
 | mvpatel2000.Battlecode2019 | moreda-a.BC2019-t15 | 3 | 3-0 | 100% | replica |
 | mvpatel2000.Battlecode2019 | nhard.examplefuncsplayer | 3 | 3-0 | 100% | replica |
+| m-schier.battlecode-2019-wololo | cand:h147 | 3 | 3-0 | 100% | replica |
 | m-schier.battlecode-2019-wololo | cand:h128 | 9 | 6-3 | 67% | replica |
 | m-schier.battlecode-2019-wololo | moreda-a.BC2019-a31 | 3 | 1-2 | 33% | replica |
 | m-schier.battlecode-2019-wololo | cand:h145 | 3 | 3-0 | 100% | replica |
@@ -421,7 +424,9 @@ Every pairing (W-L of the first player; where the games were played):
 | j-mao.battlecode-2019 | ipercyNC.group6-battlecode | 3 | 3-0 | 100% | replica |
 | j-mao.battlecode-2019 | jamesrayman.HCN-bot | 3 | 3-0 | 100% | replica |
 | j-mao.battlecode-2019 | jamesrayman.HCN-basic-bot | 3 | 3-0 | 100% | replica |
+| cand:h150 | us:v8 | 6 | 4-2 | 67% | local |
 | cand:h147 | StoneT2000.BC19-bot1v43 | 3 | 2-1 | 67% | replica |
+| cand:h147 | StoneT2000.BC19-botfinalsafe | 3 | 2-1 | 67% | replica |
 | cand:h147 | us:v8 | 40 | 26-14 | 65% | local |
 | arya-k.bc19 | bqi343.cp-notebook | 3 | 1-2 | 33% | replica |
 | arya-k.bc19 | UpperArlingtonHighSchool.~682aa9 | 3 | 2-1 | 67% | replica |
@@ -431,11 +436,11 @@ Every pairing (W-L of the first player; where the games were played):
 | arya-k.bc19 | bovard.battlecode-2019-un~8822c3 | 3 | 3-0 | 100% | replica |
 | arya-k.bc19 | VictorButoi.BattleCode201~c4576b | 3 | 3-0 | 100% | replica |
 | IanCoolidge0.battlecode20~69ce88 | cand:h128 | 9 | 2-7 | 22% | replica |
-| IanCoolidge0.battlecode20~69ce88 | cand:h145 | 3 | 0-3 | 0% | replica |
 | IanCoolidge0.battlecode20~69ce88 | StoneT2000.BC19-bot1v43 | 3 | 2-1 | 67% | replica |
+| IanCoolidge0.battlecode20~69ce88 | cand:h145 | 3 | 0-3 | 0% | replica |
 | IanCoolidge0.battlecode20~69ce88 | cand:h141 | 3 | 2-1 | 67% | replica |
-| IanCoolidge0.battlecode20~69ce88 | StoneT2000.BC19-botfinalsafe | 3 | 2-1 | 67% | replica |
 | IanCoolidge0.battlecode20~69ce88 | cand:h139 | 6 | 4-2 | 67% | replica |
+| IanCoolidge0.battlecode20~69ce88 | StoneT2000.BC19-botfinalsafe | 3 | 2-1 | 67% | replica |
 | IanCoolidge0.battlecode20~69ce88 | cand:h140 | 3 | 3-0 | 100% | replica |
 | IanCoolidge0.battlecode20~69ce88 | cand:h146 | 3 | 1-2 | 33% | replica |
 | IanCoolidge0.battlecode20~69ce88 | cand:h130 | 3 | 3-0 | 100% | replica |
@@ -469,13 +474,10 @@ Every pairing (W-L of the first player; where the games were played):
 | moreda-a.BC2019-a31 | m4reko.bc2019-tmores-angels | 3 | 3-0 | 100% | replica |
 | moreda-a.BC2019-a31 | nthistle.battlecode-2019 | 3 | 3-0 | 100% | replica |
 | moreda-a.BC2019-a31 | SethKitchen.examplefuncsplayer | 3 | 3-0 | 100% | replica |
-| cand:h145 | StoneT2000.BC19-bot1v43 | 3 | 1-2 | 33% | replica |
-| cand:h145 | StoneT2000.BC19-botfinalsafe | 3 | 1-2 | 33% | replica |
-| cand:h145 | awesomelemonade.Battlecode2019 | 3 | 2-1 | 67% | replica |
-| cand:h145 | us:v8 | 40 | 23-17 | 57% | local |
+| StoneT2000.BC19-bot1v43 | cand:h145 | 3 | 2-1 | 67% | replica |
 | StoneT2000.BC19-bot1v43 | cand:h141 | 3 | 2-1 | 67% | replica |
-| StoneT2000.BC19-bot1v43 | StoneT2000.BC19-botfinalsafe | 6 | 1-5 | 17% | replica |
 | StoneT2000.BC19-bot1v43 | cand:h139 | 6 | 4-2 | 67% | replica |
+| StoneT2000.BC19-bot1v43 | StoneT2000.BC19-botfinalsafe | 6 | 1-5 | 17% | replica |
 | StoneT2000.BC19-bot1v43 | cand:h140 | 3 | 1-2 | 33% | replica |
 | StoneT2000.BC19-bot1v43 | cand:h146 | 3 | 2-1 | 67% | replica |
 | StoneT2000.BC19-bot1v43 | cand:h130 | 3 | 1-2 | 33% | replica |
@@ -502,6 +504,9 @@ Every pairing (W-L of the first player; where the games were played):
 | StoneT2000.BC19-bot1v43 | TestSubjector.BattleCode2~e6de74 | 6 | 6-0 | 100% | replica |
 | StoneT2000.BC19-bot1v43 | SethKitchen.examplefuncsplayer | 3 | 3-0 | 100% | replica |
 | StoneT2000.BC19-bot1v43 | DivyanshuSaxena.Battlecode | 3 | 3-0 | 100% | replica |
+| cand:h145 | StoneT2000.BC19-botfinalsafe | 3 | 1-2 | 33% | replica |
+| cand:h145 | awesomelemonade.Battlecode2019 | 3 | 2-1 | 67% | replica |
+| cand:h145 | us:v8 | 40 | 23-17 | 57% | local |
 | cand:h148 | us:v8 | 40 | 23-17 | 57% | local |
 | cand:h141 | StoneT2000.BC19-botfinalsafe | 3 | 2-1 | 67% | replica |
 | cand:h141 | awesomelemonade.Battlecode2019 | 3 | 1-2 | 33% | replica |
@@ -509,7 +514,9 @@ Every pairing (W-L of the first player; where the games were played):
 | cand:h143 | us:v7 | 40 | 24-16 | 60% | local |
 | cand:block | us:v7 | 20 | 12-8 | 60% | local |
 | cand:camp | us:v7 | 20 | 12-8 | 60% | local |
-| StoneT2000.BC19-botfinalsafe | cand:h139 | 6 | 2-4 | 33% | replica |
+| cand:h139 | StoneT2000.BC19-botfinalsafe | 6 | 4-2 | 67% | replica |
+| cand:h139 | awesomelemonade.Battlecode2019 | 6 | 4-2 | 67% | replica |
+| cand:h139 | us:v7 | 40 | 22-18 | 55% | local |
 | StoneT2000.BC19-botfinalsafe | cand:h140 | 3 | 2-1 | 67% | replica |
 | StoneT2000.BC19-botfinalsafe | cand:h146 | 3 | 2-1 | 67% | replica |
 | StoneT2000.BC19-botfinalsafe | awesomelemonade.Battlecode2019 | 3 | 2-1 | 67% | replica |
@@ -540,8 +547,6 @@ Every pairing (W-L of the first player; where the games were played):
 | StoneT2000.BC19-botfinalsafe | TestSubjector.BattleCode2~e6de74 | 3 | 3-0 | 100% | replica |
 | StoneT2000.BC19-botfinalsafe | SethKitchen.examplefuncsplayer | 3 | 3-0 | 100% | replica |
 | StoneT2000.BC19-botfinalsafe | bc19-starter | 3 | 3-0 | 100% | replica |
-| cand:h139 | awesomelemonade.Battlecode2019 | 6 | 4-2 | 67% | replica |
-| cand:h139 | us:v7 | 40 | 22-18 | 55% | local |
 | cand:h140 | awesomelemonade.Battlecode2019 | 3 | 2-1 | 67% | replica |
 | cand:h140 | us:v7 | 40 | 25-15 | 62% | local |
 | cand:h146 | awesomelemonade.Battlecode2019 | 3 | 1-2 | 33% | replica |
@@ -587,7 +592,7 @@ Every pairing (W-L of the first player; where the games were played):
 | cand:h104 | us:v7 | 40 | 22-18 | 55% | local |
 | cand:h111 | us:v7 | 40 | 22-18 | 55% | local |
 | cand:h112 | us:v7 | 40 | 22-18 | 55% | local |
-| us:v8 | cand:h149 | 28 | 14-14 | 50% | local |
+| us:v8 | cand:h149 | 40 | 20-20 | 50% | local |
 | us:v8 | us:v7 | 40 | 23-17 | 57% | local |
 | cand:h127 | us:v7 | 40 | 24-16 | 60% | local |
 | cand:h103 | us:v7 | 40 | 21-19 | 52% | local |
@@ -597,6 +602,14 @@ Every pairing (W-L of the first player; where the games were played):
 | cand:h136 | us:v7 | 40 | 20-20 | 50% | local |
 | cand:h44 | us:v5 | 8 | 6-2 | 75% | local |
 | cand:h135 | us:v7 | 40 | 20-20 | 50% | local |
+| virenvshah.Battlecode2019 | vineetparikh.BigRedBattle~fe3459 | 3 | 2-1 | 67% | replica |
+| virenvshah.Battlecode2019 | howard36.Battlecode2019-eco6 | 3 | 3-0 | 100% | replica |
+| virenvshah.Battlecode2019 | unrevre.battlecode | 3 | 1-2 | 33% | replica |
+| virenvshah.Battlecode2019 | Tom-CCS.BC19 | 3 | 2-1 | 67% | replica |
+| virenvshah.Battlecode2019 | sunanth123.battlecode19-mainbot | 3 | 2-1 | 67% | replica |
+| virenvshah.Battlecode2019 | vicennial.BattleCode19 | 3 | 3-0 | 100% | replica |
+| virenvshah.Battlecode2019 | jackliu612.Battlecode19 | 3 | 3-0 | 100% | replica |
+| virenvshah.Battlecode2019 | vishwasns99.BC_2019 | 3 | 3-0 | 100% | replica |
 | us:v7 | cand:h118 | 40 | 20-20 | 50% | local |
 | us:v7 | cand:h100 | 200 | 103-97 | 52% | local |
 | us:v7 | cand:h121 | 40 | 21-19 | 52% | local |
@@ -620,14 +633,6 @@ Every pairing (W-L of the first player; where the games were played):
 | us:v7 | cand:turtle | 20 | 16-4 | 80% | local |
 | us:v7 | CS554-software-engineerin~a575dc | 3 | 3-0 | 100% | replica |
 | us:v7 | CometsTech.battlecode2019 | 3 | 3-0 | 100% | replica |
-| virenvshah.Battlecode2019 | vineetparikh.BigRedBattle~fe3459 | 3 | 2-1 | 67% | replica |
-| virenvshah.Battlecode2019 | howard36.Battlecode2019-eco6 | 3 | 3-0 | 100% | replica |
-| virenvshah.Battlecode2019 | unrevre.battlecode | 3 | 1-2 | 33% | replica |
-| virenvshah.Battlecode2019 | Tom-CCS.BC19 | 3 | 2-1 | 67% | replica |
-| virenvshah.Battlecode2019 | sunanth123.battlecode19-mainbot | 3 | 2-1 | 67% | replica |
-| virenvshah.Battlecode2019 | vicennial.BattleCode19 | 3 | 3-0 | 100% | replica |
-| virenvshah.Battlecode2019 | jackliu612.Battlecode19 | 3 | 3-0 | 100% | replica |
-| virenvshah.Battlecode2019 | vishwasns99.BC_2019 | 3 | 3-0 | 100% | replica |
 | vineetparikh.BigRedBattle~fe3459 | lschaberg.bc19 | 3 | 2-1 | 67% | replica |
 | vineetparikh.BigRedBattle~fe3459 | m4reko.bc2019-tmores-angels | 3 | 1-2 | 33% | replica |
 | vineetparikh.BigRedBattle~fe3459 | 18dcb01.Battlecode19-prea~fb5c48 | 3 | 3-0 | 100% | replica |
@@ -644,8 +649,8 @@ Every pairing (W-L of the first player; where the games were played):
 | rafekruse.Battlecode-2019~2680d4 | roy-love.onshoreBattleCode2019 | 3 | 3-0 | 100% | replica |
 | IvanGeffner.BC19-bot6b | CometsTech.battlecode2019~187e8c | 3 | 3-0 | 100% | replica |
 | IvanGeffner.BC19-bot6b | OmarTahoun.battle-code | 3 | 3-0 | 100% | replica |
-| cand:h76 | cand:h84 | 8 | 4-4 | 50% | local |
 | cand:h76 | cand:h83 | 8 | 4-4 | 50% | local |
+| cand:h76 | cand:h84 | 8 | 4-4 | 50% | local |
 | cand:h76 | cand:h82 | 8 | 4-4 | 50% | local |
 | cand:h76 | us:v6 | 8 | 6-2 | 75% | local |
 | ldcWV.Battlecode-2019 | UpperArlingtonHighSchool.~682aa9 | 3 | 2-1 | 67% | replica |
@@ -699,12 +704,12 @@ Every pairing (W-L of the first player; where the games were played):
 | Nischay-Pro.BattleCode2019 | twitu.bc19-tsp | 3 | 3-0 | 100% | replica |
 | Nischay-Pro.BattleCode2019 | haydenshively.Battle-Code~e1c2fb | 3 | 3-0 | 100% | replica |
 | Nischay-Pro.BattleCode2019 | TestSubjector.BattleCode2~e6de74 | 3 | 3-0 | 100% | replica |
+| us:v0 | us:v1 | 17 | 12-5 | 71% | local |
+| us:v0 | bc19-starter | 21 | 21-0 | 100% | local |
 | spar:rush4 | cand:h77 | 8 | 8-0 | 100% | local |
 | spar:rush4 | us:v6 | 6 | 6-0 | 100% | local |
 | spar:rush4 | cand:h89 | 8 | 8-0 | 100% | local |
 | spar:rush4 | cand:h90 | 8 | 8-0 | 100% | local |
-| us:v0 | us:v1 | 17 | 12-5 | 71% | local |
-| us:v0 | bc19-starter | 21 | 21-0 | 100% | local |
 | cand:h24v5 | us:v5 | 40 | 23-17 | 57% | local |
 | NielsKornerup.Battlecode-2019 | 18dcb01.Battlecode19-prea~fb5c48 | 3 | 2-1 | 67% | replica |
 | NielsKornerup.Battlecode-2019 | nthistle.battlecode-2019 | 3 | 3-0 | 100% | replica |
@@ -733,8 +738,8 @@ Every pairing (W-L of the first player; where the games were played):
 | abcdefguan.battlecode2019 | waylon531.scala_starter | 3 | 3-0 | 100% | replica |
 | abcdefguan.battlecode2019 | VoidMercy.battlecode-2019-bot | 3 | 3-0 | 100% | replica |
 | cand:h11c | cand:h6 | 25 | 15-10 | 60% | local |
-| cand:h2 | cand:h3 | 19 | 10-9 | 53% | local |
 | cand:h7 | bc19-starter | 8 | 8-0 | 100% | local |
+| cand:h2 | cand:h3 | 19 | 10-9 | 53% | local |
 | lschaberg.bc19 | m4reko.bc2019-tmores-angels | 3 | 1-2 | 33% | replica |
 | lschaberg.bc19 | dmunozc.bc19-g8-davjasdiv | 6 | 4-2 | 67% | replica |
 | lschaberg.bc19 | 18dcb01.Battlecode19-prea~fb5c48 | 3 | 2-1 | 67% | replica |

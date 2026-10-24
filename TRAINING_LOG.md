@@ -4059,3 +4059,11 @@ seed0 26000: 20/40, gained 3, lost 3, D 6, t 0.00; castles lost 35 vs 34 (1.03x)
 bank at the end 38 K vs 48 K over the 40 games. Its block 1 goes to the replica behind h148's (777-782). The panel
 order stays shuffled: with a pool that mixes sides, a fixed side would bias the expectation wherever a side effect
 is real, while shuffled keeps the pooled expectation unbiased (TRAINING_LOG 08:52).
+
+## 2026-10-24 09:09 PDT: h149's block is 955-960; the daily autoscrim fired, 190 matches waiting
+
+The replica's autoscrim fired at 09:00 PDT (24 h after the last; the queue had dropped to 14): 174 ranked matches
+between ladder teams, 190 waiting in all. At the recent 10-11 matches an hour it clears in about 18 hours; our own
+matches (h147's 767-769, the v8 field scrims 770-776, h148's 777-782, h149's 955-960, autoscrim 887 uvafan) are
+bumped to the front (tools/bump_ours.sh --ours), the activity service adds nothing while matches wait, and the next
+autoscrim is held until fewer than 30 wait. These ranked matches are what moves the rating history graphs.
