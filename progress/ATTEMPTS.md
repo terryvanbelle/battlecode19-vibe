@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 121 other, 28 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (174 rows).
+Totals: 120 other, 29 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (174 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -155,7 +155,7 @@ Totals: 121 other, 28 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparrin
 | `h109` | 2026-10-23 | v7 | v7 + structures never build onto a tile where the visible enemy attackers could kill the newborn before its first turn (SAFE_BUILD=1) |  |  |  |  | PARKED (diagnostic: blocks chain launches; worse 2 of 4 cells; -> h111) |
 | `h110` | 2026-10-23 | v7 | castles under attack recall the army (RECALL 30), chain-born units keep their line target (h108 fixed) | 17-23 vs h87, 20 cells (out/h110_h87.jsonl): gained 0, lost 3, split 17, D 3, net -3, t -1.73 |  |  | vs v7 17-23 | REJECTED 09:20: field-aimed gate t -1.73 <= -1, mechanism opposite (dlv SUM castles lost 35 vs h87's 24; milBuilt 7,475 vs 7,236, milLost 5,232 vs 4,715) |
 | `h111` | 2026-10-23 | v7 | never build where attackers with no other target of ours would kill the newborn before it acts | 22-18 vs h87, 20 cells (out/h111_h87.jsonl): gained 4, lost 2, split 14, D 6, net +2, t 0.82 |  | block 1 616-621 vs control 420-425: gained 2, lost 2, D 4, net 0, t 0.00; 6/18 wins each | vs v7 22-18 | REJECTED 14:48: replica block 1 net 0 (two-block rule: reject at net <= 0) |
-| `h112` | 2026-10-23 | v7 | v7 + a threat response counts as defenders only our military that see the closest attacker (DEF_SEEN=1) | 22-18 vs h87 (out/h112_h87.jsonl) |  | block 1 = matches 673-678 (sent 2026-10-24 00:55) |  | REPLICA PANEL |
+| `h112` | 2026-10-23 | v7 | v7 + a threat response counts as defenders only our military that see the closest attacker (DEF_SEEN=1) | 22-18 vs h87 (out/h112_h87.jsonl) |  | block 1 673-678: +2 -2, D 4, net 0, t 0 |  | REJECTED (replica net 0) |
 | `h113` | 2026-10-23 | v7 | v7 + a chainer that sees 2 or more enemy crusaders, prophets or preachers starts no line (CHAIN_CLEAR=2) | 17-23 vs h87 (out/h113_h87.jsonl) |  |  |  | REJECTED 10:38: gate t -1.73, gained 0 lost 3 (D 3); churches lost/built 0.35 vs 0.39, churches built 374 vs 478, castles lost 32 vs 26 |
 | `h114` | 2026-10-23 | v7 | v7 + a structure's guard quota builds without waiting for the chain's bank (CHAIN_GUARD=1) | 16-24 vs h87 (out/h114_h87.jsonl) |  |  |  | REJECTED 11:24: gate t -1.63, gained 1 lost 5 (D 6); churches built 312 vs 400, castles lost 32 vs 29 |
 | `h115` | 2026-10-23 | v7 | v7 + from r900 all fuel into preachers (crusaders when karbonite is short), no pilgrims or churches, units away from home stand still (ENDGAME_FUEL=900) | vs h87 20 cells: 21-19, gained 2, lost 1, D 3, t 0.58 |  |  |  | REJECTED 11:58 (731c03953b9a): mechanism opposite; in the 20 games that reached r1000 fuelEnd 136,008 vs h87's 38,353 (pre-registered: at most half), karbEnd 1-72 in 15 of 20: karbonite binds, not fuel |

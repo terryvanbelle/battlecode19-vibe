@@ -3765,3 +3765,10 @@ deaths.js). Fewer losses of units did not turn into wins: the saved prophets hol
 h136 (SIEGE 30 alone) screen vs h87, 20 cells seed0 13000: +2 -2, D 4, t 0; castles lost 25 vs 27: non-inferior ->
 replica panel: submission 123 (dist/h136, 4d8e4bab9982), block 1 = matches 694-699 (v7 resubmitted, 124; bumped).
 h137 = v7 + SIEGE 10 (dist/h137, 081c8a6aacb4: a shorter memory, a less passive hold) screen queued, seed0 14000.
+
+## 2026-10-24 03:2x PDT: h112 REJECTED on the replica (net 0)
+
+h112 (DEF_SEEN 1) block 1 673-678 vs v7's 420-425: gained 2 (bot1v43 2321 at r278, uvafan 1653 on castles at r1000),
+lost 2 (IanCoolidge0 203 and awesomelemonade 1712, both on health at r1000), D 4, net 0, t 0, 6/18 each: REJECTED by
+the two-block rule. awesomelemonade 1712 (v7 won it at r474) went to health at r1000 for both h112 and h135, and
+uvafan 1653 turned for both: the panel's noise floor is about 2 cells each way per block.
