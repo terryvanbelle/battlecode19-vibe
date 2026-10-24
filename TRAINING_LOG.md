@@ -3882,3 +3882,14 @@ blocks never interleave: a scrim plays the submission current when it was reques
 - h103 cumulative 12 of 33 against 10.0, z 0.94 (704 vs awesomelemonade still running); h121 block 1 so far 5 of 15
   against 5.1, z -0.07 (717 vs uvafan running).
 - h143 = v7 + h139's, h140's and h141's switches (dist/h143) screen on seed0 20000.
+
+## 2026-10-24 08:4x PDT: h103 and h121 REJECTED on the replica (pooled rule)
+
+`contest19.py fetch --new` reads one page of matches: the slow awesomelemonade and uvafan matches (704, 717) had
+fallen off it and were never fetched; `fetch --new --pages 6` took them (HANDOFF's reading command now says so).
+- h103 (ESCORT 2 + ESCORT_UNIT 3) blocks 438-443 + 700-705: 12 of 36 against the pooled 11.2, z 0.35 (< 1 after two
+  blocks): REJECTED.
+- h121 (early centre pioneer) block 1 712-713, 716-719: 5 of 18 against 5.7, z -0.45: REJECTED. It won two never-won
+  cells (awesomelemonade 2518, wololo 836) and lost a sure one (botfinalsafe 2740); h140 (h121 + PIONEER_FAST, panel
+  744-749) reads the same idea again.
+Both blocks join progress/panels/v7-m1.pool.
