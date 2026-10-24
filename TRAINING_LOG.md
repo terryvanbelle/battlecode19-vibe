@@ -3569,3 +3569,10 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 Replica queue fell under 30. h126 = submission 108, block 1 = matches 622-627; h127 = submission 109, block 1 = matches
 628-633 (panel v7-m1, control 420-425). bots/v7 resubmitted as the ladder build (submission 110); our matches bumped to
 the front. Read each with `contest19.py compare 420-425 <block>` under the two-block rule.
+
+## 2026-10-23 19:19 PDT: h127 vs h126 even; h128 queued
+
+h127 vs h126 (...19z, 20 cells seed0 5000): 20/40, gained 4, lost 4, split 12, D 8, net 0, t 0. Neither form of the
+mirror escort beats the other head to head; the replica panels decide. h128 = v7 + ESCORT_FIRST 2 + ESCORT_MIRROR 1
++ ESCORT_UNIT 3 (dist/h128, cd4c900d6216): two crusaders on the enemy's mirror site. Gate vs h87 on fresh cells (seed0 6000),
+par 2, field-aimed bars; mechanism: castles lost not above h87's, churches at least 0.95 of h87's.
