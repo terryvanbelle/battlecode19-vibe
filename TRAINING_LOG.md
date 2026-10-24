@@ -4166,3 +4166,13 @@ h148's block 1 (777-782) against the v8 pool (control 726-731 + the five v8-m1 b
 expectation of 7.6, z 2.20. It won three rarely-won cells (bot1v43 2321, botfinalsafe 203, uvafan 1712: uvafan's
 castles fell at r573) and lost one usually-won cell (botfinalsafe 2740); the four never-won cells stayed lost. Block 2
 (submission 166, ladder build resubmitted as 167) = matches 967-972, run first with our other panel matches.
+
+## 2026-10-24 11:28 PDT: h149 (CHAIN_LIVE 2) and h150 (WATCH 2) rejected on panel block 1
+
+Against the v8 pool (control 726-731 + the five v8-m1 blocks), block 1 each:
+- h149 (CHAIN_LIVE 2, castles hold the chain bank only while a chainer waits staged; 955-960): 8 of 18, pooled
+  expectation 7.6, z 0.28 < 0.5. Won the rarely-won botfinalsafe 203; lost botfinalsafe 2740 (every other block won
+  it) and awesomelemonade 2797.
+- h150 (WATCH 2, structures radio attackers no military unit sees; 961-966): 7 of 18, E 7.6, z -0.37. All seven wins
+  in cells the pool wins half the time or more; lost wololo 2644 and IanCoolidge0 203.
+Both blocks join progress/panels/v8-m1.pool (now control + 7 blocks). h148 (CHAIN_LIVE 1) block 2 (967-972) runs.

@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 10:41 PDT)
+## State (2026-10-24 11:28 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -43,7 +43,7 @@
   v7-based panels (read for the idea, not acceptance): h139 (ECON_RICH 150) 706-711 + 732-737 z 1.96 against v7
   (h145 on v8: 750-755 z 0.00, REJECTED; the line closes), h141 (church strike) 738-743 REJECTED (z 0.43), h140 (early
   fast pioneer) 744-749 REJECTED (z -0.24; won awesomelemonade 2518). v8-pool blocks 1: h146 (v8 + church strike) 758-763 REJECTED (z -1.98; the strike line closes),
-  h147 (early fast centre pioneer) 764-769 REJECTED (z 0.34; won 2518, 2321, 203; lost IanCoolidge0 2644: the pioneers had no money after an early rush, TRAINING_LOG 09:25), **h148** (CHAIN_LIVE 1; screen t 1.73) block 1 777-782 11 of 18, E 7.6, z 2.20; block 2 = 967-972, **h149** (CHAIN_LIVE 2; screen t 0.00) = 955-960, **h150** (WATCH 2; screen t 1.51) = 961-966.
+  h147 (early fast centre pioneer) 764-769 REJECTED (z 0.34; won 2518, 2321, 203; lost IanCoolidge0 2644: the pioneers had no money after an early rush, TRAINING_LOG 09:25), **h148** (CHAIN_LIVE 1; screen t 1.73) block 1 777-782 11 of 18, E 7.6, z 2.20; block 2 = 967-972; h149 (CHAIN_LIVE 2) 955-960 REJECTED (z 0.28), h150 (WATCH 2) 961-966 REJECTED (z -0.37) (TRAINING_LOG 11:28).
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013, 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
   2518; uvafan 2046; bot1v43 2591. Studies: botfinalsafe 1706 (castles idle r33-93, the centre cluster lost); wololo
   2013 (church-beside-church preacher fights from r97). TRAINING_LOG 2026-10-24 02:52, 03:48.
