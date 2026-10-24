@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 11:28 PDT)
+## State (2026-10-24 11:58 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -36,15 +36,18 @@
   VM (awk on columns 18-19, a = candidate).
 - **Replica panels** (progress/panels/v7-m1.json: six field bots, wololo, botfinalsafe, bot1v43, uvafan,
   awesomelemonade, IanCoolidge0 ~69ce88, three maps each). Ladder build: submission 149 = bots/v8. Play a block with
-  `tools/panel_submit.sh dist/hN "message"` (submits, scrims, resubmits $LADDER = bots/v8, bumps; retries what the
-  hourly limit refuses (HTTP 429, about 20 requests an hour) every 15 min; a lock keeps blocks apart); add the
+  `tools/panel_submit.sh dist/hN "message"` (submits, scrims each opponent twice, NAME@+ and NAME@-, so the block's 36
+  games play every cell on both sides (we win 61% as red, 31% as blue: TRAINING_LOG 11:58); resubmits $LADDER =
+  bots/v8, bumps; retries what the hourly limit refuses (HTTP 429, about 20 requests an hour) every 15 min; a lock
+  keeps blocks apart); add the
   tools/progress/submissions.tsv row. Read: `contest19.py fetch --new --pages 6` (one page misses slow matches), then
   for v8-based candidates `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK...`, for v7-based ones
-  `tools/panel_pool.sh 420-425 progress/panels/v7-m1.pool BLOCK...`; rejected blocks join their pool file.
+  `tools/panel_pool.sh 420-425 progress/panels/v7-m1.pool BLOCK...`; decide on its side-aware z (it refuses a block
+  with a match unfinished); a rejected block joins its pool file only when its own z lies within +-1.
   v7-based panels (read for the idea, not acceptance): h139 (ECON_RICH 150) 706-711 + 732-737 z 1.96 against v7
   (h145 on v8: 750-755 z 0.00, REJECTED; the line closes), h141 (church strike) 738-743 REJECTED (z 0.43), h140 (early
   fast pioneer) 744-749 REJECTED (z -0.24; won awesomelemonade 2518). v8-pool blocks 1: h146 (v8 + church strike) 758-763 REJECTED (z -1.98; the strike line closes),
-  h147 (early fast centre pioneer) 764-769 REJECTED (z 0.34; won 2518, 2321, 203; lost IanCoolidge0 2644: the pioneers had no money after an early rush, TRAINING_LOG 09:25), **h148** (CHAIN_LIVE 1; screen t 1.73) block 1 777-782 11 of 18, E 7.6, z 2.20; block 2 = 967-972; h149 (CHAIN_LIVE 2) 955-960 REJECTED (z 0.28), h150 (WATCH 2) 961-966 REJECTED (z -0.37) (TRAINING_LOG 11:28).
+  h147 (early fast centre pioneer) 764-769 REJECTED (z 0.34; won 2518, 2321, 203; lost IanCoolidge0 2644: the pioneers had no money after an early rush, TRAINING_LOG 09:25), **h148** (CHAIN_LIVE 1; screen t 1.73) block 1 777-782 11 of 18, E 7.9, z 2.02 (pool without 758-763); block 2 = 967-972, decided by the rule fixed in TRAINING_LOG 11:58 (both z's >= 2 accept, both < 1 reject, else a both-sides third block); h149 (CHAIN_LIVE 2) 955-960 REJECTED (z 0.28), h150 (WATCH 2) 961-966 REJECTED (z -0.37) (TRAINING_LOG 11:28).
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013, 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
   2518; uvafan 2046; bot1v43 2591. Studies: botfinalsafe 1706 (castles idle r33-93, the centre cluster lost); wololo
   2013 (church-beside-church preacher fights from r97). TRAINING_LOG 2026-10-24 02:52, 03:48.

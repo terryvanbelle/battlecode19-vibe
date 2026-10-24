@@ -12,7 +12,8 @@ as a team on the official site would act. Standard library only; run on the driv
         request N scrimmages against teams rated just above us (ranked: galaxy picks 3 random maps, alternating
         order) and just below us (unranked on --maps random maps: galaxy refuses ranked requests downward),
         alternating above/below, nearest first; skips opponents we already have a match waiting against.
-        --vs: one scrimmage against each named team instead (exact name or a unique substring)
+        --vs: one scrimmage against each named team instead (exact name or a unique substring); NAME@+ plays us red
+        in every game of it, NAME@- blue (galaxy's player order; otherwise '?': sides alternate from a random start)
         --panel FILE: unranked, on the maps FILE holds for that opponent; an opponent not in FILE gets a random draw
         that is written there, so a candidate's panel and the incumbent's control play the same maps in the same order
   python3 tools/galaxy19/contest19.py matches [--pages 1] [--all]   our scrimmages (or everyone's), newest first
@@ -22,7 +23,12 @@ as a team on the official site would act. Standard library only; run on the driv
   python3 tools/galaxy19/contest19.py results [--pages 3]  per-opponent W-L over our finished matches (games)
   python3 tools/galaxy19/contest19.py compare CTRL CAND [--dir DIR]
         two downloaded panel blocks (match ids, e.g. 420-425 and 432-437) cell by cell (opponent, map): our result,
-        side, rounds, reason in each; gained / lost / net and t = net / sqrt(D) for the two-block rule. Local files only
+        side, rounds, reason in each; gained / lost / net and t = net / sqrt(D). Local files only
+  python3 tools/galaxy19/contest19.py pool [--partial] [--k 2] CONTROL POOLFILE BLOCK [BLOCK...]   (tools/panel_pool.sh)
+        candidate blocks scored against the pooled history of v8-family blocks (CONTROL + POOLFILE's blocks, one per
+        line, '#' comments; a block also named as a candidate is left out of the pool): wins - E over sqrt(V), side-
+        blind (cell = opponent, map) and side-aware (cell = opponent, map, our side). A candidate block with a match
+        not downloaded (finished) is refused (exit 3) unless --partial. Local files only
 """
 import argparse
 import json
@@ -86,6 +92,11 @@ def named(ladder, my_id, names):
     return out
 
 
+def split_order(spec):
+    """'NAME@+' -> ('NAME', '+'), 'NAME@-' -> ('NAME', '-'), 'NAME' -> ('NAME', '?')."""
+    return (spec[:-2], spec[-1]) if spec[-2:] in ('@+', '@-') else (spec, '?')
+
+
 def panel_maps(panel, name, maps, n, rnd):
     """The maps a panel plays against `name`: the recorded draw, else a random draw of n, recorded."""
     if name not in panel:
@@ -115,6 +126,21 @@ def block_cells(ids, root=REPLAYS, team=TEAM):
             opp = g['blue_team'] if side == 'red' else g['red_team']
             cells[(opp, g['map'])] = (g['winner_team'] == team, side, g['rounds'], g['reason'], i)
     return cells, missing
+
+
+def block_cells_all(ids, root=REPLAYS, team=TEAM):
+    """Every game of the matches as a cell (opponent, map, our side, won), so a block that plays a map on both sides
+    keeps both."""
+    out = []
+    for i in ids:
+        f = os.path.join(root, str(i), 'match.json')
+        if os.path.exists(f):
+            with open(f) as fh:
+                gs = json.load(fh)['games']
+            for g in gs:
+                side = 'red' if g['red_team'] == team else 'blue'
+                out.append((g['blue_team'] if side == 'red' else g['red_team'], g['map'], side, int(g['winner_team'] == team)))
+    return out
 
 
 def compare_blocks(ctrl, cand):
@@ -147,6 +173,65 @@ def compare_cmd(a):
     return 0
 
 
+def pool_score(prior, cand, k=2.0):
+    """Candidate cells scored against prior blocks' cells; each cell (opponent, map, side, won). Side-blind p per
+    (opponent, map) = (w + .5) / (n + 1); side-aware p per (opponent, map, side) = (w_s + k p) / (n_s + k), the side's
+    own record shrunk toward the side-blind p while it is thin (red moves first and wins about twice as often on the
+    replica, and '?' scrims draw each block's sides at random). Returns rows (opponent, map, side, w, n, w_s, n_s,
+    cand wins, cand games, p, p_s) and {'blind': (W, N, E, z), 'side': (W, N, E, z)}."""
+    def tally(cells, key):
+        t = {}
+        for c in cells:
+            x = t.setdefault(key(c), [0, 0])
+            x[0] += c[3]
+            x[1] += 1
+        return t
+    cell, side = (lambda c: c[:2]), (lambda c: c[:3])
+    pb, ps, cs = tally(prior, cell), tally(prior, side), tally(cand, side)
+    rows, acc = [], {'blind': [0, 0, 0.0, 0.0], 'side': [0, 0, 0.0, 0.0]}
+    for key in sorted(cs):
+        cw, cn = cs[key]
+        w, n = pb.get(key[:2], (0, 0))
+        ws, ns = ps.get(key, (0, 0))
+        p = (w + 0.5) / (n + 1)
+        q = (ws + k * p) / (ns + k)
+        rows.append((*key, w, n, ws, ns, cw, cn, p, q))
+        for name, x in (('blind', p), ('side', q)):
+            a = acc[name]
+            a[0] += cw; a[1] += cn; a[2] += cn * x; a[3] += cn * x * (1 - x)
+    out = {name: (W, N, E, (W - E) / V ** 0.5 if V > 0 else 0.0) for name, (W, N, E, V) in acc.items()}
+    return rows, out
+
+
+def pool_cmd(a):
+    games = lambda spec: block_cells_all(block_ids(spec), a.dir)
+    missing = lambda spec: [i for i in block_ids(spec) if not os.path.exists(os.path.join(a.dir, str(i), 'match.json'))]
+    prior, miss = games(a.ctrl), missing(a.ctrl)
+    with open(a.poolfile) as f:
+        lines = f.read().splitlines()
+    for line in lines:
+        b = line.split('#')[0].strip()
+        if b and b not in a.blocks:
+            prior += games(b)
+            miss += missing(b)
+    if miss:
+        print(f'~ pool matches not downloaded: {miss}')
+    todo = [i for b in a.blocks for i in missing(b)]
+    if todo and not a.partial:
+        print(f'~ PARTIAL: matches not finished or not downloaded: {todo}; refused (--partial scores the rest)')
+        return 3
+    cand = [g for b in a.blocks for g in games(b)]
+    rows, s = pool_score(prior, cand, a.k)
+    for opp, mp, sd, w, n, ws, ns, cw, cn, p, q in rows:
+        flag = '  <- won a rarely-won cell' if cw and q < 0.25 else '  <- lost a usually-won cell' if cw < cn and q > 0.75 else ''
+        print(f'{opp[:40]:40} {mp:10} {sd:4}  pool {w:2}/{n:<2} {sd} {ws:2}/{ns:<2}  cand {cw}/{cn}{flag}')
+    W, N, E, z = s['blind']
+    print(f'~ cand wins {W} of {N}, pooled expectation {E:.1f}, z {z:.2f}')
+    W, N, E, z = s['side']
+    print(f'~ side-aware (k {a.k:g}): expectation {E:.1f}, z {z:.2f}')
+    return 0
+
+
 def opponent(m, my_id):
     ps = m.get('participants') or []
     me = next((p for p in ps if p.get('team') == my_id), None)
@@ -170,9 +255,14 @@ def main(argv=None):
     p.add_argument('--out', default=REPLAYS); p.add_argument('--pages', type=int, default=3)
     p = sub.add_parser('results'); p.add_argument('--pages', type=int, default=3)
     p = sub.add_parser('compare'); p.add_argument('ctrl'); p.add_argument('cand'); p.add_argument('--dir', default=REPLAYS)
+    p = sub.add_parser('pool'); p.add_argument('ctrl'); p.add_argument('poolfile'); p.add_argument('blocks', nargs='+')
+    p.add_argument('--partial', action='store_true'); p.add_argument('--k', type=float, default=2.0)
+    p.add_argument('--dir', default=REPLAYS)
     a = ap.parse_args(argv)
     if a.cmd == 'compare':
         return compare_cmd(a)
+    if a.cmd == 'pool':
+        return pool_cmd(a)
     c = cl.Client(a.site)
     acc = cl.load_accounts()
     ep = c.episode
@@ -212,7 +302,9 @@ def main(argv=None):
                 if o:
                     waiting.add(o.get('team'))
         ladder = cl.rankings(c)
-        plan = named(ladder, my_id, a.vs.split(',')) if a.vs else plan_scrims(ladder, my_id, a.n, a.band, waiting)
+        specs = [split_order(v) for v in a.vs.split(',')] if a.vs else []
+        plan = named(ladder, my_id, [n for n, _ in specs]) if a.vs else plan_scrims(ladder, my_id, a.n, a.band, waiting)
+        orders = [o for _, o in specs] or ['?'] * len(plan)
         if not plan:
             print('no rated opponent near us (or all have a match waiting)')
             return 1
@@ -220,19 +312,20 @@ def main(argv=None):
         import random
         rnd = random.Random()
         panel = json.load(open(a.panel)) if a.panel and os.path.exists(a.panel) else {}
-        for t, ranked in plan:
+        for (t, ranked), order in zip(plan, orders):
+            tag = t['name'] + ('' if order == '?' else '@' + order)
             if a.panel:
                 ranked, mp = False, panel_maps(panel, t['name'], maps, a.maps, rnd)
             else:
                 mp = [] if ranked else rnd.sample(maps, a.maps)
             if a.dry_run:
-                print(f'would request {"ranked" if ranked else "unranked"} vs {t["name"]} (rated {t["rating"] or 0:.0f}) {mp}')
+                print(f'would request {"ranked" if ranked else "unranked"} vs {tag} (rated {t["rating"] or 0:.0f}) {mp}')
                 continue
             try:
-                r = cl.request(s, t['id'], ranked, mp, '?', ep)
-                print(f'request {r["id"]}: vs {t["name"]} ({"ranked" if ranked else "unranked"}, rated {t["rating"] or 0:.0f})')
+                r = cl.request(s, t['id'], ranked, mp, order, ep)
+                print(f'request {r["id"]}: vs {tag} ({"ranked" if ranked else "unranked"}, rated {t["rating"] or 0:.0f})')
             except cl.ApiError as e:
-                print(f'refused: vs {t["name"]}: {e}')
+                print(f'refused: vs {tag}: {e}')
         if a.panel and not a.dry_run:
             with open(a.panel, 'w') as f:
                 json.dump(panel, f, indent=1)

@@ -4187,3 +4187,23 @@ decision lies within +-1. 758-763 leaves progress/panels/v8-m1.pool; the other r
 h148's decision, fixed before any of 967-972 is scored (the match list at 11:26 showed 969 at 2-1; nothing else
 read): `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 777-782 967-972` at this commit, read only once all
 six matches have finished; accept at cumulative z >= 2, reject below 1, otherwise a third block accepted at z >= 2.
+
+## 2026-10-24 11:58 PDT: our side decides replica panel games; h148's block-2 rule amended before 970 and 971 finish
+
+The audit's infra lens found that the pooled z ignores which side we played. In the finished v8-family blocks we won
+41 of 67 games as red and 24 of 77 as blue, with gaps inside single cells (wololo on 2644: red 5/5, blue 0/3;
+IanCoolidge0 on 203: red 4/5, blue 0/3; botfinalsafe on 203 the other way, red 0/5, blue 3/3). Red moves first. Panel
+scrims use galaxy's player order '?', so each match alternates sides from a random start (BRB or RBR) and every block
+draws a different side mix: noise the side-blind z does not count.
+Changes, all from this commit: `tools/panel_pool.sh` (now `contest19.py pool`) prints, beside the side-blind z, a
+side-aware z with p per (opponent, map, our side) = (w_s + 2p) / (n_s + 2), p the side-blind cell rate; its side-blind
+z equals the old script's on every finished block combination tried. It refuses a candidate block with a match not
+downloaded unless --partial. New panel blocks (tools/panel_submit.sh, SIDES=both) request each opponent twice, NAME@+
+(we are red in all three games) and NAME@- (blue): 36 games, every cell on both sides, scored side-aware.
+Disclosure: while 967-972 was running, the audit agent rescored the downloaded part of it and reported side-blind z
+1.69 and side-aware 0.69 (about 2 of 3 of the block). No one acts on those numbers. h148's rule, fixed now, before 970
+and 971 finish, picks no side of that split: at `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 777-782
+967-972` once all six matches are downloaded, accept when both the side-blind and the side-aware cumulative z are >= 2;
+reject when both are below 1; otherwise a third block, both sides (36 games), decided by the side-aware z over all
+three blocks: accept at >= 2, else reject. From the next candidate on, panel decisions use the side-aware z only, with
+the existing bars (block 1 reject below 0.5; block 2 accept at >= 2, reject below 1; else a third block at >= 2).

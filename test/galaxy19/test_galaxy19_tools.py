@@ -8,6 +8,7 @@ import io
 import json
 import os
 import random
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -349,6 +350,10 @@ class Contest(unittest.TestCase):
         with self.assertRaises(SystemExit):
             contest19.named(ladder, 4, ['no such team'])
 
+    def test_split_order(self):
+        self.assertEqual([contest19.split_order(s) for s in ('a~b@+', 'a~b@-', 'a~b', 'x@')],
+                         [('a~b', '+'), ('a~b', '-'), ('a~b', '?'), ('x@', '?')])
+
     def test_opponent(self):
         m = {'participants': [{'team': 1, 'score': 2}, {'team': 2, 'score': 1}]}
         self.assertEqual(contest19.opponent(m, 2), ({'team': 2, 'score': 1}, {'team': 1, 'score': 2}))
@@ -378,6 +383,42 @@ class Compare(unittest.TestCase):
         self.assertAlmostEqual(t, 1 / 3 ** 0.5)
         self.assertEqual(rows[3][2], None)                      # seed-4 only in the control
         self.assertEqual(contest19.compare_blocks({}, {})[1:], (0, 0, 0.0))
+
+    def test_pool_side_blind_and_side_aware_z(self):
+        root = tempfile.mkdtemp(dir=TMP)
+        us = contest19.TEAM
+        def match(i, games):                  # games: (map, our side, won)
+            os.makedirs(os.path.join(root, str(i)))
+            with open(os.path.join(root, str(i), 'match.json'), 'w') as f:
+                json.dump({'games': [{'red_team': us if s == 'red' else 'X', 'blue_team': 'X' if s == 'red' else us,
+                                      'map': m, 'rounds': 1000, 'reason': 'health', 'winner_team': us if w else 'X'}
+                                     for m, s, w in games]}, f)
+        match(10, [('seed-1', 'red', 1), ('seed-2', 'blue', 0), ('seed-3', 'red', 0)])     # control
+        match(30, [('seed-1', 'blue', 1), ('seed-2', 'red', 1), ('seed-3', 'blue', 0)])    # pool
+        match(20, [('seed-1', 'red', 1), ('seed-2', 'blue', 1), ('seed-3', 'red', 1)])     # candidate
+        match(21, [('seed-1', 'red', 1), ('seed-2', 'blue', 1)])                           # candidate; 22 still playing
+        pool = os.path.join(root, 'pool')
+        with open(pool, 'w') as f:
+            f.write('30\n# 40 left out\n20  # a candidate never scores against itself\n')
+        run = lambda *a: subprocess.run([os.path.join(REPO, 'tools', 'panel_pool.sh'), *a], capture_output=True,
+                                        text=True, env=dict(os.environ, GALAXY19_REPLAYS=root))
+        # side-blind p = (w + .5) / 3: 5/6, 1/2, 1/6; E 1.5, z = 1.5 / sqrt(.5278). Side-aware, each side 1 game:
+        # (w_s + 2p) / 3 = 8/9, 1/3, 1/9; E 1.33, z = 1.67 / sqrt(.4198)
+        r = run('10', pool, '20')
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn('~ cand wins 3 of 3, pooled expectation 1.5, z 2.06', r.stdout)
+        self.assertIn('~ side-aware (k 2): expectation 1.3, z 2.57', r.stdout)
+        self.assertRegex(r.stdout, r'X +seed-3 +red +pool  0/2  red  0/1   cand 1/1  <- won a rarely-won cell')
+        r = run('10', pool, '21-22')
+        self.assertEqual(r.returncode, 3)
+        self.assertIn('PARTIAL: matches not finished or not downloaded: [22]', r.stdout)
+        self.assertNotIn('z ', r.stdout)
+        r = run('--partial', '10', pool, '21-22')     # block 20 now pools: p 3.5/4, 2.5/4; red 2/2, blue 1/2
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn('~ cand wins 2 of 2, pooled expectation 1.5, z 0.85', r.stdout)
+        self.assertIn('~ side-aware (k 2): expectation 1.5, z 0.91', r.stdout)
+        rows, s = contest19.pool_score([], [('X', 'seed-9', 'red', 1)])
+        self.assertEqual((rows[0][-2:], s['side'][2]), ((0.5, 0.5), 0.5))       # no history: p = q = .5
 
 
 class Client(unittest.TestCase):
