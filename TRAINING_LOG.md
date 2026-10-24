@@ -3809,3 +3809,11 @@ peacetime army (h116 used 100). Aimed at the never-won cells (botfinalsafe 1706:
 on seed0 16000 queued behind h137 and h138; replica submission 127, block 1 = matches 706-711 (v7 resubmitted, 128;
 bumped), read by LEARNINGS 33 (wins against the pooled expectation, flips of never-won cells). A screen rejection
 voids the panel.
+
+## 2026-10-24 05:0x PDT: h137 (SIEGE 10) REJECTED on its screen; h138 (SIEGE 60) passes and waits on h136's panel
+
+- h137 vs h87, 20 cells seed0 14000: 18/40, gained 1, lost 3, D 4, net -2, t -1.00; castles lost 35 vs 35: REJECTED
+  (t <= -1).
+- h138 vs h87, 20 cells seed0 15000: 21/40, gained 3, lost 2, D 5, net 1, t 0.45; castles lost 35 vs 32 (1.09x, bar
+  1.1x), churches 456 vs 510: non-inferior. Its panel waits for h136's (SIEGE 30, 694-699): the SIEGE line goes on
+  only if h136 beats the pooled expectation (LEARNINGS 33).

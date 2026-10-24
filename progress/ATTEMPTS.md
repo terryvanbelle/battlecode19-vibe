@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 122 other, 29 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (176 rows).
+Totals: 121 other, 30 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (176 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -187,6 +187,6 @@ Totals: 122 other, 29 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparrin
 | `h134` | 2026-10-23 22:47 | v7 | CHAIN_ROUND 0: no church chains (field-aimed) | vs h87 20 cells seed0 11000: +4 -10, D 14, t -1.60 |  |  |  | REJECTED (screen: t <= -1) |
 | `h135` | 2026-10-24 00:33 | v7 | SIEGE 30 + SAFE_BUILD 2: structures radio the nearest enemy prophet to newborns; units remember prophets and keep out of their reach while holding the lattice | vs h87 20 cells seed0 12000: +4 -4, D 8, t 0; castles lost 37 vs 37 |  | block 1 679-684: +2 -2, D 4, net 0, t 0 (prophet-on-prophet deaths 1593 -> 1099) |  | REJECTED (replica net 0) |
 | `h136` | 2026-10-24 01:47 | v7 | SIEGE 30 alone (h135 without SAFE_BUILD 2) | vs h87 20 cells seed0 13000: +2 -2, D 4, t 0; castles lost 25 vs 27 |  | block 1 = matches 694-699 |  | REPLICA PANEL (screen passed) |
-| `h137` | 2026-10-24 02:30 | v7 | SIEGE 10: h136 with a shorter prophet memory |  |  |  |  | SCREEN QUEUED |
-| `h138` | 2026-10-24 03:4x | v7 | SIEGE 60: h136 with a longer prophet memory |  |  |  |  | SCREEN QUEUED |
+| `h137` | 2026-10-24 02:30 | v7 | SIEGE 10: h136 with a shorter prophet memory | vs h87 20 cells seed0 14000: +1 -3, D 4, t -1.00; castles lost 35 vs 35 |  |  |  | REJECTED (screen t -1.00) |
+| `h138` | 2026-10-24 03:4x | v7 | SIEGE 60: h136 with a longer prophet memory | vs h87 20 cells seed0 15000: +3 -2, D 5, t 0.45; castles lost 35 vs 32 |  |  |  | SCREEN PASSED (panel waits on h136) |
 | `h139` | 2026-10-24 04:2x | v7 | ECON_RICH 150: before r100 the bank past 150 K + reserves builds the peacetime army (h116 at 100) |  |  | block 1 = matches 706-711 |  | SCREEN QUEUED + REPLICA PANEL |
