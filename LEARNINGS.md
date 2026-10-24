@@ -174,3 +174,8 @@
    2019 a turn's time is mostly the engine (the turn message is compiled as a script every turn), GC and load; our
    code was ~2 ms a turn. Profile before rewriting: `node --cpu-prof` on one game with an unminified build.
    (TRAINING_LOG 2026-10-23 14:18)
+32. **Self-play does not rank against the field.** Three candidates beat the incumbent locally and lost to it on the
+   replica panel: h126 (gate t 1.00 -> replica net 0), h127 (t 1.26 -> net -3), h130 (prophet army, t 1.67 -> net
+   -2). A switch that exploits the incumbent's own habits (camping its mirror site, outranging its crusaders) buys
+   nothing against bots without those habits. Use the local gate to reject; let only the replica panel accept.
+   (2026-10-23 22:09)

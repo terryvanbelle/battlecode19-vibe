@@ -3633,3 +3633,12 @@ h128 (ESCORT_FIRST 2 + ESCORT_MIRROR 1 + ESCORT_UNIT 3) block 1 634-639 vs v7's 
 203), D 6, net +2, t 0.82: neither bar of the two-block rule -> block 2 on the same cells, submission 115, matches
 646-651 (v7 resubmitted, 116; bumped). Galaxy assigns sides per match, so block 2 swaps them only where it happens to;
 compare reads both blocks cell by cell against 420-425 and the cumulative t needs >= 1.5 with net >= +3.
+
+## 2026-10-23 22:09 PDT: h130 REJECTED on the replica (block 1 net -2)
+
+h130 (MIL_ROTATION null, prophet army) block 1 640-645 vs v7's 420-425: 4/18 to 6/18, gained 1 (bot1v43 2321),
+lost 3 (IanCoolidge0 203 on health, botfinalsafe 203 at r773, awesomelemonade 2797 on health), D 4, net -2, t -1.00
+-> REJECTED. uvafan still beats us on health in all three r1000 games with prophets, so the health deficit there is
+not the crusaders' fault. With h126 and h127 this makes three local wins that the field reversed (LEARNINGS 32).
+h131 (MIL_ROTATION [4]) and h132 (h130 without the attack) gates continue for their local reading; they go to the
+replica only at t >= 2.

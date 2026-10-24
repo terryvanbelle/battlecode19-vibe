@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 123 other, 21 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (169 rows).
+Totals: 122 other, 22 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (169 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -180,6 +180,6 @@ Totals: 123 other, 21 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparrin
 | `v7` | 2026-10-23 00:30 | v6 | Frozen snapshot of h87 (bots/v7): v6 + h82's economy switches (ECON_UNTIL 100, PIONEERS_TEAM 6, PEACE_RESERVE_K 60, PLAN_VALUE 10, DEF_RESERVE_K 30) + h76's church chain from round 200; the replica build since submission 99 |  |  | submission 99 | vs h100 103-97; vs h101 22-18; vs h103 19-21; vs h104 18-22; vs h107 25-15; vs h110 23-17; vs h111 18-22; vs h96 19-21; vs v6 29-11; vs h82 6-2; vs IanCoolidge0.battlecode20~69ce88 1-2 (replica); vs StoneT2000.BC19-bot1v43 1-2 (replica); vs StoneT2000.BC19-botfinalsafe 2-1 (replica); vs awesomelemonade.Battlecode2019 2-1 (replica); vs m-schier.battlecode-2019-wololo 0-3 (replica); vs uvafan.bc2019 0-3 (replica) | ACCEPTED 00:30 as v7 (h87 row: gate vs h50) |
 | `h128` | 2026-10-23 19:19 | v7 | ESCORT_FIRST 2 + ESCORT_MIRROR 1 + ESCORT_UNIT 3 (two crusaders on the mirror site) | vs h87 20 cells seed0 6000: +7 -4, D 11, t 0.90; castles lost 35 vs 44, churches 567 vs 508 |  | block 1 634-639: +4 -2, net +2, t 0.82; block 2 = 646-651 |  | REPLICA PANEL |
 | `h129` | 2026-10-23 20:20 | v7 | ESCORT_FIRST 2 + ESCORT_MIRROR 1 + ESCORT_UNIT 5 (two preachers on the mirror site) | vs h87 20 cells seed0 7000: +1 -10, D 11, t -2.71; castles lost 48 vs 29, churches 435 vs 643 |  |  |  | REJECTED |
-| `h130` | 2026-10-23 20:41 | v7 | MIL_ROTATION null: peacetime prophets, every 4th a preacher (h98 on today's src), replica without a local gate | vs h87 20 cells seed0 8000: +7 -2, D 9, t 1.67; castles lost 24 vs 38 |  | block 1 = matches 640-645 |  | REPLICA PANEL |
+| `h130` | 2026-10-23 20:41 | v7 | MIL_ROTATION null: peacetime prophets, every 4th a preacher (h98 on today's src), replica without a local gate | vs h87 20 cells seed0 8000: +7 -2, D 9, t 1.67; castles lost 24 vs 38 |  | block 1 640-645: +1 -3, net -2, t -1.00 |  | REJECTED |
 | `h131` | 2026-10-23 21:20 | v7 | MIL_ROTATION [4]: all-prophet peacetime army |  |  |  |  | GATE QUEUED |
 | `h132` | 2026-10-23 21:20 | v7 | MIL_ROTATION null + ATTACK_ROUND 1001 + ATTACK_LATE 1001: prophet army, no general attack |  |  |  |  | GATE QUEUED |
