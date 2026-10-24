@@ -4098,3 +4098,11 @@ depots (plan.mjs: our castles staff 8, one cluster planned, c3@(29,18)); our 8 p
 to c3 died at r34, and from r40 to r100 the castles built nothing (ECON_UNTIL 100) while the bank rose to 495 K
 (950 at r300). That is ECON_RICH's case (closed on v8 at z 0.00); with no depot left to staff, a saturated economy
 could end ECON_UNTIL at once. 1626 (red): even castles; rafekruse's army 107 against our 25, mined K 11,480 vs 5,770.
+
+## 2026-10-24 09:37 PDT: h150 (WATCH 2) passes its screen and goes to the replica; h152 and h153 queued
+
+h150 (v8 + WATCH 2) vs bots/v8, 20 cells seed0 27000: 25/40, gained 8, lost 3, D 11, net 5, t 1.51; castles lost 24
+vs 38: passes. In one game (1063) our structures sent 315 radio messages against v8's 117, eight line churches
+spotting the same enemy at r270 (10 fuel each). Block 1 = 961-966 (submission 164), at the front of the replica queue
+with h148's and h149's. Screens queued behind h151: h152 (CHAIN_LIVE 1 + WATCH 2, the two passing screens stacked,
+29000) and h153 (WATCH 2 + SPOT_MASK 56: prophets also answer structure spots and walk into the band, 30000).

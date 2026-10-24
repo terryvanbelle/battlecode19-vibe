@@ -5376,6 +5376,9 @@ galaxy-771,3,us:v8,rafekruse.Battlecode-2019-bc19,seed-1626,B,1000,health,1626,r
 galaxy-774,1,arya-k.bc19,us:v8,seed-1712,B,362,castles,1712,red,2026-10-24T15:29:06Z
 galaxy-774,2,arya-k.bc19,us:v8,seed-2321,B,481,castles,2321,blue,2026-10-24T15:29:06Z
 galaxy-774,3,arya-k.bc19,us:v8,seed-70,B,381,castles,70,red,2026-10-24T15:29:06Z
+galaxy-776,1,us:v8,j-mao.battlecode-2019,seed-1706,A,325,castles,1706,red,2026-10-24T15:29:06Z
+galaxy-776,2,us:v8,j-mao.battlecode-2019,seed-2057,A,1000,castles,2057,blue,2026-10-24T15:29:06Z
+galaxy-776,3,us:v8,j-mao.battlecode-2019,seed-2740,A,509,castles,2740,red,2026-10-24T15:29:06Z
 batch-out/h149_v8,1,cand:h149,us:v8,seed-2918,A,729,castles,2918,blue,2026-10-24T15:33:46Z
 batch-out/h149_v8,2,cand:h149,us:v8,seed-169,B,830,castles,169,red,2026-10-24T15:35:09Z
 batch-out/h149_v8,3,cand:h149,us:v8,seed-2918,B,1000,castles,2918,red,2026-10-24T15:36:21Z
@@ -5446,3 +5449,15 @@ batch-out/h150_v8,27,cand:h150,us:v8,seed-1348,B,234,castles,1348,red,2026-10-24
 batch-out/h150_v8,28,cand:h150,us:v8,seed-678,A,255,castles,678,red,2026-10-24T16:18:58Z
 batch-out/h150_v8,29,cand:h150,us:v8,seed-678,A,252,castles,678,blue,2026-10-24T16:19:14Z
 batch-out/h150_v8,30,cand:h150,us:v8,seed-1348,B,1000,castles,1348,blue,2026-10-24T16:20:58Z
+batch-out/h150_v8,31,cand:h150,us:v8,seed-1714,A,918,castles,1714,red,2026-10-24T16:26:04Z
+batch-out/h150_v8,32,cand:h150,us:v8,seed-1823,A,262,castles,1823,red,2026-10-24T16:26:18Z
+batch-out/h150_v8,33,cand:h150,us:v8,seed-1823,B,262,castles,1823,blue,2026-10-24T16:26:32Z
+batch-out/h150_v8,34,cand:h150,us:v8,seed-2920,B,504,castles,2920,red,2026-10-24T16:27:35Z
+batch-out/h150_v8,35,cand:h150,us:v8,seed-1714,A,1000,castles,1714,blue,2026-10-24T16:27:43Z
+batch-out/h150_v8,36,cand:h150,us:v8,seed-2920,B,1000,health,2920,blue,2026-10-24T16:30:26Z
+batch-out/h150_v8,37,cand:h150,us:v8,seed-2950,A,1000,castles,2950,red,2026-10-24T16:31:11Z
+batch-out/h150_v8,38,cand:h150,us:v8,seed-828,A,254,castles,828,red,2026-10-24T16:31:32Z
+batch-out/h150_v8,39,cand:h150,us:v8,seed-828,A,253,castles,828,blue,2026-10-24T16:31:54Z
+batch-out/h150_v8,40,cand:h150,us:v8,seed-2950,B,1000,castles,2950,blue,2026-10-24T16:33:12Z
+batch-out/h151_v8,1,cand:h151,us:v8,seed-2573,B,404,castles,2573,red,2026-10-24T16:36:38Z
+batch-out/h151_v8,2,cand:h151,us:v8,seed-197,B,460,castles,197,red,2026-10-24T16:37:07Z

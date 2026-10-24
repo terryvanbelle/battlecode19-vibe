@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 08:42 PDT)
+## State (2026-10-24 09:38 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -20,10 +20,11 @@
 - **VM queue** (`~/jobq`; the runner takes pending jobs in locale `ls | sort` order; gates run from the shadow tree
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
-  ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 26 z's (h151); the next adds a z. Now:
-  **h150** (v8 + WATCH 2: a structure radios an enemy attacker within r2 100 that none of our military units sees;
-  melee units engage it; 27000) runs, then **h151** (v8 + CHAIN_FAILS 1; 28000; pre-registered screen exception:
-  castles alone with t > 0 still goes to the panel, TRAINING_LOG 2026-10-24 08:42). h148 (CHAIN_LIVE 1) passed (+3 -0, t 1.73, castles 35 vs 39); h149 (CHAIN_LIVE 2) passed (+3 -3, t 0.00, castles 35 vs 34).
+  ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 28 z's (h153); the next adds a z. Now:
+  **h151** (v8 + CHAIN_FAILS 1; 28000; pre-registered screen exception: castles alone with t > 0 still goes to the
+  panel, TRAINING_LOG 2026-10-24 08:42) runs, then **h152** (CHAIN_LIVE 1 + WATCH 2; 29000) and **h153** (WATCH 2 +
+  SPOT_MASK 56; 30000). Passed: h148 (CHAIN_LIVE 1; +3 -0, t 1.73, castles 35 vs 39), h149 (CHAIN_LIVE 2; +3 -3, t
+  0.00, 35 vs 34), h150 (WATCH 2: structures radio enemy attackers no military unit of ours sees; +8 -3, t 1.51, 24 vs 38).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h`, castles from out/dlv_gate_hN.txt on the
   VM (awk on columns 18-19, a = candidate).
 - **Replica panels** (progress/panels/v7-m1.json: six field bots, wololo, botfinalsafe, bot1v43, uvafan,
@@ -36,7 +37,7 @@
   v7-based panels (read for the idea, not acceptance): h139 (ECON_RICH 150) 706-711 + 732-737 z 1.96 against v7
   (h145 on v8: 750-755 z 0.00, REJECTED; the line closes), h141 (church strike) 738-743 REJECTED (z 0.43), h140 (early
   fast pioneer) 744-749 REJECTED (z -0.24; won awesomelemonade 2518). v8-pool blocks 1: h146 (v8 + church strike) 758-763 REJECTED (z -1.98; the strike line closes),
-  h147 (early fast centre pioneer) 764-769 REJECTED (z 0.34; won 2518, 2321, 203; lost IanCoolidge0 2644: the pioneers had no money after an early rush, TRAINING_LOG 09:25), **h148** (CHAIN_LIVE 1; screen t 1.73) = 777-782, **h149** (CHAIN_LIVE 2; screen t 0.00) = 955-960.
+  h147 (early fast centre pioneer) 764-769 REJECTED (z 0.34; won 2518, 2321, 203; lost IanCoolidge0 2644: the pioneers had no money after an early rush, TRAINING_LOG 09:25), **h148** (CHAIN_LIVE 1; screen t 1.73) = 777-782, **h149** (CHAIN_LIVE 2; screen t 0.00) = 955-960, **h150** (WATCH 2; screen t 1.51) = 961-966.
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013, 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
   2518; uvafan 2046; bot1v43 2591. Studies: botfinalsafe 1706 (castles idle r33-93, the centre cluster lost); wololo
   2013 (church-beside-church preacher fights from r97). TRAINING_LOG 2026-10-24 02:52, 03:48.
