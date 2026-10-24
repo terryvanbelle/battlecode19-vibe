@@ -3739,3 +3739,10 @@ SIG.THREAT radios: 8 on 2046, 18 on 203. The pre-registered ages 1-3 bar is not 
 prophets on turns 1-3 against h130: self-play does not reproduce the field's walk-in deaths), so the delivery
 passes on firing and outcome; the replica panel reads the mechanism. Non-inferiority screen vs h87 queued
 (seed0 12000); tools/ and test/ synced to the shadow tree.
+
+## 2026-10-24 01:03 PDT: h135 to the replica panel beside its screen (679-684)
+
+The replica lane is short and the local screen only rejects (LEARNINGS 32), so h135's panel runs beside it:
+submission 121 (dist/h135, a5aa75edd7a6), block 1 = matches 679-684 (v7 resubmitted, 122; bumped). A screen
+rejection voids the panel. Read the mechanism on the replica: prophet deaths at ages 0-3 and unfired walk-ins
+(scratch an/pdeath.js) against v7's 368 + 165 in 420-425.
