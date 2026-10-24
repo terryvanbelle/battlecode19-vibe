@@ -3874,3 +3874,11 @@ blocks never interleave: a scrim plays the submission current when it was reques
 - h141 (church strike) vs h87, 20 cells seed0 18000: 25/40, gained 5, lost 0, D 5, t 2.24; castles lost 29 vs 39,
   churches 547 vs 466. Panel requested (after h139's block 2 and h140's block 1; tools/panel_submit.sh's lock).
 - h142 = v7 + h139's and h141's switches (dist/h142, de28240ef2f0): screen on seed0 19000.
+
+## 2026-10-24 08:0x PDT: h142 passes its screen; h143 (all three leads) queued; h103 and h121 wait on awesomelemonade/uvafan
+
+- h142 (h139 + h141) vs h87, 20 cells seed0 19000: 22/40, +7 -5, D 12, t 0.58; castles lost 36 vs 38, churches 569
+  vs 439: non-inferior. Its panel waits for h139's block 2 and h141's block 1 (the replica queue is near 25).
+- h103 cumulative 12 of 33 against 10.0, z 0.94 (704 vs awesomelemonade still running); h121 block 1 so far 5 of 15
+  against 5.1, z -0.07 (717 vs uvafan running).
+- h143 = v7 + h139's, h140's and h141's switches (dist/h143) screen on seed0 20000.
