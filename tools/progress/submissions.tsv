@@ -12,3 +12,4 @@ submission	build	note
 111	cand:h128	panel candidate dist/h128, block 1 = matches 634-639 (TRAINING_LOG 2026-10-23 20:20)
 113	cand:h130	panel candidate dist/h130 (0467e38596bc), block 1 = matches 640-645 (TRAINING_LOG 2026-10-23 20:41)
 115	cand:h128	panel candidate dist/h128, block 2 = matches 646-651 (TRAINING_LOG 2026-10-23 21:24)
+117	cand:h123	panel candidate dist/h123 (0e0c30f2f808), block 1 = matches 652-657 (TRAINING_LOG 2026-10-23 22:19)

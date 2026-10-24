@@ -3642,3 +3642,17 @@ lost 3 (IanCoolidge0 203 on health, botfinalsafe 203 at r773, awesomelemonade 27
 not the crusaders' fault. With h126 and h127 this makes three local wins that the field reversed (LEARNINGS 32).
 h131 (MIL_ROTATION [4]) and h132 (h130 without the attack) gates continue for their local reading; they go to the
 replica only at t >= 2.
+
+## 2026-10-23 22:19 PDT: where v7's karbonite goes against uvafan; h123 to the replica panel
+
+replay.js timeline, 423-1 (v7 red vs uvafan, 2046): karbonite mined 4,618 vs 5,428 (0.85x) and fuel 29,870 vs
+36,040, yet armies at r1000 are 10 vs 199. v7's army peaked at 33 (r200-300) and fell; uvafan's grew every 100
+rounds (17, 36, 53, 72, 110, 199) on prophets with no churches. v7 built 24 churches (1,200 karbonite, 4,800 fuel)
+in four chain lines (r352, 598, 715, 836: chains_v7 423-1) and lost 23 of them with their bursts, killing no castle;
+it ended with 12 karbonite and 29,477 fuel (karbonite binds; the fuel is idle). 423-3 (1712) the same shape: 546
+military built to 960, karbonite 8, fuel 16,678. The health losses at r1000 are this attrition, not the tiebreak.
+h123 (v7 + CHAIN_FAILS 2: after two lines with no enemy castle destroyed, castles hold their lines and release
+CHAIN_K) was built from this diagnosis (TRAINING_LOG 13:04) and gated even locally (t 0, D 0), rejected only on a
+self-play mechanism bar (lines 0.84 of h87's, bar 0.8), and self-play is where chains succeed. As a field-aimed
+candidate (TRAINING_ALGORITHM step 6) whose gate passed the non-inferiority screen, it goes to the replica panel:
+submission 117, block 1 = matches 652-657 (v7 resubmitted, 118; bumped).
