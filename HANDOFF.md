@@ -85,6 +85,7 @@ node tools/build_bot.js src/bot dist/h7 --cfg ATTACK_PERSIST=1   # a candidate: 
 gssh 'cd ~/projects/vibe/2019 && bash tools/jobq.sh add "node tools/batch.js ..."; bash tools/jobq.sh status'
 tools/snapshot.sh v1 "note"                          # freeze an accepted build
 python3 -I tools/galaxy19/field.py queue              # replica backlog (owner: a long queue makes clearing it the priority)
+(echo 'DRY = True'; cat tools/galaxy19/rating_unstick.py) | gssh 'sudo bc19-galaxy-manage shell'   # stalled rating chains (heads on QUE/RUN are normal)
 python3 -I tools/galaxy19/contest19.py scrim --vs A,B --panel progress/panels/X.json   # a panel block on recorded maps
 python3 -I tools/galaxy19/contest19.py fetch --new    # download our finished replica matches
 python3 -I tools/galaxy19/contest19.py compare 420-425 432-437   # control vs candidate block, per cell, t = net/sqrt(D)

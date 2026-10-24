@@ -192,3 +192,11 @@
    ran ahead of the commits that carried them by up to four hours (h141's rejection, committed 07:20 PDT, was headed
    11:1x). Labels come from `TZ=America/Los_Angeles date` at the moment of writing; the commit time is the check.
    (2026-10-24 07:40)
+
+35. **A bulk database update skips the application's own triggers.** Dropping three teams from the replica, their
+   waiting matches were cancelled with a queryset `.update(status="CAN")`; siarnaq finalizes a team's ratings in
+   match order and requests the next update only from a save or a match report, so those matches were never rated
+   and every later rating of their opponents, and through them most of the ladder, waited: 716 of 1,554
+   participations, the rating history graphs frozen a day until the owner noticed. Change another system's state
+   through its own methods, or follow a bulk change with what its methods would have done
+   (tools/galaxy19/rating_unstick.py). Check what the replica's pages show, not only its queue. (2026-10-24 08:49)

@@ -31,6 +31,7 @@ venv, the built frontend, and the shared Caddy). How the owner opens it is in `A
 | `relay.py` | relay between saturn and siarnaq, plus the Cloud Tasks / Scheduler stand-in (`fire-jobs`, run each minute by `bc19-galaxy-scheduler.timer`). Replica-only throttle: a due autoscrim is held while `GALAXY_SCHED_MAX_WAITING` (30) matches or more wait in the execute queue, or until `GALAXY_SCHED_MIN_HOURS` (24) have passed since it last fired. |
 | `bootstrap.py` | episode `bc19` (autoscrim `0 */8 * * *` UTC, ranked on, 20 ranked / 40 unranked requests per hour), the 40 maps of `maps.txt`, and the `owner` superuser. |
 | `maps.py`, `maps.txt` | maps are `seed-<n>`: 40 seeds stratified by size, castle count and symmetry from `maps/corpus.tsv`. |
+| `rating_unstick.py` | finalizes rating chains stalled behind matches that never triggered a rating update (run through `bc19-galaxy-manage shell`; its header). Ratings, and the team rating history graphs, move only on ranked matches: the autoscrim (at most daily, held while 30+ wait) and the field's ranked challenges (`activity`); our panel and field scrims are unranked. |
 | `client.py` | API client library and CLI (accounts in `~/.bc19-galaxy/accounts.json`, site in `~/.bc19-galaxy/site`). |
 | `contest19.py` | our team's commands, below. |
 | `field.py` | the field: registers and submits the starter bot (`bc19-starter`, `bots/example`) and every compiled external bundle, idempotently. Its `activity` mode is `bc19-galaxy-activity.service`. |
@@ -64,6 +65,9 @@ sudo python3 -I /opt/bc19-galaxy/galaxy19/spool_bump.py --team NAME --drop
 sudo bc19-galaxy-manage shell -c 'from siarnaq.api.compete.models import Match; from siarnaq.api.teams.models import Team
 Match.objects.filter(pk__in=[IDS], status="QUE").update(status="CAN")
 t = Team.objects.get(name="NAME"); t.status = "X"; t.save(update_fields=["status"])'
+# ...then, from the driver, finalize the rating chains the cancelled matches hold (a bulk .update() skips siarnaq's
+# rating trigger: on 2026-10-24 three such matches had stalled 716 of 1,554 ratings and the history graphs for a day)
+gssh 'sudo bc19-galaxy-manage shell' < tools/galaxy19/rating_unstick.py   # dry run: prefix stdin with DRY = True
 
 # field (on the VM, where the bundles are rsynced; re-runnable)
 GALAXY19_CONNECT=127.0.0.1 GALAXY19_REPO=~/projects/vibe/2019 python3 ~/bc19-galaxy-stage/tools/galaxy19/field.py seed

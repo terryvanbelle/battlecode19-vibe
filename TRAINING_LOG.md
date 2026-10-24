@@ -4025,3 +4025,17 @@ measures v8's own chain, which few field bots share (LEARNINGS 32; the census of
 enemy church line, botfinalsafe on 203). h151 = v8 + CHAIN_FAILS 1, screen vs bots/v8 seed0 28000. Pre-registered: t <= -1 rejects as
 usual; if it fails only the castles criterion with t > 0, its block 1 goes to the replica anyway, flagged in the
 ledger as a screen exception, and the panel's block-1 rule (z < 0.5) is the guard.
+
+## 2026-10-24 08:49 PDT: replica ratings unstalled (owner, PROMPTS 33)
+
+The owner saw the replica's team rating history graphs a few days stale. Cause: the three ranked autoscrim matches
+cancelled when Nydroam.BatteredCod and IvanGeffner's two bots were dropped (196, 207, 214; a queryset .update()) never
+triggered siarnaq's rating update, and ratings are finalized per team in match order, so 716 of 1,554 participations
+waited behind them; the newest rated match was 613 (2026-10-23 16:00 UTC). tools/galaxy19/rating_unstick.py ran
+siarnaq's own Match.try_rating_update along the stalled chains (41 passes) after saving every participation's rating
+link to /var/tmp/bc19-rating-snapshot.json on the VM: 6 left unrated, all behind two field matches still queued.
+vibe19's latest rated ranked match is 660 (2026-10-24 07:15 UTC, rating 1660). The run was meant as a dry run first;
+the manage wrapper clears the environment, so DRY=1 never reached it and it ran for real (the same change, made one
+step early, after the snapshot). The tool's dry run is now a first line on stdin. The graphs move only on ranked
+matches (autoscrim at most daily, held while 30+ wait; the field's upward challenges); our scrims are unranked.
+LEARNINGS 35.

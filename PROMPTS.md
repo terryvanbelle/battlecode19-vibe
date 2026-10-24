@@ -128,3 +128,6 @@ That sounds good.  And just to confirm:  the remote host that spool_bump was cal
 
 ## 32. 2026-10-23 12:40 PDT
 OK, great, thanks.  Let me know if you have any more problems with the classifier
+
+## 33. 2026-10-24 08:43 PDT
+The team rating history graphs on the replica don't look like they've been updated in a few days
