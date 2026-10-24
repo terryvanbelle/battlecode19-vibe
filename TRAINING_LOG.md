@@ -4295,3 +4295,157 @@ build_bot, batch and the other targeted tests had passed alone), the h148 block-
 Per the harness they are not restarted without the owner's word. The VM and the replica are not affected: block 3
 (973-984) plays on; check-ins read it by hand. Uncommitted until the suite and the no-op replay run:
 PIONEER_TIMEOUT_REST (bot), build_bot.js (--cfg into the CFG literal), batch.js (row conditions; error rows rerun).
+
+## 2026-10-24 14:14 PDT: v8's opening economy against the field; church-sent pioneers built (h158), parked
+
+v8's 51 replica games (control block 726-731 and the ladder games since 06:41, h148's running block left out; per
+game `replay.js timeline`): our pilgrims at round 100 against theirs predict the result. Ahead: won 13 of 15; level:
+3 of 9; behind by less than 1.5x: 2 of 6; behind by 1.5x or more: 4 of 21. In 12 games our pilgrim count stops growing
+after round 50 while theirs grows (wololo 2797: 16 -> 15 against 13 -> 28; uvafan 826: 21 -> 22 against 33 -> 50).
+How the field gets there (replica 853-1, wololo, seed 2797): its church at (1,20), built r30, built the pilgrim that
+churched (1,32) on our half at r41; that church's first prophet killed our castle's pioneer for the same cluster 7
+tiles short (left the castle r24, 19 king steps). At r89 a pilgrim from its church (31,1) churched beside our church
+at (31,52) and preached our miners there. Our churches never send pioneers; only castles do, from the turn-3 plan.
+On 2518 (730-3, awesomelemonade): its pioneer left at r4 and churched the centre at r14 (six pilgrims from it by r23);
+a second church at (20,21) on our half at r29 shot our pioneer (left r23) the next round. Ours: 3 pilgrims, the two
+escort crusaders at r4-5, then nothing until r23 (the pioneer's karbonite and reserves). That race is the line of
+h121, h140 and h147 (all rejected), so it is not reopened here.
+h158 (v8 + HOP_GAIN 4, new switch, default 0 = v8): a castle whose next planned cluster has a living church of ours
+at least HOP_GAIN king steps nearer radios SIG.HOP (target << 6 | church) far enough to reach every tile beside that
+church and builds nothing that turn; the church builds the pioneer in the same round (with the round on its radio);
+the newborn reads the target from the castle's radio and reports CT.HOP + target on its first turn, so the castle
+tracks it as its own; an ask nobody answers lapses after 2 turns and that church rests HOP_REST (50) turns. Churches
+talk CT.CHURCH + their cluster on their first turn, so castles know which are alive. Unit tests (castle, church,
+pilgrim); the defaults build replays v8 IDENTICAL on 799 to r300 (40,607 bytes). Self-play h158 (red) vs v8 to r200,
+15 panel maps: it asked on 3 maps (2013 2, 2740 3, 2321 1; 1036 asked none and built one more church), churches 50 vs 48,
+no exceptions. Too rare to read alone: PARKED. Its use is as the launcher for a wider plan (EXPAND_ROUND, h125: the
+pioneers to the far clusters walked from the castles). The census also shows maps where neither build churches at
+all in 200 rounds (2046, 1653) or once (203, 2518, 2591): the turn-3 plan is empty there after the castles' depots.
+Not committed yet: the full tools suite waits for the owner's word after the 12:52 memory kill.
+
+## 2026-10-24 14:17 PDT: h148 (CHAIN_LIVE 1) REJECTED on the replica panel, block 3
+Block 3 = matches 973-984 (both sides, 36 games) finished; scored as pre-registered at 12:29:
+`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 777-782 967-972 973-984`: 35 of 72 against the pooled 31.5
+(side-blind z 1.13), side-aware expectation 32.3, **z 1.02 < 2: REJECTED**. Block 3 alone: 15 of 36 against 15.7
+(z -0.37); blocks 1 and 2 alone against today's pool: z 1.66 and 0.82. Block 1's 11 of 18 was the luck; the next 54
+games came in at expectation. Flagged cells over the three blocks: won awesomelemonade 2518 blue and uvafan 1712 blue
+(both rarely won); lost awesomelemonade 2797 red (usually won). Pool file: blocks 967-972 and 973-984 join
+progress/panels/v8-m1.pool (own z within +-1); 777-782 stays out (own z 2.20 when scored, 1.66 now). The CHAIN_LIVE
+line (h148, h149) closes. The ladder build stays bots/v8 (submission 169, resubmitted after the block).
+
+## 2026-10-24 15:13 PDT: v8 feeds newborns into kill zones: 46% of its military karbonite in losses; h159 (FEED_STOP) to the panel
+
+Bank census (timeline r40-100, v8's 51 field games: 726-731 and the non-panel matches 770-887): before ECON_UNTIL
+(r100) the bank piles up wherever the plan is small: 300-860 K at r100 on 203, 1653, 2046, 2330, 2822, 1626, 1884
+(the castles staff their few depots and build nothing else). 2591 vs bot1v43: the castle built 2 pilgrims, 2 escort
+crusaders and its pioneer at r24, which died at r31; it then built one prophet in r37-100 with the bank at 115-170
+(PIONEER_LOST_REST 100, nothing else to buy) while bot1v43 churched the centre cluster (10 of the 12 depots on our
+side) at r23, r57 and r104 and took the castle at r147.
+
+Round-1000 losses: 16 of v8's 29 field losses went to round 1000 and were decided on health. 2330 vs mvpatel2000
+(770-3, red): both sides mined about 9,050 K; we built 271 prophets and lost 262, they lost 197 of 360 units; army
+flat at 40 r500-900, health 1,200 vs 6,640 at r1000. From r600 our church (20,14) answered an enemy prophet
+standing at r2 98 (in its sight, out of its reach) with a prophet nearly every turn; each newborn stepped from
+(21,13) to (22,13), into that prophet's band before it could see it, and died there on its first or second turn.
+
+Young-death census (replay.js events, every v8 field game): military units of ours dead within 3 turns of birth,
+in karbonite: **losses 70,635 of 151,925 K (46%; 2,660 of 6,236 units), wins 14,765 of 118,650 (12%)**; the 16
+round-1000 losses 59,580 of 130,305 K (46%), about 3,700 K a game, 250 crusaders' worth of health. Worst: yujinwunz
+1712 78%, wololo 2797 73%, wololo 1884 65%, 2518 65% (twice), 2330 63%; never above 15% in our 10 best wins. The
+same in self-play: v8 vs v8 on 2321 to r300, red lost 46 of 71 units young.
+
+**h159 = v8 + FEED_STOP 3** (FEED_AGE 3, FEED_WINDOW 20, FEED_REST 50; struct.js watchKids, feeding): a structure
+follows its military newborns through their first 3 turns; one gone from its sight while within 7 tiles of it (it
+could not have walked out of sight) died, and so did one never seen alive on the turn after its build; 3 such deaths
+within 20 turns stop the structure's military builds (threat responses and the peacetime army; not escorts, chain
+launches or the endgame dump) for 50 turns, except a threat response to an attacker that can hit the structure
+itself (r2 within its attack range). The karbonite stays in the shared bank (castles' RICH_K army, chain lines, the
+endgame crusaders). Unit tests (struct: watchKids, feeding; castle: a resting castle answers no prophet at r2 81,
+one at r2 49 as before); the defaults build replays v8 IDENTICAL on 799 to r300 (40,715 bytes); dist/h159
+552aa86f0b35, FEED_STOP:3 read back from the bundle. Driver diagnostics on 2321 to r300: v8 vs v8 blue wins r280
+(red 46 young deaths); h159 red vs v8 wins r267 (20 young); v8 red vs h159 blue: v8 wins r249 (h159 24 young). One
+map, both results flipped: no reading, only that it runs without exceptions.
+
+Pre-registration: screen vs bots/v8, 20 cells seed0 35000 (VM job queued first among the held screens, runs when the
+replica queue is under 30); panel block 1 = matches 985-996 (submission 170; v8 back as 171), both sides, scored with
+`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK...` by the pooled rule (block 1 reject at z < 0.5; two
+blocks accept at z >= 2, reject at z < 1; else a third, accept at z >= 2). Studied cells: none (the mechanism came
+from 2330 vs mvpatel2000, not a panel cell; the census is every v8 field game). Mechanism read (not a decision
+input): `node tools/replay.js young REPLAY` (new: per team and military type, built and dead within 3 rounds, its
+karbonite) on our side of the block's games, against v8's own blocks 726-731 and the pool; FEED_STOP should cut the
+young share in the games it loses (v8 in 726-731: 23% of its military karbonite in its 8 wins, 55% in its 10
+losses). Not committed yet (rule 7: the full
+tools suite waits for the owner's word after the 12:52 memory kill; the bot tests pass, 103 of 103).
+
+## 2026-10-24 15:32 PDT: maps with nothing to church: v8 banks 386-863 K at r100 with army 2-4; h160 (ECON_NOPLAN) and a targeted panel
+
+Census of v8's 51 field games (bank at r40-100, tools/plan.mjs on every map): on 5 of the 40 pool maps no castle of
+ours plans a church (2046, 1626, 1653, 1884, 2330: every cluster is staffed from a castle or nearer the enemy), yet
+ECON_UNTIL 100 keeps the peacetime army waiting for pioneers that never leave. v8's field games there: bank at r100
+440, 863, 785, 386, 435 K; our army 2-4 against 17, 34, 37, 6, 17; won 1 of 5 (1653). Across all 51 games, being
+behind in pilgrims at r100 went with losing (behind 8+: 4-10; behind 1-7: 2-11; level or ahead: 16-8), and on 1712
+uvafan out-expanded v8 2:1 by r100 (38 pilgrims, 6 churches vs 20 and 3): our pioneers left one at a time while the
+bank sat at 30-155 K after 7 pilgrims and 4 escort crusaders by r18. Early losses (r134-306: 2321 vs wololo, 2591 and
+2321 vs bot1v43, 2013 vs wololo, 1706 vs botfinalsafe) follow the opponent's centre churches (wololo on 2321: r20 and
+r42, 10 tiles from our castle; one prophet from them killed 5 pilgrims beside our castle from outside its sight);
+then the castle built 13 prophets onto (12,10), in reach of the prophets it was answering, most dead in their build
+round (a newborn acts after every older robot). SAFE_BUILD, SIEGE and DEF_FAR_UNIT tried the structure's side of
+this and were neutral; the opening is where the held escort screens (h154, h155, h157) aim.
+
+The round-1000 losses are not close: health 1,040 vs 6,250, 2,560 vs 12,580, 4,730 vs 9,630 in the three censused;
+no endgame dump covers that (the endgame lines h8, h96, h104 are closed). tools/replay.js young (new) gives the
+young-death census per replay.
+
+**h160 = v8 + ECON_NOPLAN 1** (struct.js: ECON_UNTIL does not hold a castle whose st.planAll is 0; churches and
+castles that planned keep it). Unit test (no plan: builds at r50 with 600 K; plan 2: waits; plan not made yet:
+waits); defaults build replays v8 IDENTICAL on 799 r300 (40,747 bytes); dist/h160 15b40f6fac46 (ECON_NOPLAN:1 read
+back) also replays IDENTICAL to v8 on 799 (castles plan 4 churches there): inert where a church is planned. Driver
+diagnostic h160 red vs v8 on 2330 to r150 (--det): army r40 8 vs 0, r100 25 vs 3 (v8's bank 785), r120 31 vs 26; no
+exceptions.
+
+Pre-registration. On the general panel h160 differs from v8 in 4 of 36 games (uvafan 1653 and 2046), too few to
+read, so it is judged by a targeted panel (TRAINING_ALGORITHM §4, new today before any h160 game):
+progress/panels/noplan-m1.json, the six panel bots each on three of the five maps by fixed rotation (2046, 1626,
+1653: 4 cells each; 1884, 2330: 3), both sides, 36 games a block (`PANEL=progress/panels/noplan-m1.json
+tools/panel_submit.sh DIST "msg"`). Order: a bots/v8 control block first, then h160's blocks; scored with
+`contest19.py pool` against the control (pool file progress/panels/noplan-m1.pool, empty at the start) by the pooled
+rule (block 1 reject at z < 0.5; two blocks accept at z >= 2, reject at z < 1; else a third, accept at z >= 2). Before
+h160's first block is scored, panelsim.py on this design: if its false-accept rate exceeds 10%, a second v8 control
+block is played first. Studied cells: uvafan 2046 and 1653 (the census included them); the other 16 cells must
+score z >= 0 too. Submitted when the replica queue is under 30 (owner, PROMPTS 17: 24 matches). Local screen: the
+five maps both sides vs bots/v8, 10 games (VM job held in superseded behind h159's).
+
+## 2026-10-24 15:42 PDT: what a besieged castle does with its turns; CASTLE_FIRE noted, not built
+
+A castle acts once a turn: it builds a defender (structAct step 1, while ours < 2 x attackers + 1) or shoots, never
+both. Per turn of the castle with an enemy attacker within r2 100 (positions after its turn), r1-200: 853 game 2
+(2321 vs wololo, castle #1313): built with an attacker in its reach (r2 <= 64) 12 turns, shot 12; built with all of
+them out of its reach 14, idle (nothing affordable) 28. 726 game 3 (836 vs wololo, castle #1368): in reach built 6,
+shot 15; out of reach built 12, idle 31. The larger share of the feeding is against attackers the castle cannot hit,
+which is h159's (FEED_STOP) case. CASTLE_FIRE (shoot rather than build while an attacker is in reach and few are in
+sight) would turn about 6-12 build turns a siege into shots (a prophet dies to two); noted as a partner for
+FEED_STOP if h159 reads positive, not built now. On 836 the defence spent the shared bank (12 defenders r33-89,
+11 of them dead by r100) so the other castle, with 3 clusters planned, never held the 90 K a pioneer needs: no church of
+ours before r100 against wololo's 5, three of them on our half.
+
+## 2026-10-24 16:02 PDT: the opening bank idles: 335 K median at r100 against the field's 92
+
+Census of v8's 51 field games (control block 726-731 and the ladder games since 06:41; per game `replay.js timeline`
+at r50-200, bank from the 14:14 census): at r100 our bank's median is 335 K (300+ in 28 games), the opponent's 92
+(300+ in 1); our army's median 4, theirs 10 (15-37 in the losses to uvafan, rafekruse, yujinwunz, mvpatel2000 2330);
+churches 2 and 2, fewer than theirs in 27 games, more in 8. Mined karbonite, ours over theirs: wins r50 1.02, r100
+1.04, r150 1.06, r200 1.02 (medians, 22 games); losses 0.91, 0.86, 0.72, 0.65 (29). The loss gap opens by r50 and
+widens after r100, when their armies reach our miners. The bank's size does not sort wins from losses (300+: 12 of 28
+won; under 150: 5 of 11), so the karbonite is idle, not decisive by itself: it is what ECON_UNTIL 100 and the reserves
+hold while the economy has nothing left to buy (203, 4 games, 0 churches before r200 in 3: the pioneer to c3 dead by
+r34, 8 pilgrims out by r12, 495-585 K at r100 against armies of 2-31). Next: where the field's churches stand and
+what kills our pioneers (churches.js census, after the tools suite), then the saturated-economy switch the 09:27
+entry named (a castle with no depot to staff and nothing to pioneer stops waiting for ECON_UNTIL).
+
+## 2026-10-24 16:04 PDT: the tools suite passes; the held work is committed; symcheck on v8 restarted
+
+The owner (PROMPTS 35, 36: "From now on, don't wait on me") lifted the 12:52 hold. `tools/unit-tests.sh` alone on
+the driver, 15:58-16:03: node 154 of 154, galaxy19 python 63 of 63. Committed with it: PIONEER_TIMEOUT_REST, HOP_GAIN
+(h158), FEED_STOP (h159), ECON_NOPLAN (h160), build_bot.js --cfg, batch.js row conditions, `replay.js young`,
+panel_submit.sh PANEL, the noplan-m1 panel, and the log, ledger and HANDOFF entries since 12:53. symcheck on bots/v8
+(seeds 1, 2, 3, 2321 to r1000) runs alone on the driver from 16:03.

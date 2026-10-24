@@ -226,3 +226,10 @@
    11:58). Brief every agent that touches replica data: finished matches only. The same audit found symcheck stops at
    the first divergence and excuses everything after the first attack, so it checked only the opening (rounds 31-60
    on 3 of 4 seeds), and it was last run on h127: v8 itself was never side-checked. (2026-10-24 12:17)
+
+39. **A switch that acts on a few maps is invisible to a general panel; test it where it acts.** ECON_NOPLAN (h160)
+   changes play only on maps where we plan no church: 5 of the replica's 40 maps, 2 of the panel's 18 cells, so even
+   flipping both games of one cell moves the panel's z by about 0.7. ECON_RICH (h145), which fired on the same maps
+   among others, was rejected on one general block at z 0.00. When a switch's trigger is a property of the map alone,
+   show it is inert elsewhere (an identical replay on a map where it does not fire) and judge it on a panel of those maps
+   with its own control (TRAINING_ALGORITHM §4). (2026-10-24 15:33)

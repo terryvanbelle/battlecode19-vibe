@@ -31,7 +31,17 @@ export const CFG = {
   PIONEER_LOST_REST: 100,    // rounds a castle waits before re-sending a pioneer to a cluster where the last one died
   PIONEER_LOST_DOUBLE: 0,    // 1: ...doubled per pioneer lost there (replica scrims vs StoneT2000: 25 of 46 pioneers killed,
                              // castles re-sent one into the same prophets every ~105 rounds)
-  ESCORT: 0,                 // >0: a pioneer overdue at its site (ESCORT_SLACK turns past its king-step distance) or lost
+  PIONEER_TIMEOUT_REST: 0,   // 1: a pioneer still alive but 80 turns out without its church rests its cluster as a lost one
+                             // does (0: the castle forgets it and may send another to the same site at once, while the
+                             // first stays out as a zombie; audit 2026-10-24)
+  HOP_GAIN: 0,               // >0: a castle's next pioneer is built by the living church of ours whose site is at least
+                             // this many king steps nearer the cluster's site than the castle (castle.js hopPioneer,
+                             // church.js hopBuild). wololo churches its next cluster from its last church: replica 853-1,
+                             // seed 2797, its church at (1,20) r30 built the pilgrim that churched (1,32) on our half at
+                             // r41, whose prophet killed our castle's pioneer 7 tiles short (r24 start, 19 king steps).
+                             // In v8's 51 replica games: ahead in pilgrims at r100 won 13 of 15, 1.5x behind 4 of 21
+  HOP_REST: 50,              // turns a castle asks a church nothing after a request to it lapsed unanswered
+  ESCORT: 0,                // >0: a pioneer overdue at its site (ESCORT_SLACK turns past its king-step distance) or lost
                              // on the way gets this many military units built with SIG.GUARD at its site; they hold the
                              // lattice there instead of home (replica 206-2, seed 2321: our pioneer waited 137 turns at
                              // the edge of two StoneT2000 prophets' range beside its site and died; vs StoneT2000 46 of
@@ -80,6 +90,10 @@ export const CFG = {
                              // anyway (replica, v7's 18 games in 420-425: the bank held 245-658 K at r75 in 10 and
                              // 315-863 at r100 in 10, army 0-3, while 1-2 enemy prophets by the centre held 4-8 of our
                              // pioneers short of their sites; seed 2321: 535 K at r100, castle lost r214)
+  ECON_NOPLAN: 0,            // 1: ECON_UNTIL does not hold a castle whose team planned no church (castle.js planAll 0:
+                             // every cluster is staffed from a castle or nearer the enemy): there is no pioneer to save for
+                             // (v8's field games on such maps, 2330 2046 1653 1884 1626: the bank held 386-863 K at r100,
+                             // our army 2-4 against 6-37; won 1 of 5)
   MIL_FUEL_RESERVE: 300,     // peacetime military builds keep this much fuel back (movement and mining need it)
   MIL_FUEL_PER_UNIT: 10,     // ...plus this much per military unit we have (each needs fuel to shoot and move)
   FUEL_PER_KARB: 2.5,        // staff fuel depots while fuel < this x karbonite (and below FUEL_HIGH)
@@ -357,6 +371,17 @@ export const CFG = {
   CASTLE_POST_EVERY: 20,
   CASTLE_POST_R: 6,          // ...and holds lattice tiles within this many king steps of it (LATTICE_R 12 left units
                              // by churches within 12 of the castle where they stood: diagnostic 2299, 11 by the castle)
+  FEED_STOP: 0,              // >0: a structure that saw this many of its military newborns die within FEED_AGE turns of
+                             // their birth (gone from sight while near enough that they could not have walked out of it,
+                             // or never seen alive) within FEED_WINDOW turns builds no military unit for FEED_REST turns,
+                             // except against an attacker in reach of the structure itself (struct.js watchKids; replica
+                             // 770, seed 2330 vs mvpatel2000: church (20,14) answered an enemy prophet standing at r2 98,
+                             // out of its reach, with a prophet a turn; each stepped into that prophet's band before it
+                             // could see it and died there on its first or second turn: 262 of 271 prophets lost, the
+                             // army flat at 40 r500-900, the game lost at r1000 on health 1,200 vs 6,640)
+  FEED_AGE: 3,
+  FEED_WINDOW: 20,
+  FEED_REST: 50,
   // endgame
   ENDGAME_MARGIN: 6,
   ENDGAME_FUEL: 0,           // >0: from this round all fuel goes into preachers (health breaks round-1000 ties; a

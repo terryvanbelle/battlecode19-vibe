@@ -119,6 +119,7 @@ export function buildToward(B, unit, tx, ty, signal) {
   if (!best) return null;
   if (signal !== undefined && !w.sentR2 && w.fuel >= STATS[unit].costF + 2) w.signal(signal, 2);
   B.st.pending = null; B.st.built = unit;
+  if (CFG.FEED_STOP && unit >= CRUSADER) B.st.kidPending = { x: me.x + best[0], y: me.y + best[1], unit };
   return { act: w.build(unit, best[0], best[1]), x: me.x + best[0], y: me.y + best[1] };
 }
 
@@ -183,6 +184,7 @@ function seers(B, e) {
 // The structure's turn after role bookkeeping. extra(): castle-only builds (pioneers); first(): castle-only builds
 // ahead of the economy pilgrims (CFG.PIONEER_EARLY). Returns an action or null.
 export function structTurn(B, allIds, extra, first) {
+  if (CFG.FEED_STOP) watchKids(B);
   if (!CFG.KILL_ZONE && !CFG.SIEGE && !CFG.WATCH) return structAct(B, allIds, extra, first);
   if (CFG.KILL_ZONE) watchDeaths(B);
   B.st.built = -1;
@@ -190,6 +192,38 @@ export function structTurn(B, allIds, extra, first) {
   if (CFG.KILL_ZONE) sayZone(B); else if (CFG.SIEGE) sayThreat(B);
   if (CFG.WATCH) sayWatch(B);
   return a;
+}
+
+// CFG.FEED_STOP: follow this structure's military newborns through their first FEED_AGE turns. One that vanishes from
+// sight within 3 tiles less than the structure's vision radius died (no newborn walks out that far that fast), and so
+// did one never seen alive on the turn after its build; FEED_STOP such deaths within FEED_WINDOW turns stop military
+// builds until st.feedOff (struct.js feeding).
+export function watchKids(B) {
+  const st = B.st, w = B.w, me = w.me, t = me.turn, R = Math.sqrt(STATS[me.unit].vision) - 3;
+  const kids = st.kids || (st.kids = new Map()), quick = st.quick || (st.quick = []);
+  const p = st.kidPending;
+  if (p) {
+    st.kidPending = null;
+    let best = null, bd = 1e9;
+    for (const r of w.friends) {
+      if (r.turn !== 1 || r.unit !== p.unit) continue;
+      const dd = d2(r.x, r.y, p.x, p.y); if (dd <= 9 && dd < bd) { bd = dd; best = r; }
+    }
+    if (best) kids.set(best.id, { t: t - 1, x: best.x, y: best.y }); else quick.push(t);
+  }
+  for (const [id, k] of [...kids]) {
+    const r = w.friends.find(f => f.id === id);
+    if (r) { if (t - k.t >= CFG.FEED_AGE) kids.delete(id); else { k.x = r.x; k.y = r.y; } continue; }
+    kids.delete(id);
+    if (d2(k.x, k.y, me.x, me.y) <= R * R) quick.push(t);
+  }
+  while (quick.length && t - quick[0] >= CFG.FEED_WINDOW) quick.shift();
+  if (quick.length >= CFG.FEED_STOP) { st.feedOff = t + CFG.FEED_REST; quick.length = 0; }
+}
+// Whether this structure may build a military unit now (CFG.FEED_STOP): always against an attacker that can hit it.
+export function feeding(B, e, ed) {
+  if (!CFG.FEED_STOP || !(B.st.feedOff > B.w.me.turn)) return true;
+  return !!e && ed <= STATS[e.unit].atkMax;
 }
 
 // CFG.WATCH: radio, as a spot, the nearest enemy attacker within r2 100 that no military unit of ours sees.
@@ -261,7 +295,7 @@ function structAct(B, allIds, extra, first) {
     // bank (seed 799: a front church's answers took 136 of 211 military builds in r200-400 and no line ever fired).
     const hold = Math.max(CFG.CHAIN_HOLD_R2 && me.unit === CHURCH && chainOn && cd > CFG.CHAIN_HOLD_R2 ? CFG.CHAIN_K : 0,
       waitK && cd > CFG.PIONEER_HOLD ? waitK : 0);
-    if (ours < attackers.length * 2 + 1) {
+    if (ours < attackers.length * 2 + 1 && feeding(B, closest, cd)) {
       const unit = cd <= 36 || closest.unit === CRUSADER ? PREACHER : (CFG.DEF_FAR_UNIT || PROPHET);
       if (w.canAfford(unit, hold)) { const b = buildToward(B, unit, closest.x, closest.y); if (b) return b.act; }
       if (unit === PREACHER && w.canAfford(PROPHET, hold)) { const b = buildToward(B, PROPHET, closest.x, closest.y); if (b) return b.act; }
@@ -318,11 +352,12 @@ function structAct(B, allIds, extra, first) {
 
   // 4. Peacetime army: a growing guard (prophets, every Nth a preacher), spending what the economy leaves.
   // CFG.ECON_RICH: before ECON_UNTIL only the bank past ECON_RICH + reserveK builds it (the economy had nothing to buy).
-  const early = (B.round || 0) < CFG.ECON_UNTIL;
+  // CFG.ECON_NOPLAN: a castle whose team planned no church has nothing to save for.
+  const early = (B.round || 0) < CFG.ECON_UNTIL && !(CFG.ECON_NOPLAN && me.unit === CASTLE && st.planAll === 0);
   if (early && !(CFG.ECON_RICH && w.karbonite > CFG.ECON_RICH + reserveK)) return null;
   const want = Math.min(CFG.GUARD_MAX, CFG.GUARD_BASE + Math.floor((B.round || 0) / CFG.GUARD_ROUNDS));
   const have = defenders(B, 100);
-  if (early || have < want || w.karbonite > CFG.RICH_K + reserveK) {
+  if ((early || have < want || w.karbonite > CFG.RICH_K + reserveK) && feeding(B, null, 0)) {
     const unit = mixByStock(w) || (CFG.MIL_ROTATION ? CFG.MIL_ROTATION[st.nDef % CFG.MIL_ROTATION.length]
       : (st.nDef % CFG.PREACHER_EVERY === CFG.PREACHER_EVERY - 1) ? PREACHER : PROPHET);
     const army = st.count ? st.count[3] + st.count[4] + st.count[5] : have;

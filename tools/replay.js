@@ -14,6 +14,7 @@
 //   node tools/replay.js fire     <replay> [--from R --to R]  # per team and shooter type: shots, fuel, damage per fuel
 //   node tools/replay.js timeline <replay> [--at 25,50,...]   # per team at checkpoints: structures, pilgrims, army (and by type), mined, bank
 //   node tools/replay.js moves    <replay> [--every N]     # per team and window of rounds: movement fuel by unit type
+//   node tools/replay.js young    <replay> [--age N]       # per team and military type: built, and dead within N rounds
 // Teams: 0 red, 1 blue. Unit codes: 0 castle, 1 church, 2 pilgrim, 3 crusader, 4 prophet, 5 preacher.
 'use strict';
 const fs = require('fs');
@@ -302,6 +303,32 @@ function fireText(rows) {
     ...rows.map(a => [['red', 'blue'][a.team], UNIT[a.unit], a.shots, a.fuel, a.enemy, a.friendly, a.kills, (a.enemy / a.fuel).toFixed(2)].join('\t'))].join('\n');
 }
 
+// Military units per team and type: built, their karbonite, and those dead within `age` rounds of their build round
+// (fed to a kill zone before they could act: TRAINING_LOG 2026-10-24 15:13, FEED_STOP).
+function young(buf, age = 3) {
+  const born = new Map(), rows = {};
+  const row = (team, unit) => rows[team + ':' + unit] || (rows[team + ':' + unit] = { team, unit, built: 0, k: 0, young: 0, young_k: 0 });
+  simulate(buf, { onTurn(ev) {
+    if (ev.rec.action === 3 && !ev.error) for (const b of ev.born) if (b.unit >= 3) {
+      born.set(b.id, ev.round); const a = row(b.team, b.unit); a.built++; a.k += SPECS.UNITS[b.unit].CONSTRUCTION_KARBONITE;
+    }
+    for (const d of ev.died) if (born.has(d.id) && ev.round - born.get(d.id) <= age) {
+      const a = row(d.team, d.unit); a.young++; a.young_k += SPECS.UNITS[d.unit].CONSTRUCTION_KARBONITE;
+    }
+  } });
+  return Object.values(rows).sort((a, b) => a.team - b.team || a.unit - b.unit);
+}
+
+function youngText(rows, age = 3) {
+  const out = [`team\tunit\tbuilt\tkarbonite\tdead_within_${age}\tkarbonite_lost\tshare`];
+  for (const team of [0, 1]) {
+    const rs = rows.filter(a => a.team === team), sum = { unit: 'all', built: 0, k: 0, young: 0, young_k: 0 };
+    for (const a of rs) for (const f of ['built', 'k', 'young', 'young_k']) sum[f] += a[f];
+    for (const a of [...rs, sum]) out.push([['red', 'blue'][team], typeof a.unit === 'number' ? UNIT[a.unit] : a.unit, a.built, a.k, a.young, a.young_k, a.k ? (a.young_k / a.k).toFixed(2) : '-'].join('\t'));
+  }
+  return out.join('\n');
+}
+
 // Movement fuel per team, window of rounds and unit type: where the fuel goes.
 // back: fuel of moves that return a robot to the tile its previous move left (A -> B -> A: oscillation).
 function moves(buf, every = 100) {
@@ -360,12 +387,12 @@ function timelineText(rows) {
   return out.join('\n');
 }
 
-module.exports = { timeline, timelineText, fire, fireText, moves, movesText, threats, threatText, parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
+module.exports = { timeline, timelineText, fire, fireText, young, youngText, moves, movesText, threats, threatText, parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
 
 if (require.main === module) {
   const argv = process.argv.slice(2), cmd = argv[0], file = argv[1];
   const opt = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
-  if (!cmd || !file) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 19).join('\n')); process.exit(1); }
+  if (!cmd || !file) { console.error(fs.readFileSync(__filename, 'utf8').split('\n').slice(1).join('\n').split('\n\'use strict\'')[0]); process.exit(1); }
   const buf = fs.readFileSync(file);
   if (cmd === 'summary') console.log(summaryText(analyze(buf)));
   else if (cmd === 'json') console.log(JSON.stringify(analyze(buf)));
@@ -377,6 +404,7 @@ if (require.main === module) {
   else if (cmd === 'talk') console.log(events(buf, 0, Infinity, ['signal', 'talk']).split('\n').filter(l => !opt('--team') || l.includes(' ' + 'RB'[+opt('--team')])).join('\n'));
   else if (cmd === 'fire') console.log(fireText(fire(buf, parseInt(opt('--from', '0'), 10), parseFloat(opt('--to', 'Infinity')))));
   else if (cmd === 'moves') console.log(movesText(moves(buf, parseInt(opt('--every', '100'), 10))));
+  else if (cmd === 'young') { const age = parseInt(opt('--age', '3'), 10); console.log(youngText(young(buf, age), age)); }
   else if (cmd === 'timeline') { const at = opt('--at'); console.log(timelineText(at ? timeline(buf, at.split(',').map(Number)) : timeline(buf))); }
   else if (cmd === 'threat') { const t = threats(buf); console.log(argv.includes('--json') ? JSON.stringify(t) : threatText(t)); }
   else { console.error('unknown command ' + cmd); process.exit(1); }

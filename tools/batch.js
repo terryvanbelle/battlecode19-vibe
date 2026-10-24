@@ -70,7 +70,8 @@ async function main() {
   if (!sandboxed()) { console.error('unshare -rn unavailable: refusing to run bot code without a network sandbox'); process.exit(3); }
   const ah = codeHash(o.a), bh = codeHash(o.b);
   const done = new Set();
-  if (fs.existsSync(o.out)) for (const l of fs.readFileSync(o.out, 'utf8').split('\n')) if (l) { const r = JSON.parse(l); done.add([r.a_hash, r.b_hash, r.seed, r.a_side].join(':')); }
+  // An error row (machine load, a crash) is not a result: a rerun plays that game again.
+  if (fs.existsSync(o.out)) for (const l of fs.readFileSync(o.out, 'utf8').split('\n')) if (l) { const r = JSON.parse(l); if (!r.error) done.add([r.a_hash, r.b_hash, r.seed, r.a_side].join(':')); }
   const jobs = [];
   for (const seed of o.seeds) for (const side of (o.sides === 'both' ? ['red', 'blue'] : ['red'])) {
     if (!done.has([ah, bh, seed, side].join(':'))) jobs.push({ seed, side });
@@ -111,6 +112,8 @@ async function main() {
           row = { tag: o.tag, a: o.a, b: o.b, a_hash: ah, b_hash: bh, seed: j.seed, a_side: j.side,
             winner_is_a: r.winner === j.side ? 1 : 0, reason: r.reason, rounds: r.rounds, wall_s: r.wall_s, fast_turn: r.fast_turn,
             fast_init: r.fast_init, no_kill: r.no_kill, fast_view: r.fast_view,
+            // the conditions the game ran under, so a read can tell rows played on different clocks apart
+            det: r.det, timescale: r.timescale, init_ms: r.init_ms, turn_kill_ms: r.turn_kill_ms, net_isolated: r.net_isolated,
             a_team: r.teams[ai], b_team: r.teams[1 - ai], map: r.map, t: new Date().toISOString() };
         } catch (e) { row = { tag: o.tag, a_hash: ah, b_hash: bh, seed: j.seed, a_side: j.side, error: (se || so).slice(-500), code }; }
         // A castle that misses the init clock before round 1 says nothing about the bots: retry the game (machine

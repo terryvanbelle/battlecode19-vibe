@@ -10,7 +10,7 @@ import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot } from '../src/bot/military.js';
 import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
-import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch } from '../src/bot/struct.js';
+import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -595,6 +595,34 @@ test('struct: ECON_RICH builds the peacetime army before ECON_UNTIL from the ban
     assert.ok([S.CRUSADER, S.PROPHET, S.PREACHER].includes((turn1(100, 600) || {}).u));       // a rich bank builds one
     assert.strictEqual(turn1(100, 100 + reserve), null);                                      // at the threshold: waits
   } finally { [CFG.ECON_RICH, CFG.SERVE_MOVES] = saved; }
+});
+
+test('struct: ECON_NOPLAN: before ECON_UNTIL a castle whose team planned no church builds its army; one with a plan waits', () => {
+  const saved = [CFG.ECON_NOPLAN, CFG.SERVE_MOVES];
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    CFG.SERVE_MOVES = 1;   // every served depot is in sight and staffed below: the economy has nothing to build
+    let id = 4100;
+    for (let y = castle.y - 2; y <= castle.y + 2; y++) for (let x = castle.x - 2; x <= castle.x + 2; x++)
+      if (x >= 0 && y >= 0 && x < n && y < n && (g.karbonite_map[y][x] || g.fuel_map[y][x]) && !g.robots.some(q => q.x === x && q.y === y))
+        g.robots.push({ id: id++, team: 0, unit: S.PILGRIM, x, y, turn: 3, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const turn1 = (noplan, planAll) => {
+      CFG.ECON_NOPLAN = noplan; castle.turn = 50;   // a castle's round is its turn: before ECON_UNTIL
+      const all = g.robots;
+      g.robots = all.filter(r => d2(r.x, r.y, castle.x, castle.y) <= 100);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round: 50, birthRound: 1, st: { planAll }, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 600; w.fuel = 2000;
+      return castleTurn(B);
+    };
+    assert.ok(CFG.ECON_UNTIL > 50 && !CFG.ECON_RICH, 'v8 values');
+    const mil = a => [S.CRUSADER, S.PROPHET, S.PREACHER].includes((a || {}).u);
+    assert.strictEqual(turn1(0, 0), null);           // default: no army before ECON_UNTIL
+    assert.ok(mil(turn1(1, 0)));                      // nothing planned: the bank builds the army
+    assert.strictEqual(turn1(1, 2), null);           // churches planned: the bank waits for their pioneers
+    assert.strictEqual(turn1(1, undefined), null);   // no plan yet (castles plan on turn 3)
+  } finally { [CFG.ECON_NOPLAN, CFG.SERVE_MOVES] = saved; }
 });
 
 test('struct: PIONEER_HOLD keeps the church in the bank from pilgrims and far threat responses while a pioneer waits', () => {
@@ -1468,6 +1496,164 @@ test('castle: PIONEER_LOST_DOUBLE doubles the rest before re-sending a pioneer w
   } finally { Object.assign(CFG, saved); }
 });
 
+test('castle: PIONEER_TIMEOUT_REST rests the cluster of a pioneer 80 turns out without its church', () => {
+  const saved = { ...CFG };
+  try {
+    const run = on => {
+      CFG.PIONEER_TIMEOUT_REST = on;
+      const g = new Game(1205, 100, 20, false, false);   // one castle a side, 12 clusters
+      const castle = g.robots.find(r => r.team === 0);
+      const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+      const at = t => { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; w.karbonite = 0; castleTurn(B); };
+      for (const t of [1, 2, 3]) at(t);
+      const st = B.st, c = st.plan[0].cluster, [sx, sy] = B.clusters[c].site;
+      // The pioneer is alive (castles see every robot's id) and still out at round 91.
+      g.robots.push({ id: 4400, team: 0, unit: S.PILGRIM, x: sx, y: sy, turn: 81, health: 10, karbonite: 0, fuel: 0,
+        signal: 0, signal_radius: 0, castle_talk: 0 });
+      st.pioneers = [{ id: 4400, cluster: c, since: 10, d: 5 }];
+      at(90);
+      const kept = st.pioneers.length;
+      at(91);
+      return { kept, st, c, next: (nextPioneer(B) || {}).cluster };
+    };
+    const off = run(0), on = run(1);
+    assert.deepStrictEqual([off.kept, on.kept], [1, 1]);                 // within 80 turns: still in flight
+    assert.strictEqual(off.st.pioneers.length, 0);
+    assert.strictEqual(off.st.lost.has(off.c), false);
+    assert.strictEqual(off.next, off.c);                                // v8: the same site goes out again at once
+    assert.strictEqual(on.st.lost.get(on.c), 91);
+    assert.notStrictEqual(on.next, on.c);                               // rested PIONEER_LOST_REST rounds
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('castle: HOP_GAIN asks the church nearest the next site, adopts the pioneer by its CT.HOP talk, lapses unanswered asks', () => {
+  const saved = { ...CFG };
+  try {
+    const run = (gain, answer) => {
+      CFG.HOP_GAIN = gain;
+      const g = new Game(1205, 100, 20, false, false);   // one castle a side, 12 clusters
+      const castle = g.robots.find(r => r.team === 0);
+      const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+      const sent = [];
+      const world = t => { castle.turn = t; const w = worldFor(g, castle); w.api.signal = (v, r2) => sent.push([t, v, r2]); B.w = w; B.api = w.api; return w; };
+      const at = t => { world(t).karbonite = 0; return castleTurn(B); };
+      for (const t of [1, 2, 3]) at(t);
+      const st = B.st, n = B.w.n;
+      // A planned cluster and another cluster whose site is at least 4 king steps nearer it than the castle.
+      let pick = null;
+      for (const p of st.plan) {
+        const f = bfs(B.w, [B.clusters[p.cluster].site], offsets(2));
+        for (const c of B.clusters) {
+          const v = f[c.site[1] * n + c.site[0]];
+          if (c.i !== p.cluster && v >= 0 && v + 4 <= p.d && (!pick || v < pick.v)) pick = { p, j: c.i, v };
+        }
+        if (pick) break;
+      }
+      assert.ok(pick, 'no cluster pair for the test');
+      const [hx, hy] = B.clusters[pick.j].site, t = pick.p.cluster;
+      const mk = (id, unit, x, y, turn, talk) => ({ id, team: 0, unit, x, y, turn, health: 10, karbonite: 0, fuel: 0, signal: -1, signal_radius: 0, castle_talk: talk });
+      const church = mk(4500, S.CHURCH, hx, hy, 1, CT.CHURCH + pick.j);
+      g.robots.push(church);
+      st.plan = [pick.p];
+      at(4);                                    // the church's first-turn talk: castles learn its id
+      church.turn = 2; church.castle_talk = CT.UNIT + S.CHURCH;
+      world(5);
+      const act = pioneer(B);
+      const out = { act, sent: sent.slice(), pioneers: st.pioneers.map(p => ({ ...p })), t, j: pick.j, hx, hy, castle };
+      if (answer) g.robots.push(mk(4600, S.PILGRIM, hx, hy + 1, 1, CT.HOP + t));
+      for (const u of [6, 7, 8]) at(u);
+      return { ...out, after: st.pioneers.map(p => ({ ...p })), fail: st.hopFail.get(pick.j) };
+    };
+    const off = run(0, false), on = run(4, true), lapse = run(4, false);
+    assert.strictEqual(off.act.u, S.PILGRIM);                                         // v8: the castle builds it
+    assert.ok(!off.sent.some(([t, v]) => t === 5 && (v >> 12) === SIG.HOP));
+    assert.ok(on.act && on.act.hopped && !on.act.u);                                 // asked, and nothing built here
+    const [ask] = on.sent.filter(([t, v]) => t === 5);
+    assert.strictEqual(ask[1], encNum(SIG.HOP, (on.t << 6) | on.j));
+    const dist = Math.sqrt(d2(on.castle.x, on.castle.y, on.hx, on.hy));
+    assert.ok(ask[2] >= (dist + Math.SQRT2) ** 2 && !Object.values(FAR).includes(ask[2]), 'reaches beside the church: ' + ask[2]);
+    assert.deepStrictEqual(on.pioneers.map(p => [p.id, p.cluster, p.hop]), [[0, on.t, on.j]]);
+    assert.deepStrictEqual(on.after.map(p => [p.id, p.cluster]), [[4600, on.t]]);   // adopted by its CT.HOP talk
+    assert.strictEqual(on.fail, undefined);
+    assert.strictEqual(lapse.after.length, 0);                                       // nobody answered: dropped
+    assert.strictEqual(lapse.fail, 8);                                               // that church rests HOP_REST turns
+  } finally { Object.assign(CFG, saved); }
+});
+
+// A church at cluster `c`'s site of seed 1205 (one castle a side), the castle radioing SIG.HOP for target `t`.
+function hopScene() {
+  const g = new Game(1205, 100, 20, false, false), n = g.map.length;
+  g.robots = g.robots.filter(r => r.team === 0);
+  const castle = g.robots[0], B0 = { w: worldFor(g, castle) }; econ(B0);
+  const plain = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.karbonite_map[y][x] && !g.fuel_map[y][x];
+  const c = B0.clusters.find(c => king(c.site[0], c.site[1], castle.x, castle.y) > 8 &&
+    offsets(2).filter(([dx, dy]) => plain(c.site[0] + dx, c.site[1] + dy)).length >= 2);
+  const t = B0.clusters.find(q => q.i !== c.i && q.i < 63).i;
+  const mk = (id, unit, x, y, turn, extra = {}) => ({ id, team: 0, unit, x, y, turn, health: 10, karbonite: 0, fuel: 0, signal: -1, signal_radius: 0, castle_talk: 0, ...extra });
+  const ask = named => ({ ...castle, signal: encNum(SIG.HOP, (t << 6) | named), signal_radius: 7000 });
+  const beside = offsets(2).map(([dx, dy]) => [c.site[0] + dx, c.site[1] + dy]).find(([x, y]) => plain(x, y));
+  return { g, castle, c, t, mk, ask, beside, clusters: B0.clusters };
+}
+
+test('church: HOP_GAIN: a SIG.HOP naming this church builds the pioneer that round, with the round; others are ignored', () => {
+  const saved = { ...CFG };
+  try {
+    CFG.HOP_GAIN = 4;
+    const { g, c, t, mk, ask, clusters } = hopScene();
+    const run = (named, birthRound = 46, turn = 5, enemy = false) => {
+      const church = mk(4500, S.CHURCH, c.site[0], c.site[1], turn);
+      const all = g.robots;
+      g.robots = [ask(named), church].concat(enemy ? [{ ...mk(4700, S.CRUSADER, c.site[0] + 3, c.site[1], 9), team: 1 }] : []);
+      const w = worldFor(g, church); g.robots = all;
+      const sent = [], talk = []; w.api.signal = (v, r2) => sent.push([v, r2]); w.api.castleTalk = v => talk.push(v);
+      const B = { api: w.api, w, birthRound, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 100; w.fuel = 1000;
+      return { act: churchTurn(B) || {}, sent, talk };
+    };
+    const yes = run(c.i);
+    assert.strictEqual(yes.act.u, S.PILGRIM);
+    assert.deepStrictEqual(yes.sent, [[encNum(SIG.ROUND, 50), 2]]);               // the newborn learns the round from us
+    const noRound = run(c.i, 0);
+    assert.deepStrictEqual(noRound.sent, [[encXY(SIG.CHURCH, clusters[t].site[0], clusters[t].site[1]), 2]]);   // or the site
+    const other = run((c.i + 1) % 63);
+    assert.ok(!other.sent.some(([v]) => (v >> 12) === SIG.ROUND || (v >> 12) === SIG.CHURCH));   // not ours to answer
+    assert.notStrictEqual(run(c.i, 46, 5, true).act.u, S.PILGRIM);              // an attacker in sight comes first
+    assert.ok(run(c.i, 46, 1).talk.includes(CT.CHURCH + c.i));                    // first turn: castles learn its id
+    CFG.HOP_GAIN = 0;
+    assert.ok(!run(c.i).sent.some(([v]) => v === encNum(SIG.ROUND, 50)));          // v8: no answer
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('pilgrim: HOP_GAIN: a newborn beside a church a castle\'s SIG.HOP names takes the target and talks CT.HOP', () => {
+  const saved = { ...CFG };
+  try {
+    const { g, c, t, mk, ask, beside, clusters } = hopScene();
+    const run = (gain, named) => {
+      CFG.HOP_GAIN = gain;
+      const church = mk(4500, S.CHURCH, c.site[0], c.site[1], 5, { signal: encNum(SIG.ROUND, 50), signal_radius: 2 });
+      const pil = mk(4501, S.PILGRIM, beside[0], beside[1], 1);
+      const all = g.robots;
+      g.robots = [ask(named), church, pil];
+      const w = worldFor(g, pil); g.robots = all;
+      const talk = []; w.api.castleTalk = v => talk.push(v);
+      const B = { api: w.api, w, st: {}, deps: null, clusters: null, rnd: rng(2) };
+      B.offs = offsets(4); B.nav = new Nav(w, B.offs, B.rnd);
+      w.karbonite = 100; w.fuel = 1000;
+      pilgrimTurn(B);
+      return { st: B.st, talk, round: B.round };
+    };
+    const yes = run(4, c.i);
+    assert.deepStrictEqual(yes.st.site, clusters[t].site);
+    assert.strictEqual(yes.st.cluster, t);
+    assert.ok(yes.talk.includes(CT.HOP + t));
+    assert.strictEqual(yes.round, 50);
+    const other = run(4, (c.i + 1) % 63);                                          // another church's pioneer
+    assert.ok(!other.st.site && other.st.target && !other.talk.includes(CT.HOP + t));
+    const off = run(0, c.i);                                                       // v8: a miner
+    assert.ok(!off.st.site && off.st.target);
+  } finally { Object.assign(CFG, saved); }
+});
+
 testPreV7('castle: PIONEERS_TEAM lets a lone castle keep more pioneers in flight; off, MAX_PIONEERS per castle', () => {
   const saved = { ...CFG };
   try {
@@ -2063,6 +2249,71 @@ test('struct: SIEGE: the turn after a military build the structure radios the ne
     w.me = { ...w.me, turn: 41 }; w.sentR2 = 2; B.st.built = S.PROPHET; sayThreat(B); assert.strictEqual(sent.length, 2);
     w.me = { ...w.me, turn: 42 }; w.sentR2 = 0; B.st.built = -1; sayThreat(B); assert.strictEqual(sent.length, 3, 'the next free turn');
   } finally { CFG.SIEGE = saved; CFG.SIEGE_NOW = now; }
+});
+
+test('struct: FEED_STOP: newborns gone young near the structure, or never seen, count; enough of them stop military builds', () => {
+  const saved = [CFG.FEED_STOP, CFG.FEED_AGE, CFG.FEED_WINDOW, CFG.FEED_REST];
+  try {
+    Object.assign(CFG, { FEED_STOP: 3, FEED_AGE: 3, FEED_WINDOW: 20, FEED_REST: 50 });
+    const P = (id, x, y, turn) => ({ id, team: 0, unit: S.PROPHET, x, y, turn });
+    const w = { me: { id: 1, team: 0, unit: S.CHURCH, x: 10, y: 10, turn: 100 }, friends: [] };
+    const B = { w, st: {} };
+    const step = (turn, friends) => { w.me = { ...w.me, turn }; w.friends = friends; watchKids(B); };
+    // Turn 100 built a prophet at (11,11); on 101 it stands at (12,11) on its first turn: tracked.
+    B.st.kidPending = { x: 11, y: 11, unit: S.PROPHET };
+    step(101, [P(7, 12, 11, 1), P(8, 10, 13, 9)]);
+    assert.deepStrictEqual([...B.st.kids.keys()], [7]); assert.strictEqual(B.st.quick.length, 0);
+    step(102, [P(8, 10, 13, 10)]);                       // gone at r2 5 from the church (vision r2 100, 7 tiles of margin): dead
+    assert.deepStrictEqual(B.st.quick, [102]); assert.strictEqual(B.st.kids.size, 0);
+    B.st.kidPending = { x: 11, y: 11, unit: S.PROPHET };
+    step(103, []);                                       // never seen alive: dead
+    B.st.kidPending = { x: 11, y: 11, unit: S.PROPHET };
+    step(104, [P(9, 11, 12, 1)]);
+    step(105, [P(9, 16, 16, 2)]);                        // r2 72: could have walked out of sight
+    step(106, []);
+    assert.deepStrictEqual(B.st.quick, [102, 103]); assert.ok(!(B.st.feedOff > 0));
+    B.st.kidPending = { x: 11, y: 11, unit: S.PROPHET };
+    step(107, [P(10, 11, 11, 1)]); step(110, [P(10, 11, 12, 4)]);   // lived FEED_AGE turns: no longer followed
+    assert.strictEqual(B.st.kids.size, 0);
+    B.st.kidPending = { x: 9, y: 9, unit: S.CRUSADER };
+    step(111, [P(11, 9, 9, 1)]);                         // a prophet, not the crusader built: never seen alive
+    assert.strictEqual(B.st.feedOff, 161); assert.deepStrictEqual(B.st.quick, []);
+    // feeding: off while feedOff lasts, except against an attacker that can hit the structure.
+    w.me = { ...w.me, turn: 120 };
+    assert.ok(!feeding(B, null, 0));
+    assert.ok(!feeding(B, { unit: S.PROPHET }, 98) && feeding(B, { unit: S.PROPHET }, 64) && feeding(B, { unit: S.CRUSADER }, 16));
+    w.me = { ...w.me, turn: 161 }; assert.ok(feeding(B, null, 0));
+    // Three within FEED_WINDOW stop it; one older than that has left the window.
+    const C = { w, st: { quick: [135, 140] } };
+    w.me = { ...w.me, turn: 150 }; w.friends = []; C.st.kidPending = { x: 11, y: 11, unit: S.PROPHET }; watchKids(C);
+    assert.deepStrictEqual(C.st.quick, []);
+    assert.strictEqual(C.st.feedOff, 200);
+    const D = { w, st: { quick: [125, 140] } };
+    D.st.kidPending = { x: 11, y: 11, unit: S.PROPHET }; watchKids(D);
+    assert.deepStrictEqual(D.st.quick, [140, 150]); assert.ok(!(D.st.feedOff > 0));   // 125 is 25 turns back
+    CFG.FEED_STOP = 0; assert.ok(feeding({ w, st: { feedOff: 999 } }, null, 0));      // off: always
+  } finally { [CFG.FEED_STOP, CFG.FEED_AGE, CFG.FEED_WINDOW, CFG.FEED_REST] = saved; }
+});
+
+test('struct: FEED_STOP: a castle resting from feeding answers no prophet out of its reach, one in reach as before', () => {
+  const saved = CFG.FEED_STOP;
+  try {
+    const g = new Game(3, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0);
+    const turn1 = (stop, dy) => {
+      CFG.FEED_STOP = stop; castle.turn = 1;
+      const extra = [{ id: 4999, team: 1, unit: S.PROPHET, x: castle.x, y: castle.y + dy, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 }];
+      const all = g.robots;
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100).concat(extra);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round: 1, birthRound: 1, st: { feedOff: 60 }, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 100; w.fuel = 500;
+      return (castleTurn(B) || {}).u;
+    };
+    assert.strictEqual(turn1(0, 9), S.PROPHET);          // r2 81: answered by default
+    assert.notStrictEqual(turn1(3, 9), S.PROPHET);       // resting: not answered
+    assert.strictEqual(turn1(3, 7), S.PROPHET);          // r2 49: it can hit the castle
+  } finally { CFG.FEED_STOP = saved; }
 });
 
 test('struct: WATCH: a structure radios the nearest enemy attacker within r2 100 that no military unit of ours sees', () => {

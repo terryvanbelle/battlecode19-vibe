@@ -18,11 +18,15 @@ async function build(srcDir, outDir, opts = {}) {
   const input = {};
   for (const f of files) input[f] = fs.readFileSync(path.join(srcDir, f), 'utf8');
   input['robot.js'] += '\nexport { MyRobot };\n';
-  // --cfg KEY=JSON overrides (sparring partners, ablations): applied to CFG when config.js loads.
+  // --cfg KEY=JSON overrides (candidates, sparring partners, ablations): written into the CFG literal itself, so CFG
+  // stays a constant and terser drops the code of every switch that is off, as in a plain build (a runtime
+  // Object.assign kept it all: v8's bundle 56.6 KB against 40.4 KB for the same values as literals; LEARNINGS 3, 17).
   if (opts.cfg && Object.keys(opts.cfg).length) {
-    if (!input['config.js'] || !/export const CFG = \{/.test(input['config.js'])) throw new Error('--cfg needs config.js with CFG');
-    for (const k of Object.keys(opts.cfg)) if (!new RegExp('\\b' + k + ':').test(input['config.js'])) throw new Error('unknown CFG key ' + k);
-    input['config.js'] += '\nObject.assign(CFG, ' + JSON.stringify(opts.cfg) + ');\n';
+    const src = input['config.js'] || '', m = /export const CFG = (\{[\s\S]*?\n\});/.exec(src);
+    if (!m) throw new Error('--cfg needs config.js with CFG');
+    const cfg = Function('return (' + m[1] + ');')();
+    for (const k of Object.keys(opts.cfg)) if (!(k in cfg)) throw new Error('unknown CFG key ' + k);
+    input['config.js'] = src.replace(m[0], 'export const CFG = ' + JSON.stringify({ ...cfg, ...opts.cfg }) + ';');
   }
   const bundle = await rollup.rollup({ input: { robot: 'robot.js' }, external: ['battlecode'], plugins: [virtual(input)] });
   const out = await bundle.generate({ format: 'es' });

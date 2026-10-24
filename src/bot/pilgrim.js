@@ -27,10 +27,28 @@ function init(B) {
     }
   }
   if (st.chain) learnRound(B);
+  if (CFG.HOP_GAIN && me.turn === 1 && !st.target && !st.chain) hopHeard(B);
   if (B.birthRound) B.round = B.birthRound + me.turn - 1;
   B.rnd = rng(((B.birthRound || 0) * 4096 + me.y * 64 + me.x) * 8 + me.unit); B.nav.rnd = B.rnd;
   if (!st.target && !st.site) st.target = freeDepotNear(B, me.x, me.y, null);
   st.ready = true;
+}
+
+// CFG.HOP_GAIN: born beside a church that a castle's SIG.HOP (target cluster << 6 | church cluster) names, with no depot
+// of its own: the pioneer that castle asked the church for (castle.js hopPioneer). It takes the target's site and tells
+// the castles its id (CT.HOP + target) on this first turn.
+function hopHeard(B) {
+  const w = B.w, me = w.me, st = B.st;
+  for (const r of w.robots) {
+    if (!(r.signal > 0) || (r.signal >> 12) !== SIG.HOP) continue;
+    const t = (r.signal >> 6) & 63, c = B.clusters[r.signal & 63], tc = B.clusters[t];
+    if (!c || !tc || t >= 63 || (st.site && st.cluster !== t)) continue;
+    const [cx, cy] = c.site;
+    if (king(cx, cy, me.x, me.y) > 1 || !w.friends.some(f => f.unit === CHURCH && f.x === cx && f.y === cy)) continue;
+    st.site = [tc.site[0], tc.site[1]]; st.cluster = t;
+    w.talk(CT.HOP + t);
+    return;
+  }
 }
 
 function depotAt(B, x, y) { for (const d of B.deps) if (d.x === x && d.y === y) return d; return null; }

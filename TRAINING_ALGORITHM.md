@@ -135,6 +135,13 @@ its trigger fires elsewhere.
 - **The pool is not a test set.** A candidate designed from particular panel cells lists them in its pre-registration;
   it is accepted only if its z over the other cells is ≥ 0 as well. Version the panel (§5) before every cell has
   been studied.
+- **A map-conditional switch gets a targeted panel.** A switch that changes play only on maps picked out from the map
+  alone, before any game (say, maps where the bot plans no expansion), is diluted on the general panel to the few
+  cells that qualify. Check that it is inert elsewhere (a replay on a non-qualifying map identical to the champion's),
+  then judge it on a targeted panel: the general panel's opponents on the qualifying maps of the ladder's pool,
+  assigned by a fixed rotation, the champion's control block on the same cells played first, the same pooled rule, and
+  the design's simulated false-accept rate checked before the first candidate block is scored. Its worth to the whole
+  ladder is that effect times the qualifying maps' share of the pool.
 - **No rule applies backwards.** A rejected candidate is never reopened under a rule written after its rejection
   without fresh blocks, and a decision rule is fixed in the log before the block it decides is scored.
 - Where the season has a graded objective (score margin, structures killed, resources at the end), test the per-pair

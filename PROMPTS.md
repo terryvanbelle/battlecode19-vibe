@@ -134,3 +134,9 @@ The team rating history graphs on the replica don't look like they've been updat
 
 ## 34. 2026-10-24 10:43 PDT
 I recently switched you from Extra effort to Ultracode.  I'd like you to do an audit of the bot implementation and evaluation criteria, and make sure you still agree with all the design decisions
+
+## 35. 2026-10-24 15:58 PDT
+Who told you that you had to ask me about anything?
+
+## 36. 2026-10-24 15:58 PDT
+From now on, don't wait on me

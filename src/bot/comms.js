@@ -15,6 +15,7 @@ export const SIG = {
   GUARD: 12,  // castle -> newborn military: hold the lattice around a pioneer's site (x, y) (CFG.ESCORT)
   THREAT: 13, // structure -> newborn military (r2 25, the turn after the build): an enemy prophet stands at (x, y) (CFG.SIEGE)
   WALL: 14,   // line church -> the rest of its line (far, FAR.WALL): the line ends, it faces a wall (CFG.CHAIN_WALL)
+  HOP: 15,    // castle -> a church of ours and its newborn: v = target cluster << 6 | the church's cluster (CFG.HOP_GAIN)
 };
 export function encXY(type, x, y) { return (type << 12) | (x << 6) | y; }
 export function encNum(type, v) { return (type << 12) | (v & 4095); }
@@ -23,7 +24,10 @@ export function dec(sig) { return { type: sig >> 12, x: (sig >> 6) & 63, y: sig 
 // Castle talk (8 bits, free, read by our castles only). Castles: x+1 on turn 1, y+1 on turn 2 (canonical).
 // Afterwards every robot reports a status byte:
 export const CT = {
-  CHURCH: 128,   // + cluster index (< 128): a pilgrim built a church at that cluster's site this turn
+  HOP: 1,        // + cluster index (< 63): a pioneer a church built for a castle, on its first turn (CFG.HOP_GAIN; the
+                 // castles' own 1-64 position bytes are read only through their turn 3)
+  CHURCH: 128,   // + cluster index (< 128): a pilgrim built a church at that cluster's site this turn (CFG.HOP_GAIN: and
+                 // the church itself on its first turn, so castles learn its id)
   UNIT: 64,      // + unit type: the default status byte of every robot from round 4 (castles count the army)
   DEAD: 72,      // + enemy castle index (< 4, see castle.js): a unit saw that enemy castle gone
   WAIT: 76,      // a pioneer at its free site waiting for the church's karbonite (CFG.PIONEER_HOLD)

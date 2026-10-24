@@ -89,6 +89,19 @@ test('replay: moves per 100 rounds add up to the move fuel; back-and-forth fuel 
   assert.ok(/\tback$/.test(replay.movesText(rows).split('\n')[0]));
 });
 
+test('replay: young deaths: built matches the summary; with no age limit every military loss counts', () => {
+  const buf = fs.readFileSync(path.join(FIX, 'chain_s2013_407-3.bc19'));
+  const an = replay.analyze(buf), all = replay.young(buf, 1e9), y3 = replay.young(buf), y0 = replay.young(buf, 0);
+  for (const team of [0, 1]) for (const unit of [3, 4, 5]) {
+    const pick = rows => rows.find(a => a.team === team && a.unit === unit) || { built: 0, young: 0, young_k: 0 };
+    assert.strictEqual(pick(all).built, an.tally[team].built[unit]);
+    assert.strictEqual(pick(all).young, an.tally[team].lost[unit]);
+    assert.ok(pick(y0).young <= pick(y3).young && pick(y3).young <= pick(all).young);
+  }
+  assert.strictEqual(replay.youngText(y3).split('\n')[0].split('\t')[4], 'dead_within_3');
+  assert.match(replay.youngText(y3), /^red\tall\t88\t2260\t7\t190\t0\.08$/m);
+});
+
 test('paired: discordant cells, net and t; mismatched cells ignored', () => {
   const { pairedRead } = require('../tools/paired');
   const row = (a, seed, side, w, b = 'o') => ({ a_hash: a, b_hash: b, seed, a_side: side, winner_is_a: w });
@@ -241,9 +254,16 @@ test('build_bot: --cfg overrides land in the bundle; unknown keys are refused', 
   const { build } = require('../tools/build_bot.js');
   const os = require('os');
   const out = fs.mkdtempSync(path.join(os.tmpdir(), 'bb-'));
-  await build(path.join(__dirname, '..', 'src', 'bot'), out, { cfg: { RUSH: 7 } });
-  assert.ok(/Object\.assign\(CFG,\s*\{\s*RUSH:\s*7\s*\}\)/.test(fs.readFileSync(path.join(out, 'robot.js'), 'utf8')));
-  await assert.rejects(build(path.join(__dirname, '..', 'src', 'bot'), out, { cfg: { NO_SUCH_KEY: 1 } }), /unknown CFG key/);
+  const src = path.join(__dirname, '..', 'src', 'bot'), read = () => fs.readFileSync(path.join(out, 'robot.js'), 'utf8');
+  await build(src, out, { cfg: { RUSH: 7 }, noMinify: true });
+  assert.ok(/"RUSH":7[,}]/.test(read()), 'override written into the CFG literal');
+  await assert.rejects(build(src, out, { cfg: { NO_SUCH_KEY: 1 } }), /unknown CFG key/);
+  // An override equal to the default builds the plain bundle byte for byte (CFG stays a constant, so terser drops
+  // the code of switches that are off), and the bundle stays under the size that failed init (LEARNINGS 3).
+  await build(src, out); const plain = read();
+  await build(src, out, { cfg: { PIONEER_TIMEOUT_REST: 0 } });
+  assert.strictEqual(read(), plain);
+  assert.ok(plain.length < 48000, `bundle ${plain.length} bytes`);
   fs.rmSync(out, { recursive: true, force: true });
 });
 
@@ -389,6 +409,15 @@ test('run_game --no-kill replays the killed path\'s game; batch.js caps a game w
     const row = JSON.parse(fs.readFileSync(res, 'utf8').trim());
     assert.match(row.error, /over the game cap of 3 s/);
     assert.ok(Date.now() - t0 < 30000, 'capped promptly');
+    // An error row is not a result: a rerun plays the game again. A result row carries the game's conditions.
+    execFileSync(process.execPath, [path.join(root, 'tools', 'batch.js'), '--a', 'test/fixtures/loopbot', '--b', 'bots/v2',
+      '--seeds', '2202', '--sides', 'a-red', '--par', '1', '--no-kill', '--game-cap', '3', '--out', res], { cwd: root, stdio: 'ignore' });
+    assert.strictEqual(fs.readFileSync(res, 'utf8').trim().split('\n').length, 2);
+    const ok = path.join(dir, 'ok.jsonl');
+    execFileSync(process.execPath, [path.join(root, 'tools', 'batch.js'), '--a', 'bots/v3', '--b', 'bots/v2', '--seeds', '2202',
+      '--sides', 'a-red', '--par', '1', '--max-rounds', '5', '--timescale', '20', '--init-ms', '10000', '--out', ok], { cwd: root, stdio: 'ignore' });
+    const r5 = JSON.parse(fs.readFileSync(ok, 'utf8').trim());
+    assert.deepStrictEqual([r5.timescale, r5.init_ms, r5.turn_kill_ms, r5.net_isolated], [20, 10000, 4000, true]);
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 

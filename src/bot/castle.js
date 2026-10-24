@@ -2,8 +2,8 @@
 // plans and sends church pioneers, calls attacks, and runs the structure loop.
 // Enemy castles are exactly the mirrors of ours (canonical frame: (x, n-1-y)).
 import { CFG, defReserveK } from './config.js';
-import { CHURCH, PILGRIM, CRUSADER } from './specs.js';
-import { SIG, encXY, CT, FAR } from './comms.js';
+import { STATS, CHURCH, PILGRIM, CRUSADER } from './specs.js';
+import { SIG, encXY, encNum, CT, FAR } from './comms.js';
 import { bfs } from './mapinfo.js';
 import { offsets, d2 } from './util.js';
 import { structInit, structTurn, buildToward } from './struct.js';
@@ -28,6 +28,9 @@ export function castleTurn(B) {
     st.attackUntil = 0;
     st.deadE = new Set();   // indices (into st.order) of enemy castles reported destroyed
     st.lastT = -1;
+    st.churchIds = new Map();   // CFG.HOP_GAIN: cluster -> id of our living church at its site
+    st.hopF = new Map();        // ...cluster -> king steps from its site (bfs), for the church nearest it
+    st.hopFail = new Map();     // ...church cluster -> turn a request to it lapsed
     st.ready = true;
   }
   if (me.turn === 1) w.talk(me.x + 1);
@@ -56,12 +59,20 @@ export function castleTurn(B) {
       const p = CFG.ESCORT && st.pioneers.find(q => q.id === r.id);
       if (p && !p.esc) { p.esc = true; openEscort(B, p.cluster); }
     }
+    else if (CFG.HOP_GAIN && me.turn > 3 && ct >= CT.HOP && ct < CT.HOP + 63) {   // a pioneer a church built for us
+      st.count[PILGRIM]++;
+      const q = r.turn === 1 && st.pioneers.find(q => q.hop >= 0 && q.id === 0 && q.cluster === ct - CT.HOP);
+      if (q) q.id = r.id;
+    }
     if (me.turn <= 3 && r.castle_talk > 0 && r.castle_talk <= 64) {
       const p = st.partial.get(r.id) || {};
       if (r.turn === 1) p.x = r.castle_talk - 1; else if (r.turn === 2) p.y = r.castle_talk - 1;
       st.partial.set(r.id, p);
       if (p.x !== undefined && p.y !== undefined) st.castles.set(r.id, { x: p.x, y: p.y });
-    } else if (me.turn > 3 && r.castle_talk >= CT.CHURCH) st.churched.add(r.castle_talk - CT.CHURCH);
+    } else if (me.turn > 3 && r.castle_talk >= CT.CHURCH) {
+      st.churched.add(r.castle_talk - CT.CHURCH);
+      if (CFG.HOP_GAIN && r.turn === 1) st.churchIds.set(r.castle_talk - CT.CHURCH, r.id);   // the church's own first turn
+    }
     else if (me.turn > 3 && r.castle_talk >= CT.DEAD && r.castle_talk < CT.DEAD + 4) st.deadE.add(r.castle_talk - CT.DEAD);
     else if (me.turn > 3 && ct >= CT.TAKEN && ct < CT.TAKEN + 40) st.taken.set(ct - CT.TAKEN, me.turn);
   }
@@ -71,6 +82,7 @@ export function castleTurn(B) {
   if (me.turn === 3) { planClusters(B); if (CFG.ESCORT_FIRST) escortFirst(B); }
   // A castle that disappeared from the id list is dead.
   if (me.turn > 3) for (const id of [...st.castles.keys()]) if (id !== me.id && !allIds.has(id)) st.castles.delete(id);
+  if (CFG.HOP_GAIN) for (const [c, id] of [...st.churchIds]) if (!allIds.has(id)) st.churchIds.delete(c);
   if (CFG.EXPAND_ROUND && st.plan && me.turn >= CFG.EXPAND_ROUND && (me.turn - CFG.EXPAND_ROUND) % 50 === 0) expandPlan(B);
   // Pioneers: one that disappeared frees its cluster for a later retry; one that built its church or is overdue is done.
   st.pioneers = st.pioneers.filter(p => {
@@ -79,9 +91,14 @@ export function castleTurn(B) {
       if (CFG.ESCORT) openEscort(B, p.cluster);
       return false;
     }
+    // CFG.HOP_GAIN: no newborn answered for it (the church could not build in the round it was asked): the castle may
+    // send it itself next, and asks that church nothing for HOP_REST turns.
+    if (p.hop >= 0 && p.id === 0 && me.turn - p.since > 2) { st.hopFail.set(p.hop, me.turn); return false; }
     if (CFG.ESCORT && !p.esc && me.turn - p.since > p.d + CFG.ESCORT_SLACK) { p.esc = true; openEscort(B, p.cluster); }
     if ((CFG.PIONEER_GIVEUP || CFG.PIONEER_STALL_ANY) && st.taken.has(p.cluster) && st.taken.get(p.cluster) >= p.since) return false;   // it gave up
-    return !st.churched.has(p.cluster) && me.turn - p.since <= 80;
+    const late = me.turn - p.since > 80;
+    if (late && CFG.PIONEER_TIMEOUT_REST && !st.churched.has(p.cluster)) st.lost.set(p.cluster, me.turn);
+    return !st.churched.has(p.cluster) && !late;
   });
   st.nStructs = () => st.castles.size + st.churched.size;
   if (CFG.RECALL) callRecall(B);
@@ -91,7 +108,7 @@ export function castleTurn(B) {
     (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null),
     CFG.PIONEER_EARLY || CFG.ESCORT_EARLY ? () => (CFG.ESCORT_EARLY ? escort(B) : null) || (CFG.PIONEER_EARLY ? earlyPioneer(B) : null) : null);
   if (CFG.CASTLE_POST) callPost(B);   // after the build, so a newborn's radio comes first
-  return act;
+  return act === HOPPED ? null : act;
 }
 
 // CFG.CASTLE_POST: radio this castle's position far (FAR.POST, 60 tiles) every CASTLE_POST_EVERY rounds when the turn's
@@ -194,7 +211,37 @@ function pioneer(B) {
   const next = nextPioneer(B);
   if (!next) return null;
   if (!w.canAfford(PILGRIM, CFG.PIONEER_DEPART_K + defReserveK(B), 200)) return null;
+  if (CFG.HOP_GAIN) { const h = hopPioneer(B, next); if (h) return h; }
   return sendPioneer(B, next);
+}
+
+// CFG.HOP_GAIN: the pioneer for `next` is built by the living church of ours nearest its site (king steps over passable
+// tiles; ties to the lower cluster index) when that church is at least HOP_GAIN steps nearer than this castle. The
+// castle radios SIG.HOP (target cluster << 6 | church cluster) far enough to reach every tile beside the church: the
+// church builds that round (church.js hopBuild) and its newborn reads the target from this radio (pilgrim.js). The
+// castle builds nothing this turn, so no newborn's radio of its own replaces the request. The pioneer is tracked as one
+// of the castle's own, its id taken from its first turn's CT.HOP talk. Returns HOPPED, or null to build it here.
+const HOPPED = { hopped: true };
+function hopPioneer(B, next) {
+  const w = B.w, st = B.st, me = w.me, n = w.n, t = next.cluster;
+  if (w.sentR2 || !st.churchIds.size || t >= 63) return null;
+  if (!st.hopF.has(t)) st.hopF.set(t, bfs(w, [B.clusters[t].site], KING));
+  const f = st.hopF.get(t);
+  let best = -1, bd = next.d - CFG.HOP_GAIN + 1;
+  for (const j of [...st.churchIds.keys()].sort((a, b) => a - b)) {
+    if (j >= 64 || (st.hopFail.has(j) && me.turn - st.hopFail.get(j) < CFG.HOP_REST)) continue;
+    const [sx, sy] = B.clusters[j].site, v = f[sy * n + sx];
+    if (v >= 0 && v < bd) { bd = v; best = j; }
+  }
+  if (best < 0) return null;
+  const [hx, hy] = B.clusters[best].site;
+  let r2 = Math.ceil((Math.sqrt(d2(me.x, me.y, hx, hy)) + 1.5) ** 2);
+  while (Object.values(FAR).includes(r2)) r2++;   // never one of the far messages' radii
+  r2 = Math.min(2 * 63 * 63, r2);
+  if (w.fuel < Math.ceil(Math.sqrt(r2)) + STATS[PILGRIM].costF + 2) return null;
+  w.signal(encNum(SIG.HOP, (t << 6) | best), r2);
+  st.pioneers.push({ id: 0, cluster: t, since: me.turn, d: bd, hop: best });
+  return HOPPED;
 }
 
 // CFG.PIONEER_EARLY: through its turn PIONEER_EARLY a castle whose plan opens with a contested cluster sends that one
