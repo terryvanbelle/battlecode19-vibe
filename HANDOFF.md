@@ -21,8 +21,7 @@
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
   ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzz.sh (h145). Last job name ...19 + 24 z's (h149); the next adds a z. Now:
-  h145 (v8 + ECON_RICH 150) and h146 (v8 + church strike STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) screens
-  passed (t 1.00, castles 30 vs 34; t 1.13, 35 vs 38); h147 (v8 + PIONEER_EARLY 6, HOLD 64, LEAN 3, FAST
+  h146 (v8 + church strike STRIKE_R2 36, PREACHER_SELF 4, PREACHER_MIL 2.5) screen passed (t 1.13, castles 35 vs 38); h147 (v8 + PIONEER_EARLY 6, HOLD 64, LEAN 3, FAST
   1) passed (t 1.41, castles 23 vs 38). Screens vs bots/v8 for **h148** (v8 + CHAIN_LIVE 1: castles hold the chain reserve
   only while a chainer walks or waits; 25000) and **h149** (CHAIN_LIVE 2: only while one waits staged; 26000).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h`, castles from out/dlv_gate_hN.txt on the
@@ -35,14 +34,14 @@
   for v8-based candidates `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK...`, for v7-based ones
   `tools/panel_pool.sh 420-425 progress/panels/v7-m1.pool BLOCK...`; rejected blocks join their pool file.
   v7-based panels (read for the idea, not acceptance): h139 (ECON_RICH 150) 706-711 + 732-737 z 1.96 against v7
-  (carried by **h145**: v8-pool block 1 = 750-755, beside its screen), h141 (church strike) 738-743 REJECTED (z 0.43), h140 (early fast
-  pioneer) 744-749. v8-pool blocks 1: **h146** (v8 + church strike; screen t 1.13) = 758-763,
+  (h145 on v8: 750-755 z 0.00, REJECTED; the line closes), h141 (church strike) 738-743 REJECTED (z 0.43), h140 (early
+  fast pioneer) 744-749 REJECTED (z -0.24; won awesomelemonade 2518). v8-pool blocks 1: **h146** (v8 + church strike; screen t 1.13) = 758-763,
   **h147** (v8 + early fast centre pioneer; screen t 1.41) = 764-769.
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013, 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
   2518; uvafan 2046; bot1v43 2591. Studies: botfinalsafe 1706 (castles idle r33-93, the centre cluster lost); wololo
   2013 (church-beside-church preacher fights from r97). TRAINING_LOG 2026-10-24 02:52, 03:48.
 - **Candidates parked**: h119 (PIONEER_CALL; no local build triggers it), h117, h109, h108, h102, h98/h99, h105,
-  h106. Closed lines: SIEGE (h135-h138), the v7 stacks h142/h143, ECON_RICH 100/250 (h116, h144).
+  h106. Closed lines: SIEGE (h135-h138), the v7 stacks h142/h143, ECON_RICH (h116, h139/h145, h144).
 - Closed on 2026-10-23 (TRAINING_LOG, progress/ATTEMPTS.md): h114 REJECTED 11:24 (CHAIN_GUARD 1: t -1.63); h104 REJECTED on the replica 10:47 (no general attack: net
   0); h113 REJECTED 10:38 (CHAIN_CLEAR 2: t -1.73); h110 REJECTED
   09:20 (RECALL 30: t -1.73); h96 REJECTED on the replica 08:35; h100 REJECTED 08:14 (ESCORT_FIRST 1: D-48 look t -0.29); h107 FAILED 06:46 (DEF_FAR_UNIT 3: t -1.89, D 7,

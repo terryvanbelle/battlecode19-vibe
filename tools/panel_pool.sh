@@ -19,6 +19,6 @@ cmp() { python3 -I tools/galaxy19/contest19.py compare "$ctrl" "$1" 2>/dev/null 
 } | awk '$1=="P"{k=$2" "$3; n[k]++; w[k]+=$4} $1=="C"{k=$2" "$3; m[k]++; c[k]+=$4}
 END{E=0; W=0; V=0; N=0
   for(k in m){p=(w[k]+0.5)/(n[k]+1); E+=m[k]*p; W+=c[k]; V+=m[k]*p*(1-p); N+=m[k]
-    flag=(c[k]>0 && w[k]<=1) ? "  <- won a never-won cell" : ((c[k]<m[k] && w[k]>=n[k]-1) ? "  <- lost a sure cell" : "")
+    flag=(c[k]>0 && p<0.25) ? "  <- won a rarely-won cell" : ((c[k]<m[k] && p>0.75) ? "  <- lost a usually-won cell" : "")
     printf "%-45s pool %2d/%-2d cand %d/%d%s\n", k, w[k], n[k], c[k], m[k], flag}
   printf "~ cand wins %d of %d, pooled expectation %.1f, z %.2f\n", W, N, E, (V>0) ? (W-E)/sqrt(V) : 0}' | sort

@@ -3982,3 +3982,22 @@ the bank only while a chainer of ours walks or waits (castle talk CT.CHAINER fro
 staged (new CT.STAGED 79). Churches unchanged. Screens vs bots/v8: h148 (CHAIN_LIVE 1, seed0 25000), h149 (CHAIN_LIVE
 2, 26000). Pre-registered: either passes the screen, then the v8-pool panel decides; the mechanism is visible if the
 bank above 600 K with no chainer live drops in the census games' cells (dlv per-game bank not yet measured).
+
+## 2026-10-24 08:24 PDT: h145 and h140 REJECTED on the replica; the v8 census of 54 field games
+
+h145 (v8 + ECON_RICH 150) block 1 750-755 against the v8 pool: 8 of 18 against 8.0, z 0.00: REJECTED (joins the v8
+pool); the idle-bank switch that read z 1.96 on v7 (h139) reads nothing on v8: the ECON_RICH line closes. h140 (v7 +
+early fast centre pioneer) 744-749 against the v7 pool: 5 of 18 against 5.4, z -0.24: REJECTED (joins the v7 pool);
+it won awesomelemonade 2518 (pool 1 of 15), as h121 did; h147 carries the switch on v8 (764-769).
+tools/panel_pool.sh flags cells by the pooled rate now (won at p < 0.25, lost at p > 0.75): "won at most once" read a
+1-of-3 cell as never won.
+
+Census (timeline at r100-600 of all 54 v8 games, 634-639, 646-651, 726-731): the army stops growing at r200 in nearly
+every game and stays flat until the first chain fires (uvafan 2046: 33 units r200-400, first line r352; awesomelemonade
+2797: 29-34 units r200-400, first line r728/754; bot1v43 2321: 40 units r200-470, no line; IanCoolidge0 203: 5-10
+units, first line r478) while the bank climbs 4-8 K a round toward CHAIN_K. Wins come from early lines on small maps
+(wololo 2644 r250, bot1v43 388 r291, awesomelemonade 1712 r225, IanCoolidge0 2644 r283) and repeated lines on
+IanCoolidge0 1036 (five). Two never-won cells are one pattern: a single central cluster on the symmetry axis (bot1v43
+2591, 32x32: home clusters of two depots each; awesomelemonade 2518, 36x36): the castle builds 2-3 home pilgrims, the
+two escort crusaders (r3-r5, 30 K) and its pioneer only at r23-24, which dies at r30-31; the enemy has a church there
+by r23 (2591) / two by r40 (2518), and we mine 180-336 K by r100 to its 700+.
