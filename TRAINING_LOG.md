@@ -3563,3 +3563,9 @@ CometsTech~187e8c (3.8 h; most nacks against the dropped bots). Under the 5400 s
 - -> **REPLICA PANEL**. h126 and h127 are the first two candidates since v7 to clear a gate's mechanism with a
   positive estimate; their block 1s go in together (12 matches) once fewer than 30 wait (38 now), ahead of h103
   block 2, h112 and h119. If both pass, the one with the higher replica net is the next incumbent.
+
+## 2026-10-23 19:16 PDT: h126 and h127 replica panel block 1s queued
+
+Replica queue fell under 30. h126 = submission 108, block 1 = matches 622-627; h127 = submission 109, block 1 = matches
+628-633 (panel v7-m1, control 420-425). bots/v7 resubmitted as the ladder build (submission 110); our matches bumped to
+the front. Read each with `contest19.py compare 420-425 <block>` under the two-block rule.

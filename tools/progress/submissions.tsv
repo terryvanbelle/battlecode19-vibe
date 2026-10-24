@@ -7,3 +7,5 @@ submission	build	note
 102	cand:h104	panel candidate dist/h104 (144f5cfdab65), block 1 = matches 432-437 (TRAINING_LOG 2026-10-23 05:42)
 104	cand:h103	panel candidate dist/h103 (406a9d0dc3b3), block 1 = matches 438-443 (TRAINING_LOG 2026-10-23 07:28)
 106	cand:h111	panel candidate dist/h111 (39be56a5794b), block 1 = matches 616-621 (TRAINING_LOG 2026-10-23 09:13)
+108	cand:h126	panel candidate dist/h126 (9884fc8a4840), block 1 = matches 622-627 (TRAINING_LOG 2026-10-23 19:16)
+109	cand:h127	panel candidate dist/h127 (d2caca3969e4), block 1 = matches 628-633 (TRAINING_LOG 2026-10-23 19:16)
