@@ -6,6 +6,8 @@
 // independently, and the clock is not enforced. The stepper takes the engine's order out of the result:
 //   - attacks resolve first and together: every shot hits the pre-round board, and the dead are removed only after
 //     all have fired (the engine's order lets the first of two duelling twins kill the other before it shoots);
+//     reclaim from the phase's dead goes to every attacker whose shot reached them, from their cargo before the
+//     phase (phaseReclaim; the engine's order credits only the shot that crosses zero);
 //   - the other actions follow in twin pairs, red then its blue twin, so same-team conflicts resolve alike on both
 //     sides; twins that aim at one tile (a tile on the mirror axis is its own mirror) both stay put, keeping their
 //     signal and castle talk (the engine would give the tile to the first to act).
@@ -37,6 +39,23 @@ function compile(dir) {
 function mirrorFn(g) {
   const n = g.map.length, sym = symmetry(g.map);
   return sym === 'H' ? (x, y) => [x, n - 1 - y] : (x, y) => [n - 1 - x, y];
+}
+
+// Reclaim in the simultaneous attack phase: every attacker whose shot reached a non-structure that dies in the phase
+// takes the engine's reclaim for it (action_record.js enactAttack), from the victim's cargo before the phase. Applied
+// one by one, the engine's rule credits only the shot that crosses zero and reads cargo the victim may have reclaimed
+// earlier in the same phase: with twins in one pair the red one always goes first (seed 3, r504: two axis preachers
+// 7 vs 6 karbonite). hits: [{a: attacker, victims: [robot...]}]; returns Map attacker -> {k, f}.
+function phaseReclaim(hits, dead, cargo0) {
+  const gain = new Map();
+  for (const { a, victims } of hits) for (const v of victims) {
+    if (!dead.has(v) || v.unit === SPECS.CASTLE || v.unit === SPECS.CHURCH) continue;
+    const r2 = (a.x - v.x) ** 2 + (a.y - v.y) ** 2, c = cargo0.get(v.id), s = gain.get(a) || { k: 0, f: 0 };
+    s.k += Math.floor((c.k + SPECS.UNITS[v.unit].CONSTRUCTION_KARBONITE / 2) / r2);
+    s.f += Math.floor(c.f / r2);
+    gain.set(a, s);
+  }
+  return gain;
 }
 
 // First difference between the red half and the mirrored blue half, or null.
@@ -114,10 +133,21 @@ async function check(code, seed, rounds) {
     // mid: the first twin pair (one key) after whose actions the board stops being a mirror image.
     let mid = null;
     // Attacks, together: the dead stay on the board (and keep taking hits) until every shot has landed.
-    const dead = new Set();
+    const dead = new Set(), hits = [], cargo0 = new Map(g.robots.map(r => [r.id, { k: r.karbonite, f: r.fuel }]));
     g._deleteRobot = r => dead.add(r);
-    try { for (const i of order) if (acts[i] && acts[i].action === 'attack') apply(i, acts[i]); }
-    finally { g._deleteRobot = realDelete; }
+    try {
+      for (const i of order) if (acts[i] && acts[i].action === 'attack') {
+        const r = actors[i], tx = r.x + acts[i].dx, ty = r.y + acts[i].dy, s = SPECS.UNITS[r.unit].DAMAGE_SPREAD;
+        const victims = g.robots.filter(q => (q.x - tx) ** 2 + (q.y - ty) ** 2 <= s);
+        apply(i, acts[i]);
+        if (!errs[i]) hits.push({ a: r, victims });
+        r.karbonite = cargo0.get(r.id).k; r.fuel = cargo0.get(r.id).f;   // the engine's own reclaim, undone
+      }
+    } finally { g._deleteRobot = realDelete; }
+    for (const [a, s] of phaseReclaim(hits, dead, cargo0)) {
+      a.karbonite = Math.min(cargo0.get(a.id).k + s.k, SPECS.UNITS[a.unit].KARBONITE_CAPACITY);
+      a.fuel = Math.min(cargo0.get(a.id).f + s.f, SPECS.UNITS[a.unit].FUEL_CAPACITY);
+    }
     for (const r of dead) realDelete.call(g, r);
     if (dead.size || firstAttack === round) { const d = diff(g, mir); if (d) mid = describe('after the attacks: ' + d, order.filter(i => acts[i] && acts[i].action === 'attack')); }
     // The rest, in twin pairs; the killed do not act. Twins claiming one tile both stay put (signal and talk kept).
@@ -150,5 +180,5 @@ async function main() {
   for (const s of seeds) { const r = await check(code, s, rounds); if (r.ok === false) bad++; console.log(JSON.stringify(r)); }
   process.exit(bad ? 1 : 0);
 }
-module.exports = { check, compile, claim, contested };
+module.exports = { check, compile, claim, contested, phaseReclaim };
 if (require.main === module) main().catch(e => { console.error(e.stack || e); process.exit(2); });

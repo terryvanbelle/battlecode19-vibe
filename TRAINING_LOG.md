@@ -4456,3 +4456,28 @@ symcheck on bots/v8 (seeds 1, 2, 3, 2321 to r1000) started alone on the driver a
 16:23 with 285 MB left (no output yet); stopped by PID. It runs on the VM as job ...1000sym (from 2019-next, the
 driver's tools/symcheck.js 716a95d5, nice 15, unshare -rn; one process beside saturn's 8 slots), log
 out/sym_v8_r1000.log. LEARNINGS 13 extended: symcheck at 1000 rounds is a VM job, not a driver one.
+
+## 2026-10-24 16:27 PDT: church census of v8's 51 field games: no church at all in 11 of 29 losses; later to church in the rest
+
+Every church built to r200 and every pilgrim death (scratchpad churches.js over the replays of the 16:02 census; half
+= nearer its own castles or the enemy's). Losses (29): no church of ours by r200 in 11 (wins: 1 of 22): the no-plan
+maps 2046, 2330, 1626, 1884 (h160's case; there the opponents built none either, but rafekruse on 1626, r17), and the
+one-contested-cluster maps 203 (4 games), 2518 (2), 2591, where our one pioneer dies (203 vs StoneT2000, rafekruse,
+uvafan: their church on our half at r26-90). Where both teams churched, our first church came at a median r32.5
+against theirs at r22, ours first in 2 of 18 (wins: r40 against r33, first in 7 of 19). Their churches on our half by
+r100: 22 in the losses, 8 in the wins; ours on theirs: 1 and 1. Our pilgrims dead by r100: 33 in the losses (23 to
+prophets; 22 within 8 tiles of one of our structures), 4 in the wins; theirs 14 and 16. Reading: the losses are
+decided in the opening race for clusters, and where we lose it outright the bank then idles to r100 (16:02). The
+saturated-economy switch covers that second part (203, 2518, 2591 after the pioneer dies; the no-plan maps as h160);
+the race itself is the line of h121, h140, h147 (closed).
+
+## 2026-10-24 16:56 PDT: symcheck on v8 to r1000: seeds 1, 2, 2321 mirror; seed 3 parted at r504 on the stepper's reclaim order
+
+VM job ...1000sym (out/sym_v8_r1000.log): seeds 1, 2 and 2321 stay exact mirror images to r1000 (222, 184, 128
+robots). Seed 3 parted at r504, after the attack phase: twin preachers #859 (8,25) and #3170 (8,24) carried 7 and 6
+karbonite. Both twins' actions were mirror images (attacks at (5,23) and (5,26), four preachers a side splashing the
+other's): the difference is reclaim, which the stepper took from the engine's one-by-one rule. In a pair the red twin
+fires first, collects reclaim, and its killer later reads that larger cargo (floor((4 + 15) / 9) = 2 against
+floor(15 / 9) = 1). A tool artifact, like the axis-tile contest, not a decision of the bot. Fixed: in the phase every
+attacker whose shot reached a robot that dies takes the reclaim, from the cargo the victim held before the phase
+(`phaseReclaim`, unit-tested on this case). The four seeds rerun on the VM (job ...1000symb, seed 3 first).

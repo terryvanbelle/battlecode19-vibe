@@ -140,3 +140,6 @@ Who told you that you had to ask me about anything?
 
 ## 36. 2026-10-24 15:58 PDT
 From now on, don't wait on me
+
+## 37. 2026-10-24 16:43 PDT
+I have a research project for you.  I'd like you to look into ways in which micro- and macroeconomic models could be applied to strategy for your bot.  Write up a document called ECONOMICS.md, which should include concrete, practical suggestions for improving the bot's performance by applying economic models.  Once the document is written, start trying out the ideas, starting with the ones most likely to work

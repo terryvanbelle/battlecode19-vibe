@@ -556,6 +556,21 @@ test('symcheck: claimed tiles; v5 stays a mirror image for 12 rounds (run withou
   assert.deepStrictEqual(JSON.parse(r.stdout.trim()), { seed: 2, ok: true, round: 12, robots: JSON.parse(r.stdout.trim()).robots });
 });
 
+test('symcheck: phase reclaim credits every hitter of the dead from cargo before the phase, alike for twins', () => {
+  const { phaseReclaim } = require('../tools/symcheck');
+  // Seed 3, r504 in miniature: twin preachers R (red) and B (blue) each splash the other's preacher; each victim
+  // reclaimed 4 K earlier in the phase in the engine's order, which must not count. Preacher cost 30: half 15.
+  const R = { id: 1, unit: 5, x: 5, y: 26 }, B = { id: 2, unit: 5, x: 5, y: 23 }, P = { id: 3, unit: 2, x: 4, y: 26 };
+  const cargo0 = new Map([[1, { k: 0, f: 0 }], [2, { k: 0, f: 0 }], [3, { k: 20, f: 40 }]]);
+  const g = phaseReclaim([{ a: R, victims: [B] }, { a: B, victims: [R, P] }], new Set([R, B, P]), cargo0);
+  assert.deepStrictEqual(g.get(R), { k: 1, f: 0 });                      // floor(15 / 9)
+  assert.deepStrictEqual(g.get(B), { k: 1 + Math.floor(25 / 10), f: 4 }); // R at r2 9, the pilgrim at r2 10: (20 + 5) / 10, 40 / 10
+  // A survivor yields nothing; structures yield nothing.
+  const C = { id: 4, unit: 1, x: 5, y: 24 };
+  cargo0.set(4, { k: 0, f: 0 });
+  assert.strictEqual(phaseReclaim([{ a: R, victims: [B, C] }], new Set([C]), cargo0).size, 0);
+});
+
 test('gatesim: certain outcomes decide at the first look; no discordance stays open; p 0.5 rarely accepts', () => {
   const { simulate, gate, rng } = require('../tools/gatesim');
   const o = { looks: [12, 24, 48], block: 20, maxCells: 200, accept: 2, reject: 0 };
