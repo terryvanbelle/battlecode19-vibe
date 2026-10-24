@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 09:38 PDT)
+## State (2026-10-24 09:49 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -20,10 +20,11 @@
 - **VM queue** (`~/jobq`; the runner takes pending jobs in locale `ls | sort` order; gates run from the shadow tree
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
-  ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 28 z's (h153); the next adds a z. Now:
+  ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 30 z's (h155); the next adds a z. Now:
   **h151** (v8 + CHAIN_FAILS 1; 28000; pre-registered screen exception: castles alone with t > 0 still goes to the
-  panel, TRAINING_LOG 2026-10-24 08:42) runs, then **h152** (CHAIN_LIVE 1 + WATCH 2; 29000) and **h153** (WATCH 2 +
-  SPOT_MASK 56; 30000). Passed: h148 (CHAIN_LIVE 1; +3 -0, t 1.73, castles 35 vs 39), h149 (CHAIN_LIVE 2; +3 -3, t
+  panel, TRAINING_LOG 2026-10-24 08:42) runs, then **h152** (CHAIN_LIVE 1 + WATCH 2; 29000), **h153** (WATCH 2 +
+  SPOT_MASK 56; 30000), **h154** (ESCORT_HOLD_R 2 + ESCORT_EARLY 1, the wololo-study escort fixes; 31000) and
+  **h155** (ESCORT_HOLD_R 2 alone; 32000). Passed: h148 (CHAIN_LIVE 1; +3 -0, t 1.73, castles 35 vs 39), h149 (CHAIN_LIVE 2; +3 -3, t
   0.00, 35 vs 34), h150 (WATCH 2: structures radio enemy attackers no military unit of ours sees; +8 -3, t 1.51, 24 vs 38).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h`, castles from out/dlv_gate_hN.txt on the
   VM (awk on columns 18-19, a = candidate).

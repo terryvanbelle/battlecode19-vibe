@@ -1662,6 +1662,61 @@ testPreV8('castle: ESCORT_FIRST owes escorts to the first contested cluster at p
   } finally { Object.assign(CFG, saved); }
 });
 
+test('military: ESCORT_HOLD_R: an escort holds within that many king steps of its site, other units within LATTICE_R', () => {
+  const saved = { ...CFG };
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    const cru = { id: 4002, team: 0, unit: S.CRUSADER, x: 0, y: 0, turn: 3, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    g.robots.push(cru);
+    const world = () => { const w = worldFor(g, cru); w.fuel = 1000; return w; };
+    let site = null;   // a passable, even (canonical frame), non-depot tile with no enemy near, 6 rows from the site
+    for (let k = 1; k < n * n && !site; k++) {
+      const x = k % n, y = Math.floor(k / n);
+      if (!free(x, y) || d2(x, y, castle.x, castle.y) > 400) continue;
+      cru.x = x; cru.y = y;
+      const w = world(), m = w.me;
+      if (((m.x + m.y) & 1) || w.isDepot(m.x, m.y) || w.enemies.some(e => d2(e.x, e.y, m.x, m.y) <= 196)) continue;
+      const sy = m.y + 6 < n ? m.y + 6 : m.y - 6;
+      if (sy >= 0 && sy < n) site = { x: m.x, y: sy };
+    }
+    assert.ok(site);
+    const turns = (holdR, escort) => {   // the first action in three turns (a cruise step may wait a turn or two first)
+      CFG.ESCORT_HOLD_R = holdR;
+      const w = world(), B = { api: w.api, w, round: 20, birthRound: 18, rnd: rng(2), deps: null, clusters: null,
+        st: { ready: true, home: site, guardAt: escort ? site : undefined, target: null, tIdx: -1, known: [], dead: new Set(),
+          reports: [], waitUntil: 0, guard: false } };
+      B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+      for (let i = 0; i < 3; i++) { const a = militaryTurn(B); if (a) return a; }
+      return null;
+    };
+    assert.strictEqual(turns(0, true), null);                     // v8: 6 king steps out, inside LATTICE_R 12: holds
+    assert.strictEqual((turns(3, true) || {}).action, 'move');   // an escort 6 steps out heads for its site
+    assert.strictEqual(turns(3, false), null);                    // a unit that heard no SIG.GUARD holds as before
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('castle: ESCORT_EARLY builds the owed escorts ahead of the economy pilgrims', () => {
+  const saved = { ...CFG };
+  try {
+    const run = (early) => {   // the castle's builds on turns 1-5 of seed 1915 (one castle a side, a contested centre)
+      CFG.ESCORT_EARLY = early;
+      const g = new Game(1915, 100, 20, false, false), castle = g.robots.find(r => r.team === 0);
+      g.robots = g.robots.filter(r => r.team === 0);
+      const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 }, out = [];
+      for (const t of [1, 2, 3, 4, 5]) {
+        castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; w.karbonite = 100; w.fuel = 500;
+        const a = castleTurn(B); out.push(a && a.action === 'build' ? a.u : null);
+      }
+      return out;
+    };
+    // Off (v8): pilgrims while depots are due; on: v8's two crusaders on turns 3 and 4, once the plan owes them.
+    assert.deepStrictEqual(run(0), [S.PILGRIM, S.PILGRIM, S.PILGRIM, S.PILGRIM, S.PILGRIM]);
+    assert.deepStrictEqual(run(1), [S.PILGRIM, S.PILGRIM, S.CRUSADER, S.CRUSADER, S.PILGRIM]);
+  } finally { Object.assign(CFG, saved); }
+});
+
 testPreV8('military: ESCORT a unit born hearing SIG.GUARD holds the lattice around that site, not home', () => {
   const saved = { ...CFG };
   try {

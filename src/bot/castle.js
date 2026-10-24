@@ -87,7 +87,8 @@ export function castleTurn(B) {
   callAttack(B);
   st.pioneerDue = pioneerDue(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
   const act = structTurn(B, allIds, () => (CFG.ESCORT_FIRST ? escort(B) : null) || pioneer(B) || (CFG.ESCORT ? escort(B) : null) ||
-    (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null), CFG.PIONEER_EARLY ? () => earlyPioneer(B) : null);
+    (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null),
+    CFG.PIONEER_EARLY || CFG.ESCORT_EARLY ? () => (CFG.ESCORT_EARLY ? escort(B) : null) || (CFG.PIONEER_EARLY ? earlyPioneer(B) : null) : null);
   if (CFG.CASTLE_POST) callPost(B);   // after the build, so a newborn's radio comes first
   return act;
 }

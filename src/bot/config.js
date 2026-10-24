@@ -49,6 +49,14 @@ export const CFG = {
   ESCORT_UNIT: 3,            // crusader (v8; 4 prophet)
   ESCORT_MIRROR: 1,          // 1: ESCORT_FIRST's units hold the enemy's mirror site (v8 = h128: two crusaders there; replica
                              // panel, three blocks 23 of 54 against the pooled 16.1, z 2.54: wololo 2644 3/3, never won before)
+  ESCORT_HOLD_R: 0,          // >0: a unit that heard SIG.GUARD holds lattice tiles within this many king steps of the
+                             // site, not LATTICE_R (replica 726, seed 2013: v8's escorts stopped on the first lattice tile
+                             // within 12 steps of the site, 2 steps from home, and stood there r6-r48 out of sight of
+                             // wololo's crusader on the site; they reach it only when diagonal steps miss every lattice
+                             // tile, as on 2644)
+  ESCORT_EARLY: 0,           // 1: the castle builds ESCORT_FIRST's units ahead of its economy pilgrims (turns 3-4, not 4-5:
+                             // replica 758, seed 2644: a blue crusader built r5 acts after red's r5 prophet and lost the
+                             // duel by one shot, r14-18; as red the same crusader acts first and won, 634, 646, 726)
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short

@@ -4106,3 +4106,16 @@ vs 38: passes. In one game (1063) our structures sent 315 radio messages against
 spotting the same enemy at r270 (10 fuel each). Block 1 = 961-966 (submission 164), at the front of the replica queue
 with h148's and h149's. Screens queued behind h151: h152 (CHAIN_LIVE 1 + WATCH 2, the two passing screens stacked,
 29000) and h153 (WATCH 2 + SPOT_MASK 56: prophets also answer structure spots and walk into the band, 30000).
+
+## 2026-10-24 09:48 PDT: h154 and h155: the escort fixes from the wololo study
+
+Two switches from the study of v8's losses to wololo (workflow over replica 634, 646, 726, 758, TRAINING_LOG
+2026-10-24 09:25). ESCORT_HOLD_R: a unit that heard SIG.GUARD at birth holds lattice tiles within this many king
+steps of its site instead of LATTICE_R 12. On 2013 (726) v8's two escort crusaders stopped on the first lattice tile
+inside 12 steps of the centre site, two steps from home, and stood there r6-r48 out of sight of the wololo crusader
+parked on the site; they reach the site only when their diagonal steps miss every lattice tile, as on 2644.
+ESCORT_EARLY: the castle builds ESCORT_FIRST's units on turns 3-4, ahead of the economy pilgrims, not 4-5. On 2644
+as blue (758) the r5 crusader acts after red's r5 prophet in the build order and lost their duel by one shot
+(r14-18); as red (634, 646, 726) the same crusader acts first and won. Both off by default (the default build replays
+h128's game byte for byte; 142 unit tests). Screens: h154 = v8 + ESCORT_HOLD_R 2 + ESCORT_EARLY 1 (31000; stacked,
+so one panel block tests both) and h155 = v8 + ESCORT_HOLD_R 2 alone (32000), queued behind h153.

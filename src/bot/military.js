@@ -295,8 +295,9 @@ function latticeCentre(B) {
   return { x: h.x, y: Math.min(B.w.n - 1, h.y + Math.floor((B.round - CFG.CREEP_ROUND) / CFG.CREEP_EVERY)) };
 }
 
-// King steps from the lattice centre within which a unit holds the lattice (CFG.CASTLE_POST: a castle post is tighter).
-function latticeR(B) { return B.st.post ? CFG.CASTLE_POST_R : CFG.LATTICE_R; }
+// King steps from the lattice centre within which a unit holds the lattice (CFG.CASTLE_POST: a castle post is tighter;
+// CFG.ESCORT_HOLD_R: an escort holds near its site).
+function latticeR(B) { return B.st.post ? CFG.CASTLE_POST_R : CFG.ESCORT_HOLD_R && B.st.guardAt ? CFG.ESCORT_HOLD_R : CFG.LATTICE_R; }
 
 // The free lattice tile nearest an anchor ahead of the lattice centre (toward the enemy), within CFG.LATTICE_R king
 // steps of the centre (home, unless CFG.CREEP_ROUND).

@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 125 other, 37 rejected, 16 accepted, 6 in progress, 5 dropped, 4 sparring partners (193 rows).
+Totals: 127 other, 37 rejected, 16 accepted, 6 in progress, 5 dropped, 4 sparring partners (195 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -207,3 +207,5 @@ Totals: 125 other, 37 rejected, 16 accepted, 6 in progress, 5 dropped, 4 sparrin
 | `h151` | 2026-10-24 08:42 | v8 | v8 + CHAIN_FAILS 1: castles hold chain lines after one fired with no enemy castle destroyed (h133 rebased; field-aimed) (dist/h151 8feb4e1832d3) |  |  |  | vs v8 0-2 | SCREEN QUEUED (vs bots/v8) |
 | `h152` | 2026-10-24 09:37 | v8 | v8 + CHAIN_LIVE 1 + WATCH 2: h148 and h150 stacked (dist/h152 fdbddfe8dde9) |  |  |  |  | SCREEN QUEUED (vs bots/v8) |
 | `h153` | 2026-10-24 09:37 | v8 | v8 + WATCH 2 + SPOT_MASK 56: prophets also answer structure spots (dist/h153 56ad0f09aebf) |  |  |  |  | SCREEN QUEUED (vs bots/v8) |
+| `h154` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_EARLY 1: escorts built turns 3-4 ahead of the economy pilgrims and holding within 2 steps of the site (dist/h154 ae2b4ac88687) |  |  |  |  | SCREEN QUEUED (vs bots/v8) |
+| `h155` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2: escorts hold within 2 steps of the site (dist/h155 562d81eddf8a) |  |  |  |  | SCREEN QUEUED (vs bots/v8) |

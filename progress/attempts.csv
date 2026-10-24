@@ -192,3 +192,5 @@ h150,2026-10-24 08:40,v8,cand:h150,v8 + WATCH 2: a structure radios an enemy att
 h151,2026-10-24 08:42,v8,cand:h151,v8 + CHAIN_FAILS 1: castles hold chain lines after one fired with no enemy castle destroyed (h133 rebased; field-aimed) (dist/h151 8feb4e1832d3),,,,SCREEN QUEUED (vs bots/v8),TRAINING_LOG 2026-10-24 08:42
 h152,2026-10-24 09:37,v8,cand:h152,v8 + CHAIN_LIVE 1 + WATCH 2: h148 and h150 stacked (dist/h152 fdbddfe8dde9),,,,SCREEN QUEUED (vs bots/v8),TRAINING_LOG 2026-10-24 09:37
 h153,2026-10-24 09:37,v8,cand:h153,v8 + WATCH 2 + SPOT_MASK 56: prophets also answer structure spots (dist/h153 56ad0f09aebf),,,,SCREEN QUEUED (vs bots/v8),TRAINING_LOG 2026-10-24 09:37
+h154,2026-10-24 09:48,v8,cand:h154,v8 + ESCORT_HOLD_R 2 + ESCORT_EARLY 1: escorts built turns 3-4 ahead of the economy pilgrims and holding within 2 steps of the site (dist/h154 ae2b4ac88687),,,,SCREEN QUEUED (vs bots/v8),TRAINING_LOG 2026-10-24 09:48
+h155,2026-10-24 09:48,v8,cand:h155,v8 + ESCORT_HOLD_R 2: escorts hold within 2 steps of the site (dist/h155 562d81eddf8a),,,,SCREEN QUEUED (vs bots/v8),TRAINING_LOG 2026-10-24 09:48
