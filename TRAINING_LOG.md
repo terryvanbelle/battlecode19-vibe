@@ -3576,3 +3576,12 @@ h127 vs h126 (...19z, 20 cells seed0 5000): 20/40, gained 4, lost 4, split 12, D
 mirror escort beats the other head to head; the replica panels decide. h128 = v7 + ESCORT_FIRST 2 + ESCORT_MIRROR 1
 + ESCORT_UNIT 3 (dist/h128, cd4c900d6216): two crusaders on the enemy's mirror site. Gate vs h87 on fresh cells (seed0 6000),
 par 2, field-aimed bars; mechanism: castles lost not above h87's, churches at least 0.95 of h87's.
+
+## 2026-10-23 20:20 PDT: h128 to the replica panel; h129 queued
+
+h128 gate (...19zz, seed0 6000): 23/40, gained 7, lost 4, split 9, D 11, net +3, t 0.90. Mechanism met: castles lost
+35 vs 44, churches built 567 vs 508 (1.12x). In the band -> replica panel: submission 111, block 1 = matches 634-639
+(bots/v7 resubmitted, 112; bumped). The two-crusader mirror escort gates like h127 (t 1.26) on fresh cells.
+Replica so far (block 1 vs v7's control 420-425): h126 624 bot1v43 1-2 (=), 625 uvafan 0-3 (=), 627 Ian 2-1 (+1);
+h127 628 wololo 0-3 (=), 629 botfinalsafe 0-3 (-2), 630 bot1v43 1-2 (=). h129 = v7 + ESCORT_FIRST 2 + ESCORT_MIRROR 1
++ ESCORT_UNIT 5 (dist/h129, 8749df0348b6): the preacher form; gate vs h87 on seed0 7000, same bars.

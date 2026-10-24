@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 122 other, 18 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (165 rows).
+Totals: 123 other, 18 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparring partners (166 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -178,4 +178,5 @@ Totals: 122 other, 18 rejected, 14 accepted, 6 in progress, 3 dropped, 2 sparrin
 | `h98` | 2026-10-23 | v7 | v7 + MIL_ROTATION null: no peacetime crusaders (prophets, every 4th a preacher) |  |  |  |  | BUILT, NOT QUEUED: driver 2644 lost a contested church at r100-125 to h87's crusaders and its castle at r277 |
 | `h99` | 2026-10-23 | v7 | v7 + MIL_ROTATION [4]: peacetime army all prophets |  |  |  |  | BUILT, NOT QUEUED (h98's diagnostic: crusaders win close contests in self-play) |
 | `v7` | 2026-10-23 00:30 | v6 | Frozen snapshot of h87 (bots/v7): v6 + h82's economy switches (ECON_UNTIL 100, PIONEERS_TEAM 6, PEACE_RESERVE_K 60, PLAN_VALUE 10, DEF_RESERVE_K 30) + h76's church chain from round 200; the replica build since submission 99 |  |  | submission 99 | vs h100 103-97; vs h101 22-18; vs h103 19-21; vs h104 18-22; vs h107 25-15; vs h110 23-17; vs h111 18-22; vs h96 19-21; vs v6 29-11; vs h82 6-2; vs IanCoolidge0.battlecode20~69ce88 1-2 (replica); vs StoneT2000.BC19-bot1v43 1-2 (replica); vs StoneT2000.BC19-botfinalsafe 2-1 (replica); vs awesomelemonade.Battlecode2019 2-1 (replica); vs m-schier.battlecode-2019-wololo 0-3 (replica); vs uvafan.bc2019 0-3 (replica) | ACCEPTED 00:30 as v7 (h87 row: gate vs h50) |
-| `h128` | 2026-10-23 19:19 | v7 | ESCORT_FIRST 2 + ESCORT_MIRROR 1 + ESCORT_UNIT 3 (two crusaders on the mirror site) |  |  |  |  | GATE QUEUED |
+| `h128` | 2026-10-23 19:19 | v7 | ESCORT_FIRST 2 + ESCORT_MIRROR 1 + ESCORT_UNIT 3 (two crusaders on the mirror site) | vs h87 20 cells seed0 6000: +7 -4, D 11, t 0.90; castles lost 35 vs 44, churches 567 vs 508 |  | block 1 = matches 634-639 |  | REPLICA PANEL |
+| `h129` | 2026-10-23 20:20 | v7 | ESCORT_FIRST 2 + ESCORT_MIRROR 1 + ESCORT_UNIT 5 (two preachers on the mirror site) |  |  |  |  | GATE QUEUED |
