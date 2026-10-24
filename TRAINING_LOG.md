@@ -3616,3 +3616,12 @@ h129 (ESCORT_FIRST 2 + ESCORT_MIRROR 1 + ESCORT_UNIT 5, preachers) vs h87, 20 ce
 lost 10, split 9, D 11, net -9, t -2.71 -> REJECTED. Mechanism missed both ways: castles lost 48 vs 29, churches
 built 435 vs 643 (0.68x): two preachers (30 karbonite each) out of the opening cost the economy what two crusaders
 did not. The mirror-escort line is closed (h126, h127 replica-rejected; h128 on the replica 634-639, read as is).
+
+## 2026-10-23 21:20 PDT: h130's local gate t 1.67 (the prophet army beats h87); h131, h132 queued
+
+h130 (MIL_ROTATION null) vs h87, 20 cells seed0 8000: 25/40, gained 7, lost 2, split 11, D 9, net +5, t 1.67;
+castles lost 24 vs 38, churches 501 vs 456. The single driver games that set the doctrine aside (h98 on 2644, h99,
+h106: TRAINING_LOG 01:45, 04:22) misread it: one map is not a measurement. Its replica block 640-645 so far: 640
+wololo 0-3 (=), 641 botfinalsafe 1-2 (-1), 642 bot1v43 2-1 (+1). Queued: h131 = v7 + MIL_ROTATION [4] (all
+prophets; dist/h131 a1720a8dbd6c) on seed0 9000, then h132 = h130 + ATTACK_ROUND 1001 + ATTACK_LATE 1001 (no general
+attack; dist/h132 8219f3cfe4bb) on seed0 9500; mechanism: castles lost below h87's; field-aimed bars.
