@@ -4039,3 +4039,15 @@ the manage wrapper clears the environment, so DRY=1 never reached it and it ran 
 step early, after the snapshot). The tool's dry run is now a first line on stdin. The graphs move only on ranked
 matches (autoscrim at most daily, held while 30+ wait; the field's upward challenges); our scrims are unranked.
 LEARNINGS 35.
+
+## 2026-10-24 08:52 PDT: h146 REJECTED on the replica; our side in a panel cell is a coin flip
+
+h146 (v8 + church strike) block 1 758-763 against the v8 pool: 5 of 18 against 8.0, z -1.98: REJECTED (joins the v8
+pool). With h141 (the same strike on v7, z 0.43) the church-strike line closes.
+
+Panel scrims are requested with galaxy's shuffled player order, so each block plays a cell on a random side. Pooled
+over the v7 pool's 16 blocks, side does not matter overall (we win 43 of 141 games as red, 39 of 147 as blue); a few
+cells lean (bot1v43 2321 red 4/7, blue 1/9; awesomelemonade 1712 red 1/7, blue 5/9), and on the v8 pool wololo 2644
+is won 3 of 3 as red and lost 2 of 2 as blue, about what chance gives over 18 cells. The side adds variance to the
+panel, not bias; the rule stays. Open: fixing the order per opponent in progress/panels/v7-m1.json (as its maps are)
+would make every block play each cell on the same side; to be decided before a block is requested, not after.

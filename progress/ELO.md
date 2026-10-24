@@ -1,8 +1,8 @@
 # Ratings (Bradley-Terry)
 
-Written by `tools/progress/elo.py` from `progress/games.csv` (`tools/progress-refresh.sh`): regenerate, do not edit. Latest game 2026-10-24 08:50 PDT.
+Written by `tools/progress/elo.py` from `progress/games.csv` (`tools/progress-refresh.sh`): regenerate, do not edit. Latest game 2026-10-24 08:52 PDT.
 
-5382 games: 3149 local (VM batches between our builds, candidates, sparring partners and the starter bot), 739 of ours on the galaxy replica and 1494 between field bots there (1491 replica games known only from match scores: no map, side or rounds). Rated by a batch Bradley-Terry fit on the Elo scale (`tools/progress/elolib.py`): every game counts, each pair of players at most 200 games, each build its own player, prior 0.1 virtual win and loss against 1500. Ratings are relative to the mean of all 188 players; compare them only within this fit.
+5384 games: 3151 local (VM batches between our builds, candidates, sparring partners and the starter bot), 739 of ours on the galaxy replica and 1494 between field bots there (1491 replica games known only from match scores: no map, side or rounds). Rated by a batch Bradley-Terry fit on the Elo scale (`tools/progress/elolib.py`): every game counts, each pair of players at most 200 games, each build its own player, prior 0.1 virtual win and loss against 1500. Ratings are relative to the mean of all 188 players; compare them only within this fit.
 
 **Thin field.** 89 rated field bots (mvpatel2000.Battlecode2019, m-schier.battlecode-2019-wololo, uvafan.bc2019, rafekruse.Battlecode-2019-bc19, yujinwunz.battlecode_2019, VoidMercy.battlecode-2019~e7dc06, j-mao.battlecode-2019, arya-k.bc19, IanCoolidge0.battlecode20~69ce88, moreda-a.BC2019-a31, StoneT2000.BC19-bot1v43, StoneT2000.BC19-botfinalsafe, awesomelemonade.Battlecode2019, bqi343.cp-notebook, virenvshah.Battlecode2019, vineetparikh.BigRedBattle~fe3459, rafekruse.Battlecode-2019~2680d4, IvanGeffner.BC19-bot6b, ldcWV.Battlecode-2019, IanCoolidge0.battlecode20~f649f3, howard36.Battlecode2019-eco6, UpperArlingtonHighSchool.~682aa9, cemondr.BC19pdxgroup4, Nischay-Pro.BattleCode2019, NielsKornerup.Battlecode-2019, unrevre.battlecode, abcdefguan.battlecode2019, lschaberg.bc19, ovkulkarni.battlecode2019~0aa607, IvanGeffner.BC19-eigthbot, m4reko.bc2019-tmores-angels, dmunozc.bc19-g8-davjasdiv, programjames.BC19Bot-seeding, Tom-CCS.BC19, sunanth123.battlecode19-mainbot, dmunozc.bc19-g8-bots, programjames.BC19Bot-root, ovkulkarni.battlecode2019~06c610, 18dcb01.Battlecode19-prea~fb5c48, nthistle.battlecode-2019, cvxluo.battlecode19, ipercyNC.group6-battlecode, sunanth123.battlecode19-prorush, CS554-software-engineerin~a575dc, CometsTech.battlecode2019, UpperArlingtonHighSchool.~5e7875, Nydroam.BatteredCod, jamesrayman.HCN-bot, evanyeyeye.battlecode2019~af562c, moreda-a.BC2019-t15, JasonLarson44.2019-Battle~1c7639, bayoumi17m.BattleCode-2019, vicennial.BattleCode19, twitu.bc19-tsp, TestSubjector.BattleCode2~fb22c7, haydenshively.Battle-Code~e1c2fb, 18dcb01.Battlecode19-robot2, haydenshively.Battle-Code~e37b3e, TestSubjector.BattleCode2~e6de74, jackliu612.Battlecode19, dgh2.bc19-t1, spachava753.bc19, liwanlin41.examplefuncsplayer, dndoja.battlecode19, asunathanr.asu_bc, rooneyshuman.Battlecode, CometsTech.battlecode2019~187e8c, SethKitchen.examplefuncsplayer, bovard.battlecode-2019-un~8822c3, roy-love.onshoreBattleCode2019, VictorButoi.BattleCode201~c4576b, OmarTahoun.battle-code, jyurkanin.corn_bc19, DivyanshuSaxena.Battlecode, howard36.Battlecode2019-sprint, waylon531.scala_starter, vishwasns99.BC_2019, bc19-starter, VoidMercy.battlecode-2019-bot, nhard.examplefuncsplayer, ryanhzhao.Battlecode-2019, RyanSharafuddin.Battlecode_2019, jbiewend.Battlecode2019, djkeyes.bc19, TheRobotCarlson.battlehac~323871, jamesrayman.HCN-basic-bot, yunaganyh.bc19, jshin313.battlecodebot, ArtemUstilov.bc19_CrazyTapok) out of the replica's 86 teams: the whole public field is entered (BENCHMARK.md), but the replica plays a few matches an hour, so only these have rated games against our builds and the field score below is an expected score against them alone, one of them the starter. With so few games the 95% intervals are wide, and ratings will move as the replica's games accumulate. Round-0 init failures (a bot that never started: machine load or a broken bot) are not games and are left out.
 
@@ -18,7 +18,7 @@ Our builds (accepted = bots/ROSTER.tsv v*, candidate = a dist/ bundle, sparring 
 | v5 | accepted | 1528 ± 80 | 103 of 188 | 439 | 202-237 | 68.0% | 25.3% (vs 29) |
 | v6 | accepted | 1560 ± 76 | 95 of 188 | 322 | 130-192 | 70.0% | 25.7% (vs 26) |
 | v7 | accepted | 1705 ± 63 | 47 of 188 | 1804 | 927-877 | 78.7% | 28.9% (vs 14) |
-| v8 | accepted | 1736 ± 100 | 37 of 188 | 226 | 101-125 | 80.5% | 32.4% (vs 14) |
+| v8 | accepted | 1736 ± 100 | 37 of 188 | 228 | 102-126 | 80.5% | 32.4% (vs 14) |
 | block | candidate | 1773 ± 166 | 18 of 188 | 20 | 12-8 | 82.4% | 32.4% (vs 11) |
 | camp | candidate | 1773 ± 166 | 19 of 188 | 20 | 12-8 | 82.4% | 32.4% (vs 11) |
 | h100 | candidate | 1694 ± 79 | 52 of 188 | 200 | 97-103 | 78.1% | 31.5% (vs 17) |
@@ -62,7 +62,7 @@ Our builds (accepted = bots/ROSTER.tsv v*, candidate = a dist/ bundle, sparring 
 | h146 | candidate | 1759 ± 122 | 23 of 188 | 58 | 28-30 | 81.7% | 32.3% (vs 12) |
 | h147 | candidate | 1848 ± 144 | 8 of 188 | 43 | 28-15 | 86.1% | 33.6% (vs 7) |
 | h148 | candidate | 1788 ± 147 | 15 of 188 | 40 | 23-17 | 83.2% | 34.1% (vs 11) |
-| h149 | candidate | 1735 ± 166 | 38 of 188 | 26 | 13-13 | 80.4% | 32.2% (vs 14) |
+| h149 | candidate | 1735 ± 162 | 38 of 188 | 28 | 14-14 | 80.4% | 32.2% (vs 14) |
 | h16r | candidate | 1303 ± 155 | 135 of 188 | 40 | 16-24 | 53.8% | 15.4% (vs 40) |
 | h18 | candidate | 1283 ± 198 | 138 of 188 | 25 | 6-19 | 52.5% | 15.8% (vs 42) |
 | h2 | candidate | 1542 ± 159 | 98 of 188 | 54 | 25-29 | 68.9% | 24.8% (vs 27) |
@@ -98,8 +98,8 @@ Our builds (accepted = bots/ROSTER.tsv v*, candidate = a dist/ bundle, sparring 
 | h77 | candidate | 1573 ± 190 | 91 of 188 | 16 | 8-8 | 70.8% | 26.1% (vs 25) |
 | h78 | candidate | 1744 ± 281 | 29 of 188 | 8 | 6-2 | 80.9% | 31.9% (vs 13) |
 | h82 | candidate | 1650 ± 103 | 68 of 188 | 134 | 70-64 | 75.5% | 29.4% (vs 20) |
-| h83 | candidate | 1684 ± 301 | 58 of 188 | 8 | 4-4 | 77.5% | 32.3% (vs 19) |
-| h84 | candidate | 1684 ± 301 | 59 of 188 | 8 | 4-4 | 77.5% | 32.3% (vs 19) |
+| h83 | candidate | 1684 ± 301 | 59 of 188 | 8 | 4-4 | 77.5% | 32.3% (vs 19) |
+| h84 | candidate | 1684 ± 301 | 58 of 188 | 8 | 4-4 | 77.5% | 32.3% (vs 19) |
 | h88 | candidate | 1614 ± 148 | 78 of 188 | 40 | 18-22 | 73.4% | 28.4% (vs 23) |
 | h89 | candidate | 822 ± 1086 | 165 of 188 | 8 | 0-8 | 28.2% | 8.6% (vs 67) |
 | h8v5 | candidate | 1632 ± 129 | 74 of 188 | 48 | 31-17 | 74.4% | 29.3% (vs 22) |
@@ -112,8 +112,8 @@ Our builds (accepted = bots/ROSTER.tsv v*, candidate = a dist/ bundle, sparring 
 
 Sources (`tools/progress/games.py`):
 
-- local: 3149 games from 119 batch files (skipped: 258 cut before a verdict, 23 init failure, 98 load (robot init failures), 150 malformed)
-- replica: 2233 games (11 archive games skipped, 237 matches from archives, 497 matches from scores), fetched 2026-10-24T15:51:13+00:00
+- local: 3151 games from 119 batch files (skipped: 258 cut before a verdict, 23 init failure, 98 load (robot init failures), 150 malformed)
+- replica: 2233 games (11 archive games skipped, 237 matches from archives, 497 matches from scores), fetched 2026-10-24T15:53:16+00:00
 
 ![ratings](elo.png)
 
@@ -161,8 +161,8 @@ All players. Our record = the incumbent's (v8) win rate and W-L against the bot,
 | 34 | **cand:h104** | candidate | 1737 | 109 | 58 | 28-30 |  |
 | 35 | **cand:h111** | candidate | 1737 | 109 | 58 | 28-30 |  |
 | 36 | **cand:h112** | candidate | 1737 | 109 | 58 | 28-30 |  |
-| 37 | **us:v8** | accepted | 1736 | 100 | 226 | 101-125 |  |
-| 38 | **cand:h149** | candidate | 1735 | 166 | 26 | 13-13 |  |
+| 37 | **us:v8** | accepted | 1736 | 100 | 228 | 102-126 |  |
+| 38 | **cand:h149** | candidate | 1735 | 162 | 28 | 14-14 |  |
 | 39 | **cand:h127** | candidate | 1731 | 97 | 98 | 47-51 |  |
 | 40 | **cand:h103** | candidate | 1725 | 100 | 76 | 33-43 |  |
 | 41 | **cand:h115** | candidate | 1721 | 124 | 40 | 21-19 |  |
@@ -182,8 +182,8 @@ All players. Our record = the incumbent's (v8) win rate and W-L against the bot,
 | 55 | ldcWV.Battlecode-2019 | field | 1686 | 198 | 27 | 18-9 |  |
 | 56 | **cand:h121** | candidate | 1685 | 110 | 58 | 24-34 |  |
 | 57 | **cand:h96** | candidate | 1685 | 110 | 58 | 24-34 |  |
-| 58 | **cand:h83** | candidate | 1684 | 301 | 8 | 4-4 |  |
-| 59 | **cand:h84** | candidate | 1684 | 301 | 8 | 4-4 |  |
+| 58 | **cand:h84** | candidate | 1684 | 301 | 8 | 4-4 |  |
+| 59 | **cand:h83** | candidate | 1684 | 301 | 8 | 4-4 |  |
 | 60 | IanCoolidge0.battlecode20~f649f3 | field | 1674 | 157 | 45 | 33-12 | 67% (v3 2-1) |
 | 61 | **cand:h123** | candidate | 1672 | 110 | 58 | 23-35 |  |
 | 62 | **cand:h101** | candidate | 1669 | 124 | 40 | 18-22 |  |
@@ -587,7 +587,7 @@ Every pairing (W-L of the first player; where the games were played):
 | cand:h104 | us:v7 | 40 | 22-18 | 55% | local |
 | cand:h111 | us:v7 | 40 | 22-18 | 55% | local |
 | cand:h112 | us:v7 | 40 | 22-18 | 55% | local |
-| us:v8 | cand:h149 | 26 | 13-13 | 50% | local |
+| us:v8 | cand:h149 | 28 | 14-14 | 50% | local |
 | us:v8 | us:v7 | 40 | 23-17 | 57% | local |
 | cand:h127 | us:v7 | 40 | 24-16 | 60% | local |
 | cand:h103 | us:v7 | 40 | 21-19 | 52% | local |
@@ -644,8 +644,8 @@ Every pairing (W-L of the first player; where the games were played):
 | rafekruse.Battlecode-2019~2680d4 | roy-love.onshoreBattleCode2019 | 3 | 3-0 | 100% | replica |
 | IvanGeffner.BC19-bot6b | CometsTech.battlecode2019~187e8c | 3 | 3-0 | 100% | replica |
 | IvanGeffner.BC19-bot6b | OmarTahoun.battle-code | 3 | 3-0 | 100% | replica |
-| cand:h76 | cand:h83 | 8 | 4-4 | 50% | local |
 | cand:h76 | cand:h84 | 8 | 4-4 | 50% | local |
+| cand:h76 | cand:h83 | 8 | 4-4 | 50% | local |
 | cand:h76 | cand:h82 | 8 | 4-4 | 50% | local |
 | cand:h76 | us:v6 | 8 | 6-2 | 75% | local |
 | ldcWV.Battlecode-2019 | UpperArlingtonHighSchool.~682aa9 | 3 | 2-1 | 67% | replica |
