@@ -402,7 +402,11 @@ export const CFG = {
                              // reach (SIG.THREAT) until 2A + 1 of them stand ready, then radios it as a spot (FAR.ENEMY)
                              // and they charge together (ECONOMICS.md, Lanchester: v8 fed one unit a turn into a
                              // prophet's band, 46% of its military karbonite lost died within 3 turns of birth;
-                             // struct.js musterAct, military.js musterHold)
+                             // struct.js musterAct, military.js musterHold). 2: hold only, no release: the held crusaders
+                             // stand 2-4 king steps from home until an enemy crusader or preacher is in sight, and while
+                             // the case holds the peacetime army builds held crusaders too (health kept for the r1000
+                             // tiebreak: in v8's 11 health losses 85% of the military K spent r500-899 died, 98% within
+                             // r2 100 of our structures, 62% within 3 turns of birth; TRAINING_LOG 2026-10-24 23:32)
   MUSTER_WAIT: 25,           // turns a held crusader waits for the release, and a release's spot radio lasts
   MUSTER_DWELL: 3,           // turns an enemy prophet must have stood on its tile to count as a camper
   FEED_WINDOW: 20,

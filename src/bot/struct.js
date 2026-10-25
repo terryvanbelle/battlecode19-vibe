@@ -268,11 +268,14 @@ export function musterTrack(B) {
 // or A + 1 once ours outnumber them (held crusaders count among ours: on 1712 against dist/turtle the gate closed at 6
 // held of 7 and the hold timed out); then radio it as a spot (FAR.ENEMY) every turn of the release, and they engage
 // it together (military.js). Returns a build or null (no build this turn).
+// CFG.MUSTER 2 (hold only): no release; the held crusaders are health kept for the round-1000 tiebreak, and while the
+// case holds the peacetime army builds held crusaders too (st.camp, musterArmy).
 export function musterAct(B, out, hold, short) {
   const st = B.st, w = B.w, me = w.me, m = st.mus;
   let e = out[0], ed = 1e9;
   for (const x of out) { const r = d2(me.x, me.y, x.x, x.y); if (r < ed) { ed = r; e = x; } }
-  if (m.rel < 0 && m.ids.size >= (short ? 2 * out.length + 1 : out.length + 1)) { m.rel = me.turn; m.ids.clear(); }
+  st.camp = { t: me.turn, x: e.x, y: e.y };
+  if (CFG.MUSTER !== 2 && m.rel < 0 && m.ids.size >= (short ? 2 * out.length + 1 : out.length + 1)) { m.rel = me.turn; m.ids.clear(); }
   if (m.rel >= 0) {
     if (!w.sentR2 && w.fuel >= 10) w.signal(encXY(0, e.x, e.y), FAR.ENEMY);
     return null;
@@ -281,6 +284,16 @@ export function musterAct(B, out, hold, short) {
   const b = buildToward(B, CRUSADER, 2 * me.x - e.x, 2 * me.y - e.y, encXY(SIG.THREAT, e.x, e.y));
   if (!b) return null;
   m.pend = { x: b.x, y: b.y };
+  return b.act;
+}
+// CFG.MUSTER 2: the peacetime army's unit, while this turn's camper case holds, is a held crusader on the far side.
+export function musterArmy(B, resK, fuelK) {
+  const st = B.st, w = B.w, me = w.me, c = st.camp;
+  if (!(CFG.MUSTER === 2 && c && c.t === me.turn)) return undefined;
+  if (!w.canAfford(CRUSADER, resK, fuelK)) return null;
+  const b = buildToward(B, CRUSADER, 2 * me.x - c.x, 2 * me.y - c.y, encXY(SIG.THREAT, c.x, c.y));
+  if (!b) return null;
+  st.mus.pend = { x: b.x, y: b.y }; st.nDef++;
   return b.act;
 }
 
@@ -425,6 +438,8 @@ function structAct(B, allIds, extra, first) {
     const army = st.count ? st.count[3] + st.count[4] + st.count[5] : have;
     // CFG.CHAIN_GUARD: the guard quota does not wait for the chain's bank; only the army past it does.
     const resK = CFG.CHAIN_GUARD && chainOn && have < want ? reserveK - CFG.CHAIN_K : reserveK;
+    const held = musterArmy(B, resK, CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army);
+    if (held !== undefined) return held;
     if (w.canAfford(unit, resK, CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army)) {
       const [ex, ey] = w.mirror(me.x, me.y);
       const sig = B.round ? encNum(SIG.ROUND, B.round) : undefined;

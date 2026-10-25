@@ -20,7 +20,7 @@ function init(B) {
       if (m.type === SIG.ROUND) B.birthRound = m.v;
       else if (m.type === SIG.CHAIN && CFG.CHAIN_ROUND) st.chainT = [m.x, m.y];   // born in a church chain (chain.js)
       else if (m.type === SIG.GUARD && (CFG.ESCORT || CFG.ESCORT_FIRST)) st.guardAt = { x: m.x, y: m.y };   // escort: a pioneer's site
-      else if (m.type === SIG.THREAT && CFG.MUSTER) st.muster = { x: m.x, y: m.y, until: me.turn + CFG.MUSTER_WAIT };   // musterHold
+      else if (m.type === SIG.THREAT && CFG.MUSTER) st.muster = { x: m.x, y: m.y, until: CFG.MUSTER === 2 ? Infinity : me.turn + CFG.MUSTER_WAIT };   // musterHold
     }
   }
   if (st.chainT) learnRound(B);
@@ -59,7 +59,7 @@ function listen(B) {
     if (m && m.type === SIG.POST) { if (st.toCastle && w.passable(m.x, m.y)) hearPost(B, m.x, m.y); continue; }
     if (m && m.type === SIG.ENEMY) {
       if ((CFG.SPOT || CFG.WATCH) && (CFG.SPOT_MASK >> me.unit & 1)) hearSpot(B, m.x, m.y);
-      else if (CFG.MUSTER && (st.muster || st.mustered)) { st.muster = null; st.mustered = true; hearSpot(B, m.x, m.y); }   // the release
+      else if (CFG.MUSTER === 1 && (st.muster || st.mustered)) { st.muster = null; st.mustered = true; hearSpot(B, m.x, m.y); }   // the release
       continue;
     }
     if (m && m.type === SIG.HUNT) { if (CFG.HUNT && me.unit !== PROPHET) hearHunt(B, m.x, m.y); continue; }
@@ -153,19 +153,21 @@ function go(B, key, sources, cap, avoid) {
 // CFG.MUSTER: a crusader built against attackers out of its structure's reach (SIG.THREAT: the nearest stood at (x, y))
 // holds two king steps from home, out of reach of the attackers it sees and of r2 64 around that one, until the
 // structure radios the release (a spot, listen), MUSTER_WAIT turns pass or an enemy crusader or preacher comes in
-// sight. Null: it stays.
+// sight. Null: it stays. CFG.MUSTER 2 (hold only): the hold lasts until an enemy melee unit is in sight, on rings 2-4
+// king steps from home, the nearest free first (a full ring 2 would leave newborns on the build tiles).
 function musterHold(B) {
-  const w = B.w, me = w.me, h = B.st.home, m = B.st.muster, S = STATS[me.unit];
+  const w = B.w, me = w.me, h = B.st.home, m = B.st.muster, S = STATS[me.unit], far = CFG.MUSTER === 2 ? 4 : 2;
   const th = w.enemies.filter(e => THREAT_R2[e.unit] > 0);
   const hot = (x, y) => d2(x, y, m.x, m.y) <= 64 || th.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]);
-  if (!hot(me.x, me.y) && king(me.x, me.y, h.x, h.y) === 2) return null;
-  const score = (x, y) => (hot(x, y) ? 2e6 : 0) + (king(x, y, h.x, h.y) === 2 ? 0 : 1e6) - d2(x, y, m.x, m.y);
+  const ring = (x, y) => { const k = king(x, y, h.x, h.y); return k >= 2 && k <= far ? (k - 2) * 1e3 : 1e6; };
+  if (!hot(me.x, me.y) && (far === 2 ? king(me.x, me.y, h.x, h.y) === 2 : ring(me.x, me.y) < 1e6)) return null;
+  const score = (x, y) => (hot(x, y) ? 2e6 : 0) + ring(x, y) - d2(x, y, m.x, m.y);
   const r = fuelStep(w.fuel, S.speed, S.fuelPerMove, 60);
   let best = null, bs = score(me.x, me.y);
   for (const [dx, dy, r2] of B.offs) {
     if (r2 === 0 || r2 > r) continue;
     const x = me.x + dx, y = me.y + dy;
-    if (king(x, y, h.x, h.y) > 2 || !w.free(x, y)) continue;
+    if (king(x, y, h.x, h.y) > far || !w.free(x, y)) continue;
     const s = score(x, y); if (s < bs) { bs = s; best = [dx, dy]; }
   }
   return best ? w.move(best[0], best[1]) : null;

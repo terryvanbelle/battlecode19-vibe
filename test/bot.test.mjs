@@ -10,7 +10,7 @@ import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot } from '../src/bot/military.js';
 import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
-import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct } from '../src/bot/struct.js';
+import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -2488,6 +2488,85 @@ test('struct: MUSTER: the attackers out of reach, the held set, and the release 
   assert.deepStrictEqual([sent, gst.mus.rel], [[], -1]);              // gate open: 3 < 2 * 2 + 1
   musterAct({ w: fw, st: gst }, [P(5, 16), P(6, 13)], 0, false);
   assert.deepStrictEqual([sent, gst.mus.rel], [[[encXY(0, 6, 13), FAR.ENEMY]], 50]);
+});
+
+test('struct: MUSTER 2 (hold only): no release at 2A + 1; the peacetime army builds held crusaders while the case holds', () => {
+  const saved = CFG.MUSTER;
+  try {
+    let id = 100;
+    const P = (x, y) => ({ id: id++, x, y, unit: S.PROPHET });
+    const sent = [], built = [];
+    const fw = { me: { x: 5, y: 5, turn: 40, unit: S.CHURCH }, sentR2: 0, fuel: 500, enemies: [], afford: true,
+      canAfford() { return this.afford; }, free: () => true, isDepot: () => false,
+      signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; }, build(unit, dx, dy) { built.push([unit, dx, dy]); return { u: unit, dx, dy }; } };
+    const st = { mus: { ids: new Set([1, 2, 3, 4, 5]), pend: null, rel: -1 }, nDef: 0 };
+    CFG.MUSTER = 2;
+    assert.strictEqual(musterAct({ w: fw, st }, [P(5, 16), P(6, 13)], 0, false), null);   // 5 held >= 2 * 2 + 1
+    assert.deepStrictEqual([sent, st.mus.rel, st.camp], [[], -1, { t: 40, x: 6, y: 13 }]);   // no release; the case noted
+    const a = musterArmy({ w: fw, st }, 0, 0);
+    assert.strictEqual(a.u, S.CRUSADER);
+    assert.ok(d2(5 + a.dx, 5 + a.dy, 6, 13) > d2(5, 5, 6, 13));                     // the far side
+    assert.deepStrictEqual([sent, st.mus.pend, st.nDef], [[[encXY(SIG.THREAT, 6, 13), 2]], { x: 5 + a.dx, y: 5 + a.dy }, 1]);
+    fw.afford = false; assert.strictEqual(musterArmy({ w: fw, st }, 0, 0), null);     // the case holds: nothing else
+    fw.afford = true; fw.me.turn = 41; assert.strictEqual(musterArmy({ w: fw, st }, 0, 0), undefined);   // not this turn
+    CFG.MUSTER = 1; fw.me.turn = 40; assert.strictEqual(musterArmy({ w: fw, st }, 0, 0), undefined);     // mode 1: v8's army
+    CFG.MUSTER = 2; st.mus.rel = -1; st.mus.ids = new Set([1, 2, 3]); sent.length = 0;
+    musterAct({ w: fw, st }, [P(5, 16)], 0, false);
+    assert.deepStrictEqual([sent, st.mus.rel], [[], -1]);
+  } finally { CFG.MUSTER = saved; }
+});
+
+test('military: MUSTER 2: a held crusader holds rings 2-4 king steps from home until an enemy melee unit is in sight; the spot does not release it', () => {
+  const saved = CFG.MUSTER;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let at = null, tgt = null;
+    for (let dy = -1; dy <= 1 && !tgt; dy++) for (let dx = -1; dx <= 1 && !tgt; dx++) {
+      const ax = castle.x + dx, ay = castle.y + dy; if ((!dx && !dy) || !free(ax, ay)) continue;
+      for (let ty = 0; ty < n && !tgt; ty++) for (let tx = 0; tx < n && !tgt; tx++) {
+        if (!free(tx, ty) || d2(tx, ty, castle.x, castle.y) < 81 || d2(tx, ty, castle.x, castle.y) > 100 || d2(tx, ty, ax, ay) <= 49) continue;
+        let ok = false;
+        for (let y = ay - 3; y <= ay + 3; y++) for (let x = ax - 3; x <= ax + 3; x++)
+          if (free(x, y) && d2(x, y, ax, ay) <= 9 && king(x, y, castle.x, castle.y) === 2 && d2(x, y, tx, ty) > 64) ok = true;
+        if (ok) { at = [ax, ay]; tgt = [tx, ty]; }
+      }
+    }
+    assert.ok(at && tgt);
+    const own = g.robots.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100);
+    const crus = { id: 4005, team: 0, unit: S.CRUSADER, x: at[0], y: at[1], turn: 1, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    const all = g.robots;
+    const step = (st, sig, radius, extra = []) => {
+      castle.signal = sig; castle.signal_radius = radius;
+      g.robots = own.concat([crus], extra);
+      try {
+        const w = worldFor(g, crus), B = { api: w.api, w, round: 20, birthRound: 20, st, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        return militaryTurn(B);
+      } finally { g.robots = all; castle.signal = 0; castle.signal_radius = 0; }
+    };
+    const cw = worldFor(g, castle), [ex, ey] = cw.T.toC(tgt[0], tgt[1]);
+    CFG.MUSTER = 2;
+    const st = {}, a = step(st, encXY(SIG.THREAT, ex, ey), 2);
+    assert.deepStrictEqual([st.muster.x, st.muster.y, st.muster.until], [ex, ey, Infinity]);
+    assert.ok(a && a.action === 'move');
+    const to = [at[0] + a.dx, at[1] + a.dy], k = king(to[0], to[1], castle.x, castle.y);
+    assert.ok(k >= 2 && k <= 4 && d2(to[0], to[1], tgt[0], tgt[1]) > 64);
+    crus.x = to[0]; crus.y = to[1];
+    crus.turn = 2 + 5 * CFG.MUSTER_WAIT; assert.strictEqual(step(st, 0, 0), null);   // still held long after MUSTER_WAIT
+    crus.turn++; step(st, encXY(0, ex, ey), FAR.ENEMY);                               // a spot: no release
+    assert.ok(st.muster && !st.mustered);
+    // Three king steps from home and out of reach: it stays (rings 2-4; mode 1 would walk back to ring 2).
+    let r3 = null;
+    for (let y = castle.y - 3; y <= castle.y + 3 && !r3; y++) for (let x = castle.x - 3; x <= castle.x + 3 && !r3; x++)
+      if (free(x, y) && king(x, y, castle.x, castle.y) === 3 && d2(x, y, tgt[0], tgt[1]) > 64) r3 = [x, y];
+    assert.ok(r3);
+    crus.x = r3[0]; crus.y = r3[1]; crus.turn = 50; assert.strictEqual(step(st, 0, 0), null);
+    crus.x = to[0]; crus.y = to[1]; crus.turn = 60;
+    step(st, 0, 0, [{ id: 4006, team: 1, unit: S.CRUSADER, x: tgt[0], y: tgt[1], turn: 9, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 }]);
+    assert.strictEqual(st.muster, null);                                              // an enemy crusader in sight
+  } finally { CFG.MUSTER = saved; }
 });
 
 test('military: MUSTER: a crusader told of a prophet holds two king steps from home out of its reach, then charges on the release', () => {
