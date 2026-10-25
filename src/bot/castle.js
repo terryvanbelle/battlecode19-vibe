@@ -11,7 +11,7 @@ import { chainLaunch } from './chain.js';
 
 const KING = offsets(2), PILGRIM_OFFS = offsets(4);
 
-export { callDue, planClusters, expandPlan, nextPioneer, pioneerDue, pioneer };
+export { callAttack, callDue, planClusters, expandPlan, nextPioneer, pioneerDue, pioneer };
 
 export function castleTurn(B) {
   const w = B.w, me = w.me, st = B.st;
@@ -303,7 +303,8 @@ export function escort(B) {
 }
 
 // General attack: from ATTACK_ROUND, when enough military stands near this castle, radio the nearest enemy castle
-// (mirror of one of ours) every few rounds as a far message (radius FAR.ATTACK, about 20 tiles).
+// (mirror of one of ours) every few rounds as a far message (radius FAR.ATTACK, about 20 tiles). CFG.ATTACK_ONE: every
+// castle radios the same one, the mirror nearest our living castles in summed r2 (ties: canonical order).
 function callAttack(B) {
   const w = B.w, st = B.st, me = w.me;
   if (B.round < CFG.ATTACK_ROUND) return;
@@ -313,8 +314,11 @@ function callAttack(B) {
   if (w.fuel < CFG.ATTACK_FUEL_PER_UNIT * army && B.round < 950) return;
   if (CFG.ATTACK_PERSIST && st.order) return callAttackPersist(B);
   if (!callDue(B)) return;
-  const targets = [...st.castles.values()].map(c => w.mirror(c.x, c.y));
-  targets.sort((a, b) => ((a[0] - me.x) ** 2 + (a[1] - me.y) ** 2) - ((b[0] - me.x) ** 2 + (b[1] - me.y) ** 2) || a[0] - b[0]);
+  const own = [...st.castles.values()], targets = own.map(c => w.mirror(c.x, c.y));
+  if (CFG.ATTACK_ONE) {
+    const cost = t => own.reduce((s, c) => s + (t[0] - c.x) ** 2 + (t[1] - c.y) ** 2, 0);
+    targets.sort((a, b) => cost(a) - cost(b) || (a[1] * w.n + a[0]) - (b[1] * w.n + b[0]));
+  } else targets.sort((a, b) => ((a[0] - me.x) ** 2 + (a[1] - me.y) ** 2) - ((b[0] - me.x) ** 2 + (b[1] - me.y) ** 2) || a[0] - b[0]);
   const t = targets[0];
   if (w.fuel >= 20 + 20 && !w.sentR2) w.signal(encXY(0, t[0], t[1]), FAR.ATTACK);
 }

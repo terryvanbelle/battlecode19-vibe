@@ -73,6 +73,9 @@ export function nextDepot(B) {
   const free = st.served.filter(d => !st.assign.has(d.i) && w.occ(d.x, d.y) <= 0 && !enemyNear(B, d.x, d.y) &&
     !(st.cool.get(d.i) > w.me.turn));
   if (!free.length) return null;
+  // CFG.FUEL_DEFER: in the opening the fuel trickle pays for everything, and each fuel miner's 10 K delays the pioneer.
+  if (CFG.FUEL_DEFER && (B.round || w.me.turn) < CFG.FUEL_DEFER && w.fuel >= CFG.FUEL_DEFER_MIN &&
+    st.threatAt === undefined && !(w.me.unit === CASTLE && st.planAll === 0)) return free.find(d => d.k) || null;
   let wantK = nk < CFG.KARB_FIRST * (nf + 1);
   if (w.fuel < CFG.FUEL_LOW || (w.fuel < CFG.FUEL_HIGH && w.fuel < w.karbonite * CFG.FUEL_PER_KARB)) wantK = false;
   else if (w.fuel > CFG.FUEL_HIGH) wantK = true;
@@ -273,6 +276,7 @@ function structAct(B, allIds, extra, first) {
   resolvePending(B);
   refreshAssign(B, allIds);
   const attackers = w.enemies.filter(e => isAttacker(e.unit));
+  if (attackers.length && st.threatAt === undefined) st.threatAt = me.turn;   // CFG.FUEL_DEFER ends at the first threat
   // Past CHAIN_ROUND, or (CFG.CHAIN_KEEP) a church that never learned the round: a line church, or one whose builder
   // was shot before the church's first turn. Its army spent the bank the next line needs (seed 799: church #505, its
   // chainer killed in between, built 136 units in r246-450 and no line fired).

@@ -613,6 +613,9 @@ test('census: pioneers, churches by round, mines; gate replay names sum by role'
   const tot = summarize([{ cand: 1, teams: T }, { cand: 0, teams: T }]);
   assert.deepStrictEqual([tot.cand.pioneers, tot.ctrl.pioneers, tot.cand.games, tot.cand.phase_mean], [3, 3, 2, 17.5]);
   assert.deepStrictEqual(Object.keys(summarize([{ cand: null, teams: T }])), ['red', 'blue']);
+  // First pioneer (round, team fuel after the build) and first church; means skip the games without one
+  assert.deepStrictEqual(T.map(t => [t.first_pioneer, t.pioneer_fuel, t.first_church]), [[12, 258, 26], [null, null, null]]);
+  assert.deepStrictEqual([tot.cand.first_church_mean, tot.cand.first_church_n, tot.cand.pioneer_fuel_mean], [26, 1, 258]);
   // h50 (red) vs h71 (blue, CHURCH_GUARD_D 8, preacher), seed 2591 to round 25: both church the centre at round 18;
   // red's church builds a pilgrim first, blue's a preacher
   const g = census(fs.readFileSync(path.join(FIX, 'guard_s2591_r25.bc19')));
@@ -630,6 +633,11 @@ test('census: pioneers, churches by round, mines; gate replay names sum by role'
   const mil = census(cb).map(t => [t.mil_born, t.mil_dead, t.newborn_dead, t.newborn_dead_k]);
   assert.deepStrictEqual(mil, [[88, 18, 5, 130], [135, 26, 5, 150]]);
   assert.deepStrictEqual(census(cb, { to: 100 }).map(t => t.newborn_dead <= t.mil_dead && t.mil_dead <= t.mil_born), [true, true]);
+  // h162 (red, ATTACK_ONE 1) vs v8 on 2046 to r586: red's two castles call one target at r580 and r585; v8's call two
+  // at r585 (its castles' own mirrors)
+  const ab = fs.readFileSync(path.join(FIX, 'attack_s2046_r586.bc19'));
+  assert.deepStrictEqual(census(ab).map(t => [t.castles, t.attack_calls, t.attack_split]), [[2, 2, 0], [2, 1, 1]]);
+  assert.deepStrictEqual(census(ab, { to: 584 }).map(t => [t.attack_calls, t.attack_split]), [[1, 0], [0, 0]]);
 });
 
 test('move_stale.sh: moves only named pending jobs to superseded and back; refuses names that are not plain', () => {

@@ -8,9 +8,9 @@ import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
 import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot } from '../src/bot/military.js';
-import { callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
+import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
-import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding } from '../src/bot/struct.js';
+import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -329,6 +329,27 @@ test('castle: attack calls every ATTACK_EVERY rounds, or (WAVE) 3 rounds once en
   } finally { Object.assign(CFG, saved); }
 });
 
+test('castle: ATTACK_ONE: every castle calls the same enemy castle, the mirror nearest ours in summed r2', () => {
+  const saved = CFG.ATTACK_ONE;
+  try {
+    // Canonical n 40, enemy castle = (x, 39 - y): A's own mirror is nearer A, B's nearer B; summed r2 2390 vs 1662
+    const castles = new Map([[1, { x: 5, y: 3 }], [2, { x: 30, y: 10 }]]);
+    const call = (x, y) => {
+      const sent = [];
+      const B = { round: 500, st: { count: [2, 0, 5, 10, 6, 4], castles },
+        w: { me: { x, y }, n: 40, fuel: 1000, sentR2: false, mirror: (a, b) => [a, 39 - b], signal: (m, r) => sent.push([m, r]) } };
+      callAttack(B);
+      return sent;
+    };
+    CFG.ATTACK_ONE = 0;
+    assert.deepStrictEqual([call(5, 3), call(30, 10)], [[[encXY(0, 5, 36), FAR.ATTACK]], [[encXY(0, 30, 29), FAR.ATTACK]]]);
+    CFG.ATTACK_ONE = 1;
+    assert.deepStrictEqual([call(5, 3), call(30, 10)], [[[encXY(0, 30, 29), FAR.ATTACK]], [[encXY(0, 30, 29), FAR.ATTACK]]]);
+    castles.delete(2);                                  // B fell: the call follows the living castles
+    assert.deepStrictEqual(call(5, 3), [[encXY(0, 5, 36), FAR.ATTACK]]);
+  } finally { CFG.ATTACK_ONE = saved; }
+});
+
 // A castle that launches a chainer on an attack-call round: the call holds the radio, so v8 builds the chainer deaf and
 // counts the launch; RADIO_WAIT launches the next turn, with its message.
 test('chain: RADIO_WAIT: a launch waits a turn while the attack call holds the radio', () => {
@@ -623,6 +644,37 @@ test('struct: ECON_NOPLAN: before ECON_UNTIL a castle whose team planned no chur
     assert.strictEqual(turn1(1, 2), null);           // churches planned: the bank waits for their pioneers
     assert.strictEqual(turn1(1, undefined), null);   // no plan yet (castles plan on turn 3)
   } finally { [CFG.ECON_NOPLAN, CFG.SERVE_MOVES] = saved; }
+});
+
+test('struct: FUEL_DEFER staffs only karbonite depots in the opening while fuel lasts, no attacker was seen and a church may be planned', () => {
+  const saved = [CFG.FUEL_DEFER, CFG.FUEL_DEFER_MIN];
+  try {
+    CFG.FUEL_DEFER = 0;
+    const g = new Game(2013, 100, 20, false, false);   // one castle a side, serving one karbonite and two fuel depots
+    g.robots = g.robots.filter(r => r.team === 0);
+    const castle = g.robots[0];
+    const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    castle.turn = 1; let w = worldFor(g, castle); B.w = w; B.api = w.api;
+    const a = castleTurn(B);
+    assert.strictEqual(a.u, S.PILGRIM);
+    assert.deepStrictEqual([...B.st.assign.keys()].map(i => B.deps[i].k), [true]);   // the karbonite miner first
+    assert.deepStrictEqual(B.st.served.map(d => d.k).sort(), [false, false, true]);
+    castle.turn = 2; w = worldFor(g, castle); B.w = w; B.api = w.api;   // its newborn is still pending
+    const next = (fd, set = {}) => {
+      CFG.FUEL_DEFER = fd; CFG.FUEL_DEFER_MIN = 300;
+      w.fuel = 'fuel' in set ? set.fuel : 500; B.round = set.round || 2;
+      B.st.planAll = set.planAll; B.st.threatAt = set.threatAt;
+      return nextDepot(B);
+    };
+    assert.strictEqual(next(0).k, false);                                 // default (v8): a fuel miner next
+    assert.strictEqual(next(60), null);                                   // before planning (turn 3): only karbonite
+    assert.strictEqual(next(60, { planAll: 6 }), null);                   // a church planned: the fuel miners wait
+    assert.strictEqual(next(60, { planAll: 0 }).k, false);                // nothing to church: v8's mix
+    assert.strictEqual(next(60, { planAll: 6, fuel: 299 }).k, false);     // short of fuel: v8's mix
+    assert.strictEqual(next(60, { planAll: 6, round: 60 }).k, false);     // the opening is over
+    assert.strictEqual(next(60, { planAll: 6, round: 59 }), null);
+    assert.strictEqual(next(60, { planAll: 6, threatAt: 2 }).k, false);   // an attacker was seen
+  } finally { [CFG.FUEL_DEFER, CFG.FUEL_DEFER_MIN] = saved; }
 });
 
 test('struct: PIONEER_HOLD keeps the church in the bank from pilgrims and far threat responses while a pioneer waits', () => {

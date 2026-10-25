@@ -75,6 +75,14 @@ export const CFG = {
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short
   FUEL_LOW: 400,             // below this fuel the next pilgrim takes a fuel depot (if any is free)
   FUEL_HIGH: 2000,           // above this fuel the next pilgrim takes karbonite (if any is free)
+  FUEL_DEFER: 0,             // >0: before this round (a church that never learned it counts its own turns) a structure
+                             // staffs only karbonite depots while fuel >= FUEL_DEFER_MIN and it has seen no enemy attacker;
+                             // a castle whose team planned no church keeps v8's mix (ECONOMICS.md: 500 F + 25 a round pays
+                             // the opening; replica 727-3, seed 2740: the castle hired 2 fuel miners and sat at 60-80 K
+                             // with 1,100-1,500 F until its first pioneer left at r44, the gate being 90 K)
+  FUEL_DEFER_MIN: 400,       // above the escorts' 350 F and the pioneer's 250 F gates: two- and three-castle teams, whose
+                             // fuel falls under it by turn 2-3, keep v8's mix (driver, 16 maps: at 300 fuel fell to 17-226
+                             // after the first church on 826, 836, 1712; 600 never opens, the game starts at 500)
   // military production
   GUARD_BASE: 2,             // peacetime prophets wanted per structure at round 0
   GUARD_ROUNDS: 40,          // one more wanted per this many rounds
@@ -357,6 +365,9 @@ export const CFG = {
                              // CHAIN_ROUND, CHAIN_STAGGER, CHAIN_EVERY and ATTACK_EVERY are multiples of 5, so every
                              // later launch of that castle falls on a call round; audit 2026-10-24, replica 731 game 3:
                              // 5 of 5 chain launches after r450 and 3 pioneer re-sends went out deaf)
+  ATTACK_ONE: 0,             // 1: every castle calls the general attack on the same enemy castle, the mirror nearest our
+                             // living castles in summed r2 (ECONOMICS.md, Blotto: 16 of v8's 29 replica losses reached
+                             // r1000 at equal castles, decided on health; on 11 of them the castles called 2-3 targets)
   ATTACK_PERSIST: 0,         // 1: units report destroyed enemy castles (CT.DEAD), castles drop them and radio the next
                              // target map-wide (FAR.WIDE); units without orders wait where they are, not at home
   ATTACK_WAIT: 40,           // ...for this many rounds

@@ -4500,3 +4500,52 @@ Mechanism read (not a decision input; `node tools/replay.js young` on our side o
 karbonite dead within 3 rounds of birth was 43% in h159's 19 losses (per-game median 0.51) and 13% in its 17 wins
 (median 0.09), against v8's 55% / 23% in its own blocks 726-731. Lower in both, in the direction FEED_STOP aims; the
 blocks differ in sides and luck, so it only says the switch acts.
+
+## 2026-10-24 18:45 PDT: ECONOMICS.md (prompt 37): twelve suggestions ranked; h161 (FUEL_DEFER 60) and h162 (ATTACK_ONE) built
+
+ECONOMICS.md: the rules' prices and payback, a diagnosis from v8's 51 field games, five economic lenses run as a
+read-only workflow (production and location, growth and capital, inventory and finance, game theory and military
+economics, national accounts), each proposal checked by a separate verifier against the code and this ledger;
+twelve suggestions ranked by the verifiers' confidence, seven dropped on the numbers. Three lenses converged on the
+first: fuel is a free good in the opening and karbonite binds.
+
+Opening census (scratchpad opening.js: bank and miners per team to r60, v8's 51 field games): our karbonite bank
+median 70-80 at r20-50 against the field's 40, our fuel 733 / 1,045 / 1,348 / 1,577 at r20 / 30 / 40 / 50 against
+447 / 552 / 788 / 998; fuel miners by r40 4 and 4, karbonite miners 4 and 5; a first church by r60 in 36 of 51 games
+(median r33) against the field's 44 of 51 (r22.5). On one-castle maps with one karbonite depot by the castle and two
+fuel depots (2013, 2644, 1706, 2740, 493, 1915) the bank steps 40, 40, 60, 60, 80, 80, 80 and stalls one cargo under
+the pioneer's 90-K gate with 1,100-1,500 F idle.
+
+**h161 = v8 + FUEL_DEFER 60** (FUEL_DEFER_MIN 400; struct.js nextDepot, structAct's threat flag): before r60 (a
+church that never learned the round counts its own turns), while team fuel is at least 400 and the structure has seen
+no enemy attacker, a castle or church staffs only karbonite depots and builds no pilgrim when none is free; a castle
+whose team planned no church keeps v8's mix. Driver diagnostics, head to head against v8 to r150 on 16 maps (one side;
+2013 on both, an exact mirror), no exceptions. Floor 300: first church earlier on 12 of 16 maps, karbonite mined by
+r150 up on most one-castle maps (2013 2,068 against 1,018; 2644 1,254 / 412) and down on two-castle maps (826 2,422 /
+3,250; 836 2,116 / 3,168; 1712 1,516 / 2,294), where fuel fell to 17-226 after the first church. Floor 600: inert
+(the game starts at 500 F). Floor 400: one-castle maps as at 300; two-castle maps 826, 799, 2797, 203 equal, 1712 and
+1036 ahead, 836 behind (2,300 / 3,524). 400 was the inventory verifier's dose before these games (above the escorts'
+350 F and the pioneer's 250 F gates); the three floors are driver readings, not a panel read. Unit test (struct:
+FUEL_DEFER); the defaults build (both switches off) replays v8 IDENTICAL on 799 to r300 and on 2046 to r600 (290,918 bytes); dist/h161 4e5d828b7522,
+FUEL_DEFER:60 read back from the bundle.
+
+**h162 = v8 + ATTACK_ONE 1** (castle.js callAttack): every castle calls the general attack on the same enemy castle,
+the mirror nearest our living castles in summed r2 (ties: canonical order), instead of each its own nearest. The
+Blotto lens: 16 of v8's 29 field losses reached r1000 at equal castles, decided on health; on 11 of them the castles
+called 2-3 targets. The call splits on 19 of the 40 pool maps (scratchpad split.js) and on 7 of the general panel's 18
+cells (wololo 836, botfinalsafe 203, IanCoolidge0 203, uvafan 1653, 1712, 2046, awesomelemonade 1712): 39% of the
+panel against 47% of the pool, so the general panel represents the ladder and no targeted panel is needed. Unit test
+(castle: ATTACK_ONE); dist/h162 88a7474abd7a. Driver, seed 2046 to r600 (scratchpad attack_calls.js): in v8 vs v8 both
+teams' castles radio two targets on every call round (2 and 4 rounds); h162 (red) against v8 radios one on each of its
+2, v8's side still two; no exceptions. `tools/census.js` now counts attack calls and split calls (fixture
+test/fixtures/attack_s2046_r586.bc19, that game to r586) and reports the first pioneer's round and fuel and the first
+church's round.
+
+Pre-registration. Both go to the general panel one block at a time after h159's block 2: h161 first, then h162,
+scored with `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK...` by the pooled rule. Studied cells: h161,
+botfinalsafe 2740 (replica 727-3 is in the config comment), so h161 is accepted only if its z over the other cells is
+also >= 0; h162, none (the r1000 census covers every field game). Mechanism reads, not decision inputs, on our side of
+each block's games: h161, `tools/census.js` first_pioneer and first_church means on the one-castle cells against
+v8's in 726-731 (bar: first pioneer at least 6 rounds earlier); h162, `tools/census.js` attack_split (call rounds with 2+ targets; bar: none).
+h161's rush4 check (castles lost against bots/rush4 no more than v8's) runs when the VM screens resume (queue < 30);
+the screens vs bots/v8 (20 cells, seed0 36000 and 37000) wait in ~/jobq/superseded behind h160's.

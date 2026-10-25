@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 124 other, 41 rejected, 16 accepted, 8 in progress, 7 dropped, 4 sparring partners (200 rows).
+Totals: 124 other, 41 rejected, 16 accepted, 8 in progress, 7 dropped, 4 sparring partners, 2 queued (202 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -214,3 +214,5 @@ Totals: 124 other, 41 rejected, 16 accepted, 8 in progress, 7 dropped, 4 sparrin
 | `h158` | 2026-10-24 14:14 | v8 | v8 + HOP_GAIN 4: a castle's next pioneer is built by the living church of ours at least 4 king steps nearer its site, asked over the radio (dist/h158 ed5e0e7cb5d3) |  |  |  |  | BUILT, PARKED: in self-play vs v8 to r200 on the 15 panel maps it asked a church on 3 maps, 1-3 times a game (churches 50 vs 48); too rare to read alone |
 | `h159` | 2026-10-24 15:13 | v8 | v8 + FEED_STOP 3: a structure that saw 3 of its military newborns die within 3 turns of birth in 20 turns builds no military unit for 50 turns, except against an attacker that can hit the structure itself (dist/h159 552aa86f0b35) |  |  | block 1: matches 985-996 (both sides), 17 of 36, side-aware z 0.75 (pooled 0.56); block 2: matches 997-1008 |  | in progress: block 1 passed (z 0.75 >= 0.5); block 2 queued |
 | `h160` | 2026-10-24 15:32 | v8 | v8 + ECON_NOPLAN 1: ECON_UNTIL does not hold a castle whose team planned no church (5 of 40 pool maps); inert elsewhere (dist/h160 15b40f6fac46) |  |  |  |  | in progress: targeted panel (noplan-m1) and screen queued behind the replica queue |
+| `h161` | 2026-10-24 18:45 | v8 | v8 + FUEL_DEFER 60 (FUEL_DEFER_MIN 400): before r60, while team fuel >= 400 and the structure has seen no enemy attacker, castles and churches staff only karbonite depots; a castle whose team planned no church keeps v8's mix (ECONOMICS.md idea 1; dist/h161 4e5d828b7522) |  |  |  |  | queued: panel block after h159's block 2; screen held for the replica queue |
+| `h162` | 2026-10-24 18:45 | v8 | v8 + ATTACK_ONE 1: every castle calls the general attack on the same enemy castle, the mirror nearest our living castles in summed r2 (19 of 40 pool maps split v8's call; ECONOMICS.md idea 2; dist/h162 88a7474abd7a) |  |  |  |  | queued: panel block after h161's; screen held for the replica queue |
