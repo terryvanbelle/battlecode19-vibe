@@ -143,6 +143,7 @@ that the switch passes the replica panel; our accepted rate is about 1 in 8). Ev
 | 11 | Plan order with a finite premium for contested land | von Thünen | PLAN_CONTEST_PREM 2, PLAN_FUEL_W 4 | 8 of 26 maps change order | 0.07 | S | targeted panel |
 | 12 | Hunt enemy pilgrims dwelling on our depots far from their structures | enclosure denial | HUNT_DEPOT 1 after h156 (INTERCEPT) | their churches on our half | 0.07 | M | after h156 |
 | 13 | Stop re-buying pioneers for held sites: one 40 turns no nearer its site gives it up and mines by our structures; a castle rests a site whose pioneer timed out | sunk cost, idle capital | PIONEER_STALL_ANY 40, PIONEER_HOME 1, PIONEER_TIMEOUT_REST 1 | 108 parked pioneers in 46 games | 0.08 | S | h169 closed with v8; rebuilt on v9 as h170, the next panel after v9's control block (section 5) |
+| 14 | Match idle miners to free safe home depots: a pilgrim whose depot is taken or hot takes a safe one; one 25 turns no nearer gives its depot up | search and matching (idle labour beside vacant jobs) | PILGRIM_HERE 1, PILGRIM_STALL 25 | idle miners beside safe depots: 40.4 pilgrim-rounds a game to r300, 23 of 72 games at 50+ | 0.06 | S | h174, panel after h170 (TRAINING_LOG 2026-10-25 09:12) |
 
 Rules of the test, unchanged from TRAINING_ALGORITHM.md: one switch per candidate on the champion; a no-op check that
 the defaults reproduce the champion byte for byte; unit tests; mechanism bars written before any game is read; the side-aware

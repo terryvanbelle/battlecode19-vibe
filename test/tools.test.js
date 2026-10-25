@@ -713,3 +713,37 @@ test('bump_ours.sh: reorders only, by digit ids or our team; refuses anything el
     assert.strictEqual(r.stdout, '', JSON.stringify(bad));
   }
 });
+
+// tools/reads: the panel's mechanism reads (h170 parked pioneers, h171 escorts, h174 idle miners). Values pinned from
+// the session scripts they replace (identical output on these replays).
+test('reads: idle, parked and escort reads on replica games', () => {
+  const { execFileSync } = require('child_process');
+  const run = (read, ...a) => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', read), ...a], { encoding: 'utf8' })
+    .trim().split('\n').map(l => JSON.parse(l));
+  const g = path.join(FIX, 'escort_s2591_1124-1.bc19'), chain = path.join(FIX, 'chain_s2013_407-3.bc19');
+  assert.deepStrictEqual(run('idle.mjs', '0', '300', chain), [{ waste: 1174, rounds: 232, S: 1502, L: 2051, H: 6, stuckP: 0, stuckM: 955, nM: 13 }]);
+  assert.deepStrictEqual(run('idle.mjs', '0', '300', g), [{ waste: 26, rounds: 25, S: 33, L: 118, H: 16, stuckP: 23, stuckM: 0, nM: 0 }]);
+  assert.deepStrictEqual(run('parked.mjs', '0', g), [{ sent: 2, church: 0, mine: 0, died: 0, alive: 2, gaveup: 0, toTaken: 2, churches: 0 }]);
+  const e = run('escorts.mjs', '0', g);
+  assert.deepStrictEqual(e.map(x => [x.id, x.round, x.hit, x.hitBy, x.k0, x.dead, x.hit6, x.pc60]),
+    [[2967, 3, 41, 'R', 10, 43, 1, 0], [851, 4, 34, 'R', 10, 40, 1, 0]]);
+  assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'idle.mjs'), '2', '300', g], { stdio: 'pipe' }));
+});
+
+test('reads: sum.py means per field, wins/losses and opponents; nulls left out; --ge counts', () => {
+  const { execFileSync } = require('child_process');
+  const lines = ['1 a.x seed-1 0 W 300 {"s":10,"h":null}', '1 a.x seed-2 0 L 200 {"s":60,"h":1}', '2 b.y seed-1 1 L 999 {"s":2,"h":0}', 'noise'];
+  const out = execFileSync('python3', ['-I', path.join(__dirname, '..', 'tools', 'reads', 'sum.py'), 's,h', '--ge', '50'], { input: lines.join('\n'), encoding: 'utf8' }).split('\n');
+  assert.strictEqual(out[0], 'all: 3; s mean 24.00 median 10 (n 3); h mean 0.50 median 0.5 (n 2); s >= 50: 1');
+  assert.strictEqual(out[1], 'W: 1; s mean 10.00 median 10 (n 1); h -; s >= 50: 0');
+  assert.strictEqual(out[2], 'L: 2; s mean 31.00 median 31 (n 2); h mean 0.50 median 0.5 (n 2); s >= 50: 1');
+  assert.strictEqual(out[3], '  a.x: 2; s mean 35.00 median 35 (n 2); h mean 1.00 median 1 (n 1); s >= 50: 1');
+});
+
+test('reads: games.sh refuses a bad match id and a missing --', () => {
+  const { spawnSync } = require('child_process'), sh = path.join(__dirname, '..', 'tools', 'reads', 'games.sh');
+  assert.strictEqual(spawnSync('bash', [sh, 'idle.mjs', '300', '--', '11x']).status, 2);
+  assert.strictEqual(spawnSync('bash', [sh, 'idle.mjs', '300', '1180']).status, 2);
+  const none = spawnSync('bash', [sh, 'idle.mjs', '300', '--', '9999999'], { env: { ...process.env, REPLAYS: FIX } });
+  assert.strictEqual(none.status, 1);
+});

@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 08:24 PDT)
+## State (2026-10-25 09:14 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -21,7 +21,7 @@
   z < 0.5; two blocks accept at z >= 2 (other cells z >= 0), reject at z < 1, else a third block at z >= 2. The
   basics-fix rule (h170, fixed 2026-10-25 04:26): two blocks, block 1 rejects only at z < -1; accept at z >= 0
   (others z >= 0) if the mechanism reads pass, else the ordinary rule.
-- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free (2.5 GB at 07:31 after
+- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free (2.4 GB at 09:04; 2.5 GB at 07:31 after
   deleting the decided screens' out/rp_h145v8-rp_h151v8 on 2026-10-25). Prune a screen's out/rp_* once its candidate
   is decided; next candidates if needed: /var/log/syslog.1 (213 MB), the journal (111 MB).
 - **VM queue** (`~/jobq`; the runner takes pending jobs in locale `ls | sort` order; gates run from the shadow tree
@@ -47,6 +47,9 @@
   block is scored (TRAINING_LOG 2026-10-25 07:24). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted).
+  **Replica queue (09:10): the daily autoscrim fired at 09:00, 167 ranked matches waiting** (4 a team, none
+  dominant; about 15 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: the v9 control block = matches 1180-1191** (submission 190, bots/v9 back as the ladder build 191); when
   all 12 finish it joins progress/panels/v9-m1.pool, no decision; then h170's block 1 (`tools/panel_submit.sh
   dist/h170 "..."`).
@@ -55,10 +58,14 @@
   h170 (v9 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PIONEER_TIMEOUT_REST 1, dist/h170 f4e6985acea0; h169's switches:
   stop re-buying pioneers for held sites; basics-fix rule; studied cells uvafan.bc2019:seed-1712,
   IanCoolidge0.battlecode20~69ce88:seed-1036, awesomelemonade.Battlecode2019:seed-2518; mechanism reads with
-  scratchpad econ/zombies.mjs, bars from h167's blocks to be fixed before h170's block is scored);
+  tools/reads/parked.mjs, bars from v9's 108 panel games to be fixed before h170's block is scored);
+  h174 (v9 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h174 b60bfc4a57f5: idle miners take free safe home depots;
+  basics-fix rule; studied cells awesomelemonade.Battlecode2019:seed-2518, uvafan.bc2019:seed-2046; mechanism read
+  stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 75% of v9's over its 108 panel games,
+  bar fixed when the control block is in; TRAINING_LOG 2026-10-25 09:12);
   h171 (v9 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h171 a3c65b3dba16; h168's; studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
-  econ/esc_back.mjs: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);
+  tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);
   h172 (v9 + CHAIN_WALL 28, dist/h172 d114d31e373e; h164's; studied cells uvafan 2046, 1653, IanCoolidge0 1036);
   h173 (v9 + ECON_NOPLAN 1, dist/h173 437528e313a7; h160's) on the targeted panel progress/panels/noplan-m1.json
   (the six bots on the five pool maps where no castle plans a church): first a bots/v9 control block
@@ -109,6 +116,7 @@ node tools/symcheck.js --bot dist/dev --seeds 1,2,3 --rounds 200   # side-symmet
 node tools/run_game.js --red src/bot --blue bots/v0 --seed 2 --replay r.bc19 --logs l.jsonl   # one game
 node tools/replay.js summary r.bc19                  # also: rounds, unit --id, board --round, events, nav, talk, threat, fire, timeline, moves, young
 node tools/basics.js --team red r.bc19               # basics battery
+tools/reads/games.sh idle.mjs 300 -- 1180 1181 | python3 -I tools/reads/sum.py stuckM --ge 50   # mechanism reads per replica game (also parked.mjs, escorts.mjs)
 node tools/dlv.js [--from R --to R] [--seeds a,b] rp_dlv_hN/*.bc19   # delivery numbers per batch replay, SUM per label a/b
 source tools/vm.sh && ensure_vm && vm_sync           # push code to the VM
 gssh 'cd ~/projects/vibe/2019 && ~/bin/node tools/batch.js --a dist/dev --b bots/v1 --random 24 --par 6 --timescale 2 --out ~/runs/results.jsonl --replays ~/runs/replays --tag X'

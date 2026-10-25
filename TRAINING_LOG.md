@@ -5192,3 +5192,31 @@ block 1180-1191 completes the 108-game reference. Exceptions 0 in 72 games; 23 t
 VM job ...1000symv9 (`tools/symcheck.js --bot bots/v9 --seeds 3,1,2,2321 --rounds 1000`, nice 15, unshare -rn; out/sym_v9_r1000.log):
 every seed ok at round 1000 (192, 196, 98 and 106 robots), as v8's (2026-10-24 17:33). MUSTER 2's held crusaders and
 their rings keep the mirror.
+
+## 2026-10-25 09:12 PDT: the daily autoscrim fired (174 waiting); h174 pre-registered (idle miners beside free safe depots)
+
+- Replica queue: the autoscrim fired at 09:00 PDT, 24 h after the last: 174 ranked matches waiting at 09:00, 167 at
+  09:10, spread 4 a team over the ladder (ours 4; 15 hold one of the five slow bots), so no bot holds the lion's share
+  and none is dropped. All 8 execute slots play (load 12.3; the VM's job queue is empty, so the 8 vCPUs serve the
+  replica). Clearing takes about 15 h. Inflow while 30+ wait: the autoscrim stays held, no local VM jobs, and our panel
+  blocks go in one at a time (12 matches, about 7% of the backlog), bumped to the front (`tools/bump_ours.sh --ours`)
+  as on 2026-10-24 09:09. The v9 control block 1180-1191 has 10 of 12 done (1186, 1187 against uvafan running).
+- **h174 = v9 + PILGRIM_HERE 1 + PILGRIM_STALL 25** (dist/h174 b60bfc4a57f5; ECONOMICS row 14: idle labour beside
+  vacant jobs is a matching friction, the search-and-matching model of unemployment). A pilgrim whose target depot is
+  taken or hot takes the depot it stands on, else the nearest free one not hot; one 25 turns no nearer its depot gives
+  it up for 50 turns for the free depot nearest our structures. Source: awesomelemonade 2518 (1151): an enemy prophet
+  parked out of our castle's reach from r43 killed every miner on (8,29) (r131, 200, 212, 293); two pilgrims both took
+  the hot (8,29) through the "taken -> nearest free depot" branch and circled under stepAvoid while nobody mined the
+  safe (9,30) from r67, the bank idle at 130-170 K.
+- Census (tools/reads/idle.mjs, the scratchpad's econ/idledep.mjs moved into the repo with parked.mjs (econ/zombies.mjs)
+  and escorts.mjs (econ/esc_back.mjs), same output; our team, to r300; stuckM = pilgrim-rounds a miner idle 20+ rounds in a row,
+  carrying nothing, while a home depot (within 3 king steps of our structure) lies unmined, unoccupied and outside every
+  enemy attacker's THREAT_R2; chainers and pioneers left out) on v9's 72 decided panel games: mean 40.4 a game, median
+  1, 23 games at 50+; losses 49.9, wins 32.0; by opponent awesomelemonade 124.2, uvafan 56.0, IanCoolidge0 23.7,
+  wololo 23.6, StoneT2000's two 7.6. Self-play h174 red against v9 to r300 (driver, one game at a time): stuckM 143 ->
+  39 on 2046, 311 -> 229 on 1712 (mined K 4,008 against 3,744), 55 -> 69 on 2518, 0 -> 0 on 2591: the switch acts.
+- Pre-registration: basics-fix rule (two blocks; block 1 rejects only at z < -1; accept at z >= 0, others >= 0, if
+  the read passes, else the ordinary rule). Mechanism read: stuckM per game over h174's panel games at most 75% of
+  v9's over its 108 panel games (40.4 over the 72 decided; the control block's 36 are added before h174's block is
+  read, and the bar is fixed then). Studied cells awesomelemonade.Battlecode2019:seed-2518,
+  uvafan.bc2019:seed-2046. Panel order: h170, h174, h171, h172, then h173 on its targeted panel (basics first).
