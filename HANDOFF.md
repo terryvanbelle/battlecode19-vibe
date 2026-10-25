@@ -75,8 +75,9 @@
   dropped, driver diagnostics instead; studied cells wololo 2013, 2644, 836, bot1v43 2591, botfinalsafe 1706 with
   `--studied` as in TRAINING_LOG 12:51; mechanism read scratchpad econ/esc_matches.sh BLOCK: both first escorts within 2
   steps of their site 20 rounds after birth in half the studied games, v8 0 of 5; TRAINING_LOG 22:20, 22:43), `tools/panel_submit.sh dist/h157 "cand:h157"`. If h157 is
-  accepted, h165 (h157 + ESCORT_EACH 2, ECONOMICS row 7, dist/h165 feb35bd6487b; rebuild on the new champion; general
-  panel, no studied cell; TRAINING_LOG 22:33) follows it; if not, row 7 closes. Then
+  accepted, h165 (h157 + ESCORT_EACH 2, ECONOMICS row 7, dist/h165 feb35bd6487b; general panel, no studied cell;
+  TRAINING_LOG 22:33) and h166 (h157 + ESCORT_EARLY 1, dist/h166 69e55f300f65; studied cell wololo 836) follow it;
+  if not, both close. Then
   (ECONOMICS.md, TRAINING_LOG 20:54) h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e;
   studied cells uvafan 1712, awesomelemonade 1712, 2797, 2518), `tools/panel_submit.sh dist/h163 "cand:h163"` on the
   general panel against the v8-m1 pool. ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22); row 5

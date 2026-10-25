@@ -4808,3 +4808,12 @@ at r96-100). By r100 wololo had 28 pilgrims and 5 churches to our 5 and none (ou
 our 446, and took a castle by r150. h157's fast walk does not cure a late start; ESCORT_EARLY (escorts on turns 3-4,
 ahead of the economy pilgrims; in h154 with ESCORT_HOLD_R) does. If h157 is accepted, h157 + ESCORT_EARLY 1 is the
 next escort candidate (before h165), with 836 among its studied cells.
+
+## 2026-10-24 22:46 PDT: h166 (h157 + ESCORT_EARLY 1) built; on 836 it moves one escort to r3 and adds little to h157
+
+dist/h166 = v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_EARLY 1 (69e55f300f65; no new code). Driver, 836 as
+blue against v8 to r120 (scratchpad vs/esc836.txt; guards.mjs): h157's four escorts (r12-15) hold 2 steps from their
+sites at +20; v8 never churches (45,28) and has 5 churches by r75 to the mirror's 7 by r70; karbonite mined by r120
+2,598 against 1,588 (the mirror 2,356 and 2,138). h166 builds one escort at r3 and the other three at r12-15 (the
+two castles' shared bank), and mines 2,518 against 1,574. Against wololo, which churched (45,28) at r23 in 726-3,
+h157's escorts would arrive about r25-30. h166 waits with h165: it plays only if h157 is accepted.
