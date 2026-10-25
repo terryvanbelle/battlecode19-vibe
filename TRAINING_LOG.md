@@ -5096,3 +5096,16 @@ karbonite, blocked or fleeing). At most half of the 447 throttled steps could ha
 gain nothing at r2 4), so PIONEER_FAST would bring the median early church about 3 rounds sooner, about 20 K-equivalent
 on a 4-depot cluster (ECONOMICS §1). The race gap is departure (the field's first pioneers leave at r4, ours at
 r12-24) and the bank at the site, both tried (h140, h147 rejected). PIONEER_FAST alone stays parked; no new candidate.
+
+## 2026-10-25 05:49 PDT: h167 (MUSTER 2, hold only) passes panel block 1 (21 of 36, side-aware z 3.28); block 2 = matches 1143-1154
+
+Block 1 (1120-1131, all finished 05:48) scored as pre-registered:
+`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 1120-1131 --studied uvafan.bc2019:seed-1712,awesomelemonade.Battlecode2019:seed-1712,awesomelemonade.Battlecode2019:seed-2797,awesomelemonade.Battlecode2019:seed-2518`:
+21 of 36 against the pooled 16.1 (side-blind z 2.52); side-aware expectation 16.0, **z 3.28**; studied cells 5 of 8
+(expectation 3.7, z 1.59); other cells 16 of 28 (expectation 12.4, z 2.89). Rarely-won cells won: wololo 2013 red
+(pool 0 of 18), botfinalsafe 203 red (0 of 11 on that side), uvafan 1712 blue (1 of 11). Lost every cell the pool
+never wins (wololo 836, 2013 blue; botfinalsafe 1706; bot1v43 2591; uvafan 2046; awesomelemonade 2518) but the one.
+Block 1 passes (z >= 0.5); under the rule a block-1 z is not a verdict (h148's 2.20 and h163's 1.34 did not repeat),
+so block 2 decides with it (accept at pooled z >= 2, reject < 1, else a third). Block 2 requested 05:49: matches
+1143-1154 (submission 188, v8 back as 189). Mechanism reads (00:04) wait until the block decision, run on the driver
+one at a time.

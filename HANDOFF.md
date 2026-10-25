@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 05:00 PDT)
+## State (2026-10-25 05:49 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -67,11 +67,12 @@
   h166 close with it, unplayed.
   h163 (MUSTER 1) 1047-1058 + 1063-1074 + 1091-1102 REJECTED 2026-10-25 04:35 (51 of 108, side-aware z 1.23; blocks
   z 1.34, 0.71, 0.08; blocks 2 and 3 joined the pool; TRAINING_LOG 04:35).
-  **In play: h167 (v8 + MUSTER 2, hold only, dist/h167 bd86bcd5b011): block 1 = matches 1120-1131** (submission 186,
-  v8 back as 187; TRAINING_LOG 2026-10-25 04:35). Score once all 12 finish with `tools/panel_pool.sh 726-731
-  progress/panels/v8-m1.pool 1120-1131 --studied
+  **In play: h167 (v8 + MUSTER 2, hold only, dist/h167 bd86bcd5b011): block 1 = matches 1120-1131 passed (21 of
+  36, side-aware z 3.28, others z 2.89; TRAINING_LOG 05:49); block 2 = matches 1143-1154** (submission 188, v8 back
+  as 189). Score once all 12 finish with `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 1120-1131
+  1143-1154 --studied
   uvafan.bc2019:seed-1712,awesomelemonade.Battlecode2019:seed-1712,awesomelemonade.Battlecode2019:seed-2797,awesomelemonade.Battlecode2019:seed-2518`
-  (block 1 rejects at z < 0.5; two blocks accept z >= 2, reject < 1, else a third). Mechanism reads (not decision
+  (two blocks accept at z >= 2 with the other cells z >= 0, reject < 1, else a third). Mechanism reads (not decision
   inputs; TRAINING_LOG 00:04): muster builds in at least a third of the games; military K dead within 3 turns of
   birth in losses under 45% (v8 55%); end health in r1000 games against v8's in the same cells (econ/endgame.js).
   **Next, one block at a time:**
