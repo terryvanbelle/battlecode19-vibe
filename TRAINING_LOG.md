@@ -4817,3 +4817,14 @@ sites at +20; v8 never churches (45,28) and has 5 churches by r75 to the mirror'
 2,598 against 1,588 (the mirror 2,356 and 2,138). h166 builds one escort at r3 and the other three at r12-15 (the
 two castles' shared bank), and mines 2,518 against 1,574. Against wololo, which churched (45,28) at r23 in 726-3,
 h157's escorts would arrive about r25-30. h166 waits with h165: it plays only if h157 is accepted.
+
+## 2026-10-24 22:54 PDT: the replica queue falls under 30; saturn stays at 8 slots, the VM screens retire
+
+The queue reached 29 waiting at 22:52 (all ranked; 52 at 21:56). The trigger in HANDOFF (back to 6 slots and gates
+at par 2, the held screens moved back) is replaced: candidates now go straight to the panel with driver diagnostics
+as the pre-filter (h157, h164 tonight), a 40-game screen costs the same VM as a 36-game panel block, and each block
+adds 12 matches, which would put the queue back over 30 under the shared mode. So saturn keeps its 8 slots and the
+screens retire: h155 and h154 deleted from ~/jobq/superseded (superseded by h157 on the panel and by h166), as h157's
+and h164's were; h160, h162 and h156 stay there unrun until decided. Saturn's undeployed code (slots that survive
+spool errors, exc_caught / slow_logged, the fail-closed sandbox.sh) goes in with `deploy.sh app` and a restart
+between panel blocks, after h162's last match (1029) ends, so no block game is retried.

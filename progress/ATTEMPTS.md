@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 127 other, 43 rejected, 16 accepted, 8 in progress, 7 dropped, 4 sparring partners, 1 queued (206 rows).
+Totals: 125 other, 43 rejected, 16 accepted, 9 dropped, 8 in progress, 4 sparring partners, 1 queued (206 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -207,8 +207,8 @@ Totals: 127 other, 43 rejected, 16 accepted, 8 in progress, 7 dropped, 4 sparrin
 | `h151` | 2026-10-24 08:42 | v8 | v8 + CHAIN_FAILS 1: castles hold chain lines after one fired with no enemy castle destroyed (h133 rebased; field-aimed) (dist/h151 8feb4e1832d3) | vs v8 20 cells seed0 28000: +1 -3, D 4, t -1.00; castles lost 31 vs 19 |  |  | vs v8 0-2 | REJECTED (screen: t -1.00, castles 31 vs 19) |
 | `h152` | 2026-10-24 09:37 | v8 | v8 + CHAIN_LIVE 1 + WATCH 2: h148 and h150 stacked (dist/h152 fdbddfe8dde9) |  |  |  |  | DROPPED 2026-10-24 11:30: stacks WATCH 2, which the panel rejected as h150 (z -0.37); CHAIN_LIVE 1 is tested alone as h148 |
 | `h153` | 2026-10-24 09:37 | v8 | v8 + WATCH 2 + SPOT_MASK 56: prophets also answer structure spots (dist/h153 56ad0f09aebf) |  |  |  |  | DROPPED 2026-10-24 11:30: never engages (CFG.SPOT 0: prophets store structure spots but no branch reads them; plays as h150, which the panel rejected; audit 2026-10-24) |
-| `h154` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_EARLY 1: escorts built turns 3-4 ahead of the economy pilgrims and holding within 2 steps of the site (dist/h154 ae2b4ac88687) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |
-| `h155` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2: escorts hold within 2 steps of the site (dist/h155 562d81eddf8a) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |
+| `h154` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_EARLY 1: escorts built turns 3-4 ahead of the economy pilgrims and holding within 2 steps of the site (dist/h154 ae2b4ac88687) |  |  |  |  | DROPPED 2026-10-24 22:54: superseded by h157 on the panel and h166 (h157 + ESCORT_EARLY 1); screen never ran |
+| `h155` | 2026-10-24 09:48 | v8 | v8 + ESCORT_HOLD_R 2: escorts hold within 2 steps of the site (dist/h155 562d81eddf8a) |  |  |  |  | DROPPED 2026-10-24 22:54: superseded by h157 (ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9) on the panel; screen never ran |
 | `h156` | 2026-10-24 10:08 | v8 | v8 + INTERCEPT_R2 64 + INTERCEPT_DWELL 3: a structure builds a unit that hits an enemy pilgrim within r2 64 (or standing 3 turns in sight) in its birth round (dist/h156 e37dfe78da27) |  |  |  |  | SCREEN QUEUED (vs bots/v8; held while the replica queue clears) |
 | `h157` | 2026-10-24 10:24 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9: escorts hurry to the contested site (steps up to r2 9 until they first hold) and hold within 2 steps of it (dist/h157 a5eba191475e) |  |  |  |  | PANEL NEXT after h162 (screen dropped: VM held for the replica; driver: escorts hold the site by r10 on 2591 and 2013) |
 | `h158` | 2026-10-24 14:14 | v8 | v8 + HOP_GAIN 4: a castle's next pioneer is built by the living church of ours at least 4 king steps nearer its site, asked over the radio (dist/h158 ed5e0e7cb5d3) |  |  |  |  | BUILT, PARKED: in self-play vs v8 to r200 on the 15 panel maps it asked a church on 3 maps, 1-3 times a game (churches 50 vs 48); too rare to read alone |
