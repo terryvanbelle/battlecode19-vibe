@@ -5037,3 +5037,14 @@ pioneers per game under a third of v8's on 726-731 (58 in 18 games); our churche
 uvafan.bc2019:seed-1712, IanCoolidge0.battlecode20~69ce88:seed-1036, awesomelemonade.Battlecode2019:seed-2518.
 Panel order: after h163's third block, h167, then h169, then h168, h164, h160; if h163 is accepted, h169 is rebuilt
 on the new champion with the same three switches.
+
+## 2026-10-25 04:26 PDT: h169's decision rule, fixed before its first block
+
+h169 repairs a basics failure of the class already judged so twice (pilgrims idle on free depots, pioneers that never
+arrive: entries of 2026-10-22 08:43 and 09:30): pioneers that park for good at held sites and are re-bought every 81
+rounds. TRAINING_ALGORITHM §4 lets such a fix be accepted at z >= 0. The rule, fixed now: two blocks (72 games, both
+sides); block 1 rejects only at side-aware z < -1. After block 2, accept if (a) the mechanism reads of 04:22 pass on
+the two blocks (parked pioneers per game under a third of v8's on 726-731; our churches per game at least 90% of
+v8's there), (b) the cumulative side-aware z >= 0, and (c) the z over the cells other than the three studied ones
+>= 0. If (a) fails, the ordinary rule applies to the same blocks (accept z >= 2, reject < 1, else a third block).
+Otherwise reject.

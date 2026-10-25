@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 04:22 PDT)
+## State (2026-10-25 04:26 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -81,7 +81,9 @@
   pioneers for held sites; studied cells uvafan.bc2019:seed-1712, IanCoolidge0.battlecode20~69ce88:seed-1036,
   awesomelemonade.Battlecode2019:seed-2518; mechanism reads with scratchpad econ/zombies.mjs against v8's 726-731:
   parked pioneers per game under a third, churches per game at least 90%; TRAINING_LOG 2026-10-25 04:22; rebuilt
-  with the same switches if h163 is accepted). Then h168
+  with the same switches if h163 is accepted). Its decision rule is the basics-fix one fixed at 04:26: two blocks,
+  block 1 rejects only at z < -1; accept at z >= 0 (others z >= 0) if the mechanism reads pass, else the ordinary
+  rule. Then h168
   (h157 + ESCORT_BACK 1, dist/h168 a5bd8bb262df; studied cells uvafan 1712, awesomelemonade 2518, wololo 836, 2644,
   bot1v43 388, botfinalsafe 2740; mechanism read econ/esc_back.mjs: escorts dead within 6 rounds of a prophet or
   castle hit under 40%, h157 69%; TRAINING_LOG 2026-10-25 01:24). ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22), row 10 on one (2026-10-25 04:22); row 5
