@@ -4996,3 +4996,15 @@ radio SIG.THREAT at r2 2): 740 in 25 of the 36 games (11 of 18 wins, 14 of 18 lo
 those 25 (bar: a third). The most in IanCoolidge0 203 (60 and 101 builds, 167 and 679 release radios; both lost,
 v8 6 of 7 red) and uvafan 1712 (109 and 171; one won, a cell v8 won once in 14). None on bot1v43 388, 2591, wololo
 2644 red, IanCoolidge0 2644. The switch acts where it was built to; block 2 decides.
+
+## 2026-10-25 03:07 PDT: h163 (MUSTER 1) block 2 scored: a third block
+
+All twelve matches of block 2 (1063-1074) downloaded at 03:05. `tools/panel_pool.sh 726-731
+progress/panels/v8-m1.pool 1047-1058 1063-1074 --studied uvafan.bc2019:seed-1712,awesomelemonade.Battlecode2019:seed-1712,awesomelemonade.Battlecode2019:seed-2797,awesomelemonade.Battlecode2019:seed-2518`:
+35 of 72 against the pooled 32.0, side-blind z 1.05; side-aware (k 2) 31.7, z 1.45. Studied cells 9 of 16 (z 1.27),
+other cells 26 of 56 (z 0.89, so the studied-cells condition holds). Block 2 alone: 17 of 36, side-aware z 0.71
+(studied 4 of 8, z 0.33; others 13 of 28, z 0.63). Over both blocks it won the rarely-won botfinalsafe 203 red (1 of
+2, pool 0 of 9) and uvafan 1712 blue (1 of 2, pool 1 of 9), and lost the usually-won IanCoolidge0 203 red (1 of 2,
+pool 6 of 7). Neither z >= 2 nor below 1, so by the rule: a third block, both sides, decided by the side-aware z over
+all three blocks, accept at >= 2, else reject. Block 3 = matches 1091-1102 (submission 184, v8 back as 185),
+requested 03:06.
