@@ -4549,3 +4549,24 @@ each block's games: h161, `tools/census.js` first_pioneer and first_church means
 v8's in 726-731 (bar: first pioneer at least 6 rounds earlier); h162, `tools/census.js` attack_split (call rounds with 2+ targets; bar: none).
 h161's rush4 check (castles lost against bots/rush4 no more than v8's) runs when the VM screens resume (queue < 30);
 the screens vs bots/v8 (20 cells, seed0 36000 and 37000) wait in ~/jobq/superseded behind h160's.
+
+## 2026-10-24 19:01 PDT: h159 (FEED_STOP 3) REJECTED at two blocks (33 of 72, side-aware z 0.66); h161's block 1 in
+
+Block 2 = matches 997-1008 finished by 18:59: h159 wins 16 of 36 (own side-aware z 0.18). Both blocks together, by
+`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 985-996 997-1008`: 33 of 72 against a pooled expectation of
+31.6 (z 0.46), side-aware 31.4, z 0.66: under 1, so REJECTED by the pre-registered rule. Both blocks join the v8-m1
+pool (own z 0.75 and 0.18, within +-1). Cells against the pool's 10 games: won awesomelemonade 2797 4 of 4 (pool 5),
+IanCoolidge0 203, bot1v43 2321 and botfinalsafe 2740 on the red side only (2 of 2 red, 0 of 2 blue each); lost uvafan
+1712 0 of 4 (pool 1) and wololo 2644 blue 0 of 2 (pool 6); never won wololo 2013, 836, botfinalsafe 1706,
+awesomelemonade 2518, uvafan 2046, bot1v43 2591, as v8.
+
+Mechanism read (not a decision input; `replay.js young` on our side, scratchpad young_share.sh): military karbonite
+dead within 3 rounds of birth was 41% in block 2's 20 losses and 12% in its 16 wins; over both blocks 42% / 13%,
+against v8's 55% / 23% in 726-731. FEED_STOP cut the young losses by a quarter and moved no games: a structure that
+stops feeding leaves the karbonite in the bank or puts it into the peacetime army, and the attacker that killed the
+newborns still stands where it stood. So feeding reads as a symptom of a lost position more than its cause; what
+might change a game is what the karbonite buys instead (MUSTER spends it on a massed counter-attack, ECONOMICS.md
+row 3), a lower prior for MUSTER than ECONOMICS.md's 0.20.
+
+h161 (v8 + FUEL_DEFER 60) went in at 19:02 as the pre-registration (18:45) set: block 1 = matches 1011-1022
+(submission 174, v8 back as 175), with 79 replica matches waiting. h162 follows it.

@@ -11,3 +11,6 @@
 # h148 (CHAIN_LIVE 1, rejected 2026-10-24 14:17): 777-782 left out (own z 2.20 when scored); blocks 2 and 3 join
 967-972
 973-984
+# h159 (FEED_STOP 3, rejected 2026-10-24 19:01): blocks 1 and 2 join (own side-aware z 0.75 and 0.18)
+985-996
+997-1008

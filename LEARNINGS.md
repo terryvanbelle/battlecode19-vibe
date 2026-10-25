@@ -235,3 +235,18 @@
    among others, was rejected on one general block at z 0.00. When a switch's trigger is a property of the map alone,
    show it is inert elsewhere (an identical replay on a map where it does not fire) and judge it on a panel of those maps
    with its own control (TRAINING_ALGORITHM §4). (2026-10-24 15:33)
+
+40. **Watch the VM's disk; a full disk stops the replica without a word.** On 2026-10-24 the VM's 20 GB root filled
+   (2.6 GB of local screen replays for long-decided candidates, 6 GB of the 2023 replica, 2 GB of match replays):
+   saturn's game runs failed from 18:29 PDT and Postgres from 18:55, so the API answered 500 and the queue stood at
+   70-79 for an hour, which looked like slow bots. `apt-get clean` and deleting 94 decided screens' replay directories
+   freed 3 GB. Every check-in reads `df -h /` on the VM; keep 2 GB free, and prune a screen's replay directory once
+   its candidate is decided (its jsonl and dlv_gate summary stay). (2026-10-24 19:29)
+
+41. **Count where a switch fires before it plays anyone.** MUSTER's first form (h163, "attackers out of the
+   structure's reach") was meant for a lone prophet camping by a church, but against v8 on the driver it fired 48-112
+   times a game against advancing armies (preachers in sight, a prophet at r2 20 of a contested church), held the
+   crusaders back while the enemy closed, and lost two castles-down games out of three to the mirror. A replay
+   census of the trigger's context (who stood where at each firing) showed it in one command. Before a switch goes to
+   a screen or panel, log its firings on a few games and check that they are the situations its idea names.
+   (2026-10-24 19:29)
