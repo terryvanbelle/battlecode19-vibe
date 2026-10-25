@@ -60,9 +60,9 @@
   with held crusaders within 10 king steps and none attacking at most 0.144 a game (v9 0.287); TRAINING_LOG
   2026-10-25 10:57);
   h176 (v9 + DEF_SAFE 1, dist/h176 f32b083df07f: military newborns built while enemy attackers are in sight go on a
-  tile they cannot kill them on, if one is free; tools/reads/stillborn.mjs census over v9's 108 panel games running
-  (scratchpad econ/still_v9.txt), then bars, studied cells, the no-op check and its place in this order;
-  TRAINING_LOG 2026-10-25 11:30);
+  tile they cannot kill them on, if one is free; basics-fix rule; studied cells uvafan.bc2019:seed-1712,
+  uvafan.bc2019:seed-2046; mechanism read tools/reads/stillborn.mjs over its two blocks: `safer` at most 2.13 a game
+  (v9 8.50); no-op IDENTICAL; TRAINING_LOG 2026-10-25 12:06);
   h171 (v9 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h171 a3c65b3dba16; h168's; studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
   tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);

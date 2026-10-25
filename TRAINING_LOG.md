@@ -5369,3 +5369,28 @@ turns); not chased now.
   matches): the losses carry it (1373 seed 1884: 162 stillborn, 119 safer; 887 seed 826: 161, 135; 853 seed 2797:
   94, 42; 1216 seed 2591: 20 of 30 built, all safer); the wins few. Its bar waits on the census over v9's 108 panel
   games (running), then the no-op check on a quiet driver.
+
+## 2026-10-25 12:06 PDT: stillborn census; h176 (DEF_SAFE 1) no-op and pre-registration
+
+tools/reads/stillborn.mjs over v9's 108 panel games (1120-1131, 1143-1154, 1180-1191; v9's side): 173.6 military
+newborns a game, 18.27 dead within 2 rounds of their build (456.5 K a game), 4.30 of them a castle's, 12.49 on a
+tile exposed to at least their hp, **8.50 on such a tile while another free adjacent tile was not ("safer")**. Wins
+5.39 a game (54), losses 11.61 (54); games with 10+ safer: 14 wins, 18 losses. Cells with the most safer a game:
+uvafan 1712 blue 43.3 (stillborn 119.7) and red 32.3, uvafan 2046 blue 39.0 and red 17.0, uvafan 1653 blue 20.7,
+botfinalsafe 203 red 16.7, bot1v43 2321 red 14.3. On the 27 ladder games of 9 ranked matches (658-1373): wins 2.71
+safer a game (14), losses 33.77 (13); 1373 seed 1884 119, 887 seed 826 135.
+
+- **h176** = v9 + DEF_SAFE 1 (dist/h176 f32b083df07f; src 06cb7a1). Every military build of a structure goes through
+  buildToward (peacetime army, defence, muster, escorts, guards), so the switch covers them all; pilgrims are not
+  ranked. No-op (defaults vs bots/v9, each against itself on 799 to r300) IDENTICAL on a quiet driver; unit tests
+  pass.
+- **Pre-registered** (before any h176 game is read): the basics-fix rule (units bought where they die before acting).
+  Two blocks on the v7-m1 panel, both sides, scored with `tools/panel_pool.sh 1120-1131
+  progress/panels/v9-m1.pool`; block 1 rejects only at side-aware z < -1; accept at side-aware z >= 0 (other cells
+  z >= 0) if the mechanism read passes on h176's two blocks: `safer` at most 2.13 a game (a quarter of v9's 8.50;
+  `tools/reads/games.sh stillborn.mjs -- BLOCK...`, mean of the field over the 72 games). If it fails, the ordinary
+  rule on the same blocks (accept z >= 2, reject < 1, else a third). Reported, not bars: stillborn a game (v9
+  18.27), their K a game (v9 456.5), castles lost a game (v9 0.565). Studied cells (the census's top cells,
+  named to be conservative; the switch was designed on ladder 1373 seed 1884): uvafan.bc2019:seed-1712,
+  uvafan.bc2019:seed-2046.
+- Panel order: h175 (in play), **h176**, h171, h174, h172, then h173 on its targeted panel. No bar changed.
