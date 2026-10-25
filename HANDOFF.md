@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 20:54 PDT)
+## State (2026-10-24 21:22 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -75,7 +75,7 @@
   **Next, one block at a time (ECONOMICS.md, TRAINING_LOG 18:45, 20:54):** h162 (v8 + ATTACK_ONE 1, dist/h162
   88a7474abd7a; mechanism read census attack_split, bar 0), then h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e; studied
   cells uvafan 1712, awesomelemonade 1712, 2797, 2518), each `tools/panel_submit.sh dist/hN "cand:hN"` on the general
-  panel against the v8-m1 pool. Then CASTLE_FIRE (ECONOMICS.md §4 row 4); after h161: DEPOSIT_AT on top of it.
+  panel against the v8-m1 pool. ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22); after h161: DEPOSIT_AT on top of it.
   **Waiting for the queue (< 30): h160 (v8 + ECON_NOPLAN 1, dist/h160 15b40f6fac46) on the targeted panel**
   progress/panels/noplan-m1.json (the six bots on the five pool maps where no castle plans a church; TRAINING_ALGORITHM
   §4 map-conditional switch): first a bots/v8 control block (`PANEL=progress/panels/noplan-m1.json

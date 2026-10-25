@@ -4624,3 +4624,17 @@ karbonite dead within 3 rounds of birth (`replay.js young`, scratchpad young_sha
 in 726-731 (bar: under 45%), and the count of muster builds and release rounds (scratchpad econ/muster.js; bar:
 releases in at least a third of the games that build). Its VM screen (26 z's + yyyy, seed0 38000) is dropped: v8
 advances rather than camps (no firing on 2797), so against v8 the screen would mostly replay the mirror.
+
+## 2026-10-24 21:22 PDT: ECONOMICS rows 4 (CASTLE_FIRE) and 6 (ECON_HIT) dropped on replay censuses before a panel
+
+LEARNINGS 41 first: count where a switch would fire, on v8's 18 panel games 726-731 (our side), before a block.
+CASTLE_FIRE (shoot instead of building against 1-2 attackers in reach; scratchpad fire/cf_census.js): castles saw
+1-2 attackers with the nearest in reach on 41 turns (16 in 8 wins, 25 in 10 losses) and already shot on 36; they built
+on 5 turns in 3 losses (3 against prophets alone) and 1 of those newborns died within 3 rounds. At most 5 builds in
+18 games would change, so no build. ECON_HIT (a castle that loses a pilgrim before r100 owes 2 peacetime units for
+50 turns; built with the verifier's fixes and a unit test, the defaults build replayed v8 IDENTICAL on 2046 to r600):
+our pilgrims died before r100 6 times in the 18 games, all in losses (5 of the 10), 5 seen by a castle
+(r30, 31, 78, 90, 93), 1 by a church (r61) (scratchpad fire/hit_census.js, hit2_census.js). Two games lose a
+pilgrim early enough for the owed guards to come well before v8's army starts at r100: too few for a block, so the
+code is reverted (not committed). ECONOMICS.md §4 and §6 updated. Next from the list: DEPOSIT_AT waits for h161's
+block; rows 7, 8, 10 wait for the held screens (h157, CHAIN_WALL), 9 for h160, 12 for h156.

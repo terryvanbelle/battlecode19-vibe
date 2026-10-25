@@ -121,9 +121,9 @@ that the switch passes the replica panel; our accepted rate is about 1 in 8). Ev
 | 1 | Staff only karbonite depots in the opening while fuel is above a floor and no attacker has been seen | production (free good), inventory (cargo lumps), national accounts | FUEL_DEFER 60, FUEL_DEFER_MIN 400 | one-castle K1F2 maps | 0.10-0.20 | S | h161, built; section 5 |
 | 2 | Every castle calls the general attack on the same enemy castle | Blotto, Lanchester | ATTACK_ONE 1 | split calls: 19 of 40 pool maps, 11 of 16 r1000 losses, 7 of 18 panel cells | 0.15 | S | h162, built |
 | 3 | Against campers out of reach, build out of their band and release 2A+1 together | Lanchester (concentration in time) | MUSTER 1 | 1712, 2797, 2518, 1884 feeding cells | 0.20 | M | h163, built; section 5 |
-| 4 | Shoot a lone camper with the castle instead of buying a newborn it kills | relative prices (a shot costs no K) | CASTLE_FIRE 2 | castles with 1-2 attackers in reach | 0.12 | S | next |
+| 4 | Shoot a lone camper with the castle instead of buying a newborn it kills | relative prices (a shot costs no K) | CASTLE_FIRE 2 | castles with 1-2 attackers in reach | 0.12 | S | dropped (section 6) |
 | 5 | A karbonite miner gives a part cargo when it completes a purchase (pioneer or church gate) | Baumol-Tobin | DEPOSIT_AT 1, DEPOSIT_UNTIL 60 on FUEL_DEFER | adjacent-K maps: 2013, 493, 1706, 1241, 1915 | 0.10 | S-M | after h161 |
-| 6 | A castle that loses a pilgrim before r100 builds 2 guards at once | Ramsey (state switch), depreciation | ECON_HIT 50 | early pilgrim deaths: 16 of 29 losses | 0.10 | S | queued |
+| 6 | A castle that loses a pilgrim before r100 builds 2 guards at once | Ramsey (state switch), depreciation | ECON_HIT 50 | early pilgrim deaths: 16 of 29 losses | 0.10 | S | dropped (section 6) |
 | 7 | Escort every contested site, not only the first | Leontief complements, Tullock | ESCORT_EACH 2 on ESCORT_HOLD_R 2 | maps with 2+ contested clusters | 0.10 | S | after h157 |
 | 8 | Abandon a chain line that meets a wall of 28+ units | real options | CHAIN_WALL 28 (exists) | chain lines into walls | 0.10 | S | screen |
 | 9 | End ECON_UNTIL for a castle whose land is saturated | Solow fixed factor, Ramsey | ECON_SAT 10 (castles) | saturated maps | 0.08-0.10 | S | after h160 (ECON_NOPLAN) |
@@ -170,6 +170,18 @@ army 22 at r400 against 87 held and v8's 26) or costs nothing (2797). It would f
 (48 of the 49 losses). Panel block after h162's; TRAINING_LOG has the pre-registration.
 
 ## 6. Dropped on the numbers
+
+- **CASTLE_FIRE** (row 4, 0.12), dropped before a build on a census of v8's 18 panel games 726-731 (scratchpad
+  fire/cf_census.js): a castle saw 1-2 attackers with the nearest in its reach on 41 turns, and it already shot on
+  36 (v8 builds only while ours do not outnumber them 2A + 1, and only when it can pay); it built on 5, in 3 games
+  (3 against prophets alone), and 1 of those newborns died within 3 rounds. The switch could change at most 5
+  builds in 18 games, before the verifier's decoy filters. Castles are not lost to lone campers but to armies.
+- **ECON_HIT** (row 6, 0.10), built (castles only, the verifier's rule) and dropped before a panel on a census of
+  the same 18 games (scratchpad fire/hit_census.js, hit2_census.js): our pilgrims died before r100 6 times, all in
+  losses (5 of 10), 5 where a castle sees them go (r30, 31, 78, 90, 93) and 1 by a church (r61). Only 2 games lose a
+  pilgrim early enough for 2 guards to matter before v8's army starts at r100. The lens's 33 deaths in 16 of 29
+  losses came from a wider set of games; on v8's panel the early raids are rare (ESCORT_FIRST, h128, covers the
+  first contested site).
 
 - **Spend the idle opening bank on crusaders at our first hot cluster** (0.05): the trigger is ECON_RICH's (h116 cut
   churches to 94%), it fires only at r80-100, after the race, and v8's escorts stop 12 tiles short.
