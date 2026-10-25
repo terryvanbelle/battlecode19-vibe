@@ -257,4 +257,7 @@
    diverge A B` on a candidate's game and the champion's game on the same cell and side names who acted
    differently first. On h157 (rejected, z -1.17) 2 of the 8 discordant cells were the opponents' noise, and the 6
    where our switch acted first split 3 wins and 3 losses: an even trade between two kinds of map, not a uniform cost. That
-   reading, not the z, is what names the next idea; the decision rule stays as it is. (2026-10-25 00:37)
+   reading, not the z, is what names the next idea; the decision rule stays as it is. (2026-10-25 00:37) Compare
+   board actions, not radio: awesomelemonade's churches and uvafan's and botfinalsafe's castles radio values that
+   differ every game, so the plain first difference is always theirs. `diverge --board` (and `--team T` for our own
+   turns) found that 3 of h163's 5 opponent-first gains parted on our church's muster build. (04:52)

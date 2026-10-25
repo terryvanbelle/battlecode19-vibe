@@ -5064,3 +5064,16 @@ h167 (MUSTER 2, hold only; dist/h167 bd86bcd5b011) next, as pre-registered at 00
 1120-1131 (submission 186, v8 back as 187), requested 04:35; scored with
 `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 1120-1131 --studied uvafan.bc2019:seed-1712,awesomelemonade.Battlecode2019:seed-1712,awesomelemonade.Battlecode2019:seed-2797,awesomelemonade.Battlecode2019:seed-2518`
 against the pool as it now stands (block 1 rejects at z < 0.5).
+
+## 2026-10-25 04:52 PDT: h163's discordant pairs read by first board difference
+
+The 54 h163 games whose cell and side v8 played in 726-731, paired with v8's game (scratchpad study/pairs_h163.txt):
+6 discordant, 5 gained and 1 lost. `node tools/replay.js diverge`: the loss (IanCoolidge0 203 red, 1057 vs 731)
+parted on our castle at r63 (a muster crusader against v8's prophet); the 5 gains parted first on the opponent's
+radio value (awesomelemonade's church r43, botfinalsafe's castle r57, uvafan's church r72), which differs every
+game. New `diverge --board` (radio and castle talk ignored) and `--team T` (tools/replay.js; unit test; suite 165
+of 165): awesomelemonade 2797 blue, all three gains (1056, 1072, 1100 vs 730), part first on our church #1266 at
+r72 building a crusader where v8 built a prophet, before any opponent board action differs: switch-led. Botfinalsafe
+203 red parts first on their pilgrim at r57 (moved, v8's game: mined) and uvafan 1712 blue on their prophet at r72
+(gave, v8's game: moved): the opponents' noise. So the switch led 4 discordant cells, 3 gains on one cell
+(awesomelemonade 2797 blue) and 1 loss; MUSTER's worth sits on that cell. LEARNINGS 42 extended.
