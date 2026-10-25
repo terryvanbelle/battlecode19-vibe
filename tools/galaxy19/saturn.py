@@ -107,6 +107,9 @@ def game_timeout():
     return int(os.environ.get('GALAXY_GAME_TIMEOUT') or 1800)
 
 
+SLOT_RETRY = 30   # seconds a slot waits after an error outside its task before it leases again
+
+
 def nack_delay():
     return float(os.environ.get('GALAXY_NACK_DELAY') or 10)
 
@@ -658,7 +661,25 @@ class Executor:
         return Task(payload, self.reporter, self.stop).run(runner)
 
     def slot(self, topic, k):
+        """One consumer. An error outside the task's own handler (a full disk failing the spool's writes: on
+        2026-10-24 five of eight slots died that way and their matches sat at RUN until a restart) returns the leased
+        message unchanged and restarts the loop after SLOT_RETRY seconds."""
         q = spool.topic_queue(topic).ensure()
+        while not self.stop.is_set():
+            held = []
+            try:
+                self.consume(q, topic, k, held)
+            except Exception:
+                log.exception('slot %s-%d: crashed outside the task; returning %s, restarting in %ds', topic, k,
+                              held or 'nothing', SLOT_RETRY)
+                for msg_id in held:
+                    try:
+                        q.release(msg_id)
+                    except OSError:
+                        log.exception('slot %s-%d: could not return %s (the next start recovers it)', topic, k, msg_id)
+                self.stop.wait(SLOT_RETRY)
+
+    def consume(self, q, topic, k, held):
         workdir = config.galaxy_home('saturn', f'{topic}-{k}')
         while not self.stop.is_set():
             item = q.lease()
@@ -666,6 +687,7 @@ class Executor:
                 self.stop.wait(self.poll)
                 continue
             msg_id, msg = item
+            held[:] = [msg_id]
             payload = parse_message(msg)
             if payload is None:
                 log.error('slot %s-%d: invalid message %s; dropped', topic, k, msg_id)
@@ -686,6 +708,7 @@ class Executor:
             else:
                 msg = dict(msg, delivery_attempt=int(msg.get('delivery_attempt') or 0) + 1)
                 q.nack(msg_id, msg, delay=0 if self.stop.is_set() else nack_delay())
+            held.clear()
             log.info('slot %s-%d: %s %s in %.0fs', topic, k, 'acked' if ok else 'nacked', msg_id, time.time() - t0)
 
     def run(self):

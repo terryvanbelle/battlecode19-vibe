@@ -113,6 +113,14 @@ class Queue:
         except FileNotFoundError:
             pass
 
+    def release(self, msg_id):
+        """Return a leased message unchanged to ready/: a rename, so it works on a full disk. True if it was leased."""
+        try:
+            os.rename(os.path.join(self.leased, f'{msg_id}.json'), os.path.join(self.ready, f'{msg_id}.json'))
+            return True
+        except FileNotFoundError:
+            return False
+
     def bury(self, msg_id, obj):
         fsutil.atomic_write_json(os.path.join(self.dead, f'{msg_id}.json'), obj)
         self.ack(msg_id)

@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 124 other, 42 rejected, 16 accepted, 8 in progress, 7 dropped, 4 sparring partners, 1 queued (202 rows).
+Totals: 124 other, 42 rejected, 16 accepted, 8 in progress, 7 dropped, 4 sparring partners, 2 queued (203 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -216,3 +216,4 @@ Totals: 124 other, 42 rejected, 16 accepted, 8 in progress, 7 dropped, 4 sparrin
 | `h160` | 2026-10-24 15:32 | v8 | v8 + ECON_NOPLAN 1: ECON_UNTIL does not hold a castle whose team planned no church (5 of 40 pool maps); inert elsewhere (dist/h160 15b40f6fac46) |  |  |  |  | in progress: targeted panel (noplan-m1) and screen queued behind the replica queue |
 | `h161` | 2026-10-24 18:45 | v8 | v8 + FUEL_DEFER 60 (FUEL_DEFER_MIN 400): before r60, while team fuel >= 400 and the structure has seen no enemy attacker, castles and churches staff only karbonite depots; a castle whose team planned no church keeps v8's mix (ECONOMICS.md idea 1; dist/h161 4e5d828b7522) |  |  | block 1: matches 1011-1022 (both sides) |  | in progress: panel block 1 (submission 174, 19:02); screen held for the replica queue |
 | `h162` | 2026-10-24 18:45 | v8 | v8 + ATTACK_ONE 1: every castle calls the general attack on the same enemy castle, the mirror nearest our living castles in summed r2 (19 of 40 pool maps split v8's call; ECONOMICS.md idea 2; dist/h162 88a7474abd7a) |  |  |  |  | queued: panel block after h161's; screen held for the replica queue |
+| `h163` | 2026-10-24 20:54 | v8 | v8 + MUSTER 1: against a prophet camping out of a structure's reach (3 turns on its tile, beyond r2 36, a castle's 64; no enemy melee in sight), crusaders built on the far side hold 2 king steps from home out of reach and charge together at 2A + 1 (A + 1 once v8's gate is shut) on the structure's spot radio (ECONOMICS.md idea 3; dist/h163 f0fbe3ea6c0e) |  |  |  |  | queued: panel block after h162's; screen dropped (inert against v8) |

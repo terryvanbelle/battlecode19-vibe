@@ -120,8 +120,8 @@ that the switch passes the replica panel; our accepted rate is about 1 in 8). Ev
 |---|---|---|---|---|---|---|---|
 | 1 | Staff only karbonite depots in the opening while fuel is above a floor and no attacker has been seen | production (free good), inventory (cargo lumps), national accounts | FUEL_DEFER 60, FUEL_DEFER_MIN 400 | one-castle K1F2 maps | 0.10-0.20 | S | h161, built; section 5 |
 | 2 | Every castle calls the general attack on the same enemy castle | Blotto, Lanchester | ATTACK_ONE 1 | split calls: 19 of 40 pool maps, 11 of 16 r1000 losses, 7 of 18 panel cells | 0.15 | S | h162, built |
-| 3 | Against campers out of reach, build out of their band and release 2A+1 together | Lanchester (concentration in time) | MUSTER 1 | 1712, 2797, 2518, 1884 feeding cells | 0.20 | M | after h159 (FEED_STOP) |
-| 4 | Shoot a lone camper with the castle instead of buying a newborn it kills | relative prices (a shot costs no K) | CASTLE_FIRE 2 | castles with 1-2 attackers in reach | 0.12 | S | after h159 |
+| 3 | Against campers out of reach, build out of their band and release 2A+1 together | Lanchester (concentration in time) | MUSTER 1 | 1712, 2797, 2518, 1884 feeding cells | 0.20 | M | h163, built; section 5 |
+| 4 | Shoot a lone camper with the castle instead of buying a newborn it kills | relative prices (a shot costs no K) | CASTLE_FIRE 2 | castles with 1-2 attackers in reach | 0.12 | S | next |
 | 5 | A karbonite miner gives a part cargo when it completes a purchase (pioneer or church gate) | Baumol-Tobin | DEPOSIT_AT 1, DEPOSIT_UNTIL 60 on FUEL_DEFER | adjacent-K maps: 2013, 493, 1706, 1241, 1915 | 0.10 | S-M | after h161 |
 | 6 | A castle that loses a pilgrim before r100 builds 2 guards at once | Ramsey (state switch), depreciation | ECON_HIT 50 | early pilgrim deaths: 16 of 29 losses | 0.10 | S | queued |
 | 7 | Escort every contested site, not only the first | Leontief complements, Tullock | ESCORT_EACH 2 on ESCORT_HOLD_R 2 | maps with 2+ contested clusters | 0.10 | S | after h157 |
@@ -155,6 +155,19 @@ both sides: an exact mirror). No exceptions.
   (2,300 against 3,524, first church r37 against r31).
 - One head-to-head game a map is a noisy instrument (836's first church came at r31 at floor 300 and r37 at 400);
   the replica panel decides.
+
+**FEED_STOP (h159, the precursor of row 3).** Rejected on the panel at two blocks (33 of 72, side-aware z 0.66;
+TRAINING_LOG 2026-10-24 19:01). In our losses it cut the share of military karbonite dead within 3 rounds of birth from
+55% to 42% and moved no games: the structure that stops feeding leaves the karbonite idle, and the camper stays. So
+row 3's prior is lower than 0.20: what may change a game is what the karbonite buys instead.
+
+**MUSTER (h163).** Its first form (any attacker out of the structure's reach) fired 48-112 times a game against
+advancing armies and lost two of three games to the mirror on the driver (LEARNINGS 41); the built form acts only on
+a prophet that has stood 3 turns beyond r2 36 (64 for a castle) with no enemy melee in sight, under v8's gate. It
+never fires against v8 on 2797 (v8 advances), never against dist/camp (whose prophets march escorted), and fires
+against dist/turtle's lattice, where releasing on the visible campers' count sends crusaders into the hundreds behind (1712,
+army 22 at r400 against 87 held and v8's 26) or costs nothing (2797). It would fire in 79 of the 90 panel games
+(48 of the 49 losses). Panel block after h162's; TRAINING_LOG has the pre-registration.
 
 ## 6. Dropped on the numbers
 

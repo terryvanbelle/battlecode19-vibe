@@ -4570,3 +4570,57 @@ row 3), a lower prior for MUSTER than ECONOMICS.md's 0.20.
 
 h161 (v8 + FUEL_DEFER 60) went in at 19:02 as the pre-registration (18:45) set: block 1 = matches 1011-1022
 (submission 174, v8 back as 175), with 79 replica matches waiting. h162 follows it.
+
+## 2026-10-24 20:00 PDT: the VM's disk filled 18:29-19:23 and killed five saturn slots; freed, restarted, hardened
+
+The replica API answered HTTP 500 from 18:55 (`field.py queue` failed every other call): the VM's 20 GB root was full
+(Postgres: "could not extend file ... No space left on device", first at 18:55; saturn "[Errno 28]" task errors from
+18:29 to 19:23). Space: the 2023 replica /srv/bc23-galaxy 6.0 GB (not ours to touch), our out/ 2.6 GB of local screen
+replays, the replica's match replays 2.0 GB, apt's cache 0.45 GB. Freed 3 GB at 19:20: `apt-get clean`, and the 94
+out/rp_* directories of screens whose candidates are decided (h6-h144 and the v5-v7 delivery and rush runs; listed in
+~/rp_prune_list.txt on the VM; their jsonl results and dlv_gate summaries stay; rp_h145v8-rp_h151v8 kept). The API came
+back at once. But the queue still crawled (one match in 25 minutes, load 1.8): five of saturn's eight execute slot
+threads had died when the spool's nack could not write (the exception escaped the slot loop), their leased messages
+held and their matches showing RUN. `sudo systemctl restart bc19-galaxy-saturn` at 19:54 returned 7 leased messages and
+put 8 games back on the board; by 20:18 67 waited (77 at 19:52). No match ended in ERR (15 before and after).
+Hardened (tools, not yet deployed: it goes with the queue < 30 deploy in HANDOFF): saturn's slot loop catches an error
+outside the task, returns the leased message unchanged with the new spool `release` (a rename, which works on a full
+disk) and restarts after SLOT_RETRY 30 s; test test_slot_survives_a_spool_error_and_returns_the_message. LEARNINGS 40:
+every check-in reads the VM's `df -h /`, keeps 2 GB free, and prunes a decided screen's replays.
+
+## 2026-10-24 20:54 PDT: h163 (MUSTER 1) built in its camper form; pre-registered for the general panel after h162
+
+**h163 = v8 + MUSTER 1** (ECONOMICS.md §4 row 3, Lanchester's concentration in time; struct.js musterCase /
+musterTrack / musterAct, military.js musterHold). The case is a camper: the nearest enemy attacker a structure sees
+is a prophet that has stood on its tile MUSTER_DWELL 3 turns, beyond r2 36 (and beyond r2 64 for a castle, its
+reach), with no enemy crusader or preacher in sight. There v8 answered with one prophet a turn while ours did not
+outnumber them 2A + 1, and each walked into the band alone (LEARNINGS 41 has the first form, which also fired on
+advancing armies and lost to the mirror). MUSTER builds crusaders instead, under v8's own gate (ours < 2A + 1) and
+fuel reserve, on the free adjacent tile farthest from the camper, radioing its tile (SIG.THREAT, r2 2); each holds
+two king steps from home, out of reach of the attackers it sees and of r2 64 around that tile, for up to MUSTER_WAIT
+25 turns, and an enemy crusader or preacher in sight ends the hold. The structure counts the held crusaders it sees
+(newborns found as watchKids finds them); at 2A + 1 (A = the campers out of its reach), or at A + 1 once v8's gate
+is shut by our attackers in sight, it radios the nearest camper as a spot (FAR.ENEMY, 10 F) every turn for up to 25
+turns while attackers stay in sight, and the held crusaders charge it through the engage path (WATCH's spot).
+Anything else keeps v8's answer.
+
+Driver diagnostics (scratchpad econ/vsdiag.sh, red side, to r400, no exceptions). Against bots/v8 on 2797 the replay
+is identical to v8 vs v8 (no prophet camps on v8's side); against dist/camp on 2321, 2591, 2644, no firings and the
+same results (camp escorts its prophets with crusaders). Against dist/turtle (a prophet lattice of 200+ units) it
+fires: 1712, 17 crusaders built and 8 release rounds; 2797, 29 and 90; 2046, 4 and none. Before the A + 1 release
+the crusaders were held and never sent (1712: army 87 at r400 against v8's 26, 14 churches against 6, young losses
+26% of military karbonite against v8's 61%). With it, on 1712 they charge the visible campers and die in the lattice
+behind them (army 22, 9 churches, young 52%); on 2797 the release costs nothing (army 49 against v8's 26 and the
+hold's 47, 11 churches against v8's 3, young 53% against 60%). Turtle is the extreme case, a camp of hundreds where
+the visible A undercounts the defence; on the panel the switch would fire in 79 of the 90 games (48 of the 49
+losses; scratchpad camp_census.js on 726-731 and 985-1008). Defaults build replays
+v8 IDENTICAL on 2046 to r600; `tools/unit-tests.sh` 160 of 160 (galaxy19 64 OK). dist/h163 f0fbe3ea6c0e.
+
+Pre-registration. h163 goes to the general panel one block after h162, scored with
+`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK...` by the pooled rule. Studied cells: uvafan 1712,
+awesomelemonade 1712, 2797 and 2518 (the feeding cells of ECONOMICS.md row 3), so h163 is accepted only if its z
+over the other cells is also >= 0. Mechanism reads, not decision inputs, on our side of the block's games: military
+karbonite dead within 3 rounds of birth (`replay.js young`, scratchpad young_share.sh) in losses, against v8's 55%
+in 726-731 (bar: under 45%), and the count of muster builds and release rounds (scratchpad econ/muster.js; bar:
+releases in at least a third of the games that build). Its VM screen (26 z's + yyyy, seed0 38000) is dropped: v8
+advances rather than camps (no firing on 2797), so against v8 the screen would mostly replay the mirror.

@@ -20,6 +20,7 @@ function init(B) {
       if (m.type === SIG.ROUND) B.birthRound = m.v;
       else if (m.type === SIG.CHAIN && CFG.CHAIN_ROUND) st.chainT = [m.x, m.y];   // born in a church chain (chain.js)
       else if (m.type === SIG.GUARD && (CFG.ESCORT || CFG.ESCORT_FIRST)) st.guardAt = { x: m.x, y: m.y };   // escort: a pioneer's site
+      else if (m.type === SIG.THREAT && CFG.MUSTER) st.muster = { x: m.x, y: m.y, until: me.turn + CFG.MUSTER_WAIT };   // musterHold
     }
   }
   if (st.chainT) learnRound(B);
@@ -56,7 +57,11 @@ function listen(B) {
       continue;
     }
     if (m && m.type === SIG.POST) { if (st.toCastle && w.passable(m.x, m.y)) hearPost(B, m.x, m.y); continue; }
-    if (m && m.type === SIG.ENEMY) { if ((CFG.SPOT || CFG.WATCH) && (CFG.SPOT_MASK >> me.unit & 1)) hearSpot(B, m.x, m.y); continue; }
+    if (m && m.type === SIG.ENEMY) {
+      if ((CFG.SPOT || CFG.WATCH) && (CFG.SPOT_MASK >> me.unit & 1)) hearSpot(B, m.x, m.y);
+      else if (CFG.MUSTER && (st.muster || st.mustered)) { st.muster = null; st.mustered = true; hearSpot(B, m.x, m.y); }   // the release
+      continue;
+    }
     if (m && m.type === SIG.HUNT) { if (CFG.HUNT && me.unit !== PROPHET) hearHunt(B, m.x, m.y); continue; }
     if (CFG.RECALL && st.recall && me.turn <= st.recall.until) continue;   // recalled: attack orders wait
     if (!m || m.type !== SIG.ATTACK || m.y < n / 2 || !w.passable(m.x, m.y) || ((st.guard || !(CFG.MARCH_MASK >> me.unit & 1)) && B.round < CFG.ATTACK_LATE)) continue;
@@ -143,6 +148,27 @@ function go(B, key, sources, cap, avoid) {
   const s = B.nav.step(key, sources, r, avoid, cap ? [CFG.CRUISE_SLIDE_AFTER, CFG.CRUISE_ESCAPE_AFTER, !!CFG.CRUISE_RESET] : undefined,
     cap && CFG.DETOUR ? [CFG.DETOUR_AFTER, CFG.DETOUR, CFG.DETOUR_EVERY, CFG.DETOUR_MEMORY] : null);
   return s ? w.move(s[0], s[1]) : null;
+}
+
+// CFG.MUSTER: a crusader built against attackers out of its structure's reach (SIG.THREAT: the nearest stood at (x, y))
+// holds two king steps from home, out of reach of the attackers it sees and of r2 64 around that one, until the
+// structure radios the release (a spot, listen), MUSTER_WAIT turns pass or an enemy crusader or preacher comes in
+// sight. Null: it stays.
+function musterHold(B) {
+  const w = B.w, me = w.me, h = B.st.home, m = B.st.muster, S = STATS[me.unit];
+  const th = w.enemies.filter(e => THREAT_R2[e.unit] > 0);
+  const hot = (x, y) => d2(x, y, m.x, m.y) <= 64 || th.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]);
+  if (!hot(me.x, me.y) && king(me.x, me.y, h.x, h.y) === 2) return null;
+  const score = (x, y) => (hot(x, y) ? 2e6 : 0) + (king(x, y, h.x, h.y) === 2 ? 0 : 1e6) - d2(x, y, m.x, m.y);
+  const r = fuelStep(w.fuel, S.speed, S.fuelPerMove, 60);
+  let best = null, bs = score(me.x, me.y);
+  for (const [dx, dy, r2] of B.offs) {
+    if (r2 === 0 || r2 > r) continue;
+    const x = me.x + dx, y = me.y + dy;
+    if (king(x, y, h.x, h.y) > 2 || !w.free(x, y)) continue;
+    const s = score(x, y); if (s < bs) { bs = s; best = [dx, dy]; }
+  }
+  return best ? w.move(best[0], best[1]) : null;
 }
 
 // CFG.EDGE: tiles in reach of the enemy attackers in sight, while ours in sight (and this unit) do not outnumber them
@@ -368,6 +394,9 @@ export function militaryTurn(B) {
     }
   }
 
+  if (st.muster && (me.turn > st.muster.until || enemies.some(e => e.unit === CRUSADER || e.unit === PREACHER))) st.muster = null;
+  if (st.muster) return musterHold(B);   // CFG.MUSTER; an enemy melee unit in sight ends the hold
+
   // Engage visible enemies near home (or anywhere when marching): melee closes in; prophets hold.
   const h = st.home, c = latticeCentre(B), waiting = !st.target && B.round < st.waitUntil;
   const rc = CFG.RECALL && st.recall && me.turn <= st.recall.until ? st.recall : null, marching = !!st.target || waiting || !!rc;
@@ -378,7 +407,7 @@ export function militaryTurn(B) {
       if (!near) continue;
       const r = d2(me.x, me.y, x.x, x.y) - (cf && cf(x) ? 1e6 : 0); if (r < ed) { ed = r; e = x; }
     }
-    const sp = (CFG.SPOT || CFG.WATCH) && st.spot;   // CFG.WATCH: structures radio spots too
+    const sp = (CFG.SPOT || CFG.WATCH || st.mustered) && st.spot;   // CFG.WATCH, CFG.MUSTER: structures radio spots too
     if (!e && sp && me.turn - sp.t <= 1 && d2(sp.x, sp.y, marching ? me.x : c.x, marching ? me.y : c.y) <= 196) e = sp;
     const hu = CFG.HUNT && st.hunt;
     if (!e && hu && !marching && me.turn - hu.t <= CFG.HUNT_EVERY && d2(hu.x, hu.y, me.x, me.y) <= CFG.HUNT_R2) e = hu;

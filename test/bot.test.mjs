@@ -10,7 +10,7 @@ import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot } from '../src/bot/military.js';
 import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
-import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot } from '../src/bot/struct.js';
+import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -2366,6 +2366,159 @@ test('struct: FEED_STOP: a castle resting from feeding answers no prophet out of
     assert.notStrictEqual(turn1(3, 9), S.PROPHET);       // resting: not answered
     assert.strictEqual(turn1(3, 7), S.PROPHET);          // r2 49: it can hit the castle
   } finally { CFG.FEED_STOP = saved; }
+});
+
+test('struct: MUSTER: a castle answers a camper out of its reach with a crusader on the far side, told the prophet\'s tile', () => {
+  const saved = CFG.MUSTER;
+  try {
+    const g = new Game(3, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0);
+    const turn1 = (muster, unit, dy, since = -5) => {
+      CFG.MUSTER = muster; castle.turn = 1;
+      const extra = [{ id: 4999, team: 1, unit, x: castle.x, y: castle.y + dy, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 }];
+      const all = g.robots;
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100).concat(extra);
+      const w = worldFor(g, castle); g.robots = all;
+      const sent = []; w.api.signal = (v, r2) => sent.push([v, r2]);
+      const e = w.T.toC(castle.x, castle.y + dy);   // seen on its tile since turn `since`
+      const st = { mus: { ids: new Set(), pend: null, rel: -1, seen: new Map([[4999, { x: e[0], y: e[1], t: since }]]) } };
+      const B = { api: w.api, w, round: 1, birthRound: 1, st, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 100; w.fuel = 500;
+      return { a: castleTurn(B) || {}, sent, e, st: B.st };
+    };
+    const off = turn1(0, S.PROPHET, 9);
+    assert.strictEqual(off.a.u, S.PROPHET);                 // v8: a prophet against a prophet at r2 81
+    const on = turn1(1, S.PROPHET, 9);
+    assert.strictEqual(on.a.u, S.CRUSADER);
+    assert.ok(d2(castle.x + on.a.dx, castle.y + on.a.dy, castle.x, castle.y + 9) > 81);   // the far side
+    assert.deepStrictEqual(on.sent, [[encXY(SIG.THREAT, on.e[0], on.e[1]), 2]]);
+    assert.ok(on.st.mus.pend);
+    assert.strictEqual(turn1(1, S.PROPHET, 7).a.u, S.PROPHET);     // r2 49: in the castle's reach, v8's answer
+    assert.strictEqual(turn1(1, S.CRUSADER, 9).a.u, S.PREACHER);   // a crusader: v8's answer
+    assert.strictEqual(turn1(1, S.PREACHER, 9).a.u, S.PROPHET);    // a preacher: v8's answer
+    assert.strictEqual(turn1(1, S.PROPHET, 9, -1).a.u, S.PROPHET);  // 2 turns on its tile, not 3: v8's answer
+  } finally { CFG.MUSTER = saved; }
+});
+
+test('struct: MUSTER: the attackers out of reach, the held set, and the release at 2A + 1', () => {
+  let id = 100;
+  const P = (x, y, unit = S.PROPHET) => ({ id: id++, x, y, unit });
+  // musterCase with every enemy seen on its tile since turn `since` (the structure's turn is 10); the nearest first.
+  const mc = (unit, enemies, since = 0) => {
+    const seen = new Map(enemies.map(e => [e.id, { x: e.x, y: e.y, t: since }]));
+    return musterCase({ w: { me: { x: 5, y: 5, unit, turn: 10 }, enemies }, st: { mus: { seen } } }, enemies, enemies[0], d2(5, 5, enemies[0].x, enemies[0].y));
+  };
+  let a = P(5, 12), b = P(5, 16);
+  assert.deepStrictEqual(mc(S.CHURCH, [a, b]), [a, b]);              // a church reaches nothing
+  assert.strictEqual(mc(S.CHURCH, [a, b], 8), null);                  // 2 turns on the tile, not MUSTER_DWELL 3
+  assert.strictEqual(mc(S.CHURCH, [P(5, 10), b]), null);              // r2 25 <= 36: v8's preacher
+  assert.strictEqual(mc(S.CHURCH, [a, P(15, 15, S.CRUSADER)]), null); // enemy melee in sight: an army
+  assert.strictEqual(mc(S.CHURCH, [a, P(5, 20, S.PREACHER)]), null);
+  assert.strictEqual(mc(S.CHURCH, [P(5, 12, S.CASTLE), b]), null);    // the nearest is no prophet
+  a = P(5, 14); b = P(14, 5);
+  assert.deepStrictEqual(mc(S.CASTLE, [a, b]), [a, b]);               // beyond r2 64: the castle's reach
+  assert.strictEqual(mc(S.CASTLE, [P(5, 13), a]), null);
+
+  // Tracking: an enemy prophet keeps the turn it came to its tile; last turn's newborn crusader joins; a member out of
+  // sight leaves; a release ends after MUSTER_WAIT turns or when no attacker is in sight.
+  const e1 = P(5, 14), e2 = P(9, 14);
+  const w = { me: { x: 5, y: 5, turn: 31 }, enemies: [e1, e2],
+    friends: [{ id: 7, unit: S.CRUSADER, turn: 1, x: 4, y: 4 }, { id: 8, unit: S.CRUSADER, turn: 6, x: 6, y: 6 }, { id: 10, unit: S.PROPHET, turn: 1, x: 6, y: 4 }] };
+  const st = { mus: { ids: new Set([8, 9]), pend: { x: 4, y: 4 }, rel: -1,
+    seen: new Map([[e1.id, { x: 5, y: 14, t: 20 }], [e2.id, { x: 9, y: 13, t: 20 }], [999, { x: 1, y: 1, t: 3 }]]) } };
+  musterTrack({ w, st });
+  assert.deepStrictEqual([[...st.mus.ids].sort(), st.mus.pend, st.mus.rel], [[7, 8], null, -1]);
+  assert.deepStrictEqual([...st.mus.seen], [[e1.id, { x: 5, y: 14, t: 20 }], [e2.id, { x: 9, y: 14, t: 31 }]]);   // e2 moved
+  st.mus.rel = 7; musterTrack({ w, st }); assert.strictEqual(st.mus.rel, 7);    // 24 turns
+  st.mus.rel = 6; musterTrack({ w, st }); assert.strictEqual(st.mus.rel, -1);   // 25
+  st.mus.rel = 30; w.enemies = [P(5, 14, S.PILGRIM)]; musterTrack({ w, st }); assert.strictEqual(st.mus.rel, -1);
+
+  // The release: 2A + 1 held (5 against two) radio the nearest as a spot and clear the set; the radio repeats.
+  const sent = [], fw = { me: { x: 5, y: 5, turn: 40, unit: S.CHURCH }, sentR2: 0, fuel: 500, canAfford: () => false,
+    signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; } };
+  const fst = { mus: { ids: new Set([1, 2, 3]), pend: null, rel: -1 } };
+  assert.strictEqual(musterAct({ w: fw, st: fst }, [P(5, 16), P(6, 13)], 0, true), null);   // 3 < 2 * 2 + 1: builds (if it can)
+  assert.deepStrictEqual([sent, fst.mus.rel], [[], -1]);
+  fst.mus.ids.add(4); fst.mus.ids.add(5);
+  assert.strictEqual(musterAct({ w: fw, st: fst }, [P(5, 16), P(6, 13)], 0, true), null);
+  assert.deepStrictEqual([sent, fst.mus.rel, fst.mus.ids.size], [[[encXY(0, 6, 13), FAR.ENEMY]], 40, 0]);
+  fw.sentR2 = 0; fw.me.turn = 41;
+  musterAct({ w: fw, st: fst }, [P(5, 16), P(6, 13)], 0, true);
+  assert.strictEqual(sent.length, 2);
+  // Ours already outnumber them (the gate is shut): A + 1 held suffice.
+  const gst = { mus: { ids: new Set([1, 2]), pend: null, rel: -1 } };
+  fw.sentR2 = 0; fw.me.turn = 50; sent.length = 0;
+  musterAct({ w: fw, st: gst }, [P(5, 16), P(6, 13)], 0, false);
+  assert.deepStrictEqual([sent, gst.mus.rel], [[], -1]);              // 2 < 2 + 1
+  gst.mus.ids.add(3);
+  musterAct({ w: fw, st: gst }, [P(5, 16), P(6, 13)], 0, true);
+  assert.deepStrictEqual([sent, gst.mus.rel], [[], -1]);              // gate open: 3 < 2 * 2 + 1
+  musterAct({ w: fw, st: gst }, [P(5, 16), P(6, 13)], 0, false);
+  assert.deepStrictEqual([sent, gst.mus.rel], [[[encXY(0, 6, 13), FAR.ENEMY]], 50]);
+});
+
+test('military: MUSTER: a crusader told of a prophet holds two king steps from home out of its reach, then charges on the release', () => {
+  const saved = CFG.MUSTER;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let at = null, tgt = null;
+    for (let dy = -1; dy <= 1 && !tgt; dy++) for (let dx = -1; dx <= 1 && !tgt; dx++) {
+      const ax = castle.x + dx, ay = castle.y + dy; if ((!dx && !dy) || !free(ax, ay)) continue;
+      for (let ty = 0; ty < n && !tgt; ty++) for (let tx = 0; tx < n && !tgt; tx++) {
+        if (!free(tx, ty) || d2(tx, ty, castle.x, castle.y) < 81 || d2(tx, ty, castle.x, castle.y) > 100 || d2(tx, ty, ax, ay) <= 49) continue;
+        let ok = false;   // a free tile two king steps from the castle, out of the prophet's reach, one move away
+        for (let y = ay - 3; y <= ay + 3; y++) for (let x = ax - 3; x <= ax + 3; x++)
+          if (free(x, y) && d2(x, y, ax, ay) <= 9 && king(x, y, castle.x, castle.y) === 2 && d2(x, y, tx, ty) > 64) ok = true;
+        if (ok) { at = [ax, ay]; tgt = [tx, ty]; }
+      }
+    }
+    assert.ok(at && tgt);
+    const own = g.robots.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100);
+    const crus = { id: 4005, team: 0, unit: S.CRUSADER, x: at[0], y: at[1], turn: 1, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    const all = g.robots;
+    const step = (st, sig, radius) => {
+      castle.signal = sig; castle.signal_radius = radius;
+      g.robots = own.concat([crus]);
+      try {
+        const w = worldFor(g, crus), B = { api: w.api, w, round: 20, birthRound: 20, st, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        return militaryTurn(B);
+      } finally { g.robots = all; castle.signal = 0; castle.signal_radius = 0; }
+    };
+    const cw = worldFor(g, castle), [ex, ey] = cw.T.toC(tgt[0], tgt[1]);
+    CFG.MUSTER = 0;
+    const st0 = {}; step(st0, encXY(SIG.THREAT, ex, ey), 2);
+    assert.strictEqual(st0.muster, undefined);                    // off: v8
+    CFG.MUSTER = 1;
+    const st = {}, a = step(st, encXY(SIG.THREAT, ex, ey), 2);
+    assert.deepStrictEqual([st.muster.x, st.muster.y, st.muster.until], [ex, ey, 1 + CFG.MUSTER_WAIT]);
+    assert.ok(a && a.action === 'move');
+    const to = [at[0] + a.dx, at[1] + a.dy];
+    assert.strictEqual(king(to[0], to[1], castle.x, castle.y), 2);
+    assert.ok(d2(to[0], to[1], tgt[0], tgt[1]) > 64);
+    // Held there: it stays.
+    crus.x = to[0]; crus.y = to[1]; crus.turn = 2;
+    assert.strictEqual(step(st, 0, 0), null);
+    // The release (the castle radios the spot): it charges.
+    crus.turn = 3;
+    const b = step(st, encXY(0, ex, ey), FAR.ENEMY);
+    assert.deepStrictEqual([st.muster, st.mustered], [null, true]);
+    assert.ok(b && b.action === 'move' && d2(to[0] + b.dx, to[1] + b.dy, tgt[0], tgt[1]) < d2(to[0], to[1], tgt[0], tgt[1]));
+    // No release: it holds MUSTER_WAIT turns, then goes on as v8.
+    const st2 = {}; crus.x = at[0]; crus.y = at[1]; crus.turn = 1;
+    step(st2, encXY(SIG.THREAT, ex, ey), 2);
+    crus.turn = 2 + CFG.MUSTER_WAIT; step(st2, 0, 0);
+    assert.strictEqual(st2.muster, null);
+    // An enemy preacher in sight ends the hold at once.
+    const st3 = {}; crus.turn = 1;
+    step(st3, encXY(SIG.THREAT, ex, ey), 2);
+    assert.ok(st3.muster);
+    own.push({ id: 4006, team: 1, unit: S.PREACHER, x: tgt[0], y: tgt[1], turn: 9, health: 60, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    crus.turn = 2; step(st3, 0, 0); own.pop();
+    assert.strictEqual(st3.muster, null);
+  } finally { CFG.MUSTER = saved; }
 });
 
 test('struct: WATCH: a structure radios the nearest enemy attacker within r2 100 that no military unit of ours sees', () => {

@@ -469,6 +469,30 @@ class TaskProtocol(unittest.TestCase):
         ex = saturn.Executor(runtime=saturn.Runtime(sandbox=[]), reporter=FakeReporter())
         self.assertFalse(ex.handle({'metadata': {'task-type': 'mine-bitcoin'}}, os.path.join(TMP, 'w')))
 
+    def test_slot_survives_a_spool_error_and_returns_the_message(self):
+        # A nack that cannot write (a full disk) must not kill the slot: the leased message goes back unchanged.
+        topic = config.TOPIC_EXECUTE
+        q = spool.topic_queue(topic).ensure()
+        mid = q.put({'data': base64.b64encode(json.dumps({'metadata': {'task-type': 'execute'}}).encode()).decode()})
+        ex = saturn.Executor(runtime=saturn.Runtime(sandbox=[]), reporter=FakeReporter(), poll=0.01)
+        ex.handle = lambda payload, workdir: False
+        calls = []
+        def full(self, msg_id, obj=None, delay=0.0):
+            calls.append(msg_id)
+            ex.stop.set()
+            raise OSError(28, 'No space left on device')
+        orig, retry = spool.Queue.nack, saturn.SLOT_RETRY
+        spool.Queue.nack, saturn.SLOT_RETRY = full, 0
+        try:
+            ex.slot(topic, 0)                      # returns once stop is set, instead of dying in the nack
+        finally:
+            spool.Queue.nack, saturn.SLOT_RETRY = orig, retry
+        self.assertEqual(calls, [mid])
+        self.assertEqual(q.counts()['leased'], 0)
+        self.assertEqual(q.lease()[0], mid)        # back in ready/, as it was
+        q.ack(mid)
+        self.assertFalse(q.release(mid))           # nothing leased: release is a no-op
+
 class FakeSiarnaq:
     def __init__(self, status=204):
         self.status, self.calls = status, []

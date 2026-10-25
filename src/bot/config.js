@@ -391,6 +391,15 @@ export const CFG = {
                              // could see it and died there on its first or second turn: 262 of 271 prophets lost, the
                              // army flat at 40 r500-900, the game lost at r1000 on health 1,200 vs 6,640)
   FEED_AGE: 3,
+  MUSTER: 0,                 // 1: against campers, enemy prophets a structure cannot hit (the nearest beyond r2 36, still
+                             // MUSTER_DWELL turns, no enemy crusader or preacher in sight; a castle's beyond its r2 64),
+                             // it builds crusaders on the adjacent tile farthest from the nearest, which hold out of its
+                             // reach (SIG.THREAT) until 2A + 1 of them stand ready, then radios it as a spot (FAR.ENEMY)
+                             // and they charge together (ECONOMICS.md, Lanchester: v8 fed one unit a turn into a
+                             // prophet's band, 46% of its military karbonite lost died within 3 turns of birth;
+                             // struct.js musterAct, military.js musterHold)
+  MUSTER_WAIT: 25,           // turns a held crusader waits for the release, and a release's spot radio lasts
+  MUSTER_DWELL: 3,           // turns an enemy prophet must have stood on its tile to count as a camper
   FEED_WINDOW: 20,
   FEED_REST: 50,
   // endgame

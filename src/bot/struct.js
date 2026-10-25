@@ -229,6 +229,61 @@ export function feeding(B, e, ed) {
   return !!e && ed <= STATS[e.unit].atkMax;
 }
 
+// CFG.MUSTER: campers, the enemy prophets this structure cannot hit, when the nearest attacker is one of them beyond
+// r2 36 (nearer, v8 answers with a preacher) that has stood on its tile MUSTER_DWELL turns and no enemy crusader or
+// preacher is in sight (an army, not a siege: h163's first form mustered against advancing preachers and lost to
+// v8 on 1712 and 2797); else null (v8's answer).
+export function musterCase(B, attackers, e, ed) {
+  const w = B.w, me = w.me, reach = me.unit === CASTLE ? STATS[CASTLE].atkMax : 0;
+  if (e.unit !== PROPHET || ed <= Math.max(reach, 36)) return null;
+  if (w.enemies.some(x => x.unit === CRUSADER || x.unit === PREACHER)) return null;
+  const s = B.st.mus && B.st.mus.seen.get(e.id);
+  if (!s || me.turn - s.t < CFG.MUSTER_DWELL) return null;
+  return attackers.filter(x => x.unit === PROPHET && d2(x.x, x.y, me.x, me.y) > reach);
+}
+// Every turn: each enemy prophet in sight keeps the turn it came to its tile; the crusader built last turn joins the
+// held set (found as watchKids finds newborns), units gone from sight leave it, and a release ends after MUSTER_WAIT
+// turns or when no attacker is in sight.
+export function musterTrack(B) {
+  const st = B.st, w = B.w, me = w.me, m = st.mus || (st.mus = { ids: new Set(), pend: null, rel: -1, seen: new Map() });
+  const seen = new Map();
+  for (const e of w.enemies) if (e.unit === PROPHET) {
+    const p = m.seen.get(e.id); seen.set(e.id, { x: e.x, y: e.y, t: p && p.x === e.x && p.y === e.y ? p.t : me.turn });
+  }
+  m.seen = seen;
+  if (m.pend) {
+    let best = null, bd = 1e9;
+    for (const r of w.friends) {
+      if (r.turn !== 1 || r.unit !== CRUSADER) continue;
+      const dd = d2(r.x, r.y, m.pend.x, m.pend.y); if (dd <= 9 && dd < bd) { bd = dd; best = r; }
+    }
+    if (best) m.ids.add(best.id);
+    m.pend = null;
+  }
+  for (const id of [...m.ids]) if (!w.friends.some(f => f.id === id)) m.ids.delete(id);
+  if (m.rel >= 0 && (me.turn - m.rel >= CFG.MUSTER_WAIT || !w.enemies.some(e => isAttacker(e.unit)))) m.rel = -1;
+}
+// Against campers (out = musterCase): hold crusaders, built while ours do not outnumber the attackers 2A + 1 (v8's
+// gate) on the tile farthest from the nearest and told its position (SIG.THREAT), until 2A + 1 of them stand ready,
+// or A + 1 once ours outnumber them (held crusaders count among ours: on 1712 against dist/turtle the gate closed at 6
+// held of 7 and the hold timed out); then radio it as a spot (FAR.ENEMY) every turn of the release, and they engage
+// it together (military.js). Returns a build or null (no build this turn).
+export function musterAct(B, out, hold, short) {
+  const st = B.st, w = B.w, me = w.me, m = st.mus;
+  let e = out[0], ed = 1e9;
+  for (const x of out) { const r = d2(me.x, me.y, x.x, x.y); if (r < ed) { ed = r; e = x; } }
+  if (m.rel < 0 && m.ids.size >= (short ? 2 * out.length + 1 : out.length + 1)) { m.rel = me.turn; m.ids.clear(); }
+  if (m.rel >= 0) {
+    if (!w.sentR2 && w.fuel >= 10) w.signal(encXY(0, e.x, e.y), FAR.ENEMY);
+    return null;
+  }
+  if (!short || !w.canAfford(CRUSADER, hold, 2)) return null;
+  const b = buildToward(B, CRUSADER, 2 * me.x - e.x, 2 * me.y - e.y, encXY(SIG.THREAT, e.x, e.y));
+  if (!b) return null;
+  m.pend = { x: b.x, y: b.y };
+  return b.act;
+}
+
 // CFG.WATCH: radio, as a spot, the nearest enemy attacker within r2 100 that no military unit of ours sees.
 export function sayWatch(B) {
   const st = B.st, w = B.w, me = w.me;
@@ -277,6 +332,7 @@ function structAct(B, allIds, extra, first) {
   refreshAssign(B, allIds);
   const attackers = w.enemies.filter(e => isAttacker(e.unit));
   if (attackers.length && st.threatAt === undefined) st.threatAt = me.turn;   // CFG.FUEL_DEFER ends at the first threat
+  if (CFG.MUSTER) musterTrack(B);
   // Past CHAIN_ROUND, or (CFG.CHAIN_KEEP) a church that never learned the round: a line church, or one whose builder
   // was shot before the church's first turn. Its army spent the bank the next line needs (seed 799: church #505, its
   // chainer killed in between, built 136 units in r246-450 and no line fired).
@@ -299,7 +355,9 @@ function structAct(B, allIds, extra, first) {
     // bank (seed 799: a front church's answers took 136 of 211 military builds in r200-400 and no line ever fired).
     const hold = Math.max(CFG.CHAIN_HOLD_R2 && me.unit === CHURCH && chainOn && cd > CFG.CHAIN_HOLD_R2 ? CFG.CHAIN_K : 0,
       waitK && cd > CFG.PIONEER_HOLD ? waitK : 0);
-    if (ours < attackers.length * 2 + 1 && feeding(B, closest, cd)) {
+    const out = CFG.MUSTER ? musterCase(B, attackers, closest, cd) : null;
+    if (out) { const a = musterAct(B, out, hold, ours < attackers.length * 2 + 1); if (a) return a; }
+    else if (ours < attackers.length * 2 + 1 && feeding(B, closest, cd)) {
       const unit = cd <= 36 || closest.unit === CRUSADER ? PREACHER : (CFG.DEF_FAR_UNIT || PROPHET);
       if (w.canAfford(unit, hold)) { const b = buildToward(B, unit, closest.x, closest.y); if (b) return b.act; }
       if (unit === PREACHER && w.canAfford(PROPHET, hold)) { const b = buildToward(B, PROPHET, closest.x, closest.y); if (b) return b.act; }
