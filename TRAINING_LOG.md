@@ -5077,3 +5077,11 @@ r72 building a crusader where v8 built a prophet, before any opponent board acti
 203 red parts first on their pilgrim at r57 (moved, v8's game: mined) and uvafan 1712 blue on their prophet at r72
 (gave, v8's game: moved): the opponents' noise. So the switch led 4 discordant cells, 3 gains on one cell
 (awesomelemonade 2797 blue) and 1 loss; MUSTER's worth sits on that cell. LEARNINGS 42 extended.
+
+## 2026-10-25 04:57 PDT: h169's bars in numbers (v8 on 726-731, before any h169 game)
+
+zombies.mjs on v8's 18 panel games (scratchpad econ/zmatch.sh 726-731): 101 pioneers sent, 58 parked (alive at the
+end without church, mine or death; 3.22 a game), 217 churches of ours (12.06 a game). h169's bars (04:22) are
+therefore: parked pioneers under 1.07 a game; our churches at least 10.85 a game. Also from the replica record:
+since match 1000 our robots time out 6 times and freeze 8 times per million turns, the opponents in the same games
+38 and 763 (LEARNINGS 31: the host's load, not our code); no basics item there.
