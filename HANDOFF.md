@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 21:22 PDT)
+## State (2026-10-24 21:39 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -28,9 +28,9 @@
   ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 32 z's; the next adds a z.
   Nothing runs on the VM queue. symcheck on bots/v8 to r1000 mirrors on seeds 1, 2, 3, 2321 (job ...1000symb, TRAINING_LOG
   17:33); symcheck past a few hundred rounds never runs on the driver (LEARNINGS 13).
-  **Held for the replica queue (TRAINING_LOG 2026-10-24 10:08):** saturn runs 8 slots and no gate runs; seven screens
+  **Held for the replica queue (TRAINING_LOG 2026-10-24 10:08):** saturn runs 8 slots and no gate runs; six screens
   wait in ~/jobq/superseded, named to run in this order (26 z's + y..., then 27-30 z's): h160 (ECON_NOPLAN 1; 26 z's + y;
-  the five no-plan maps both sides, 10 games; TRAINING_LOG 15:32), h161 (FUEL_DEFER 60; 26 z's + yy; 36000), h162
+  the five no-plan maps both sides, 10 games; TRAINING_LOG 15:32), h162
   (ATTACK_ONE 1; 26 z's + yyy; 37000; both TRAINING_LOG 18:45), h157
   (ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9; 34000), h155 (ESCORT_HOLD_R 2; 32000), h154 (ESCORT_HOLD_R 2 + ESCORT_EARLY 1;
   31000), h156 (INTERCEPT_R2 64 + INTERCEPT_DWELL 3; 33000); h163's screen deleted 20:54 (inert against v8,
@@ -44,7 +44,7 @@
   that survive spool errors, spool.release, of 19:58: until then a full disk kills slot threads, and only
   `sudo systemctl restart bc19-galaxy-saturn` brings them back, as at 19:54),
   `sudo systemctl restart bc19-galaxy-saturn`, then `tools/move_stale.sh --back`
-  the seven jobs h160, h161, h162, h157, h155, h154, h156.
+  the six jobs h160, h162, h157, h155, h154, h156.
   Screens passed: h148 (CHAIN_LIVE 1; +3 -0, t 1.73, castles 35 vs 39), h149 (CHAIN_LIVE 2; +3 -3, t 0.00, 35 vs 34),
   h150 (WATCH 2; +8 -3, t 1.51, 24 vs 38). Rejected: h151 (CHAIN_FAILS 1; +1 -3, t -1.00, 31 vs 19).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h` (t, castles lost and the verdict).
@@ -67,15 +67,16 @@
   h147 (early fast centre pioneer) 764-769 REJECTED (z 0.34; won 2518, 2321, 203; lost IanCoolidge0 2644: the pioneers had no money after an early rush, TRAINING_LOG 09:25), h148 (CHAIN_LIVE 1) 777-782 + 967-972 + 973-984 REJECTED 14:17 (35 of 72, side-aware z 1.02; block 1 z 2.20 was luck; the CHAIN_LIVE line closes); h149 (CHAIN_LIVE 2) 955-960 REJECTED (z 0.28), h150 (WATCH 2) 961-966 REJECTED (z -0.37) (TRAINING_LOG 11:28).
   h159 (FEED_STOP 3) 985-996 + 997-1008 REJECTED 19:01 (33 of 72, side-aware z 0.66; young share in losses 42% vs
   v8's 55%: the switch acts, no games move; TRAINING_LOG 19:01).
-  **In play: h161 (v8 + FUEL_DEFER 60, dist/h161 4e5d828b7522): block 1 = matches 1011-1022** (submission 174, v8
-  back as 175; TRAINING_LOG 18:45, 19:01). Score with `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool
-  1011-1022` once all 12 finish: block 1 reject z < 0.5, else a second block. Studied cell: botfinalsafe 2740 (h161 is
-  accepted only if its z over the other cells is also >= 0). Mechanism read (not a decision input): `tools/census.js`
-  first_pioneer / first_church means on the one-castle cells against v8's in 726-731 (bar: first pioneer 6+ rounds earlier).
-  **Next, one block at a time (ECONOMICS.md, TRAINING_LOG 18:45, 20:54):** h162 (v8 + ATTACK_ONE 1, dist/h162
-  88a7474abd7a; mechanism read census attack_split, bar 0), then h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e; studied
-  cells uvafan 1712, awesomelemonade 1712, 2797, 2518), each `tools/panel_submit.sh dist/hN "cand:hN"` on the general
-  panel against the v8-m1 pool. ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22); after h161: DEPOSIT_AT on top of it.
+  h161 (FUEL_DEFER 60) 1011-1022 REJECTED 21:36 (14 of 36, side-aware z -1.17; not pooled; TRAINING_LOG 21:38).
+  **In play: h162 (v8 + ATTACK_ONE 1, dist/h162 88a7474abd7a): block 1 = matches 1023-1034** (submission 176, v8
+  back as 177; TRAINING_LOG 18:45, 21:38). Score with `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool
+  1023-1034` once all 12 finish: block 1 reject z < 0.5, else a second block. No studied cell. Mechanism read (not a
+  decision input): `tools/census.js` attack_split on our side (bar: none).
+  **Next, one block at a time (ECONOMICS.md, TRAINING_LOG 20:54):** h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e;
+  studied cells uvafan 1712, awesomelemonade 1712, 2797, 2518), `tools/panel_submit.sh dist/h163 "cand:h163"` on the
+  general panel against the v8-m1 pool. ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22); row 5
+  (DEPOSIT_AT) was to stack on h161, now rejected. CHAIN_WALL 28 (row 8; the switch exists, never played) is in
+  driver diagnostics as h164 (dist/h164 96cae5a62d0f).
   **Waiting for the queue (< 30): h160 (v8 + ECON_NOPLAN 1, dist/h160 15b40f6fac46) on the targeted panel**
   progress/panels/noplan-m1.json (the six bots on the five pool maps where no castle plans a church; TRAINING_ALGORITHM
   §4 map-conditional switch): first a bots/v8 control block (`PANEL=progress/panels/noplan-m1.json

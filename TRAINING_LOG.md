@@ -4638,3 +4638,15 @@ our pilgrims died before r100 6 times in the 18 games, all in losses (5 of the 1
 pilgrim early enough for the owed guards to come well before v8's army starts at r100: too few for a block, so the
 code is reverted (not committed). ECONOMICS.md §4 and §6 updated. Next from the list: DEPOSIT_AT waits for h161's
 block; rows 7, 8, 10 wait for the held screens (h157, CHAIN_WALL), 9 for h160, 12 for h156.
+
+## 2026-10-24 21:38 PDT: h161 (FUEL_DEFER 60) REJECTED at block 1 (14 of 36, side-aware z -1.17); h162's block 1 in
+
+Block 1 = matches 1011-1022 finished at 21:35 (1019, vibe19 vs awesomelemonade, ran last): h161 wins 14 of 36
+against a pooled expectation of 16.0 (z -0.99), side-aware 15.9, z -1.17: under 0.5, so REJECTED by the
+pre-registered rule. The block does not join the v8-m1 pool (its own z is outside +-1). Cells against the pool's 14
+games: won bot1v43 2591 blue (pool 0 of 14) and the studied cell botfinalsafe 2740 on both sides (pool 10 of 14;
+the studied-cell rule is moot after a reject); lost awesomelemonade 1712 red, wololo 2644 red and uvafan 1653 red
+(pool 14, 8 and 12 of 14), and bot1v43 2321 red. The mechanism read (`tools/census.js` first pioneer and first
+church on the one-castle cells, against v8's 726-731) follows when the driver frees.
+h162 (v8 + ATTACK_ONE 1, dist/h162 88a7474abd7a) went in at 21:38 as pre-registered (18:45): block 1 = matches
+1023-1034 (submission 176, v8 back as 177), with 50 replica matches waiting. h163 follows it.
