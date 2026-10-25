@@ -5282,3 +5282,10 @@ parked (3.01 a game; the control block alone 2.64), 1,204 churches (11.15 a game
 bars (pre-registered 07:42): parked pioneers under 1.00 a game and churches at least 10.03 a game over h170's two
 blocks. h174's stuckM bar follows when the control block's idle read finishes. h170 block 1 (1379-1390) still in
 play; only its status was read.
+
+## 2026-10-25 10:12 PDT: h174's stuckM bar fixed from v9's 108 panel games
+
+tools/reads/idle.mjs (to r300) on v9's three blocks: stuckM (pilgrim-rounds a miner idle 20+ rounds stood beside a
+free safe home depot) 41.2 a game over 108 games (the decided 72: 40.4; the control block: 42.8), 36 games at 50+.
+h174's mechanism bar (pre-registered 09:12: at most 75% of v9's): stuckM at most 30.9 a game over h174's blocks.
+Fixed before any h174 game; h174 plays after h171.
