@@ -5080,7 +5080,7 @@ r72 building a crusader where v8 built a prophet, before any opponent board acti
 
 ## 2026-10-25 04:57 PDT: h169's bars in numbers (v8 on 726-731, before any h169 game)
 
-zombies.mjs on v8's 18 panel games (scratchpad econ/zmatch.sh 726-731): 101 pioneers sent, 58 parked (alive at the
+zombies.mjs on v8's 18 panel games (scratchpad econ/zmatch.sh 726-731): 132 pioneers sent, 58 parked (alive at the
 end without church, mine or death; 3.22 a game), 217 churches of ours (12.06 a game). h169's bars (04:22) are
 therefore: parked pioneers under 1.07 a game; our churches at least 10.85 a game. Also from the replica record:
 since match 1000 our robots time out 6 times and freeze 8 times per million turns, the opponents in the same games
