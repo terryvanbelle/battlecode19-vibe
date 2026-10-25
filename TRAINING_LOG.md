@@ -4949,3 +4949,30 @@ the escorts first saw crusaders or nothing. The fast hold trades the open-site c
 the prophet-opener cells. The decision stands (rejected, not pooled; LEARNINGS 38). Lead, not queued: an escort that
 takes a prophet's shot goes back to v8's lattice hold; first a census of the hits in these 18 games (836's first
 two escorts also died to prophets, at r24-26, in a win).
+
+## 2026-10-25 01:24 PDT: h168 (h157 + ESCORT_BACK 1) built; pre-registered for the panel after h167
+
+**h168 = v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1** (dist/h168 a5bd8bb262df). From the pair-by-pair
+read of h157's block (00:37): h157's escorts won the cells where the enemy came to the site with pilgrims and
+crusaders (uvafan 1712, awesomelemonade 2518, wololo 836), with every winning kill before any prophet hit
+(scratchpad econ/esc_hit.mjs), and died 3-7 rounds after a prophet's first shot where the enemy opened with
+prophets (bot1v43 388, botfinalsafe 2740, wololo 2644). ESCORT_BACK (military.js escortBack): an escort that loses
+health with no enemy crusader or preacher within r2 25 (a prophet's or a castle's shot, often from outside its
+vision) gives up its site, takes its birth structure's lattice and walks all the way to its chosen tile there at
+ESCORT_FAST_R2 before it holds again. Defaults replay v8 IDENTICAL on 2046 to r600; `tools/unit-tests.sh` 165 of 165
+(new test: hit with no melee near, it goes home at steps up to r2 9 and holds within 7 king steps of its castle;
+unhit, off, or hit beside an enemy crusader, it keeps its site).
+
+Driver diagnostics to r150, red side (scratchpad vs/h168_diag.txt, vs/h168_camp.txt, econ/esc_back.mjs; no
+exceptions): against dist/turtle on 388, 2740, 2644, 1712, 2518 and bots/v8 on 1712, 2518, 388 no prophet or castle
+hits an escort, so the switch never fires (against turtle h168's games equal h157's at r150). Against dist/camp it
+fires where it should: on 388 the escort hit at r12 walked from 12 to 21 steps from its site and lived (h157's died
+at r18), on 2644 the one hit at r11 from 2 to 12 steps and lived (h157's died at r14); 2591 no hit.
+
+Pre-registration. h168 plays the general panel one block after h167, scored with `tools/panel_pool.sh 726-731
+progress/panels/v8-m1.pool BLOCK --studied` on the six cells its design read: uvafan 1712, awesomelemonade 2518,
+wololo 836, wololo 2644, bot1v43 388, botfinalsafe 2740 (so its z over the other cells must also be >= 0). If h163 is
+accepted first, h168 rebases onto the new champion. Mechanism reads, not decision inputs, on our side of the block:
+of the escorts a prophet or castle hits, those dead within 6 rounds of the first hit (econ/esc_back.mjs): under
+40% (h157: 18 of 26, 69%); and in the 1712, 2518, 836 games, our escorts' kills of enemy pilgrims and churches
+before r60, against h157's in the same games.

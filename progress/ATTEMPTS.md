@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 125 other, 45 rejected, 16 accepted, 9 dropped, 8 in progress, 4 sparring partners (207 rows).
+Totals: 126 other, 45 rejected, 16 accepted, 9 dropped, 8 in progress, 4 sparring partners (208 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -221,3 +221,4 @@ Totals: 125 other, 45 rejected, 16 accepted, 9 dropped, 8 in progress, 4 sparrin
 | `h165` | 2026-10-24 22:33 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_EACH 2: h157 plus an escort of 2 for every later contested cluster's pioneer (dist/h165 feb35bd6487b) |  |  |  |  | CLOSED 2026-10-25 00:11: h157 rejected; unplayed |
 | `h166` | 2026-10-24 22:46 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_EARLY 1: h157 with the first escorts built on turns 3-4 ahead of the economy pilgrims (dist/h166 69e55f300f65) |  |  |  |  | CLOSED 2026-10-25 00:11: h157 rejected; unplayed |
 | `h167` | 2026-10-25 00:04 | v8 | v8 + MUSTER 2: hold only; held crusaders kept 2-4 king steps from home out of the campers' reach until enemy melee is in sight, and the peacetime army builds held crusaders while the camper case holds (dist/h167 bd86bcd5b011) |  |  |  |  | HELD: panel one block after h163 (studied cells as h163's; turtle diag: 1712 won by castles r370, 2797 army 51 vs v8 26) |
+| `h168` | 2026-10-25 01:24 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1: h157, with an escort hit by a prophet or castle (no enemy melee within r2 25) going back fast to its base lattice (dist/h168 a5bd8bb262df) |  |  |  |  | HELD: panel one block after h167 (driver vs camp: the hit escorts retreat and live on 388, 2644) |
