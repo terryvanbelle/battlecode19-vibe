@@ -2010,6 +2010,67 @@ test('military: ESCORT_HOLD_R: an escort holds within that many king steps of it
   } finally { Object.assign(CFG, saved); }
 });
 
+test('military: ESCORT_BACK: an escort hit with no enemy melee near goes back to its base lattice fast; otherwise it keeps its site', () => {
+  const saved = { ...CFG };
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    const cru = { id: 4003, team: 0, unit: S.CRUSADER, x: 0, y: 0, turn: 30, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    g.robots.push(cru);
+    const world = () => { const w = worldFor(g, cru); w.fuel = 1000; return w; };
+    let site = null, base = null;   // the escort stands on its site: a lattice tile 7-10 king steps from the castle, no enemy near
+    for (let k = 1; k < n * n && !site; k++) {
+      const x = k % n, y = Math.floor(k / n);
+      if (!free(x, y)) continue;
+      cru.x = x; cru.y = y;
+      const w = world(), m = w.me, c = w.friends.find(r => r.unit === S.CASTLE);
+      if (!c || ((m.x + m.y) & 1) || w.isDepot(m.x, m.y) || w.enemies.some(e => d2(e.x, e.y, m.x, m.y) <= 196)) continue;
+      const k2 = king(m.x, m.y, c.x, c.y);
+      if (k2 >= 7 && k2 <= 10) { site = { x: m.x, y: m.y }; base = { x: c.x, y: c.y }; }
+    }
+    assert.ok(site);
+    const fresh = () => ({ ready: true, home: site, home0: site, base, guardAt: site, held: true, hp: 40, target: null, tIdx: -1,
+      known: [], dead: new Set(), reports: [], waitUntil: 0, guard: false });
+    const turn = (st, round = 40) => {
+      const w = world(), B = { api: w.api, w, round, birthRound: 10, rnd: rng(2), deps: null, clusters: null, st };
+      B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+      return militaryTurn(B);
+    };
+    CFG.ESCORT_HOLD_R = 2; CFG.ESCORT_FAST_R2 = 9; CFG.ESCORT_BACK = 1;
+    let st = fresh(); st.held = false;   // first it takes its post, within 2 king steps of the site (not on it: LATTICE_MIN_R2)
+    for (let k = 0; k < 6 && !st.held; k++, cru.turn++) { const a = turn(st); if (a) { cru.x += a.dx; cru.y += a.dy; } }
+    assert.ok(st.held);
+    const [x0, y0] = [cru.x, cru.y];
+    // Unhit, it holds its post; ESCORT_BACK changes nothing.
+    st = fresh();
+    assert.strictEqual(turn(st), null); assert.deepStrictEqual(st.guardAt, site); assert.strictEqual(st.hp, 40);
+    // Off (h157): hit, it still holds its site.
+    CFG.ESCORT_BACK = 0; st = fresh(); cru.health = 30;
+    assert.strictEqual(turn(st), null); assert.deepStrictEqual(st.guardAt, site);
+    // On: hit with no enemy crusader or preacher within r2 25, it gives up the site and walks home at steps up to r2 9.
+    CFG.ESCORT_BACK = 1; st = fresh();
+    let k = 0, maxR2 = 0;
+    for (; k < 12; k++, cru.turn++) {
+      const a = turn(st, 40 + k);
+      if (k === 0) { assert.strictEqual(st.guardAt, null); assert.deepStrictEqual(st.home, base); assert.ok(st.back); }
+      if (!a) { if (st.held) break; continue; }
+      assert.strictEqual(a.action, 'move');
+      maxR2 = Math.max(maxR2, a.dx * a.dx + a.dy * a.dy); cru.x += a.dx; cru.y += a.dy;
+    }
+    const w = world();
+    assert.ok(st.held && maxR2 > 2 && maxR2 <= 9, JSON.stringify({ k, maxR2 }));
+    assert.ok(king(w.me.x, w.me.y, base.x, base.y) < 7, JSON.stringify([w.me, base]));
+    // On, hit beside an enemy crusader: a melee hit, so it keeps its site (and strikes back).
+    cru.x = x0; cru.y = y0; cru.health = 30;
+    const spots = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]].map(([dx, dy]) => [x0 + dx, y0 + dy]).filter(([x, y]) => free(x, y));
+    g.robots.push({ id: 4004, team: 1, unit: S.CRUSADER, x: spots[0][0], y: spots[0][1], turn: 5, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    st = fresh();
+    const a = turn(st);
+    assert.deepStrictEqual(st.guardAt, site); assert.strictEqual(a.action, 'attack');
+  } finally { Object.assign(CFG, saved); }
+});
+
 test('castle: ESCORT_EARLY builds the owed escorts ahead of the economy pilgrims', () => {
   const saved = { ...CFG };
   try {

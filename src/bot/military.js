@@ -25,7 +25,7 @@ function init(B) {
   }
   if (st.chainT) learnRound(B);
   if (B.birthRound) B.round = B.birthRound + me.turn - 1;
-  if (st.guardAt) st.home = st.guardAt;   // CFG.ESCORT: hold the lattice around the pioneer's site
+  if (st.guardAt) { st.base = st.home; st.home = st.guardAt; }   // CFG.ESCORT: hold the lattice around the pioneer's site
   if (!st.home) st.home = { x: me.x, y: me.y };
   st.target = st.chainT || null;   // [x, y] enemy structure to attack
   st.tIdx = -1;       // its enemy castle index from the ATTACK message (-1: unknown)
@@ -188,6 +188,20 @@ function edgeAvoid(B) {
 
 // A lattice tile: (x + y) even (CFG.LATTICE_SPARSE: x + 2y a multiple of 5), passable, not a depot, not adjacent to
 // the home structure (CFG.KEEP_CLEAR: and not kept clear; CFG.KILL_ZONE: and not in a kill zone).
+// CFG.ESCORT_BACK: an escort hit while no enemy crusader or preacher could have struck it (a prophet or a castle, often
+// out of its sight: crusader vision r2 49, prophet reach 64) gives up its site for its birth structure's lattice, and
+// walks back at ESCORT_FAST_R2 (replica 1035-1046, h157: escorts at their site won where the enemy came with pilgrims
+// and crusaders, 1712, 2518, 836, and died 3-7 rounds after a prophet's first shot where it came with prophets, 388,
+// 2740, 2644; the kills that won came before any prophet hit; TRAINING_LOG 2026-10-25 00:37).
+function escortBack(B) {
+  const st = B.st, me = B.w.me;
+  if (st.guardAt && st.base && st.hp !== undefined && me.health < st.hp
+      && !B.w.enemies.some(e => (e.unit === CRUSADER || e.unit === PREACHER) && d2(e.x, e.y, me.x, me.y) <= 25)) {
+    st.guardAt = null; st.home = st.home0 = st.base; st.held = false; st.lt = null; st.back = true;
+  }
+  st.hp = me.health;
+}
+
 function latticeOk(B, x, y) {
   const w = B.w, h = B.st.home;
   return latticeTile(x, y) && w.passable(x, y) && !w.isDepot(x, y) && d2(x, y, h.x, h.y) >= CFG.LATTICE_MIN_R2 &&
@@ -367,6 +381,7 @@ export function militaryTurn(B) {
   if (!st.ready) init(B);   // until it completes: a turn killed mid-init (200 ms) leaves it half done
   if (CFG.KILL_ZONE) watchDeaths(B);
   listen(B);
+  if (CFG.ESCORT_BACK) escortBack(B);
   if (CFG.SIEGE) watchThreats(B);
   const enemies = w.enemies;
   const canShoot = w.fuel >= S.atkFuel + (u === PROPHET ? CFG.PROPHET_FLOOR : CFG.SHOOT_FLOOR);   // pilgrims must still mine
@@ -440,12 +455,14 @@ export function militaryTurn(B) {
   if (marching) return go(B, 'A' + st.target[0] + ',' + st.target[1], () => bandSources(B, st.target[0], st.target[1]), CFG.CRUISE_R2,
     CFG.EDGE ? edgeAvoid(B) : undefined);
 
-  // Hold the lattice.
-  if (latticeOk(B, me.x, me.y) && king(me.x, me.y, c.x, c.y) <= latticeR(B)) { st.held = true; return null; }
+  // Hold the lattice (CFG.ESCORT_BACK: an escort sent back walks all the way to its chosen tile first).
+  const back = st.back && !st.held;
+  if (!back && latticeOk(B, me.x, me.y) && king(me.x, me.y, c.x, c.y) <= latticeR(B)) { st.held = true; return null; }
   const t = holdTarget(B);
   if (!t) return CFG.KEEP_CLEAR ? stepClear(B) : null;
-  // CFG.ESCORT_FAST_R2: an escort hurries to its site until it first holds there.
-  const cap = CFG.ESCORT_FAST_R2 && st.guardAt && !st.held ? CFG.ESCORT_FAST_R2 : CFG.CRUISE_R2;
+  if (back && t[0] === me.x && t[1] === me.y) { st.held = true; return null; }
+  // CFG.ESCORT_FAST_R2: an escort hurries to its site until it first holds there (CFG.ESCORT_BACK: and back home).
+  const cap = CFG.ESCORT_FAST_R2 && (st.guardAt || st.back) && !st.held ? CFG.ESCORT_FAST_R2 : CFG.CRUISE_R2;
   const a = go(B, 'l' + t[0] + ',' + t[1], [t], cap, CFG.SIEGE ? siegeAvoid(B) : undefined);
   return a || (CFG.KEEP_CLEAR ? stepClear(B) : null);
 }

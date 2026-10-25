@@ -74,6 +74,10 @@ export const CFG = {
   ESCORT_FAST_R2: 0,         // >0: a unit that heard SIG.GUARD walks to its site with steps up to this r2, not CRUISE_R2,
                              // until it first holds there (replica 778, seed 1706: v8's escorts walked one tile a turn
                              // from r4 and stood 10 steps short from r27; botfinalsafe churched the site at r29)
+  ESCORT_BACK: 0,            // 1: an escort hit with no enemy crusader or preacher within r2 25 (a prophet's or a castle's shot)
+                             // gives up its site and goes back to its birth structure's lattice (h157's block 1035-1046: the
+                             // escorts at their site won 1712, 2518, 836 with kills before any prophet hit, and died 3-7
+                             // rounds after a prophet's first shot on 388, 2740, 2644; TRAINING_LOG 2026-10-25 00:37)
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short
