@@ -265,3 +265,10 @@
    board actions, not radio: awesomelemonade's churches and uvafan's and botfinalsafe's castles radio values that
    differ every game, so the plain first difference is always theirs. `diverge --board` (and `--team T` for our own
    turns) found that 3 of h163's 5 opponent-first gains parted on our church's muster build. (04:52)
+43. **Refresh progress/ after a new champion's first games, not only at its acceptance.** v9 was accepted at 07:24
+   2026-10-25 and progress/ was refreshed at 08:02, when v9 had no finished games, so the charts said "no games yet:
+   v9" for two hours until the owner asked (PROMPTS 40). A refresh at acceptance shows the decision, not the build;
+   refresh again when its first block or ladder games finish, and after every scored block (TRAINING_ALGORITHM step
+   8). Candidate panel games stay under the candidate's name (cand:hN) even when the code becomes the champion: the
+   accepting blocks overstate it (LEARNINGS 33), so the champion's rating comes from its own control and ladder
+   games. (2026-10-25 10:15)

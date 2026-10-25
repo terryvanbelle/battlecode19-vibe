@@ -217,6 +217,27 @@ class TestElo(Base):
         self.assertIn('| us:v1 | starter | 30 | 25-5 | 83% | replica |', md)
 
 
+class TestVia(Base):
+    def test_accepted_via_and_render(self):
+        with open(self.roster, 'w') as fh:
+            fh.write('name\thash\tdate_pdt\tnote\nv0\thash0\t\t\nv1\thash1\t\th2 = v0 + X\nv2\thash2\t\th9 (v1 + Y)\n'
+                     'rush\thashr\t\th3 = sparring\n')
+        self.assertEqual(elolib.accepted_via(), {'us:v1': 'cand:h2', 'us:v2': 'cand:h9'})
+        rows = sample_rows()
+        a = quiet(elo.analyse, rows, None)
+        self.assertEqual(a['via'], {'us:v1': 'cand:h2'})      # h9 has no games
+        md = elo.render_md(rows, a, None, [])
+        self.assertIn('also played as a candidate: v1 = h2 (2 games, 1-1)', md)
+        self.assertIn('Accepted builds with no recorded game: v2.', md)
+        try:
+            import matplotlib  # noqa: F401
+        except ImportError:
+            self.skipTest('matplotlib not installed here (.venv-progress)')
+        p = os.path.join(self.dir, 'progress.png')
+        elo.render_progress_png(a, p, len(rows))
+        self.assertGreater(os.path.getsize(p), 1000)
+
+
 class TestAttempts(Base):
     def test_set_fields(self):
         rows = []

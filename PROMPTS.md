@@ -152,3 +152,6 @@ Switching back to Auto permissions setting.  I hope the classifier has calmed do
 
 ## 40. 2026-10-25 10:14 PDT
 The progress/ directory doesn't seem to be updated after v9
+
+## 41. 2026-10-25 10:16 PDT
+Wouldn't we have the games that led to v9's acceptance?

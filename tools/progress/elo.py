@@ -54,12 +54,14 @@ def analyse(rows, bundle=None):
     ours.sort(key=lambda p: (elolib.kind(p) != 'ours', order.get(p, 99), elolib.build_of(p)))
     played = [p for p in accepted if games[p]]
     incumbent = played[-1] if played else None
+    via = {p: c for p, c in elolib.accepted_via().items() if p in order and games.get(c)}
     rec = elolib.records(rows)
     src = collections.defaultdict(set)
     for r in rows:
         src[frozenset((r['teamA'], r['teamB']))].add('local' if elolib.is_local(r) else 'replica')
     return {'R': R, 'SE': SE, 'games': games, 'wins': wins, 'players': players, 'field': field, 'rank': rank,
-            'ours': ours, 'accepted': accepted, 'played': played, 'incumbent': incumbent, 'rec': rec, 'src': src,
+            'ours': ours, 'accepted': accepted, 'played': played, 'incumbent': incumbent, 'via': via, 'rec': rec,
+            'src': src,
             'unmet': [t for t in ladder_teams(bundle) if not games[t]]}
 
 
@@ -117,6 +119,12 @@ def render_md(rows, a, bundle=None, summary=()):
     missing = [elolib.build_of(p) for p in a['accepted'] if not games[p]]
     if missing:
         lines += ['', f"Accepted builds with no recorded game: {', '.join(missing)}."]
+    if a['via']:
+        lines += ['', "Accepted builds whose code also played as a candidate: " + ', '.join(
+            f"{elolib.build_of(p)} = {elolib.build_of(c)} ({games[c]} games, {wins[c]}-{games[c] - wins[c]})"
+            for p, c in a['via'].items()) + ". Those games stay under the candidate's name: where they are the "
+            "panel blocks that accepted it, they were selected for passing and overstate it (LEARNINGS 33). "
+            "progress.png shows them beside the build's own games as hollow grey points."]
     inc = elolib.build_of(a['incumbent']) if a['incumbent'] else '-'
     lines += ['', '![ratings](elo.png)', '', '![accepted builds](progress.png)', '',
               "No projection of the field score over time (2023's field-score charts) yet: it needs accepted builds "
@@ -178,28 +186,37 @@ def render_progress_png(a, path, ngames):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
-    subs = a['played']
+    via = a.get('via') or {}
+    subs = [p for p in a['accepted'] if p in a['played'] or p in via]
     R, SE, fld = a['R'], a['SE'], a['field']
-    fs = [100 * elolib.field_score(R, p, fld) for p in subs]
+    own = [i for i, p in enumerate(subs) if p in a['played']]
+    fs = [100 * elolib.field_score(R, subs[i], fld) for i in own]
     x = list(range(len(subs)))
     fig, (a1, a2) = plt.subplots(2, 1, figsize=(8, 6), sharex=True)
-    a1.errorbar(x, [R[p] for p in subs], yerr=[1.96 * SE[p] for p in subs], fmt='o-', color='#c0392b', capsize=4)
+    a1.errorbar(own, [R[subs[i]] for i in own], yerr=[1.96 * SE[subs[i]] for i in own], fmt='o-', color='#c0392b',
+                capsize=4, label="the build's own games")
+    vx = [i for i, p in enumerate(subs) if p in via]
+    if vx:
+        a1.errorbar([i + 0.2 for i in vx], [R[via[subs[i]]] for i in vx], yerr=[1.96 * SE[via[subs[i]]] for i in vx],
+                    fmt='o', mfc='white', color='0.55', capsize=3,
+                    label="its games as the candidate before acceptance (accepting blocks: biased up)")
+        a1.legend(fontsize=7, loc='upper center')
     a1.set_ylabel('rating (BT, Elo scale)')
     a1.grid(alpha=.3)
     a1.set_title(f'Accepted builds ({ngames} games; {len(fld)} rated field bots)')
-    a2.plot(x, fs, 'o-', color='#2471a3')
+    a2.plot(own, fs, 'o-', color='#2471a3')
     a2.set_ylabel('expected field score %')
     a2.set_ylim(0, 100)
     a2.grid(alpha=.3)
     a2.set_xticks(x)
     a2.set_xticklabels([elolib.build_of(p) for p in subs], fontsize=9)
     a2.set_xlim(-0.5, max(len(subs) - 0.5, 0.5))
-    for i, v in enumerate(fs):
+    for i, v in zip(own, fs):
         a2.annotate(f'{v:.0f}%', (i, v), textcoords='offset points', xytext=(0, 6), ha='center', fontsize=8)
-    missing = [elolib.build_of(p) for p in a['accepted'] if p not in subs]
+    missing = [elolib.build_of(p) for p in a['accepted'] if p not in a['played']]
     if missing:
-        a2.annotate(f"no games yet: {', '.join(missing)}", (0.01, 0.03), xycoords='axes fraction', fontsize=8,
-                    color='0.4')
+        a2.annotate(f"no games of its own yet: {', '.join(missing)}", (0.01, 0.03), xycoords='axes fraction',
+                    fontsize=8, color='0.4')
     fig.tight_layout()
     fig.savefig(path + '.tmp.png', dpi=110)
     plt.close(fig)

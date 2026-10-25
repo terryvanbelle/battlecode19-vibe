@@ -88,7 +88,8 @@ the ladder and calibrated with a full field block the same day. Then run a corre
    created with, submit the candidate only while its matches are created, then resubmit the incumbent. Score by the
    pooled rule (§4); a block is scored only once all its games have finished.
 8. **On accept**: snapshot; submit as the active build; run the progress refresh (ratings, charts, attempts table,
-   handoff); commit and push the same hour; mine the new ladder games for the next target.
+   handoff); commit and push the same hour; mine the new ladder games for the next target. The new build has no games
+   at that refresh, so refresh again when its first games finish, and after every scored block.
 9. **On reject**: restore the working bot from the snapshot, log the closing number, its kind (refuted, below
    resolution, blocked on a prerequisite, inert) and a checkable re-open condition in the closed-directions ledger.
 

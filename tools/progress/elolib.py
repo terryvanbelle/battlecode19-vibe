@@ -82,6 +82,22 @@ def accepted_builds(path=None):
     return [roster_player(n) for n, _ in roster(path) if ACCEPTED.match(n)]
 
 
+def accepted_via(path=None):
+    """{accepted build: the candidate it was accepted as} from roster notes that start with the candidate's name
+    ('h167 = v8 + ...'), as player names."""
+    path = path or ROSTER
+    if not os.path.exists(path):
+        return {}
+    with open(path) as fh:
+        rows = list(csv.DictReader(fh, delimiter='\t'))
+    out = {}
+    for r in rows:
+        m = re.match(r'(h\d+)\b', r.get('note') or '')
+        if r.get('name') and ACCEPTED.match(r['name']) and m:
+            out[roster_player(r['name'])] = 'cand:' + m.group(1)
+    return out
+
+
 # ---------------------------------------------------------------- games.csv
 def load(path=GAMES):
     """Rows of games.csv ([] when missing); rows whose winner is not A or B are skipped with a count on stderr."""
