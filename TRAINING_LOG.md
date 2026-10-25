@@ -5432,3 +5432,83 @@ units against awesomelemonade's 46 prophets by r200) and the bank holds 150-700 
 Releasing the reserve buys 6-28 prophets in games whose economy was lost by r100 (the opening race: TRAINING_LOG
 2026-10-24 16:02). Dropped on the census (ECONOMICS section 6); the lever on those maps is the opening, not the
 reserve.
+
+## 2026-10-25 15:26 PDT: h175 (MUSTER_RESCUE 100) ACCEPTED under the basics-fix rule (37 of 72, z 0.40; mechanism read passes); it becomes v10
+
+Block 2 (1403-1414, finished 14:26): 19 of 36. Both blocks, as pre-registered (10:57): `tools/panel_pool.sh 1120-1131
+progress/panels/v9-m1.pool 1391-1402 1403-1414 --studied m-schier.battlecode-2019-wololo:seed-2013`: 37 of 72
+against the pooled 36.0 (side-blind z 0.33); side-aware expectation 36.0, **z 0.40** (>= 0; effect +28 Elo, 95% -109
+to +166); studied cell 0 of 4 (expectation 0.7, z -0.99); other cells 37 of 68 (expectation 35.3, **z 0.74** >= 0).
+**Mechanism read** (tools/reads/held.mjs on both blocks, 72 games; scratchpad econ/held_h175.txt, summed by
+econ/held_sum.py, which reproduces v9's 0.565 and 0.287 from econ/held_v9.txt): castle losses with held crusaders
+within 10 king steps and none attacking in the castle's last 20 rounds **0.042 a game** (3: bot1v43 2321 blue in both
+blocks, awesomelemonade 1712 blue in a won game), against the bar 0.144 (v9 0.287): **passes. ACCEPTED.** Reported,
+not a bar: castles lost 0.500 a game (36 in 72; v9 0.565); held crusaders 1,921 built (26.7 a game; v9 28.0), 178 of
+them attacked (2.5 a game; v9 1.2). Basics from the replica's match records: 0 exceptions, 0 init failures, 26
+timeouts and 18 frozen turns in 72 games (v9's accepting blocks: 23 and 6; theirs 23,771 exceptions, 231 timeouts,
+2,700 frozen, 302 init failures). Every never-won cell stays lost (wololo 836, 2013; botfinalsafe 1706;
+awesomelemonade 2518; uvafan 2046; bot1v43 2591).
+**v10 = h175 = v9 + MUSTER_RESCUE 100** (dist/h175 24ba82513211). The basics-fix rule accepts a fix that works as
+designed and costs nothing; at z 0.40 the accepting blocks barely overstate v10, but the pool for v10's candidates
+follows v9's precedent (07:24): control 1391-1402, pool file progress/panels/v10-m1.pool = 1403-1414 plus a fresh
+v10 control block played first; rejected v10-based blocks join under the +-1 rule. Queued candidates (h176, h171,
+h174, h172, h173, then h177) are rebuilt on v10 with their own switches and keep their pre-registrations; bars
+relative to the champion are recomputed from v10's 108 panel games (h175's two blocks and the control block) before
+each candidate's block is read, as h170's were on v9 (07:42).
+
+## 2026-10-25 15:45 PDT: pioneer census on v9's 108 panel games: the first pioneer churches only on safe land
+
+New read tools/reads/pioneers.mjs (TEAM REPLAY: each pioneer, a pilgrim our castle built radioing SIG.CHURCH, with its
+site, build round, bank, arrival, church, death, and the round an enemy church first stood within 3 king steps of its
+site, counting one built before it left) over 1120-1131, 1143-1154, 1180-1191 (108 lines checked against the game
+count; scratchpad econ/pion_v9_all.txt), joined with each map's turn-3 plan (econ/pion_m.mjs, plan.mjs's planOf):
+the first pioneer sent by r60 and the m (their king steps minus ours) of its site.
+- First pioneer: left at r29 on average in losses, r27 in wins (k 15-17); founded its church in **1 of 48 losses**
+  and 31 of 48 wins; the enemy churched beside its site first in 47 of 48 losses (18 of 48 wins); it died without a
+  church in 30 losses (5 wins). Military spend while it travelled: 48 K a loss, 15 K a win. Pilgrims alive at r100:
+  8.4 a loss, 14.6 a win. Six games of each have none (1653, 2046: no plan).
+- By the site's m: **m <= 1: 0 of 24 churched** (18 losses: 2321 blue, 2518, 2591, 2740; 6 wins); m 2-6: 20 of 60
+  (19 of the 30 wins, 1 of the 30 losses); **m >= 7: 12 of 12 churched, 12 wins** (1036 m11, 2797 m25).
+- PIONEER_OPEN 7 (the first planned cluster with m >= 7, open_census.mjs) moves the first pioneer to safe land on 1706
+  (m2 -> m14), 1712 (m5 -> m23 / m19), 2013 (m2 -> m25), 2321 (m0 -> m22), 2740 (m0 -> m29), 388 (m2 -> m8) and 836
+  (m3 -> m21 / m12); on 1036 and 2797 the first site is already safe (PIONEER_EARLY only moves it to turn 6); none on
+  203, 2518, 2591, 2644, 1653, 2046. Both teams plan alike on every map.
+The margin is a correlation across opponents (the bots that out-race our pioneers also win the rest of the game), but
+the m bands cut across maps and opponents: no first pioneer on m <= 1 ever churched, every one on m >= 7 did. This is
+h177's case (v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7: the contested pioneer still leaves as before, an extra one goes to
+safe land on turn 6). ECONOMICS section 7's gap "pioneer arrival is not logged per game" is closed by this read.
+
+## 2026-10-25 15:51 PDT: v10 set up; the v10 control block in play; h177-h182 built on v10; h177 pre-registered
+
+- bots/v10 = dist/h175 byte for byte (sha 24ba82513211; roster code hash ac4a035d62f5). `src/bot/config.js`
+  MUSTER_RESCUE defaults to 100 (v10); PIONEER_OPEN (default 0) joins. The defaults build (341da7a49ab4) against
+  itself on 799 to r300 (the no-op flags, driver alone) is **IDENTICAL** to bots/v10 against itself. Unit tests: the
+  MUSTER 2 hold test pins v9's MUSTER_RESCUE 0 (testPreV10); then 172 of 172 and the 64 galaxy19 tests pass. `tools/panel_submit.sh`
+  resubmits bots/v10 as the ladder build from now on.
+- **The v10 control block** (bots/v10 as the candidate, both sides, submission 198, requests 672-683; bots/v10 the
+  ladder build, 199) = matches 1415-1426, bumped (1415 running at 15:30). It joins progress/panels/v10-m1.pool
+  (holding 1403-1414) with no decision, before any v10-based block is scored; v10-based blocks are scored with
+  `tools/panel_pool.sh 1391-1402 progress/panels/v10-m1.pool BLOCK...`.
+- Rebuilt on v10, each with its predecessor's switches and pre-registration (bars relative to the champion from
+  v10's 108 panel games, 1391-1426, computed before the candidate's block is read): **h178** = DEF_SAFE 1 (h176's;
+  8fa0a00b145b), **h179** = ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1 (h171's; 48005faf0871), **h180** =
+  PILGRIM_HERE 1 + PILGRIM_STALL 25 (h174's; 8af367be7f5f), **h181** = CHAIN_WALL 28 (h172's; 282b5b6f2336),
+  **h182** = ECON_NOPLAN 1 (h173's; e6265fba135c; its targeted panel after a v10 control block there). h171-h174 and
+  h176 are closed unplayed.
+- **h177** = v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7 (dist/h177 800bd22f607b; the earlier dist/h177, h147's config,
+  deleted unplayed): a castle with a planned cluster it reaches 7+ king steps before the enemy sends a pioneer there
+  by turn 6 (when the pilgrim leaves 200 fuel banked); the contested pioneer still leaves as before. Census case:
+  15:45 (fires on 1706, 1712, 2013, 2321, 2740, 388, 836, 1036, 2797).
+- **Pre-registered** (before any h177 game is read): the ordinary rule. v7-m1 panel, both sides, scored with
+  `tools/panel_pool.sh 1391-1402 progress/panels/v10-m1.pool`; block 1 rejects at side-aware z < 0.5; two blocks
+  accept at z >= 2 (other cells z >= 0), reject at z < 1, else a third block (accept at z >= 2). Studied cells (looked
+  at game by game in the design): m-schier.battlecode-2019-wololo:seed-836, m-schier.battlecode-2019-wololo:seed-2013,
+  StoneT2000.BC19-botfinalsafe:seed-1706. Mechanism read, reported with the verdict (pioneers.mjs on h177's blocks):
+  on the firing maps, the pioneer built by r6 founds its church in at least two thirds of games, and our first church
+  comes earlier than in v10's games of the same cells; the mechanism has failed if that pioneer churches in under
+  half. Reported, not bars: pilgrims at r100 and castles lost a game (v10's from its 108 games). Before its block: a
+  driver diagnostic (h177 against v10 on 836) and an inertness check (h177 against itself on 2518, where no castle
+  has an m >= 7 cluster, IDENTICAL to v10 against itself to r300).
+- Panel order: the v10 control block (in play), h178, **h177**, h179, h180, h181, then h182 on its targeted panel.
+  h177 moves ahead of h179-h181 on the census: no first pioneer on m <= 1 ever churched in 108 games, every one on
+  m >= 7 did.

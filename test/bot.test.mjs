@@ -43,6 +43,13 @@ const testPreV9 = (name, fn) => test(name, () => {
   Object.assign(CFG, PRE_V9);
   try { fn(); } finally { Object.assign(CFG, saved); }
 });
+// v10 (2026-10-25) turned on h175's rescue radio; tests of MUSTER 2's hold written against v9 pin v9's values.
+const PRE_V10 = { MUSTER_RESCUE: 0 };
+const testPreV10 = (name, fn) => test(name, () => {
+  const saved = { ...CFG };
+  Object.assign(CFG, PRE_V10);
+  try { fn(); } finally { Object.assign(CFG, saved); }
+});
 
 test('specs.js matches the engine', () => {
   for (let u = 0; u < 6; u++) {
@@ -1845,6 +1852,30 @@ test('castle: PIONEER_EARLY sends a contested first pioneer at the plan ahead of
   } finally { Object.assign(CFG, saved); }
 });
 
+test('castle: PIONEER_OPEN sends the early pioneer to the first planned cluster we reach that far ahead, or none', () => {
+  const saved = { ...CFG };
+  try {
+    // seed 1706 plans c2 (m 2, contested) then c1 (m 14); seed 2518 plans only c1 (m 0) (tools/plan.mjs).
+    const run = (seed, open) => {
+      const g = new Game(seed, 100, 20, false, false), castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+      g.robots = g.robots.filter(r => r.team === 0);
+      const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+      Object.assign(CFG, saved, { PIONEER_EARLY: 6, PIONEER_OPEN: open });
+      for (const t of [1, 2, 3]) { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; B.round = t; castleTurn(B); }
+      B.st.pending = null; B.st.pioneers = []; B.st.earlySent = undefined;
+      castle.turn = 4; const w = worldFor(g, castle); B.w = w; B.api = w.api; B.round = 4; w.karbonite = 10; castleTurn(B);
+      const p = B.st.pending && B.st.pending.kind === 'pioneer' ? B.st.plan.find(q => q.cluster === B.st.pending.ref) : null;
+      return { p, plan: B.st.plan };
+    };
+    const contested = run(1706, 0), open = run(1706, 7);
+    assert.ok(contested.p && contested.p.m <= CFG.PLAN_CONTEST_FIRST, 'PIONEER_EARLY alone: the contested cluster');
+    assert.ok(open.p && open.p.m >= 7, 'PIONEER_OPEN 7: a cluster 7+ steps ahead');
+    assert.strictEqual(open.p.cluster, open.plan.find(q => q.m >= 7).cluster);   // the first such in plan order
+    assert.strictEqual(run(2518, 7).p, null);                                     // no such cluster: none early
+    assert.ok(run(2518, 0).p, 'PIONEER_EARLY alone sends the contested one');
+  } finally { Object.assign(CFG, saved); }
+});
+
 test('pilgrim: PIONEER_CALL a pioneer that sees a mobile enemy attacker by its site talks BLOCKED', () => {
   const saved = CFG.PIONEER_CALL;
   try {
@@ -2610,7 +2641,7 @@ test('struct: MUSTER 2 (hold only): no release at 2A + 1; the peacetime army bui
   } finally { CFG.MUSTER = saved; }
 });
 
-test('military: MUSTER 2: a held crusader holds rings 2-4 king steps from home until an enemy melee unit is in sight; the spot does not release it', () => {
+testPreV10('military: MUSTER 2: a held crusader holds rings 2-4 king steps from home until an enemy melee unit is in sight; the spot does not release it', () => {
   const saved = CFG.MUSTER;
   try {
     const g = new Game(3, 100, 20, false, false), n = g.map.length;

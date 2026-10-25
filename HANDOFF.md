@@ -1,15 +1,19 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 14:53 PDT)
+## State (2026-10-25 15:52 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
-  teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
+  teams make mirror-image decisions. Champion **v10** (`bots/v10` = h175, bots/ROSTER.tsv); frozen history v0-v10,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
   built bundles (`tools/build_bot.js src/bot dist/hN --cfg KEY=JSON ...`, one --cfg per key), never the source
   directory. Every candidate change is a CFG switch whose default is the incumbent.
 - No-op check after every bot code change: a defaults-only build replays the champion against itself on 799 to r300
   (--det --seed 799 --max-rounds 300 --timescale 100 --init-ms 5000 --fast-turn --fast-init --fast-view --no-kill; the
   default 100 ms init fails on the driver, and timescale 10 freezes robots when anything else runs) IDENTICAL to
-  bots/v9's replay, with nothing else running on the driver (LEARNINGS 13); then `tools/unit-tests.sh`.
+  bots/v10's replay, with nothing else running on the driver (LEARNINGS 13); then `tools/unit-tests.sh`.
+- v10 = h175 = v9 + MUSTER_RESCUE 100 (a structure hit in its last 3 turns radios the nearest attacker in sight; held
+  crusaders whose home lies within r2 100 engage), ACCEPTED 15:26 2026-10-25 under the basics-fix rule: two blocks
+  1391-1402 + 1403-1414, 37 of 72, side-aware z 0.40, others z 0.74; idle-held castle losses 0.042 a game (v9 0.287;
+  MUSTER 2 hold tests pin v9's values: testPreV10).
 - v9 = h167 = v8 + MUSTER 2 (against enemy prophets camping out of a structure's reach, the peacetime army builds
   crusaders held on rings 2-4 from home, never released: health for the round-1000 tiebreak), ACCEPTED 07:24
   2026-10-25 on the replica panel: two blocks 1120-1131 + 1143-1154, 38 of 72, side-aware z 2.78, others z 2.40
@@ -21,7 +25,7 @@
   z < 0.5; two blocks accept at z >= 2 (other cells z >= 0), reject at z < 1, else a third block at z >= 2. The
   basics-fix rule (h170, fixed 2026-10-25 04:26): two blocks, block 1 rejects only at z < -1; accept at z >= 0
   (others z >= 0) if the mechanism reads pass, else the ordinary rule.
-- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free (2.3 GB at 14:53 on
+- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free (2.3 GB at 15:53 on
   2026-10-25; 2.5 GB at 12:26 after deleting /var/log/syslog.1, 213 MB). Prune a screen's out/rp_* once its candidate
   is decided; next candidates if needed: the journal (142 MB, `sudo journalctl --vacuum-size=50M`), the gradle 7.6
   daemon logs (~/.gradle/daemon/7.6, 266 MB of *.out.log).
@@ -29,54 +33,54 @@
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Screen job template: ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 +
   32 z's; the next adds a z. Nothing runs on it. v9 passed symcheck to r1000 on seeds 3, 1, 2, 2321 (job
-  ...1000symv9, out/sym_v9_r1000.log, TRAINING_LOG 2026-10-25 08:24); symcheck past a few hundred rounds never runs on the driver
+  ...1000symv9, out/sym_v9_r1000.log, TRAINING_LOG 2026-10-25 08:24); v10's r1000 symcheck (the same job with bots/v10)
+  runs once the replica queue is under 30; symcheck past a few hundred rounds never runs on the driver
   (LEARNINGS 13). **Saturn stays at 8 slots (TRAINING_LOG 2026-10-24 22:54):** candidates go straight to the replica
   panel (driver diagnostics as the pre-filter); the VM screens retired. In ~/jobq/superseded, not run: h160, h156,
   h159, h152, h153. Deploy saturn only between panel blocks (`tools/galaxy19/deploy/deploy.sh app`, then `sudo
   systemctl restart bc19-galaxy-saturn`; a restart retries every running game).
   Read a screen: rsync out/hN_v9.jsonl, `node tools/paired.js out/hN_v9.jsonl --h2h`.
 - **Replica panels** (progress/panels/v7-m1.json: six field bots, wololo, botfinalsafe, bot1v43, uvafan,
-  awesomelemonade, IanCoolidge0 ~69ce88, three maps each). Ladder build: bots/v9 from the v9 control block on
-  (`tools/panel_submit.sh` resubmits $LADDER, default bots/v9, after each block). Play a block with
+  awesomelemonade, IanCoolidge0 ~69ce88, three maps each). Ladder build: bots/v10 from the v10 control block on
+  (`tools/panel_submit.sh` resubmits $LADDER, default bots/v10, after each block). Play a block with
   `tools/panel_submit.sh dist/hN "message"` (submits, scrims each opponent twice, NAME@+ and NAME@-, so the block's 36
   games play every cell on both sides (red wins about 13 points more often within a cell: LEARNINGS 37); resubmits
   the ladder build, bumps; retries what the hourly limit refuses (HTTP 429) every 15 min; a lock keeps blocks apart);
-  add the tools/progress/submissions.tsv rows. Read: `contest19.py fetch --new --pages 6`, then for v9-based
-  candidates `tools/panel_pool.sh 1120-1131 progress/panels/v9-m1.pool BLOCK... [--studied ...]` (it refuses a
+  add the tools/progress/submissions.tsv rows. Read: `contest19.py fetch --new --pages 6`, then for v10-based
+  candidates `tools/panel_pool.sh 1391-1402 progress/panels/v10-m1.pool BLOCK... [--studied ...]` (it refuses a
   block with a match unfinished); a rejected block joins the pool file only when its own z lies within +-1. The
-  pool file holds h167's block 2 (1143-1154) and takes the v9 control block when it finishes, before any v9-based
-  block is scored (TRAINING_LOG 2026-10-25 07:24). The rule's false-accept rate and power: `python3 -I
+  pool file holds h175's block 2 (1403-1414) and takes the v10 control block (1415-1426) when it finishes, before any
+  v10-based block is scored (TRAINING_LOG 2026-10-25 15:26, 15:51). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
-  h145-h151, h157, h159, h161-h163 rejected; h167 accepted).
-  **Replica queue (14:53): 83 waiting (all ranked) after the 09:00 daily autoscrim** (4 a team, none dominant;
-  about 15 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted).
+  **Replica queue (15:52): 83 waiting (75 ranked) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  about 12 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **h175's two blocks are done** (1391-1402, 1403-1414: 37 of 72, side-aware z 0.40, others z 0.74); its
-  mechanism read (held.mjs on both blocks) decides it under the basics-fix rule; h176 goes next once h175 is decided. h170 was rejected on its block 1 (1379-1390:
-  15 of 36, z -1.71; TRAINING_LOG 2026-10-25 11:16); the v9 control block 1180-1191 (16 of 36) is in
-  progress/panels/v9-m1.pool.
-  **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion use
-  v9's numbers):
-  h175 (v9 + MUSTER_RESCUE 100, dist/h175 24ba82513211: a structure under fire calls its held crusaders; basics-fix
-  rule; studied cell m-schier.battlecode-2019-wololo:seed-2013; mechanism read tools/reads/held.mjs: castle losses
-  with held crusaders within 10 king steps and none attacking at most 0.144 a game (v9 0.287); TRAINING_LOG
-  2026-10-25 10:57);
-  h176 (v9 + DEF_SAFE 1, dist/h176 f32b083df07f: military newborns built while enemy attackers are in sight go on a
-  tile they cannot kill them on, if one is free; basics-fix rule; studied cells uvafan.bc2019:seed-1712,
-  uvafan.bc2019:seed-2046; mechanism read tools/reads/stillborn.mjs over its two blocks: `safer` at most 2.13 a game
-  (v9 8.50); no-op IDENTICAL; TRAINING_LOG 2026-10-25 12:06);
-  h171 (v9 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h171 a3c65b3dba16; h168's; studied cells
+  **In play: the v10 control block = matches 1415-1426** (bots/v10 as the candidate, submission 198; bots/v10 the
+  ladder build, 199): no decision; it joins progress/panels/v10-m1.pool. h175 was accepted as v10 (TRAINING_LOG
+  2026-10-25 15:26); h170 rejected (1379-1390, z -1.71).
+  **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
+  recomputed from v10's 108 panel games, 1391-1426, before the candidate's block is read; TRAINING_LOG 2026-10-25 15:51):
+  h178 (v10 + DEF_SAFE 1, dist/h178 8fa0a00b145b; h176's: military newborns built while enemy attackers are in
+  sight go on a tile they cannot kill them on, if one is free; basics-fix rule; studied cells uvafan.bc2019:seed-1712,
+  uvafan.bc2019:seed-2046; mechanism read tools/reads/stillborn.mjs over its two blocks: `safer` at most a quarter of
+  v10's rate (v9 8.50, bar 2.13); TRAINING_LOG 2026-10-25 12:06);
+  h177 (v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7, dist/h177 800bd22f607b: a turn-6 pioneer to the first planned
+  cluster we reach 7+ king steps before the enemy; ordinary rule; studied cells wololo 836, 2013, botfinalsafe 1706;
+  mechanism read pioneers.mjs (the r<=6 pioneer churches in 2/3+ of firing-map games); first a driver diagnostic on
+  836 and the inertness check on 2518; TRAINING_LOG 2026-10-25 15:45, 15:51);
+  h179 (v10 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h179 48005faf0871; h171's; studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
   tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);
-  h174 (v9 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h174 b60bfc4a57f5: idle miners take free safe home depots;
-  basics-fix rule; studied cells awesomelemonade.Battlecode2019:seed-2518, uvafan.bc2019:seed-2046; mechanism read
-  stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 30.9 (75% of v9's 41.2 over its 108 panel games;
-  TRAINING_LOG 2026-10-25 09:12, 10:12));
-  h172 (v9 + CHAIN_WALL 28, dist/h172 d114d31e373e; h164's; studied cells uvafan 2046, 1653, IanCoolidge0 1036);
-  h173 (v9 + ECON_NOPLAN 1, dist/h173 437528e313a7; h160's) on the targeted panel progress/panels/noplan-m1.json
-  (the six bots on the five pool maps where no castle plans a church): first a bots/v9 control block
-  (`PANEL=progress/panels/noplan-m1.json tools/panel_submit.sh bots/v9 "v9 control, noplan-m1"`), panelsim on the
-  design (> 10% false accepts: a second control block first), then h173; score with `contest19.py pool CONTROL
+  h180 (v10 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h180 8af367be7f5f; h174's: idle miners take free safe home
+  depots; basics-fix rule; studied cells awesomelemonade.Battlecode2019:seed-2518, uvafan.bc2019:seed-2046; mechanism
+  read stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 75% of v10's (v9 41.2, bar 30.9); TRAINING_LOG
+  2026-10-25 09:12, 10:12);
+  h181 (v10 + CHAIN_WALL 28, dist/h181 282b5b6f2336; h172's; studied cells uvafan 2046, 1653, IanCoolidge0 1036);
+  h182 (v10 + ECON_NOPLAN 1, dist/h182 e6265fba135c; h173's) on the targeted panel progress/panels/noplan-m1.json
+  (the six bots on the five pool maps where no castle plans a church): first a bots/v10 control block
+  (`PANEL=progress/panels/noplan-m1.json tools/panel_submit.sh bots/v10 "v10 control, noplan-m1"`), panelsim on the
+  design (> 10% false accepts: a second control block first), then h182; score with `contest19.py pool CONTROL
   progress/panels/noplan-m1.pool BLOCK...` (TRAINING_LOG 2026-10-24 15:32).
   h167's mechanism reads are done (TRAINING_LOG 2026-10-25 09:43).
   ECONOMICS rows 4, 5, 6, 10 dropped (TRAINING_LOG 2026-10-24 21:22, 22:10; 2026-10-25 04:22); rows 9 (ECON_SAT),

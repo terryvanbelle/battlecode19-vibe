@@ -178,11 +178,11 @@ function expandPlan(B) {
   st.plan.push(...add);
 }
 
-// The next cluster this castle should send a pioneer to now, if any.
-function nextPioneer(B) {
+// The next cluster this castle should send a pioneer to now, if any (and, given `ok`, the first that passes it).
+function nextPioneer(B, ok) {
   const w = B.w, st = B.st;
   if (!st.plan || st.pioneers.length >= maxPioneers(st) || w.me.turn < CFG.PIONEER_MIN_ROUND) return null;
-  return st.plan.find(p => !st.churched.has(p.cluster) && !st.pioneers.some(q => q.cluster === p.cluster) &&
+  return st.plan.find(p => (!ok || ok(p)) && !st.churched.has(p.cluster) && !st.pioneers.some(q => q.cluster === p.cluster) &&
     !(st.lost.has(p.cluster) && w.me.turn - st.lost.get(p.cluster) < lostRest(st, p.cluster)) &&
     !(st.taken.has(p.cluster) && w.me.turn - st.taken.get(p.cluster) < 200)) || null;
 }
@@ -248,12 +248,13 @@ function hopPioneer(B, next) {
 // CFG.PIONEER_EARLY: through its turn PIONEER_EARLY a castle whose plan opens with a contested cluster sends that one
 // pioneer ahead of the economy pilgrims, on the pilgrim's cost alone (replica 420-425: the field's first pilgrims
 // reached the centre clusters at r11-23 and churched them by r14-53; ours left at r12-16, waiting for the bank to
-// hold PIONEER_DEPART_K + DEF_RESERVE_K after the economy pilgrims of turns 1-5).
+// hold PIONEER_DEPART_K + DEF_RESERVE_K after the economy pilgrims of turns 1-5). CFG.PIONEER_OPEN: it goes instead
+// to the first planned cluster we reach PIONEER_OPEN king steps before the enemy (safe land, no race).
 function earlyPioneer(B) {
   const w = B.w, st = B.st;
   if (st.earlySent || w.me.turn > CFG.PIONEER_EARLY) return null;
-  const next = nextPioneer(B);
-  if (!next || !(next.m <= CFG.PLAN_CONTEST_FIRST) || !w.canAfford(PILGRIM, 0, 200)) return null;
+  const next = CFG.PIONEER_OPEN ? nextPioneer(B, p => p.m >= CFG.PIONEER_OPEN) : nextPioneer(B);
+  if (!next || !(CFG.PIONEER_OPEN || next.m <= CFG.PLAN_CONTEST_FIRST) || !w.canAfford(PILGRIM, 0, 200)) return null;
   const a = sendPioneer(B, next);
   if (a) st.earlySent = true;
   return a;

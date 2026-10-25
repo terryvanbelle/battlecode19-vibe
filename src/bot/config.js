@@ -300,6 +300,11 @@ export const CFG = {
                              // PLAN_CONTEST_FIRST) sends that pioneer first, ahead of the economy pilgrims and without
                              // PIONEER_DEPART_K (replica 420-425: our first pioneers left at r12-16, the field's first
                              // pilgrims reached the centre clusters at r11-23; castle.js earlyPioneer)
+  PIONEER_OPEN: 0,           // >0 (with PIONEER_EARLY): that early pioneer goes to the first planned cluster we reach at least
+                             // this many king steps before the enemy (m >= PIONEER_OPEN), contested or not, and castles
+                             // without one send none early (v9's 108 panel games: its first pioneer left at r23-45 and
+                             // founded its church in 1 of 48 losses and 31 of 48 wins; sent to a cluster with m <= 1,
+                             // 0 of 24; with m >= 7, 12 of 12; TRAINING_LOG 2026-10-25 15:45)
   CHURCH_SAVE: 0,            // >0: before this round a church's economy pilgrims leave a church's karbonite (50) in the
                              // bank: a waiting pioneer's CT.WAIT reaches castles only (replica 420-1, seed 2013: churches
                              // built 11 pilgrims in r40-100 while three pioneers waited 35-55 turns at free sites, the
@@ -416,11 +421,12 @@ export const CFG = {
                              // 0 was v8's.
   MUSTER_WAIT: 25,           // turns a held crusader waits for the release, and a release's spot radio lasts
   MUSTER_DWELL: 3,           // turns an enemy prophet must have stood on its tile to count as a camper
-  MUSTER_RESCUE: 0,          // >0 (with MUSTER 2): a structure hit in its last 3 turns radios the nearest enemy attacker
+  MUSTER_RESCUE: 100,        // >0 (with MUSTER 2): a structure hit in its last 3 turns radios the nearest enemy attacker
                              // in sight as a spot (FAR.ENEMY, 10 fuel) when its radio is free after its build; a held
                              // crusader whose home lies within this r2 of the spot drops its hold and engages it (replica
                              // 1180, seed 2013: wololo's prophets shot castle (15,14) dead in r177-204, r2 61 from it,
-                             // while three held crusaders stood 2-4 tiles from it, out of the prophets' sight)
+                             // while three held crusaders stood 2-4 tiles from it, out of the prophets' sight). 100 is
+                             // v10's (h175, TRAINING_LOG 2026-10-25 15:26); 0 was v9's.
   FEED_WINDOW: 20,
   FEED_REST: 50,
   // endgame
