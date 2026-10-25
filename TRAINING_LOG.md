@@ -5085,3 +5085,14 @@ end without church, mine or death; 3.22 a game), 217 churches of ours (12.06 a g
 therefore: parked pioneers under 1.07 a game; our churches at least 10.85 a game. Also from the replica record:
 since match 1000 our robots time out 6 times and freeze 8 times per million turns, the opponents in the same games
 38 and 763 (LEARNINGS 31: the host's load, not our code); no basics item there.
+
+## 2026-10-25 05:15 PDT: pioneer speed census: fuel-throttled steps cost the early church about 3 rounds; PIONEER_FAST stays parked
+
+Scratchpad econ/pspeed.mjs on v8's 51 field games (327 pioneers). The 74 pioneers born before r40 that built a
+church: median 11 king steps to the site, 15.5 turns from birth to church; turns minus king steps, quartiles 0, 0, 9
+(half walk one king step a turn and build on arrival). Their 1,565 turns: 841 one-tile moves (447 of them with the
+bank under PILGRIM_FAST_FUEL 1000), 220 two-tile moves, 430 turns without a move (waiting for the church's
+karbonite, blocked or fleeing). At most half of the 447 throttled steps could have been two-tile steps (diagonal runs
+gain nothing at r2 4), so PIONEER_FAST would bring the median early church about 3 rounds sooner, about 20 K-equivalent
+on a 4-depot cluster (ECONOMICS §1). The race gap is departure (the field's first pioneers leave at r4, ours at
+r12-24) and the bank at the site, both tried (h140, h147 rejected). PIONEER_FAST alone stays parked; no new candidate.
