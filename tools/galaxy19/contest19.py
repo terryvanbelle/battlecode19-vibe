@@ -32,6 +32,7 @@ as a team on the official site would act. Standard library only; run on the driv
 """
 import argparse
 import json
+import math
 import os
 import subprocess
 import sys
@@ -205,6 +206,36 @@ def pool_score(prior, cand, k=2.0):
     return rows, out
 
 
+def effect(rows, zc=1.96):
+    """The candidate's effect as one logit shift d over the pool's side-aware cell rates q (logit p = logit q + d: a
+    Bradley-Terry gain with every (opponent, map, side) cell its own opponent), on the Elo scale (400 / ln 10 a logit).
+    The estimate solves sum cn p = wins; the 95% interval inverts the side-aware score z at +-zc (that z is this
+    model's score test at d = 0). Returns (elo, lo, hi); an end is +-inf when the wins sit at 0 or N."""
+    cells = [(cw, cn, math.log(min(max(q, 1e-9), 1 - 1e-9) / (1 - min(max(q, 1e-9), 1 - 1e-9))))
+             for *_, cw, cn, p, q in rows if cn]
+    W, N = sum(c[0] for c in cells), sum(c[1] for c in cells)
+
+    def score(d):   # (wins - expected) / sd at shift d
+        ps = [(cn, 1 / (1 + math.exp(-(l + d)))) for _, cn, l in cells]
+        v = sum(cn * x * (1 - x) for cn, x in ps)
+        return (W - sum(cn * x for cn, x in ps)) / v ** 0.5 if v > 0 else 0.0
+
+    def solve(t, lim=12.0):   # the shift where score = t (score falls as d grows); +-inf past +-lim
+        if score(-lim) < t:
+            return -math.inf
+        if score(lim) > t:
+            return math.inf
+        lo, hi = -lim, lim
+        for _ in range(60):
+            mid = (lo + hi) / 2
+            lo, hi = (mid, hi) if score(mid) > t else (lo, mid)
+        return (lo + hi) / 2
+    if not N:
+        return 0.0, -math.inf, math.inf
+    elo = 400 / math.log(10)
+    return tuple(x * elo for x in (solve(0.0), solve(zc), solve(-zc)))
+
+
 def pool_cmd(a):
     games = lambda spec: block_cells_all(block_ids(spec), a.dir)
     missing = lambda spec: [i for i in block_ids(spec) if not os.path.exists(os.path.join(a.dir, str(i), 'match.json'))]
@@ -231,6 +262,8 @@ def pool_cmd(a):
     print(f'~ cand wins {W} of {N}, pooled expectation {E:.1f}, z {z:.2f}')
     W, N, E, z = s['side']
     print(f'~ side-aware (k {a.k:g}): expectation {E:.1f}, z {z:.2f}')
+    d, lo, hi = effect(rows)
+    print(f'~ side-aware effect: {d:+.0f} Elo (95% {lo:+.0f} to {hi:+.0f}): one logit shift over the pool\'s cell rates')
     if a.studied:
         # TRAINING_ALGORITHM §4: a candidate designed from some cells must also hold its own (z >= 0) on the others.
         marks = [x.split(':', 1) for x in a.studied.split(',')]

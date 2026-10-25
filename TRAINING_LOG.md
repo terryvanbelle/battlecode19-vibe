@@ -5289,3 +5289,14 @@ tools/reads/idle.mjs (to r300) on v9's three blocks: stuckM (pilgrim-rounds a mi
 free safe home depot) 41.2 a game over 108 games (the decided 72: 40.4; the control block: 42.8), 36 games at 50+.
 h174's mechanism bar (pre-registered 09:12: at most 75% of v9's): stuckM at most 30.9 a game over h174's blocks.
 Fixed before any h174 game; h174 plays after h171.
+
+## 2026-10-25 10:30 PDT: panel scoring reports its effect on the Elo scale (PROMPTS 42); past decisions
+
+The side-aware z is the score test for one BT (logit) gain over the pool's cell rates, each (opponent, map, side)
+cell its own opponent; `tools/panel_pool.sh` now also prints that gain on the Elo scale with the interval where the
+score z is ±1.96 (contest19.effect). Decision rules unchanged. The v8-era decisions rescored against today's
+v8-m1.pool (which has gained blocks since some were scored, so the z differ a little from the logged ones):
+h159 +40 Elo (95% -110 to +190), h161 -147 (-364 to +71), h162 -218 (-435 to -2), h157 -147 (-364 to +71), h163 +78
+(-46 to +202), h167 +231 (+69 to +392). One 36-game block resolves about ±220 Elo, two about ±160. h167's +231 is
+the accepting blocks' number (biased up, LEARNINGS 33); v9's own games on the field BT (progress/ELO.md, 42 games)
+put it +77 over v8 (1812 ± 120 against 1735 ± 68).

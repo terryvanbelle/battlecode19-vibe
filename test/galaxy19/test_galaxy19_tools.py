@@ -474,6 +474,16 @@ class Compare(unittest.TestCase):
         self.assertIn('~ side-aware (k 2): expectation 1.5, z 0.91', r.stdout)
         rows, s = contest19.pool_score([], [('X', 'seed-9', 'red', 1)])
         self.assertEqual((rows[0][-2:], s['side'][2]), ((0.5, 0.5), 0.5))       # no history: p = q = .5
+        self.assertIn('~ side-aware effect: +inf Elo (95% -335 to +inf)', r.stdout)   # 2 of 2: no upper end
+        # effect: two cells at q .5, one win of two: no shift, a symmetric interval where (1 - 2s) / sqrt(2s(1 - s))
+        # = 1.96 (s = sigma(d)); a single loss at q .5: the estimate is -inf.
+        rows = [('X', 'm1', 'red', 0, 0, 0, 0, 1, 1, .5, .5), ('X', 'm2', 'red', 0, 0, 0, 0, 0, 1, .5, .5)]
+        d, lo, hi = contest19.effect(rows)
+        self.assertAlmostEqual(d, 0, places=6)
+        self.assertAlmostEqual(lo, -hi, places=6)
+        s = 1 / (1 + math.exp(hi / (400 / math.log(10))))
+        self.assertAlmostEqual((1 - 2 * s) / math.sqrt(2 * s * (1 - s)), 1.96, places=6)
+        self.assertEqual(contest19.effect(rows[1:])[0], -math.inf)
 
 
 class Client(unittest.TestCase):

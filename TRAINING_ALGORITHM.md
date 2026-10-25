@@ -127,6 +127,12 @@ its trigger fires elsewhere.
   and score a candidate by wins minus the pooled expectation: z = (W − E) / √V, E = Σ p, V = Σ p(1 − p).
 - **The cell includes the side.** p per (opponent, map, side) = (w_s + k·p_c) / (n_s + k), k = 2, where
   p_c = (w + ½) / (n + 1) is the side-blind cell rate: the side's own record, shrunk toward the cell's while it is thin.
+- **This z is a rating test.** It is the score test for one Bradley-Terry (logit) gain d over the pooled cell rates,
+  every (opponent, map, side) cell its own opponent: logit p = logit p_cell + d. Report d on the Elo scale with the
+  interval where z(d) = ±1.96 (the effect size, comparable across candidates). A plain BT fit on the panel (one
+  rating per opponent, maps and sides ignored) adds nothing: against the same opponents a player's BT rating is a
+  monotone function of its wins, and dropping the cells only adds variance. Ladder ratings (BT over all games) are
+  for watching the field, never for accepting: the ladder's opponents differ between builds.
 - **Pooled rule**: after block 1 reject at z < 0.5; after block 2 accept at cumulative z ≥ 2, reject at z < 1, else a
   third block, accepted at z ≥ 2. A rejected candidate's block joins the pool only when its own z lay within ±1 (a
   clearly worse candidate's block lowers every later expectation). A fix that removes a basics failure may be
