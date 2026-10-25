@@ -5274,3 +5274,11 @@ king steps of the radioed site, h171 against v9: 836 (site (45,31)) r15 and r17 
 against never; 1706 ((7,19)) r13 and r15 against never; 2591 ((16,5)) r7 and r8 against never. The opponents
 churched those clusters at r23 (wololo 836) and r29 (botfinalsafe 1706). On 2591 blue's pioneer never built its
 church against h171 (it did against v9); on 1706 both h171 escorts died at r27 and r31 to v9's own escorts, no kills.
+
+## 2026-10-25 09:57 PDT: h170's bars fixed from v9's 108 panel games (before h170's block is read)
+
+tools/reads/parked.mjs on v9's three blocks (1120-1131, 1143-1154, 1180-1191; 108 games): 872 pioneers sent, 325
+parked (3.01 a game; the control block alone 2.64), 1,204 churches (11.15 a game; control 10.47). h170's mechanism
+bars (pre-registered 07:42): parked pioneers under 1.00 a game and churches at least 10.03 a game over h170's two
+blocks. h174's stuckM bar follows when the control block's idle read finishes. h170 block 1 (1379-1390) still in
+play; only its status was read.
