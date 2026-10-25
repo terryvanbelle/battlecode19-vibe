@@ -129,7 +129,7 @@ that the switch passes the replica panel; our accepted rate is about 1 in 8). Ev
 | 5 | A karbonite miner gives a part cargo when it completes a purchase (pioneer or church gate) | Baumol-Tobin | DEPOSIT_AT 1, DEPOSIT_UNTIL 60 on FUEL_DEFER | adjacent-K maps: 2013, 493, 1706, 1241, 1915 | 0.10 | S-M | dropped (section 5) |
 | 6 | A castle that loses a pilgrim before r100 builds 2 guards at once | Ramsey (state switch), depreciation | ECON_HIT 50 | early pilgrim deaths: 16 of 29 losses | 0.10 | S | dropped (section 6) |
 | 7 | Escort every contested site, not only the first | Leontief complements, Tullock | ESCORT_EACH 2 on ESCORT_HOLD_R 2 | maps with 2+ contested clusters: 6 of 15 panel maps | 0.10 | S | h165, closed unplayed: its base h157 was rejected (section 5) |
-| 8 | Abandon a chain line that meets a wall of 28+ units | real options | CHAIN_WALL 28 (exists) | chain lines into walls | 0.10 | S | h164, built; panel after h163 (census: TRAINING_LOG 22:39) |
+| 8 | Abandon a chain line that meets a wall of 28+ units | real options | CHAIN_WALL 28 (exists) | chain lines into walls | 0.10 | S | h164, built; panel after h168 (census: TRAINING_LOG 22:39) |
 | 9 | End ECON_UNTIL for a castle whose land is saturated | Solow fixed factor, Ramsey | ECON_SAT 10 (castles) | saturated maps | 0.08-0.10 | S | after h160 (ECON_NOPLAN) |
 | 10 | After a pioneer dies, escort a retry after 30 rounds, not 100 | real options, idle land | LOST_RETRY 30 | remote pioneer deaths: 14 of 29 losses | 0.08 | M | on v8, after h164 |
 | 11 | Plan order with a finite premium for contested land | von Thünen | PLAN_CONTEST_PREM 2, PLAN_FUEL_W 4 | 8 of 26 maps change order | 0.07 | S | targeted panel |
