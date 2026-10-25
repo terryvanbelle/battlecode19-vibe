@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 03:07 PDT)
+## State (2026-10-25 04:22 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -76,10 +76,15 @@
   young/young_share.sh); releases in at least a third of the games that build (scratchpad econ/muster.js).
   **Next, one block at a time:**
   h167 (v8 + MUSTER 2, hold only, dist/h167 bd86bcd5b011; same studied
-  cells; TRAINING_LOG 2026-10-25 00:04; if h163 is accepted, it rebases as MUSTER 2 on the new champion). Then h168
+  cells; TRAINING_LOG 2026-10-25 00:04; if h163 is accepted, it rebases as MUSTER 2 on the new champion). Then h169
+  (v8 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PIONEER_TIMEOUT_REST 1, dist/h169 44beaf1cf5bf: stop re-buying
+  pioneers for held sites; studied cells uvafan.bc2019:seed-1712, IanCoolidge0.battlecode20~69ce88:seed-1036,
+  awesomelemonade.Battlecode2019:seed-2518; mechanism reads with scratchpad econ/zombies.mjs against v8's 726-731:
+  parked pioneers per game under a third, churches per game at least 90%; TRAINING_LOG 2026-10-25 04:22; rebuilt
+  with the same switches if h163 is accepted). Then h168
   (h157 + ESCORT_BACK 1, dist/h168 a5bd8bb262df; studied cells uvafan 1712, awesomelemonade 2518, wololo 836, 2644,
   bot1v43 388, botfinalsafe 2740; mechanism read econ/esc_back.mjs: escorts dead within 6 rounds of a prophet or
-  castle hit under 40%, h157 69%; TRAINING_LOG 2026-10-25 01:24). ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22); row 5
+  castle hit under 40%, h157 69%; TRAINING_LOG 2026-10-25 01:24). ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22), row 10 on one (2026-10-25 04:22); row 5
   (DEPOSIT_AT) dropped unbuilt: h161's pioneers came 8 rounds earlier, its first churches no earlier (TRAINING_LOG 22:10). Then CHAIN_WALL 28 (row 8) as h164 (dist/h164
   96cae5a62d0f), screen dropped; studied cells uvafan 2046, 1653, IanCoolidge0 1036 (`--studied` as in TRAINING_LOG
   22:39; the driver's 1653 cost is v8's own fuel starvation).

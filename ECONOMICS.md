@@ -66,6 +66,11 @@ From v8's 51 replica field games (22 wins, 29 losses):
    2013, 2644, 1706, 2740, 493, 1915) the bank climbs 40, 40, 60, 60, 80, 80, 80 and stalls one cargo under the
    pioneer's 90-K gate (10 + PIONEER_DEPART_K 50 + DEF_RESERVE_K 30) with 1,100-1,500 F idle. On 2740 (replica
    727-3) the castle hired 1 karbonite and 2 fuel miners plus 2 escorts by r5, and its first pioneer left at r44.
+8. **Pioneers are bought for land the enemy already holds.** Of v8's 327 pioneers in 46 games, 142 went to a site
+   where an enemy church or castle already stood within 3 king steps (and none of ours); 5 of those built a church,
+   43 died and 88 never built, mined or died: they park 8-15 king steps short, out of the campers' reach, too far to
+   see the church, and the castle forgets each after 80 turns and sends the next (729-3, seed 1712: 24 pioneers, 16
+   parked). 108 pioneers ended so, 56 in the 21 wins and 52 in the 25 losses (scratchpad econ/lost.mjs).
 
 ## 3. The models and what each one says
 
@@ -131,9 +136,10 @@ that the switch passes the replica panel; our accepted rate is about 1 in 8). Ev
 | 7 | Escort every contested site, not only the first | Leontief complements, Tullock | ESCORT_EACH 2 on ESCORT_HOLD_R 2 | maps with 2+ contested clusters: 6 of 15 panel maps | 0.10 | S | h165, closed unplayed: its base h157 was rejected (section 5) |
 | 8 | Abandon a chain line that meets a wall of 28+ units | real options | CHAIN_WALL 28 (exists) | chain lines into walls | 0.10 | S | h164, built; panel after h168 (census: TRAINING_LOG 22:39) |
 | 9 | End ECON_UNTIL for a castle whose land is saturated | Solow fixed factor, Ramsey | ECON_SAT 10 (castles) | saturated maps | 0.08-0.10 | S | after h160 (ECON_NOPLAN) |
-| 10 | After a pioneer dies, escort a retry after 30 rounds, not 100 | real options, idle land | LOST_RETRY 30 | remote pioneer deaths: 14 of 29 losses | 0.08 | M | on v8, after h164 |
+| 10 | After a pioneer dies, escort a retry after 30 rounds, not 100 | real options, idle land | LOST_RETRY 30 | remote pioneer deaths: 14 of 29 losses | 0.08 | M | dropped on a census (section 6); row 13 instead |
 | 11 | Plan order with a finite premium for contested land | von Thünen | PLAN_CONTEST_PREM 2, PLAN_FUEL_W 4 | 8 of 26 maps change order | 0.07 | S | targeted panel |
 | 12 | Hunt enemy pilgrims dwelling on our depots far from their structures | enclosure denial | HUNT_DEPOT 1 after h156 (INTERCEPT) | their churches on our half | 0.07 | M | after h156 |
+| 13 | Stop re-buying pioneers for held sites: one 40 turns no nearer its site gives it up and mines by our structures; a castle rests a site whose pioneer timed out | sunk cost, idle capital | PIONEER_STALL_ANY 40, PIONEER_HOME 1, PIONEER_TIMEOUT_REST 1 | 108 parked pioneers in 46 games | 0.08 | S | h169, built (section 5) |
 
 Rules of the test, unchanged from TRAINING_ALGORITHM.md: one switch per candidate on v8; a no-op check that the
 defaults reproduce v8 byte for byte; unit tests; mechanism bars written before any game is read; the side-aware
@@ -186,6 +192,12 @@ army 22 at r400 against 87 held and v8's 26) or costs nothing (2797). It would f
 5 of 8, z 1.47; others z 0.63); block 2 (1063-1074) 17 of 36, z 0.71; the two blocks 35 of 72, side-aware z 1.45,
 so a third block, 1091-1102 (TRAINING_LOG 2026-10-25 03:07); the 2026-10-24 20:54 entry has the pre-registration.
 
+**Parked pioneers (h169, row 13).** Emulating siteStalled on v8's 327 field pioneers, PIONEER_STALL_ANY 40 fires on
+100 of the 108 that parked, 46 of the 79 that died and 5 of the 123 that built a church, a median 50 rounds after
+birth. In self-play (seed 1712, both sides against v8) no pioneer stalls and the games are identical with the sides
+swapped: the switches act only where the field holds our sites. Bars and studied cells: TRAINING_LOG 2026-10-25
+04:22; the panel comes after h167.
+
 **ESCORT_EACH (h165).** Built on h157 (v8's first escorts hurried to their site and held within 2 steps of it), so it
 would play only if h157 were accepted. The panel rejected h157 at block 1 (1035-1046): 14 of 36, side-aware z -1.17;
 both first escorts held at the site in 1 of its 10 studied games (TRAINING_LOG 2026-10-25 00:11). h165 closed
@@ -198,6 +210,10 @@ unplayed.
   36 (v8 builds only while ours do not outnumber them 2A + 1, and only when it can pay); it built on 5, in 3 games
   (3 against prophets alone), and 1 of those newborns died within 3 rounds. The switch could change at most 5
   builds in 18 games, before the verifier's decoy filters. Castles are not lost to lone campers but to armies.
+- **LOST_RETRY** (row 10, 0.08), dropped before a build on a census of v8's 51 field games (726-731, 770-776, 800,
+  805, 853, 887; scratchpad econ/lost.mjs): of 79 pioneer deaths, 74 came where an enemy church or castle already
+  stood within 3 king steps of the site, 2 where one came within the next 100 rounds, 3 where none ever came. A
+  sooner retry pre-empts nothing; it would buy more of the waste row 13 removes.
 - **ECON_HIT** (row 6, 0.10), built (castles only, the verifier's rule) and dropped before a panel on a census of
   the same 18 games (scratchpad fire/hit_census.js, hit2_census.js): our pilgrims died before r100 6 times, all in
   losses (5 of 10), 5 where a castle sees them go (r30, 31, 78, 90, 93) and 1 by a church (r61). Only 2 games lose a

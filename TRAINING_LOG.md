@@ -5008,3 +5008,32 @@ other cells 26 of 56 (z 0.89, so the studied-cells condition holds). Block 2 alo
 pool 6 of 7). Neither z >= 2 nor below 1, so by the rule: a third block, both sides, decided by the side-aware z over
 all three blocks, accept at >= 2, else reject. Block 3 = matches 1091-1102 (submission 184, v8 back as 185),
 requested 03:06.
+
+## 2026-10-25 04:22 PDT: ECONOMICS row 10 dropped on a census; parked pioneers; h169 built and pre-registered
+
+Census of v8's 51 field games (726-731, 770-776, 800, 805, 853, 887; scratchpad econ/lost.mjs, stall.mjs; 46 games
+send pioneers): 327 pioneers, 123 built a church, 17 mined first, 79 died, 108 never built, mined or died. Of the 79
+deaths, 74 came where an enemy church or castle already stood within 3 king steps of the site, 2 where one came
+within the next 100 rounds and 3 where none ever came: a sooner retry (row 10, LOST_RETRY) pre-empts nothing, so
+row 10 is dropped unbuilt. The waste is elsewhere: 142 pioneers went to a site the enemy already held (an enemy
+structure within 3 king steps, none of ours); 5 built a church, 43 died, 88 parked. Parked pioneers stand 8-15 king
+steps short (quartiles 8, 11.5, 15), out of the campers' reach and mostly too far to see the church (68 of the 142
+ever had an enemy structure within 5 of the site in vision); the castle forgets each after 80 turns and sends the
+next (729-3, seed 1712: 24 pioneers, 16 parked). Parked: 56 in the 21 wins, 52 in the 25 losses; 58 in v8's 18
+panel games (uvafan 1712 16, IanCoolidge0 1036 15, awesomelemonade 2518 6).
+Emulating pilgrim.js's siteStalled on every pioneer turn (flee turns and at-site turns excluded): PIONEER_STALL_ANY
+40 fires on 155 pioneers, a median 50 rounds after birth: 100 of the 108 parked, 46 of the 79 that died, 4 that
+mined, and 5 of the 123 that built a church (20: 171 and 7 churches; 60: 147 and 5).
+**h169 = v8 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PIONEER_TIMEOUT_REST 1** (dist/h169 44beaf1cf5bf; ECONOMICS row
+13, idle capital): a pioneer 40 turns no nearer its site gives it up, reports it taken (castles rest it 200 rounds)
+and mines at a free depot by our structures; a castle rests the site of a pioneer 80 turns out without its church
+100 rounds instead of re-sending at once. One change (stop re-buying pioneers for held sites) over three existing,
+unit-tested switches. Driver, seed 1712 to r1000, both sides against v8: the two games are identical with the sides
+swapped (blue wins on castles; no pioneer stalls, gives up or parks in self-play; no exceptions), so the switches act
+only where the field holds our sites.
+Pre-registered (mechanism reads, not decision inputs; zombies.mjs on h169's block and on v8's 726-731): parked
+pioneers per game under a third of v8's on 726-731 (58 in 18 games); our churches per game at least 90% of v8's on
+726-731. Studied cells (the design used every v8 field game; these panel cells hold 37 of v8's 58 parked):
+uvafan.bc2019:seed-1712, IanCoolidge0.battlecode20~69ce88:seed-1036, awesomelemonade.Battlecode2019:seed-2518.
+Panel order: after h163's third block, h167, then h169, then h168, h164, h160; if h163 is accepted, h169 is rebuilt
+on the new champion with the same three switches.
