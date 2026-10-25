@@ -28,11 +28,11 @@
   ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 32 z's; the next adds a z.
   Nothing runs on the VM queue. symcheck on bots/v8 to r1000 mirrors on seeds 1, 2, 3, 2321 (job ...1000symb, TRAINING_LOG
   17:33); symcheck past a few hundred rounds never runs on the driver (LEARNINGS 13).
-  **Held for the replica queue (TRAINING_LOG 2026-10-24 10:08):** saturn runs 8 slots and no gate runs; six screens
-  wait in ~/jobq/superseded, named to run in this order (26 z's + y..., then 28-30 and 33 z's): h160 (ECON_NOPLAN 1; 26 z's + y;
+  **Held for the replica queue (TRAINING_LOG 2026-10-24 10:08):** saturn runs 8 slots and no gate runs; five screens
+  wait in ~/jobq/superseded, named to run in this order (26 z's + y..., then 28-30 z's): h160 (ECON_NOPLAN 1; 26 z's + y;
   the five no-plan maps both sides, 10 games; TRAINING_LOG 15:32), h162
   (ATTACK_ONE 1; 26 z's + yyy; 37000; both TRAINING_LOG 18:45), h155 (ESCORT_HOLD_R 2; 32000), h154 (ESCORT_HOLD_R 2 + ESCORT_EARLY 1;
-  31000), h156 (INTERCEPT_R2 64 + INTERCEPT_DWELL 3; 33000), h164 (CHAIN_WALL 28; 33 z's, after the escort screens; 39000; TRAINING_LOG 21:41, 21:45); h163's screen deleted 20:54 (inert against v8,
+  31000), h156 (INTERCEPT_R2 64 + INTERCEPT_DWELL 3; 33000); h163's screen deleted 20:54 (inert against v8,
   TRAINING_LOG 20:54). Stay in superseded/: h159 (FEED_STOP 3;
   26 z's; REJECTED 19:01 on the panel), h152 (CHAIN_LIVE 1 + WATCH 2; 29000) and h153 (WATCH 2 + SPOT_MASK 56; 30000)
   (DROPPED 11:31: WATCH rejected as h150; h153 never reads the spots).
@@ -43,7 +43,7 @@
   that survive spool errors, spool.release, of 19:58: until then a full disk kills slot threads, and only
   `sudo systemctl restart bc19-galaxy-saturn` brings them back, as at 19:54),
   `sudo systemctl restart bc19-galaxy-saturn`, then `tools/move_stale.sh --back`
-  the six jobs h160, h162, h155, h154, h156, h164 (h157's screen deleted 22:20: it plays the panel).
+  the five jobs h160, h162, h155, h154, h156 (h157's and h164's screens deleted 22:20 and 22:39: they play the panel).
   Screens passed: h148 (CHAIN_LIVE 1; +3 -0, t 1.73, castles 35 vs 39), h149 (CHAIN_LIVE 2; +3 -3, t 0.00, 35 vs 34),
   h150 (WATCH 2; +8 -3, t 1.51, 24 vs 38). Rejected: h151 (CHAIN_FAILS 1; +1 -3, t -1.00, 31 vs 19).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h` (t, castles lost and the verdict).
@@ -80,8 +80,9 @@
   (ECONOMICS.md, TRAINING_LOG 20:54) h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e;
   studied cells uvafan 1712, awesomelemonade 1712, 2797, 2518), `tools/panel_submit.sh dist/h163 "cand:h163"` on the
   general panel against the v8-m1 pool. ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22); row 5
-  (DEPOSIT_AT) dropped unbuilt: h161's pioneers came 8 rounds earlier, its first churches no earlier (TRAINING_LOG 22:10). CHAIN_WALL 28 (row 8; the switch exists, never played) is h164 (dist/h164
-  96cae5a62d0f): its screen vs v8 first (driver 1653: 2 castles lost after the rest; TRAINING_LOG 21:41).
+  (DEPOSIT_AT) dropped unbuilt: h161's pioneers came 8 rounds earlier, its first churches no earlier (TRAINING_LOG 22:10). Then CHAIN_WALL 28 (row 8) as h164 (dist/h164
+  96cae5a62d0f), screen dropped; studied cells uvafan 2046, 1653, IanCoolidge0 1036 (`--studied` as in TRAINING_LOG
+  22:39; the driver's 1653 cost is v8's own fuel starvation).
   **Waiting for the queue (< 30): h160 (v8 + ECON_NOPLAN 1, dist/h160 15b40f6fac46) on the targeted panel**
   progress/panels/noplan-m1.json (the six bots on the five pool maps where no castle plans a church; TRAINING_ALGORITHM
   §4 map-conditional switch): first a bots/v8 control block (`PANEL=progress/panels/noplan-m1.json

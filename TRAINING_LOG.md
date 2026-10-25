@@ -4742,3 +4742,40 @@ every escort, steps from its site 20 and 40 rounds after birth). No exceptions.
 v8 contests the later clusters little, so these games show the cost (later churches, dead escorts) more than the
 gain. h165 plays only if h157 is accepted (then as the new champion + ESCORT_EACH 2, on the general panel with the
 pooled rule and no studied cell); otherwise row 7 closes with h157.
+
+## 2026-10-24 22:34 PDT: awesomelemonade 2518, a never-won cell, is the escort stall too (730-3)
+
+v8 as blue on 2518 (730-3, lost r723 on castles): pilgrims r1-3, the two escort crusaders r4-5, then no build until
+the pioneer at r23 (the bank waits for PIONEER_DEPART_K), killed at r30 by a prophet from awesomelemonade's second
+church (20,21), built r29 on our side of the axis. Its 4th pilgrim (r4) churched the centre (17,17) at r14. Our
+escorts' site was (17,17); they stood 12 king steps from it from r24 on (econ/guards.mjs), one died at r58 and one at
+r415, and v8 built no church by r200. h161's two 2518 games (1019, 1020) were lost too. Driver check (v8 red, h157 blue, to r60; scratchpad
+vs/esc2518.txt): h157's escorts hold 2 steps from the centre site by r24, h157 churches (18,17) at r34 and v8 has no
+church by r60; in the mirror both escort pairs stand 12 steps out and both sides church at r37. 2518 is not one of
+h157's studied cells, so it scores among the others: an out-of-sample cell of the same mechanism.
+
+## 2026-10-24 22:39 PDT: CHAIN_WALL's census on v8's control games; h164's 1653 cost is v8's own fuel starvation
+
+Census before play (LEARNINGS 41; scratchpad study/lines.js on 726-731, our side: chain lines from r200 with 3+ church
+builds a round, the most enemy crusaders, prophets and preachers a new church saw within r2 100, and an enemy castle
+destroyed within 60 rounds). 27 lines in 13 of 18 games. The 16 whose churches saw 28 or more killed one castle
+(IanCoolidge0 1036 r880, seen 33, a game already won); the 11 that saw fewer killed 9. The 28+ lines: wololo 836
+(61), uvafan 2046 (29, 33, 88), 1653 (36, 43) and 1712 (40), awesomelemonade 2797 (70) and 2518 (100),
+IanCoolidge0 203 (31, 34) and 1036 (30, 41, 33, 33, 33). So CHAIN_WALL 28 would end 15 lines that killed nothing,
+in 8 games, 5 of them losses.
+
+The driver game behind h164's held screen (1653, h164 red vs v8 to r600, TRAINING_LOG 21:41; red lost castles at
+r376 and r499): both lines start at r272 and meet head-on; red's ends at 4 churches (CT.WALL), blue's builds 6. Red's
+fuel falls from 6,106 at r270 to 36 at r290 and stays under 140 to r380 (red prophets 110 shots in r270-295, blue's
+56), while blue keeps 1,800-3,100. But the v8 mirror on the same seed (scratchpad vs/v8_v8_1653.bc19) starves both
+sides the same way: fuel 6,106 at r270, 49 at r300, under 40 from r320 to r380, 55 at r601, while blue banks 1,703 K
+it cannot spend (a unit costs 50 F). So the collapse is v8's: after a chain clash its fuel goes to shots and never
+recovers. h164's 1653 loss is one game of a mirror-unstable state, not a mechanism of CHAIN_WALL. Late-game fuel
+starvation is now being counted across the panel games (scratchpad econ/fuelstarve.js).
+h164 therefore goes to the general panel one block after h163, and its VM screen (...19 + 33 z's) is deleted: a
+screen of 40 games costs the same VM as a 36-game panel block, and the panel decides. Pre-registration: pooled rule;
+studied cells uvafan 2046, uvafan 1653 and IanCoolidge0 1036 (the lines CHAIN_WALL's census in config.js was drawn
+from), so h164 is accepted only if its side-aware z over the other cells is also >= 0 (`--studied
+uvafan.bc2019:seed-2046,uvafan.bc2019:seed-1653,IanCoolidge0.battlecode20~69ce88:seed-1036`). Mechanism read, not a
+decision input: on our side, lines whose churches saw 28+ that CT.WALL ended (study/wall.js, study/lines.js; bar: at
+least half of them).
