@@ -400,7 +400,7 @@ export const CFG = {
                              // could see it and died there on its first or second turn: 262 of 271 prophets lost, the
                              // army flat at 40 r500-900, the game lost at r1000 on health 1,200 vs 6,640)
   FEED_AGE: 3,
-  MUSTER: 0,                 // 1: against campers, enemy prophets a structure cannot hit (the nearest beyond r2 36, still
+  MUSTER: 2,                 // v9 (h167, 2026-10-25): 2. 1: against campers, enemy prophets a structure cannot hit (the nearest beyond r2 36, still
                              // MUSTER_DWELL turns, no enemy crusader or preacher in sight; a castle's beyond its r2 64),
                              // it builds crusaders on the adjacent tile farthest from the nearest, which hold out of its
                              // reach (SIG.THREAT) until 2A + 1 of them stand ready, then radios it as a spot (FAR.ENEMY)
@@ -410,7 +410,8 @@ export const CFG = {
                              // stand 2-4 king steps from home until an enemy crusader or preacher is in sight, and while
                              // the case holds the peacetime army builds held crusaders too (health kept for the r1000
                              // tiebreak: in v8's 11 health losses 85% of the military K spent r500-899 died, 98% within
-                             // r2 100 of our structures, 62% within 3 turns of birth; TRAINING_LOG 2026-10-24 23:32)
+                             // r2 100 of our structures, 62% within 3 turns of birth; TRAINING_LOG 2026-10-24 23:32).
+                             // 0 was v8's.
   MUSTER_WAIT: 25,           // turns a held crusader waits for the release, and a release's spot radio lasts
   MUSTER_DWELL: 3,           // turns an enemy prophet must have stood on its tile to count as a camper
   FEED_WINDOW: 20,

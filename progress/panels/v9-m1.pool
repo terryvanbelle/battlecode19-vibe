@@ -1,0 +1,5 @@
+# The v7-m1 panel (progress/panels/v7-m1.json) with v9 = h167 as the incumbent (accepted 2026-10-25 07:24): its blocks
+# pooled with the control 1120-1131 (tools/panel_pool.sh 1120-1131 progress/panels/v9-m1.pool BLOCK...). The
+# accepting blocks overstate v9 (block 1 21 of 36, block 2 17), so a fresh v9 control block joins before any v9-based
+# block is scored. Rejected v9-based blocks join when their own side-aware z is within +-1.
+1143-1154

@@ -5125,3 +5125,44 @@ of the enemy's guards and waits while their pilgrim builds under them. The 6 nev
 the castles' pioneer slots (2 each, 6 a team) were held by stalled pioneers until the 80-turn timeout. This is the
 case h169 acts on (a pioneer 40 turns no nearer gives up and mines; the castle rests a timed-out site and sends the
 next); it is evidence for its design, not a new bar.
+
+## 2026-10-25 07:24 PDT: h167 (MUSTER 2, hold only) ACCEPTED on two blocks (38 of 72, side-aware z 2.78); it becomes v9
+
+Block 2 (1143-1154, all finished by 07:23): 17 of 36. Both blocks, as pre-registered (00:04, 05:49):
+`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 1120-1131 1143-1154 --studied uvafan.bc2019:seed-1712,awesomelemonade.Battlecode2019:seed-1712,awesomelemonade.Battlecode2019:seed-2797,awesomelemonade.Battlecode2019:seed-2518`:
+38 of 72 against the pooled 32.2 (side-blind z 2.11); side-aware expectation 32.0, **z 2.78** (>= 2); studied cells
+9 of 16 (expectation 7.3, z 1.41); other cells 29 of 56 (expectation 24.7, **z 2.40** >= 0). **ACCEPTED.** Cells
+against the pool: botfinalsafe 203 red 2 of 2 (pool 0 of 11 on that side), wololo 2013 red 1 of 2 (0 of 8), uvafan
+1712 blue 1 of 2 (1 of 11); every other cell at or near its pool rate; the never-won cells stay lost (wololo 836,
+2013 blue; botfinalsafe 1706; bot1v43 2591; uvafan 2046; awesomelemonade 2518).
+**v9 = h167 = v8 + MUSTER 2** (dist/h167 bd86bcd5b011, frozen as bots/v9). Today's source built with MUSTER 2 replays
+dist/h167 byte for byte (seed 1712 against dist/turtle to r400: red wins by castles at r370, 24 muster builds; scratchpad
+vs/id_*). Block 1's 21 included luck (block 2: 17), so v9's accepting blocks overstate it; the pool for v9's
+candidates is fixed now, before any v9-based block is scored: control 1120-1131, pool file progress/panels/v9-m1.pool
+= 1143-1154 plus a fresh v9 control block played first (bots/v9 as the candidate, both sides, 36 games), which
+dilutes the selection in the accepting blocks (TRAINING_ALGORITHM §4: the incumbent's own blocks). Rejected v9-based
+blocks join it under the +-1 rule. Then, one block at a time: h170 (= v9 + h169's three pioneer switches; h169 is
+closed unplayed, its base superseded), h171 (v9 + h168's escort switches), h172 (v9 + CHAIN_WALL 28, h164's), h173
+(v9 + ECON_NOPLAN 1 on the targeted panel, h160's). Each keeps its predecessor's pre-registration, with v9's numbers
+where a bar is relative to the champion.
+
+## 2026-10-25 07:42 PDT: v9 set up; h170-h173 built on v9; h170's bars re-based on v9
+
+- `src/bot/config.js` MUSTER defaults to 2 (v9). The defaults build (sha 3b6862f2b236, byte for byte the `--cfg
+  MUSTER=2` build) against itself on 799 to r300 (the no-op flags, driver alone) is IDENTICAL to bots/v9 against
+  itself. Unit tests 165 of 165 after pinning v8's MUSTER 0 in the one test of MUSTER 1's release (testPreV9).
+  `tools/panel_submit.sh` resubmits bots/v9 as the ladder build from now on.
+- Built on v9 (defaults plus the predecessor's switches): h170 = PIONEER_STALL_ANY 40 + PIONEER_HOME 1 +
+  PIONEER_TIMEOUT_REST 1 (dist/h170 f4e6985acea0; h169's), h171 = ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1
+  (a3c65b3dba16; h168's), h172 = CHAIN_WALL 28 (d114d31e373e; h164's), h173 = ECON_NOPLAN 1 (437528e313a7; h160's).
+- **h170 pre-registered** (before any h170 game): the basics-fix rule of 04:26 with v9 in v8's place. Two blocks on
+  the v7-m1 panel, both sides; block 1 rejects only at z < -1; accept at side-aware z >= 0 (other cells z >= 0) if
+  (a) both mechanism reads pass on h170's two blocks: parked pioneers per game under a third of v9's, and our
+  churches per game at least 90% of v9's, where v9's rates are scratchpad econ/zombies.mjs (econ/zmatch.sh) on v9's
+  108 panel games: h167's blocks 1120-1131 and 1143-1154 and the v9 control block (same panel, both sides, so the
+  same cells as h170's; h169's reference was v8's 18 games on 726-731). If (a) fails, the ordinary rule on the same
+  blocks (accept z >= 2, reject < 1, else a third). Studied cells: uvafan.bc2019:seed-1712,
+  IanCoolidge0.battlecode20~69ce88:seed-1036, awesomelemonade.Battlecode2019:seed-2518. Interim, h167 block 1: 3.19
+  parked and 11.25 churches a game (36 games); the bars are computed from all 108 before h170's block is read.
+- Next: the v9 control block (bots/v9 as the candidate), which joins progress/panels/v9-m1.pool with no decision;
+  then h170, h171, h172, then h173 on the targeted panel after its own v9 control block.

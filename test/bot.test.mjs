@@ -36,6 +36,13 @@ const testPreV8 = (name, fn) => test(name, () => {
   Object.assign(CFG, PRE_V8);
   try { fn(); } finally { Object.assign(CFG, saved); }
 });
+// v9 (2026-10-25) turned on h167's hold-only muster; tests of MUSTER 1's release written against v8 pin v8's values.
+const PRE_V9 = { MUSTER: 0 };
+const testPreV9 = (name, fn) => test(name, () => {
+  const saved = { ...CFG };
+  Object.assign(CFG, PRE_V9);
+  try { fn(); } finally { Object.assign(CFG, saved); }
+});
 
 test('specs.js matches the engine', () => {
   for (let u = 0; u < 6; u++) {
@@ -2494,7 +2501,7 @@ test('struct: MUSTER: a castle answers a camper out of its reach with a crusader
   } finally { CFG.MUSTER = saved; }
 });
 
-test('struct: MUSTER: the attackers out of reach, the held set, and the release at 2A + 1', () => {
+testPreV9('struct: MUSTER: the attackers out of reach, the held set, and the release at 2A + 1', () => {
   let id = 100;
   const P = (x, y, unit = S.PROPHET) => ({ id: id++, x, y, unit });
   // musterCase with every enemy seen on its tile since turn `since` (the structure's turn is 10); the nearest first.

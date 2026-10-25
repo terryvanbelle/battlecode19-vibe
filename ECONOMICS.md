@@ -126,26 +126,26 @@ only when aimed at the binding factor: security of contested or lost land, or de
 ## 4. Suggestions, most likely first
 
 Confidence is the verifier's, after checking each proposal against the code and the attempt ledger (a probability
-that the switch passes the replica panel; our accepted rate is about 1 in 8). Every switch defaults to v8.
+that the switch passes the replica panel; our accepted rate is about 1 in 8). Every switch defaults to the champion (v8 when written, v9 from 2026-10-25 07:24).
 
 | # | suggestion | model | switch | acts on | conf. | effort | status |
 |---|---|---|---|---|---|---|---|
 | 1 | Staff only karbonite depots in the opening while fuel is above a floor and no attacker has been seen | production (free good), inventory (cargo lumps), national accounts | FUEL_DEFER 60, FUEL_DEFER_MIN 400 | one-castle K1F2 maps | 0.10-0.20 | S | h161, rejected; section 5 |
 | 2 | Every castle calls the general attack on the same enemy castle | Blotto, Lanchester | ATTACK_ONE 1 | split calls: 19 of 40 pool maps, 11 of 16 r1000 losses, 7 of 18 panel cells | 0.15 | S | h162, rejected; section 5 |
-| 3 | Against campers out of reach, build out of their band and release 2A+1 together | Lanchester (concentration in time) | MUSTER 1 | 1712, 2797, 2518, 1884 feeding cells | 0.20 | M | h163 rejected at three blocks (z 1.23); its hold-only form h167 passed block 1 (1120-1131, z 3.28), block 2 1143-1154; section 5 |
+| 3 | Against campers out of reach, build out of their band and release 2A+1 together | Lanchester (concentration in time) | MUSTER 1 | 1712, 2797, 2518, 1884 feeding cells | 0.20 | M | h163 rejected at three blocks (z 1.23); its hold-only form h167 ACCEPTED as v9 (1120-1131 + 1143-1154, 38 of 72, z 2.78); section 5 |
 | 4 | Shoot a lone camper with the castle instead of buying a newborn it kills | relative prices (a shot costs no K) | CASTLE_FIRE 2 | castles with 1-2 attackers in reach | 0.12 | S | dropped (section 6) |
 | 5 | A karbonite miner gives a part cargo when it completes a purchase (pioneer or church gate) | Baumol-Tobin | DEPOSIT_AT 1, DEPOSIT_UNTIL 60 on FUEL_DEFER | adjacent-K maps: 2013, 493, 1706, 1241, 1915 | 0.10 | S-M | dropped (section 5) |
 | 6 | A castle that loses a pilgrim before r100 builds 2 guards at once | Ramsey (state switch), depreciation | ECON_HIT 50 | early pilgrim deaths: 16 of 29 losses | 0.10 | S | dropped (section 6) |
 | 7 | Escort every contested site, not only the first | Leontief complements, Tullock | ESCORT_EACH 2 on ESCORT_HOLD_R 2 | maps with 2+ contested clusters: 6 of 15 panel maps | 0.10 | S | h165, closed unplayed: its base h157 was rejected (section 5) |
-| 8 | Abandon a chain line that meets a wall of 28+ units | real options | CHAIN_WALL 28 (exists) | chain lines into walls | 0.10 | S | h164, built; panel after h168 (census: TRAINING_LOG 22:39) |
-| 9 | End ECON_UNTIL for a castle whose land is saturated | Solow fixed factor, Ramsey | ECON_SAT 10 (castles) | saturated maps | 0.08-0.10 | S | after h160 (ECON_NOPLAN) |
+| 8 | Abandon a chain line that meets a wall of 28+ units | real options | CHAIN_WALL 28 (exists) | chain lines into walls | 0.10 | S | h164 closed with v8; rebuilt on v9 as h172, panel after h171 (census: TRAINING_LOG 22:39) |
+| 9 | End ECON_UNTIL for a castle whose land is saturated | Solow fixed factor, Ramsey | ECON_SAT 10 (castles) | saturated maps | 0.08-0.10 | S | after h173 (ECON_NOPLAN, h160 rebuilt on v9) |
 | 10 | After a pioneer dies, escort a retry after 30 rounds, not 100 | real options, idle land | LOST_RETRY 30 | remote pioneer deaths: 14 of 29 losses | 0.08 | M | dropped on a census (section 6); row 13 instead |
 | 11 | Plan order with a finite premium for contested land | von Thünen | PLAN_CONTEST_PREM 2, PLAN_FUEL_W 4 | 8 of 26 maps change order | 0.07 | S | targeted panel |
 | 12 | Hunt enemy pilgrims dwelling on our depots far from their structures | enclosure denial | HUNT_DEPOT 1 after h156 (INTERCEPT) | their churches on our half | 0.07 | M | after h156 |
-| 13 | Stop re-buying pioneers for held sites: one 40 turns no nearer its site gives it up and mines by our structures; a castle rests a site whose pioneer timed out | sunk cost, idle capital | PIONEER_STALL_ANY 40, PIONEER_HOME 1, PIONEER_TIMEOUT_REST 1 | 108 parked pioneers in 46 games | 0.08 | S | h169, built (section 5) |
+| 13 | Stop re-buying pioneers for held sites: one 40 turns no nearer its site gives it up and mines by our structures; a castle rests a site whose pioneer timed out | sunk cost, idle capital | PIONEER_STALL_ANY 40, PIONEER_HOME 1, PIONEER_TIMEOUT_REST 1 | 108 parked pioneers in 46 games | 0.08 | S | h169 closed with v8; rebuilt on v9 as h170, the next panel after v9's control block (section 5) |
 
-Rules of the test, unchanged from TRAINING_ALGORITHM.md: one switch per candidate on v8; a no-op check that the
-defaults reproduce v8 byte for byte; unit tests; mechanism bars written before any game is read; the side-aware
+Rules of the test, unchanged from TRAINING_ALGORITHM.md: one switch per candidate on the champion; a no-op check that
+the defaults reproduce the champion byte for byte; unit tests; mechanism bars written before any game is read; the side-aware
 replica panel (block 1 rejects at z < 0.5; two blocks accept at z >= 2, reject below 1; else a third block); a
 map-conditional switch gets a targeted panel on the cells where it acts.
 
@@ -195,13 +195,17 @@ army 22 at r400 against 87 held and v8's 26) or costs nothing (2797). It would f
 5 of 8, z 1.47; others z 0.63); block 2 (1063-1074) 17 of 36, z 0.71; the two blocks 35 of 72, side-aware z 1.45,
 so a third block, 1091-1102: 16 of 36, z 0.08. Rejected at three blocks: 51 of 108, side-aware z 1.23 (studied
 12 of 24, z 0.57; others z 1.09; TRAINING_LOG 2026-10-25 04:35); block 1's lead did not repeat. The 2026-10-24 20:54
-entry has the pre-registration. Its hold-only form (MUSTER 2, h167) plays next: block 1 = 1120-1131.
+entry has the pre-registration. Its hold-only form (MUSTER 2, h167: the held crusaders stay on rings 2-4 from home,
+health for the round-1000 tiebreak) passed: block 1 (1120-1131) 21 of 36, side-aware z 3.28; block 2 (1143-1154) 17
+of 36; together 38 of 72, z 2.78, other cells z 2.40. ACCEPTED as v9 (TRAINING_LOG 2026-10-25 07:24); it won
+botfinalsafe 203 red twice (pool 0 of 11) and wololo 2013 red once (0 of 8).
 
 **Parked pioneers (h169, row 13).** Emulating siteStalled on v8's 327 field pioneers, PIONEER_STALL_ANY 40 fires on
 100 of the 108 that parked, 46 of the 79 that died and 5 of the 123 that built a church, a median 50 rounds after
 birth. In self-play (seed 1712, both sides against v8) no pioneer stalls and the games are identical with the sides
 swapped: the switches act only where the field holds our sites. Bars and studied cells: TRAINING_LOG 2026-10-25
-04:22; the panel comes after h167.
+04:22; h169 closed unplayed when v9 replaced its base, and the same switches on v9 are h170, the next panel after
+v9's control block.
 
 **ESCORT_EACH (h165).** Built on h157 (v8's first escorts hurried to their site and held within 2 steps of it), so it
 would play only if h157 were accepted. The panel rejected h157 at block 1 (1035-1046): 14 of 36, side-aware z -1.17;
