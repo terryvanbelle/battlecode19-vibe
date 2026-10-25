@@ -71,6 +71,9 @@ From v8's 51 replica field games (22 wins, 29 losses):
    43 died and 88 never built, mined or died: they park 8-15 king steps short, out of the campers' reach, too far to
    see the church, and the castle forgets each after 80 turns and sends the next (729-3, seed 1712: 24 pioneers, 16
    parked). 108 pioneers ended so, 56 in the 21 wins and 52 in the 25 losses (scratchpad econ/lost.mjs).
+   By r200 the losses hold 25 planned clusters of ours with an enemy church: at 12 our pioneer was still short of
+   the site when theirs went up, 6 were never sent (the slots held by stalled pioneers), 6 had our church first
+   (scratchpad econ/ourhalf.mjs; TRAINING_LOG 2026-10-25 05:58).
 
 ## 3. The models and what each one says
 

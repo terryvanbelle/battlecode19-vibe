@@ -5109,3 +5109,19 @@ Block 1 passes (z >= 0.5); under the rule a block-1 z is not a verdict (h148's 2
 so block 2 decides with it (accept at pooled z >= 2, reject < 1, else a third). Block 2 requested 05:49: matches
 1143-1154 (submission 188, v8 back as 189). Mechanism reads (00:04) wait until the block decision, run on the driver
 one at a time.
+
+## 2026-10-25 05:58 PDT: census: the enemy's churches on our half stand where our pioneer stalled short of the site
+
+Scratchpad econ/ourhalf.mjs on v8's 51 field games: every enemy church nearer our first castles than theirs, matched
+to the nearest cluster our castles planned (tools/plan.mjs, within 3 king steps) and to our pioneers sent there
+before it. 224 such churches in 29 games, 164 of them in losses, most after r200 (chain lines and invasions: 130 of
+the 164 at no planned site). By r200 the losses hold 38 distinct sites: 25 planned clusters and 13 unplanned. Of the
+25 planned: at 12 our pioneer had been sent 3-60 rounds before the enemy built and was still short of the site
+(parked 6-9 king steps out; 12 of those 14 pioneers died later), at 6 our church stood first and theirs went up
+beside it, at 1 our pioneer had died, and 6 were never sent by the time the enemy built (r53-184, contest margins
+m 8-19: uncontested land we had not reached). The wins hold 9 such sites by r200, 7 of them with our pioneer short.
+So the land the field takes from us is mostly land we went for and could not close: a lone pioneer stops at the edge
+of the enemy's guards and waits while their pilgrim builds under them. The 6 never-sent sites point the same way:
+the castles' pioneer slots (2 each, 6 a team) were held by stalled pioneers until the 80-turn timeout. This is the
+case h169 acts on (a pioneer 40 turns no nearer gives up and mines; the castle rests a timed-out site and sends the
+next); it is evidence for its design, not a new bar.
