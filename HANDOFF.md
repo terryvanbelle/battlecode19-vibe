@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 04:35 PDT)
+## State (2026-10-25 05:00 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -78,7 +78,7 @@
   h169 (v8 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PIONEER_TIMEOUT_REST 1, dist/h169 44beaf1cf5bf: stop re-buying
   pioneers for held sites; studied cells uvafan.bc2019:seed-1712, IanCoolidge0.battlecode20~69ce88:seed-1036,
   awesomelemonade.Battlecode2019:seed-2518; mechanism reads with scratchpad econ/zombies.mjs against v8's 726-731:
-  parked pioneers per game under a third, churches per game at least 90%; TRAINING_LOG 2026-10-25 04:22; rebuilt
+  parked pioneers under 1.07 a game (v8 3.22), our churches at least 10.85 a game (v8 12.06); TRAINING_LOG 2026-10-25 04:22, 04:57; rebuilt
   with the same switches if h167 is accepted). Its decision rule is the basics-fix one fixed at 04:26: two blocks,
   block 1 rejects only at z < -1; accept at z >= 0 (others z >= 0) if the mechanism reads pass, else the ordinary
   rule. Then h168
