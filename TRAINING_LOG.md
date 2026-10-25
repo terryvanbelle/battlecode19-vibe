@@ -4650,3 +4650,22 @@ the studied-cell rule is moot after a reject); lost awesomelemonade 1712 red, wo
 church on the one-castle cells, against v8's 726-731) follows when the driver frees.
 h162 (v8 + ATTACK_ONE 1, dist/h162 88a7474abd7a) went in at 21:38 as pre-registered (18:45): block 1 = matches
 1023-1034 (submission 176, v8 back as 177), with 50 replica matches waiting. h163 follows it.
+
+## 2026-10-24 21:41 PDT: h164 (CHAIN_WALL 28) built; driver diagnostics show a cost against v8, so a screen comes first
+
+Studying uvafan 2046 (replica 729-1, lost on health at r1000 with castles equal; we were blue): uvafan built 7
+pilgrims, no church and 164 prophets, its army 205 at r1000; ours peaked at 33 (r200-300) and ended at 13 with 30,500
+fuel unspent. Our military deaths by window (scratchpad study/deaths.js): r301-400 25 (21 on their side: our r352
+chain line of 6 churches into a wall of about 50 prophets), then 99 in r401-1000, all but one on our side and 46 of
+them within 3 rounds of birth (76 preachers built in the game, 56 dead young: the castles' answer to prophets
+inside r2 36). The line's spend is
+ECONOMICS row 8: CHAIN_WALL (built in the 12:25 audit, never played; config.js has its census: v7-v8 lines whose
+nearest church saw 28+ killed no castle and lost 8,020 K within 60 rounds).
+h164 = v8 + CHAIN_WALL 28 (dist/h164 96cae5a62d0f). Driver, h164 red vs bots/v8 to r600 (scratchpad study/wall.js
+counts wall radios, CT.WALL and chain links): 2046, no firing, replay IDENTICAL to v8 vs v8; 1036, no firing, red won
+on castles at r479; 1653, CT.WALL at r272 (red's line stopped at 4 links, v8's 6), then red built no line while v8
+chained again at r344 and r455, and red's castles fell at r376 and r499 (1 castle to 3 at r600). v8 vs v8 on 1653
+keeps 3 castles a side to r600, one line each at r272 and none after. One game, but a cost path: resting our chains
+for 300 rounds gives the enemy the initiative. So h164 waits for its screen vs bots/v8 (castles lost at sign-flip
+p < 0.05 rejects) before any panel block: job ~/jobq/superseded/...19 + 26 z's + yyyy (seed0 39000), held with the
+others until the replica queue is under 30.
