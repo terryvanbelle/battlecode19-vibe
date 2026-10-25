@@ -73,8 +73,8 @@
   decision input): `tools/census.js` attack_split on our side (bar: none).
   **Next, one block at a time:** h157 (v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9, dist/h157 a5eba191475e; screen
   dropped, driver diagnostics instead; studied cells wololo 2013, 2644, 836, bot1v43 2591, botfinalsafe 1706 with
-  `--studied` as in TRAINING_LOG 12:51; mechanism read scratchpad econ/esc.js, both first crusaders 6+ steps from home
-  at r30 in half the studied games; TRAINING_LOG 22:20), `tools/panel_submit.sh dist/h157 "cand:h157"`. If h157 is
+  `--studied` as in TRAINING_LOG 12:51; mechanism read scratchpad econ/esc_matches.sh BLOCK: both first escorts within 2
+  steps of their site 20 rounds after birth in half the studied games, v8 0 of 5; TRAINING_LOG 22:20, 22:47), `tools/panel_submit.sh dist/h157 "cand:h157"`. If h157 is
   accepted, h165 (h157 + ESCORT_EACH 2, ECONOMICS row 7, dist/h165 feb35bd6487b; rebuild on the new champion; general
   panel, no studied cell; TRAINING_LOG 22:33) follows it; if not, row 7 closes. Then
   (ECONOMICS.md, TRAINING_LOG 20:54) h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e;

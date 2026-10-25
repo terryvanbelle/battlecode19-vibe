@@ -4790,3 +4790,11 @@ karbonite depot within 10 king steps of our structures is staffed at r300-r900 (
 either side), and on 2797 8-9 of 10 (econ/depots.js). The pilgrim switch fuel -> karbonite (SWITCH_KARB_LOW 30)
 waits for an empty karbonite bank and a free depot within 8 steps, and the second is missing. So the glut measures
 saturated land, the case of ECONOMICS row 9 (ECON_SAT) and h160 (ECON_NOPLAN; 2046 is a no-plan map): no new switch.
+
+## 2026-10-24 22:47 PDT: h157's mechanism read revised before any h157 game: steps from the site, not from home
+
+The read pre-registered at 22:20 (both first crusaders 6+ king steps from home at r30) does not separate the builds:
+v8's 1706 escorts already stand 18-19 steps out at r30 (727), 10 short of the site. Revised, before any h157 game
+exists: on our side of the studied cells, both of our first two escorts within 2 king steps of their radioed site 20
+rounds after birth (scratchpad econ/esc_matches.sh over econ/guards.mjs). v8 in 726-728: 0 of 5 (2013 11/10, 2644
+-/6, 836 11/8, 1706 10/9, 2591 10/10). Bar: at least half of h157's studied games. Still not a decision input.
