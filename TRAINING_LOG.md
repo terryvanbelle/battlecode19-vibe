@@ -5221,7 +5221,7 @@ their rings keep the mirror.
   read, and the bar is fixed then). Studied cells awesomelemonade.Battlecode2019:seed-2518,
   uvafan.bc2019:seed-2046. Panel order: h170, h174, h171, h172, then h173 on its targeted panel (basics first).
 
-## 2026-10-25 09:40 PDT: the v9 control block (1180-1191) joins the v9 pool, 16 of 36; h170's block 1 = matches 1379-1390
+## 2026-10-25 09:24 PDT: the v9 control block (1180-1191) joins the v9 pool, 16 of 36; h170's block 1 = matches 1379-1390
 
 - v9 control block, bots/v9 as the candidate (submission 190), no decision: 16 of 36 (wololo 1 of 6, botfinalsafe 1,
   bot1v43 3, uvafan 2, awesomelemonade 4, IanCoolidge0 ~69ce88 5). The accepting blocks read 21 and 17: v9 stands at
