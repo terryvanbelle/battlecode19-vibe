@@ -5394,3 +5394,8 @@ safer a game (14), losses 33.77 (13); 1373 seed 1884 119, 887 seed 826 135.
   named to be conservative; the switch was designed on ladder 1373 seed 1884): uvafan.bc2019:seed-1712,
   uvafan.bc2019:seed-2046.
 - Panel order: h175 (in play), **h176**, h171, h174, h172, then h173 on its targeted panel. No bar changed.
+
+## 2026-10-25 12:26 PDT: check-in; VM disk
+
+Queue 133 waiting (all ranked); h175's block 1391-1402: 3 running, none waiting. VM disk 2.2 GB free at 12:23, below
+the 2.4 of the morning; deleted /var/log/syslog.1 (213 MB, the rotated system log; HANDOFF's named next candidate): 2.5 GB.
