@@ -5337,3 +5337,14 @@ A `contest19.py matches --pages 3` listing, run to find v9's ranked autoscrim ma
 h170's ten finished block matches (1379-1384, 1387-1390; 1385-1386 still running). h170's rule and bars were fixed
 before (07:42, 09:57); none is changed, and the block is scored as pre-registered once all twelve finish.
 Running blocks' status comes from field.py queue only (LEARNINGS 38).
+
+## 2026-10-25 11:16 PDT: h170 rejected on block 1 (matches 1379-1390)
+
+h170 (v9 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PIONEER_TIMEOUT_REST 1) on the v7-m1 panel, both sides, scored as
+pre-registered with `tools/panel_pool.sh 1120-1131 progress/panels/v9-m1.pool 1379-1390`: 15 of 36, pooled
+expectation 18.0 (z -1.40); side-aware expectation 18.0, **z -1.71** (effect -171 Elo, 95% -368 to +25). Studied
+cells (uvafan 1712, IanCoolidge0 1036, awesomelemonade 2518) 1 of 6 against 2.4 expected (z -2.19); other cells 14 of
+30 against 15.6 (z -1.00). Lost usually-won cells: IanCoolidge0 1036 blue, bot1v43 2321 red. The basics-fix rule
+rejects block 1 at z < -1: **rejected**. Its z lies outside +-1, so the block stays out of the pool file. The
+mechanism read (parked.mjs) runs on this block for the record once the driver is free; it decides nothing now.
+Next block: h175 (submission 194, requests 648-659; bots/v9 back as the ladder build, submission 195).

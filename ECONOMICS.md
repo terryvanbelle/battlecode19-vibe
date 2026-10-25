@@ -142,9 +142,10 @@ that the switch passes the replica panel; our accepted rate is about 1 in 8). Ev
 | 10 | After a pioneer dies, escort a retry after 30 rounds, not 100 | real options, idle land | LOST_RETRY 30 | remote pioneer deaths: 14 of 29 losses | 0.08 | M | dropped on a census (section 6); row 13 instead |
 | 11 | Plan order with a finite premium for contested land | von Thünen | PLAN_CONTEST_PREM 2, PLAN_FUEL_W 4 | 8 of 26 maps change order | 0.07 | S | targeted panel |
 | 12 | Hunt enemy pilgrims dwelling on our depots far from their structures | enclosure denial | HUNT_DEPOT 1 after h156 (INTERCEPT) | their churches on our half | 0.07 | M | after h156 |
-| 13 | Stop re-buying pioneers for held sites: one 40 turns no nearer its site gives it up and mines by our structures; a castle rests a site whose pioneer timed out | sunk cost, idle capital | PIONEER_STALL_ANY 40, PIONEER_HOME 1, PIONEER_TIMEOUT_REST 1 | 108 parked pioneers in 46 games | 0.08 | S | h169 closed with v8; rebuilt on v9 as h170, the next panel after v9's control block (section 5) |
+| 13 | Stop re-buying pioneers for held sites: one 40 turns no nearer its site gives it up and mines by our structures; a castle rests a site whose pioneer timed out | sunk cost, idle capital | PIONEER_STALL_ANY 40, PIONEER_HOME 1, PIONEER_TIMEOUT_REST 1 | 108 parked pioneers in 46 games | 0.08 | S | h169 closed with v8; h170 on v9 rejected on panel block 1 (z -1.71; TRAINING_LOG 2026-10-25 11:24) |
 | 14 | Match idle miners to free safe home depots: a pilgrim whose depot is taken or hot takes a safe one; one 25 turns no nearer gives its depot up | search and matching (idle labour beside vacant jobs) | PILGRIM_HERE 1, PILGRIM_STALL 25 | idle miners beside safe depots: 40.4 pilgrim-rounds a game to r300, 23 of 72 games at 50+ | 0.06 | S | h174, panel after h171 (TRAINING_LOG 2026-10-25 09:12, 09:43) |
 | 15 | A structure under fire calls its held crusaders: hit in its last 3 turns, it radios the nearest attacker; held crusaders whose home lies near engage | Lanchester (an idle force adds nothing to the fight: bring it to the engagement) | MUSTER_RESCUE 100 | castles lost with held crusaders idle within 10 steps: 25 of v9's 54 losses, 0.29 a game | 0.12 | S | h175, panel after h170 (TRAINING_LOG 2026-10-25 10:57) |
+| 16 | Don't feed newborns to campers: a military unit built while enemy attackers are in sight goes on a free adjacent tile they cannot kill it on before its first turn, if one exists | marginal product (a unit that dies unborn adds 0 for its full price; the price is the same on a safe tile) | DEF_SAFE 1 | ladder loss 1373 seed 1884: 162 of 222 military newborns dead within 2 rounds, 119 of them while a safer free tile stood beside; census over v9's panel games pending | 0.10 | S | h176, being built (TRAINING_LOG pending) |
 
 Rules of the test, unchanged from TRAINING_ALGORITHM.md: one switch per candidate on the champion; a no-op check that
 the defaults reproduce the champion byte for byte; unit tests; mechanism bars written before any game is read; the side-aware
@@ -206,8 +207,9 @@ botfinalsafe 203 red twice (pool 0 of 11) and wololo 2013 red once (0 of 8).
 100 of the 108 that parked, 46 of the 79 that died and 5 of the 123 that built a church, a median 50 rounds after
 birth. In self-play (seed 1712, both sides against v8) no pioneer stalls and the games are identical with the sides
 swapped: the switches act only where the field holds our sites. Bars and studied cells: TRAINING_LOG 2026-10-25
-04:22; h169 closed unplayed when v9 replaced its base, and the same switches on v9 are h170, the next panel after
-v9's control block.
+04:22; h169 closed unplayed when v9 replaced its base, and the same switches on v9 are h170. Panel block 1
+(1379-1390): 15 of 36 against the side-aware 18.0, z -1.71 (effect -171 Elo, 95% -368 to +25); the basics-fix
+rule rejects block 1 below -1: rejected (TRAINING_LOG 2026-10-25 11:16).
 
 **ESCORT_EACH (h165).** Built on h157 (v8's first escorts hurried to their site and held within 2 steps of it), so it
 would play only if h157 were accepted. The panel rejected h157 at block 1 (1035-1046): 14 of 36, side-aware z -1.17;

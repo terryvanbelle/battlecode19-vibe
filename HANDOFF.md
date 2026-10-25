@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 10:25 PDT)
+## State (2026-10-25 11:18 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -47,19 +47,14 @@
   block is scored (TRAINING_LOG 2026-10-25 07:24). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted).
-  **Replica queue (10:25): 155 waiting (all ranked) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  **Replica queue (11:18): 152 waiting (140 ranked, our 12) after the 09:00 daily autoscrim** (4 a team, none dominant;
   about 15 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: h170's block 1 = matches 1379-1390** (6 still running at 10:25) (submission 192, bots/v9 back as the ladder build 193); the v9
-  control block 1180-1191 (16 of 36) is in progress/panels/v9-m1.pool. h170's and h174's bars are fixed from v9's
-  108 panel games (TRAINING_LOG 2026-10-25 09:57, 10:12).
+  **In play: h175's block 1 = matches 1391-1402** (submission 194, bots/v9 back as the ladder build 195). h170
+  was rejected on its block 1 (1379-1390: 15 of 36, side-aware z -1.71; TRAINING_LOG 2026-10-25 11:16); the v9
+  control block 1180-1191 (16 of 36) is in progress/panels/v9-m1.pool.
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion use
   v9's numbers):
-  h170 (v9 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PIONEER_TIMEOUT_REST 1, dist/h170 f4e6985acea0; h169's switches:
-  stop re-buying pioneers for held sites; basics-fix rule; studied cells uvafan.bc2019:seed-1712,
-  IanCoolidge0.battlecode20~69ce88:seed-1036, awesomelemonade.Battlecode2019:seed-2518; mechanism reads with
-  tools/reads/parked.mjs over h170's two blocks: parked pioneers under 1.00 a game (v9 3.01) and churches at least
-  10.03 a game (v9 11.15));
   h175 (v9 + MUSTER_RESCUE 100, dist/h175 24ba82513211: a structure under fire calls its held crusaders; basics-fix
   rule; studied cell m-schier.battlecode-2019-wololo:seed-2013; mechanism read tools/reads/held.mjs: castle losses
   with held crusaders within 10 king steps and none attacking at most 0.144 a game (v9 0.287); TRAINING_LOG
