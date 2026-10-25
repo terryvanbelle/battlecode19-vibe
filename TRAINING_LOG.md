@@ -4987,3 +4987,12 @@ usually-won one: IanCoolidge0 203 red. Never-won cells still lost: uvafan 2046, 
 wololo 2013, 836, awesomelemonade 2518. By the rule a second block decides (accept at two-block z >= 2, reject
 under 1, else a third): submitted with `tools/panel_submit.sh dist/h163 "cand:h163"` (submission 182, v8 back as
 183); **block 2 = matches 1063-1074**. Queue 2 waiting before it.
+
+### 2026-10-25 01:59 PDT: h163's mechanism reads on block 1 (1047-1058): both pass; not decision inputs
+
+Military karbonite dead within 3 rounds of birth (scratchpad young/young_share.sh, our side): losses 21,050 of
+54,005 K, **39%** (bar: under 45%; v8 55% in 726-731); wins 16%. Muster builds (scratchpad econ/muster.js; structure
+radio SIG.THREAT at r2 2): 740 in 25 of the 36 games (11 of 18 wins, 14 of 18 losses), with release radios in 22 of
+those 25 (bar: a third). The most in IanCoolidge0 203 (60 and 101 builds, 167 and 679 release radios; both lost,
+v8 6 of 7 red) and uvafan 1712 (109 and 171; one won, a cell v8 won once in 14). None on bot1v43 388, 2591, wololo
+2644 red, IanCoolidge0 2644. The switch acts where it was built to; block 2 decides.
