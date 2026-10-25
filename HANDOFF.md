@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 11:30 PDT)
+## State (2026-10-25 11:54 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -47,7 +47,7 @@
   block is scored (TRAINING_LOG 2026-10-25 07:24). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted).
-  **Replica queue (11:30): 150 waiting (140 ranked, our block bumped) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  **Replica queue (11:54): 142 waiting (140 ranked; h175's block 6 running, 2 waiting) after the 09:00 daily autoscrim** (4 a team, none dominant;
   about 15 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: h175's block 1 = matches 1391-1402** (submission 194, bots/v9 back as the ladder build 195). h170
