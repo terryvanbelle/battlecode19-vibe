@@ -540,6 +540,32 @@ test('struct: SAFE_BUILD never builds onto a tile where the enemies in sight wou
   } finally { CFG.SAFE_BUILD = saved; }
 });
 
+test('struct: DEF_SAFE builds a military newborn on a tile the enemies in sight cannot kill it on, while one is free', () => {
+  const saved = CFG.DEF_SAFE;
+  try {
+    const g = new Game(3, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0);
+    const dy = castle.y + 7 < g.map.length ? 7 : -7;   // two prophets 7 rows out, as in the SAFE_BUILD test
+    const foes = [-1, 1].map((ox, i) => ({ id: 4990 + i, team: 1, unit: S.PROPHET, x: castle.x + ox, y: castle.y + dy, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 }));
+    const hits = (x, y) => foes.filter(e => { const r = d2(x, y, e.x, e.y); return r >= 16 && r <= 64; }).length * 10;
+    const turn1 = (on, wall) => {
+      CFG.DEF_SAFE = on; castle.turn = 1;
+      const all = g.robots, map = g.map;
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100).concat(foes);
+      if (wall) g.map = map.map((row, y) => row.map((v, x) => (Math.abs(x - castle.x) <= 1 && Math.abs(y - castle.y) <= 1 && hits(x, y) < 20) ? false : v));
+      const w = worldFor(g, castle); g.robots = all; g.map = map;
+      const B = { api: w.api, w, round: 1, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 100; w.fuel = 500;
+      return castleTurn(B);
+    };
+    const a0 = turn1(0), a1 = turn1(1), a2 = turn1(1, true);
+    assert.strictEqual(a0.u, S.PROPHET); assert.strictEqual(hits(castle.x + a0.dx, castle.y + a0.dy), 20);   // default: toward them
+    assert.strictEqual(a1.u, S.PROPHET); assert.ok(hits(castle.x + a1.dx, castle.y + a1.dy) < 20, 'a tile the pair cannot both reach');
+    // only deadly tiles left: unlike SAFE_BUILD it still builds, nearest the target
+    assert.strictEqual(a2.u, S.PROPHET, JSON.stringify(a2)); assert.strictEqual(hits(castle.x + a2.dx, castle.y + a2.dy), 20);
+  } finally { CFG.DEF_SAFE = saved; }
+});
+
 testPreV7('struct: ECON_UNTIL keeps the peacetime army out before that round, not a threat response', () => {
   const saved = [CFG.ECON_UNTIL, CFG.SERVE_MOVES];
   try {

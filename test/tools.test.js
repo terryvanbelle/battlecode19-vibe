@@ -732,6 +732,13 @@ test('reads: idle, parked and escort reads on replica games', () => {
   assert.deepStrictEqual(run('held.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')),
     [{ held: 5, heldShot: 0, lost: 2, lostCastles: 1, byLoss: [[175, 1, 5, 0, 0], [204, 0, 3, 3, 0]] }]);
   assert.deepStrictEqual(run('held.mjs', '0', g), [{ held: 0, heldShot: 0, lost: 1, lostCastles: 1, byLoss: [[120, 0, 0, 0, 0]] }]);
+  // The same game: 17 of v9's 57 military newborns died within 2 rounds, 13 on a tile exposed to their hp beside a
+  // free one that was not; wololo's (team 1) lost 2 of 54.
+  assert.deepStrictEqual(run('stillborn.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')),
+    [{ built: 57, stillborn: 17, K: 430, byCastle: 13, shootable: 9, exposed: 13, safer: 13, byRound: { 100: 14, 200: 3 } }]);
+  assert.deepStrictEqual(run('stillborn.mjs', '1', path.join(FIX, 'held_s2013_1180-1.bc19')),
+    [{ built: 54, stillborn: 2, K: 60, byCastle: 0, shootable: 0, exposed: 0, safer: 0, byRound: { 100: 2 } }]);
+  assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'stillborn.mjs'), '2', g], { stdio: 'pipe' }));
 });
 
 test('reads: sum.py means per field, wins/losses and opponents; nulls left out; --ge counts', () => {

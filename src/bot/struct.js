@@ -110,13 +110,17 @@ export function exposure(w, x, y, only) {
 
 // Build `unit` on the free adjacent tile closest to (tx, ty); avoid depots when possible. Returns the action or null.
 // CFG.SAFE_BUILD: never on a tile whose exposure would kill the newborn before its first turn (null if every tile would).
+// CFG.DEF_SAFE: a military newborn goes on such a tile only when every free tile is one (replica 1373, seed 1884:
+// castle (0,14) built a prophet a round on (0,15), the tile nearest two enemy prophets, from r247; each died that
+// round, 162 of v9's 222 military newborns in the game, while a free tile out of one prophet's reach stood beside it).
 export function buildToward(B, unit, tx, ty, signal) {
   const w = B.w, me = w.me; let best = null, bd = 1e9;
   const safe = CFG.SAFE_BUILD && w.enemies.some(e => STATS[e.unit].damage > 0);
+  const shun = CFG.DEF_SAFE && unit >= CRUSADER && w.enemies.some(e => STATS[e.unit].damage > 0);
   for (const [dx, dy] of ADJ) {
     const x = me.x + dx, y = me.y + dy; if (!w.free(x, y)) continue;
     if (safe && exposure(w, x, y, CFG.SAFE_BUILD >= 2) >= STATS[unit].hp) continue;
-    const dd = d2(x, y, tx, ty) * 4 + (w.isDepot(x, y) ? 3 : 0);
+    const dd = d2(x, y, tx, ty) * 4 + (w.isDepot(x, y) ? 3 : 0) + (shun && exposure(w, x, y) >= STATS[unit].hp ? 1e6 : 0);
     if (dd < bd) { bd = dd; best = [dx, dy]; }
   }
   if (!best) return null;
