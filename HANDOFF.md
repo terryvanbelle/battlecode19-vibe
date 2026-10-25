@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 21:45 PDT)
+## State (2026-10-24 22:24 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -74,7 +74,9 @@
   **Next, one block at a time:** h157 (v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9, dist/h157 a5eba191475e; screen
   dropped, driver diagnostics instead; studied cells wololo 2013, 2644, 836, bot1v43 2591, botfinalsafe 1706 with
   `--studied` as in TRAINING_LOG 12:51; mechanism read scratchpad econ/esc.js, both first crusaders 6+ steps from home
-  at r30 in half the studied games; TRAINING_LOG 22:20), `tools/panel_submit.sh dist/h157 "cand:h157"`; then
+  at r30 in half the studied games; TRAINING_LOG 22:20), `tools/panel_submit.sh dist/h157 "cand:h157"`. If h157 is
+  accepted, h165 (h157 + ESCORT_EACH 2, ECONOMICS row 7, dist/h165 feb35bd6487b; rebuild on the new champion; general
+  panel, no studied cell; TRAINING_LOG 22:33) follows it; if not, row 7 closes. Then
   (ECONOMICS.md, TRAINING_LOG 20:54) h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e;
   studied cells uvafan 1712, awesomelemonade 1712, 2797, 2518), `tools/panel_submit.sh dist/h163 "cand:h163"` on the
   general panel against the v8-m1 pool. ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22); row 5

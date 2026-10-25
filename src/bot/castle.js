@@ -25,6 +25,7 @@ export function castleTurn(B) {
     st.lostN = new Map();  // cluster -> pioneers lost there (CFG.PIONEER_LOST_DOUBLE)
     st.taken = new Map();  // cluster -> round a pioneer saw an enemy structure there (CFG.EXPAND_ROUND) or gave up (PIONEER_GIVEUP, _STALL_ANY)
     st.escorts = [];       // CFG.ESCORT: [{cluster, x, y, left}] pioneer sites still owed escort units
+    st.escorted = new Set();   // CFG.ESCORT_EACH: clusters an escort was opened for at a pioneer's send (once each)
     st.attackUntil = 0;
     st.deadE = new Set();   // indices (into st.order) of enemy castles reported destroyed
     st.lastT = -1;
@@ -266,7 +267,18 @@ function sendPioneer(B, next) {
   if (!b) return null;
   st.pending = { x: b.x, y: b.y, unit: PILGRIM, kind: 'pioneer', ref: next.cluster };
   st.pioneers.push({ id: -1, cluster: next.cluster, since: w.me.turn, d: next.d });
+  if (CFG.ESCORT_EACH && next.m <= CFG.PLAN_CONTEST_FIRST) escortEach(B, next.cluster);
   return b.act;
+}
+
+// CFG.ESCORT_EACH: a pioneer sent to a contested cluster other than ESCORT_FIRST's opens ESCORT_EACH units to it, once
+// per cluster, built after it (escort before pioneer only for the first: ECONOMICS.md row 7).
+function escortEach(B, cluster) {
+  const st = B.st;
+  if (st.escorted.has(cluster)) return;
+  st.escorted.add(cluster);
+  openEscort(B, cluster, CFG.ESCORT_EACH);
+  mirrorEscort(B, cluster);
 }
 
 // CFG.ESCORT: owe `left` units (ESCORT) to a cluster's site (once per cluster while any are still owed).
@@ -282,9 +294,14 @@ export function escortFirst(B) {
   const p = B.st.plan.find(q => q.m <= CFG.PLAN_CONTEST_FIRST);
   if (!p) return;
   openEscort(B, p.cluster, CFG.ESCORT_FIRST);
-  // CFG.ESCORT_MIRROR (on in v8): the escort holds the mirror image of the site, the enemy's own site
-  // for that cluster pair, as bot1v43's round-3 prophet does (replica 410-1, 416-1, 416-3).
-  const e = CFG.ESCORT_MIRROR && B.st.escorts.find(q => q.cluster === p.cluster);
+  B.st.escorted.add(p.cluster);
+  mirrorEscort(B, p.cluster);
+}
+
+// CFG.ESCORT_MIRROR (on in v8): the escort holds the mirror image of the site, the enemy's own site
+// for that cluster pair, as bot1v43's round-3 prophet does (replica 410-1, 416-1, 416-3).
+function mirrorEscort(B, cluster) {
+  const e = CFG.ESCORT_MIRROR && B.st.escorts.find(q => q.cluster === cluster);
   if (e) [e.x, e.y] = B.w.mirror(e.x, e.y);
 }
 

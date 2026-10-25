@@ -4719,3 +4719,26 @@ pre-registration is unchanged; it waits one block). Scored by the pooled rule wi
 also >= 0. Mechanism read, not a decision input: on our side of the studied cells, the first two crusaders standing 6+
 king steps from home at r30 (esc.js; v8's stand 1-2 steps out; bar: both, in at least half of those games). The h157 screen job (...19 + 27 z's) is
 deleted from ~/jobq/superseded; h155 and h154 stay held behind it.
+
+## 2026-10-24 22:33 PDT: h165 (ESCORT_EACH 2 on h157) built; held until h157 is decided
+
+ECONOMICS.md row 7 (Leontief complements: a pioneer and its guard on contested land). ESCORT_EACH (castle.js
+escortEach; off by default): a pioneer sent to a contested cluster (m <= PLAN_CONTEST_FIRST) other than
+ESCORT_FIRST's opens ESCORT_EACH units to it, once per cluster, built after it, at the mirror site under
+ESCORT_MIRROR as ESCORT_FIRST's are. Census before play (LEARNINGS 41; scratchpad contested.mjs, the bot's own turn-3
+plans): on 6 of the 15 panel maps a castle plans 2+ contested clusters (2013, 2644, 2740, 2321, 1712, 1036), 12
+extra escorts in all. Defaults replay v8 byte for byte (2046 to r600, 2013 to r200); `tools/unit-tests.sh` 161 of 161
+and 64 OK. A build of the current tree with h157's two switches replays dist/h157's 2591 game byte for byte.
+dist/h165 = v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_EACH 2 (feb35bd6487b).
+
+Driver diagnostics against v8, red side, to r200, beside h157's games on the same seeds (scratchpad econ/guards.mjs:
+every escort, steps from its site 20 and 40 rounds after birth). No exceptions.
+- 2013: two more escorts (r79-80) hold 2 steps from their site and die at r125 and r138; churches 3-5 come 2-5
+  rounds later than h157's; karbonite mined by r200 2,632 against 2,658.
+- 2321: six more escorts; four hold 2 steps out, two (r27, r34) die at r45 and r47 before arriving; the 4th and 5th
+  churches come at r79 and r89 against h157's r65 and r68; 2,662 against 2,762.
+- 1712: four more escorts (r89-97), all dead at r101-105 short of their sites; churches within 5 rounds of h157's,
+  some earlier; 3,416 against 3,414.
+v8 contests the later clusters little, so these games show the cost (later churches, dead escorts) more than the
+gain. h165 plays only if h157 is accepted (then as the new champion + ESCORT_EACH 2, on the general panel with the
+pooled rule and no studied cell); otherwise row 7 closes with h157.

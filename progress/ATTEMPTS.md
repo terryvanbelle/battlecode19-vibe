@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 124 other, 43 rejected, 16 accepted, 8 in progress, 7 dropped, 4 sparring partners, 2 queued (204 rows).
+Totals: 125 other, 43 rejected, 16 accepted, 8 in progress, 7 dropped, 4 sparring partners, 2 queued (205 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -218,3 +218,4 @@ Totals: 124 other, 43 rejected, 16 accepted, 8 in progress, 7 dropped, 4 sparrin
 | `h162` | 2026-10-24 18:45 | v8 | v8 + ATTACK_ONE 1: every castle calls the general attack on the same enemy castle, the mirror nearest our living castles in summed r2 (19 of 40 pool maps split v8's call; ECONOMICS.md idea 2; dist/h162 88a7474abd7a) |  |  | block 1: matches 1023-1034 (both sides) |  | in progress: panel block 1 (submission 176, 21:38); screen held for the replica queue |
 | `h163` | 2026-10-24 20:54 | v8 | v8 + MUSTER 1: against a prophet camping out of a structure's reach (3 turns on its tile, beyond r2 36, a castle's 64; no enemy melee in sight), crusaders built on the far side hold 2 king steps from home out of reach and charge together at 2A + 1 (A + 1 once v8's gate is shut) on the structure's spot radio (ECONOMICS.md idea 3; dist/h163 f0fbe3ea6c0e) |  |  |  |  | queued: panel block after h162's; screen dropped (inert against v8) |
 | `h164` | 2026-10-24 21:41 | v8 | v8 + CHAIN_WALL 28: a line church that sees 28+ enemy crusaders, prophets and preachers ends its line (no link, no burst), radios the rest of the line, and our castles launch no chain and keep no chain bank for 300 rounds (ECONOMICS.md row 8; dist/h164 96cae5a62d0f) |  |  |  |  | queued: screen vs v8 first (held for the replica queue); driver 1653 lost 2 castles after the rest |
+| `h165` | 2026-10-24 22:33 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_EACH 2: h157 plus an escort of 2 for every later contested cluster's pioneer (dist/h165 feb35bd6487b) |  |  |  |  | HELD: plays only if h157 is accepted (driver vs v8: later churches on 2321, extra escorts die on 1712) |

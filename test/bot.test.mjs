@@ -1923,6 +1923,39 @@ testPreV8('castle: ESCORT_FIRST owes escorts to the first contested cluster at p
   } finally { Object.assign(CFG, saved); }
 });
 
+test('castle: ESCORT_EACH opens an escort, once, for a pioneer sent to a later contested cluster; off: none', () => {
+  const saved = { ...CFG };
+  try {
+    const run = each => {
+      CFG.ESCORT_EACH = each;
+      const g = new Game(2013, 100, 20, false, false);   // one castle a side; three contested clusters planned
+      const castle = g.robots.find(r => r.team === 0);
+      const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+      for (const t of [1, 2, 3]) { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; castleTurn(B); }
+      const st = B.st, w = B.w, hot = st.plan.filter(p => p.m <= CFG.PLAN_CONTEST_FIRST);
+      assert.ok(hot.length >= 2, 'seed 2013 plans 2+ contested clusters');
+      assert.deepStrictEqual(st.escorts.map(e => e.cluster), [hot[0].cluster]);   // ESCORT_FIRST's, at planning
+      assert.ok(st.escorted.has(hot[0].cluster));
+      // The first pioneer goes to ESCORT_FIRST's cluster: nothing more is opened.
+      st.escorts = []; st.pioneers = []; st.pending = null; B.round = 3; w.fuel = 500; w.karbonite = 300;
+      assert.ok(pioneer(B)); assert.strictEqual(st.pioneers[0].cluster, hot[0].cluster);
+      assert.deepStrictEqual(st.escorts, []);
+      // The next contested cluster's pioneer opens ESCORT_EACH units at its mirror site (ESCORT_MIRROR, v8).
+      st.churched.add(hot[0].cluster); st.pioneers = []; st.pending = null; w.karbonite = 300;
+      assert.ok(pioneer(B)); assert.strictEqual(st.pioneers[0].cluster, hot[1].cluster);
+      return { B, hot };
+    };
+    const { B, hot } = run(2), st = B.st, site = B.clusters[hot[1].cluster].site, [mx, my] = B.w.mirror(site[0], site[1]);
+    assert.deepStrictEqual(st.escorts, [{ cluster: hot[1].cluster, x: mx, y: my, left: 2 }]);
+    // Once per cluster: a second pioneer there (the first died) opens nothing.
+    st.escorts = []; st.pioneers = []; st.pending = null; B.w.karbonite = 300;
+    assert.ok(pioneer(B)); assert.strictEqual(st.pioneers[0].cluster, hot[1].cluster);
+    assert.deepStrictEqual(st.escorts, []);
+    // Off (v8): the later pioneer goes alone.
+    assert.deepStrictEqual(run(0).B.st.escorts, []);
+  } finally { Object.assign(CFG, saved); }
+});
+
 test('military: ESCORT_HOLD_R: an escort holds within that many king steps of its site, other units within LATTICE_R', () => {
   const saved = { ...CFG };
   try {
