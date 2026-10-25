@@ -4828,3 +4828,26 @@ screens retire: h155 and h154 deleted from ~/jobq/superseded (superseded by h157
 and h164's were; h160, h162 and h156 stay there unrun until decided. Saturn's undeployed code (slots that survive
 spool errors, exc_caught / slow_logged, the fail-closed sandbox.sh) goes in with `deploy.sh app` and a restart
 between panel blocks, after h162's last match (1029) ends, so no block game is retried.
+
+## 2026-10-24 22:56 PDT: h162 (ATTACK_ONE 1) REJECTED at block 1 (13 of 36, side-aware z -1.80); saturn redeployed
+
+Block 1 = matches 1023-1034 (1029, vibe19 vs uvafan, ran last; finished 22:55). `tools/panel_pool.sh 726-731
+progress/panels/v8-m1.pool 1023-1034`: h162 wins 13 of 36 against a pooled expectation of 16.0 (z -1.48),
+side-aware 15.9, z -1.80: under 0.5, so REJECTED by the block-1 rule; outside the +-1 join band, so not pooled.
+Won: IanCoolidge0 1036 (both), 2644 (both), 203 red; bot1v43 388 (both); botfinalsafe 203 blue, 2740 red;
+awesomelemonade 1712 (both); wololo 2644 red; uvafan 1653 blue. Lost the usually-won awesomelemonade 2797 red (pool
+red 5 of 6), uvafan 1653 red (7 of 9) and bot1v43 2321 red (5 of 6); the never-won cells stayed lost. ECONOMICS row 2
+closes (Blotto concentration of the general attack). The mechanism read (`tools/census.js` attack_split on our side
+against v8's 726-731) follows.
+
+Saturn's pending code went in between blocks: `tools/galaxy19/deploy/deploy.sh app` and `sudo systemctl restart
+bc19-galaxy-saturn` at 22:55 (no match of ours running), 8 slots back at once.
+
+### 2026-10-24 23:01 PDT: h157 on the panel, block 1 = matches 1035-1046
+
+Submitted with `tools/panel_submit.sh dist/h157 "cand:h157"` (submission 178, scrim requests 464-475, v8 back on
+the ladder as 179) right after the saturn restart. Bars fixed before any game (22:20, 22:43): side-aware z over the
+v8-m1 pool with the five studied cells (wololo 2013, 2644, 836, bot1v43 2591, botfinalsafe 1706); block 1 rejects
+below 0.5; the studied cells also need z over the other cells >= 0. Mechanism read: both first escorts within 2
+steps of their radioed site 20 rounds after birth in at least half of the studied games (v8 0 of 5). h162's held
+VM screen deleted (decided). Queue 38 waiting (26 ranked + h157's 12); VM disk 2.9 GB free.

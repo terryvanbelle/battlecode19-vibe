@@ -42,3 +42,4 @@ submission	build	note
 172	cand:h159	panel candidate dist/h159 (552aa86f0b35), block 2 = matches 997-1008, both sides (TRAINING_LOG 2026-10-24 17:29)
 174	cand:h161	panel candidate dist/h161 (4e5d828b7522), block 1 = matches 1011-1022, both sides (TRAINING_LOG 2026-10-24 19:01)
 176	cand:h162	panel candidate dist/h162 (88a7474abd7a), block 1 = matches 1023-1034, both sides (TRAINING_LOG 2026-10-24 21:38)
+178	cand:h157	panel candidate dist/h157 (a5eba191475e), block 1 = matches 1035-1046, both sides (TRAINING_LOG 2026-10-24 22:20)

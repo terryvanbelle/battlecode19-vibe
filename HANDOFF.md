@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 22:24 PDT)
+## State (2026-10-24 23:00 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -32,13 +32,12 @@
   diagnostics as the pre-filter), so no gate needs the VM, and each 12-match panel block would push the queue back
   over 30 under the shared mode. The VM screens retire: h157, h164 deleted (they play the panel), h155 and h154
   deleted (superseded by h157 and h166). Still in ~/jobq/superseded, not run while saturn holds 8 slots: h160
-  (ECON_NOPLAN 1; 26 z's + y; its route is the targeted panel), h162 (ATTACK_ONE 1; 26 z's + yyy; on the panel now),
-  h156 (INTERCEPT_R2 64 + INTERCEPT_DWELL 3; 30 z's), and the decided h159, h152, h153 (26, 31, 32 z's).
-  Saturn's pending code (`tools/galaxy19/deploy/deploy.sh app`, then `sudo systemctl restart bc19-galaxy-saturn`):
-  exc_caught / slow_logged keys, the fail-closed sandbox.sh of 2026-10-24 (tried on the VM under saturn's unit
-  settings), and slots that survive spool errors (spool.release, 19:58; until deployed a full disk kills slot threads
-  and only a restart brings them back, as at 19:54). Deploy it between panel blocks (a restart retries every running
-  game). The shared mode (GALAXY_EXECUTE_SLOTS=6, `deploy.sh env`, gates at par 2) returns only if gates come back.
+  (ECON_NOPLAN 1; 26 z's + y; its route is the targeted panel),
+  h156 (INTERCEPT_R2 64 + INTERCEPT_DWELL 3; 30 z's), and the decided h159, h152, h153 (26, 31, 32 z's); h162's
+  screen deleted (decided on the panel, 22:56). Saturn deployed and restarted 2026-10-24 22:55 (exc_caught /
+  slow_logged keys, the fail-closed sandbox.sh, slots that survive spool errors); deploy again only between panel
+  blocks (`tools/galaxy19/deploy/deploy.sh app`, then `sudo systemctl restart bc19-galaxy-saturn`; a restart retries
+  every running game). The shared mode (GALAXY_EXECUTE_SLOTS=6, `deploy.sh env`, gates at par 2) returns only if gates come back.
   Screens passed: h148 (CHAIN_LIVE 1; +3 -0, t 1.73, castles 35 vs 39), h149 (CHAIN_LIVE 2; +3 -3, t 0.00, 35 vs 34),
   h150 (WATCH 2; +8 -3, t 1.51, 24 vs 38). Rejected: h151 (CHAIN_FAILS 1; +1 -3, t -1.00, 31 vs 19).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h` (t, castles lost and the verdict).
@@ -62,14 +61,15 @@
   h159 (FEED_STOP 3) 985-996 + 997-1008 REJECTED 19:01 (33 of 72, side-aware z 0.66; young share in losses 42% vs
   v8's 55%: the switch acts, no games move; TRAINING_LOG 19:01).
   h161 (FUEL_DEFER 60) 1011-1022 REJECTED 21:36 (14 of 36, side-aware z -1.17; not pooled; TRAINING_LOG 21:38).
-  **In play: h162 (v8 + ATTACK_ONE 1, dist/h162 88a7474abd7a): block 1 = matches 1023-1034** (submission 176, v8
-  back as 177; TRAINING_LOG 18:45, 21:38). Score with `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool
-  1023-1034` once all 12 finish: block 1 reject z < 0.5, else a second block. No studied cell. Mechanism read (not a
-  decision input): `tools/census.js` attack_split on our side (bar: none).
-  **Next, one block at a time:** h157 (v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9, dist/h157 a5eba191475e; screen
-  dropped, driver diagnostics instead; studied cells wololo 2013, 2644, 836, bot1v43 2591, botfinalsafe 1706 with
-  `--studied` as in TRAINING_LOG 12:51; mechanism read scratchpad econ/esc_matches.sh BLOCK: both first escorts within 2
-  steps of their site 20 rounds after birth in half the studied games, v8 0 of 5; TRAINING_LOG 22:20, 22:43), `tools/panel_submit.sh dist/h157 "cand:h157"`. If h157 is
+  h162 (ATTACK_ONE 1) 1023-1034 REJECTED 22:56 (13 of 36, side-aware z -1.80; not pooled; TRAINING_LOG 22:56).
+  **In play: h157 (v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9, dist/h157 a5eba191475e): block 1 = matches 1035-1046**
+  (submission 178, v8 back as 179; TRAINING_LOG 22:20, 22:43). Score once all 12 finish with
+  `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 1035-1046 --studied
+  m-schier.battlecode-2019-wololo:seed-2013,m-schier.battlecode-2019-wololo:seed-2644,m-schier.battlecode-2019-wololo:seed-836,StoneT2000.BC19-bot1v43:seed-2591,StoneT2000.BC19-botfinalsafe:seed-1706`
+  (block 1 reject z < 0.5; studied cells also need z over the other cells >= 0). Mechanism read (scratchpad
+  econ/esc_matches.sh 1035-1046): both first escorts within 2 steps of their site 20 rounds after birth in half the
+  studied games, v8 0 of 5. awesomelemonade 2518 is an out-of-sample stall cell (TRAINING_LOG 22:34).
+  **Next, one block at a time:** if h157 is
   accepted, h165 (h157 + ESCORT_EACH 2, ECONOMICS row 7, dist/h165 feb35bd6487b; general panel, no studied cell;
   TRAINING_LOG 22:33) and h166 (h157 + ESCORT_EARLY 1, dist/h166 69e55f300f65; studied cell wololo 836) follow it;
   if not, both close. Then
