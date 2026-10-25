@@ -275,3 +275,8 @@
    8). Candidate panel games stay under the candidate's name (cand:hN) even when the code becomes the champion: the
    accepting blocks overstate it (LEARNINGS 33), so the champion's rating comes from its own control and ladder
    games. (2026-10-25 10:15)
+44. **Never SIGSTOP a background job to make room; wait for it or kill it and rerun.** To keep one heavy job on the
+   driver, a census loop launched as a background shell was paused with `kill -STOP` while the progress refresh ran.
+   The harness's wrapper shell saw its job stopped, and on `kill -CONT` the loop exited early: 35 of 108 games read,
+   "finished" printed as if complete. Check a census's line count against its game count before reading it, and
+   either queue the second heavy job behind the first or stop the first and rerun its missing part. (2026-10-25 12:59)
