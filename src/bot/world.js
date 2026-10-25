@@ -95,7 +95,13 @@ export class World {
   // Actions, canonical offsets in, engine actions out.
   move(dx, dy) { const [a, b] = this.T.dirE(dx, dy); return this.api.move(a, b); }
   attack(dx, dy) { const [a, b] = this.T.dirE(dx, dy); return this.api.attack(a, b); }
-  build(unit, dx, dy) { const [a, b] = this.T.dirE(dx, dy); return this.api.buildUnit(unit, a, b); }
+  // A build is charged too, so a signal sent after it this turn (struct.js sayRescue) leaves its fuel: the engine
+  // takes the turn's signal fuel before it checks the build's price (game.js:832-893).
+  build(unit, dx, dy) {
+    const [a, b] = this.T.dirE(dx, dy);
+    this.karbonite -= STATS[unit].costK; this.fuel -= STATS[unit].costF;
+    return this.api.buildUnit(unit, a, b);
+  }
   give(dx, dy, k, f) { const [a, b] = this.T.dirE(dx, dy); return this.api.give(a, b, k, f); }
   mine() { return this.api.mine(); }
   // The API charges the signal at once (js_starter.js:108): later checks this turn must see the lower fuel.

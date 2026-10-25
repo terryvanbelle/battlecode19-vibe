@@ -314,6 +314,19 @@ test('world: a signal lowers the fuel that later affordability checks see', () =
   w.signal(1, 2); assert.strictEqual(w.fuel, 48); assert.ok(!w.canAfford(S.PROPHET));
 });
 
+test('world: a build lowers the karbonite and fuel that a later signal this turn sees (no "Cannot afford")', () => {
+  // h177 against v10 on 836 (det): v10's castle, hit at r479 with 50-59 fuel, built a preacher (50 fuel) and then
+  // radioed MUSTER_RESCUE's spot (10); the engine takes the signal's fuel first and refused the build.
+  const built = [], sent = [];
+  const w = Object.assign(Object.create(World.prototype), { T: { dirE: (dx, dy) => [dx, dy] }, karbonite: 100, fuel: 55,
+    api: { buildUnit: (u, a, b) => (built.push([u, a, b]), { action: 'build' }), signal: (v, r) => sent.push([v, r]) } });
+  assert.deepStrictEqual(w.build(S.PROPHET, 1, 0), { action: 'build' });
+  assert.deepStrictEqual([built, w.karbonite, w.fuel], [[[S.PROPHET, 1, 0]], 75, 5]);
+  const st = { hitAt: 40 }, B = { w, st };
+  w.me = { x: 5, y: 5, turn: 41, unit: S.CASTLE, health: 190 }; w.sentR2 = 0; w.enemies = [{ x: 12, y: 5, unit: S.PROPHET }];
+  sayRescue(B); assert.deepStrictEqual(sent, []);                                           // 5 fuel left: no spot
+});
+
 test('military: after a kill, report it and march on the nearest other known enemy castle, else wait', () => {
   const B = { round: 500, w: { me: { x: 10, y: 40 } },
     st: { tIdx: 1, known: [[30, 50], [10, 45], [12, 60]], dead: new Set(), reports: [], waitUntil: 0, target: null } };

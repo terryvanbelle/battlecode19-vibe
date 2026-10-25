@@ -5521,3 +5521,22 @@ MB; registry.bin kept), now 2.5 GB. h177's inertness check: h177 against itself 
 a cluster with m >= 7) is IDENTICAL to v10 against itself. Its 836 diagnostic (h177 red against v10 blue) is running.
 Interim, not a bar: v10's stillborn read over h175's 72 games gives `safer` 11.76 a game (v9's 108: 8.50; uvafan's
 12 games 39.25); h178's bar (a quarter of v10's rate) is set once the control block's 36 games join.
+
+## 2026-10-25 16:55 PDT: h177's 836 diagnostic; v10's one exception traced and fixed (World.build charges its price); h177-h182 rebuilt
+
+- **h177 red against v10 blue on 836** (det, the no-op flags, to r1000; scratchpad h177/d836.bc19): h177 won by
+  castles at r486. Both castles sent their PIONEER_OPEN pioneer on r3: to c2 (32,9) (arrived r11, church r24, 13
+  rounds waiting for the bank) and c1 (3,9) (arrived r19, church r46); the contested pioneer left at r24 as v10's
+  did (church r35, v10's mirror r31). First church r24 against v10's r31; mined K by r50 450 against 412, r100 1834
+  against 1770, r200 4994 against 3730; pilgrims r100 34 against 30. One game on one side: not a verdict.
+- **v10's exception**: 1 in that game (h177 0): "Cannot afford to build specified unit.", blue castle 1316 at r479
+  (hit, 120 HP, 50-59 fuel): it built a preacher (50 fuel) and then radioed MUSTER_RESCUE's spot (10), which the
+  engine charges first. World.build now lowers w.karbonite and w.fuel as World.signal does (LEARNINGS 45), so
+  sayRescue sees the fuel left after the build. It changes play only where the engine would refuse the build. Unit
+  test added. No-op (defaults 943de76c4a94 against bots/v10, 799 to r300, driver alone) **IDENTICAL**; unit tests 173
+  of 173 and the 64 galaxy19 tests pass. The replica's 72 h175 games had 0 exceptions (the case needs a hit structure
+  with fuel within 10 of a unit's price).
+- Rebuilt with the fix (switches unchanged, pre-registrations unchanged): h177 902efcd0eaf7, h178 4a802965e3a3, h179
+  2faea994919d, h180 45123f763cfb, h181 1b367520ea40, h182 fa74c6f4dc8f. h177's inertness check on 2518, rerun on the new
+  build: **IDENTICAL**. Late in the 836 game both teams sat on ~2,100 K with 0-370 fuel: a fuel census (scratchpad econ/fuel.mjs:
+  rounds fuel-bound, with K for a prophet but not the fuel) runs on v10's panel games next.

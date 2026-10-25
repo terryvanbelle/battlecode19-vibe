@@ -280,3 +280,9 @@
    The harness's wrapper shell saw its job stopped, and on `kill -CONT` the loop exited early: 35 of 108 games read,
    "finished" printed as if complete. Check a census's line count against its game count before reading it, and
    either queue the second heavy job behind the first or stop the first and rerun its missing part. (2026-10-25 12:59)
+45. **The world model charges every action's price the moment the bot makes it, builds as well as signals.** The
+   engine takes a turn's signal fuel before it checks the build's price (game.js:832-893). World.signal lowered
+   w.fuel since h7 (a radio sent before a build), but World.build did not, so v10's rescue radio, sent after the
+   build, saw the turn-start fuel: a castle hit at r479 with 50-59 fuel built a preacher (50) and radioed the spot
+   (10), and the engine refused the build ("Cannot afford", h177 against v10 on 836). World.build now charges K and
+   fuel too. Any new post-build signal must check the fuel left after the build. (2026-10-25 16:55)

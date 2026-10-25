@@ -61,23 +61,23 @@
   2026-10-25 15:26); h170 rejected (1379-1390, z -1.71).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v10's 108 panel games, 1391-1426, before the candidate's block is read; TRAINING_LOG 2026-10-25 15:51):
-  h178 (v10 + DEF_SAFE 1, dist/h178 8fa0a00b145b; h176's: military newborns built while enemy attackers are in
+  h178 (v10 + DEF_SAFE 1, dist/h178 4a802965e3a3; h176's: military newborns built while enemy attackers are in
   sight go on a tile they cannot kill them on, if one is free; basics-fix rule; studied cells uvafan.bc2019:seed-1712,
   uvafan.bc2019:seed-2046; mechanism read tools/reads/stillborn.mjs over its two blocks: `safer` at most a quarter of
   v10's rate (v9 8.50, bar 2.13); TRAINING_LOG 2026-10-25 12:06);
-  h177 (v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7, dist/h177 800bd22f607b: a turn-6 pioneer to the first planned
+  h177 (v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7, dist/h177 902efcd0eaf7: a turn-6 pioneer to the first planned
   cluster we reach 7+ king steps before the enemy; ordinary rule; studied cells wololo 836, 2013, botfinalsafe 1706;
   mechanism read pioneers.mjs (the r<=6 pioneer churches in 2/3+ of firing-map games); first a driver diagnostic on
   836 and the inertness check on 2518; TRAINING_LOG 2026-10-25 15:45, 15:51);
-  h179 (v10 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h179 48005faf0871; h171's; studied cells
+  h179 (v10 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h179 2faea994919d; h171's; studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
   tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);
-  h180 (v10 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h180 8af367be7f5f; h174's: idle miners take free safe home
+  h180 (v10 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h180 45123f763cfb; h174's: idle miners take free safe home
   depots; basics-fix rule; studied cells awesomelemonade.Battlecode2019:seed-2518, uvafan.bc2019:seed-2046; mechanism
   read stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 75% of v10's (v9 41.2, bar 30.9); TRAINING_LOG
   2026-10-25 09:12, 10:12);
-  h181 (v10 + CHAIN_WALL 28, dist/h181 282b5b6f2336; h172's; studied cells uvafan 2046, 1653, IanCoolidge0 1036);
-  h182 (v10 + ECON_NOPLAN 1, dist/h182 e6265fba135c; h173's) on the targeted panel progress/panels/noplan-m1.json
+  h181 (v10 + CHAIN_WALL 28, dist/h181 1b367520ea40; h172's; studied cells uvafan 2046, 1653, IanCoolidge0 1036);
+  h182 (v10 + ECON_NOPLAN 1, dist/h182 fa74c6f4dc8f; h173's) on the targeted panel progress/panels/noplan-m1.json
   (the six bots on the five pool maps where no castle plans a church): first a bots/v10 control block
   (`PANEL=progress/panels/noplan-m1.json tools/panel_submit.sh bots/v10 "v10 control, noplan-m1"`), panelsim on the
   design (> 10% false accepts: a second control block first), then h182; score with `contest19.py pool CONTROL
