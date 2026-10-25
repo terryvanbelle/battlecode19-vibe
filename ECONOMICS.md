@@ -164,7 +164,8 @@ both sides: an exact mirror). No exceptions.
 **ATTACK_ONE (h162).** Rejected on the panel at block 1 (1023-1034): 13 of 36 against the pooled 16.0, side-aware
 z -1.80 (TRAINING_LOG 2026-10-24 22:56). It lost three usually-won red cells (awesomelemonade 2797, uvafan 1653,
 bot1v43 2321) and won no new one: concentrating the general attack on one castle did not buy the castle kill that
-breaks a tie at r1000. Whether its castles' calls were in fact joined is the mechanism read (census attack_split).
+breaks a tie at r1000. The calls were joined: 0 split call rounds in its 18 multi-castle games, against 283 of 468 in v8's 9 (census
+attack_split, TRAINING_LOG 23:10). The switch acted as built and moved no game.
 
 **FEED_STOP (h159, the precursor of row 3).** Rejected on the panel at two blocks (33 of 72, side-aware z 0.66;
 TRAINING_LOG 2026-10-24 19:01). In our losses it cut the share of military karbonite dead within 3 rounds of birth from

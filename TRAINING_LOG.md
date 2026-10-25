@@ -4851,3 +4851,11 @@ v8-m1 pool with the five studied cells (wololo 2013, 2644, 836, bot1v43 2591, bo
 below 0.5; the studied cells also need z over the other cells >= 0. Mechanism read: both first escorts within 2
 steps of their radioed site 20 rounds after birth in at least half of the studied games (v8 0 of 5). h162's held
 VM screen deleted (decided). Queue 38 waiting (26 ranked + h157's 12); VM disk 2.9 GB free.
+
+### 2026-10-24 23:10 PDT: h162 mechanism read: every call joined, no games moved
+
+census attack_calls / attack_split on our side (scratchpad study/split_census.js; tools/census.js, to r1000):
+h162's block 1023-1034 has 18 multi-castle games, 601 attack-call rounds, 0 split (no game with a split); v8's
+pool block 726-731 has 9 multi-castle games, 468 call rounds, 283 split, 4 games with a split (2046, 1653, 1712,
+203). So ATTACK_ONE acted as built and every castle called the same target, yet the block won 13 of 36 (z -1.80).
+Split targets are not what decides v8's long games; ECONOMICS row 2 closes with the mechanism confirmed.
