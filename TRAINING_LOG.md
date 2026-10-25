@@ -5265,3 +5265,12 @@ their rings keep the mirror.
   2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1: escorts hold within 2 of the site, move at r2 9, step back from a prophet's
   band) acts on exactly that stop, and 836 is among its studied cells; h170 acts on the parked and re-bought pioneers.
   Panel order now h170, h171, h174, h172, then h173 (an order of untried candidates, no bar changed).
+
+## 2026-10-25 09:55 PDT: h171's escorts reach the never-won cells' contested sites by r7-17 (self-play census)
+
+LEARNINGS 41, before h171 plays: dist/h171 red against bots/v9 and bots/v9 against itself, 80 rounds, on 836, 1706
+and 2591 (driver, one game at a time; scratchpad econ/escdiag.sh, tools/reads/escorts.mjs). First round within 2
+king steps of the radioed site, h171 against v9: 836 (site (45,31)) r15 and r17 against never; (0,33) r22 and r24
+against never; 1706 ((7,19)) r13 and r15 against never; 2591 ((16,5)) r7 and r8 against never. The opponents
+churched those clusters at r23 (wololo 836) and r29 (botfinalsafe 1706). On 2591 blue's pioneer never built its
+church against h171 (it did against v9); on 1706 both h171 escorts died at r27 and r31 to v9's own escorts, no kills.
