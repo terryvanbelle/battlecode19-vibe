@@ -250,3 +250,11 @@
    census of the trigger's context (who stood where at each firing) showed it in one command. Before a switch goes to
    a screen or panel, log its firings on a few games and check that they are the situations its idea names.
    (2026-10-24 19:29)
+
+42. **Read a decided block's discordant cells by where each pair first diverges.** Some panel opponents are not
+   deterministic: on an identical state uvafan's prophet and IanCoolidge0's castle chose differently between two of
+   our builds' games, at r47 and r2, so those cells change result without our switch acting. `node tools/replay.js
+   diverge A B` on a candidate's game and the champion's game on the same cell and side names who acted
+   differently first. On h157 (rejected, z -1.17) 2 of the 8 discordant cells were the opponents' noise, and the 6
+   where our switch acted first split 3 wins and 3 losses: an even trade between two kinds of map, not a uniform cost. That
+   reading, not the z, is what names the next idea; the decision rule stays as it is. (2026-10-25 00:37)

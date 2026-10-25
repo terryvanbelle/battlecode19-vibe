@@ -4924,3 +4924,28 @@ Studied cells (wololo 2013, 2644, 836, bot1v43 2591, botfinalsafe 1706) 1 of 10 
 h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e) is next, as pre-registered (2026-10-24 20:54): submitted with
 `tools/panel_submit.sh dist/h163 "cand:h163"` (submission 180, scrim requests 476-487, v8 back as 181);
 **block 1 = matches 1047-1058**. Queue 14 waiting before it.
+
+## 2026-10-25 00:37 PDT: h157's block read pair by pair: the fast hold won where the site was open, lost to early prophets
+
+h157's 18 games against v8's 18 in 726-731 on the same cell and side (scratchpad study/pairs.txt). 8 pairs differ in
+result. `node tools/replay.js diverge A B` (new: the first robot-turn that acts differently) puts the split of
+2 on the opponent, acting first on an identical state: uvafan 1653 red (r47, a prophet gives instead of idling)
+and IanCoolidge0 1036 red (r2, the castle builds a pilgrim). Those two losses are the opponents' own
+nondeterminism. The other 6 split on our escort's first long step (r4-r12), and they split 3 and 3:
+- Won (v8 lost): uvafan 1712 blue (and red, by castles at r311/r319), awesomelemonade 2518 blue (and red, castles
+  r283/r279), wololo 836 blue. On 1712 the escort stood at uvafan's site by r20-22, killed the pilgrim at r22 and its
+  new church at r30 and kept killing pilgrims; h157 had 5-6 churches and 29-30 pilgrims at r100 against uvafan's 1-3
+  and 11-18 (in v8's game uvafan had 6 and 38, v8 3 and 20; v8's escort died at r27 to a preacher). On 2518
+  awesomelemonade built no church all game (5 pilgrims) with our two crusaders on its site from r8-10; against v8
+  it churched by r25 and killed v8's pilgrim at r30.
+- Lost (v8 won): bot1v43 388 red (both escorts dead at r22-23 to its r3 prophet), botfinalsafe 2740 red (dead at r40
+  and r45 to prophets), wololo 2644 red (dead at r20 to the castle and r27 to a prophet; v8's escort won the r15-18
+  duel there).
+Escort census (scratchpad econ/esc_sight.mjs, all 18 pairs): v8's escorts never come within 2 steps of their site;
+h157's do by r7-r28 in 14 of the 15 games with escorts. In the three switch-led losses 5 of the 6 died to prophets,
+and 3 of those had no enemy attacker or castle in their own vision before they died (6 in all of h157's games;
+crusader vision r2 49, prophet reach 64). So a "fall back on sight" rule cannot separate the cases; in the wins
+the escorts first saw crusaders or nothing. The fast hold trades the open-site cells for
+the prophet-opener cells. The decision stands (rejected, not pooled; LEARNINGS 38). Lead, not queued: an escort that
+takes a prophet's shot goes back to v8's lattice hold; first a census of the hits in these 18 games (836's first
+two escorts also died to prophets, at r24-26, in a win).

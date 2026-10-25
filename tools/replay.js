@@ -15,6 +15,7 @@
 //   node tools/replay.js timeline <replay> [--at 25,50,...]   # per team at checkpoints: structures, pilgrims, army (and by type), mined, bank
 //   node tools/replay.js moves    <replay> [--every N]     # per team and window of rounds: movement fuel by unit type
 //   node tools/replay.js young    <replay> [--age N]       # per team and military type: built, and dead within N rounds
+//   node tools/replay.js diverge  <replay> <replay2>       # the first robot-turn whose action differs: which team moved first
 // Teams: 0 red, 1 blue. Unit codes: 0 castle, 1 church, 2 pilgrim, 3 crusader, 4 prophet, 5 preacher.
 'use strict';
 const fs = require('fs');
@@ -387,7 +388,29 @@ function timelineText(rows) {
   return out.join('\n');
 }
 
-module.exports = { timeline, timelineText, fire, fireText, young, youngText, moves, movesText, threats, threatText, parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
+// The first robot-turn at which two replays of the same map and opponents act differently, or null over their shared
+// turns. Paired panel games split here: when the opponent acts first on an identical state, the split is its own
+// nondeterminism, not our switch (TRAINING_LOG 2026-10-25: h157's 1653 and 1036 losses).
+function diverge(bufA, bufB) {
+  const seq = buf => { const out = []; simulate(buf, { onTurn({ round, robot, rec }) {
+    out.push({ round, team: robot.team, unit: robot.unit, id: robot.id,
+      act: [rec.action, rec.dx, rec.dy, rec.build_unit, rec.give_karbonite, rec.give_fuel, rec.signal, rec.signal_radius, rec.castle_talk].join(',') });
+  } }); return out; };
+  const a = seq(bufA), b = seq(bufB), n = Math.min(a.length, b.length);
+  for (let i = 0; i < n; i++) {
+    const x = a[i], y = b[i];
+    if (x.id !== y.id || x.act !== y.act) return { turn: i, round: x.round, a: x, b: y, shared: n };
+  }
+  return a.length === b.length ? null : { turn: n, round: (a[n] || b[n]).round, a: a[n] || null, b: b[n] || null, shared: n };
+}
+
+function divergeText(d) {
+  if (!d) return 'identical';
+  const f = r => r ? `${['red', 'blue'][r.team]} ${UNIT[r.unit]} #${r.id} action ${r.act}` : 'replay ended';
+  return `first difference at robot-turn ${d.turn}, round ${d.round}\n  A: ${f(d.a)}\n  B: ${f(d.b)}`;
+}
+
+module.exports = { diverge, divergeText, timeline, timelineText, fire, fireText, young, youngText, moves, movesText, threats, threatText, parseHeader, simulate, analyze, summaryText, roundsCsv, unitLife, boardAt, events, nav, teamState, UNIT, ACTION };
 
 if (require.main === module) {
   const argv = process.argv.slice(2), cmd = argv[0], file = argv[1];
@@ -406,6 +429,7 @@ if (require.main === module) {
   else if (cmd === 'moves') console.log(movesText(moves(buf, parseInt(opt('--every', '100'), 10))));
   else if (cmd === 'young') { const age = parseInt(opt('--age', '3'), 10); console.log(youngText(young(buf, age), age)); }
   else if (cmd === 'timeline') { const at = opt('--at'); console.log(timelineText(at ? timeline(buf, at.split(',').map(Number)) : timeline(buf))); }
+  else if (cmd === 'diverge') console.log(divergeText(diverge(buf, fs.readFileSync(argv[2]))));
   else if (cmd === 'threat') { const t = threats(buf); console.log(argv.includes('--json') ? JSON.stringify(t) : threatText(t)); }
   else { console.error('unknown command ' + cmd); process.exit(1); }
 }

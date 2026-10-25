@@ -102,6 +102,23 @@ test('replay: young deaths: built matches the summary; with no age limit every m
   assert.match(replay.youngText(y3), /^red\tall\t88\t2260\t7\t190\t0\.08$/m);
 });
 
+test('replay: diverge finds the first robot-turn that acts differently; identical replays give null', () => {
+  const buf = fs.readFileSync(path.join(FIX, 'example_s2.bc19'));
+  assert.strictEqual(replay.diverge(buf, buf), null);
+  const acts = []; replay.simulate(buf, { onTurn(ev) { acts.push(ev.rec.action); } });
+  const k = acts.findIndex((a, i) => i > 200 && a === 1), b2 = Buffer.from(buf);
+  b2.fill(0, 6 + 8 * k, 14 + 8 * k);
+  const d = replay.diverge(buf, b2);
+  assert.strictEqual(d.turn, k);
+  assert.strictEqual(d.a.id, d.b.id);
+  assert.match(d.a.act, /^1,/);
+  assert.match(d.b.act, /^0,/);
+  assert.match(replay.divergeText(d), /^first difference at robot-turn \d+, round \d+\n  A: (red|blue) \w+ #\d+ action 1,/);
+  const short = buf.subarray(0, 6 + 8 * 100), e = replay.diverge(buf, short);
+  assert.strictEqual(e.turn, 100);
+  assert.strictEqual(e.b, null);
+});
+
 test('paired: discordant cells, net and t; mismatched cells ignored', () => {
   const { pairedRead } = require('../tools/paired');
   const row = (a, seed, side, w, b = 'o') => ({ a_hash: a, b_hash: b, seed, a_side: side, winner_is_a: w });
