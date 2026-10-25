@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 07:45 PDT)
+## State (2026-10-25 07:55 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -27,8 +27,8 @@
 - **VM queue** (`~/jobq`; the runner takes pending jobs in locale `ls | sort` order; gates run from the shadow tree
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Screen job template: ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 +
-  32 z's; the next adds a z. symcheck on v9 to r1000 on seeds 1, 2, 3, 2321 is the next VM job (v8's: job
-  ...1000symb, TRAINING_LOG 2026-10-24 17:33); symcheck past a few hundred rounds never runs on the driver
+  32 z's; the next adds a z. Queued 07:53: symcheck on bots/v9 to r1000 on seeds 3, 1, 2, 2321 (job ...1000symv9,
+  out/sym_v9_r1000.log; v8's: job ...1000symb, TRAINING_LOG 2026-10-24 17:33); symcheck past a few hundred rounds never runs on the driver
   (LEARNINGS 13). **Saturn stays at 8 slots (TRAINING_LOG 2026-10-24 22:54):** candidates go straight to the replica
   panel (driver diagnostics as the pre-filter); the VM screens retired. In ~/jobq/superseded, not run: h160, h156,
   h159, h152, h153. Deploy saturn only between panel blocks (`tools/galaxy19/deploy/deploy.sh app`, then `sudo
@@ -47,7 +47,9 @@
   block is scored (TRAINING_LOG 2026-10-25 07:24). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted).
-  **Next: the v9 control block** (`tools/panel_submit.sh bots/v9 "v9 control"`; it joins v9-m1.pool, no decision).
+  **In play: the v9 control block = matches 1180-1191** (submission 190, bots/v9 back as the ladder build 191); when
+  all 12 finish it joins progress/panels/v9-m1.pool, no decision; then h170's block 1 (`tools/panel_submit.sh
+  dist/h170 "..."`).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion use
   v9's numbers):
   h170 (v9 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PIONEER_TIMEOUT_REST 1, dist/h170 f4e6985acea0; h169's switches:
