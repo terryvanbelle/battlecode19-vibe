@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 07:55 PDT)
+## State (2026-10-25 07:53 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -27,7 +27,7 @@
 - **VM queue** (`~/jobq`; the runner takes pending jobs in locale `ls | sort` order; gates run from the shadow tree
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Screen job template: ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 +
-  32 z's; the next adds a z. Queued 07:53: symcheck on bots/v9 to r1000 on seeds 3, 1, 2, 2321 (job ...1000symv9,
+  32 z's; the next adds a z. Queued 07:47: symcheck on bots/v9 to r1000 on seeds 3, 1, 2, 2321 (job ...1000symv9,
   out/sym_v9_r1000.log; v8's: job ...1000symb, TRAINING_LOG 2026-10-24 17:33); symcheck past a few hundred rounds never runs on the driver
   (LEARNINGS 13). **Saturn stays at 8 slots (TRAINING_LOG 2026-10-24 22:54):** candidates go straight to the replica
   panel (driver diagnostics as the pre-filter); the VM screens retired. In ~/jobq/superseded, not run: h160, h156,
