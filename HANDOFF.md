@@ -23,8 +23,8 @@
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Gates at par 2 while saturn runs its 6 slots (owner, PROMPTS 18). Screen job template: see
   ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 + 32 z's; the next adds a z.
-  **Running on the VM:** job ...1000sym, symcheck on bots/v8 to r1000 (seeds 1, 2, 3, 2321; log
-  out/sym_v8_r1000.log; TRAINING_LOG 16:26; symcheck past a few hundred rounds never runs on the driver, LEARNINGS 13).
+  Nothing runs on the VM queue. symcheck on bots/v8 to r1000 mirrors on seeds 1, 2, 3, 2321 (job ...1000symb, TRAINING_LOG
+  17:33); symcheck past a few hundred rounds never runs on the driver (LEARNINGS 13).
   **Held for the replica queue (TRAINING_LOG 2026-10-24 10:08):** saturn runs 8 slots and no gate runs; eight screens
   wait in ~/jobq/superseded, named to run in this order (26-32 z's): h159 (FEED_STOP 3; 35000; TRAINING_LOG 15:13),
   h160 (ECON_NOPLAN 1; 26 z's + y; the five no-plan maps both sides, 10 games; TRAINING_LOG 15:32), h157 (ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9; 34000),
@@ -57,8 +57,9 @@
   (h145 on v8: 750-755 z 0.00, REJECTED; the line closes), h141 (church strike) 738-743 REJECTED (z 0.43), h140 (early
   fast pioneer) 744-749 REJECTED (z -0.24; won awesomelemonade 2518). v8-pool blocks 1: h146 (v8 + church strike) 758-763 REJECTED (z -1.98; the strike line closes),
   h147 (early fast centre pioneer) 764-769 REJECTED (z 0.34; won 2518, 2321, 203; lost IanCoolidge0 2644: the pioneers had no money after an early rush, TRAINING_LOG 09:25), h148 (CHAIN_LIVE 1) 777-782 + 967-972 + 973-984 REJECTED 14:17 (35 of 72, side-aware z 1.02; block 1 z 2.20 was luck; the CHAIN_LIVE line closes); h149 (CHAIN_LIVE 2) 955-960 REJECTED (z 0.28), h150 (WATCH 2) 961-966 REJECTED (z -0.37) (TRAINING_LOG 11:28).
-  **In play: h159 (v8 + FEED_STOP 3, dist/h159 552aa86f0b35) block 1 = matches 985-996** (submission 170;
-  TRAINING_LOG 15:13). Why: in v8's field losses 46% of its military karbonite died within 3 turns of
+  **In play: h159 (v8 + FEED_STOP 3, dist/h159 552aa86f0b35): block 1 = matches 985-996 passed (17 of 36, side-aware
+  z 0.75; young share in losses 43% vs v8's 55%; TRAINING_LOG 17:40); block 2 = matches 997-1008** (submission 172, v8 back as 173). Score both blocks
+  together: accept z >= 2, reject z < 1, else a third block. Why: in v8's field losses 46% of its military karbonite died within 3 turns of
   birth (wins 12%); 16 of 29 losses went to r1000 on health.
   **Waiting for the queue (< 30): h160 (v8 + ECON_NOPLAN 1, dist/h160 15b40f6fac46) on the targeted panel**
   progress/panels/noplan-m1.json (the six bots on the five pool maps where no castle plans a church; TRAINING_ALGORITHM

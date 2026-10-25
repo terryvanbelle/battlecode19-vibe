@@ -4481,3 +4481,22 @@ fires first, collects reclaim, and its killer later reads that larger cargo (flo
 floor(15 / 9) = 1). A tool artifact, like the axis-tile contest, not a decision of the bot. Fixed: in the phase every
 attacker whose shot reached a robot that dies takes the reclaim, from the cargo the victim held before the phase
 (`phaseReclaim`, unit-tested on this case). The four seeds rerun on the VM (job ...1000symb, seed 3 first).
+
+## 2026-10-24 17:33 PDT: symcheck on v8 to r1000 with the phase reclaim: all four seeds mirror
+
+VM job ...1000symb (out/sym_v8_r1000b.log, tools/symcheck.js 4abcd1a9): seeds 3, 1, 2 and 2321 stay exact mirror
+images to r1000 (66, 206, 184, 106 robots). Seed 3, which parted at r504 on the stepper's reclaim order, now holds.
+v8's moves are symmetric under side swap on all four maps for the whole game.
+
+## 2026-10-24 17:40 PDT: h159 (FEED_STOP 3) panel block 1: 17 of 36, side-aware z 0.75: a second block
+
+Block 1 = matches 985-996 (both sides), scored at 17:23 by `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool
+985-996`: h159 wins 17 of 36 against a pooled expectation of 15.8 (z 0.56); side-aware (k 2) 15.7, z 0.75. Not below
+0.5, so by the pre-registered rule a second block: matches 997-1008 (submission 172, v8 back as 173), submitted 17:29
+with 84 ladder matches waiting (block 1 went in at 119). Both blocks are scored together: accept at z >= 2, reject
+under 1, else a third.
+
+Mechanism read (not a decision input; `node tools/replay.js young` on our side of all 36 games): military
+karbonite dead within 3 rounds of birth was 43% in h159's 19 losses (per-game median 0.51) and 13% in its 17 wins
+(median 0.09), against v8's 55% / 23% in its own blocks 726-731. Lower in both, in the direction FEED_STOP aims; the
+blocks differ in sides and luck, so it only says the switch acts.
