@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 12:26 PDT)
+## State (2026-10-25 12:56 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -48,12 +48,13 @@
   block is scored (TRAINING_LOG 2026-10-25 07:24). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted).
-  **Replica queue (12:26): 133 waiting (all ranked; h175's block: 3 running, none waiting) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  **Replica queue (12:56): 135 waiting (123 ranked, h175's block 2) after the 09:00 daily autoscrim** (4 a team, none dominant;
   about 15 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: h175's block 1 = matches 1391-1402** (submission 194, bots/v9 back as the ladder build 195). h170
-  was rejected on its block 1 (1379-1390: 15 of 36, side-aware z -1.71; TRAINING_LOG 2026-10-25 11:16); the v9
-  control block 1180-1191 (16 of 36) is in progress/panels/v9-m1.pool.
+  **In play: h175's block 2 = matches 1403-1414** (submission 196, bots/v9 back as the ladder build 197); block 1
+  (1391-1402) 18 of 36, side-aware z 0.00 (TRAINING_LOG 2026-10-25 12:56). h170 was rejected on its block 1 (1379-1390:
+  15 of 36, z -1.71; TRAINING_LOG 2026-10-25 11:16); the v9 control block 1180-1191 (16 of 36) is in
+  progress/panels/v9-m1.pool.
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion use
   v9's numbers):
   h175 (v9 + MUSTER_RESCUE 100, dist/h175 24ba82513211: a structure under fire calls its held crusaders; basics-fix

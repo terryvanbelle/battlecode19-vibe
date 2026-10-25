@@ -5407,3 +5407,14 @@ under --no-kill on the driver; v9 1,763). stillborn.mjs: h176 built 436 military
 of them exposed, **safer 0**; v9 717 built, 10 stillborn, safer 3. The switch removed the case it targets; h176's
 other stillborn came r600-799 (31), as its army lost the castle fight. One self-play game on one side decides
 nothing; the panel decides.
+
+## 2026-10-25 12:56 PDT: h175 panel block 1 (1391-1402): z 0.00, block 2 in play (1403-1414)
+
+h175 (v9 + MUSTER_RESCUE 100) on the v7-m1 panel, both sides, scored as pre-registered with `tools/panel_pool.sh
+1120-1131 progress/panels/v9-m1.pool 1391-1402 --studied m-schier.battlecode-2019-wololo:seed-2013`: 18 of 36,
+pooled expectation 18.0 (z 0.00); side-aware 18.0, **z 0.00** (effect -0 Elo, 95% -196 to +195). Studied cell
+(wololo 2013) 0 of 2 against 0.4 (z -0.70); other cells 18 of 34 against 17.6 (z 0.22). Won botfinalsafe 2740 blue
+(pool 1 of 3 on that side). The basics-fix rule rejects block 1 only below z -1: block 2 = matches 1403-1414
+(submission 196, requests 660-671; bots/v9 back as the ladder build, 197). The mechanism read (held.mjs) runs on
+both blocks once block 2 is decided. Its z lies within +-1, but a candidate's block joins the pool file only once
+rejected (HANDOFF).
