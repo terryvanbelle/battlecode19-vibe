@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 11:18 PDT)
+## State (2026-10-25 11:30 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -47,7 +47,7 @@
   block is scored (TRAINING_LOG 2026-10-25 07:24). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted).
-  **Replica queue (11:18): 152 waiting (140 ranked, our 12) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  **Replica queue (11:30): 150 waiting (140 ranked, our block bumped) after the 09:00 daily autoscrim** (4 a team, none dominant;
   about 15 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: h175's block 1 = matches 1391-1402** (submission 194, bots/v9 back as the ladder build 195). h170
@@ -59,6 +59,10 @@
   rule; studied cell m-schier.battlecode-2019-wololo:seed-2013; mechanism read tools/reads/held.mjs: castle losses
   with held crusaders within 10 king steps and none attacking at most 0.144 a game (v9 0.287); TRAINING_LOG
   2026-10-25 10:57);
+  h176 (v9 + DEF_SAFE 1, dist/h176 f32b083df07f: military newborns built while enemy attackers are in sight go on a
+  tile they cannot kill them on, if one is free; tools/reads/stillborn.mjs census over v9's 108 panel games running
+  (scratchpad econ/still_v9.txt), then bars, studied cells, the no-op check and its place in this order;
+  TRAINING_LOG 2026-10-25 11:30);
   h171 (v9 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h171 a3c65b3dba16; h168's; studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
   tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);

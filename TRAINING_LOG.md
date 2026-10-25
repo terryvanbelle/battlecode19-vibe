@@ -5348,3 +5348,24 @@ cells (uvafan 1712, IanCoolidge0 1036, awesomelemonade 2518) 1 of 6 against 2.4 
 rejects block 1 at z < -1: **rejected**. Its z lies outside +-1, so the block stays out of the pool file. The
 mechanism read (parked.mjs) runs on this block for the record once the driver is free; it decides nothing now.
 Next block: h175 (submission 194, requests 648-659; bots/v9 back as the ladder build, submission 195).
+
+## 2026-10-25 11:30 PDT: check-in; ladder 1301, 1328; vm2 kills; DEF_SAFE committed, h176 built
+
+Replica queue 150 waiting (140 ranked) at 11:26; h175's block 1391-1402 bumped (1391-1392 running). VM jobq empty,
+disk 2.3 GB free. v9's ranked autoscrims: 1301 lost 1-2 to wololo (won seed-1915 r211 red), 1328 lost 1-2 to uvafan
+(won seed-1915 r414; lost 1828 blue on health at r1000 with 4 vm2-killed turns, max 1,025 ms, 5 frozen; 836 red on
+castles with 1 kill). vm2 kills (a turn over 200 ms) across our 402 replica games since match 1000: 61 games with at
+least one, 93 kills = 6.5 per million of our turns; the opponents in the same games 1,328 = 40.4 per million; both
+sides in 43 of the 61. Consistent with LEARNINGS 31 (the host and the engine's per-turn compile, not our ~2 ms
+turns); not chased now.
+
+- **DEF_SAFE** (src 06cb7a1; default 0 = v9): when a structure builds a crusader, prophet or preacher with an enemy
+  attacker in sight, it ranks the free adjacent tiles whose exposure (struct.js exposure: one shot from each attacker
+  in sight) would kill the newborn after every other one; unlike SAFE_BUILD it never skips the build. Unit test:
+  default toward the two prophets (20 exposure), on a tile out of one's reach when on, and still builds when only
+  deadly tiles are free. tools/reads/stillborn.mjs (military newborns dead within 2 rounds, and how many were on an
+  exposed tile while a safer free tile stood beside: `safer`) with fixture assertions. Unit tests pass.
+- **h176** = v9 + DEF_SAFE 1 (dist/h176 f32b083df07f). Ladder census (stillborn.mjs over 27 games of 9 ladder
+  matches): the losses carry it (1373 seed 1884: 162 stillborn, 119 safer; 887 seed 826: 161, 135; 853 seed 2797:
+  94, 42; 1216 seed 2591: 20 of 30 built, all safer); the wins few. Its bar waits on the census over v9's 108 panel
+  games (running), then the no-op check on a quiet driver.

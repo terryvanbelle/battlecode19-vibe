@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 132 other, 47 rejected, 18 accepted, 9 dropped, 6 in progress, 4 sparring partners (216 rows).
+Totals: 133 other, 47 rejected, 18 accepted, 9 dropped, 6 in progress, 4 sparring partners (217 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -230,3 +230,4 @@ Totals: 132 other, 47 rejected, 18 accepted, 9 dropped, 6 in progress, 4 sparrin
 | `h172` | 2026-10-25 07:24 | v9 | v9 + CHAIN_WALL 28: h164's switch on v9 (ECONOMICS.md row 8; dist/h172 d114d31e373e) |  |  |  |  | built; panel after h174 |
 | `h173` | 2026-10-25 07:24 | v9 | v9 + ECON_NOPLAN 1: h160's switch on v9 (dist/h173 437528e313a7); targeted panel noplan-m1 after a v9 control block there |  |  |  |  | built; targeted panel after h172 |
 | `v9` | 2026-10-25 07:24 | v8 | Frozen snapshot of h167 (bots/v9): v8 + MUSTER 2 (against enemy prophets camping out of a structure's reach, the peacetime army builds crusaders held on rings 2-4 from home, never released); the replica build since submission 191 (control block 1180-1191 = submission 190) |  |  | submission 190 (control block), 191, 193 | vs IanCoolidge0.battlecode20~69ce88 5-1 (replica); vs StoneT2000.BC19-bot1v43 3-3 (replica); vs StoneT2000.BC19-botfinalsafe 1-5 (replica); vs awesomelemonade.Battlecode2019 4-2 (replica); vs m-schier.battlecode-2019-wololo 1-5 (replica); vs uvafan.bc2019 2-4 (replica); vs VoidMercy.battlecode-2019~e7dc06 2-1 (replica); vs mvpatel2000.Battlecode2019 1-2 (replica) | ACCEPTED 07:24 as v9 (h167 row: replica panel, two blocks 38 of 72, side-aware z 2.78; control block 16 of 36) |
+| `h176` | 2026-10-25 11:30 | v9 | v9 + DEF_SAFE 1: a structure's military newborn goes on a free tile the enemy attackers in sight cannot kill it on before its first turn, while one exists (dist/h176 f32b083df07f; ECONOMICS row 16) |  |  |  |  | built; bar after the panel census, then panel |
