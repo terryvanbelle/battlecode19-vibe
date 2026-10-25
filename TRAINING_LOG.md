@@ -5418,3 +5418,17 @@ pooled expectation 18.0 (z 0.00); side-aware 18.0, **z 0.00** (effect -0 Elo, 95
 (submission 196, requests 660-671; bots/v9 back as the ladder build, 197). The mechanism read (held.mjs) runs on
 both blocks once block 2 is decided. Its z lies within +-1, but a candidate's block joins the pool file only once
 rejected (HANDOFF).
+
+## 2026-10-25 14:00 PDT: bank census on v9's 108 panel games: releasing CHAIN_K would free little, in games already lost
+
+Scratchpad econ/bank.mjs (TEAM REPLAY: bank, income, military and church builds per 50 rounds from r150; the rounds
+a chain line fired) over v9's panel games 1120-1131, 1143-1154, 1180-1191 (108, all lines checked against the game
+count after LEARNINGS 44). Question: does CHAIN_K (1000 K saved for a chain line from r200) idle capital the army
+needs? Time for the bank to reach 1000 at the income of r200-250: over 150 rounds in 16 of 54 losses and 1 of 54
+wins; no chain line fired from r200 in 35 losses and 3 wins. The slow-fill games are the small one-castle maps
+v9 never wins: botfinalsafe 1706 (all 6 sides and blocks), awesomelemonade 2518 (all 6), plus wololo 2644 blue and
+botfinalsafe 203 blue. There the income is 0-4 K a round from r200 (2518: 0-140 K per 50 rounds, 5-15 military
+units against awesomelemonade's 46 prophets by r200) and the bank holds 150-700 K when the castle falls (r310-567).
+Releasing the reserve buys 6-28 prophets in games whose economy was lost by r100 (the opening race: TRAINING_LOG
+2026-10-24 16:02). Dropped on the census (ECONOMICS section 6); the lever on those maps is the opening, not the
+reserve.

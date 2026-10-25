@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 13:25 PDT)
+## State (2026-10-25 14:22 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -21,7 +21,7 @@
   z < 0.5; two blocks accept at z >= 2 (other cells z >= 0), reject at z < 1, else a third block at z >= 2. The
   basics-fix rule (h170, fixed 2026-10-25 04:26): two blocks, block 1 rejects only at z < -1; accept at z >= 0
   (others z >= 0) if the mechanism reads pass, else the ordinary rule.
-- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free (2.2 GB at 12:23 on
+- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free (2.3 GB at 14:22 on
   2026-10-25; 2.5 GB at 12:26 after deleting /var/log/syslog.1, 213 MB). Prune a screen's out/rp_* once its candidate
   is decided; next candidates if needed: the journal (142 MB, `sudo journalctl --vacuum-size=50M`), the gradle 7.6
   daemon logs (~/.gradle/daemon/7.6, 266 MB of *.out.log).
@@ -48,7 +48,7 @@
   block is scored (TRAINING_LOG 2026-10-25 07:24). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted).
-  **Replica queue (13:25): 127 waiting (123 ranked; h175's block 2: 5 running, 4 waiting) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  **Replica queue (14:22): 98 waiting (all ranked; h175's block 2: 1409 running, the rest done) after the 09:00 daily autoscrim** (4 a team, none dominant;
   about 15 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: h175's block 2 = matches 1403-1414** (submission 196, bots/v9 back as the ladder build 197); block 1

@@ -144,7 +144,7 @@ that the switch passes the replica panel; our accepted rate is about 1 in 8). Ev
 | 12 | Hunt enemy pilgrims dwelling on our depots far from their structures | enclosure denial | HUNT_DEPOT 1 after h156 (INTERCEPT) | their churches on our half | 0.07 | M | after h156 |
 | 13 | Stop re-buying pioneers for held sites: one 40 turns no nearer its site gives it up and mines by our structures; a castle rests a site whose pioneer timed out | sunk cost, idle capital | PIONEER_STALL_ANY 40, PIONEER_HOME 1, PIONEER_TIMEOUT_REST 1 | 108 parked pioneers in 46 games | 0.08 | S | h169 closed with v8; h170 on v9 rejected on panel block 1 (z -1.71; TRAINING_LOG 2026-10-25 11:16) |
 | 14 | Match idle miners to free safe home depots: a pilgrim whose depot is taken or hot takes a safe one; one 25 turns no nearer gives its depot up | search and matching (idle labour beside vacant jobs) | PILGRIM_HERE 1, PILGRIM_STALL 25 | idle miners beside safe depots: 40.4 pilgrim-rounds a game to r300, 23 of 72 games at 50+ | 0.06 | S | h174, panel after h171 (TRAINING_LOG 2026-10-25 09:12, 09:43) |
-| 15 | A structure under fire calls its held crusaders: hit in its last 3 turns, it radios the nearest attacker; held crusaders whose home lies near engage | Lanchester (an idle force adds nothing to the fight: bring it to the engagement) | MUSTER_RESCUE 100 | castles lost with held crusaders idle within 10 steps: 25 of v9's 54 losses, 0.29 a game | 0.12 | S | h175, panel block 1 in play (1391-1402; TRAINING_LOG 2026-10-25 10:57) |
+| 15 | A structure under fire calls its held crusaders: hit in its last 3 turns, it radios the nearest attacker; held crusaders whose home lies near engage | Lanchester (an idle force adds nothing to the fight: bring it to the engagement) | MUSTER_RESCUE 100 | castles lost with held crusaders idle within 10 steps: 25 of v9's 54 losses, 0.29 a game | 0.12 | S | h175, panel block 1 (1391-1402) z 0.00, block 2 in play (1403-1414; TRAINING_LOG 2026-10-25 10:57, 12:56) |
 | 16 | Don't feed newborns to campers: a military unit built while enemy attackers are in sight goes on a free adjacent tile they cannot kill it on before its first turn, if one exists | marginal product (a unit that dies unborn adds 0 for its full price; the price is the same on a safe tile) | DEF_SAFE 1 | newborns dead within 2 rounds on an exposed tile while a safer one was free: v9 8.50 a game on the panel (losses 11.61, wins 5.39); ladder 1373 seed 1884: 119 of 222 | 0.10 | S | h176, panel after h175 (TRAINING_LOG 2026-10-25 12:06) |
 
 Rules of the test, unchanged from TRAINING_ALGORITHM.md: one switch per candidate on the champion; a no-op check that
@@ -233,6 +233,11 @@ unplayed.
   pilgrim early enough for 2 guards to matter before v8's army starts at r100. The lens's 33 deaths in 16 of 29
   losses came from a wider set of games; on v8's panel the early raids are rare (ESCORT_FIRST, h128, covers the
   first contested site).
+
+- **Release CHAIN_K when the line cannot fill** (not ranked; v9's bank census, TRAINING_LOG 2026-10-25 14:00): the
+  bank takes over 150 rounds to reach 1000 K in 16 of 54 losses and 1 of 54 wins, but those are botfinalsafe 1706 and
+  awesomelemonade 2518 (all 12 games) and two other cells, with income 0-4 K a round from r200; releasing frees 150-700
+  K in games lost in the opening race.
 
 - **Spend the idle opening bank on crusaders at our first hot cluster** (0.05): the trigger is ECON_RICH's (h116 cut
   churches to 94%), it fires only at r80-100, after the race, and v8's escorts stop 12 tiles short.
