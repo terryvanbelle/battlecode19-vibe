@@ -4684,3 +4684,38 @@ until r131: the escorts never went toward the site (the known fault ESCORT_HOLD_
 castle kept 2 pilgrims and built nothing more but a prophet until r100; bot1v43's army of 9 took it at r147. So the
 escort screens (h157, h155, h154) now run before h164's (renamed to 33 z's): a cell lost 14 of 14 at r147 is
 exactly their case.
+
+## 2026-10-24 22:10 PDT: h161's mechanism read: the first pioneer came 8 rounds earlier, the first church did not; DEPOSIT_AT dropped
+
+The read pre-registered at 18:45 (scratchpad our_census.js: `tools/census.js` on our side of each game, sides from
+match.json, one-castle maps, to r200). h161's block 1011-1022, 18 one-castle games: first pioneer mean r22.7, first
+church mean r50.2 (14 games with a church by r200). v8's control 726-731, 9 one-castle games: r31.1 and r50.0 (7).
+The pioneer bar (6 rounds earlier) is met, 8.4 rounds; the church did not follow. Per cell (h161 against v8): 1706
+r29 against r40, wololo 2644 r40-41 against r50, 2321 r37 against r42, 2740 r70 against r73, 388 r46 both; but
+wololo 2013 r44 (red) and r88 (blue) against r49, IanCoolidge0 2644 r78 (red) and r48 (blue) against r50; 2591 and
+2518 no church by r200 in either build. h161 lost wololo 2644 on both sides (v8 won it in 726 and in every pool
+block since ESCORT_MIRROR) with its first church 9 rounds earlier, and 1706 and 2013 stayed lost. So the opening's
+karbonite came sooner but did not buy sites sooner where sites are contested, and the fuel it left unmined cost
+more than the rounds it gained. ECONOMICS row 5 (DEPOSIT_AT, a part cargo at the purchase gate, built to stack on
+FUEL_DEFER) offers the same kind of gain, a purchase a few rounds sooner, and is dropped unbuilt.
+
+## 2026-10-24 22:20 PDT: h157 (the escort fix) goes to the panel after h162, ahead of h163; its VM screen is dropped
+
+h157 = v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 (dist/h157 a5eba191475e; TRAINING_LOG 10:24) has waited for the VM
+since 10:08, and the replica queue has stayed above 30 for twelve hours (52 waiting at 21:56, 48 ranked). Driver
+diagnostics instead (scratchpad econ/esc.js: the first two crusaders each side builds, positions r10-r60, churches by
+r80; red side, to r200; no exceptions):
+- 2591: h157's escorts stand at (15,7) and (14,4) from r10, two steps from the centre site (15,5)/(16,5), and v8's
+  pioneer builds no church by r80; in the mirror (v8 vs v8) both castles' escorts stand at home ((6,14)/(7,15),
+  (24,15)/(25,14), as in replica 728) and both church the centre at r34. Karbonite mined by r200: h157 1,360 against
+  v8's 362; the mirror 584 and 644.
+- 2013: h157's escorts stand at (6,26) and (7,27) from r10, beside v8's site (5,28); v8's first church comes at r49
+  (r43 in the mirror) and its second at r68 (r57). Karbonite by r200 2,658 against 2,040; the mirror 2,174 and 2,636.
+- 1706 (10:24): h155's escorts reach the site by r31, h157's by r16-17.
+The switch does what it was built for, and three of the four never-won cells (bot1v43 2591, botfinalsafe 1706,
+wololo 2013) are its case, so it plays the general panel next, one block after h162, before h163 (MUSTER's
+pre-registration is unchanged; it waits one block). Scored by the pooled rule with the studied cells fixed at 12:51
+(wololo 2013, 2644, 836; bot1v43 2591; botfinalsafe 1706): accepted only if its side-aware z over the other cells is
+also >= 0. Mechanism read, not a decision input: on our side of the studied cells, the first two crusaders standing 6+
+king steps from home at r30 (esc.js; v8's stand 1-2 steps out; bar: both, in at least half of those games). The h157 screen job (...19 + 27 z's) is
+deleted from ~/jobq/superseded; h155 and h154 stay held behind it.
