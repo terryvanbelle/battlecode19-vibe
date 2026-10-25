@@ -5220,3 +5220,15 @@ their rings keep the mirror.
   v9's over its 108 panel games (40.4 over the 72 decided; the control block's 36 are added before h174's block is
   read, and the bar is fixed then). Studied cells awesomelemonade.Battlecode2019:seed-2518,
   uvafan.bc2019:seed-2046. Panel order: h170, h174, h171, h172, then h173 on its targeted panel (basics first).
+
+## 2026-10-25 09:40 PDT: the v9 control block (1180-1191) joins the v9 pool, 16 of 36; h170's block 1 = matches 1379-1390
+
+- v9 control block, bots/v9 as the candidate (submission 190), no decision: 16 of 36 (wololo 1 of 6, botfinalsafe 1,
+  bot1v43 3, uvafan 2, awesomelemonade 4, IanCoolidge0 ~69ce88 5). The accepting blocks read 21 and 17: v9 stands at
+  54 of 108. progress/panels/v9-m1.pool now holds 1143-1154 and 1180-1191. Basics: 0 exceptions, 11 timeouts and 4
+  frozen turns in 36 games (theirs 12,258 exceptions, 146 timeouts, 1,191 frozen, 98 init failures).
+- h170 block 1 (dist/h170 f4e6985acea0, submission 192, requests 636-647) = matches 1379-1390, bumped to the front;
+  bots/v9 resubmitted as the ladder build (193). Scored with `tools/panel_pool.sh 1120-1131 progress/panels/v9-m1.pool
+  1379-1390 --studied uvafan.bc2019:seed-1712,IanCoolidge0.battlecode20~69ce88:seed-1036,awesomelemonade.Battlecode2019:seed-2518`
+  under the basics-fix rule. Its bars (2026-10-25 07:42) and h174's are computed from v9's 108 games before the block
+  is read (tools/reads parked.mjs and idle.mjs on 1180-1191 running on the driver).

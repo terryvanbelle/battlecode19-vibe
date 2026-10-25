@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 09:14 PDT)
+## State (2026-10-25 09:42 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -50,9 +50,9 @@
   **Replica queue (09:10): the daily autoscrim fired at 09:00, 167 ranked matches waiting** (4 a team, none
   dominant; about 15 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: the v9 control block = matches 1180-1191** (submission 190, bots/v9 back as the ladder build 191); when
-  all 12 finish it joins progress/panels/v9-m1.pool, no decision; then h170's block 1 (`tools/panel_submit.sh
-  dist/h170 "..."`).
+  **In play: h170's block 1 = matches 1379-1390** (submission 192, bots/v9 back as the ladder build 193); the v9
+  control block 1180-1191 (16 of 36) is in progress/panels/v9-m1.pool. Before reading h170's block, fix its bars and
+  h174's from v9's 108 games (TRAINING_LOG 2026-10-25 09:40).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion use
   v9's numbers):
   h170 (v9 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PIONEER_TIMEOUT_REST 1, dist/h170 f4e6985acea0; h169's switches:

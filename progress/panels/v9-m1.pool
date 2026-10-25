@@ -3,3 +3,4 @@
 # accepting blocks overstate v9 (block 1 21 of 36, block 2 17), so a fresh v9 control block joins before any v9-based
 # block is scored. Rejected v9-based blocks join when their own side-aware z is within +-1.
 1143-1154
+1180-1191
