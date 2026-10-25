@@ -5512,3 +5512,12 @@ safe land on turn 6). ECONOMICS section 7's gap "pioneer arrival is not logged p
 - Panel order: the v10 control block (in play), h178, **h177**, h179, h180, h181, then h182 on its targeted panel.
   h177 moves ahead of h179-h181 on the census: no first pioneer on m <= 1 ever churched in 108 games, every one on
   m >= 7 did.
+
+## 2026-10-25 16:26 PDT: check-in; h177 inert on 2518; VM disk 2.5 GB
+
+Queue 73 waiting (all ranked); the v10 control block (1415-1426): 5 running, the rest done. VM disk was 2.2 GB free:
+deleted ~/.gradle/daemon/7.6/daemon-*.out.log (651 gradle daemon logs dated Aug 27-Sep 1, before this project; 277
+MB; registry.bin kept), now 2.5 GB. h177's inertness check: h177 against itself on 2518 to r300 (no castle there has
+a cluster with m >= 7) is IDENTICAL to v10 against itself. Its 836 diagnostic (h177 red against v10 blue) is running.
+Interim, not a bar: v10's stillborn read over h175's 72 games gives `safer` 11.76 a game (v9's 108: 8.50; uvafan's
+12 games 39.25); h178's bar (a quarter of v10's rate) is set once the control block's 36 games join.
