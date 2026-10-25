@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 21:39 PDT)
+## State (2026-10-24 21:45 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -31,10 +31,9 @@
   **Held for the replica queue (TRAINING_LOG 2026-10-24 10:08):** saturn runs 8 slots and no gate runs; seven screens
   wait in ~/jobq/superseded, named to run in this order (26 z's + y..., then 27-30 z's): h160 (ECON_NOPLAN 1; 26 z's + y;
   the five no-plan maps both sides, 10 games; TRAINING_LOG 15:32), h162
-  (ATTACK_ONE 1; 26 z's + yyy; 37000; both TRAINING_LOG 18:45), h164 (CHAIN_WALL 28; 26 z's + yyyy; 39000; TRAINING_LOG
-  21:41), h157
+  (ATTACK_ONE 1; 26 z's + yyy; 37000; both TRAINING_LOG 18:45), h157
   (ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9; 34000), h155 (ESCORT_HOLD_R 2; 32000), h154 (ESCORT_HOLD_R 2 + ESCORT_EARLY 1;
-  31000), h156 (INTERCEPT_R2 64 + INTERCEPT_DWELL 3; 33000); h163's screen deleted 20:54 (inert against v8,
+  31000), h156 (INTERCEPT_R2 64 + INTERCEPT_DWELL 3; 33000), h164 (CHAIN_WALL 28; 33 z's, after the escort screens; 39000; TRAINING_LOG 21:41, 21:45); h163's screen deleted 20:54 (inert against v8,
   TRAINING_LOG 20:54). Stay in superseded/: h159 (FEED_STOP 3;
   26 z's; REJECTED 19:01 on the panel), h152 (CHAIN_LIVE 1 + WATCH 2; 29000) and h153 (WATCH 2 + SPOT_MASK 56; 30000)
   (DROPPED 11:31: WATCH rejected as h150; h153 never reads the spots).
@@ -45,7 +44,7 @@
   that survive spool errors, spool.release, of 19:58: until then a full disk kills slot threads, and only
   `sudo systemctl restart bc19-galaxy-saturn` brings them back, as at 19:54),
   `sudo systemctl restart bc19-galaxy-saturn`, then `tools/move_stale.sh --back`
-  the seven jobs h160, h162, h164, h157, h155, h154, h156.
+  the seven jobs h160, h162, h157, h155, h154, h156, h164.
   Screens passed: h148 (CHAIN_LIVE 1; +3 -0, t 1.73, castles 35 vs 39), h149 (CHAIN_LIVE 2; +3 -3, t 0.00, 35 vs 34),
   h150 (WATCH 2; +8 -3, t 1.51, 24 vs 38). Rejected: h151 (CHAIN_FAILS 1; +1 -3, t -1.00, 31 vs 19).
   Read: rsync out/hN_v8.jsonl, `node tools/paired.js out/hN_v8.jsonl --h2h` (t, castles lost and the verdict).

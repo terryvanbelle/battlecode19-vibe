@@ -4669,3 +4669,18 @@ keeps 3 castles a side to r600, one line each at r272 and none after. One game, 
 for 300 rounds gives the enemy the initiative. So h164 waits for its screen vs bots/v8 (castles lost at sign-flip
 p < 0.05 rejects) before any panel block: job ~/jobq/superseded/...19 + 26 z's + yyyy (seed0 39000), held with the
 others until the replica queue is under 30.
+
+## 2026-10-24 21:45 PDT: how the never-won cells are lost; the escort screens move ahead of h164's
+
+The v8-m1 pool's 14 games a cell (726-731 and the pooled blocks), by end: early castle kills on bot1v43 2591 (all
+castles by r120-179, 13 of 14), wololo 2013 (r173-238 in 11 of 14) and botfinalsafe 1706 (r304-354, 14 of 14);
+late kills on wololo 836 (r405-867), awesomelemonade 2518 (r513-910) and uvafan 1712 (castles or health at r1000);
+uvafan 2046 always on health at r1000 (21:41). Replica 728-1 (bot1v43 2591, we blue, castle (26,15), one castle a
+side): our castle built 2 pilgrims, then ESCORT_FIRST's 2 crusaders (30 K) at r3-4, and its pioneer only at r24;
+bot1v43's pioneers left at r1-2 and stood churches at the centre's top clusters (13,7) at r23 and (15,3) at r57,
+and later at (18,7), our side's mirror, at r104. Its r3 prophet walked to the centre, killed our pioneer at r31 and
+the escort crusader #109 at r40; #109 had stood one tile from our castle from r5 to r36, and #977 stood at (25,14)
+until r131: the escorts never went toward the site (the known fault ESCORT_HOLD_R fixes: h154, h155, h157). Our
+castle kept 2 pilgrims and built nothing more but a prophet until r100; bot1v43's army of 9 took it at r147. So the
+escort screens (h157, h155, h154) now run before h164's (renamed to 33 z's): a cell lost 14 of 14 at r147 is
+exactly their case.
