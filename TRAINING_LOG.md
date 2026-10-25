@@ -4884,3 +4884,27 @@ The statement in the 18:45 entry (its Blotto lens), ECONOMICS §2 item 5, the Bl
 that all 16 r1000 losses came at equal castles is wrong: match.json gives reason "health" for 11 and "castles" for 5
 (770 826, 771 520, 772 1712, 853 1884, 887 826). ECONOMICS and the config comment are corrected; the split-call
 count (11 of the 16) is unchanged.
+
+### 2026-10-25 00:04 PDT: h167 (MUSTER 2, hold only) built; pre-registered for the panel one block after h163
+
+**h167 = v8 + MUSTER 2** (ECONOMICS row 3, its hold form; dist/h167 bd86bcd5b011). The camper case is h163's
+(struct.js musterCase). Mode 2 never radios the release: the held crusaders are health kept for the r1000
+tiebreak (2026-10-24 23:32: in v8's 11 health losses 85% of the military K spent r500-899 died, 98% at home, 62% within 3
+turns of birth). They hold on rings 2-4 king steps from home (mode 1: ring 2), out of the campers' reach, until an
+enemy crusader or preacher is in sight, with no MUSTER_WAIT timeout, and they skip attack orders, ATTACK_LATE too,
+while they hold. While the case holds, the peacetime army builds held crusaders instead of prophets and preachers
+for the lattice (struct.js musterArmy). Defaults replay v8 byte-identical on 2046 to r600; MUSTER 1 unchanged;
+`tools/unit-tests.sh` 163 of 163 (galaxy19 64 OK).
+
+Driver diagnostics against dist/turtle to r400 (scratchpad econ/vsdiag.sh; red side; no exceptions), with v8's and
+h163's from 2026-10-24 20:54: 1712: h167 won by castles at r370 (turtle castles fell r259 and r370; a church line went from
+4 to 12 churches in r350-369), v8 and h163 had no result by r400; young share of military K 62% (v8 61%, h163 52%).
+2797: no result by r400; army 51 (26 crusaders, 19 prophets, 6 preachers) against v8's 26 and h163's 49; young
+share 39% against v8's 60% and h163's 53%; turtle at one castle (v8's game: two).
+
+Pre-registration. h167 plays the general panel one block after h163, scored the same way:
+`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool BLOCK --studied` with h163's studied cells (uvafan 1712,
+awesomelemonade 1712, 2797, 2518). If h163 is accepted first, h167 rebases onto the new champion as MUSTER 2
+against its pool. Mechanism reads, not decision inputs: muster builds in at least a third of the games; military
+K dead within 3 turns of birth in losses under 45% (v8 55%); in r1000 games, our end health against v8's in the
+same cells (scratchpad econ/endgame.js).

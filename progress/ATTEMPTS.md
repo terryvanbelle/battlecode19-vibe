@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 124 other, 44 rejected, 16 accepted, 9 dropped, 8 in progress, 4 sparring partners, 1 queued (206 rows).
+Totals: 125 other, 44 rejected, 16 accepted, 9 dropped, 8 in progress, 4 sparring partners, 1 queued (207 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -220,3 +220,4 @@ Totals: 124 other, 44 rejected, 16 accepted, 9 dropped, 8 in progress, 4 sparrin
 | `h164` | 2026-10-24 21:41 | v8 | v8 + CHAIN_WALL 28: a line church that sees 28+ enemy crusaders, prophets and preachers ends its line (no link, no burst), radios the rest of the line, and our castles launch no chain and keep no chain bank for 300 rounds (ECONOMICS.md row 8; dist/h164 96cae5a62d0f) |  |  |  |  | PANEL after h163 (screen dropped 22:39; census: 15 of 16 lines that saw 28+ killed nothing; the driver's 1653 cost is v8's own fuel starvation) |
 | `h165` | 2026-10-24 22:33 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_EACH 2: h157 plus an escort of 2 for every later contested cluster's pioneer (dist/h165 feb35bd6487b) |  |  |  |  | HELD: plays only if h157 is accepted (driver vs v8: later churches on 2321, extra escorts die on 1712) |
 | `h166` | 2026-10-24 22:46 | v8 | v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_EARLY 1: h157 with the first escorts built on turns 3-4 ahead of the economy pilgrims (dist/h166 69e55f300f65) |  |  |  |  | HELD: plays only if h157 is accepted (driver 836 vs v8: one escort moves to r3, mining as h157) |
+| `h167` | 2026-10-25 00:04 | v8 | v8 + MUSTER 2: hold only; held crusaders kept 2-4 king steps from home out of the campers' reach until enemy melee is in sight, and the peacetime army builds held crusaders while the camper case holds (dist/h167 bd86bcd5b011) |  |  |  |  | HELD: panel one block after h163 (studied cells as h163's; turtle diag: 1712 won by castles r370, 2797 army 51 vs v8 26) |

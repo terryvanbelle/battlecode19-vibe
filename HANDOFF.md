@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-24 23:25 PDT)
+## State (2026-10-25 00:05 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -75,7 +75,8 @@
   if not, both close. Then
   (ECONOMICS.md, TRAINING_LOG 20:54) h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e;
   studied cells uvafan 1712, awesomelemonade 1712, 2797, 2518), `tools/panel_submit.sh dist/h163 "cand:h163"` on the
-  general panel against the v8-m1 pool. ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22); row 5
+  general panel against the v8-m1 pool. Then h167 (v8 + MUSTER 2, hold only, dist/h167 bd86bcd5b011; same studied
+  cells; TRAINING_LOG 2026-10-25 00:04; if h163 is accepted, it rebases as MUSTER 2 on the new champion). ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22); row 5
   (DEPOSIT_AT) dropped unbuilt: h161's pioneers came 8 rounds earlier, its first churches no earlier (TRAINING_LOG 22:10). Then CHAIN_WALL 28 (row 8) as h164 (dist/h164
   96cae5a62d0f), screen dropped; studied cells uvafan 2046, 1653, IanCoolidge0 1036 (`--studied` as in TRAINING_LOG
   22:39; the driver's 1653 cost is v8's own fuel starvation).
