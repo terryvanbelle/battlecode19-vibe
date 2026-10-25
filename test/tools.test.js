@@ -117,6 +117,18 @@ test('replay: diverge finds the first robot-turn that acts differently; identica
   const short = buf.subarray(0, 6 + 8 * 100), e = replay.diverge(buf, short);
   assert.strictEqual(e.turn, 100);
   assert.strictEqual(e.b, null);
+  // --team: only that team's turns count; the other team's change is invisible to it.
+  const t = d.a.team, mine = replay.diverge(buf, b2, { team: t }), other = replay.diverge(buf, b2, { team: 1 - t });
+  assert.strictEqual(mine.a.id, d.a.id);
+  assert.strictEqual(mine.round, d.round);
+  assert.ok(mine.turn <= d.turn);
+  assert.ok(!other || other.round >= d.round);
+  // --board: a turn that differs only in its castle talk (or radio) is not a difference.
+  const j = 60, b3 = Buffer.from(buf);
+  b3[6 + 8 * j + 4] ^= 2;   // castle talk's low bit is bit 1 of the record's fifth byte (engine action_record.js)
+  const r = replay.diverge(buf, b3), rb = replay.diverge(buf, b3, { board: true });
+  assert.strictEqual(r.turn, j);
+  assert.strictEqual(rb, null);
 });
 
 test('paired: discordant cells, net and t; mismatched cells ignored', () => {

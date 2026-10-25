@@ -15,7 +15,9 @@
 //   node tools/replay.js timeline <replay> [--at 25,50,...]   # per team at checkpoints: structures, pilgrims, army (and by type), mined, bank
 //   node tools/replay.js moves    <replay> [--every N]     # per team and window of rounds: movement fuel by unit type
 //   node tools/replay.js young    <replay> [--age N]       # per team and military type: built, and dead within N rounds
-//   node tools/replay.js diverge  <replay> <replay2>       # the first robot-turn whose action differs: which team moved first
+//   node tools/replay.js diverge  <replay> <replay2> [--team 0|1] [--board]   # the first robot-turn whose action differs:
+//                                                        which team moved first; --team: that team's turns only; --board:
+//                                                        radio and castle talk ignored (an opponent's random signals)
 // Teams: 0 red, 1 blue. Unit codes: 0 castle, 1 church, 2 pilgrim, 3 crusader, 4 prophet, 5 preacher.
 'use strict';
 const fs = require('fs');
@@ -391,10 +393,14 @@ function timelineText(rows) {
 // The first robot-turn at which two replays of the same map and opponents act differently, or null over their shared
 // turns. Paired panel games split here: when the opponent acts first on an identical state, the split is its own
 // nondeterminism, not our switch (TRAINING_LOG 2026-10-25: h157's 1653 and 1036 losses).
-function diverge(bufA, bufB) {
+// opts.team: compare only that team's turns (turn = index among them); opts.board: only board actions (move, attack,
+// build, give, mine), not radio or castle talk.
+function diverge(bufA, bufB, opts = {}) {
   const seq = buf => { const out = []; simulate(buf, { onTurn({ round, robot, rec }) {
-    out.push({ round, team: robot.team, unit: robot.unit, id: robot.id,
-      act: [rec.action, rec.dx, rec.dy, rec.build_unit, rec.give_karbonite, rec.give_fuel, rec.signal, rec.signal_radius, rec.castle_talk].join(',') });
+    if (opts.team !== undefined && robot.team !== opts.team) return;
+    const f = [rec.action, rec.dx, rec.dy, rec.build_unit, rec.give_karbonite, rec.give_fuel];
+    if (!opts.board) f.push(rec.signal, rec.signal_radius, rec.castle_talk);
+    out.push({ round, team: robot.team, unit: robot.unit, id: robot.id, act: f.join(',') });
   } }); return out; };
   const a = seq(bufA), b = seq(bufB), n = Math.min(a.length, b.length);
   for (let i = 0; i < n; i++) {
@@ -429,7 +435,7 @@ if (require.main === module) {
   else if (cmd === 'moves') console.log(movesText(moves(buf, parseInt(opt('--every', '100'), 10))));
   else if (cmd === 'young') { const age = parseInt(opt('--age', '3'), 10); console.log(youngText(young(buf, age), age)); }
   else if (cmd === 'timeline') { const at = opt('--at'); console.log(timelineText(at ? timeline(buf, at.split(',').map(Number)) : timeline(buf))); }
-  else if (cmd === 'diverge') console.log(divergeText(diverge(buf, fs.readFileSync(argv[2]))));
+  else if (cmd === 'diverge') console.log(divergeText(diverge(buf, fs.readFileSync(argv[2]), { team: opt('--team') === undefined ? undefined : +opt('--team'), board: argv.includes('--board') })));
   else if (cmd === 'threat') { const t = threats(buf); console.log(argv.includes('--json') ? JSON.stringify(t) : threatText(t)); }
   else { console.error('unknown command ' + cmd); process.exit(1); }
 }
