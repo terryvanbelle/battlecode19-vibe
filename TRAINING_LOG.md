@@ -5186,3 +5186,9 @@ block 1180-1191 completes the 108-game reference. Exceptions 0 in 72 games; 23 t
   pioneer at r24 (K 50-80: the escorts' 30 K came out of the church's price). Both escorts stood on (6,14), beside
   the castle, from birth to death (r43): it is a lattice tile within LATTICE_R 12 of the mirror site, the stop h157
   and h171 (ESCORT_HOLD_R 2) change. Mined K by r120: ours 172, theirs 432.
+
+## 2026-10-25 08:24 PDT: v9 symmetric to r1000 on seeds 3, 1, 2, 2321
+
+VM job ...1000symv9 (`tools/symcheck.js --bot bots/v9 --seeds 3,1,2,2321 --rounds 1000`, nice 15, unshare -rn; out/sym_v9_r1000.log):
+every seed ok at round 1000 (192, 196, 98 and 106 robots), as v8's (2026-10-24 17:33). MUSTER 2's held crusaders and
+their rings keep the mirror.
