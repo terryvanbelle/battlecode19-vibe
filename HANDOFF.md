@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 10:13 PDT)
+## State (2026-10-25 10:25 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -47,10 +47,10 @@
   block is scored (TRAINING_LOG 2026-10-25 07:24). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted).
-  **Replica queue (10:00): 159 waiting (155 ranked) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  **Replica queue (10:25): 155 waiting (all ranked) after the 09:00 daily autoscrim** (4 a team, none dominant;
   about 15 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: h170's block 1 = matches 1379-1390** (submission 192, bots/v9 back as the ladder build 193); the v9
+  **In play: h170's block 1 = matches 1379-1390** (6 still running at 10:25) (submission 192, bots/v9 back as the ladder build 193); the v9
   control block 1180-1191 (16 of 36) is in progress/panels/v9-m1.pool. h170's and h174's bars are fixed from v9's
   108 panel games (TRAINING_LOG 2026-10-25 09:57, 10:12).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion use
