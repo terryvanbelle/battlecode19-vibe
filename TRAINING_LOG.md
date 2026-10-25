@@ -4779,3 +4779,14 @@ from), so h164 is accepted only if its side-aware z over the other cells is also
 uvafan.bc2019:seed-2046,uvafan.bc2019:seed-1653,IanCoolidge0.battlecode20~69ce88:seed-1036`). Mechanism read, not a
 decision input: on our side, lines whose churches saw 28+ that CT.WALL ended (study/wall.js, study/lines.js; bar: at
 least half of them).
+
+## 2026-10-24 22:41 PDT: fuel starvation is rare; the long losses hold a fuel glut on saturated karbonite land
+
+Census of v8's control games 726-731 from r200 (scratchpad econ/fuelstarve.js, sides from match.json): our fuel was
+under 100 in 2.7% of rounds (theirs 4.4%), almost all in the 1653 win (23%, theirs 22%). The long losses carry the
+opposite: mean fuel banked 20,485 on uvafan 2046 and 20,509 on awesomelemonade 2797 (2046 ends at 30,547 F against
+uvafan's 13,941, with under 1,000 K banked on either side throughout). The fuel cannot buy karbonite: on 2046 every
+karbonite depot within 10 king steps of our structures is staffed at r300-r900 (3 of 3; fuel 3-4 of 4; no church on
+either side), and on 2797 8-9 of 10 (econ/depots.js). The pilgrim switch fuel -> karbonite (SWITCH_KARB_LOW 30)
+waits for an empty karbonite bank and a free depot within 8 steps, and the second is missing. So the glut measures
+saturated land, the case of ECONOMICS row 9 (ECON_SAT) and h160 (ECON_NOPLAN; 2046 is a no-plan map): no new switch.
