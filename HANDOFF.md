@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 04:26 PDT)
+## State (2026-10-25 04:35 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -65,23 +65,21 @@
   h157 (ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9) 1035-1046 REJECTED 2026-10-25 00:11 (14 of 36, side-aware z -1.17; not
   pooled; it won uvafan 1712 and awesomelemonade 2518 both sides; escorts held in 1 of 10 studied games); h165 and
   h166 close with it, unplayed.
-  **In play: h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e): blocks 1047-1058 + 1063-1074 = 35 of 72, side-aware z
-  1.45 (block 1 18 of 36, z 1.34; block 2 17 of 36, z 0.71; studied z 1.27, others z 0.89); block 3 = matches
-  1091-1102** (submission 184, v8 back as 185; TRAINING_LOG 2026-10-25 03:07). Score once all 12 finish with
-  `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 1047-1058 1063-1074 1091-1102 --studied
+  h163 (MUSTER 1) 1047-1058 + 1063-1074 + 1091-1102 REJECTED 2026-10-25 04:35 (51 of 108, side-aware z 1.23; blocks
+  z 1.34, 0.71, 0.08; blocks 2 and 3 joined the pool; TRAINING_LOG 04:35).
+  **In play: h167 (v8 + MUSTER 2, hold only, dist/h167 bd86bcd5b011): block 1 = matches 1120-1131** (submission 186,
+  v8 back as 187; TRAINING_LOG 2026-10-25 04:35). Score once all 12 finish with `tools/panel_pool.sh 726-731
+  progress/panels/v8-m1.pool 1120-1131 --studied
   uvafan.bc2019:seed-1712,awesomelemonade.Battlecode2019:seed-1712,awesomelemonade.Battlecode2019:seed-2797,awesomelemonade.Battlecode2019:seed-2518`
-  (third block: accept at side-aware z >= 2 over all three, else reject; studied cells also need z over the other
-  cells >= 0).
-  Mechanism reads (not decision inputs; TRAINING_LOG 2026-10-24 20:54): young share of military K in losses under 45% (v8 55%; scratchpad
-  young/young_share.sh); releases in at least a third of the games that build (scratchpad econ/muster.js).
+  (block 1 rejects at z < 0.5; two blocks accept z >= 2, reject < 1, else a third). Mechanism reads (not decision
+  inputs; TRAINING_LOG 00:04): muster builds in at least a third of the games; military K dead within 3 turns of
+  birth in losses under 45% (v8 55%); end health in r1000 games against v8's in the same cells (econ/endgame.js).
   **Next, one block at a time:**
-  h167 (v8 + MUSTER 2, hold only, dist/h167 bd86bcd5b011; same studied
-  cells; TRAINING_LOG 2026-10-25 00:04; if h163 is accepted, it rebases as MUSTER 2 on the new champion). Then h169
-  (v8 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PIONEER_TIMEOUT_REST 1, dist/h169 44beaf1cf5bf: stop re-buying
+  h169 (v8 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PIONEER_TIMEOUT_REST 1, dist/h169 44beaf1cf5bf: stop re-buying
   pioneers for held sites; studied cells uvafan.bc2019:seed-1712, IanCoolidge0.battlecode20~69ce88:seed-1036,
   awesomelemonade.Battlecode2019:seed-2518; mechanism reads with scratchpad econ/zombies.mjs against v8's 726-731:
   parked pioneers per game under a third, churches per game at least 90%; TRAINING_LOG 2026-10-25 04:22; rebuilt
-  with the same switches if h163 is accepted). Its decision rule is the basics-fix one fixed at 04:26: two blocks,
+  with the same switches if h167 is accepted). Its decision rule is the basics-fix one fixed at 04:26: two blocks,
   block 1 rejects only at z < -1; accept at z >= 0 (others z >= 0) if the mechanism reads pass, else the ordinary
   rule. Then h168
   (h157 + ESCORT_BACK 1, dist/h168 a5bd8bb262df; studied cells uvafan 1712, awesomelemonade 2518, wololo 836, 2644,

@@ -14,3 +14,6 @@
 # h159 (FEED_STOP 3, rejected 2026-10-24 19:01): blocks 1 and 2 join (own side-aware z 0.75 and 0.18)
 985-996
 997-1008
+# h163 (MUSTER 1, rejected 2026-10-25 04:35): 1047-1058 left out (own side-aware z 1.34); blocks 2 and 3 join (0.71, 0.08)
+1063-1074
+1091-1102

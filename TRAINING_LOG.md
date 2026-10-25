@@ -5048,3 +5048,19 @@ the two blocks (parked pioneers per game under a third of v8's on 726-731; our c
 v8's there), (b) the cumulative side-aware z >= 0, and (c) the z over the cells other than the three studied ones
 >= 0. If (a) fails, the ordinary rule applies to the same blocks (accept z >= 2, reject < 1, else a third block).
 Otherwise reject.
+
+## 2026-10-25 04:35 PDT: h163 (MUSTER 1) REJECTED at three blocks (51 of 108, side-aware z 1.23); h167 on the panel
+
+Block 3 (1091-1102) downloaded at 04:33. `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 1047-1058 1063-1074
+1091-1102 --studied uvafan.bc2019:seed-1712,awesomelemonade.Battlecode2019:seed-1712,awesomelemonade.Battlecode2019:seed-2797,awesomelemonade.Battlecode2019:seed-2518`:
+51 of 108 against the pooled 48.0, side-blind z 0.85; side-aware (k 2) 47.6, z 1.23, under 2: **rejected**. Block 3
+alone 16 of 36, side-aware z 0.08 (studied 3 of 8, z -0.80; others 13 of 28, z 0.63); the three blocks' studied cells
+12 of 24 (z 0.57), others 39 of 84 (z 1.09). Across the blocks it won the rarely-won botfinalsafe 203 red (1 of 3,
+pool 0 of 9) and uvafan 1712 blue (1 of 3, pool 1 of 9) and dropped the usually-won IanCoolidge0 203 red and
+awesomelemonade 2797 red (2 of 3 each, pool 6 of 7 and 5 of 6). Block 1's z 1.34 did not repeat (0.71, 0.08), the
+shape h148 showed. Pool (rule of 2026-10-24 11:43, each block by its own side-aware z): 1047-1058 left out (1.34),
+1063-1074 and 1091-1102 join progress/panels/v8-m1.pool.
+h167 (MUSTER 2, hold only; dist/h167 bd86bcd5b011) next, as pre-registered at 00:04 on v8: block 1 = matches
+1120-1131 (submission 186, v8 back as 187), requested 04:35; scored with
+`tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 1120-1131 --studied uvafan.bc2019:seed-1712,awesomelemonade.Battlecode2019:seed-1712,awesomelemonade.Battlecode2019:seed-2797,awesomelemonade.Battlecode2019:seed-2518`
+against the pool as it now stands (block 1 rejects at z < 0.5).
