@@ -146,3 +146,6 @@ I have a research project for you.  I'd like you to look into ways in which micr
 
 ## 38. 2026-10-25 10:05 PDT
 What's the status of the economics analysis and ideas?
+
+## 39. 2026-10-25 10:12 PDT
+Switching back to Auto permissions setting.  I hope the classifier has calmed down a bit, but let me know if it starts rejecting moves
