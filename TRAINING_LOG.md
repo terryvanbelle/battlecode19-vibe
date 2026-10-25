@@ -5300,3 +5300,26 @@ h159 +40 Elo (95% -110 to +190), h161 -147 (-364 to +71), h162 -218 (-435 to -2)
 (-46 to +202), h167 +231 (+69 to +392). One 36-game block resolves about ±220 Elo, two about ±160. h167's +231 is
 the accepting blocks' number (biased up, LEARNINGS 33); v9's own games on the field BT (progress/ELO.md, 42 games)
 put it +77 over v8 (1812 ± 120 against 1735 ± 68).
+
+## 2026-10-25 10:57 PDT: held census; h175 (MUSTER_RESCUE 100) built and pre-registered
+
+tools/reads/held.mjs on v9's 108 panel games (1120-1131, 1143-1154, 1180-1191): held crusaders (MUSTER 2) in 86
+games, 3,021 built, 131 of them ever shot. Castles lost: 61 (0.565 a game; 57 in the 54 losses). In 31 castle
+losses (0.287 a game) held crusaders stood within 10 king steps and none of them attacked in the castle's last 20
+rounds; 25 of the 54 losses have one (wololo 836 and 2013 both sides, botfinalsafe 1706 and 203, bot1v43 2321
+blue, uvafan 1712, awesomelemonade 2518 blue and 1712 blue). Churches lost with idle held crusaders near: 83 in
+losses, 187 in wins. MUSTER 2 releases a held crusader only on enemy melee in its own sight, so prophets shooting a
+castle from out of that sight are never met (1180 game 1: castle (15,14), r177-204).
+
+- **h175** = v9 + MUSTER_RESCUE 100 (dist/h175 24ba82513211; src 6b5f99a): a structure hit in its last 3 turns
+  radios the nearest attacker in sight as a spot when its radio is free; held crusaders whose home lies within r2
+  100 of it engage. No-op (defaults vs bots/v9, 799 to r300) IDENTICAL; unit tests 170 of 170.
+- **Pre-registered** (before any h175 game is read): the basics-fix rule (a combat failure: held units idle while
+  their castle falls). Two blocks on the v7-m1 panel, both sides, scored with `tools/panel_pool.sh 1120-1131
+  progress/panels/v9-m1.pool`; block 1 rejects only at side-aware z < -1; accept at side-aware z >= 0 (other cells
+  z >= 0) if the mechanism read passes on h175's two blocks: castle losses with held crusaders within 10 king
+  steps and none attacking in the last 20 rounds at most 0.144 a game (half of v9's 0.287; held.mjs byLoss rows with
+  unit 0, near > 0, attacked 0). If it fails, the ordinary rule on the same blocks (accept z >= 2, reject < 1, else
+  a third). Reported, not a bar: castles lost a game (v9 0.565). Studied cell: m-schier.battlecode-2019-wololo:seed-2013.
+- Panel order: h170 (in play), then h175 (its census covers 25 of v9's 54 losses, the widest of the queue), h171,
+  h174, h172, then h173 on its targeted panel. No bar changed.

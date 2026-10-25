@@ -60,6 +60,10 @@
   IanCoolidge0.battlecode20~69ce88:seed-1036, awesomelemonade.Battlecode2019:seed-2518; mechanism reads with
   tools/reads/parked.mjs over h170's two blocks: parked pioneers under 1.00 a game (v9 3.01) and churches at least
   10.03 a game (v9 11.15));
+  h175 (v9 + MUSTER_RESCUE 100, dist/h175 24ba82513211: a structure under fire calls its held crusaders; basics-fix
+  rule; studied cell m-schier.battlecode-2019-wololo:seed-2013; mechanism read tools/reads/held.mjs: castle losses
+  with held crusaders within 10 king steps and none attacking at most 0.144 a game (v9 0.287); TRAINING_LOG
+  2026-10-25 10:57);
   h171 (v9 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h171 a3c65b3dba16; h168's; studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
   tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);
@@ -74,11 +78,6 @@
   design (> 10% false accepts: a second control block first), then h173; score with `contest19.py pool CONTROL
   progress/panels/noplan-m1.pool BLOCK...` (TRAINING_LOG 2026-10-24 15:32).
   h167's mechanism reads are done (TRAINING_LOG 2026-10-25 09:43).
-  **In development: MUSTER_RESCUE** (src: config.js, struct.js hitTrack/sayRescue, military.js listen; default 0 =
-  v9; unit tests in test/bot.test.mjs): a structure hit in its last 3 turns radios the nearest attacker as a spot,
-  and held crusaders whose home lies within r2 MUSTER_RESCUE of it engage (wololo 2013, 1180 game 1: three held
-  crusaders idle while prophets shot castle (15,14) dead in r177-204). Before a build: the no-op check and the
-  held census (tools/reads/held.mjs on v9's 108 games; LEARNINGS 41).
   ECONOMICS rows 4, 5, 6, 10 dropped (TRAINING_LOG 2026-10-24 21:22, 22:10; 2026-10-25 04:22); rows 9 (ECON_SAT),
   11 (PLAN_CONTEST_PREM, targeted panel), 12 (HUNT_DEPOT) unbuilt.
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013 (h167 won it once, red), 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
