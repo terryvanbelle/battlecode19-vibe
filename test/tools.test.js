@@ -714,7 +714,7 @@ test('bump_ours.sh: reorders only, by digit ids or our team; refuses anything el
   }
 });
 
-// tools/reads: the panel's mechanism reads (h170 parked pioneers, h171 escorts, h174 idle miners). Values pinned from
+// tools/reads: the panel's mechanism reads (h170 parked pioneers, h171 escorts, h174 idle miners, held crusaders). Values pinned from
 // the session scripts they replace (identical output on these replays).
 test('reads: idle, parked and escort reads on replica games', () => {
   const { execFileSync } = require('child_process');
@@ -728,6 +728,10 @@ test('reads: idle, parked and escort reads on replica games', () => {
   assert.deepStrictEqual(e.map(x => [x.id, x.round, x.hit, x.hitBy, x.k0, x.dead, x.hit6, x.pc60]),
     [[2967, 3, 41, 'R', 10, 43, 1, 0], [851, 4, 34, 'R', 10, 40, 1, 0]]);
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'idle.mjs'), '2', '300', g], { stdio: 'pipe' }));
+  // 1180 game 1 (wololo 2013, v9 red): the castle fell at r204 with three held crusaders within 10 steps, none shooting.
+  assert.deepStrictEqual(run('held.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')),
+    [{ held: 5, heldShot: 0, lost: 2, lostCastles: 1, byLoss: [[175, 1, 5, 0, 0], [204, 0, 3, 3, 0]] }]);
+  assert.deepStrictEqual(run('held.mjs', '0', g), [{ held: 0, heldShot: 0, lost: 1, lostCastles: 1, byLoss: [[120, 0, 0, 0, 0]] }]);
 });
 
 test('reads: sum.py means per field, wins/losses and opponents; nulls left out; --ge counts', () => {

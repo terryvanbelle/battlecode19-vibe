@@ -414,6 +414,11 @@ export const CFG = {
                              // 0 was v8's.
   MUSTER_WAIT: 25,           // turns a held crusader waits for the release, and a release's spot radio lasts
   MUSTER_DWELL: 3,           // turns an enemy prophet must have stood on its tile to count as a camper
+  MUSTER_RESCUE: 0,          // >0 (with MUSTER 2): a structure hit in its last 3 turns radios the nearest enemy attacker
+                             // in sight as a spot (FAR.ENEMY, 10 fuel) when its radio is free after its build; a held
+                             // crusader whose home lies within this r2 of the spot drops its hold and engages it (replica
+                             // 1180, seed 2013: wololo's prophets shot castle (15,14) dead in r177-204, r2 61 from it,
+                             // while three held crusaders stood 2-4 tiles from it, out of the prophets' sight)
   FEED_WINDOW: 20,
   FEED_REST: 50,
   // endgame

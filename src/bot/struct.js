@@ -188,13 +188,31 @@ function seers(B, e) {
 // ahead of the economy pilgrims (CFG.PIONEER_EARLY). Returns an action or null.
 export function structTurn(B, allIds, extra, first) {
   if (CFG.FEED_STOP) watchKids(B);
-  if (!CFG.KILL_ZONE && !CFG.SIEGE && !CFG.WATCH) return structAct(B, allIds, extra, first);
+  if (CFG.MUSTER_RESCUE) hitTrack(B);
+  if (!CFG.KILL_ZONE && !CFG.SIEGE && !CFG.WATCH && !CFG.MUSTER_RESCUE) return structAct(B, allIds, extra, first);
   if (CFG.KILL_ZONE) watchDeaths(B);
   B.st.built = -1;
   const a = structAct(B, allIds, extra, first);
   if (CFG.KILL_ZONE) sayZone(B); else if (CFG.SIEGE) sayThreat(B);
   if (CFG.WATCH) sayWatch(B);
+  if (CFG.MUSTER_RESCUE) sayRescue(B);
   return a;
+}
+
+// CFG.MUSTER_RESCUE: the turn this structure last lost health (st.hitAt).
+export function hitTrack(B) {
+  const st = B.st, me = B.w.me;
+  if (me.health < st.hp) st.hitAt = me.turn;
+  st.hp = me.health;
+}
+// CFG.MUSTER_RESCUE: a structure hit within its last 3 turns radios, as a spot, the nearest enemy attacker in sight,
+// when its radio is free after its build; the held crusaders near it drop their hold and engage it (military.js listen).
+export function sayRescue(B) {
+  const st = B.st, w = B.w, me = w.me;
+  if (!(me.turn - st.hitAt <= 2) || w.sentR2 || w.fuel < 10) return;
+  let e = null, ed = 1e9;
+  for (const x of w.enemies) if (isAttacker(x.unit)) { const q = d2(x.x, x.y, me.x, me.y); if (q < ed) { ed = q; e = x; } }
+  if (e) w.signal(encXY(0, e.x, e.y), FAR.ENEMY);
 }
 
 // CFG.FEED_STOP: follow this structure's military newborns through their first FEED_AGE turns. One that vanishes from

@@ -10,7 +10,7 @@ import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot } from '../src/bot/military.js';
 import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
-import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy } from '../src/bot/struct.js';
+import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy, hitTrack, sayRescue } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -2635,6 +2635,65 @@ test('military: MUSTER 2: a held crusader holds rings 2-4 king steps from home u
     step(st, 0, 0, [{ id: 4006, team: 1, unit: S.CRUSADER, x: tgt[0], y: tgt[1], turn: 9, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 }]);
     assert.strictEqual(st.muster, null);                                              // an enemy crusader in sight
   } finally { CFG.MUSTER = saved; }
+});
+
+test('struct: MUSTER_RESCUE: a structure hit in its last 3 turns radios the nearest attacker in sight as a spot', () => {
+  const sent = [];
+  const w = { me: { x: 5, y: 5, turn: 40, unit: S.CASTLE, health: 200 }, sentR2: 0, fuel: 500,
+    enemies: [{ x: 5, y: 13, unit: S.PROPHET }, { x: 5, y: 8, unit: S.PILGRIM }, { x: 12, y: 5, unit: S.PROPHET }],
+    signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; } };
+  const st = {}, B = { w, st };
+  hitTrack(B); sayRescue(B); assert.deepStrictEqual([st.hitAt, sent], [undefined, []]);   // never hit
+  w.me = { ...w.me, turn: 41, health: 190 }; hitTrack(B); assert.strictEqual(st.hitAt, 41);
+  sayRescue(B); assert.deepStrictEqual(sent, [[encXY(0, 12, 5), FAR.ENEMY]]);              // nearest attacker, not the pilgrim
+  w.me = { ...w.me, turn: 43 }; w.sentR2 = 0; hitTrack(B); sayRescue(B); assert.strictEqual(sent.length, 2);   // 2 turns on
+  w.me = { ...w.me, turn: 44 }; w.sentR2 = 0; hitTrack(B); sayRescue(B); assert.strictEqual(sent.length, 2);   // 3: over
+  w.me = { ...w.me, turn: 45, health: 180 }; w.sentR2 = 2; hitTrack(B); sayRescue(B); assert.strictEqual(sent.length, 2);   // radio taken
+  w.sentR2 = 0; w.fuel = 9; sayRescue(B); assert.strictEqual(sent.length, 2);                                     // no fuel
+  w.fuel = 500; w.enemies = [w.enemies[1]]; sayRescue(B); assert.strictEqual(sent.length, 2);                    // no attacker
+});
+
+test('military: MUSTER_RESCUE: a held crusader released by a spot within r2 MUSTER_RESCUE of home engages it; a farther one does not', () => {
+  const saved = { MUSTER: CFG.MUSTER, MUSTER_RESCUE: CFG.MUSTER_RESCUE };
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let at = null, tgt = null, far = null;
+    for (let dy = -1; dy <= 1 && !tgt; dy++) for (let dx = -1; dx <= 1 && !tgt; dx++) {
+      const ax = castle.x + dx, ay = castle.y + dy; if ((!dx && !dy) || !free(ax, ay)) continue;
+      for (let ty = 0; ty < n && !tgt; ty++) for (let tx = 0; tx < n && !tgt; tx++)
+        if (free(tx, ty) && d2(tx, ty, castle.x, castle.y) >= 49 && d2(tx, ty, castle.x, castle.y) <= 64 && d2(tx, ty, ax, ay) > 49) { at = [ax, ay]; tgt = [tx, ty]; }
+    }
+    for (let ty = 0; ty < n && !far; ty++) for (let tx = 0; tx < n && !far; tx++)
+      if (free(tx, ty) && d2(tx, ty, castle.x, castle.y) > 100 && d2(tx, ty, castle.x, castle.y) <= 196) far = [tx, ty];
+    assert.ok(at && tgt && far);
+    const own = g.robots.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100);
+    const crus = { id: 4005, team: 0, unit: S.CRUSADER, x: at[0], y: at[1], turn: 1, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    const all = g.robots;
+    const step = (st, sig, radius) => {
+      castle.signal = sig; castle.signal_radius = radius;
+      g.robots = own.concat([crus]);
+      try {
+        const w = worldFor(g, crus), B = { api: w.api, w, round: 20, birthRound: 20, st, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        return militaryTurn(B);
+      } finally { g.robots = all; castle.signal = 0; castle.signal_radius = 0; }
+    };
+    const cw = worldFor(g, castle), C = ([x, y]) => cw.T.toC(x, y);
+    CFG.MUSTER = 2; CFG.MUSTER_RESCUE = 100;
+    const st = {};
+    step(st, encXY(SIG.THREAT, ...C(tgt)), 2);
+    assert.ok(st.muster);
+    crus.turn = 2; step(st, encXY(0, ...C(far)), FAR.ENEMY);                     // beyond r2 100 of home: still held
+    assert.ok(st.muster && !st.mustered);
+    crus.turn = 3; const a = step(st, encXY(0, ...C(tgt)), FAR.ENEMY);         // within: released, it closes in
+    assert.ok(st.muster === null && st.mustered);
+    assert.ok(a && a.action === 'move' && d2(crus.x + a.dx, crus.y + a.dy, tgt[0], tgt[1]) < d2(crus.x, crus.y, tgt[0], tgt[1]));
+    CFG.MUSTER_RESCUE = 0; const st2 = {}; crus.turn = 1;
+    step(st2, encXY(SIG.THREAT, ...C(tgt)), 2); crus.turn = 2; step(st2, encXY(0, ...C(tgt)), FAR.ENEMY);
+    assert.ok(st2.muster && !st2.mustered);                                    // v9: the spot does not release it
+  } finally { Object.assign(CFG, saved); }
 });
 
 test('military: MUSTER: a crusader told of a prophet holds two king steps from home out of its reach, then charges on the release', () => {

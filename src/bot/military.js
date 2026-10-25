@@ -60,6 +60,9 @@ function listen(B) {
     if (m && m.type === SIG.ENEMY) {
       if ((CFG.SPOT || CFG.WATCH) && (CFG.SPOT_MASK >> me.unit & 1)) hearSpot(B, m.x, m.y);
       else if (CFG.MUSTER === 1 && (st.muster || st.mustered)) { st.muster = null; st.mustered = true; hearSpot(B, m.x, m.y); }   // the release
+      else if (CFG.MUSTER_RESCUE && (st.mustered || (st.muster && d2(m.x, m.y, st.home.x, st.home.y) <= CFG.MUSTER_RESCUE))) {
+        st.muster = null; st.mustered = true; hearSpot(B, m.x, m.y);   // a structure under fire calls its held crusaders
+      }
       continue;
     }
     if (m && m.type === SIG.HUNT) { if (CFG.HUNT && me.unit !== PROPHET) hearHunt(B, m.x, m.y); continue; }
