@@ -4799,7 +4799,7 @@ exists: on our side of the studied cells, both of our first two escorts within 2
 rounds after birth (scratchpad econ/esc_matches.sh over econ/guards.mjs). v8 in 726-728: 0 of 5 (2013 11/10, 2644
 -/6, 836 11/8, 1706 10/9, 2591 10/10). Bar: at least half of h157's studied games. Still not a decision input.
 
-## 2026-10-24 22:46 PDT: wololo 836 (726-3): the escorts come late on a two-castle bank
+## 2026-10-24 22:44 PDT: wololo 836 (726-3): the escorts come late on a two-castle bank
 
 v8 as blue on 836 (lost r583 on castles): the two castles built 7 pilgrims in r1-4 from the shared 100 K, so their
 four escort crusaders waited for mining and came at r12-15; wololo churched the first escort site (45,28) at r23,
