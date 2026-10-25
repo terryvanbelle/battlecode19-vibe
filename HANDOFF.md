@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 00:05 PDT)
+## State (2026-10-25 00:13 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v8** (`bots/v8` = h128, bots/ROSTER.tsv); frozen history v0-v8,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -62,20 +62,18 @@
   v8's 55%: the switch acts, no games move; TRAINING_LOG 19:01).
   h161 (FUEL_DEFER 60) 1011-1022 REJECTED 21:36 (14 of 36, side-aware z -1.17; not pooled; TRAINING_LOG 21:38).
   h162 (ATTACK_ONE 1) 1023-1034 REJECTED 22:56 (13 of 36, side-aware z -1.80; not pooled; TRAINING_LOG 22:56).
-  **In play: h157 (v8 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9, dist/h157 a5eba191475e): block 1 = matches 1035-1046**
-  (submission 178, v8 back as 179; TRAINING_LOG 22:20, 22:43). Score once all 12 finish with
-  `tools/panel_pool.sh 726-731 progress/panels/v8-m1.pool 1035-1046 --studied
-  m-schier.battlecode-2019-wololo:seed-2013,m-schier.battlecode-2019-wololo:seed-2644,m-schier.battlecode-2019-wololo:seed-836,StoneT2000.BC19-bot1v43:seed-2591,StoneT2000.BC19-botfinalsafe:seed-1706`
-  (block 1 reject z < 0.5; studied cells also need z over the other cells >= 0). Mechanism read (scratchpad
-  econ/esc_matches.sh 1035-1046): both first escorts within 2 steps of their site 20 rounds after birth in half the
-  studied games, v8 0 of 5. awesomelemonade 2518 is an out-of-sample stall cell (TRAINING_LOG 22:34).
-  **Next, one block at a time:** if h157 is
-  accepted, h165 (h157 + ESCORT_EACH 2, ECONOMICS row 7, dist/h165 feb35bd6487b; general panel, no studied cell;
-  TRAINING_LOG 22:33) and h166 (h157 + ESCORT_EARLY 1, dist/h166 69e55f300f65; studied cell wololo 836) follow it;
-  if not, both close. Then
-  (ECONOMICS.md, TRAINING_LOG 20:54) h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e;
-  studied cells uvafan 1712, awesomelemonade 1712, 2797, 2518), `tools/panel_submit.sh dist/h163 "cand:h163"` on the
-  general panel against the v8-m1 pool. Then h167 (v8 + MUSTER 2, hold only, dist/h167 bd86bcd5b011; same studied
+  h157 (ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9) 1035-1046 REJECTED 2026-10-25 00:11 (14 of 36, side-aware z -1.17; not
+  pooled; it won uvafan 1712 and awesomelemonade 2518 both sides; escorts held in 1 of 10 studied games); h165 and
+  h166 close with it, unplayed.
+  **In play: h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e): block 1 = matches 1047-1058** (submission 180, v8 back as
+  181; TRAINING_LOG 2026-10-25 00:11). Score once all 12 finish with `tools/panel_pool.sh 726-731
+  progress/panels/v8-m1.pool 1047-1058 --studied
+  uvafan.bc2019:seed-1712,awesomelemonade.Battlecode2019:seed-1712,awesomelemonade.Battlecode2019:seed-2797,awesomelemonade.Battlecode2019:seed-2518`
+  (block 1 reject z < 0.5; studied cells also need z over the other cells >= 0). Mechanism reads (not decision
+  inputs; TRAINING_LOG 2026-10-24 20:54): young share of military K in losses under 45% (v8 55%; scratchpad
+  young/young_share.sh); releases in at least a third of the games that build (scratchpad econ/muster.js).
+  **Next, one block at a time:**
+  h167 (v8 + MUSTER 2, hold only, dist/h167 bd86bcd5b011; same studied
   cells; TRAINING_LOG 2026-10-25 00:04; if h163 is accepted, it rebases as MUSTER 2 on the new champion). ECONOMICS rows 4 and 6 dropped on censuses (TRAINING_LOG 21:22); row 5
   (DEPOSIT_AT) dropped unbuilt: h161's pioneers came 8 rounds earlier, its first churches no earlier (TRAINING_LOG 22:10). Then CHAIN_WALL 28 (row 8) as h164 (dist/h164
   96cae5a62d0f), screen dropped; studied cells uvafan 2046, 1653, IanCoolidge0 1036 (`--studied` as in TRAINING_LOG

@@ -4908,3 +4908,19 @@ awesomelemonade 1712, 2797, 2518). If h163 is accepted first, h167 rebases onto 
 against its pool. Mechanism reads, not decision inputs: muster builds in at least a third of the games; military
 K dead within 3 turns of birth in losses under 45% (v8 55%); in r1000 games, our end health against v8's in the
 same cells (scratchpad econ/endgame.js).
+
+## 2026-10-25 00:11 PDT: h157 (ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9) REJECTED at block 1 (14 of 36, side-aware z -1.17); h163 on the panel
+
+Block 1 = matches 1035-1046, scored by the pre-registered command (TRAINING_LOG 2026-10-24 22:20, 22:43): 14 of
+36, pooled expectation 16.0 (z -0.99), side-aware expectation 15.9, **z -1.17** (block 1 rejects under 0.5).
+Studied cells (wololo 2013, 2644, 836, bot1v43 2591, botfinalsafe 1706) 1 of 10 against 1.1 (z -0.23); other cells
+13 of 26 against 14.8 (z -1.16). Not pooled (|z| > 1). It won rarely-won cells: uvafan 1712 both sides (pool 1 of
+14), awesomelemonade 2518 both sides (2 of 14), wololo 836 blue (0 of 14); it lost usually-won ones: IanCoolidge0
+1036 red, bot1v43 388 red, botfinalsafe 2740 red, wololo 2644 red, uvafan 1653 both sides. Mechanism read
+(scratchpad econ/esc_matches.sh 1035-1046): both first escorts within 2 steps of their site 20 rounds after birth in
+1 of the 10 studied games (bar: half; v8 0 of 5); one escort only in 4, neither in 5. The hold did not hold. h165
+(h157 + ESCORT_EACH 2) and h166 (h157 + ESCORT_EARLY 1) close with it, unplayed, as pre-registered.
+
+h163 (v8 + MUSTER 1, dist/h163 f0fbe3ea6c0e) is next, as pre-registered (2026-10-24 20:54): submitted with
+`tools/panel_submit.sh dist/h163 "cand:h163"` (submission 180, scrim requests 476-487, v8 back as 181);
+**block 1 = matches 1047-1058**. Queue 14 waiting before it.
