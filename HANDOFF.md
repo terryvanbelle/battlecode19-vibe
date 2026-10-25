@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 09:45 PDT)
+## State (2026-10-25 10:13 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -47,34 +47,38 @@
   block is scored (TRAINING_LOG 2026-10-25 07:24). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted).
-  **Replica queue (09:10): the daily autoscrim fired at 09:00, 167 ranked matches waiting** (4 a team, none
-  dominant; about 15 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (10:00): 159 waiting (155 ranked) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  about 15 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: h170's block 1 = matches 1379-1390** (submission 192, bots/v9 back as the ladder build 193); the v9
-  control block 1180-1191 (16 of 36) is in progress/panels/v9-m1.pool. Before reading h170's block, fix its bars and
-  h174's from v9's 108 games (TRAINING_LOG 2026-10-25 09:24).
+  control block 1180-1191 (16 of 36) is in progress/panels/v9-m1.pool. h170's and h174's bars are fixed from v9's
+  108 panel games (TRAINING_LOG 2026-10-25 09:57, 10:12).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion use
   v9's numbers):
   h170 (v9 + PIONEER_STALL_ANY 40 + PIONEER_HOME 1 + PIONEER_TIMEOUT_REST 1, dist/h170 f4e6985acea0; h169's switches:
   stop re-buying pioneers for held sites; basics-fix rule; studied cells uvafan.bc2019:seed-1712,
   IanCoolidge0.battlecode20~69ce88:seed-1036, awesomelemonade.Battlecode2019:seed-2518; mechanism reads with
-  tools/reads/parked.mjs, bars from v9's 108 panel games to be fixed before h170's block is scored);
+  tools/reads/parked.mjs over h170's two blocks: parked pioneers under 1.00 a game (v9 3.01) and churches at least
+  10.03 a game (v9 11.15));
   h171 (v9 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h171 a3c65b3dba16; h168's; studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
   tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);
   h174 (v9 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h174 b60bfc4a57f5: idle miners take free safe home depots;
   basics-fix rule; studied cells awesomelemonade.Battlecode2019:seed-2518, uvafan.bc2019:seed-2046; mechanism read
-  stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 75% of v9's over its 108 panel games,
-  bar fixed when the control block is in; TRAINING_LOG 2026-10-25 09:12);
+  stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 30.9 (75% of v9's 41.2 over its 108 panel games;
+  TRAINING_LOG 2026-10-25 09:12, 10:12));
   h172 (v9 + CHAIN_WALL 28, dist/h172 d114d31e373e; h164's; studied cells uvafan 2046, 1653, IanCoolidge0 1036);
   h173 (v9 + ECON_NOPLAN 1, dist/h173 437528e313a7; h160's) on the targeted panel progress/panels/noplan-m1.json
   (the six bots on the five pool maps where no castle plans a church): first a bots/v9 control block
   (`PANEL=progress/panels/noplan-m1.json tools/panel_submit.sh bots/v9 "v9 control, noplan-m1"`), panelsim on the
   design (> 10% false accepts: a second control block first), then h173; score with `contest19.py pool CONTROL
   progress/panels/noplan-m1.pool BLOCK...` (TRAINING_LOG 2026-10-24 15:32).
-  Pending h167 mechanism reads (not decision inputs; TRAINING_LOG 00:04): muster builds in at least a third of the
-  games (econ/muster.js); military K dead within 3 turns of birth in losses under 45% (v8 55%); end health in r1000
-  games against v8's in the same cells (econ/endgame.js); discordant cells by first board difference (LEARNINGS 42).
+  h167's mechanism reads are done (TRAINING_LOG 2026-10-25 09:43).
+  **In development: MUSTER_RESCUE** (src: config.js, struct.js hitTrack/sayRescue, military.js listen; default 0 =
+  v9; unit tests in test/bot.test.mjs): a structure hit in its last 3 turns radios the nearest attacker as a spot,
+  and held crusaders whose home lies within r2 MUSTER_RESCUE of it engage (wololo 2013, 1180 game 1: three held
+  crusaders idle while prophets shot castle (15,14) dead in r177-204). Before a build: the no-op check and the
+  held census (tools/reads/held.mjs on v9's 108 games; LEARNINGS 41).
   ECONOMICS rows 4, 5, 6, 10 dropped (TRAINING_LOG 2026-10-24 21:22, 22:10; 2026-10-25 04:22); rows 9 (ECON_SAT),
   11 (PLAN_CONTEST_PREM, targeted panel), 12 (HUNT_DEPOT) unbuilt.
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013 (h167 won it once, red), 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
