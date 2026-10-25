@@ -5399,3 +5399,11 @@ safer a game (14), losses 33.77 (13); 1373 seed 1884 119, 887 seed 826 135.
 
 Queue 133 waiting (all ranked); h175's block 1391-1402: 3 running, none waiting. VM disk 2.2 GB free at 12:23, below
 the 2.4 of the morning; deleted /var/log/syslog.1 (213 MB, the rotated system log; HANDOFF's named next candidate): 2.5 GB.
+
+## 2026-10-25 12:46 PDT: h176 driver diagnostic (seed 1712, h176 red against v9, one game)
+
+v9 won at r1000 on castles (health 16,850 vs 6,630). h176: 0 exceptions, 0 errors, 0 timeouts, 0 frozen (ms_max 976
+under --no-kill on the driver; v9 1,763). stillborn.mjs: h176 built 436 military units, 59 dead within 2 rounds, 11
+of them exposed, **safer 0**; v9 717 built, 10 stillborn, safer 3. The switch removed the case it targets; h176's
+other stillborn came r600-799 (31), as its army lost the castle fight. One self-play game on one side decides
+nothing; the panel decides.
