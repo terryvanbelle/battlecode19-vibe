@@ -5166,3 +5166,23 @@ where a bar is relative to the champion.
   parked and 11.25 churches a game (36 games); the bars are computed from all 108 before h170's block is read.
 - Next: the v9 control block (bots/v9 as the candidate), which joins progress/panels/v9-m1.pool with no decision;
   then h170, h171, h172, then h173 on the targeted panel after its own v9 control block.
+
+## 2026-10-25 07:59 PDT: study of v9's decided blocks: where the karbonite went on uvafan 2046; 2591's escorts at home
+
+Decided blocks only (1120-1131, 1143-1154). Census for h170's bars (scratchpad econ/zmatch.sh, zsum.py): v9 sent 581
+pioneers in 72 games, 230 parked (3.19 a game in each block), 827 churches (11.25 and 11.72 a game); the control
+block 1180-1191 completes the 108-game reference. Exceptions 0 in 72 games; 23 timeouts and 6 frozen turns
+(theirs 242 and 2,586; host load, LEARNINGS 31).
+
+- **uvafan 2046** (lost 4 of 4 at r1000 on health, as v8): 1126 red, 990 HP against 6,420, both sides two castles and
+  no church at the end. We mined 4,618 K (theirs 5,428 with 7 pilgrims to our 11-15) and lost 24 churches, 69
+  preachers, 24 pilgrims, 31 crusaders and 15 prophets, about 4,350 K of the 4,680 spent; we killed 30 prophets.
+  The chain lines (churches, chainer pilgrims, preacher bursts) took about 3,500 K, 75% of the game's karbonite,
+  into a wall that grew from 59 prophets at r450 to 131 at r900. The 14 crusaders built by r200 marched at r450 and
+  died. This is the case CHAIN_WALL 28 (h172, ECONOMICS row 8) acts on; the census of 22:39 drew it from these lines.
+- **bot1v43 2591** (lost 4 of 4, r120 and r147): a 32x32 map whose only depots beyond each castle's own pair are
+  the centre cluster, split by the mirror line. bot1v43's r2 pilgrim churched (18,7) at r23 and its church's
+  prophets then covered our half. Ours: pilgrims r1-2, the two ESCORT_FIRST crusaders r3-4, then nothing until the
+  pioneer at r24 (K 50-80: the escorts' 30 K came out of the church's price). Both escorts stood on (6,14), beside
+  the castle, from birth to death (r43): it is a lattice tile within LATTICE_R 12 of the mirror site, the stop h157
+  and h171 (ESCORT_HOLD_R 2) change. Mined K by r120: ours 172, theirs 432.
