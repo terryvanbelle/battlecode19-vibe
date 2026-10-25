@@ -52,8 +52,12 @@ From v8's 51 replica field games (22 wins, 29 losses):
 4. **Capital depreciates fast in the losses.** 46% of our military karbonite in losses died within 3 rounds of being
    built (12% in wins); 33 of our pilgrims died by r100 in the losses (4 in wins), 23 of them to prophets, 22 within 8
    tiles of one of our structures.
-5. **The long losses are lost on health, not castles.** 16 of 29 losses reached r1000 at equal castles with health
-   gaps of 4,900-10,000; in them karbonite binds (0-11 K left) while fuel sits idle (9,000-30,000 F).
+5. **The long losses are lost on health, at home.** 16 of 29 losses reached r1000: 11 at equal castles, decided on
+   health (gaps of 1,700-12,500), and 5 on castles. In the 11, karbonite binds (0-11 K left) while fuel sits idle
+   (9,000-30,000 F), and from r500 to r899 we lost 85% of the karbonite we spent (35,175 of 41,220 K, 98% of it within
+   r2 100 of our own structures) against their 41%; 62% of those home losses died within 3 turns of birth, 98% to
+   prophets, 82% to prophets standing at r2 65-144 from our nearest structure, just out of a castle's reach. In the 9
+   r1000 wins we lose 44% and they lose 128% (TRAINING_LOG 2026-10-24 23:32).
 6. **We over-mine fuel early.** At r50 we have mined 5.0-5.2 F per K, the field 4.3; in our losses 1,700 F to their
    1,410, with 324 K to their 354.
 7. **The opening bank waits on its own fuel miners.** v8's bank holds 70-80 K from r20 to r50 (field 40) while it
@@ -98,7 +102,7 @@ not: a prophet outranges crusader vision (r² 64 against 49) and a newborn acts 
 one at a time fight a linear ambush; a lone crusader closing on 2 prophets dies without firing. In losses 46% of our
 military karbonite dies within 3 rounds of its build (12% in wins). A castle shot costs 10 F and no karbonite, and a
 castle alone beats up to 3 prophets. Colonel Blotto under the lexicographic tiebreak: 16 of 29 losses reached r1000
-at equal castles, all on 2-3-castle maps, and on 11 of the 16 v8's castles call the general attack on 2-3 different
+(11 at equal castles, decided on health), and on 11 of the 16 v8's castles call the general attack on 2-3 different
 enemy castles, so the one kill that flips the game is tried with a half or a third of the force. Preemption: field
 pioneers leave at r4 at 2 king steps a turn, ours at r12-24 at 1, and a rival church once standing is a factory on
 the spot, so a race lost is best conceded. Tullock contests with square-law decisiveness waste half-commitments:

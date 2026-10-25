@@ -4859,3 +4859,28 @@ h162's block 1023-1034 has 18 multi-castle games, 601 attack-call rounds, 0 spli
 pool block 726-731 has 9 multi-castle games, 468 call rounds, 283 split, 4 games with a split (2046, 1653, 1712,
 203). So ATTACK_ONE acted as built and every castle called the same target, yet the block won 13 of 36 (z -1.80).
 Split targets are not what decides v8's long games; ECONOMICS row 2 closes with the mechanism confirmed.
+
+### 2026-10-24 23:32 PDT: v8's long losses are sieges lost at home: newborns fed to prophets just outside castle reach
+
+The 11 r1000 health losses of v8's 51 replica field games (ECONOMICS §2 item 5; 729 2046, 1712; 730 2797; 770 2330;
+771 203, 1626; 772 2822; 773 2733, 2674; 887 203, 705), by 100-round windows from r500 (scratchpad econ/latewin.js,
+deaths.js, late.js, endgame.js, land2.js):
+- r500-899 we spent 41,220 K and lost 35,175 K of military (85%), 98% of it within r2 100 of one of our structures;
+  they spent 44,935 K and lost 18,495 K (41%). In the 9 r1000 wins the exchange flips: we lose 44% (89% at home),
+  they lose 128%. Our health stays flat r500-900 in the losses (1712: 2,410 to 2,330) while theirs doubles.
+- The home losses (34,645 K): 98% killed by enemy prophets, 62% at age 0-3 turns and 30% at 4-20; 82% of the
+  killers stood at r2 65-144 from our nearest structure, just outside a castle's r2 64. By type: prophets 21,100 K,
+  preachers 13,020 K (short-range units built against prophets they cannot reach), crusaders 525 K.
+- The endgame dump works: our bank is 0-11 K at r1000 with 9,000-30,000 F idle. Land is at par in 2046 and 2797
+  (K depots 3 vs 3, 9 vs 10 staffed at r800) and behind on 1712 (10 vs 17-18 from r200, structures 6 vs 8).
+- Upper bound (late.js "hold"): had every K spent from r600 bought crusaders that lived, 9 of the 11 end ahead on
+  health. Ignores that the fed units also killed some campers.
+This is MUSTER's case (h163, next after h157); its pre-registered bars stand (TRAINING_LOG 20:54). It also says the
+r1000 tiebreak is bought by units that live, and the K sunk into newborns under a siege buys almost none.
+
+### 2026-10-24 23:32 PDT: correction: 16 of v8's 29 field losses reached r1000, but only 11 at equal castles
+
+The statement in the 18:45 entry (its Blotto lens), ECONOMICS §2 item 5, the Blotto paragraph and config.js ATTACK_ONE
+that all 16 r1000 losses came at equal castles is wrong: match.json gives reason "health" for 11 and "castles" for 5
+(770 826, 771 520, 772 1712, 853 1884, 887 826). ECONOMICS and the config comment are corrected; the split-call
+count (11 of the 16) is unchanged.

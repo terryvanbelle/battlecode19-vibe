@@ -371,7 +371,8 @@ export const CFG = {
                              // 5 of 5 chain launches after r450 and 3 pioneer re-sends went out deaf)
   ATTACK_ONE: 0,             // 1: every castle calls the general attack on the same enemy castle, the mirror nearest our
                              // living castles in summed r2 (ECONOMICS.md, Blotto: 16 of v8's 29 replica losses reached
-                             // r1000 at equal castles, decided on health; on 11 of them the castles called 2-3 targets)
+                             // r1000, 11 at equal castles, decided on health; on 11 of the 16 the castles called 2-3
+                             // targets)
   ATTACK_PERSIST: 0,         // 1: units report destroyed enemy castles (CT.DEAD), castles drop them and radio the next
                              // target map-wide (FAR.WIDE); units without orders wait where they are, not at home
   ATTACK_WAIT: 40,           // ...for this many rounds
