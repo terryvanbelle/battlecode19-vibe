@@ -149,3 +149,6 @@ What's the status of the economics analysis and ideas?
 
 ## 39. 2026-10-25 10:12 PDT
 Switching back to Auto permissions setting.  I hope the classifier has calmed down a bit, but let me know if it starts rejecting moves
+
+## 40. 2026-10-25 10:14 PDT
+The progress/ directory doesn't seem to be updated after v9
