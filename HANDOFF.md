@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 09:25 PDT)
+## State (2026-10-25 09:45 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v9** (`bots/v9` = h167, bots/ROSTER.tsv); frozen history v0-v9,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -59,13 +59,13 @@
   stop re-buying pioneers for held sites; basics-fix rule; studied cells uvafan.bc2019:seed-1712,
   IanCoolidge0.battlecode20~69ce88:seed-1036, awesomelemonade.Battlecode2019:seed-2518; mechanism reads with
   tools/reads/parked.mjs, bars from v9's 108 panel games to be fixed before h170's block is scored);
+  h171 (v9 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h171 a3c65b3dba16; h168's; studied cells
+  uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
+  tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);
   h174 (v9 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h174 b60bfc4a57f5: idle miners take free safe home depots;
   basics-fix rule; studied cells awesomelemonade.Battlecode2019:seed-2518, uvafan.bc2019:seed-2046; mechanism read
   stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 75% of v9's over its 108 panel games,
   bar fixed when the control block is in; TRAINING_LOG 2026-10-25 09:12);
-  h171 (v9 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h171 a3c65b3dba16; h168's; studied cells
-  uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
-  tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);
   h172 (v9 + CHAIN_WALL 28, dist/h172 d114d31e373e; h164's; studied cells uvafan 2046, 1653, IanCoolidge0 1036);
   h173 (v9 + ECON_NOPLAN 1, dist/h173 437528e313a7; h160's) on the targeted panel progress/panels/noplan-m1.json
   (the six bots on the five pool maps where no castle plans a church): first a bots/v9 control block

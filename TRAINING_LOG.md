@@ -5232,3 +5232,36 @@ their rings keep the mirror.
   1379-1390 --studied uvafan.bc2019:seed-1712,IanCoolidge0.battlecode20~69ce88:seed-1036,awesomelemonade.Battlecode2019:seed-2518`
   under the basics-fix rule. Its bars (2026-10-25 07:42) and h174's are computed from v9's 108 games before the block
   is read (tools/reads parked.mjs and idle.mjs on 1180-1191 running on the driver).
+
+## 2026-10-25 09:43 PDT: h167's mechanism reads; the never-won cells 1706 and 836 trace to the escort stop; h171 moves ahead of h174
+
+- h167 (v9) pre-registered reads (2026-10-25 00:04; not decision inputs), on its blocks 1120-1131 and 1143-1154
+  (scratchpad econ/h167reads.txt): muster builds in 56 of 72 games (bar: a third) **met**; military karbonite dead
+  within 3 turns of birth in losses 43.2% pooled, 44.0% per game (bar under 45%, v8 55%) **met, narrowly** (wins
+  13.7%); end health at r1000 against v8's 726-731 on the shared cells: botfinalsafe 2740 +3,950 and +2,730 against
+  +1,060, uvafan 1653 +1,690..+2,970 against +2,870, uvafan 2046 -5,430..-5,760 against -5,210, uvafan 1712 -6,430 (W
+  on castles), -26,450, -5,380 against -10,020, IanCoolidge0 203 two wins and two losses against one win: no general
+  end-health gain. The discordant-cell reading is superseded by the never-won-cell study below.
+- v9's 108 panel games by cell: wololo 836, botfinalsafe 1706, bot1v43 2591, uvafan 2046, awesomelemonade 2518 lost 6
+  of 6, wololo 2013 and uvafan 1712 won 1 of 6; 388, 1653, 2797, awesomelemonade 1712, IanCoolidge0 2644, 1036 won 6 of
+  6. Most cells are decided by side and map; the round counts repeat to the round (2591: 120 red, 147 blue, every
+  block).
+- **botfinalsafe 1706** (1182 red, lost r314 on castles; 37x37, one castle each). Our plan: c2@(7,17) (7 depots,
+  their steps minus ours m2) and c1@(25,11). Escort #3654 (r4) walked to (13,9), 8 king steps short of c2, and
+  stood there from r22 to its death at r149 (125 turns with no action); botfinalsafe churched c2 at r29, out of its
+  sight. Our pioneer for c2 (#1228, r34) reached (6,8)-(8,8) at r47 and circled there; the castle bought two more
+  pioneers for the same held site (#2956 r115, #2075 r256), both circling at (6-13, 6-8). We had one church to their
+  14; mined K 1,050 to 2,418; from r200 the bank rose 276 -> 626 K under the chain reserve (CHAIN_K 1000) and the army
+  stood at 11 until their churches reached our castle at r310.
+- **wololo 836** (1180 red, lost r610 on castles; 60x60, two castles each). c8@(45,28), 12 depots split by the
+  mirror line, 10 king steps from castle (39,18), m3. Escort #2075 (r12) moved one tile to (40,20) and stood there
+  r13-r35 (the site is within LATTICE_R 12 of home, so the first lattice tile is beside the castle), then died r37.
+  wololo built its pioneer at r14 and churched (45,31) at r23; our pioneer (#2812, r25) came within 8 of the site at
+  r29 and then circled at (44-48, 15-19). The castle (39,18) spent its bank on 21 prophets in r39-r144, the castle
+  (22,19) built nothing from r15 to r179, our first church came at r165; theirs 5 churches and 30 pilgrims by r100.
+- Both cells (and 2591, TRAINING_LOG 07:59) open the same way: our escorts stop short of or beside the castle, the
+  opponent's pioneer churches the contested cluster at r23-r29, ours arrives after it and parks. A crusader at the
+  site by r16-17 sees the enemy pioneer (it walks 2 tiles a turn) and kills a pilgrim in one hit. h171 (ESCORT_HOLD_R
+  2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1: escorts hold within 2 of the site, move at r2 9, step back from a prophet's
+  band) acts on exactly that stop, and 836 is among its studied cells; h170 acts on the parked and re-bought pioneers.
+  Panel order now h170, h171, h174, h172, then h173 (an order of untried candidates, no bar changed).
