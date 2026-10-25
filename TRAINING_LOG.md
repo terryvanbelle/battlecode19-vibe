@@ -5330,3 +5330,10 @@ h175 won at r314 on castles; 0 exceptions, 0 timeouts, 0 frozen. The rescue radi
 and r103, beside its preacher builds); red had no held crusaders in this game (the camper case never held), so it
 cost 20 fuel and released no one; blue (v9) sent none. One self-play game on one side decides nothing (side and
 divergence); the release itself is pinned by the unit tests, and the panel decides.
+
+## 2026-10-25 11:01 PDT: interim h170 scores seen by accident (no change)
+
+A `contest19.py matches --pages 3` listing, run to find v9's ranked autoscrim matches, also printed the scores of
+h170's ten finished block matches (1379-1384, 1387-1390; 1385-1386 still running). h170's rule and bars were fixed
+before (07:42, 09:57); none is changed, and the block is scored as pre-registered once all twelve finish.
+Running blocks' status comes from field.py queue only (LEARNINGS 38).
