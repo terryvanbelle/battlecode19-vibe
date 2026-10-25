@@ -5323,3 +5323,10 @@ castle from out of that sight are never met (1180 game 1: castle (15,14), r177-2
   a third). Reported, not a bar: castles lost a game (v9 0.565). Studied cell: m-schier.battlecode-2019-wololo:seed-2013.
 - Panel order: h170 (in play), then h175 (its census covers 25 of v9's 54 losses, the widest of the queue), h171,
   h174, h172, then h173 on its targeted panel. No bar changed.
+
+## 2026-10-25 11:00 PDT: h175 driver diagnostic (seed 2013, h175 red against v9, one game)
+
+h175 won at r314 on castles; 0 exceptions, 0 timeouts, 0 frozen. The rescue radio fired twice (church (5,25), r102
+and r103, beside its preacher builds); red had no held crusaders in this game (the camper case never held), so it
+cost 20 fuel and released no one; blue (v9) sent none. One self-play game on one side decides nothing (side and
+divergence); the release itself is pinned by the unit tests, and the panel decides.
