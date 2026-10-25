@@ -739,6 +739,17 @@ test('reads: idle, parked and escort reads on replica games', () => {
   assert.deepStrictEqual(run('stillborn.mjs', '1', path.join(FIX, 'held_s2013_1180-1.bc19')),
     [{ built: 54, stillborn: 2, K: 60, byCastle: 0, shootable: 0, exposed: 0, safer: 0, byRound: { 100: 2 } }]);
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'stillborn.mjs'), '2', g], { stdio: 'pipe' }));
+  // pioneers.mjs, the same game: v9's first pioneer (r34, contested site (5,25)) never reached it and wololo churched
+  // beside it at r46; the r46 pioneer to (26,0) arrived at r56 with 20 K banked and built at r99; the r132 retry of
+  // (5,25) counts wololo's r46 church, built before it left. wololo's pilgrims carry no SIG.CHURCH radio.
+  const [pv] = run('pioneers.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19'));
+  assert.deepStrictEqual([pv.church1, pv.theirs1, pv.pilgrims100, pv.pioneers.length], [49, 46, 17, 7]);
+  assert.deepStrictEqual(pv.pioneers[0], { r: 34, sx: 5, sy: 25, k: 11, bank: 90, arrive: -1, bankArr: -1, church: -1, by: 0,
+    died: -1, mined: 0, mine1: -1, theirs: 46, defK: 85 });
+  assert.deepStrictEqual([pv.pioneers[3].r, pv.pioneers[3].sx, pv.pioneers[3].sy, pv.pioneers[3].arrive, pv.pioneers[3].bankArr,
+    pv.pioneers[3].church, pv.pioneers[3].by], [46, 26, 0, 56, 20, 99, 1]);
+  assert.deepStrictEqual([pv.pioneers[6].r, pv.pioneers[6].theirs, pv.pioneers[6].died], [132, 46, 196]);
+  assert.deepStrictEqual(run('pioneers.mjs', '1', path.join(FIX, 'held_s2013_1180-1.bc19'))[0].pioneers, []);
 });
 
 test('reads: sum.py means per field, wins/losses and opponents; nulls left out; --ge counts', () => {
