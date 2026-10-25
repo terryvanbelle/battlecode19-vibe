@@ -4976,3 +4976,14 @@ accepted first, h168 rebases onto the new champion. Mechanism reads, not decisio
 of the escorts a prophet or castle hits, those dead within 6 rounds of the first hit (econ/esc_back.mjs): under
 40% (h157: 18 of 26, 69%); and in the 1712, 2518, 836 games, our escorts' kills of enemy pilgrims and churches
 before r60, against h157's in the same games.
+
+## 2026-10-25 01:41 PDT: h163 (MUSTER 1) passes panel block 1 (18 of 36, side-aware z 1.34); block 2 = matches 1063-1074
+
+Block 1 = matches 1047-1058, scored by the pre-registered command (2026-10-24 20:54; HANDOFF): 18 of 36, pooled
+expectation 16.0 (z 0.99), side-aware expectation 15.9, **z 1.34**, over block 1's reject line 0.5. Studied cells
+(uvafan 1712, awesomelemonade 1712, 2797, 2518) 5 of 8 against 3.7 (z 1.47); other cells 13 of 28 against 12.2 (z
+0.63, so >= 0). Won rarely-won cells: uvafan 1712 blue (pool 1 of 14), botfinalsafe 203 red (0 of 9 red); lost a
+usually-won one: IanCoolidge0 203 red. Never-won cells still lost: uvafan 2046, bot1v43 2591, botfinalsafe 1706,
+wololo 2013, 836, awesomelemonade 2518. By the rule a second block decides (accept at two-block z >= 2, reject
+under 1, else a third): submitted with `tools/panel_submit.sh dist/h163 "cand:h163"` (submission 182, v8 back as
+183); **block 2 = matches 1063-1074**. Queue 2 waiting before it.

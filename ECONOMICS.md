@@ -124,7 +124,7 @@ that the switch passes the replica panel; our accepted rate is about 1 in 8). Ev
 |---|---|---|---|---|---|---|---|
 | 1 | Staff only karbonite depots in the opening while fuel is above a floor and no attacker has been seen | production (free good), inventory (cargo lumps), national accounts | FUEL_DEFER 60, FUEL_DEFER_MIN 400 | one-castle K1F2 maps | 0.10-0.20 | S | h161, rejected; section 5 |
 | 2 | Every castle calls the general attack on the same enemy castle | Blotto, Lanchester | ATTACK_ONE 1 | split calls: 19 of 40 pool maps, 11 of 16 r1000 losses, 7 of 18 panel cells | 0.15 | S | h162, rejected; section 5 |
-| 3 | Against campers out of reach, build out of their band and release 2A+1 together | Lanchester (concentration in time) | MUSTER 1 | 1712, 2797, 2518, 1884 feeding cells | 0.20 | M | h163, on the panel (block 1 = 1047-1058); its hold-only form h167 after it; section 5 |
+| 3 | Against campers out of reach, build out of their band and release 2A+1 together | Lanchester (concentration in time) | MUSTER 1 | 1712, 2797, 2518, 1884 feeding cells | 0.20 | M | h163, block 1 passed (1047-1058, z 1.34); block 2 = 1063-1074; its hold-only form h167 after it; section 5 |
 | 4 | Shoot a lone camper with the castle instead of buying a newborn it kills | relative prices (a shot costs no K) | CASTLE_FIRE 2 | castles with 1-2 attackers in reach | 0.12 | S | dropped (section 6) |
 | 5 | A karbonite miner gives a part cargo when it completes a purchase (pioneer or church gate) | Baumol-Tobin | DEPOSIT_AT 1, DEPOSIT_UNTIL 60 on FUEL_DEFER | adjacent-K maps: 2013, 493, 1706, 1241, 1915 | 0.10 | S-M | dropped (section 5) |
 | 6 | A castle that loses a pilgrim before r100 builds 2 guards at once | Ramsey (state switch), depreciation | ECON_HIT 50 | early pilgrim deaths: 16 of 29 losses | 0.10 | S | dropped (section 6) |
@@ -182,8 +182,9 @@ a prophet that has stood 3 turns beyond r2 36 (64 for a castle) with no enemy me
 never fires against v8 on 2797 (v8 advances), never against dist/camp (whose prophets march escorted), and fires
 against dist/turtle's lattice, where releasing on the visible campers' count sends crusaders into the hundreds behind (1712,
 army 22 at r400 against 87 held and v8's 26) or costs nothing (2797). It would fire in 79 of the 90 panel games
-(48 of the 49 losses). On the panel, block 1 = matches 1047-1058 (TRAINING_LOG 2026-10-25 00:11); the 2026-10-24
-20:54 entry has the pre-registration.
+(48 of the 49 losses). Panel block 1 (1047-1058): 18 of 36 against the pooled 16.0, side-aware z 1.34 (studied cells
+5 of 8, z 1.47; others z 0.63); block 2 = matches 1063-1074 (TRAINING_LOG 2026-10-25 01:41); the 2026-10-24 20:54
+entry has the pre-registration.
 
 **ESCORT_EACH (h165).** Built on h157 (v8's first escorts hurried to their site and held within 2 steps of it), so it
 would play only if h157 were accepted. The panel rejected h157 at block 1 (1035-1046): 14 of 36, side-aware z -1.17;
