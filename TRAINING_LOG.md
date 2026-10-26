@@ -6174,3 +6174,27 @@ transient unit of ours (run-u11061, an old sandbox probe) was reset.
 PROMPTS 47 (the unranked uvafan-wololo match): field.py activity lets the top-rated team challenge one of the 3 teams
 just below it, unranked (galaxy takes ranked requests only upward, so the top team can make none). uvafan passed
 wololo at the top (1617.7 to 1616.7); request 863 (06:01 PDT) is uvafan's unranked challenge to wololo.
+
+## 2026-10-26 06:32 PDT: early forward churches: who sees them, what guards them (v11's 108 games, scratchpad seen.mjs)
+
+The first enemy church per game founded by r60 within r2 400 of a castle of ours (61 games, 24 won), over its first 15
+rounds: our first sighting, our crusaders/preachers within r2 400 when it is founded, enemy and our military within r2
+25 of it at +5 and +10.
+
+| | n | won | unseen in 15 rounds | sighting lag (median) | seen by | our melee within r2 400 | its guards +5 / +10 | ours by it +5 / +10 | destroyed within 15 |
+|---|---|---|---|---|---|---|---|---|---|
+| lost | 37 | 0 | 10 | 4 | pilgrims 24, crusaders 3 | 1.9 | 1.8 / 1.5 | 0.0 / 0.0 | 0 |
+| won | 24 | 24 | 8 | 0 | pilgrims 13, crusaders 3 | 1.2 | 0.9 / 0.9 | 0.4 / 0.5 | 0 |
+
+By cell (0-of-6 cells first): wololo 836 (r23, seen +4 by a pilgrim, 2 of our crusaders within r2 400, guards 2 / 1-2);
+botfinalsafe 2591 (r23, seen +4 by a pilgrim, guards 2 / 0); uvafan 1712 (r22, seen +4 by a crusader or +15 by a
+pilgrim, guards 2 / 2); wololo 2013 (r46, seen at once by a pilgrim, guards 1 / 2); awesomelemonade 2518 (r14, **never
+seen** in 15 rounds, guards 0 / 0). Won cells: awesomelemonade 2797 (r58, seen at once, no guards, 2 of ours by it at
++10, destroyed 21-45 rounds later); IanCoolidge 1036 (r41-42, seen at once, guards 1-2).
+
+Reading: our pilgrims see most forward churches within 4 rounds, but nothing of ours ever goes to one: at +10 our
+military by it is 0.0 in every lost game. The local force is the 2 early crusaders, already dying to the same guards
+(836: r34-37); a strike that only redirects them meets 1-2 guards and the prophets the church builds next. A strike
+worth building needs a force raised for it (the castles hear a pilgrim's radio at r2 403: the church stands r2 205-306
+from them) or must arrive before the guards (2591's guards are gone by +10; 2518's church has none but is never seen,
+so it needs a scout). Not built yet: h184's verdict (block 3, one match left) decides the base.
