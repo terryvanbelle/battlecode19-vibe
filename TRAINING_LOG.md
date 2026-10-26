@@ -6322,3 +6322,10 @@ turn). Basics check holds: zero exceptions, overruns at the environment's floor.
   awesomelemonade 1712 red as v11 (the centre is not given up); 1706 blue and uvafan 1712 blue back to v11's 0.
 - **Panel order**: h193 (in play), h185 (being submitted), **h194**, h186, h187, h188, h191: h194 repeats a measured
   gain (h184's 2518 cells, z 7.48 over the studied cells) without the sends that cost h184 its other cells.
+
+## 2026-10-26 08:58 PDT: h192's mechanism read, for the record: it fails too
+tools/reads/bursts.mjs over h192 block 1 (1616-1627, 36 games; scratchpad econ/bursts_h192_b1.txt; a first pass at
+08:38 ran an older scratch draft without the near count and was discarded): bursts 7 (0.194 a game; v11 0.167),
+**near bursts 5 (0.139 a game; bar at most 0.051, v11 0.102)**, kills 4, castles lost 19 (0.528; v11 0.463), stagers
+2.72 a game (v11 3.05), hunted 0.61 (v11 0.68). The near bursts: botfinalsafe 203 red 3, 1706 both sides 1 each. HUNT
+found no more stagers than v11's own engage rule and the bursts went on: the hunt line gives nothing to build on.
