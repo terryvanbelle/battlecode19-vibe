@@ -67,7 +67,7 @@
   rate and power: `python3 -I tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted).
-  **Replica queue (16:23): 68 waiting (68 ranked; VM 11 GB free); h195 block 3 running (3 of 12 left).** While 30+ wait: no
+  **Replica queue (16:23): 68 waiting (68 ranked; VM 11 GB free); h195 block 3 running (3 left).** While 30+ wait: no
   local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the autoscrim held
   (TRAINING_LOG 2026-10-25 09:12). v12's rating chain moves again: 1796 rated by 15:52 (after 1738 and 1788), so
   1859-1864 (13 of 18) follow; refresh rating-history once h195 block 3 ends.
