@@ -147,6 +147,7 @@ that the switch passes the replica panel; our accepted rate is about 1 in 8). Ev
 | 15 | A structure under fire calls its held crusaders: hit in its last 3 turns, it radios the nearest attacker; held crusaders whose home lies near engage | Lanchester (an idle force adds nothing to the fight: bring it to the engagement) | MUSTER_RESCUE 100 | castles lost with held crusaders idle within 10 steps: 25 of v9's 54 losses, 0.29 a game | 0.12 | S | h175, ACCEPTED as v10 (two blocks 37 of 72, z 0.40; idle-held castle losses 0.042 a game against v9's 0.287; basics-fix rule; TRAINING_LOG 2026-10-25 15:26) |
 | 16 | Don't feed newborns to campers: a military unit built while enemy attackers are in sight goes on a free adjacent tile they cannot kill it on before its first turn, if one exists | marginal product (a unit that dies unborn adds 0 for its full price; the price is the same on a safe tile) | DEF_SAFE 1 | newborns dead within 2 rounds on an exposed tile while a safer one was free: v9 8.50 a game on the panel (losses 11.61, wins 5.39); ladder 1373 seed 1884: 119 of 222 | 0.10 | S | h176 superseded by its rebuild on v10, h178 (TRAINING_LOG 2026-10-25 12:06) |
 | 17 | Open on safe land: the turn-6 pioneer goes to the first planned cluster we reach 7+ king steps before the enemy, and the contested one still leaves as before | first-mover rent (a race lost pays nothing; a site out of the rival's reach pays its rent at once), Tullock (spend on contests you can win) | PIONEER_EARLY 6, PIONEER_OPEN 7 | v9's first pioneer churched 0 of 24 times on m <= 1 sites, 12 of 12 on m >= 7, 1 of 48 in losses; fires on 9 of 15 panel maps | 0.10 | S | h177, built on v10 (TRAINING_LOG 2026-10-25 15:45) |
+| 18 | Race where there is no safe land: in a team none of whose castles has a cluster 7+ king steps ahead, a castle whose plan opens with a race (m <= 1) sends its turn-3 pioneer there | patent race (winner takes all: an early entrant's expected rent beats the nothing a late one earns) | PIONEER_EARLY 6, PIONEER_OPEN 7, PIONEER_RACE 2 | v9's first pioneers to m-0 sites left at r23-44 and churched 0 of 24; the enemy churched 2518's site at r14, 2591's at r23 (both cells 0 of 6 for v10); fires on 2518 and 2591 beyond row 17's maps, where it plays as row 17 | 0.08 | S | h183 = h177 + PIONEER_RACE 2 (TRAINING_LOG 2026-10-25 17:05) |
 
 Rules of the test, unchanged from TRAINING_ALGORITHM.md: one switch per candidate on the champion; a no-op check that
 the defaults reproduce the champion byte for byte; unit tests; mechanism bars written before any game is read; the side-aware
@@ -260,7 +261,12 @@ unplayed.
 
 ## 7. Measurement gaps
 
-- bank.jsonl has no fuel column; re-run the bank census with the timeline's fuel field before any fuel-glut switch.
+- Fuel, closed 2026-10-25: v10's 72 h175 games (scratchpad read econ/fuel.mjs, TRAINING_LOG 2026-10-25 17:29) bank a median
+  3,180 fuel at r100 and 11,100 at r500; no checkpoint from r100 to r900 found a team under 100 fuel but one; rounds
+  with karbonite for a prophet but not its fuel are 2% (in wins 3.6%, losses 0.4%), the reverse 14.5%. Fuel is a free
+  good: karbonite prices everything (HP per K: crusader 2.7, preacher 2.0, pilgrim 1.0, prophet 0.8). A fuel-glut switch
+  can only save the 10 K of each fuel miner staffed past the glut (struct.js nextDepot staffs a free fuel depot when no
+  karbonite one is free); not ranked.
 - No replay yet shows enemy pioneers mining on our depots while they wait for their bank (HUNT_DEPOT's premise).
 - Pioneer arrival, closed 2026-10-25: `tools/reads/pioneers.mjs` gives each pioneer's build, bank, arrival, church,
   death and the round an enemy church first stood by its site (TRAINING_LOG 2026-10-25 15:45); `tools/census.js`

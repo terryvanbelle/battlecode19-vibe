@@ -65,7 +65,7 @@
   h178 (in play, above: v10 + DEF_SAFE 1, dist/h178 4a802965e3a3; h176's: military newborns built while enemy
   attackers are in sight go on a tile they cannot kill them on, if one is free; studied cells uvafan.bc2019:seed-1712,
   uvafan.bc2019:seed-2046; mechanism read tools/reads/stillborn.mjs over its two blocks: `safer` at most a quarter of
-  v10's rate over 1391-1426; TRAINING_LOG 2026-10-25 12:06, 17:05);
+  v10's rate over 1391-1426: 11.60, bar **2.90**; TRAINING_LOG 2026-10-25 12:06, 17:05, 17:43);
   h177 (v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7, dist/h177 902efcd0eaf7: a turn-6 pioneer to the first planned
   cluster we reach 7+ king steps before the enemy; ordinary rule; studied cells wololo 836, 2013, botfinalsafe 1706;
   mechanism read pioneers.mjs (the r<=6 pioneer churches in 2/3+ of firing-map games); first a driver diagnostic on

@@ -5567,3 +5567,21 @@ Interim, not a bar: v10's stillborn read over h175's 72 games gives `safer` 11.7
 Queue 64 waiting (56 ranked); h178 block 1 (1427-1438) running, our matches at the front. VM disk 2.4 GB free; jobq
 empty (no local VM jobs while 30+ wait). Fuel census of v10's 72 h175 games 59 of 72 on the driver; then the
 stillborn read over 1415-1426 (h178's bar), then PIONEER_RACE's no-op check and tests (h183, uncommitted).
+
+## 2026-10-25 17:29 PDT: fuel census over v10's 72 h175 games: fuel never binds
+
+Read: scratchpad econ/fuel.mjs (each team's bank every 100 rounds; from r100, rounds that end with karbonite for a
+prophet, 25, but fuel under its 50, and the reverse) over 1391-1414, 72 lines for 72 games. Fuel-bound 10.3 rounds a
+game (2.0% of rounds; wins 18.2, losses 2.0; mostly 1653, 117 a game, a 1000-round win); karbonite-bound 74.0 (14.5%;
+wins 61.9, losses 86.8). Median bank: r100 262 K / 3,180 F; r200 270 / 5,820; r300 718 / 9,095; r500 496 / 11,130;
+r900 642 / 11,350; of the 288 team-checkpoints at r100, 200, 300, 500, 700 and 900, one under 100 fuel. The late fuel squeeze of the 836 diagnostic (16:56) is
+not typical. Fuel is a free good for us; ECONOMICS section 7's fuel gap is closed, no fuel-glut switch ranked (the
+only saving: 10 K a fuel miner staffed past the glut).
+
+## 2026-10-25 17:43 PDT: h178's mechanism bar from v10's 108 panel games: safer at most 2.90 a game
+
+tools/reads/stillborn.mjs over 1391-1426 (108 lines for 108 games; scratchpad econ/still_v10_108.txt): `safer`
+(military newborns exposed to their hp while another free adjacent tile was not, and dead within 2 rounds) 11.60 a
+game (W 8.06, L 15.15; uvafan 38.78, wololo 9.94, botfinalsafe 7.89, awesomelemonade 7.78, bot1v43 2.83,
+IanCoolidge0 2.39); stillborn 21.77 a game, their karbonite 552. h178's bar, fixed at 15:26 as a quarter of this rate:
+**2.90** over its blocks, computed before any h178 game is read (block 1 running).
