@@ -5808,3 +5808,16 @@ v11's, both v11's rates over its 108 panel games (1427-1438, 1441-1452, the cont
 h190's block 1 is read. Studied cells: uvafan 1712, botfinalsafe 2740, wololo 836, awesomelemonade 2518. Panel order:
 h190 first after the control block (the largest basics waste measured), then h184, h185, h186, h187, h188. A driver
 diagnostic (h190 red vs v11 blue, seed 1712, r1000) is running.
+
+## 2026-10-25 23:06 PDT: v11 control block 19 of 36; joins the v11 pool; progress/ refreshed
+- **v11 control block** (submission 204, matches 1455-1466, finished 23:01): 19 of 36 (h178's two blocks, the same
+  build, 36 of 72). Joins progress/panels/v11-m1.pool (1441-1452, 1455-1466; control 1427-1438): v11's reference is
+  108 games. Every game lost: botfinalsafe 1706, bot1v43 2591, awesomelemonade 2518, wololo 2013 and 836, uvafan
+  1712 and 2046 (v10's dead cells, unchanged); every game won: IanCoolidge0 1036 and 2644, botfinalsafe 203 and 2740,
+  bot1v43 388, awesomelemonade 1712 and 2797, uvafan 1653.
+- v11's ranked matches from tools/rate_ours.sh (requests 724-729 = matches 1467-1472): 1468-1470 finished, their
+  ratings wait behind 1467 (galaxy rates a team's matches in order); 1467, 1471, 1472 running.
+- progress/ refreshed between blocks (23:06): ELO.md lists v11 with its own games (1829 +-116, 45 games: the control
+  block and three rated matches); rating-history.md's champion table follows.
+- Next: h190 block 1 once its driver diagnostic (seed 1712) is read; v11's parked.mjs census over its 108 panel games
+  for h190's bars runs while that block plays, and is fixed before the block is read.
