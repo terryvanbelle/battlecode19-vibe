@@ -1,12 +1,12 @@
 # Rating history (replica)
 
-The replica's Team page Rating History for vibe19: the displayed rating (siarnaq's penalized Elo) after each rated (ranked, non-tournament) match, with each submission's first completed rated match marked. Written by `tools/progress/rating_history.py` from data fetched 2026-10-25 15:57 PDT; regenerate, do not edit.
+The replica's Team page Rating History for vibe19: the displayed rating (siarnaq's penalized Elo) after each rated (ranked, non-tournament) match, with each submission's first completed rated match marked; below it, on its own axis, the Bradley-Terry rating of the build behind each rated match. Written by `tools/progress/rating_history.py` from data fetched 2026-10-25 15:57 PDT; regenerate, do not edit.
 
 ![rating history](rating-history.png)
 
 62 rated matches; latest rating 1,630 (2026-10-25 09:00 PDT). Times are Pacific; the replica's chart shows UTC.
 
-BT = the build's Bradley-Terry rating in `progress/ELO.md` (± 95%), the same for every submission of a build.
+BT = the build's Bradley-Terry rating in `progress/ELO.md` (± 95%), the same for every submission of a build: a fit over every game (local, replica scrimmages and ranked matches), where the replica's Elo mean (displayed rating + 1500·0.85^n) moves at most 24 points per ranked match. The BT panel draws each build from its first to its last rated match only, so a build that never played a rated match does not appear. The two agree on order but not on spread: over the 28 field teams with 20+ rated replica matches, the replica's unpenalized mean rises 0.12 points per BT point (r 0.97), so they are drawn on separate axes and a gap between them is not a gap in strength.
 
 | Submission | Build | First rated match | Time | Rating before | Rating after | Rated matches | BT |
 |---:|---|---:|---|---:|---:|---:|---:|

@@ -300,6 +300,29 @@ class TestReplicaViews(Base):
         f = rating_history.first_rated(ours, 'vibe19')
         self.assertEqual({s: (d['match'], d['matches']) for s, d in f.items()}, {1: (4, 3), 2: (7, 1)})
 
+        # BT steps: one per completed rated match, the fit's rating of its submission's build (None without games).
+        fit = ({'us:v1': 1600.0, 'us:sub2': 1500.0}, {'us:v1': 20.0, 'us:sub2': 0.0}, {'us:v1': 10})
+        bundle = {'team': 'vibe19', 'ours': ours}
+        steps = rating_history.bt_steps(bundle, fit, {1: 'us:v1'})
+        self.assertEqual([(q, b, e) for _, q, b, e in steps], [('us:v1', 1600.0, 20.0), ('us:v1', 1600.0, 20.0),
+                                                               ('us:sub2', None, None)])
+
+        # Scale: replica mean (displayed + 1500 * 0.85**n) on BT over field teams with min_n rated matches.
+        def rm(a, b):
+            return {'status': 'OK!', 'is_ranked': True, 'tournament_round': None,
+                    'participants': [{'teamname': a, 'rating': 1.0}, {'teamname': b, 'rating': 1.0}]}
+        # Our team has the matches and the fit entry to count, so only the name check leaves it out.
+        bundle = {'team': 'vibe19', 'matches': [rm('a', 'b'), rm('b', 'c'), rm('c', 'a'), rm('vibe19', 'd'),
+                                                rm('vibe19', 'd')],
+                  'rankings': [{'name': t, 'rating': r - 1500 * 0.85 ** 2} for t, r in
+                               (('a', 1500.0), ('b', 1550.0), ('c', 1600.0))] + [{'name': 'vibe19', 'rating': 0.0}]}
+        fit = ({'a': 1000.0, 'b': 1500.0, 'c': 2000.0, 'vibe19': 3000.0}, {}, {'a': 5, 'b': 5, 'c': 5, 'vibe19': 5})
+        n, slope, r = rating_history.scale(bundle, fit, min_n=2)
+        self.assertEqual(n, 3)
+        self.assertAlmostEqual(slope, 0.1)
+        self.assertAlmostEqual(r, 1.0)
+        self.assertIsNone(rating_history.scale(bundle, fit, min_n=3))
+
     def test_ladder(self):
         rows = sample_rows()
         rec = ladder.team_records(rows, 'vibe19')

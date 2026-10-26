@@ -286,3 +286,9 @@
    build, saw the turn-start fuel: a castle hit at r479 with 50-59 fuel built a preacher (50) and radioed the spot
    (10), and the engine refused the build ("Cannot afford", h177 against v10 on 836). World.build now charges K and
    fuel too. Any new post-build signal must check the fuel left after the build. (2026-10-25 16:55)
+46. **The replica's rating orders teams as BT does but is not on BT's scale; compare strength by BT.** Over the 28
+   field teams with 20+ rated replica matches, the replica's Elo mean (displayed + 1500·0.85^n) rises 0.12 points
+   per BT point (r 0.97; 0.10-0.17 across subsets, Theil-Sen 0.12): siarnaq's mean moves under 24 a ranked match and
+   teams have played a few dozen, while BT fits every game. So the replica rating has not converged to BT (as it did
+   in another year's long practice) and a gap between our replica rating and a build's BT is not a gap in strength
+   (progress/rating-history.md computes the ratio on each refresh, scale()). (2026-10-25 19:10)
