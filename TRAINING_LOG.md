@@ -6506,3 +6506,20 @@ with no planned church) stays queued behind; if h201 is accepted, h199 is review
   red, 2740 blue; bot1v43 2321 blue (r133); uvafan 2046 both sides (r1000); IanCoolidge0 203 red, 1036 both sides.
 - h195 block 1 submitted (panel_submit.sh dist/h195, running). Its bars finish with the control block's 36 games in
   the stillborn census, which runs on the driver after the castle-loss census over v12's 72 games (running).
+- (12:27) **h195's bars fixed** (before any h195 game is read): the stillborn-pilgrim census over v12's 108 panel games
+  (h185's 72 and the control block's 36; scratchpad stillpil_v12.txt, stillpil_v12c.txt): per game 34.56 pilgrims
+  built, 4.42 stillborn (44 K), 0.26 by castles, 0.472 safer (51 in 108). Bars: **safer <= 0.118 per game** (a quarter
+  of v12's) and **built >= 31.1 per game** (0.9 of v12's), over our side of h195's blocks. h195 block 1 = matches
+  1865-1876 (the last four, awesomelemonade and IanCoolidge0, resubmitted 12:27 after HTTP 429: submission 232).
+- (12:27) v12's castle-loss census (castles.mjs over its 72 panel games; scratchpad castles_v12.txt): 29 castles lost
+  (v11: 50 in 108); 4 with no military of ours within r2 400, 11 with 10+ unfired within r2 400. Per cell v12 wins
+  72 of 108 to v11's 55, but loses cells v11 won: IanCoolidge0 1036 both sides (3/3 -> 1/3), IanCoolidge0 203 red
+  (3/3 -> 1/3), wololo 2644 red (3/3 -> 0/3). wololo 2644 red (1651): escort #2509 reached (26,20) by r14 and died
+  there (ESCORT_FAST_R2), the first pioneer went to (20,9) instead of v11's centre (28,19), the castle's second
+  died at (35,19) r71; 6 pilgrims to r330 (v11 15 at r100), every unit lost by r300. IanCoolidge0 1036 red (1845,
+  1857): v11 killed both castles by r375-485 with a church chain (4 -> 13 churches r300-400); v12 mines twice the
+  karbonite by r100 (1404 vs 748), builds an army of 93 by r200 and 203 by r400, and its fuel stays 400-2,100 from
+  r200 on, so the chain (which waits for CHAIN_K 1000 K **and CHAIN_F 3500 fuel**) never fires: 4 churches to the end,
+  bank 6,512 K and 10 fuel at r974, and IanCoolidge0's preachers took both castles at r960-974. The peacetime army
+  keeps CHAIN_K karbonite back from CHAIN_ROUND but no fuel. A sweep of fuel and churches at r200-700 over v11's and
+  v12's 108 panel games each (scratchpad bank/fuel.sh) is running to size it.

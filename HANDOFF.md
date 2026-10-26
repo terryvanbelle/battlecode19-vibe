@@ -71,8 +71,7 @@
   at a time and bumped to the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   The v12 control block (1847-1858) finished 12:10, 23 of 36, and joined progress/panels/v12-m1.pool; v12's rated
   matches 1859-1864 wait in the queue.
-  **Now: h195 block 1** = matches 1865-1872 (submission 230; ladder 231) plus awesomelemonade and IanCoolidge0, refused
-  by the hourly limit and retried every 15 min by panel_submit.sh (a new candidate submission: add its row). Before it
+  **Now: h195 block 1** = matches 1865-1876 (submissions 230 and 232, the last four after HTTP 429; ladder 233). Before it
   is read: the stillborn census over 1847-1858 (after the castle-loss census over v12's 72 games, running), so the
   bars rest on v12's 108 games. h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42), h192
   on block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
