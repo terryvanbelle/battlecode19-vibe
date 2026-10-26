@@ -6140,6 +6140,6 @@ botfinalsafe 2591 (r23, r2 233; 0 of 15; 0 of 6), uvafan 1712 (r22, r2 225-244, 
 0 of 6), wololo 2013 (r46, r2 296; 0 of 17; 1 of 6). 30 games, 1 won, and every early church stands to the end or
 its cluster's end; their churches built 8-217 military each. Cells where we do destroy them win (IanCoolidge 1036:
 2 a game, 6 of 6; awesomelemonade 2797: r58 church r2 145 dead 21-45 rounds later, 6 of 6). Price: the upper bound is
-the 29 lost games of those five cells (13.4 of the panel's 36-game block at v11's rate); what a strike gets depends on
+the 29 lost games of those five cells (9.7 of a 36-game block); what a strike gets depends on
 who sees the church first and what guards it (next read: econ/seen.mjs, our sightings and its guards in its first 15
 rounds).
