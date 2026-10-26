@@ -6372,3 +6372,22 @@ jobs; h194 waits for h185's block to end.
 ladder matches), awesomelemonade and four others 5): no bot holds the lion's share, so none is dropped (owner,
 PROMPTS 20-21). All 8 execute slots play; yesterday's 174 took until 22:52 to fall under 30 (about 11 matches an
 hour). Until then: our blocks one at a time and bumped, no local VM jobs.
+
+## 2026-10-26 09:42 PDT: h193 REJECTED on block 1 (16 of 36, z -1.42); h185 block 1 25 of 36, z 4.11: block 2 next
+Both blocks finished (h185's at 09:41); replays fetched, sides checked (odd matches ours red, even blue).
+- **h193** (v11 + STRIKE_FAR 3, matches 1639-1650): 16 of 36, pooled expectation 18.3, z -1.11; side-aware z
+  **-1.42** (effect -146 Elo, 95% -347 to +57); studied cells 0 of 10 (expectation 0.6, z -0.84); other cells 16 of
+  26 (z -1.17); lost two usually-won cells (bot1v43 2321 red, botfinalsafe 2740 red). REJECTED under the panel rule
+  (block 1 rejects at z < 0.5); its z lies outside +-1, so the block stays out of the pool file.
+- **h185** (v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, matches 1651-1658 and 1831-1834): **25 of
+  36**, pooled expectation 18.3, z 3.27; side-aware z **4.11** (effect +405 Elo, 95% +220 to +586); studied cells 8
+  of 12 (expectation 4.7, z 3.59); other cells 17 of 24 (expectation 13.6, z 2.54). It won both sides of uvafan 1712,
+  awesomelemonade 2518 and bot1v43 2591 (all 0 of 6 in v11's pool), wololo 836 blue, 2013 blue and IanCoolidge 203
+  blue; it lost wololo 2644 red (3 of 3 in the pool). Block 1 passes (z >= 0.5): block 2 goes in now, ahead of h194
+  (an accept settles the champion every later candidate builds on). Its mechanism read (escorts.mjs, mean hit6 under
+  40%) runs on both blocks once block 2 ends.
+
+## 2026-10-26 09:47 PDT: h185 block 2 = matches 1835-1846
+Candidate submission 226 (dist/h185 e4a146ede62f), requests 920-931 all accepted (the hour's limit had room), ladder
+227 (bots/v11); `tools/bump_ours.sh --ours` moved them to the queue's front (169 waiting, 157 ranked). Waiter:
+scratchpad wait_block.sh 1835 1846. h194's block 1 follows it.

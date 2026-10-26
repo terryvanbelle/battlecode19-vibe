@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 09:24 PDT)
+## State (2026-10-26 09:47 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -62,21 +62,14 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted).
-  **Replica queue (09:24): 172 waiting (all ranked; the daily autoscrim fired at 09:00); h193 block 1's last match (1645) and h185 block 1's last five play.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (09:47): 169 waiting (157 ranked; the daily autoscrim fired at 09:00); h185 block 2 bumped to the front.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: h193 block 1 = matches 1639-1650** (submission 216, requests 896-907; ladder 217; waiter scratchpad
-  wait_block.sh 1639 1650). h193 = v11 + STRIKE_FAR 3 (dist/h193 18d81e3ab45c: a pilgrim radios an enemy church once,
-  FAR.STRIKE; the castle nearest it, within r2 400 and the church beyond r2 100 of every enemy castle, sends 3
-  crusaders at full speed to it; TRAINING_LOG 2026-10-26 08:00). Panel rule (block 1 rejects at z < 0.5; after block
-  2 accept at z >= 2, reject at z < 1, else block 3, accept at z >= 2), other cells z >= 0 to accept; studied
-  m-schier.battlecode-2019-wololo:seed-836,m-schier.battlecode-2019-wololo:seed-2013,StoneT2000.BC19-bot1v43:seed-2591,uvafan.bc2019:seed-1712,awesomelemonade.Battlecode2019:seed-2518;
-  mechanism bar per block (forward.mjs, strike.mjs on h193's side over the 10 studied-cell games): a near enemy
-  church destroyed in 4 or more (v11: 0 of 30), strikers built in 6 or more. Score: `tools/panel_pool.sh 1427-1438
-  progress/panels/v11-m1.pool 1639-1650 --studied <the five>`.
-  **In play: h185 block 1 = matches 1651-1658 and 1831-1834** (submissions 218 and 224, requests 908-919; four
-  requests waited out the replica's hourly scrim limit, TRAINING_LOG 2026-10-26 09:10; waiter: wait_block.sh on both
-  ranges). Score: `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1651-1658,1831-1834 --studied <h185's
-  six, below>`; rule and mechanism read in h185's entry below.
+  **In play: h185 block 2 = matches 1835-1846** (submission 226, requests 920-931, ladder 227, bumped; waiter
+  scratchpad wait_block.sh 1835 1846). Block 1 (1651-1658, 1831-1834): **25 of 36, side-aware z 4.11**, others z 2.54,
+  studied 8 of 12 (TRAINING_LOG 2026-10-26 09:42). Score both blocks: `tools/panel_pool.sh 1427-1438
+  progress/panels/v11-m1.pool 1651-1658,1831-1834,1835-1846 --studied <h185's six, below>`; panel rule after block 2:
+  accept at z >= 2 (other cells z >= 0), reject at z < 1, else block 3; mechanism read in h185's entry below.
+  h193 was REJECTED on block 1 (16 of 36, z -1.42, others -1.17, studied 0 of 10; TRAINING_LOG 2026-10-26 09:42).
   h192 was REJECTED on block 1 (14 of 36, z -2.65, others -2.83; TRAINING_LOG 2026-10-26 08:21); h184 on three
   blocks (62 of 108, z 2.51, others -0.85; 06:37); h190 on its block 1 (z -1.42; 00:42). progress/ waits for a gap
   between blocks (LEARNINGS 38; last refresh 06:37).
@@ -84,7 +77,7 @@
   recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
   2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191; h191
   last from 01:37):
-  h194 (v11 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h194 bf489b929599: h184's race part alone; general
+  h194 (after h185's block 2; v11 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h194 bf489b929599: h184's race part alone; general
   panel rule, other cells z >= 0 to accept; studied awesomelemonade.Battlecode2019:seed-2518,StoneT2000.BC19-bot1v43:seed-2591;
   mechanism read pioneers.mjs: the turn-3 pioneer founds its church in at least half of the games on the seven maps
   where it sends; TRAINING_LOG 2026-10-26 08:53);
