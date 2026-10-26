@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 05:24 PDT)
+## State (2026-10-26 05:54 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -29,7 +29,7 @@
   z < 0.5; two blocks accept at z >= 2 (other cells z >= 0), reject at z < 1, else a third block at z >= 2. The
   basics-fix rule (h170, fixed 2026-10-25 04:26): two blocks, block 1 rejects only at z < -1; accept at z >= 0
   (others z >= 0) if the mechanism reads pass, else the ordinary rule.
-- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free (3.0 GB at 05:23 on 2026-10-26; 3.2 GB at 00:26 after deleting ~/.gradle/caches, daemon and wrapper (prior-year Gradle, 1 GB); 2.4 GB at 18:24 on
+- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free (2.9 GB at 05:53 on 2026-10-26; 3.2 GB at 00:26 after deleting ~/.gradle/caches, daemon and wrapper (prior-year Gradle, 1 GB); 2.4 GB at 18:24 on
   2026-10-25; 2.5 GB at 16:26 after deleting ~/.gradle/daemon/7.6/daemon-*.out.log: 651 logs of Aug 27-Sep 1, before this project,
   277 MB; 2.2 GB before). Prune a screen's out/rp_* once its candidate is decided; next candidates if needed: the
   journal (155 MB, `sudo journalctl --vacuum-size=50M`), /var/log (243 MB).
@@ -59,7 +59,7 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted).
-  **Replica queue (05:23): 2 waiting (1 ranked), 8 running (h184 block 3 1584-1595 playing).** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (05:53): 2 waiting (2 ranked), 8 running (h184 block 3: 9 of 12 done).** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: h184 block 3 = matches 1584-1595** (submission 212, requests 841-852; ladder 213; waiter scratchpad
   wait_block.sh 1584 1595); block 1 = 1513-1524 (submission 208): 22 of 36, z 2.27; block 2 = 1547-1558 (210): 20 of
