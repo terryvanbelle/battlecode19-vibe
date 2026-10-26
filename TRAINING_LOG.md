@@ -6329,3 +6329,10 @@ tools/reads/bursts.mjs over h192 block 1 (1616-1627, 36 games; scratchpad econ/b
 **near bursts 5 (0.139 a game; bar at most 0.051, v11 0.102)**, kills 4, castles lost 19 (0.528; v11 0.463), stagers
 2.72 a game (v11 3.05), hunted 0.61 (v11 0.68). The near bursts: botfinalsafe 203 red 3, 1706 both sides 1 each. HUNT
 found no more stagers than v11's own engage rule and the bursts went on: the hunt line gives nothing to build on.
+
+## 2026-10-26 09:01 PDT: h194's driver diagnostic: the race pioneer churches its site 27-57 rounds before v11
+h194 red vs v11 blue to r150 (--det, scratchpad diag_h194.sh, h194_r_*.bc19), pioneers.mjs on red: **2740** the
+turn-3 pioneer walks 35 king steps, arrives r45, church r46 (v11's first church in the same game r73; v11's on the
+replica against botfinalsafe r73); **1036** church r16 (v11 r34; replica r34); **2321** church r17 (v11 r36; replica
+r42). Pilgrims at r100 18, 25, 18 (v11 on the replica 14-15). No errors, exceptions or timeouts. Self-play, so only
+the mechanism is read here; the panel decides.
