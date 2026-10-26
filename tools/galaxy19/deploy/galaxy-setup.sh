@@ -535,8 +535,16 @@ $1 {
 		not path /api/token/* /api/user/password_reset/*
 		header_regexp Authorization ^Bearer\s+[A-Za-z0-9._~+/=-]+$
 	}
+	# siarnaq's 401 for an expired token goes out as a 403 here too: Chrome counts a 401 to a request it had also
+	# given the cached gate login (the JWT header replaced it) as that login rejected, and drops it (PROMPTS 48).
 	handle @bearer_api {
-		reverse_proxy 127.0.0.1:$PORT
+		reverse_proxy 127.0.0.1:$PORT {
+			@siarnaq_401 status 401
+			handle_response @siarnaq_401 {
+				header -WWW-Authenticate
+				copy_response 403
+			}
+		}
 	}
 	handle /manifest.json {
 		root * $WWW/frontend

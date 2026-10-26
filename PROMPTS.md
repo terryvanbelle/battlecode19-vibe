@@ -173,3 +173,6 @@ Could you do a sweep through the VM for other prior-year files and clean them ou
 
 ## 47. 2026-10-26 06:21 PDT
 I see an Unranked match queued up between uvafan and wololo.  What's that about?  I thought we were the only ones who participated in unranked matches
+
+## 48. 2026-10-26 13:38 PDT
+I can no longer log into the replica, either as owner or vibe19

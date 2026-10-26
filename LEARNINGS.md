@@ -311,3 +311,9 @@
    (12.31 and 11.03 against 10.65), and played 15 and 16 of 36 (z -1.71, -1.42). A parked pioneer costs 10 K and 50
    F; three a game is not what decides a game. Before building a fix for a counted waste, price it (the K and F it
    burns, and when) against what the lost games lack. (2026-10-26 01:37)
+
+49. **Behind a Basic-auth gate, never let a 401 reach the browser on any path.** The replica gate passes requests
+   that carry the frontend's JWT straight to siarnaq. When the 5-day site login expired, siarnaq answered those calls
+   401, and Chrome, which had also attached its cached gate login to them before the JWT header replaced it, took the
+   401 as that login rejected and dropped it; the owner could then log in neither at the gate nor on the site
+   (PROMPTS 48). The Basic path already rewrote 401 to 403; the JWT path now does too. (2026-10-26 13:51)

@@ -6543,3 +6543,18 @@ inert; the regex also catches the ternary `CFG.CHAIN_F:0`). Pre-registration: th
 IanCoolidge0 1036 (`--studied IanCoolidge0.battlecode20~69ce88:seed-1036`); others z >= 0, where the health wins
 it risks sit. Mechanism read (a check, not a decision input): chain lines fired (churches up 3+ after r200, fuel.sh)
 in IanCoolidge0 1036 in at least half its games. Order: after h201.
+
+## 2026-10-26 13:51 PDT: replica login (PROMPTS 48): the gate dropped the owner's password when the site login expired
+
+The owner could not log in at 13:35-13:38 PDT. The site's own login (JWT, 5-day lifetime as on the official site) had
+been issued about 5 days earlier and expired between 12:05 and 13:35. On each page load the frontend sent the stale
+token with every API call; siarnaq answered 401 (DRF rejects an invalid token even on public views), and the gate passed
+that 401 through on its JWT path. Chrome had also given each of those requests its cached gate login (the frontend's
+Authorization header replaced it), so it counted the 401 as that login rejected and dropped it: the gate log shows the
+owner's API calls with a Basic login at 13:38:27 and without one a second later, after the 401s. The login form's POST
+/api/token/ then reached the gate with no login and stopped there (no browser POST in siarnaq's log). Server, DNS and
+accounts were fine: owner and vibe19 logged in from the driver throughout.
+Fix (tools/galaxy19/deploy/galaxy-setup.sh, `deploy.sh site`, Caddy reloaded 13:49; app untouched): the JWT path answers
+siarnaq's 401 as a 403 with no challenge, as the Basic path already did. Checked: a bogus Bearer token now gets 403 on
+/api/user/u/me/ and /api/episode/e/bc19/; gate + token + Bearer works for owner and vibe19. The frontend logs out on any
+failed token check (no 401-specific code in the bundle), and client.py treats 401 and 403 alike. LEARNINGS 49.

@@ -34,7 +34,13 @@ Galaxy shows Replay buttons only on a team's own pages, so watch as our team:
 
 Every 8 hours (00:00, 08:00 and 16:00 UTC) galaxy's automatic round gives every team ranked best-of-3 matches on
 random maps. In between, our team requests scrimmages (`contest19.py scrim`), and field teams challenge the teams
-rated near them when the VM has spare time. The replica runs at most 2 games at once, so the VM stays free for our own test batches.
+rated near them when the VM has spare time. The replica runs up to 8 games at once, one per VM core (6 while our
+own test batches share the VM).
+
+## If it stops letting you in
+
+The site login lasts 5 days. When it runs out, the site shows you logged out: Log In again (step 3 above). If the
+browser asks for the site password again, give it the gate login of step 2 (user `owner`), not `vibe19`.
 
 ## If the address stops working
 
