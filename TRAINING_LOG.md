@@ -5685,3 +5685,14 @@ the first refresh flagged us:sub202 with no attempts row). tools/panel_submit.sh
 ("candidate submission N", "ladder submission M"). The refresh ran while block 2 was in play, so ELO.md's h178 row
 includes 4 of its 12 matches: a look at a running block (LEARNINGS 38, extended). h178's rule (basics-fix) and bar
 (stillborn safer at most 2.90 a game) were fixed at 17:05 and 18:58 and stay as they are.
+
+## 2026-10-25 20:10 PDT: walk-in census split: engaging vs blind
+
+walkin.mjs now tells an engaging walk-in (from the new tile the unit can hit an enemy) from a blind one (nothing to
+hit there), over the same 108 v10 games (1391-1426). Per game, walk-ins / deaths within 2 rounds: engaging 25.6 /
+16.8, blind 34.7 / 14.6; blind by who saw the attackers: the unit 0.0, a structure of ours 17.7 / 6.5, nobody 17.0 /
+8.0. Losses: blind-struct 12.5 / 7.5, blind-none 10.9 / 7.8; wins 23.0 / 5.6 and 23.0 / 8.2. So the deaths a
+structure's knowledge could have saved are 6.5 a game (7.5 in losses), about 4% of the 180 units built: the SIEGE
+line (h135-h138: structures radio enemy prophets to newborns, units keep out of remembered prophets' reach) tried
+exactly this on v7 and was closed at panel z 0.33. Not a new candidate; the census is kept as a reference read
+(scratchpad econ/walkin.mjs, walkin2_v10.txt).
