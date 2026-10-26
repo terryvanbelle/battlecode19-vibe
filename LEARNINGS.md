@@ -302,3 +302,10 @@
    v11 (PROMPTS 44). Draw each accepted build from its acceptance to the next, labelled with its sample count, falling
    back to its accepting candidate's games (marked as such); and give each new champion rated matches at once (the
    field's ranked challenges after its control block: tools/rate_ours.sh). (2026-10-25 22:17)
+
+48. **A waste the reads can count is not a loss the panel can see until its price says so.** Two pioneer-waste fixes
+   did exactly what they aimed at and scored below the champion: h170 (v9 era) and h190 (v11 era) halved the
+   pioneers sent to sites the enemy already held (to taken 1.92 and 2.25 a game against 4.68), lost no church
+   (12.31 and 11.03 against 10.65), and played 15 and 16 of 36 (z -1.71, -1.42). A parked pioneer costs 10 K and 50
+   F; three a game is not what decides a game. Before building a fix for a counted waste, price it (the K and F it
+   burns, and when) against what the lost games lack. (2026-10-26 01:37)

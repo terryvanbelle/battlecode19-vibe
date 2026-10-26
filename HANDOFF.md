@@ -73,16 +73,12 @@
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
   2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191 and h192; h184
-  went before h191 from 2026-10-26 00:31, h192 too from 01:08):
+  went before h191 from 2026-10-26 00:31, h192 too from 01:08, h191 last from 01:37):
   h192 (v11 + HUNT 2 + HUNT_SLACK 4, dist/h192 b15514aedf60: pilgrims radio a loitering enemy pilgrim near our half,
   idle melee units go for it, against the one-round church chains that took botfinalsafe 1706 and bot1v43 2321 blue;
   basics-fix rule; bar near bursts per game (tools/reads/bursts.mjs) at most half of v11's, the v11 census to run
   and fix before the block is read; studied cells botfinalsafe 1706, bot1v43 2321; no-op check and diagnostic
   running; TRAINING_LOG 2026-10-26 01:08);
-  h191 (v11 + PIONEER_TIMEOUT_HOME 80, dist/h191 5a3687700398: a pioneer out 80 turns still more than a king step from
-  its site gives it up and mines at home, the pilgrim side of h190's zombie pioneers; basics-fix rule; bars parked
-  pioneers <= 1.53 a game and churches >= 9.58 a game (TRAINING_LOG 2026-10-26 00:02); no-op check passed 00:11;
-  driver diagnostic clean 01:08; TRAINING_LOG 2026-10-25 23:32);
   h185 (= h179 on v11: v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h185 e4a146ede62f; h171's; the fix for escorts
   that never leave home on small maps, LATTICE_R 12 around their site covering it (2591); studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
@@ -96,7 +92,12 @@
   (the six bots on the five pool maps where no castle plans a church): first a bots/v11 control block
   (`PANEL=progress/panels/noplan-m1.json tools/panel_submit.sh bots/v11 "v11 control, noplan-m1"`), panelsim on the
   design (> 10% false accepts: a second control block first), then h188; score with `contest19.py pool CONTROL
-  progress/panels/noplan-m1.pool BLOCK...` (TRAINING_LOG 2026-10-24 15:32).
+  progress/panels/noplan-m1.pool BLOCK...` (TRAINING_LOG 2026-10-24 15:32);
+  h191 (v11 + PIONEER_TIMEOUT_HOME 80, dist/h191 5a3687700398: a pioneer out 80 turns still more than a king step from
+  its site gives it up and mines at home, the pilgrim side of h190's zombie pioneers; basics-fix rule; bars parked
+  pioneers <= 1.53 a game and churches >= 9.58 a game (TRAINING_LOG 2026-10-26 00:02); no-op check passed 00:11;
+  driver diagnostic clean 01:08; TRAINING_LOG 2026-10-25 23:32; last since 01:37: h170 and h190, the same
+  class, passed their mechanism reads and lost, LEARNINGS 48).
   h167's mechanism reads are done (TRAINING_LOG 2026-10-25 09:43).
   ECONOMICS rows 4, 5, 6, 10 dropped (TRAINING_LOG 2026-10-24 21:22, 22:10; 2026-10-25 04:22); rows 9 (ECON_SAT),
   11 (PLAN_CONTEST_PREM, targeted panel), 12 (HUNT_DEPOT) unbuilt.

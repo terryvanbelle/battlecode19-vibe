@@ -5971,3 +5971,21 @@ comparison, fixed before its block is read), then h190's parked read for the rec
   church in at least two thirds of the games that build one (failed below half), and (b) h184's first church is
   earlier than v11's median for that cell in more cells than it is later (a game with no church counts as never;
   ties don't count). Reported, not bars: pilgrims at r100 against 13.11, castles lost a game.
+
+## 2026-10-26 01:37 PDT: h190's record read: its mechanism worked and the panel still said no; h191 to the end
+
+- parked.mjs over h190's rejected block 1 (1492-1503, 36 games; scratchpad econ/parked_h190.txt) against v11's 108
+  panel games and h170's 36 (per game):
+
+  | build | sent | churched | mined | died | parked | gave up | to taken | churches |
+  |---|---|---|---|---|---|---|---|---|
+  | v11 | 8.04 | 1.94 | 0.33 | 2.70 | 3.06 | 0.00 | 4.68 | 10.65 |
+  | h190 | 5.67 | 2.14 | 1.00 | 1.42 | 1.11 | 1.78 | 2.25 | 11.03 |
+  | h170 (v9 era) | 5.11 | 1.97 | 0.89 | 1.14 | 1.11 | 2.11 | 1.92 | 12.31 |
+
+  Both of h190's pre-registered mechanism bars pass (to taken 2.25 <= 3.27; churches 11.03 >= 9.58): it cut the
+  pioneers sent to held sites by half and lost no church, yet scored 16 of 36 (z -1.42). With h170 (same shape,
+  z -1.71) that is two pioneer-waste fixes that did what they aimed at and scored below the champion: the waste costs
+  too little to show (a parked pioneer is 10 K and 50 F; v11 parks 3 a game). LEARNINGS 48.
+- **h191** (the pilgrim side of the same waste; bar parked <= 1.53) is the third of the class: it moves from after
+  h192 to the end of the panel order (h184 in play, h192, h185, h186, h187, h188, h191). No bar or rule changed.
