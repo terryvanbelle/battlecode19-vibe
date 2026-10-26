@@ -6476,3 +6476,25 @@ h185's build, all 0): h196 = h194 (70a8617acfee), h197 = h186 (7e320236f615), h1
   pilgrims, and 12 prophets took the castle at r126. v11 reached army 20 at r125 the same way and fell at r212-217.
   The bank-at-r100 hole was ECON_RICH's case (h116, seed 2321: 535 K at r100), rejected in v7-era self-play (t -1.07
   vs h87), never panel-tested. A sweep of v12's 72 panel games (bank and army at r50-125, ours and theirs) is running.
+
+## 2026-10-26 11:47 PDT: the bank idles to r100 in half of v12's panel games; h201 (v12 + ECON_RICH 100) pre-registered
+Sweep of v12's 72 panel games (new read tools/reads/bank.sh: replay timelines at r50-125, ours and the opponent's;
+scratchpad bank/bank_v12.txt; unit test added): the games are deterministic to r100 (both blocks' cells match to the unit). Our bank at r75
+averages 199 K (300+ in 22 games), at r100 317 K (300+ in 36 of 72), with an army of 2-11: uvafan 1653 863 K, army 3
+vs 34 (won all four on health anyway: the fuel caps the total); IanCoolidge 1036 595-645 K; awesomelemonade 2518 580
+K; bot1v43 2321 blue 460 K, army 4 vs 6 (lost r124, r126); uvafan 2046 440 K, army 2 vs 17 (lost all four at r1000 on
+health). ECON_UNTIL (no peacetime army before r100) was accepted for the pioneers' sake; once the plan is spent or
+blocked the karbonite waits 25-60 rounds. ECON_RICH (h116, v7) spent only the bank past ECON_RICH + the reserves on the
+army before r100, so pilgrims and pioneers keep first claim; it lost a self-play gate (t -1.07 vs h87, where neither
+bank grows: seed 2321 self-play K 22-50), and was never tried against the field.
+**h201 = v12 + ECON_RICH 100** (dist/h201 f3833637f632; CFG diff against bots/v12: ECON_RICH only, plus the keys
+added since h185's build, all inert at their defaults; the defaults build replays v12 identically, 10:39's no-op
+check). Pre-registration: the ordinary panel rule (block 1 rejects at side-aware z < 0.5; after two blocks accept at z
+>= 2 with other cells z >= 0, reject at z < 1, else a third block). Studied cells: bot1v43 2321 and uvafan 2046
+(`--studied StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046`). Mechanism read (tools/reads/bank.sh on both
+blocks, a check, not a decision input): in the cells where v12 banked 300+ K at r100, our r100 army above v12's and the bank
+below it. Order: after h195 (both are basics; h195 was registered first). h199 (ECON_NOPLAN, the same hole on maps
+with no planned church) stays queued behind; if h201 is accepted, h199 is reviewed against it before its targeted panel.
+- (12:00) Unit tests 178/178 node + 65 Python after tools/reads/bank.sh and its test. The first run failed one test,
+  run_game --turnlog, on a boundary: a turn is logged when it is over --turnlog-ms (20) but its ms is written to 0.1,
+  so a 20.04 ms turn reads 20 and failed the test's `ms > 20`; the test now asks >= 20 (3 of 3 alone passed before).

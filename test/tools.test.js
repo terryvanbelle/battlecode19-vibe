@@ -260,7 +260,7 @@ test('run_game: --turnlog lists each turn over --turnlog-ms with its robot and c
       { cwd: path.join(__dirname, '..'), encoding: 'utf8' });
     const all = fs.readFileSync(log, 'utf8').trim().split('\n').map(l => JSON.parse(l));
     const rows = all.filter(r => r.team === 0);   // blue's v6 has slow turns of its own
-    assert.ok(all.every(r => r.ms > 20 && [0, 1].includes(r.team)));
+    assert.ok(all.every(r => r.ms >= 20 && [0, 1].includes(r.team)));   // ms is logged to 0.1: a 20.04 ms turn reads 20
     assert.ok(rows.length >= 6 && rows.every(r => r.unit === 0 && r.ms < 1000));   // two castles, rounds 1-4
     assert.ok(rows.every(r => r.bank > r.ms && r.bank <= 5000 + 20 * r.turn));   // the clock before the turn's charge
     assert.ok(rows.some(r => r.round >= 2));
@@ -782,4 +782,23 @@ test('reads: games.sh refuses a bad match id and a missing --', () => {
   assert.strictEqual(spawnSync('bash', [sh, 'idle.mjs', '300', '1180']).status, 2);
   const none = spawnSync('bash', [sh, 'idle.mjs', '300', '--', '9999999'], { env: { ...process.env, REPLAYS: FIX } });
   assert.strictEqual(none.status, 1);
+});
+
+test('reads: bank.sh prints our bank, army and churches and the opponent\'s army and churches at r50-125', () => {
+  const { spawnSync } = require('child_process'), os = require('os'), sh = path.join(__dirname, '..', 'tools', 'reads', 'bank.sh');
+  assert.strictEqual(spawnSync('bash', [sh]).status, 2);
+  assert.strictEqual(spawnSync('bash', [sh, '11x']).status, 2);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bank-'));
+  try {
+    fs.mkdirSync(path.join(dir, '42'));
+    fs.copyFileSync(path.join(FIX, 'escort_s2591_1124-1.bc19'), path.join(dir, '42', 'g.bc19'));
+    fs.writeFileSync(path.join(dir, '42', 'match.json'), JSON.stringify({ games: [
+      { file: 'g.bc19', red_team: 'vibe19', blue_team: 'x.y', winner_team: 'x.y', map: 'seed-2591', rounds: 120 }] }));
+    const r = spawnSync('bash', [sh, '42'], { env: { ...process.env, REPLAYS: dir }, encoding: 'utf8' });
+    assert.strictEqual(r.status, 0, r.stderr);
+    // The fixture ends at r120 (red's castle falls), so its last row stands in for r125.
+    assert.strictEqual(r.stdout.trim(), '42 x.y seed-2591 0 L 120 | us 50:K0/a0/ch0 75:K40/a0/ch0 100:K80/a0/ch0 ' +
+      '120:K15/a0/ch0 | them 50:a0/ch1 75:a3/ch1 100:a3/ch1 120:a3/ch2');
+    assert.strictEqual(spawnSync('bash', [sh, '43'], { env: { ...process.env, REPLAYS: dir } }).status, 1);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });

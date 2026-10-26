@@ -67,7 +67,7 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted).
-  **Replica queue (11:23): 143 waiting (132 ranked; VM 11 GB free). The v12 control block is in, 1847 playing: matches 1847-1858 (submission 228, bumped; ladder 229; rated 1859-1864); progress/ refreshed 11:14.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (11:53): 132 waiting (all ranked; VM 11 GB free). The v12 control block is in, 4 of 12 played, 8 playing: matches 1847-1858 (submission 228, bumped; ladder 229; rated 1859-1864); progress/ refreshed 11:14.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **Now: the v12 control block, matches 1847-1858** (submitted 11:20); when played, add it to progress/panels/v12-m1.pool
   and finish h195's bars (the census over h185's 72 games plus this block's 36). h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26
@@ -80,7 +80,11 @@
   stillborn pioneers, each unknown to its castle, resent every 80 turns; basics first, so first after the control
   block; basics-fix rule; mechanism read `tools/reads/stillborn.mjs TEAM 2 REPLAY` per game: safer (stillborn on an
   exposed tile beside a free safe one) at most a quarter of v12's, pilgrims built at least 0.9 of v12's; studied
-  StoneT2000.BC19-bot1v43:seed-2321; TRAINING_LOG 2026-10-26 10:45);
+  StoneT2000.BC19-bot1v43:seed-2321; TRAINING_LOG 2026-10-26 10:45; v12's 72 games give 0.47 safer and 34.08 built per
+  game, the control block's 36 still to add: 11:33);
+  h201 (v12 + ECON_RICH 100, dist/h201 f3833637f632: before r100 the peacetime army builds from the bank past 100 K
+  above the reserves; v12 banks 300+ K at r100 in 36 of its 72 panel games, army 2-11; ordinary rule; studied
+  StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046; mechanism check tools/reads/bank.sh: TRAINING_LOG 2026-10-26 11:47);
   h196 (= h194 on v12: v12 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h196 70a8617acfee: h184's race
   part alone; general panel rule, other cells z >= 0 to accept; studied awesomelemonade.Battlecode2019:seed-2518,
   StoneT2000.BC19-bot1v43:seed-2591; mechanism read pioneers.mjs: the turn-3 pioneer founds its church in at least
