@@ -170,3 +170,6 @@ Just got up, can you give me a summary?
 
 ## 46. 2026-10-26 06:19 PDT
 Could you do a sweep through the VM for other prior-year files and clean them out?
+
+## 47. 2026-10-26 06:21 PDT
+I see an Unranked match queued up between uvafan and wololo.  What's that about?  I thought we were the only ones who participated in unranked matches
