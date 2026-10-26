@@ -5921,3 +5921,8 @@ record when the driver is free. With h170 (z -1.71), two pioneer-waste fixes hav
 their first block; h191 (the pilgrim side) keeps its place after h184, with that prior.
 **Next block: h184** (submission 208, requests 770-781 = matches 1513-1524, ladder 209, bumped; ordinary rule, pre-registered 2026-10-25 17:56 as h183; bars relative to
 v11, the pioneer census over its control block running, fixed before the block is read).
+
+## 2026-10-26 00:54 PDT: check-in
+Replica queue 9 waiting (1 ranked; the rest h184's block 1513-1524), 8 running; VM disk 3.2 GB free; jobq empty.
+On the driver, one at a time: h191's diagnostic (1712 to r1000), then v11's control-block pioneer census (h184's
+comparison, fixed before its block is read), then h190's parked read for the record.
