@@ -6085,3 +6085,12 @@ same way; the verdict takes both blocks' z under the ordinary rule.
   progress/ refreshed before block 3 goes in.
 - 04:26: h184 block 3 submitted: candidate submission 212 (requests 841-852, matches 1584-1595), ladder 213, bumped;
   the queue held 1 waiting before it.
+- 04:30: what h184 gave up in its worst other cell, awesomelemonade 1712 red (v11 3 of 3 by castles at r299-312;
+  h184 0 of 2, both on health at r1000). `tools/replay.js timeline`, v11 (1435 game 2) against h184 (1521 game 2),
+  red: at r100 v11 had 6 churches and 31 pilgrims while awesomelemonade had 3 and 21; h184 had 5 and 24 while
+  awesomelemonade had 8 and 35 (r150: 5 and 26 against 7 and 40). v11 then led on army (r200 130 vs 63) and took
+  both castles by r305; h184 led less (103 vs 83), lost a castle at r250, and from r400 the enemy's prophets outgrew
+  it (r1000 734 vs 157 military; mined K 23,172 vs 19,612). h184's r3 pioneers on 1712 go to the clusters PIONEER_OPEN
+  picks (7+ king steps ahead; churches r22, r33), and here the opponent took the centre clusters v11's plan reached.
+  Not acted on during the test; a lead if h184 is accepted (on 1712 v11's plan won against awesomelemonade, h184's won
+  against uvafan blue).
