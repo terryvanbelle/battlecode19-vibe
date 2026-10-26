@@ -5634,3 +5634,8 @@ attackers could not kill the unit on onto one they could, the deaths within 2 ro
 unit, else a structure of ours (r2 100), else nobody. On 2591 (1395, red): 6 such steps, 6 dead, all prophets within
 5 rounds of birth; 5 of the 6 into attackers only the castle saw (the campers at r2 65 from the newborn's tile, past a
 prophet's vision of 64). Running over v10's 108 panel games.
+
+## 2026-10-25 18:24 PDT: check-in
+
+Queue 48 waiting (all ranked); h178 block 1: 10 of 12 matches done, 1433-1434 (uvafan) running. VM disk 2.4 GB free;
+jobq empty. Walk-in census 56 of 108 games.

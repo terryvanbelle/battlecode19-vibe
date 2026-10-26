@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 17:56 PDT)
+## State (2026-10-25 18:24 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v10** (`bots/v10` = h175, bots/ROSTER.tsv); frozen history v0-v10,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -25,7 +25,7 @@
   z < 0.5; two blocks accept at z >= 2 (other cells z >= 0), reject at z < 1, else a third block at z >= 2. The
   basics-fix rule (h170, fixed 2026-10-25 04:26): two blocks, block 1 rejects only at z < -1; accept at z >= 0
   (others z >= 0) if the mechanism reads pass, else the ordinary rule.
-- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free (2.4 GB at 17:24 on
+- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free (2.4 GB at 18:24 on
   2026-10-25; 2.5 GB at 16:26 after deleting ~/.gradle/daemon/7.6/daemon-*.out.log: 651 logs of Aug 27-Sep 1, before this project,
   277 MB; 2.2 GB before). Prune a screen's out/rp_* once its candidate is decided; next candidates if needed: the
   journal (155 MB, `sudo journalctl --vacuum-size=50M`), /var/log (243 MB).
@@ -53,7 +53,7 @@
   games (TRAINING_LOG 2026-10-25 15:26, 15:51, 17:05). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted).
-  **Replica queue (17:53): 57 waiting (all ranked; h178's block: 5 of 12 done, the rest running) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  **Replica queue (18:24): 48 waiting (all ranked; h178's block: 10 of 12 done, 1433-1434 running) after the 09:00 daily autoscrim** (4 a team, none dominant;
   about 12 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: h178 block 1 = matches 1427-1438** (submission 200; bots/v10 the ladder build, 201; waiter
