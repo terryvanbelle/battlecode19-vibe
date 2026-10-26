@@ -1,5 +1,6 @@
-// stillborn.mjs TEAM REPLAY: TEAM's military newborns (crusader, prophet, preacher) and the ones killed within 2 rounds
-// of their build (stillborn), with what the builder could have done instead. Exposure of a tile = the damage the
+// stillborn.mjs TEAM [UNITS] REPLAY: TEAM's newborns of UNITS (comma-separated unit codes; default 3,4,5, the military:
+// crusader, prophet, preacher; 2 for pilgrims) and the ones killed within 2 rounds of their build (stillborn), with
+// what the builder could have done instead. Exposure of a tile = the damage the
 // enemy attackers standing at the build could deal it without moving (castle and prophet 10 in r2 1-64 and 16-64,
 // crusader 10 in r2 1-16, preacher 20 when a tile within one king step of it lies in r2 1-16). Prints one JSON line:
 //   built, stillborn, K (their karbonite), byCastle (stillborn a castle built),
@@ -10,11 +11,12 @@ import { createRequire } from 'node:module';
 import fs from 'node:fs';
 const require = createRequire(import.meta.url);
 const { simulate } = require('../replay.js');
-if (process.argv.length !== 4 || !/^[01]$/.test(process.argv[2])) {
-  console.error('usage: node tools/reads/stillborn.mjs TEAM REPLAY');
+const A = process.argv;
+if (!(A.length === 4 || (A.length === 5 && /^[2-5](,[2-5])*$/.test(A[3]))) || !/^[01]$/.test(A[2])) {
+  console.error('usage: node tools/reads/stillborn.mjs TEAM [UNITS] REPLAY');
   process.exit(2);
 }
-const team = +process.argv[2];
+const team = +A[2], units = A.length === 5 ? A[3].split(',').map(Number) : [3, 4, 5];
 const COST = [0, 50, 10, 15, 25, 30], HP = [200, 100, 10, 40, 20, 60];
 const d2 = (a, b, x, y) => (a - x) ** 2 + (b - y) ** 2;
 function exposure(enemies, x, y) {
@@ -35,10 +37,10 @@ function exposure(enemies, x, y) {
 const c = { built: 0, stillborn: 0, K: 0, byCastle: 0, shootable: 0, exposed: 0, safer: 0, byRound: {} };
 const kids = new Map();
 let round = 0;
-simulate(fs.readFileSync(process.argv[3]), {
+simulate(fs.readFileSync(A[A.length - 1]), {
   onTurn({ robot, rec, error, born, game }) {
-    if (error || robot.team !== team || rec.action !== 3 || rec.build_unit < 3) return;
-    const kid = born.find(b => b.unit >= 3);
+    if (error || robot.team !== team || rec.action !== 3 || !units.includes(rec.build_unit)) return;
+    const kid = born.find(b => units.includes(b.unit));
     if (!kid) return;
     c.built++;
     const enemies = game.robots.filter(r => r.team !== team && r.unit !== 1 && r.unit !== 2);

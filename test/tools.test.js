@@ -714,7 +714,8 @@ test('bump_ours.sh: reorders only, by digit ids or our team; refuses anything el
   }
 });
 
-// tools/reads: the panel's mechanism reads (h170 parked pioneers, h171 escorts, h174 idle miners, held crusaders). Values pinned from
+// tools/reads: the panel's mechanism reads (h170 parked pioneers, h171 escorts, h174 idle miners, held crusaders, stillborn
+// newborns, the army at castle losses). Values pinned from
 // the session scripts they replace (identical output on these replays).
 test('reads: idle, parked and escort reads on replica games', () => {
   const { execFileSync } = require('child_process');
@@ -739,6 +740,19 @@ test('reads: idle, parked and escort reads on replica games', () => {
   assert.deepStrictEqual(run('stillborn.mjs', '1', path.join(FIX, 'held_s2013_1180-1.bc19')),
     [{ built: 54, stillborn: 2, K: 60, byCastle: 0, shootable: 0, exposed: 0, safer: 0, byRound: { 100: 2 } }]);
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'stillborn.mjs'), '2', g], { stdio: 'pipe' }));
+  // UNITS: the default is the military; v9's 27 pilgrims there all lived past 2 rounds; no unit code outside 2-5.
+  assert.deepStrictEqual(run('stillborn.mjs', '0', '3,4,5', path.join(FIX, 'held_s2013_1180-1.bc19')),
+    run('stillborn.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')));
+  assert.deepStrictEqual(run('stillborn.mjs', '0', '2', path.join(FIX, 'held_s2013_1180-1.bc19')),
+    [{ built: 27, stillborn: 0, K: 0, byCastle: 0, shootable: 0, exposed: 0, safer: 0, byRound: {} }]);
+  for (const bad of ['1', '2,x', '6'])
+    assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'stillborn.mjs'), '0', bad, g], { stdio: 'pipe' }));
+  // castles.mjs: castle (15,14) fell at r204 with 3 of v9's units within r2 100 and 6 within r2 400, none firing in
+  // its last 20 rounds; on 2591 castle (5,15) fell at r120 with none left.
+  assert.deepStrictEqual(run('castles.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')), [{ lost: 1, byLoss: [
+    { r: 204, at: [15, 14], hit: 27, foes: 3, near: 3, mid: 6, far: 3, nearFired: 0, midFired: 0, farFired: 0 }] }]);
+  assert.deepStrictEqual(run('castles.mjs', '0', g), [{ lost: 1, byLoss: [
+    { r: 120, at: [5, 15], hit: 7, foes: 2, near: 0, mid: 0, far: 0, nearFired: 0, midFired: 0, farFired: 0 }] }]);
   // pioneers.mjs, the same game: v9's first pioneer (r34, contested site (5,25)) never reached it and wololo churched
   // beside it at r46; the r46 pioneer to (26,0) arrived at r56 with 20 K banked and built at r99; the r132 retry of
   // (5,25) counts wololo's r46 church, built before it left. wololo's pilgrims carry no SIG.CHURCH radio.

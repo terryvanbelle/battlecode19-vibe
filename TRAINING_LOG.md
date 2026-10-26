@@ -6413,3 +6413,49 @@ IanCoolidge's 203.
   castle resends). stillborn.mjs, now with a UNITS argument (`stillborn.mjs TEAM 2 REPLAY` for pilgrims): 17 of the
   game's 33 pilgrims stillborn, all built by the castle on an exposed tile, 14 of them beside a free safe tile;
   military 0 of 64 (DEF_SAFE covers those). Census of stillborn pilgrims over v11's 108 games running.
+
+## 2026-10-26 10:39 PDT: h185 ACCEPTED as v12 (two blocks 49 of 72, side-aware z 5.38)
+h185 = v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1 (dist/h185 e4a146ede62f): the first contested
+pioneer's two escorts walk to its site at steps up to r2 9, hold within 2 king steps of it, and go back to their
+birth structure's lattice when a prophet's or castle's shot hits them with no enemy melee near. Block 2 = matches
+1835-1846 (sides checked): 24 of 36, side-aware z 3.50 (others 1.06, studied 9 of 12). Both blocks
+(`tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1651-1658,1831-1834,1835-1846 --studied <the six>`):
+**49 of 72**, pooled expectation 36.6 (z 4.28); side-aware z **5.38** (effect +379 Elo, 95% +247 to +511); studied
+cells 17 of 24 (expectation 9.5, z 5.85); other cells 32 of 48 (expectation 27.1, **z 2.55**). Cells won 2 of 2
+that v11's pool never won: uvafan 1712 both sides, awesomelemonade 2518 both, bot1v43 2591 both, wololo 2013 blue
+and 836 blue; lost: wololo 2644 red 0 of 2 (pool 3 of 3 red), IanCoolidge 1036 1 of 2 each side (pool 6 of 6). The
+general panel rule pre-registered for h168 (2026-10-25 01:24) and kept through h171, h179, h185 accepts at z >= 2
+after two blocks with other cells z >= 0; its mechanism reads were registered as "not decision inputs" (they follow
+on the driver: escorts dead within 6 rounds of a prophet's or castle's first hit, bar under 40%, h157 69%).
+Promotion: ESCORT_HOLD_R 2, ESCORT_FAST_R2 9, ESCORT_BACK 1 become the defaults (config.js; every test passes with
+them, so none pins v11's values); bots/v12 = dist/h185 (e4a146ede62f; bots/ROSTER.tsv);
+panel_submit.sh's ladder default is bots/v12; progress/panels/v12-m1.pool = 1835-1846 with 1651-1658,1831-1834 as
+the control argument; a fresh v12 control block joins it before any v12-based block is scored (as for v9-v11: the
+accepted candidate's own blocks were selected on their result). h194, h186, h187, h188, h191 are rebuilt on v12
+with their switches unchanged; pre-registrations stand, bars relative to the champion recomputed from v12's games.
+The r1000 symcheck of v12 waits for the replica queue to fall under 30 (no local VM jobs until then); a driver
+symcheck to r300 runs after the no-op check.
+
+## 2026-10-26 10:45 PDT: h195 (v12 + DEF_SAFE 2) built and pre-registered; the v11 queue rebuilt on v12
+**h195 = v12 + DEF_SAFE 2** (dist/h195 db45575beb6a; struct.js buildToward): a pilgrim newborn (miner, pioneer,
+chainer) goes, as v11's military newborns do, on a free tile the enemy attackers in sight cannot kill before its
+first turn while one exists, and no pilgrim is built while every free tile is exposed (a stillborn pioneer is
+never seen by its castle, which resends 80 turns later: 1446, seed 2321, 17 stillborn of 33 pilgrims; 10:12 entry).
+Unit test added (pilgrim to the one tile neither prophet reaches; none when every free tile is in reach; the
+military still builds then). The defaults (DEF_SAFE 1) leave v12 unchanged: the no-op check runs after the census.
+Pre-registration: basics-fix rule (two blocks; block 1 rejects only at z < -1; accept at z >= 0 with other cells z
+>= 0 if the mechanism read passes, else the ordinary bars). Mechanism read: `tools/reads/stillborn.mjs TEAM 2
+REPLAY` on our side of both blocks, per game: **safer** (pilgrims stillborn on an exposed tile while a free tile in
+no visible attacker's reach stood beside the builder) at most a quarter of v12's over its panel games (h185's 72
+and the v12 control block's 36, computed before any h195 game is read), and **built** (pilgrims per game) at least
+0.9 of v12's (the switch must not starve the economy). Studied cell: bot1v43 2321 blue (StoneT2000.BC19-bot1v43:
+seed-2321); others z >= 0. Order: first after the v12 control block (basics first).
+Rebuilt on v12 with their switches unchanged (CFG diff against bots/v12: only their keys, plus keys added since
+h185's build, all 0): h196 = h194 (70a8617acfee), h197 = h186 (7e320236f615), h198 = h187 (b6e939144ef7), h199 = h188
+(4ed3f18bc8de), h200 = h191 (366fc1e13c2f); h194, h186, h187, h188, h191 closed unplayed (base v11 superseded).
+- (10:55) The stillborn-pilgrim census over v11's 108 panel games (`stillborn.mjs TEAM 2`; scratchpad
+  stillpil_v11.txt): per game 32.2 pilgrims built, 5.09 stillborn (51 K), all on a tile exposed to the enemy's
+  attackers (the read counts every enemy unit, seen or not), 0.58 by castles, and **0.64 safer** (a free safe tile
+  beside the builder); bot1v43 2321 blue holds 18 of the 69 safer cases (23 stillborn in 3 games), IanCoolidge 203
+  red the most stillborn (65 of 169, a cell we win). So h195's tile choice moves about 0.6 pilgrims a game; its
+  no-build rule acts only on attackers in the builder's sight. Its bars are taken from v12's games, as registered.

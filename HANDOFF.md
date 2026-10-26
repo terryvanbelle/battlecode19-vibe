@@ -1,15 +1,20 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 10:24 PDT)
+## State (2026-10-26 10:53 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
-  teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
+  teams make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
   built bundles (`tools/build_bot.js src/bot dist/hN --cfg KEY=JSON ...`, one --cfg per key), never the source
   directory. Every candidate change is a CFG switch whose default is the incumbent.
 - No-op check after every bot code change: a defaults-only build replays the champion against itself on 799 to r300
   (--det --seed 799 --max-rounds 300 --timescale 100 --init-ms 5000 --fast-turn --fast-init --fast-view --no-kill; the
   default 100 ms init fails on the driver, and timescale 10 freezes robots when anything else runs) IDENTICAL to
-  bots/v11's replay, with nothing else running on the driver (LEARNINGS 13); then `tools/unit-tests.sh`.
+  bots/v12's replay, with nothing else running on the driver (LEARNINGS 13); then `tools/unit-tests.sh`.
+- v12 = h185 = v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1 (the first contested pioneer's two escorts
+  hurry to its site at steps up to r2 9, hold within 2 king steps of it, and go home when a prophet's or castle's shot
+  hits them with no enemy melee near), ACCEPTED 10:39 2026-10-26 on the replica panel: two blocks 1651-1658,1831-1834
+  + 1835-1846, 49 of 72, side-aware z 5.38, others z 2.55; won uvafan 1712, awesomelemonade 2518, bot1v43 2591 on
+  both sides (never won before); every test passes with its defaults (none pins v11's).
 - v11 = h178 = v10 + DEF_SAFE 1 (a structure's military newborn goes on a free tile the enemy attackers in sight
   cannot kill it on before its first turn, while one exists), ACCEPTED 20:50 2026-10-25 under the basics-fix rule: two
   blocks 1427-1438 + 1441-1452, 36 of 72, side-aware z 0.00 (exactly), others z 0.11; stillborn safer 2.68 a game
@@ -49,60 +54,56 @@
   systemctl restart bc19-galaxy-saturn`; a restart retries every running game).
   Read a screen: rsync out/hN_v9.jsonl, `node tools/paired.js out/hN_v9.jsonl --h2h`.
 - **Replica panels** (progress/panels/v7-m1.json: six field bots, wololo, botfinalsafe, bot1v43, uvafan,
-  awesomelemonade, IanCoolidge0 ~69ce88, three maps each). Ladder build: bots/v11 from the v11 control block on
-  (`tools/panel_submit.sh` resubmits $LADDER, default bots/v11, after each block). Play a block with
+  awesomelemonade, IanCoolidge0 ~69ce88, three maps each). Ladder build: bots/v12 from the v12 control block on
+  (`tools/panel_submit.sh` resubmits $LADDER, default bots/v12, after each block). Play a block with
   `tools/panel_submit.sh dist/hN "message"` (submits, scrims each opponent twice, NAME@+ and NAME@-, so the block's 36
   games play every cell on both sides (red wins about 13 points more often within a cell: LEARNINGS 37); resubmits
   the ladder build, bumps; retries what the hourly limit refuses (HTTP 429) every 15 min; a lock keeps blocks apart);
-  add the tools/progress/submissions.tsv rows. Read: `contest19.py fetch --new --pages 6`, then for v11-based
-  candidates `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool BLOCK... [--studied ...]` (it refuses a
-  block with a match unfinished); a rejected block joins the pool file only when its own z lies within +-1. The
-  pool file holds h178's block 2 (1441-1452) and, once played, the v11 control block: v11's reference is then 108
-  games (as v10's 1391-1426: TRAINING_LOG 2026-10-25 15:26, 15:51, 17:05; v11: 20:50). The rule's false-accept rate and power: `python3 -I
+  add the tools/progress/submissions.tsv rows. Read: `contest19.py fetch --new --pages 6`, then for v12-based
+  candidates `tools/panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool BLOCK... [--studied ...]` (it
+  refuses a block with a match unfinished); a rejected block joins the pool file only when its own z lies within
+  +-1. The pool file holds h185's block 2 (1835-1846) and, once played, the v12 control block: v12's reference is then
+  108 games (as v11's 1427-1466: TRAINING_LOG 2026-10-25 20:50; v12: 2026-10-26 10:39). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
-  accepted).
-  **Replica queue (10:24): 148 waiting (all ranked); h185 block 2's last match plays.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted).
+  **Replica queue (10:53): 133 waiting (all ranked); none of ours plays (the v12 control block is next).** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: h185 block 2 = matches 1835-1846** (submission 226, requests 920-931, ladder 227, bumped; waiter
-  scratchpad wait_block.sh 1835 1846). Block 1 (1651-1658, 1831-1834): **25 of 36, side-aware z 4.11**, others z 2.54,
-  studied 8 of 12 (TRAINING_LOG 2026-10-26 09:42). Score both blocks: `tools/panel_pool.sh 1427-1438
-  progress/panels/v11-m1.pool 1651-1658,1831-1834,1835-1846 --studied <h185's six, below>`; panel rule after block 2:
-  accept at z >= 2 (other cells z >= 0), reject at z < 1, else block 3; mechanism read in h185's entry below.
-  h193 was REJECTED on block 1 (16 of 36, z -1.42, others -1.17, studied 0 of 10; TRAINING_LOG 2026-10-26 09:42).
-  h192 was REJECTED on block 1 (14 of 36, z -2.65, others -2.83; TRAINING_LOG 2026-10-26 08:21); h184 on three
-  blocks (62 of 108, z 2.51, others -0.85; 06:37); h190 on its block 1 (z -1.42; 00:42). progress/ waits for a gap
-  between blocks (LEARNINGS 38; last refresh 06:37).
-  **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
-  recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
-  2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191; h191
-  last from 01:37):
-  h194 (after h185's block 2; v11 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h194 bf489b929599: h184's race part alone; general
-  panel rule, other cells z >= 0 to accept; studied awesomelemonade.Battlecode2019:seed-2518,StoneT2000.BC19-bot1v43:seed-2591;
-  mechanism read pioneers.mjs: the turn-3 pioneer founds its church in at least half of the games on the seven maps
-  where it sends; TRAINING_LOG 2026-10-26 08:53);
-  h185 (in play above; = h179 on v11: v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h185 e4a146ede62f; h171's; the fix for escorts
-  that never leave home on small maps, LATTICE_R 12 around their site covering it (2591); studied cells
-  uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
-  tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);
-  h186 (= h180 on v11: v11 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h186 21bd58ff32dc; h174's: idle miners take free safe home
-  depots; basics-fix rule; studied cells awesomelemonade.Battlecode2019:seed-2518, uvafan.bc2019:seed-2046; mechanism
-  read stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 75% of v11's (v9 41.2, bar then 30.9); TRAINING_LOG
+  **Next: the v12 control block** (`tools/panel_submit.sh bots/v12 "v12 control"`), after the progress/ refresh this
+  gap between blocks allows (LEARNINGS 38). h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26
+  09:42), h192 on block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
+  **Then, one block at a time** (each v11 candidate rebuilt on v12 with its switches unchanged and its
+  pre-registration kept; bars relative to the champion recomputed from v12's panel games (h185's 1651-1658,
+  1831-1834, 1835-1846 and the v12 control block) before the candidate's block is read; TRAINING_LOG 2026-10-26 10:39):
+  h195 (v12 + DEF_SAFE 2, dist/h195 db45575beb6a: pilgrims too go on a free tile the enemy attackers in sight cannot
+  kill them on before their first turn, and none is built while every free tile is one; replica 1446, seed 2321: 17
+  stillborn pioneers, each unknown to its castle, resent every 80 turns; basics first, so first after the control
+  block; basics-fix rule; mechanism read `tools/reads/stillborn.mjs TEAM 2 REPLAY` per game: safer (stillborn on an
+  exposed tile beside a free safe one) at most a quarter of v12's, pilgrims built at least 0.9 of v12's; studied
+  StoneT2000.BC19-bot1v43:seed-2321; TRAINING_LOG 2026-10-26 10:45);
+  h196 (= h194 on v12: v12 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h196 70a8617acfee: h184's race
+  part alone; general panel rule, other cells z >= 0 to accept; studied awesomelemonade.Battlecode2019:seed-2518,
+  StoneT2000.BC19-bot1v43:seed-2591; mechanism read pioneers.mjs: the turn-3 pioneer founds its church in at least
+  half of the games on the seven maps where it sends; TRAINING_LOG 2026-10-26 08:53);
+  h197 (= h186 on v12: v12 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h197 7e320236f615; h174's: idle miners take free
+  safe home depots; basics-fix rule; studied cells awesomelemonade.Battlecode2019:seed-2518, uvafan.bc2019:seed-2046;
+  mechanism read stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 75% of the champion's; TRAINING_LOG
   2026-10-25 09:12, 10:12);
-  h187 (= h181 on v11: v11 + CHAIN_WALL 28, dist/h187 c7fcded6f4a7; h172's; studied cells uvafan 2046, 1653, IanCoolidge0 1036);
-  h188 (= h182 on v11: v11 + ECON_NOPLAN 1, dist/h188 91129886bd9f; h173's) on the targeted panel progress/panels/noplan-m1.json
-  (the six bots on the five pool maps where no castle plans a church): first a bots/v11 control block
-  (`PANEL=progress/panels/noplan-m1.json tools/panel_submit.sh bots/v11 "v11 control, noplan-m1"`), panelsim on the
-  design (> 10% false accepts: a second control block first), then h188; score with `contest19.py pool CONTROL
-  progress/panels/noplan-m1.pool BLOCK...` (TRAINING_LOG 2026-10-24 15:32);
-  h191 (v11 + PIONEER_TIMEOUT_HOME 80, dist/h191 5a3687700398: a pioneer out 80 turns still more than a king step from
-  its site gives it up and mines at home, the pilgrim side of h190's zombie pioneers; basics-fix rule; bars parked
-  pioneers <= 1.53 a game and churches >= 9.58 a game (TRAINING_LOG 2026-10-26 00:02); no-op check passed 00:11;
-  driver diagnostic clean 01:08; TRAINING_LOG 2026-10-25 23:32; last since 01:37: h170 and h190, the same
+  h198 (= h187 on v12: v12 + CHAIN_WALL 28, dist/h198 b6e939144ef7; h172's; studied cells uvafan 2046, 1653,
+  IanCoolidge0 1036);
+  h199 (= h188 on v12: v12 + ECON_NOPLAN 1, dist/h199 4ed3f18bc8de; h173's) on the targeted panel
+  progress/panels/noplan-m1.json (the six bots on the five pool maps where no castle plans a church): first a bots/v12
+  control block (`PANEL=progress/panels/noplan-m1.json tools/panel_submit.sh bots/v12 "v12 control, noplan-m1"`),
+  panelsim on the design (> 10% false accepts: a second control block first), then h199; score with `contest19.py
+  pool CONTROL progress/panels/noplan-m1.pool BLOCK...` (TRAINING_LOG 2026-10-24 15:32);
+  h200 (= h191 on v12: v12 + PIONEER_TIMEOUT_HOME 80, dist/h200 366fc1e13c2f: a pioneer out 80 turns still more than a
+  king step from its site gives it up and mines at home; basics-fix rule; bars parked pioneers at most half the
+  champion's a game and churches at least 0.9 of its (TRAINING_LOG 2026-10-26 00:02); last: h170 and h190, the same
   class, passed their mechanism reads and lost, LEARNINGS 48).
-  h167's mechanism reads are done (TRAINING_LOG 2026-10-25 09:43).
-  **In design (not built, not queued):** h184's decomposition (RACE alone, or OPEN that keeps a contested cluster v11
-  takes; TRAINING_LOG 06:37).
+  h185's mechanism read (escorts.mjs over both blocks, mean hit6 under 40%; not a decision input) runs on the driver.
+  **In design (not built, not queued):** h184's OPEN part that keeps a contested cluster v11 takes (h184 + KEEP;
+  TRAINING_LOG 06:37, 08:53); a castle recall for field prophet balls (castles.mjs: 14 of v11's 50 castle losses had 10
+  or more unfired units within r2 400; RECALL h110 was rejected in self-play; TRAINING_LOG 2026-10-26 10:12).
   ECONOMICS rows 4, 5, 6, 10 dropped (TRAINING_LOG 2026-10-24 21:22, 22:10; 2026-10-25 04:22); rows 9 (ECON_SAT),
   11 (PLAN_CONTEST_PREM, targeted panel), 12 (HUNT_DEPOT) unbuilt.
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013 (h167 won it once, red), 836; botfinalsafe 1706 (h139 won it once); awesomelemonade

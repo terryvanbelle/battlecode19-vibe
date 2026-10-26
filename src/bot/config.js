@@ -66,11 +66,12 @@ export const CFG = {
   ESCORT_UNIT: 3,            // crusader (v8; 4 prophet)
   ESCORT_MIRROR: 1,          // 1: ESCORT_FIRST's units hold the enemy's mirror site (v8 = h128: two crusaders there; replica
                              // panel, three blocks 23 of 54 against the pooled 16.1, z 2.54: wololo 2644 3/3, never won before)
-  ESCORT_HOLD_R: 0,          // >0: a unit that heard SIG.GUARD holds lattice tiles within this many king steps of the
+  ESCORT_HOLD_R: 2,          // >0: a unit that heard SIG.GUARD holds lattice tiles within this many king steps of the
                              // site, not LATTICE_R (replica 726, seed 2013: v8's escorts stopped on the first lattice tile
                              // within 12 steps of the site, 2 steps from home, and stood there r6-r48 out of sight of
                              // wololo's crusader on the site; they reach it only when diagonal steps miss every lattice
-                             // tile, as on 2644)
+                             // tile, as on 2644). 2 is v12's (h185, with ESCORT_FAST_R2 9 and ESCORT_BACK 1: replica panel two
+                             // blocks 49 of 72, side-aware z 5.38; TRAINING_LOG 2026-10-26 10:39); 0 was v11's.
   ESCORT_EARLY: 0,           // 1: the castle builds ESCORT_FIRST's units ahead of its economy pilgrims (turns 3-4, not 4-5:
                              // replica 758, seed 2644: a blue crusader built r5 acts after red's r5 prophet and lost the
                              // duel by one shot, r14-18; as red the same crusader acts first and won, 634, 646, 726)
@@ -78,13 +79,15 @@ export const CFG = {
                              // than ESCORT_FIRST's opens this many ESCORT_UNITs to it, built after it (ECONOMICS.md row 7:
                              // a pioneer and its guard are Leontief complements on contested land; on 6 of the 15 panel
                              // maps a castle plans 2+ contested clusters, 12 escorts in all; scratchpad contested.mjs)
-  ESCORT_FAST_R2: 0,         // >0: a unit that heard SIG.GUARD walks to its site with steps up to this r2, not CRUISE_R2,
+  ESCORT_FAST_R2: 9,         // >0: a unit that heard SIG.GUARD walks to its site with steps up to this r2, not CRUISE_R2,
                              // until it first holds there (replica 778, seed 1706: v8's escorts walked one tile a turn
-                             // from r4 and stood 10 steps short from r27; botfinalsafe churched the site at r29)
-  ESCORT_BACK: 0,            // 1: an escort hit with no enemy crusader or preacher within r2 25 (a prophet's or a castle's shot)
+                             // from r4 and stood 10 steps short from r27; botfinalsafe churched the site at r29). 9 is v12's,
+                             // 0 was v11's.
+  ESCORT_BACK: 1,            // 1: an escort hit with no enemy crusader or preacher within r2 25 (a prophet's or a castle's shot)
                              // gives up its site and goes back to its birth structure's lattice (h157's block 1035-1046: the
                              // escorts at their site won 1712, 2518, 836 with kills before any prophet hit, and died 3-7
-                             // rounds after a prophet's first shot on 388, 2740, 2644; TRAINING_LOG 2026-10-25 00:37)
+                             // rounds after a prophet's first shot on 388, 2740, 2644; TRAINING_LOG 2026-10-25 00:37). 1 is
+                             // v12's, 0 was v11's.
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short
@@ -300,7 +303,8 @@ export const CFG = {
                              // died unborn on one church tile); 2: counting only attackers with no other target of ours
   DEF_SAFE: 1,               // 1: a structure's military newborn goes on a free tile where the enemy attackers in sight
                              // could kill it before its first turn only when every free tile is one (struct.js buildToward).
-                             // 1 is v11's (h178, TRAINING_LOG 2026-10-25 20:50); 0 was v10's.
+                             // 1 is v11's (h178, TRAINING_LOG 2026-10-25 20:50); 0 was v10's. 2: pilgrims too, and no pilgrim
+                             // is built while every free tile is one (replica 1446, seed 2321: 17 stillborn pioneers).
   PLAN_SERVE_PILGRIM: 0,     // 1: church planning counts a depot as served by pilgrim moves (as staffing does), and
                              // churches a cluster with >= 2 unserved depots (or all, if smaller); 0: any depot within
                              // 2*SERVE_MOVES king steps marks the whole cluster served (seed 1755: never staffed)

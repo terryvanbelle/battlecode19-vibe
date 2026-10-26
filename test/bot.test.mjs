@@ -10,7 +10,7 @@ import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot, GUARD_STRIKE } from '../
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot } from '../src/bot/military.js';
 import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers, hearStrike, strikeFar } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
-import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy, hitTrack, sayRescue } from '../src/bot/struct.js';
+import { structInit, buildToward, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy, hitTrack, sayRescue } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, strikeSpot, hotRetarget, hereRetarget, siteStalled, siteTaken, siteTimeout, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -590,6 +590,33 @@ test('struct: DEF_SAFE builds a military newborn on a tile the enemies in sight 
     assert.strictEqual(a1.u, S.PROPHET); assert.ok(hits(castle.x + a1.dx, castle.y + a1.dy) < 20, 'a tile the pair cannot both reach');
     // only deadly tiles left: unlike SAFE_BUILD it still builds, nearest the target
     assert.strictEqual(a2.u, S.PROPHET, JSON.stringify(a2)); assert.strictEqual(hits(castle.x + a2.dx, castle.y + a2.dy), 20);
+  } finally { CFG.DEF_SAFE = saved; }
+});
+
+test('struct: DEF_SAFE 2 builds a pilgrim only on a tile the enemies in sight cannot kill it on', () => {
+  const saved = CFG.DEF_SAFE;
+  try {
+    const g = new Game(3, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0);
+    const dy = castle.y + 7 < g.map.length ? 7 : -7;
+    const foes = [-1, 1].map((ox, i) => ({ id: 4990 + i, team: 1, unit: S.PROPHET, x: castle.x + ox, y: castle.y + dy, turn: 5, health: 20, signal: 0, signal_radius: 0, castle_talk: 0 }));
+    const hits = (x, y) => foes.filter(e => { const r = d2(x, y, e.x, e.y); return r >= 16 && r <= 64; }).length * 10;
+    const build = (on, unit, wall) => {
+      CFG.DEF_SAFE = on;
+      const all = g.robots, map = g.map;
+      g.robots = all.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100).concat(foes);
+      if (wall) g.map = map.map((row, y) => row.map((v, x) => (Math.abs(x - castle.x) <= 1 && Math.abs(y - castle.y) <= 1 && hits(x, y) < 10) ? false : v));
+      const w = worldFor(g, castle); g.robots = all; g.map = map;
+      return buildToward({ w, st: {} }, unit, castle.x, castle.y + dy);
+    };
+    const at = b => hits(b.x, b.y);
+    const p1 = build(1, S.PILGRIM), p2 = build(2, S.PILGRIM);
+    assert.ok(at(p1) >= 10, 'v11: the pilgrim goes toward the target, into reach');
+    assert.strictEqual(at(p2), 0, 'DEF_SAFE 2: a tile neither prophet reaches');
+    assert.strictEqual(build(2, S.PILGRIM, true), null, 'every free tile in reach: no pilgrim');
+    assert.ok(build(1, S.PILGRIM, true) !== null);
+    const m = build(2, S.PROPHET, true);   // the military still builds when every tile is deadly (DEF_SAFE 1's rule)
+    assert.ok(m !== null && at(m) >= 10);
   } finally { CFG.DEF_SAFE = saved; }
 });
 
