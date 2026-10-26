@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 17:24 PDT)
+## State (2026-10-25 17:56 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v10** (`bots/v10` = h175, bots/ROSTER.tsv); frozen history v0-v10,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -53,7 +53,7 @@
   games (TRAINING_LOG 2026-10-25 15:26, 15:51, 17:05). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted).
-  **Replica queue (17:24): 64 waiting (56 ranked; h178's block: 1427-1430 running) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  **Replica queue (17:53): 57 waiting (all ranked; h178's block: 5 of 12 done, the rest running) after the 09:00 daily autoscrim** (4 a team, none dominant;
   about 12 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: h178 block 1 = matches 1427-1438** (submission 200; bots/v10 the ladder build, 201; waiter
@@ -66,11 +66,13 @@
   attackers are in sight go on a tile they cannot kill them on, if one is free; studied cells uvafan.bc2019:seed-1712,
   uvafan.bc2019:seed-2046; mechanism read tools/reads/stillborn.mjs over its two blocks: `safer` at most a quarter of
   v10's rate over 1391-1426: 11.60, bar **2.90**; TRAINING_LOG 2026-10-25 12:06, 17:05, 17:43);
-  h177 (v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7, dist/h177 902efcd0eaf7: a turn-6 pioneer to the first planned
-  cluster we reach 7+ king steps before the enemy; ordinary rule; studied cells wololo 836, 2013, botfinalsafe 1706;
-  mechanism read pioneers.mjs (the r<=6 pioneer churches in 2/3+ of firing-map games); first a driver diagnostic on
-  836 and the inertness check on 2518; TRAINING_LOG 2026-10-25 15:45, 15:51);
-  h179 (v10 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h179 2faea994919d; h171's; studied cells
+  h183 (v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7 + PIONEER_RACE 2, dist/h183 239539f40dbe: a turn-6 pioneer to the
+  first planned cluster we reach 7+ king steps before the enemy; in a team with none, a castle whose plan opens with
+  a race (m <= 1: 2518, 2591) sends its turn-3 pioneer there; replaces h177, closed unplayed; ordinary rule; studied
+  cells wololo 836, 2013, botfinalsafe 1706, awesomelemonade 2518, bot1v43 2591; mechanism read pioneers.mjs (the
+  r<=6 pioneer churches in 2/3+ of firing-map games); TRAINING_LOG 2026-10-25 15:45, 15:51, 17:56);
+  h179 (v10 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h179 2faea994919d; h171's; the fix for escorts
+  that never leave home on small maps, LATTICE_R 12 around their site covering it (2591); studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
   tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);
   h180 (v10 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h180 45123f763cfb; h174's: idle miners take free safe home

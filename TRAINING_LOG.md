@@ -5597,3 +5597,30 @@ galaxy19 tests pass. **h183** = v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7 + PIONEER
 h177 everywhere but 2518 and 2591 (the pool maps whose team plans no cluster with m >= 7 and opens with m <= 1), where
 the castle's turn-3 pioneer races for the centre site. Driver diagnostic (h183 red against v10 on 2591 and 2518 to
 r80; v10 against itself on 2591 for the idle escorts) running.
+
+## 2026-10-25 17:55 PDT: h183's diagnostic; h183 pre-registered and replaces h177 (closed unplayed); the idle escorts explained
+
+- **Diagnostic** (driver, det, the no-op flags, to r80; scratchpad d2591/): h183 red against v10 blue. **2591**: the
+  castle's pioneer built r3 arrived r17 and churched the centre site at r18 (bot1v43's church there on the replica:
+  r23; v10's pioneer here: built r24, church r34); mined K by r80 428 against 210, pilgrims 10 against 9. **2518**:
+  built r3, arrived r13, church r14 (awesomelemonade's on the replica: r14; v10 here: r23, r41); mined K by r80 542
+  against 366, pilgrims 11 against 8. Neither castle built its ESCORT_FIRST crusaders (the cluster churched first, so
+  escort() dropped them); no army before ECON_UNTIL 100 here (the replica's opponents bring a threat response).
+  Against the field the race is not won by these timings alone: bot1v43 sends a prophet toward the centre on r3.
+- **v10's escorts** on 2591 (v10 against itself, as on the replica): the ESCORT_FIRST crusaders hear SIG.GUARD with
+  the mirror site and hold the lattice within LATTICE_R 12 king steps of it, which on a 32-wide map covers their
+  birth tiles beside the castle: both count as held at once and never move (r3-80). h179's ESCORT_HOLD_R 2 is the
+  fix for that case; it stays in the order.
+- **h183 replaces h177** in the panel order. On every pool map but 2518 and 2591 it plays h177's code path (race
+  false while the team plans a cluster with m >= 7; inertness on 836 to r300 against h177 running); on those two its
+  only change can turn cells v10 lost in all 6 of 6 games, which cannot lose more. h177 is closed unplayed
+  (superseded by h183).
+- **Pre-registered** (before any h183 replica game): the ordinary rule. v7-m1 panel, both sides, scored with
+  `tools/panel_pool.sh 1391-1402 progress/panels/v10-m1.pool BLOCK... --studied
+  m-schier.battlecode-2019-wololo:seed-836,m-schier.battlecode-2019-wololo:seed-2013,StoneT2000.BC19-botfinalsafe:seed-1706,awesomelemonade.Battlecode2019:seed-2518,StoneT2000.BC19-bot1v43:seed-2591`;
+  block 1 rejects at side-aware z < 0.5; two blocks accept at z >= 2 (other cells z >= 0), reject at z < 1, else a
+  third block (accept at z >= 2). Mechanism read (pioneers.mjs on h183's blocks), reported with the verdict: on the
+  firing maps (h177's nine, 2518, 2591) the pioneer built by r6 founds its church in at least two thirds of games and
+  our first church comes earlier than in v10's games of the same cells; failed if that pioneer churches in under
+  half. Reported, not bars: pilgrims at r100 and castles lost a game against v10's 108 games.
+- Panel order: h178 (in play), **h183**, h179, h180, h181, then h182 on its targeted panel.
