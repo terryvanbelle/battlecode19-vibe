@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 06:31 PDT)
+## State (2026-10-26 06:41 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -62,28 +62,23 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted).
-  **Replica queue (05:53): 2 waiting (2 ranked), 8 running (h184 block 3: 9 of 12 done).** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (06:40): 12 of ours waiting/running (h192 block 1), 2 ranked waiting.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: h184 block 3 = matches 1584-1595** (submission 212, requests 841-852; ladder 213; waiter scratchpad
-  wait_block.sh 1584 1595); block 1 = 1513-1524 (submission 208): 22 of 36, z 2.27; block 2 = 1547-1558 (210): 20 of
-  36, z 1.04; two blocks 42 of 72, side-aware z 2.34, others -0.69, studied 8 of 20 (TRAINING_LOG 2026-10-26 04:23):
-  accept at three-block z >= 2 with the other cells' z >= 0, else reject. Score all three:
-  `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1513-1524 1547-1558 1584-1595 --studied
-  m-schier.battlecode-2019-wololo:seed-836,m-schier.battlecode-2019-wololo:seed-2013,StoneT2000.BC19-botfinalsafe:seed-1706,awesomelemonade.Battlecode2019:seed-2518,StoneT2000.BC19-bot1v43:seed-2591`
-  under the ordinary rule. Mechanism read (pioneers.mjs, reported with the verdict): on the firing maps
-  the r<=6 pioneer churches in 2/3+ of games and our first church comes earlier than in v11's games of the same
-  cells: v11's first church is 28-73 on the firing maps, never on 2518 and 2591, 836 mixed (census scratchpad
-  econ/pioneers_v11.txt + pioneers_v11_c.txt; read fixed in TRAINING_LOG 2026-10-26 01:24: earlier than v11's cell
-  median in more cells than later). h190 was rejected on its block 1 (1492-1503, z -1.42; TRAINING_LOG 2026-10-26 00:42).
+  **In play: h192 block 1 = matches 1616-1627** (submission 214, requests 873-884; ladder 215; waiter scratchpad
+  wait_block.sh 1616 1627). h192 = v11 + HUNT 2 + HUNT_SLACK 4 (dist/h192 b15514aedf60: pilgrims radio a loitering
+  enemy pilgrim near our half, idle melee units go for it, against the one-round church chains that took botfinalsafe
+  1706 and bot1v43 2321 blue); basics-fix rule (block 1 rejects only at z < -1; after two blocks accept at z >= 0 with
+  the other cells' z >= 0 if the mechanism read passes); bar: near bursts (tools/reads/bursts.mjs) at most 0.051 a
+  game, half of v11's 0.102 (at most 3 in 72; TRAINING_LOG 2026-10-26 02:22); studied cells
+  StoneT2000.BC19-botfinalsafe:seed-1706, StoneT2000.BC19-bot1v43:seed-2321. Score:
+  `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1616-1627 --studied
+  StoneT2000.BC19-botfinalsafe:seed-1706,StoneT2000.BC19-bot1v43:seed-2321`; read bursts.mjs on its games.
+  h184 was REJECTED on three blocks (62 of 108, z 2.51, others -0.85; TRAINING_LOG 2026-10-26 06:37); h190 on its
+  block 1 (z -1.42; 00:42).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
-  2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191 and h192; h184
-  went before h191 from 2026-10-26 00:31, h192 too from 01:08, h191 last from 01:37):
-  h192 (v11 + HUNT 2 + HUNT_SLACK 4, dist/h192 b15514aedf60: pilgrims radio a loitering enemy pilgrim near our half,
-  idle melee units go for it, against the one-round church chains that took botfinalsafe 1706 and bot1v43 2321 blue;
-  basics-fix rule; bar near bursts (tools/reads/bursts.mjs) at most 0.051 a game, half of v11's 0.102 (11 in 108;
-  at most 3 in 72; TRAINING_LOG 2026-10-26 02:22); studied cells botfinalsafe 1706, bot1v43 2321; no-op check passed and
-  diagnostic read 01:49 (HUNT radios the chainer; in self-play no melee unit came); TRAINING_LOG 2026-10-26 01:08, 01:49);
+  2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191; h191
+  last from 01:37):
   h185 (= h179 on v11: v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h185 e4a146ede62f; h171's; the fix for escorts
   that never leave home on small maps, LATTICE_R 12 around their site covering it (2591); studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
@@ -104,6 +99,11 @@
   driver diagnostic clean 01:08; TRAINING_LOG 2026-10-25 23:32; last since 01:37: h170 and h190, the same
   class, passed their mechanism reads and lost, LEARNINGS 48).
   h167's mechanism reads are done (TRAINING_LOG 2026-10-25 09:43).
+  **In design (not built, not queued):** a far church strike (forward enemy churches within r2 400 of a castle stand
+  in 73 of v11's 108 panel games, never destroyed in the five cells v11 loses 29 of 30: pilgrims see them within 4
+  rounds, nothing of ours goes; 1-2 guards by +5; tools/reads/forward.mjs, TRAINING_LOG 2026-10-26 05:42, 06:32;
+  STRIKE_R2, h141's, struck only churches in a structure's own sight); h184's decomposition (RACE alone, or OPEN that
+  keeps a contested cluster v11 takes; TRAINING_LOG 06:37).
   ECONOMICS rows 4, 5, 6, 10 dropped (TRAINING_LOG 2026-10-24 21:22, 22:10; 2026-10-25 04:22); rows 9 (ECON_SAT),
   11 (PLAN_CONTEST_PREM, targeted panel), 12 (HUNT_DEPOT) unbuilt.
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013 (h167 won it once, red), 836; botfinalsafe 1706 (h139 won it once); awesomelemonade
