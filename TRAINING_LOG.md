@@ -6269,3 +6269,29 @@ destroyed in at least 4 of the 10 (v11: 0 of 30) and strikers built in at least 
 Submission 216, requests 896-907, matches 1639-1650, ladder 217 (bots/v11). It plays beside h192 block 1's last match
 (1622): blocks are separate submissions requested one run at a time (panel_submit.sh), and the replica queue is short
 (13 waiting, 12 of them h193's). Waiter: scratchpad wait_block.sh 1639 1650.
+
+## 2026-10-26 08:21 PDT: h192 REJECTED on block 1 (z -2.65)
+h192 block 1 = matches 1616-1627 (submission 214), finished 08:20; fetched, every opponent once each side.
+`tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1616-1627 --studied
+StoneT2000.BC19-botfinalsafe:seed-1706,StoneT2000.BC19-bot1v43:seed-2321`: **14 of 36, pooled expectation 18.3,
+side-aware z -2.65 (-262 Elo, 95% -452 to -70); studied cells 1 of 4 (expectation 1.1, z -0.09); other cells 13 of
+32 (expectation 17.3, z -2.83).** The basics-fix rule (pre-registered 02:22) rejects block 1 at z < -1: REJECTED.
+Usually-won cells it lost: IanCoolidge 203 red, awesomelemonade 1712 blue, 2797 red (each 6/6 or 3/6 in v11's pool);
+the studied cells did not move (botfinalsafe 1706 0 of 2, bot1v43 2321 1 of 2, as v11). The block's z lies outside
++-1, so it stays out of the pool file. The bursts read runs for the record (scratchpad econ/bursts_h192_b1.txt).
+progress/ is not refreshed now: h193 block 1 (1639-1650) is in play (LEARNINGS 38).
+
+## 2026-10-26 08:42 PDT: time audit of v11 (maps 2740 and 1653): the overruns are the engine and load, not our code
+VM jobs (v11 vs v11, vm2 kill on, no --fast-turn, `--turnlog-ms 50`; out/time_v11_{2740,1653}.{json,jsonl} and
+out/turn_v11_*.jsonl on the VM). They ran niced beside saturn's 8 execute slots (load average 12-13 on 8 vCPUs: each
+game's GC threads take up to 156% CPU), so their wall times include that load. **2740** (59 wide, 1 castle, round
+1000, 430 units built by red): 120 turns over 50 ms, up to 303 ms (prophet), 266 (preacher), 245 (crusader), 230
+(pilgrim); 4 turns killed at 200 ms and 2 frozen (red 2+2). Our own code's slowest logged turn (robot.js's TIME,
+which covers all of turn()) was 95 ms; 59 turns over 30 ms. **1653**: 6 turns over 50 ms (up to 414 ms, a pilgrim
+whose code logged at most 33), 2 killed. A killed turn never reaches the TIME line, so these two games alone cannot
+clear those 6. The replica's own counts over v11's 108 panel games (1427-1438, 1441-1452, 1455-1466, match.json)
+settle it: **our team 38 timeouts in 3.86 M turns (0.98 per 100k), 74 frozen, 0 exceptions; the opponents 305 in 8.65 M
+(3.53 per 100k), 5,246 frozen, 19,493 exceptions.** Our rate is the same against every opponent (0.76-1.05), as a
+floor set by the shared process would be; IanCoolidge0's lighter bot is lower (0.17). At 0.35 killed turns a game,
+each costing one robot one turn, time is not a lever now (LEARNINGS 31 said so from profiling: ~2 ms of our code a
+turn). Basics check holds: zero exceptions, overruns at the environment's floor.

@@ -182,7 +182,9 @@
    and a frozen or killed turn also loses its radio and castle talk (RULES §6). In
    2019 a turn's time is mostly the engine (the turn message is compiled as a script every turn), GC and load; our
    code was ~2 ms a turn. Profile before rewriting: `node --cpu-prof` on one game with an unminified build.
-   (TRAINING_LOG 2026-10-23 14:18)
+   Judge overruns as a rate against the field in the same games, not by wall clock: v11 timed out 0.98 times per
+   100k turns, its opponents 3.53, the same against every opponent, i.e. the shared process's floor; a VM job beside
+   saturn's 8 slots times the load. (TRAINING_LOG 2026-10-23 14:18, 2026-10-26 08:42)
 32. **Self-play does not rank against the field.** Three candidates beat the incumbent locally and lost to it on the
    replica panel: h126 (gate t 1.00 -> replica net 0), h127 (t 1.26 -> net -3), h130 (prophet army, t 1.67 -> net
    -2). A switch that exploits the incumbent's own habits (camping its mirror site, outranging its crusaders) buys

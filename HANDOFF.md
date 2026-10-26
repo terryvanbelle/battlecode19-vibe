@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 08:04 PDT)
+## State (2026-10-26 08:43 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -64,16 +64,7 @@
   accepted).
   **Replica queue (08:03): 13 waiting (12 of them h193 block 1), h192 block 1's last match running.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: h192 block 1 = matches 1616-1627** (submission 214, requests 873-884; ladder 215; waiter scratchpad
-  wait_block.sh 1616 1627). h192 = v11 + HUNT 2 + HUNT_SLACK 4 (dist/h192 b15514aedf60: pilgrims radio a loitering
-  enemy pilgrim near our half, idle melee units go for it, against the one-round church chains that took botfinalsafe
-  1706 and bot1v43 2321 blue); basics-fix rule (block 1 rejects only at z < -1; after two blocks accept at z >= 0 with
-  the other cells' z >= 0 if the mechanism read passes); bar: near bursts (tools/reads/bursts.mjs) at most 0.051 a
-  game, half of v11's 0.102 (at most 3 in 72; TRAINING_LOG 2026-10-26 02:22); studied cells
-  StoneT2000.BC19-botfinalsafe:seed-1706, StoneT2000.BC19-bot1v43:seed-2321. Score:
-  `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1616-1627 --studied
-  StoneT2000.BC19-botfinalsafe:seed-1706,StoneT2000.BC19-bot1v43:seed-2321`; read bursts.mjs on its games.
-  **Also in play: h193 block 1 = matches 1639-1650** (submission 216, requests 896-907; ladder 217; waiter scratchpad
+  **In play: h193 block 1 = matches 1639-1650** (submission 216, requests 896-907; ladder 217; waiter scratchpad
   wait_block.sh 1639 1650). h193 = v11 + STRIKE_FAR 3 (dist/h193 18d81e3ab45c: a pilgrim radios an enemy church once,
   FAR.STRIKE; the castle nearest it, within r2 400 and the church beyond r2 100 of every enemy castle, sends 3
   crusaders at full speed to it; TRAINING_LOG 2026-10-26 08:00). Panel rule (block 1 rejects at z < 0.5; after block
@@ -82,8 +73,9 @@
   mechanism bar per block (forward.mjs, strike.mjs on h193's side over the 10 studied-cell games): a near enemy
   church destroyed in 4 or more (v11: 0 of 30), strikers built in 6 or more. Score: `tools/panel_pool.sh 1427-1438
   progress/panels/v11-m1.pool 1639-1650 --studied <the five>`.
-  h184 was REJECTED on three blocks (62 of 108, z 2.51, others -0.85; TRAINING_LOG 2026-10-26 06:37); h190 on its
-  block 1 (z -1.42; 00:42).
+  h192 was REJECTED on block 1 (14 of 36, z -2.65, others -2.83; TRAINING_LOG 2026-10-26 08:21); h184 on three
+  blocks (62 of 108, z 2.51, others -0.85; 06:37); h190 on its block 1 (z -1.42; 00:42). progress/ waits for a gap
+  between blocks (LEARNINGS 38; last refresh 06:37).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
   2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191; h191
@@ -128,7 +120,7 @@
   2046, level economy: our crusaders and preachers fired 0 shots, health 680 vs 5,470; TRAINING_LOG 06:51); ~76 of
   our units died stillborn in 24 losses (campers in reach of our build tiles, 414-1 / 414-3; 05:37); squatters and a
   round-3 prophet on contested sites stall our pioneers (419-2, 410-1).
-- Replica operations (ACCESS.md, tools/galaxy19/README.md): saturn runs 6 execute slots (8 while the queue clears), a 10800 s wall limit per
+- Replica operations (ACCESS.md, tools/galaxy19/README.md): saturn runs 8 execute slots (TRAINING_LOG 2026-10-24 22:54; a local VM job is a 9th process: nice it, and never time with it), a 10800 s wall limit per
   game, a 3 GB heap and a 64 MB semi-space per game, keeps a match's finished games across attempts, and passes
   run_game.js --fast-init --fast-view (same game byte for byte). The autoscrim is held while 30+ matches wait and
   fires at most once per 24 h (relay.py fire-jobs). **Watch the queue every check-in** (`field.py queue`); while it
