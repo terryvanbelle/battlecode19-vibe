@@ -6055,7 +6055,7 @@ comparison, fixed before its block is read), then h190's parked read for the rec
   there: ECONOMICS row 12 as written does not reach this case. It is contested centre land the field takes with an
   escort (row 11's von Thünen premium, and h184's pioneer race, which won uvafan 1712 blue in its block 1).
 
-## 2026-10-26 03:34 PDT: h184's mechanism read on block 1 (1513-1524): it does what it was built to do
+## 2026-10-26 03:29 PDT: h184's mechanism read on block 1 (1513-1524): it does what it was built to do
 
 pioneers.mjs over block 1 (scratchpad econ/pioneers_h184_b1.txt), the 24 firing cells against v11's cell medians
 (bar fixed 01:24): **every game builds a pioneer at r3, and it founds its church in 22 of 24 (0.92, bar 2/3)**; the
