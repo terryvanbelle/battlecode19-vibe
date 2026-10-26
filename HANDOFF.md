@@ -72,16 +72,17 @@
   hand at 21:54 (requests 724-729 = matches 1467-1472).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
-  2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191):
-  h191 (v11 + PIONEER_TIMEOUT_HOME 80, dist/h191 5a3687700398: a pioneer out 80 turns still more than a king step from
-  its site gives it up and mines at home, the pilgrim side of h190's zombie pioneers; basics-fix rule; bars parked
-  pioneers <= 1.53 a game and churches >= 9.58 a game (TRAINING_LOG 2026-10-26 00:02); no-op check first, when the driver is
-  free; TRAINING_LOG 2026-10-25 23:32);
+  2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191; h184
+  before h191 from 2026-10-26 00:31):
   h184 (= h183 on v11: v11 + PIONEER_EARLY 6 + PIONEER_OPEN 7 + PIONEER_RACE 2, dist/h184 a78b4d8603e8: a turn-6 pioneer to the
   first planned cluster we reach 7+ king steps before the enemy; in a team with none, a castle whose plan opens with
   a race (m <= 1: 2518, 2591) sends its turn-3 pioneer there; replaces h177, closed unplayed; ordinary rule; studied
   cells wololo 836, 2013, botfinalsafe 1706, awesomelemonade 2518, bot1v43 2591; mechanism read pioneers.mjs (the
   r<=6 pioneer churches in 2/3+ of firing-map games); TRAINING_LOG 2026-10-25 15:45, 15:51, 17:56);
+  h191 (v11 + PIONEER_TIMEOUT_HOME 80, dist/h191 5a3687700398: a pioneer out 80 turns still more than a king step from
+  its site gives it up and mines at home, the pilgrim side of h190's zombie pioneers; basics-fix rule; bars parked
+  pioneers <= 1.53 a game and churches >= 9.58 a game (TRAINING_LOG 2026-10-26 00:02); no-op check passed 00:11;
+  driver diagnostic running; TRAINING_LOG 2026-10-25 23:32);
   h185 (= h179 on v11: v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h185 e4a146ede62f; h171's; the fix for escorts
   that never leave home on small maps, LATTICE_R 12 around their site covering it (2591); studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read

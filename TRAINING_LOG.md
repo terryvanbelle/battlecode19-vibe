@@ -5895,3 +5895,15 @@ driver alone; tools/unit-tests.sh 175 of 175 node tests, 65 Python tests OK. Nex
   h170 did most of what it was built to do (parked down 63%, churches up 10%) and still scored 15 of 36. For h190 and
   h191 (same family): the pioneer waste is real and fixable, but one block of h170 found no score in fixing it. Their
   rules and bars stand as pre-registered; the prior on a score gain from either is lower than ECONOMICS row 19's 0.12.
+
+## 2026-10-26 00:31 PDT: v11 on 2591 (match 1459, red, lost r120); panel order: h184 before h191
+A timeline read (scratchpad econ/timeline.mjs, tl_1459_2591.txt) of v11's 2591 game against bot1v43 repeats v10's
+(17:06 on 2026-10-25) to the round: bot1v43 churched the centre (18,7) at r23 and (13,7) at r103; we had 3 pilgrims
+from r24 to r106 (the r24 pioneer parked: no depot free at home), K 0-80 all game against fuel 3,180 unspent. Two
+enemy prophets stood at r2 82-85 from our castle (r34-40), past its reach and past a newborn prophet's sight; the
+castle answered with 4 prophets in r34-38, each stepped from (6,15) to (7,14) and died at age 1-2 unfired; the two
+ESCORT_FIRST crusaders died by r43; the castle killed the prophets that came in (6 of them), and 7 shot it dead at
+r120. The walk-in line (structures' knowledge, SIEGE h135-h138) was closed at 20:10 on 2026-10-25; the cell turns on
+the centre race, which h184 (h183 on v11; h183's diagnostic churched the centre at r18 here) is built for, as for
+2518. With h170's read (00:26) lowering h191's prior, **the panel order after h190 is h184, then h191**, then h185-h188
+(an order of untried candidates; no rule or bar changed).
