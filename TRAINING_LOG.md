@@ -5989,3 +5989,19 @@ comparison, fixed before its block is read), then h190's parked read for the rec
   too little to show (a parked pioneer is 10 K and 50 F; v11 parks 3 a game). LEARNINGS 48.
 - **h191** (the pilgrim side of the same waste; bar parked <= 1.53) is the third of the class: it moves from after
   h192 to the end of the panel order (h184 in play, h192, h185, h186, h187, h188, h191). No bar or rule changed.
+
+## 2026-10-26 01:49 PDT: HUNT_SLACK no-op check passed; h192's diagnostic: HUNT finds the chainer, nobody comes
+
+- No-op check (HUNT_SLACK 0 defaults build vs bots/v11, 799 to r300, nothing else on the driver): IDENTICAL;
+  `tools/unit-tests.sh` 175 of 175, galaxy19 65 OK.
+- Diagnostic: h192 red vs v11 blue on 1706 to r450 (--det; scratchpad h192/d1706.bc19; no errors, exceptions or
+  timeouts; no winner at r450, health 870 vs 630). v11's chainer P#2625 (born r200) reached (31,18) in 6 rounds and
+  its first burst came at r210 (5 churches, all killed r212-225 by the castle, prophets and the 4 crusaders and 1
+  preacher then within r2 400). It then shuffled between (31,16) and (32,15), 3-4 rows inside red's half, from r212 to
+  r409, seen by 4-5 of red's pilgrims every round. h192's pilgrims radioed it (and three other spots) 241 times from
+  r209 to r410 (scratchpad econ/huntlog.mjs; 5,061 fuel; 82 of them a v11 pioneer parked at (24,21), 2.5 rows past
+  the midline, which HUNT_SLACK admits), but from r225 no red crusader or preacher stood within r2 400 of it: red's
+  army at r400 was 4 prophets (K 999 banked for its own chain). A red preacher killed it at r409, in red's own
+  chain's wave. So in self-play HUNT's radio works and its hunters are absent. In the field games that motivated it
+  the hunters were there (1457: 6 crusaders and a preacher at r2 104-178 of the stager), so h192 goes to the panel
+  as pre-registered. Reported with its verdict, not a bar: radios a game and their fuel.
