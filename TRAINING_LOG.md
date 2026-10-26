@@ -6066,3 +6066,6 @@ cell median in 22 cells, later in none** (ties: 2591 both, never). First churche
 same way; the verdict takes both blocks' z under the ordinary rule.
 - Unit tests after tools/reads/squatters.mjs: 175 of 175, galaxy19 65 OK (410 s alone on the driver; the first run,
   beside a read, was cut by my own 600 s timeout, not by a test).
+- 03:49: bursts.mjs over h184's block 1 (reported with its verdict; scratchpad econ/bursts_h184_b1.txt): castles
+  lost 0.306 a game (v11 0.463 over its 108), near bursts 0.083 (v11 0.102; botfinalsafe 1706 red, 203 blue, bot1v43
+  2321 blue, each followed by a castle's death), stagers 3.69, hunted 0.72.
