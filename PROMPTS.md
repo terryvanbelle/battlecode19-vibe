@@ -161,3 +161,6 @@ In a previous year's practice session, we established that BT ratings are more s
 
 ## 43. 2026-10-25 18:38 PDT
 Can you add BT ratings to rating-history.png?
+
+## 44. 2026-10-25 21:45 PDT
+v11 doesn't seem to appear anywhere in progress/  v10 doesn't appear either in rating-history.png
