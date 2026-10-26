@@ -5856,3 +5856,12 @@ wait behind 1467 (running). Census for h190's bars (parked.mjs, v11's 108 games)
   against v11's 108 panel games (the census now running, computed before any h191 game is read): parked pioneers
   (`alive`) per game <= 0.5x v11's, and churches per game >= 0.9x v11's. Studied cells as h190's: uvafan 1712,
   botfinalsafe 2740, wololo 836, awesomelemonade 2518. Queued after h190's blocks.
+
+## 2026-10-25 23:54 PDT: check-in; v11's rate_ours.sh matches all in (2-4)
+Replica queue 5 waiting (2 ranked), 8 running (six of them h190's block); VM jobq empty (screens retired), disk 2.3 GB
+free. v11's other three rate_ours.sh matches: 1467 lost 1-2 to mvpatel2000 (won 836 red by castles at r1000; lost
+1915 red and 2644 blue on health at r1000), 1471 won 2-1 against yujinwunz (826 blue, 53 blue r564; lost 2591 red by
+castles r784), 1472 lost 1-2 to botfinalsafe (won 520 blue at r1000; lost 799 red by castles r334 and 836 red r965).
+All six 2-4 (16 of the 18 games' results known: 1468-1470 at 23:24). The two health losses to mvpatel2000 and the
+r334 loss to botfinalsafe on 799 are the ones to read when the driver is free. Census for h190's and h191's bars 92
+of 108; h191's no-op check and h170's record read follow it on the driver.
