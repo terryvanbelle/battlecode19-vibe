@@ -76,8 +76,8 @@
   went before h191 from 2026-10-26 00:31, h192 too from 01:08, h191 last from 01:37):
   h192 (v11 + HUNT 2 + HUNT_SLACK 4, dist/h192 b15514aedf60: pilgrims radio a loitering enemy pilgrim near our half,
   idle melee units go for it, against the one-round church chains that took botfinalsafe 1706 and bot1v43 2321 blue;
-  basics-fix rule; bar near bursts per game (tools/reads/bursts.mjs) at most half of v11's, the v11 census to run
-  and fix before the block is read; studied cells botfinalsafe 1706, bot1v43 2321; no-op check passed and
+  basics-fix rule; bar near bursts (tools/reads/bursts.mjs) at most 0.051 a game, half of v11's 0.102 (11 in 108;
+  at most 3 in 72; TRAINING_LOG 2026-10-26 02:22); studied cells botfinalsafe 1706, bot1v43 2321; no-op check passed and
   diagnostic read 01:49 (HUNT radios the chainer; in self-play no melee unit came); TRAINING_LOG 2026-10-26 01:08, 01:49);
   h185 (= h179 on v11: v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h185 e4a146ede62f; h171's; the fix for escorts
   that never leave home on small maps, LATTICE_R 12 around their site covering it (2591); studied cells

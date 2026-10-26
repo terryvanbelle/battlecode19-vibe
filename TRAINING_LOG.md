@@ -6005,3 +6005,13 @@ comparison, fixed before its block is read), then h190's parked read for the rec
   chain's wave. So in self-play HUNT's radio works and its hunters are absent. In the field games that motivated it
   the hunters were there (1457: 6 crusaders and a preacher at r2 104-178 of the stager), so h192 goes to the panel
   as pre-registered. Reported with its verdict, not a bar: radios a game and their fuel.
+
+## 2026-10-26 02:22 PDT: h192's bar fixed from v11's 108 panel games (bursts.mjs), before any h192 block
+
+- tools/reads/bursts.mjs over v11's 108 panel games (1427-1438, 1441-1452, 1455-1466; scratchpad
+  econ/bursts_v11.txt): 18 one-round bursts of 3+ enemy churches (0.167 a game); **11 near** (a church within r2 144
+  of a living castle of ours: **0.102 a game**), 10 of them followed by that castle's death within 100 rounds; 50
+  castles lost (0.463 a game); stagers 3.05 a game, 0.68 of them killed by our crusaders or preachers. The near
+  bursts: botfinalsafe 1706 7 (both sides, 6 games), bot1v43 2321 blue 2 (of 3 games), botfinalsafe 203 2.
+- **h192's bar** (pre-registered 01:08 as at most half of v11's): **near bursts at most 0.051 a game**, i.e. at most
+  3 in its 72 games of two blocks. Reported with it: kills, castles lost, stagers and hunted against the numbers above.
