@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 144 other, 47 rejected, 22 accepted, 9 dropped, 6 in progress, 4 sparring partners (232 rows).
+Totals: 145 other, 47 rejected, 22 accepted, 9 dropped, 6 in progress, 4 sparring partners (233 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -244,5 +244,6 @@ Totals: 144 other, 47 rejected, 22 accepted, 9 dropped, 6 in progress, 4 sparrin
 | `h186` | 2026-10-25 20:50 | v11 | v11 + PILGRIM_HERE 1 + PILGRIM_STALL 25: h180's (h174's) switches on v11 (idle miners take free safe home depots; dist/h186 21bd58ff32dc; ECONOMICS row 14) |  |  |  |  | built; panel after h185 (basics-fix rule) |
 | `h187` | 2026-10-25 20:50 | v11 | v11 + CHAIN_WALL 28: h181's (h172's) switch on v11 (ECONOMICS row 8; dist/h187 c7fcded6f4a7) |  |  |  |  | built; panel after h186 |
 | `h188` | 2026-10-25 20:50 | v11 | v11 + ECON_NOPLAN 1: h182's (h173's) switch on v11 (dist/h188 91129886bd9f); targeted panel noplan-m1 after a v11 control block there |  |  |  |  | built; targeted panel after h187 |
-| `h189` | 2026-10-25 20:50 | v11 | v11 + TAKEN_SEEN 1: a pioneer that sees an enemy church or castle within EXPAND_SEEN of its site reports it taken (whatever EXPAND_ROUND) and its castle frees the slot (replica 1421, seed 1712; dist/h189 bca186cf7eb6) |  |  |  |  | built; driver diagnostic and pre-registration after the v10 pioneer census |
+| `h189` | 2026-10-25 20:50 | v11 | v11 + TAKEN_SEEN 1: a pioneer that sees an enemy church or castle within EXPAND_SEEN of its site reports it taken (whatever EXPAND_ROUND) and its castle frees the slot (replica 1421, seed 1712; dist/h189 bca186cf7eb6) |  |  |  |  | CLOSED 2026-10-25 22:42: folded into h190 (TAKEN_SEEN 1 with the timed-out pioneer rest), never played |
 | `v11` | 2026-10-25 20:50 | v10 | Frozen snapshot of h178 (bots/v11): v10 + DEF_SAFE 1 (a structure's military newborn goes on a free tile the enemy attackers in sight cannot kill it on before its first turn, while one exists); the replica build from its control block on |  |  | control block to play (progress/panels/v11-m1.pool) |  | ACCEPTED 20:50 as v11 (h178 row: replica panel, two blocks 36 of 72, z 0.00, stillborn safer 2.68 a game, basics-fix rule) |
+| `h190` | 2026-10-25 22:42 | v11 | v11 + TAKEN_SEEN 1 + PIONEER_TIMEOUT_REST 2 + PIONEER_LOST_DOUBLE 1: a castle rests the site of a pioneer still out 80 turns without its church as one lost there and doubles the rest per loss (100, 200, 400 ... rounds), and a pioneer that sees an enemy structure at its site reports it taken (v11's panel games: 341 of 576 pioneers sent to a site the enemy already held, 242 repeat sends right after a timed-out one; dist/h190 b6346eeb1252) |  |  |  |  | built; driver diagnostic, then the replica panel first after the v11 control block (basics-fix rule) |

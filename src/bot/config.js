@@ -36,7 +36,8 @@ export const CFG = {
                              // castles re-sent one into the same prophets every ~105 rounds)
   PIONEER_TIMEOUT_REST: 0,   // 1: a pioneer still alive but 80 turns out without its church rests its cluster as a lost one
                              // does (0: the castle forgets it and may send another to the same site at once, while the
-                             // first stays out as a zombie; audit 2026-10-24)
+                             // first stays out as a zombie; audit 2026-10-24); 2: ...and counts as one lost there
+                             // (PIONEER_LOST_DOUBLE)
   HOP_GAIN: 0,               // >0: a castle's next pioneer is built by the living church of ours whose site is at least
                              // this many king steps nearer the cluster's site than the castle (castle.js hopPioneer,
                              // church.js hopBuild). wololo churches its next cluster from its last church: replica 853-1,

@@ -1670,7 +1670,11 @@ test('castle: PIONEER_TIMEOUT_REST rests the cluster of a pioneer 80 turns out w
       at(91);
       return { kept, st, c, next: (nextPioneer(B) || {}).cluster };
     };
-    const off = run(0), on = run(1);
+    const off = run(0), on = run(1), two = run(2);
+    assert.strictEqual(on.st.lostN.has(on.c), false);                    // 1: rested, not counted as lost
+    assert.strictEqual(two.st.lost.get(two.c), 91);
+    assert.strictEqual(two.st.lostN.get(two.c), 1);                      // 2: counted, so PIONEER_LOST_DOUBLE doubles it
+    assert.notStrictEqual(two.next, two.c);
     assert.deepStrictEqual([off.kept, on.kept], [1, 1]);                 // within 80 turns: still in flight
     assert.strictEqual(off.st.pioneers.length, 0);
     assert.strictEqual(off.st.lost.has(off.c), false);

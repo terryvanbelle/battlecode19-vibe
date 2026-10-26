@@ -98,7 +98,12 @@ export function castleTurn(B) {
     if (CFG.ESCORT && !p.esc && me.turn - p.since > p.d + CFG.ESCORT_SLACK) { p.esc = true; openEscort(B, p.cluster); }
     if ((CFG.PIONEER_GIVEUP || CFG.PIONEER_STALL_ANY || CFG.TAKEN_SEEN) && st.taken.has(p.cluster) && st.taken.get(p.cluster) >= p.since) return false;   // it gave up
     const late = me.turn - p.since > 80;
-    if (late && CFG.PIONEER_TIMEOUT_REST && !st.churched.has(p.cluster)) st.lost.set(p.cluster, me.turn);
+    if (late && CFG.PIONEER_TIMEOUT_REST && !st.churched.has(p.cluster)) {
+      st.lost.set(p.cluster, me.turn);
+      // 2: it also counts as a pioneer lost there, so PIONEER_LOST_DOUBLE lengthens the rest (v11's panel games: 242
+      // of 304 repeat sends to a site the enemy held followed a pioneer still out 80 turns, re-sent at once).
+      if (CFG.PIONEER_TIMEOUT_REST >= 2) st.lostN.set(p.cluster, (st.lostN.get(p.cluster) || 0) + 1);
+    }
     return !st.churched.has(p.cluster) && !late;
   });
   st.nStructs = () => st.castles.size + st.churched.size;

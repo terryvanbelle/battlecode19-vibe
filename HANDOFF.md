@@ -72,16 +72,16 @@
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
   2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50):
+  h190 FIRST (v11 + TAKEN_SEEN 1 + PIONEER_TIMEOUT_REST 2 + PIONEER_LOST_DOUBLE 1, dist/h190 b6346eeb1252: a castle
+  rests a timed-out pioneer's site as a lost one and doubles the rest per loss; h189 folded in, closed unplayed;
+  v11 sent 4.74 pioneers a game to sites the enemy held, 242 of 304 repeats right after a timed-out one; basics-fix
+  rule, mechanism reads parked.mjs toTaken <= 0.7x and churches >= 0.9x v11's 108 panel games, computed before block 1
+  is read; studied uvafan 1712, botfinalsafe 2740, wololo 836, awesomelemonade 2518; TRAINING_LOG 2026-10-25 22:42);
   h184 (= h183 on v11: v11 + PIONEER_EARLY 6 + PIONEER_OPEN 7 + PIONEER_RACE 2, dist/h184 a78b4d8603e8: a turn-6 pioneer to the
   first planned cluster we reach 7+ king steps before the enemy; in a team with none, a castle whose plan opens with
   a race (m <= 1: 2518, 2591) sends its turn-3 pioneer there; replaces h177, closed unplayed; ordinary rule; studied
   cells wololo 836, 2013, botfinalsafe 1706, awesomelemonade 2518, bot1v43 2591; mechanism read pioneers.mjs (the
   r<=6 pioneer churches in 2/3+ of firing-map games); TRAINING_LOG 2026-10-25 15:45, 15:51, 17:56);
-  h189 (v11 + TAKEN_SEEN 1, dist/h189 bca186cf7eb6: a pioneer that sees an enemy church or castle within EXPAND_SEEN 5
-  of its site reports it taken whatever EXPAND_ROUND, and its castle frees the slot; replica 1421, seed 1712;
-  TRAINING_LOG 2026-10-25 20:37): driver diagnostic on 1712 and the v10 pioneer census (pioneers.mjs over 1391-1426:
-  pioneers sent after the enemy held their site; scratchpad econ/pioneers_v10_{a,b,c}.txt) running; then its
-  pre-registration (basics-fix rule likely);
   h185 (= h179 on v11: v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h185 e4a146ede62f; h171's; the fix for escorts
   that never leave home on small maps, LATTICE_R 12 around their site covering it (2591); studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read

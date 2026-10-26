@@ -5781,3 +5781,30 @@ v11's symcheck to r1000 on the VM (job ...1000symv11, out/sym_v11_r1000.log): se
 rate_ours.sh matches (1467, 1468). Match 1342 (UpperArlingtonHighSchool vs awesomelemonade, the 09:00 autoscrim)
 shows RUN since 09:00 but is not stuck: saturn slot 2 took it at 18:52 and is on its third game, about 100 minutes
 a game (slow bots), so it holds one of the 8 slots for about five hours.
+
+## 2026-10-25 22:42 PDT: pioneer census over v11's panel games; PIONEER_TIMEOUT_REST 2; h190 built and pre-registered (h189 folded in)
+Census (pioneers.mjs over v11's 72 panel games, 1427-1438 + 1441-1452; scratchpad econ/pioneers_v11.txt): 576
+pioneers (8.00 a game), **341 sent to a site where an enemy church already stood within 3 king steps (4.74 a game, in
+50 of 72 games)**: 11 arrived, 130 died, 3 churched. 304 of them repeat an earlier send to the same site; of those,
+242 followed a pioneer still out but never arrived (the castle's 80-turn timeout: it forgets the pioneer and, with
+PIONEER_TIMEOUT_REST 0, sends the next at once; 229 repeats came 80-99 rounds after the previous send), 55 one that
+died (100-round rest), 7 one that arrived. Worst cells: uvafan 1712 (84 such sends in 4 games, LLLL; game 1434 sent 25
+pioneers to three sites uvafan held from r22-33), botfinalsafe 2740 (52), IanCoolidge0 1036 (30), wololo 836 (23),
+bot1v43 2321 (23), awesomelemonade 2518 (23). TAKEN_SEEN (h189) acts only on a pioneer that comes near enough to see
+the church, which few of these do (11 arrived).
+New: **PIONEER_TIMEOUT_REST 2** (castle.js; default 0 = v11): as 1 (a timed-out pioneer rests its site as a lost one,
+PIONEER_LOST_REST 100), and it counts as one lost there, so PIONEER_LOST_DOUBLE doubles the rest per failure (100,
+200, 400, ... 1600). Unit test extended; no-op check IDENTICAL (defaults build vs bots/v11, 799 to r300), 174/174 and
+65/65. A model on the census (each site's sends at t0, t0+180, t0+460, t0+940 unless a church went up) puts sends to
+held sites at 2.71 a game (v11 4.74), all sends 5.74 (8.00).
+**h190** = v11 + TAKEN_SEEN 1 + PIONEER_TIMEOUT_REST 2 + PIONEER_LOST_DOUBLE 1 (dist/h190 b6346eeb1252; CFG differs
+from v11 only there). h189 (TAKEN_SEEN alone) is closed unplayed, folded into h190. **Pre-registered** before any h190
+panel game: the basics-fix rule on v7-m1, both sides, scored with `tools/panel_pool.sh 1427-1438
+progress/panels/v11-m1.pool BLOCK...` (the pool with the v11 control block): block 1 rejects only at z < -1; after two
+blocks accept at z >= 0 (other cells z >= 0) if both mechanism reads pass, else the ordinary rule (accept at z >= 2,
+others >= 0; reject at z < 1; else a third block). Mechanism reads (tools/reads/parked.mjs over h190's two blocks, per
+game): toTaken (pioneers sent to a site the enemy held and we did not) at most 0.7x v11's, and churches at least 0.9x
+v11's, both v11's rates over its 108 panel games (1427-1438, 1441-1452, the control block 1455-1466), computed before
+h190's block 1 is read. Studied cells: uvafan 1712, botfinalsafe 2740, wololo 836, awesomelemonade 2518. Panel order:
+h190 first after the control block (the largest basics waste measured), then h184, h185, h186, h187, h188. A driver
+diagnostic (h190 red vs v11 blue, seed 1712, r1000) is running.
