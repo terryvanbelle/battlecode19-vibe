@@ -159,6 +159,7 @@ function pilgrimAct(B) {
   st.structs = st.structs.filter(s => { if (w.occ(s.x, s.y) === 0) { st.depKey = null; return false; } return true; });
 
   siteTaken(B);
+  siteTimeout(B);
 
   // CFG.CHAIN_ROUND: a chainer walks, waits and builds the first church; a link pilgrim builds the next one.
   if (st.chain) { const a = pilgrimChain(B, go); if (a !== undefined) return a; }
@@ -251,6 +252,18 @@ export function siteTaken(B) {
   if (st.cluster >= 0 && st.cluster < 40) w.talk(CT.TAKEN + st.cluster);
   const h = st.structs[0] || me;
   st.site = null; st.target = freeDepotNear(B, h.x, h.y, null);
+  return true;
+}
+
+// CFG.PIONEER_TIMEOUT_HOME: a castle's pioneer (a planned cluster's site) that many turns old and still more than one
+// king step from its site gives it up and mines on ground we hold (homeDepot). Its castle stopped counting it at 80
+// turns (castle.js); v11's panel games left such pioneers out, never arriving, 242 times, each followed by another to
+// the same site. True when it gave the site up.
+export function siteTimeout(B) {
+  const w = B.w, me = w.me, st = B.st;
+  if (!CFG.PIONEER_TIMEOUT_HOME || !st.site || st.cluster < 0 || me.turn < CFG.PIONEER_TIMEOUT_HOME) return false;
+  if (king(me.x, me.y, st.site[0], st.site[1]) <= 1) return false;   // beside it, waiting for the church's price
+  st.site = null; st.target = homeDepot(B);
   return true;
 }
 

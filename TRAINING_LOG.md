@@ -5840,3 +5840,19 @@ rate_ours.sh matches so far: 1468 lost 1-2 to uvafan (won seed-388 red by castle
 r1000, 2330 blue on health), 1469 lost 0-3 to wololo (1915 blue by castles r215, 520 red by castles at r1000, 2591
 blue r793), 1470 won 2-1 against IanCoolidge0 ~f649f3 (747 blue r707, 2046 red r975; lost 2518 blue r141). Ratings
 wait behind 1467 (running). Census for h190's bars (parked.mjs, v11's 108 games): 20 lines.
+
+## 2026-10-25 23:32 PDT: h191 built and pre-registered (PIONEER_TIMEOUT_HOME, the pilgrim side of the zombie pioneers)
+- **Switch**: `PIONEER_TIMEOUT_HOME T` (pilgrim.js siteTimeout, default 0 = v11): a castle's pioneer (a planned
+  cluster's site; FRONT pioneers excluded) T turns old and still more than one king step from its site gives the site
+  up and takes homeDepot (a free depot on ground we hold). T = 80 matches the castle's own timeout (castle.js), after
+  which v11 re-sent to the same site 242 times in its 108 panel games while the first pioneer stayed out, never
+  arriving. h190 changes the castle side (rest the site); h191 the pilgrim side (stop the walk); they compose.
+- **h191** = v11 + PIONEER_TIMEOUT_HOME 80 (dist/h191, 5a3687700398; CFG diff vs v11 only that, plus the unset
+  TAKEN_SEEN and PIONEER_RACE at their 0 defaults). Unit test added (far site at turn 80 gives up with a home depot;
+  turn 79, switch 0, beside the site, FRONT keep it). No-op check (the default build against bots/v11) runs when the
+  driver is free of v11's parked census.
+- **Pre-registration**: basics-fix rule (two blocks; block 1 rejects only z < -1; accept at z >= 0 with others >= 0 if
+  the mechanism reads pass, else the ordinary bars). Mechanism reads, parked.mjs over h191's two blocks per game
+  against v11's 108 panel games (the census now running, computed before any h191 game is read): parked pioneers
+  (`alive`) per game <= 0.5x v11's, and churches per game >= 0.9x v11's. Studied cells as h190's: uvafan 1712,
+  botfinalsafe 2740, wololo 836, awesomelemonade 2518. Queued after h190's blocks.

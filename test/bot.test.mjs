@@ -12,7 +12,7 @@ import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pio
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy, hitTrack, sayRescue } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
-import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, siteTaken, stallRetarget } from '../src/bot/pilgrim.js';
+import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, siteTaken, siteTimeout, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, canHit, PRIORITY } from '../src/bot/combat.js';
@@ -1328,6 +1328,36 @@ test('pilgrim: PIONEER_FAST pioneers take full r2 4 steps on a short bank', () =
     assert.ok(off.r2 > 0 && off.r2 <= 2, off.info);
     assert.strictEqual(on.r2, 4, on.info);
   } finally { CFG.PIONEER_FAST = saved; }
+});
+
+test('pilgrim: PIONEER_TIMEOUT_HOME gives up a far site at that many turns and mines at home; not beside it, not FRONT', () => {
+  const saved = CFG.PIONEER_TIMEOUT_HOME;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let P = null;
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]]) if (!P && free(castle.x + dx, castle.y + dy)) P = [castle.x + dx, castle.y + dy];
+    const pil = { id: 4011, team: 0, unit: S.PILGRIM, x: P[0], y: P[1], turn: 1, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    g.robots.push(pil);
+    const w0 = worldFor(g, pil);
+    const B0 = { api: w0.api, w: w0, round: 90, birthRound: 11, st: {}, deps: null, clusters: null, rnd: rng(2) };
+    B0.offs = offsets(4); B0.nav = new Nav(w0, B0.offs, B0.rnd);
+    econ(B0);
+    const ci = B0.clusters.findIndex(c => king(c.site[0], c.site[1], w0.me.x, w0.me.y) > 1);
+    assert.ok(ci >= 0, 'a far cluster site');
+    const far = B0.clusters[ci].site.slice(), near = [w0.me.x + (w0.me.x + 1 < n ? 1 : -1), w0.me.y];
+    const run = (T, turn, site, cluster) => {
+      CFG.PIONEER_TIMEOUT_HOME = T; pil.turn = turn;
+      const w = worldFor(g, pil), B = { ...B0, api: w.api, w, st: { site: site.slice(), cluster, structs: [{ x: castle.x, y: castle.y }] } };
+      return { gave: siteTimeout(B), site: B.st.site, target: B.st.target };
+    };
+    const off = run(0, 100, far, ci), on = run(80, 80, far, ci), early = run(80, 79, far, ci);
+    assert.deepStrictEqual([off.gave, off.site], [false, far]);
+    assert.deepStrictEqual([on.gave, on.site], [true, null]); assert.ok(on.target && on.target.x !== undefined);
+    assert.deepStrictEqual([early.gave, early.site], [false, far]);
+    assert.deepStrictEqual([run(80, 100, near, ci).gave, run(80, 100, far, -1).gave], [false, false]);
+  } finally { CFG.PIONEER_TIMEOUT_HOME = saved; }
 });
 
 test('pilgrim: TAKEN_SEEN gives up a site with an enemy church beside it in sight, reports it taken, and mines', () => {
