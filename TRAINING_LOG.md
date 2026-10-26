@@ -6030,3 +6030,17 @@ comparison, fixed before its block is read), then h190's parked read for the rec
   refreshed between the blocks.
 - 02:32: h184 block 2 submitted: candidate submission 210 (requests 804-815, matches 1547-1558), ladder 211, bumped;
   the replica queue held 0 waiting before it.
+
+## 2026-10-26 03:09 PDT: squatters census (ECONOMICS row 12's evidence): the field mines our half in our worst cells
+
+- New read tools/reads/squatters.mjs (enemy pilgrims' mine actions on tiles nearer our starting castles than theirs;
+  far: no enemy castle or church within two king steps then) over v11's 108 panel games (scratchpad
+  econ/squat_v11.txt). Per game: enemy mine turns in our half 1,774, far 292, by 1.9 pilgrims (0.4 of them killed
+  by us); our own mine turns in our half 4,896. **Wins 17.5 far turns a game (55 games), losses 577 (53).**
+- By cell (far / all enemy mine turns in our half): uvafan 1712 (0 of 6) 2,592-5,627 / 5,272-12,554 a game from r25
+  (red) or r69 (blue), 9-19 pilgrims, 3-9 killed: as many as twice our own mining there (5,206-16,435);
+  wololo 836 (0 of 6) 138-1,159 / 1,968-11,097 from r42-49; wololo 2013 (1 of 6) 121-710; IanCoolidge0 1036 (6 of
+  6) 20-422; everything else under 30. Mined from our land by an enemy that holds no structure beside it.
+- Association, not yet cause: a losing game hands the enemy our land. Next, the detail of one uvafan 1712 game
+  (scratchpad econ/squatdetail.mjs: per tile K or F, the r2 of the nearest enemy military, of ours and of our
+  structures) prices it and says whether a hunt could reach those miners.
