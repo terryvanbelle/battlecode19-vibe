@@ -6069,3 +6069,17 @@ same way; the verdict takes both blocks' z under the ordinary rule.
 - 03:49: bursts.mjs over h184's block 1 (reported with its verdict; scratchpad econ/bursts_h184_b1.txt): castles
   lost 0.306 a game (v11 0.463 over its 108), near bursts 0.083 (v11 0.102; botfinalsafe 1706 red, 203 blue, bot1v43
   2321 blue, each followed by a castle's death), stagers 3.69, hunted 0.72.
+
+## 2026-10-26 04:23 PDT: h184 two blocks (1513-1524, 1547-1558): 42 of 72, side-aware z 2.34, others -0.69: a third block
+
+- Block 2 alone (1547-1558, both sides checked): 20 of 36 against 18.3 (side-aware z 1.04, +111 Elo); studied 4 of
+  10 (0.6), others 16 of 26 (17.7, z -1.17).
+- **Both blocks** (`tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1513-1524 1547-1558 --studied ...`):
+  **42 of 72 against 36.6, side-aware z 2.34** (+176 Elo, 95% +29 to +322). **Studied cells 8 of 20** against 1.2 (z
+  6.77): awesomelemonade 2518 4 of 4 (v11 0 of 6), botfinalsafe 1706 blue 2 of 2 (0 of 3), uvafan 1712 blue 2 of 2
+  (0 of 3). **Other cells 34 of 52 against 35.4, z -0.69**: lost awesomelemonade 1712 red 0 of 2 (v11 3 of 3),
+  IanCoolidge0 203 red 1 of 2 (3 of 3), bot1v43 2321 red 1 of 2 (3 of 3).
+- Rule (TRAINING_ALGORITHM §4, pre-registered for h184): two blocks accept at z >= 2 only with the other cells' z >= 0
+  (it was designed from studied cells); reject at z < 1. z 2.34 with others -0.69: neither, so **a third block**,
+  accepted at cumulative z >= 2 with others >= 0. Block 2's mechanism read and castle count run on the driver;
+  progress/ refreshed before block 3 goes in.
