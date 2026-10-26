@@ -6336,3 +6336,22 @@ turn-3 pioneer walks 35 king steps, arrives r45, church r46 (v11's first church 
 replica against botfinalsafe r73); **1036** church r16 (v11 r34; replica r34); **2321** church r17 (v11 r36; replica
 r42). Pilgrims at r100 18, 25, 18 (v11 on the replica 14-15). No errors, exceptions or timeouts. Self-play, so only
 the mechanism is read here; the panel decides.
+
+## 2026-10-26 09:05 PDT: two round-1000 health losses read (IanCoolidge0 203 blue, uvafan 2046 blue)
+`tools/replay.js summary / young / timeline` (scratchpad health_study.txt), v11's games 1438-1, 1437-1, 1434-1.
+- **IanCoolidge0 203**: v11 wins red 3/3 by castles and loses blue 3/3 on health (970 vs 4,730). Our only planned
+  cluster is c3 (one castle plans, m 6). Red: the r23 pioneer arrives r29, church r30 (IanCoolidge's first r305).
+  Blue (1438): the r23 pioneer (#445) reaches 5 king steps from (24,29) at r27, turns back, and wanders between
+  (25,35) and (31,25) for 51 turns, never adjacent to the site, until a prophet kills it at r78; IanCoolidge churches
+  within 3 king steps of the site at r49, and the seven pioneers we send there later (r179-r889) never arrive either.
+  Our first church: r450. 136 of our 263 military newborns (3,295 K of 6,015) die within 3 rounds (prophets 103 of
+  159); IanCoolidge ends with 104 prophets. The pioneer's dither is h191's case (PIONEER_TIMEOUT_HOME, queued); a
+  pioneer that keeps resending to a site the enemy holds is TAKEN_SEEN's (h190, rejected).
+- **uvafan 2046**: uvafan turtles: 7 pilgrims (never idle), no church, prophets 17 at r100 to 145 at r900, bank
+  ~700 K held, then 78 crusaders from it in r900-1000; it first hits us at r352, when our line reaches it. Ours: 13-15
+  pilgrims mining less (K 4,598 against 5,428; 3,476 of 11,480 pilgrim turns idle), 17 churches all lost, 71
+  preachers (51 dead within 3 rounds), 57 of 68 crusaders lost; our bank sits at 270-830 K from r200 (CHAIN_K 1000
+  holds the peacetime army back from CHAIN_ROUND), 30,332 F unspent at the end. Health 970 against 6,640. Queued for
+  exactly this: h187 (CHAIN_WALL 28: a walled line ends the chain bank) and h186 (idle miners).
+No new candidate from this read: its levers are queued (h186, h187, h191) or closed (FEED_STOP h159, the endgame lines
+h8, h96, h104, TAKEN_SEEN h190).
