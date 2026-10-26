@@ -6064,3 +6064,5 @@ cell median in 22 cells, later in none** (ties: 2591 both, never). First churche
 2013 r15 (49), 2321 r13 (42), 2740 r28 (73), 388 r25 (46), 836 r24 (v11 187 red, 148 blue), 1036 r18 (34), 2797 r13
 (28), 2518 r14 (v11 never: won both sides). Pilgrims at r100 14.79 a game (v11 13.11). Block 2's read follows the
 same way; the verdict takes both blocks' z under the ordinary rule.
+- Unit tests after tools/reads/squatters.mjs: 175 of 175, galaxy19 65 OK (410 s alone on the driver; the first run,
+  beside a read, was cut by my own 600 s timeout, not by a test).
