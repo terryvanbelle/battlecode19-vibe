@@ -61,8 +61,9 @@
   accepted).
   **Replica queue (01:53): 2 waiting (ranked), 8 running (3 of them h184's block 1513-1524).** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: h184 block 1 = matches 1513-1524** (submission 208, requests 770-781; ladder 209; waiter scratchpad
-  wait_block.sh 1513 1524): scored with `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1513-1524 --studied
+  **In play: h184 block 2 = matches 1547-1558** (submission 210, requests 804-815; ladder 211; waiter scratchpad
+  wait_block.sh 1547 1558); block 1 = 1513-1524 (submission 208): 22 of 36, side-aware z 2.27, studied 4 of 10, others
+  z 0.20 (TRAINING_LOG 2026-10-26 02:24). Score both: `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1513-1524 1547-1558 --studied
   m-schier.battlecode-2019-wololo:seed-836,m-schier.battlecode-2019-wololo:seed-2013,StoneT2000.BC19-botfinalsafe:seed-1706,awesomelemonade.Battlecode2019:seed-2518,StoneT2000.BC19-bot1v43:seed-2591`
   under the ordinary rule (block 1 rejects at side-aware z < 0.5; two blocks accept at z >= 2 with others >= 0,
   reject at z < 1, else a third block). Mechanism read (pioneers.mjs, reported with the verdict): on the firing maps

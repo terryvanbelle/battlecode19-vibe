@@ -6028,3 +6028,5 @@ comparison, fixed before its block is read), then h190's parked read for the rec
   other cells >= 0, reject at z < 1, else a third). The mechanism read (pioneers.mjs on the firing maps against the
   bar fixed at 01:24) runs on the driver after the squatters census and is reported with the verdict. progress/
   refreshed between the blocks.
+- 02:32: h184 block 2 submitted: candidate submission 210 (requests 804-815, matches 1547-1558), ladder 211, bumped;
+  the replica queue held 0 waiting before it.
