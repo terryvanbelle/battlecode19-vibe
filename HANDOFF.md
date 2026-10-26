@@ -62,34 +62,26 @@
   add the tools/progress/submissions.tsv rows. Read: `contest19.py fetch --new --pages 6`, then for v12-based
   candidates `tools/panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool BLOCK... [--studied ...]` (it
   refuses a block with a match unfinished); a rejected block joins the pool file only when its own z lies within
-  +-1. The pool file holds h185's block 2 (1835-1846) and, once played, the v12 control block: v12's reference is then
-  108 games (as v11's 1427-1466: TRAINING_LOG 2026-10-25 20:50; v12: 2026-10-26 10:39). The rule's false-accept
+  +-1. The pool file holds h185's block 2 (1835-1846), the v12 control block (1847-1858) and rejected h195's three
+  (1865-1888, 1891-1902): v12's reference is 216 games (TRAINING_LOG 2026-10-26 10:39, 16:48). The rule's false-accept
   rate and power: `python3 -I tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
-  accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted).
-  **Replica queue (16:23): 68 waiting (68 ranked; VM 11 GB free); h195 block 3 running (3 left).** While 30+ wait: no
+  accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195 rejected).
+  **Replica queue (16:49): 72 waiting (61 ranked; VM 11 GB free); h203 block 1 running.** While 30+ wait: no
   local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the autoscrim held
-  (TRAINING_LOG 2026-10-25 09:12). v12's rating chain moves again: 1796 rated by 15:52 (after 1738 and 1788), so
-  1859-1864 (13 of 18) follow; refresh rating-history once h195 block 3 ends.
+  (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 16:48 (between blocks; rating-history 75 rated matches).
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
-  **Now: h195 block 3** = matches 1891-1902 (submission 236; ladder 237). Blocks 1-2 (1865-1888): 50 of 72,
-  side-aware z 1.08, others 1.14; the stillborn read failed its bar (safer 0.28 a game, bar 0.118), so the ordinary
-  bars: accept at cumulative z >= 2 over three blocks (others >= 0), else reject (TRAINING_LOG 2026-10-26 15:34). When
-  block 3 ends: `contest19.py fetch --new --pages 6`, `panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool
-  1865-1888 1891-1902 --studied StoneT2000.BC19-bot1v43:seed-2321`; refresh progress/ before the next block.
-  h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42), h192 on block 1 (z -2.65; 08:21),
-  h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
+  **Now: h203 block 1** = matches 1903-1914 (submission 238; ladder 239; waiter on the driver). When it ends:
+  `contest19.py fetch --new --pages 6`, `panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool 1903-1914
+  --studied m-schier.battlecode-2019-wololo:seed-2644,StoneT2000.BC19-bot1v43:seed-2321`; ordinary rule (block 1
+  rejects at z < 0.5); refresh progress/ before the next block.
+  h195 was REJECTED on three blocks (74 of 108, z 1.00; TRAINING_LOG 2026-10-26 16:48), h193 on block 1 (16 of 36, z
+  -1.42; TRAINING_LOG 2026-10-26 09:42), h192 on block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85;
+  06:37), h190 (z -1.42; 00:42).
   **Then, one block at a time** (each v11 candidate rebuilt on v12 with its switches unchanged and its
   pre-registration kept; bars relative to the champion recomputed from v12's panel games (h185's 1651-1658,
   1831-1834, 1835-1846 and the v12 control block) before the candidate's block is read; TRAINING_LOG 2026-10-26 10:39;
-  all but h195 rebuilt again at 16:40 with the World.attack fuel fix, hashes below):
-  h195 (v12 + DEF_SAFE 2, dist/h195 db45575beb6a: pilgrims too go on a free tile the enemy attackers in sight cannot
-  kill them on before their first turn, and none is built while every free tile is one; replica 1446, seed 2321: 17
-  stillborn pioneers, each unknown to its castle, resent every 80 turns; basics first, so first after the control
-  block; basics-fix rule; mechanism read `tools/reads/stillborn.mjs TEAM 2 REPLAY` per game: safer (stillborn on an
-  exposed tile beside a free safe one) at most a quarter of v12's, pilgrims built at least 0.9 of v12's; studied
-  StoneT2000.BC19-bot1v43:seed-2321; TRAINING_LOG 2026-10-26 10:45; v12's 72 games give 0.47 safer and 34.08 built per
-  game; bars over v12's 108 games: safer <= 0.118 per game, built >= 31.1: 12:11, 12:27 bullet);
+  rebuilt again at 16:40 with the World.attack fuel fix, hashes below):
   h203 (v12 + ESCORT_BACK 2, dist/h203 7f352326b9eb: an escort with 20+ health whose only enemy attacker or castle in
   sight is one prophet charges it instead of going home; 50 of v12's 153 escort hits were by a lone prophet in sight,
   among them always-lost wololo 2644, which v11 won red 3 of 3 by that charge; ordinary rule; studied

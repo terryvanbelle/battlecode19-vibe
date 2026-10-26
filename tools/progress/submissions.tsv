@@ -66,3 +66,4 @@ submission	build	note
 232	cand:h195	panel candidate dist/h195 (db45575beb6a), block 1 = matches 1873-1876 (awesomelemonade, IanCoolidge0; both sides; resubmitted after HTTP 429) (TRAINING_LOG 2026-10-26 12:11)
 234	cand:h195	panel candidate dist/h195 (db45575beb6a), block 2 = matches 1877-1888, both sides (TRAINING_LOG 2026-10-26 14:09)
 236	cand:h195	panel candidate dist/h195 (db45575beb6a), block 3 = matches 1891-1902, both sides (TRAINING_LOG 2026-10-26 15:34)
+238	cand:h203	panel candidate dist/h203 (7f352326b9eb), block 1 = matches 1903-1914, both sides (TRAINING_LOG 2026-10-26 16:48)

@@ -6691,3 +6691,16 @@ cell: a change anywhere before r58 can flip it either way, and its replays say n
   the official copy) also matched an engine copy inside a downloaded external repo (StoneT2000's BC19, in another
   session's scratchpad), and grep printed one line of it: the engine's attack-fuel check, an older form of the official
   one. No bot code was read. Engine searches now name ~/projects/vibe/bc19-official only.
+
+## 2026-10-26 16:48 PDT: h195 REJECTED on three blocks (74 of 108, side-aware z 1.00); h203 block 1 in play (1903-1914)
+- **h195** (v12 + DEF_SAFE 2), blocks 1865-1888 and 1891-1902 against v12's pool (108 games): 74 of 108, pooled
+  expectation 69.4 (z 1.24); side-aware expectation 71.0, **z 0.995** (+58 Elo, 95% -56 to +171); studied cell
+  (bot1v43 2321) 3 of 6 against 3.0; other cells 71 of 102 against 68.0 (z 1.05). Below 2 after the third block:
+  **REJECTED** (ordinary bars; the stillborn read had failed the basics-fix bar, 15:34). Against v12's side records it
+  gained botfinalsafe 2740 blue (3/3 against 1/3), 203 blue (3/3, 2/3) and IanCoolidge0 1036 red (2/3, 1/3), and lost
+  botfinalsafe 203 red (0/3, 1/3) and wololo 2013 blue (2/3, 3/3). Its own z lies within +-1, so both blocks join
+  progress/panels/v12-m1.pool (v12's reference is now 216 games).
+- progress/ refreshed between blocks (replica snapshot 16:45; 75 rated matches on rating-history).
+- **h203** (v12 + ESCORT_BACK 2, dist/h203 7f352326b9eb, with the World.attack fix) block 1: candidate submission
+  238, ladder 239 (bots/v12), matches 1903-1914, bumped. Pre-registration as at 14:57: ordinary rule; studied
+  wololo 2644 and bot1v43 2321; others z >= 0 to accept; the eschits.mjs mechanism check over our side of its blocks.
