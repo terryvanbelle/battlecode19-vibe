@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 18:24 PDT)
+## State (2026-10-25 18:58 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v10** (`bots/v10` = h175, bots/ROSTER.tsv); frozen history v0-v10,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -53,12 +53,13 @@
   games (TRAINING_LOG 2026-10-25 15:26, 15:51, 17:05). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted).
-  **Replica queue (18:24): 48 waiting (all ranked; h178's block: 10 of 12 done, 1433-1434 running) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  **Replica queue (18:58): 48 waiting (36 ranked from the 09:00 daily autoscrim, 12 ours: h178's block 2)** (4 a team, none dominant;
   about 12 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: h178 block 1 = matches 1427-1438** (submission 200; bots/v10 the ladder build, 201; waiter
-  scratchpad wait_block.sh 1427 1438): score with `tools/panel_pool.sh 1391-1402 progress/panels/v10-m1.pool 1427-1438
-  --studied uvafan.bc2019:seed-1712,uvafan.bc2019:seed-2046`, basics-fix rule. h175 was accepted as v10 (TRAINING_LOG
+  **In play: h178 block 2 = matches 1441-1452** (submission 203; block 1 = 1427-1438, 18/36, z 0.00, passed the
+  z < -1 reject; waiter scratchpad wait_block.sh 1441 1452): score with `tools/panel_pool.sh 1391-1402
+  progress/panels/v10-m1.pool 1427-1438 1441-1452 --studied uvafan.bc2019:seed-1712,uvafan.bc2019:seed-2046`,
+  basics-fix rule (accept at z >= 0, others >= 0, if stillborn safer <= 2.90 a game over both blocks; else ordinary). h175 was accepted as v10 (TRAINING_LOG
   2026-10-25 15:26); h170 rejected (1379-1390, z -1.71).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v10's 108 panel games, 1391-1426, before the candidate's block is read; TRAINING_LOG 2026-10-25 15:51):

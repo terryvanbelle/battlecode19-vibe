@@ -5648,3 +5648,23 @@ Its tools/ swap left ~/projects/vibe/2019/.tools.old behind: four root-owned .py
 sudo; no other file in ~/projects/vibe/2019 or 2019-next is owned by anyone else. Job
 ~/jobq/hold/1792609846000000004b01b1a3d5771000symv10.sh (v9's job with bots/v10: symcheck.js, seeds 3, 1, 2, 2321,
 1000 rounds, out/sym_v10_r1000.log) moves to ~/jobq/pending once fewer than 30 replica matches wait.
+
+## 2026-10-25 18:58 PDT: h178 block 1 passes (18/36, z 0.00); block 2 submitted; walk-in census
+
+**h178 block 1** (matches 1427-1438, v10 + DEF_SAFE 1): 18 of 36, pooled expectation 18.0; side-aware z 0.00
+(effect -0 Elo, 95% -226 to +230); studied cells 0 of 4 (expectation 0.1); other cells 18 of 32, z 0.08. The
+basics-fix rule rejects block 1 only at z < -1, so block 2 runs: submission 203, matches 1441-1452 (waiter
+wait_block.sh 1441 1452). The mechanism read (stillborn safer at most 2.90 a game) waits for both blocks.
+
+**Walk-in census** (scratchpad econ/walkin.mjs over v10's 108 panel games, 1391-1426, all 108 read): a military
+unit's move from a tile the enemy attackers present could not kill it on onto one they could (exposure >= hp, every
+attacker counted as firing at it), and whether it died within 2 rounds. Per game: 1,448 moves, 60.3 walk-ins, 31.3
+deaths within 2 rounds (52%), 654 K of units. Wins 26.5 deaths (37% of 71.9 walk-ins), losses 36.2 (74% of 48.8).
+By who saw the attackers that make the tile lethal: the unit itself 0.74 walk-ins / 0.52 deaths (its own danger check
+works), a structure of ours (r2 100) 25.8 / 11.9, nobody 33.8 / 18.9; newborns (5 rounds) 24.4 / 14.2. By unit:
+crusaders 27.4 / 15.1, prophets 17.4 / 11.9, preachers 15.5 / 4.4. Worst cells (deaths a game): uvafan 1712 116,
+botfinalsafe 2740 88, wololo 836 61, IanCoolidge0 203 54, uvafan 2046 44. Reading: what our units see they avoid;
+the losses come from attackers out of the unit's vision (crusader r2 49 and preacher r2 16 against prophet range
+r2 64), a third of them in a structure's sight. Lead for a candidate: a structure radios the most dangerous attacker
+it sees so units near it keep off that attacker's range (12 deaths a game at most; the SIEGE line h135-h138 was
+about sieges, not this). Not ranked yet: the deaths include units that walked in to attack and traded.

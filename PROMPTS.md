@@ -158,3 +158,6 @@ Wouldn't we have the games that led to v9's acceptance?
 
 ## 42. 2026-10-25 10:27 PDT
 In a previous year's practice session, we established that BT ratings are more stable than  siarnaq's penalized Elo used by the replica, and that the latter eventually converges to the former.  Given that, would it make sense to use estimated BT improvement on the panel as the acceptance criterion, rather than raw game count?
+
+## 43. 2026-10-25 18:38 PDT
+Can you add BT ratings to rating-history.png?

@@ -52,3 +52,4 @@ submission	build	note
 194	cand:h175	panel candidate dist/h175 (24ba82513211), block 1 = matches 1391-1402, both sides (TRAINING_LOG 2026-10-25 11:16)
 196	cand:h175	panel candidate dist/h175 (24ba82513211), block 2 = matches 1403-1414, both sides (TRAINING_LOG 2026-10-25 12:56)
 200	cand:h178	panel candidate dist/h178 (4a802965e3a3), block 1 = matches 1427-1438, both sides (TRAINING_LOG 2026-10-25 17:05)
+203	cand:h178	panel candidate dist/h178 (4a802965e3a3), block 2 = matches 1441-1452, both sides (TRAINING_LOG 2026-10-25 18:58)
