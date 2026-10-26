@@ -6094,3 +6094,8 @@ same way; the verdict takes both blocks' z under the ordinary rule.
   picks (7+ king steps ahead; churches r22, r33), and here the opponent took the centre clusters v11's plan reached.
   Not acted on during the test; a lead if h184 is accepted (on 1712 v11's plan won against awesomelemonade, h184's won
   against uvafan blue).
+- 04:35: checked by the church builds (`tools/replay.js events --kind build`, r1-150): in v11's game red churched the
+  centre at (30,17) at r53 (four prophets from it by r56), and awesomelemonade's early churches stood at (53,2) r11,
+  (36,12) r28, (56,33) r34, (40,22) r44, none in the centre. In h184's game red's r3 pioneers churched its own
+  corners, (6,33) r22 and (8,1) r33, and awesomelemonade churched the centre at (31,12) at r22 and built 5 pilgrims
+  there by r33. The 04:30 reading stands: the early pioneers went home-side and the opponent took the centre.
