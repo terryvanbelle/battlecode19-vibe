@@ -199,13 +199,26 @@ function edgeAvoid(B) {
 // walks back at ESCORT_FAST_R2 (replica 1035-1046, h157: escorts at their site won where the enemy came with pilgrims
 // and crusaders, 1712, 2518, 836, and died 3-7 rounds after a prophet's first shot where it came with prophets, 388,
 // 2740, 2644; the kills that won came before any prophet hit; TRAINING_LOG 2026-10-25 00:37).
+// ESCORT_BACK 2: not while the only enemy attacker or castle in sight is one prophet and the escort has health for one
+// more shot (20+): it charges that prophet (st.duel, engaged first) while that holds. A crusader steps r2 9 and the
+// prophet cannot shoot inside r2 16, so the duel is the crusader's (replica 1651, seed 2644: v12's escort hit at r2 45
+// by wololo's lone prophet went home and wololo churched the centre; v11's charged, killed it at r18 and won the cell
+// 3 of 3; 50 of v12's 153 escort hits in 1651-1658 and 1831-1858 were by a lone prophet in sight; TRAINING_LOG
+// 2026-10-26 14:57).
 function escortBack(B) {
   const st = B.st, me = B.w.me;
-  if (st.guardAt && st.base && st.hp !== undefined && me.health < st.hp
-      && !B.w.enemies.some(e => (e.unit === CRUSADER || e.unit === PREACHER) && d2(e.x, e.y, me.x, me.y) <= 25)) {
-    st.guardAt = null; st.home = st.home0 = st.base; st.held = false; st.lt = null; st.back = true;
-  }
+  const hit = st.guardAt && st.base && st.hp !== undefined && me.health < st.hp
+      && !B.w.enemies.some(e => (e.unit === CRUSADER || e.unit === PREACHER) && d2(e.x, e.y, me.x, me.y) <= 25);
+  const duel = CFG.ESCORT_BACK === 2 && st.guardAt && me.health >= 20 ? loneProphet(B.w, me) : null;
+  if (hit && !duel) {
+    st.guardAt = null; st.home = st.home0 = st.base; st.held = false; st.lt = null; st.back = true; st.duel = null;
+  } else st.duel = duel && (hit || st.duel) ? duel : null;
   st.hp = me.health;
+}
+function loneProphet(w, me) {
+  const v = STATS[me.unit].vision;
+  const a = w.enemies.filter(e => (e.unit === CASTLE || e.unit >= CRUSADER) && d2(e.x, e.y, me.x, me.y) <= v);
+  return a.length === 1 && a[0].unit === PROPHET ? a[0] : null;
 }
 
 function latticeOk(B, x, y) {
@@ -432,7 +445,7 @@ export function militaryTurn(B) {
   const h = st.home, c = latticeCentre(B), waiting = !st.target && B.round < st.waitUntil;
   const rc = CFG.RECALL && st.recall && me.turn <= st.recall.until ? st.recall : null, marching = !!st.target || waiting || !!rc;
   if (u !== PROPHET) {
-    let e = null, ed = 1e9;
+    let e = st.duel || null, ed = e ? -Infinity : 1e9;   // CFG.ESCORT_BACK 2: the lone prophet first
     for (const x of enemies) {
       const near = marching ? d2(x.x, x.y, me.x, me.y) <= 64 : d2(x.x, x.y, c.x, c.y) <= 196;
       if (!near) continue;

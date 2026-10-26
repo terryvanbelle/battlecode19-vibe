@@ -728,6 +728,14 @@ test('reads: idle, parked and escort reads on replica games', () => {
   const e = run('escorts.mjs', '0', g);
   assert.deepStrictEqual(e.map(x => [x.id, x.round, x.hit, x.hitBy, x.k0, x.dead, x.hit6, x.pc60]),
     [[2967, 3, 41, 'R', 10, 43, 1, 0], [851, 4, 34, 'R', 10, 40, 1, 0]]);
+  // eschits.mjs (h203): the same two escorts, shot from out of sight; in 1180 game 1 (wololo 2013) #160 is hit at r52
+  // by the one enemy attacker in its sight, a prophet at r2 40, which dies within 12 rounds.
+  assert.deepStrictEqual(run('eschits.mjs', '0', g).map(x => [x.id, x.hit, x.by, x.r2, x.seen, x.foes, x.foeP, x.dead, x.shDead12]),
+    [[2967, 41, 'P', 64, 0, 0, 0, 43, 1], [851, 34, 'P', 53, 0, 0, 0, 40, 0]]);
+  assert.deepStrictEqual(run('eschits.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')),
+    [{ id: 648, round: 4, hit: 50, by: 'P', r2: 58, seen: 0, foes: 1, foeP: 0, castle: 0, ours: 2, hp: 20, dead: 51, shDead12: 1 },
+      { id: 160, round: 5, hit: 52, by: 'P', r2: 40, seen: 1, foes: 1, foeP: 1, castle: 0, ours: 1, hp: 30, dead: 56, shDead12: 1 }]);
+  assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'eschits.mjs'), '2', g], { stdio: 'pipe' }));
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'idle.mjs'), '2', '300', g], { stdio: 'pipe' }));
   // 1180 game 1 (wololo 2013, v9 red): the castle fell at r204 with three held crusaders within 10 steps, none shooting.
   assert.deepStrictEqual(run('held.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')),

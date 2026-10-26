@@ -87,7 +87,8 @@ export const CFG = {
                              // gives up its site and goes back to its birth structure's lattice (h157's block 1035-1046: the
                              // escorts at their site won 1712, 2518, 836 with kills before any prophet hit, and died 3-7
                              // rounds after a prophet's first shot on 388, 2740, 2644; TRAINING_LOG 2026-10-25 00:37). 1 is
-                             // v12's, 0 was v11's.
+                             // v12's, 0 was v11's. 2: as 1, but an escort with 20+ health whose only enemy attacker or castle
+                             // in sight is one prophet charges it instead (military.js escortBack).
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short

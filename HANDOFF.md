@@ -87,6 +87,11 @@
   exposed tile beside a free safe one) at most a quarter of v12's, pilgrims built at least 0.9 of v12's; studied
   StoneT2000.BC19-bot1v43:seed-2321; TRAINING_LOG 2026-10-26 10:45; v12's 72 games give 0.47 safer and 34.08 built per
   game; bars over v12's 108 games: safer <= 0.118 per game, built >= 31.1: 12:11, 12:27 bullet);
+  h203 (v12 + ESCORT_BACK 2, dist/h203 565a1b43c349: an escort with 20+ health whose only enemy attacker or castle in
+  sight is one prophet charges it instead of going home; 50 of v12's 153 escort hits were by a lone prophet in sight,
+  among them always-lost wololo 2644, which v11 won red 3 of 3 by that charge; ordinary rule; studied
+  m-schier.battlecode-2019-wololo:seed-2644,StoneT2000.BC19-bot1v43:seed-2321; mechanism check tools/reads/eschits.mjs:
+  shooter dead within 12 rounds in half the lone-prophet hits, v12 18 of 50; TRAINING_LOG 2026-10-26 14:57);
   h201 (v12 + ECON_RICH 100, dist/h201 f3833637f632: before r100 the peacetime army builds from the bank past 100 K
   above the reserves; v12 banks 300+ K at r100 in 36 of its 72 panel games, army 2-11; ordinary rule; studied
   StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046; mechanism check tools/reads/bank.sh: TRAINING_LOG 2026-10-26 11:47);

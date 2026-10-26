@@ -2296,6 +2296,30 @@ test('military: ESCORT_BACK: an escort hit with no enemy melee near goes back to
     st = fresh();
     const a = turn(st);
     assert.deepStrictEqual(st.guardAt, site); assert.strictEqual(a.action, 'attack');
+    g.robots.pop();
+    // ESCORT_BACK 2, hit by the one prophet in sight (r2 36-49 away): it keeps its site and steps toward the prophet; at
+    // 10 health, or with a second prophet in sight, it goes home as at 1.
+    let pr = null;
+    for (const [dx, dy] of [[6, 0], [-6, 0], [0, 6], [0, -6], [5, 4], [-5, 4], [5, -4], [-5, -4], [4, 5], [-4, 5], [4, -5], [-4, -5]])
+      if (free(x0 + dx, y0 + dy) && !pr) pr = { id: 4005, team: 1, unit: S.PROPHET, x: x0 + dx, y: y0 + dy, turn: 5, health: 20,
+        karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    assert.ok(pr);
+    g.robots.push(pr);
+    CFG.ESCORT_BACK = 2; st = fresh(); cru.health = 30;
+    const c = turn(st), dc = d2(x0, y0, pr.x, pr.y);
+    assert.deepStrictEqual(st.guardAt, site); assert.ok(st.duel && st.duel.id === 4005);
+    assert.strictEqual(c.action, 'move'); assert.ok(d2(x0 + c.dx, y0 + c.dy, pr.x, pr.y) < dc, JSON.stringify([c, pr]));
+    st = fresh(); cru.health = 10; turn(st);
+    assert.strictEqual(st.guardAt, null); assert.ok(st.back);
+    const pr2 = { ...pr, id: 4006, x: x0 - (pr.x - x0), y: y0 - (pr.y - y0) };
+    if (free(pr2.x, pr2.y)) {
+      g.robots.push(pr2); st = fresh(); cru.health = 30; turn(st);
+      assert.strictEqual(st.guardAt, null); assert.ok(st.back && !st.duel);
+      g.robots.pop();
+    }
+    // ESCORT_BACK 1, the same lone prophet: it goes home.
+    CFG.ESCORT_BACK = 1; st = fresh(); cru.health = 30; turn(st);
+    assert.strictEqual(st.guardAt, null);
   } finally { Object.assign(CFG, saved); }
 });
 

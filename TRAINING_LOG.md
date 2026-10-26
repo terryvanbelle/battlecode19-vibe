@@ -6575,3 +6575,43 @@ failed token check (no 401-specific code in the bundle), and client.py treats 40
   a team's matches in order, so 1859-1864 wait too. Not a stall (rating_unstick.py counts it as a normal head); 1788
   bumped to the front so the chain moves. rating-history.png: the "no rated match since" note moved into the legend
   (beside the line it ran over the last submissions' markers).
+
+## 2026-10-26 14:57 PDT: escort hits in v12's panel games; h203 (v12 + ESCORT_BACK 2) built and pre-registered
+
+Two cells v12 always loses (h185, v12's control block and h195 replay them identically: games are deterministic):
+- wololo 2644 (red r330, blue r601). v11 won it red 3 of 3: its crusader #604 charged wololo's lone prophet, killed it
+  at r18, and we churched the centre cluster (28,19) at r50 (15 pilgrims by r100). v12's #604 was hit at r12 by that
+  prophet in sight (r2 45) and went home (ESCORT_BACK); its partner #2509, at 10 health after a crusader duel, died at
+  r14 to a shot from r2 65; wololo churched (28,19) at r53 and our pilgrims stayed at 6 against 18.
+- botfinalsafe 1706 (red r318, blue r327-338). One castle each, 4 karbonite depots on our side; the centre cluster
+  (7,17) is 27 steps away. Our escorts reached it at r13-16 and killed a blue pilgrim at r18; a lone blue prophet shot
+  them from r2 50-64, out of their sight, at r21-28, and both went home; our pioneers left at r34-35; blue churched
+  (7,19) at r36 and (7,15) at r95 and mined 1,456 K by r200 against our 652. ESCORT_BACK 2 changes nothing here (the
+  shooter is unseen).
+
+Census (tools/reads/eschits.mjs, our side of v12's 108 panel games 1651-1658, 1831-1858): 216 escorts, 153 first hit
+by a prophet or castle.
+
+| first hit by | hits | dead within 6 rounds | shooter dead within 12 | games (won) |
+|---|---|---|---|---|
+| a prophet out of sight (r2 > 49) | 94 | 22 | 1 | 63 (37) |
+| the one enemy attacker in sight, a prophet | 50 | 15 | 18 | 35 (21) |
+| prophets with other attackers, or 2 prophets | 9 | 9 | 0 | 9 (6) |
+
+v12 sends all of them home. The lone-prophet hits sit in lost cells wololo 2644 (both sides), bot1v43 2321 (blue: hit
+at r10 from r2 37, home, dead at r111) and in split cells botfinalsafe 203 blue and IanCoolidge0 1036; in the won
+cells (wololo 2013, awesomelemonade 1712) the shooter died within 12 rounds anyway.
+
+**h203 = v12 + ESCORT_BACK 2** (dist/h203 565a1b43c349). military.js escortBack: as ESCORT_BACK 1, but not while the
+only enemy attacker or castle in the escort's sight is one prophet and the escort has 20+ health; it charges that
+prophet instead (st.duel, engaged before the nearest enemy) while that holds, and goes home as at 1 when a second
+attacker comes into sight or a hit leaves it at 10. A crusader steps r2 9 and attacks at r2 1-16; a prophet cannot
+shoot inside r2 16, so the duel is the crusader's unless the prophet has company. Unit test extended (hit by a lone
+prophet in sight: keeps its site, steps toward it; at 10 health or with a second prophet: home; at 1: home). No-op:
+the defaults build replays bots/v12 against itself on 799 to r300 identically. CFG diff against bots/v12: ESCORT_BACK
+only (plus the keys added since h185's build, inert; the regex's WALL is the ternary `SIG.WALL:0`).
+Pre-registration: ordinary panel rule against v12's pool. Studied cells: wololo 2644, bot1v43 2321
+(`--studied m-schier.battlecode-2019-wololo:seed-2644,StoneT2000.BC19-bot1v43:seed-2321`); others z >= 0 to accept.
+Mechanism read (a check, not a decision input): eschits.mjs over our side of its blocks: the shooter dies within 12
+rounds in at least half of the lone-prophet hits (v12: 18 of 50). Order: next after h195, before h201: it targets an
+always-lost cell with the exact play that won it for v11, the most direct evidence in the queue.
