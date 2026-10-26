@@ -6099,3 +6099,8 @@ same way; the verdict takes both blocks' z under the ordinary rule.
   (36,12) r28, (56,33) r34, (40,22) r44, none in the centre. In h184's game red's r3 pioneers churched its own
   corners, (6,33) r22 and (8,1) r33, and awesomelemonade churched the centre at (31,12) at r22 and built 5 pilgrims
   there by r33. The 04:30 reading stands: the early pioneers went home-side and the opponent took the centre.
+- 04:54: h184's block 2 reads (scratchpad econ/pioneers_h184_b2.txt, bursts_h184_b2.txt). Mechanism, same as block
+  1: the r3 pioneer founds its church in 22 of 24 firing games (0.92; misses bot1v43 2591 both sides again), first
+  church earlier than v11's cell median in 22 cells, later in none; pilgrims at r100 15.04. **Both blocks: 44 of 48
+  (0.92), earlier 44, later 0: the mechanism read passes.** Castles lost 0.361 a game in block 2, **0.333 over both**
+  (v11 0.463); near bursts 0.097 (v11 0.102). The verdict waits on block 3's z (cumulative >= 2 with others >= 0).
