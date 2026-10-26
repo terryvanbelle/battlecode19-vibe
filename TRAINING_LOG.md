@@ -6636,7 +6636,7 @@ always-lost cell with the exact play that won it for v11, the most direct eviden
 - Replica queue 83 waiting (71 ranked); v12's rating chain: 1796 waits on 1788 (played, unrated), which waits on
   1738 (arya-k vs awesomelemonade, running).
 
-## 2026-10-26 15:58 PDT: h203 driver check: inert against our own builds
+## 2026-10-26 15:45 PDT: h203 driver check: inert against our own builds
 
 h203 and bots/v12 (red) against dist/turtle, dist/camp and bots/v12 (blue) on 2644, 2321, 388, 1706, 2740 to r150
 (scratchpad duel_diag.sh; one game at a time; no errors, timeouts or exceptions): all 15 h203 replays are
