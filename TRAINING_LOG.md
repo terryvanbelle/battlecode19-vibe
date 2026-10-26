@@ -6669,3 +6669,25 @@ church, 11 pilgrims, 272 K mined). At r58-60 the prophet exchange beside that ch
 (red's units act first in a round), and the games split: as red we lose the exchange and have 13 pilgrims at r100
 against 22 as blue; wololo out-mines us 24,086 K to 6,890 and takes both castles. No switch is designed from this
 cell: a change anywhere before r58 can flip it either way, and its replays say nothing about a policy.
+
+## 2026-10-26 16:40 PDT: v12's 5 exceptions traced and fixed (World.attack charges its fuel); candidates rebuilt
+
+- **Basics, our side of v12's 108 panel games** (1651-1658, 1831-1858, match.json): time-limit overruns 0.70 per 100,000
+  turns (the opponents 5.54), frozen turns 26, exceptions 5. All 5 are "Not enough fuel to attack.", all on seed 1036
+  against IanCoolidge0 (1834 blue 4, 1845 red 1); h195's blocks show the same (1876 blue 5, 1888 blue 1).
+- **Cause**: a hit castle with 10-19 fuel shot (structAct, 10 fuel) and then radioed MUSTER_RESCUE's spot (sayRescue, 10
+  fuel); the engine takes a turn's signal fuel first (game.js:832-927) and threw on the shot. LEARNINGS 45 made
+  World.build charge its price; World.attack did not. It now lowers w.fuel by the unit's attack fuel, so sayRescue sees
+  what is left and stays silent below 10. Unit test added (a castle at 15 fuel shoots and does not radio; at 25 it does
+  both; a prophet's shot costs 25). It changes play only on turns the engine would refuse the shot: in v12's config
+  sayRescue is the one fuel reader after structTurn (CASTLE_POST, sayZone, sayThreat and sayWatch are off).
+- No-op (defaults a3da3c0a67c0 against bots/v12 e4a146ede62f, 799 to r300, driver alone): **IDENTICAL**; unit tests 180
+  of 180 and the 65 galaxy19 tests pass.
+- Rebuilt with the fix (switches unchanged, pre-registrations unchanged): h203 7f352326b9eb, h198 28c0ca9175f7, h201
+  153f6da1dee7, h202 a7c9a4cfd5ae, h196 ba281d6c0d4d, h197 65c0c1991ce3, h199 619a37e5c4ad, h200 468b17598cc1; each
+  one's CFG differs from v12's in its own switches only (and keys added since v12, inert). h195 (in play) keeps its
+  build: it and v12 both carry the bug, so its panel stays like for like.
+- An incident to record: the search for the engine's fuel checks (`find / -name game.js -path '*bc19*'`, before grepping
+  the official copy) also matched an engine copy inside a downloaded external repo (StoneT2000's BC19, in another
+  session's scratchpad), and grep printed one line of it: the engine's attack-fuel check, an older form of the official
+  one. No bot code was read. Engine searches now name ~/projects/vibe/bc19-official only.

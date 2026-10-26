@@ -334,6 +334,23 @@ test('world: a build lowers the karbonite and fuel that a later signal this turn
   sayRescue(B); assert.deepStrictEqual(sent, []);                                           // 5 fuel left: no spot
 });
 
+test('world: an attack lowers the fuel that a later signal this turn sees (no "Not enough fuel to attack")', () => {
+  // v12's castles on 1036 (replica 1834, 1845): hit with 10-19 fuel, a castle shot (10) and then radioed
+  // MUSTER_RESCUE's spot (10); the engine takes the signal's fuel first and refused the shot.
+  const shot = [], sent = [];
+  const w = Object.assign(Object.create(World.prototype), { T: { dirE: (dx, dy) => [dx, dy] }, karbonite: 100, fuel: 15,
+    api: { attack: (a, b) => (shot.push([a, b]), { action: 'attack' }), signal: (v, r) => sent.push([v, r]) } });
+  w.me = { x: 5, y: 5, turn: 41, unit: S.CASTLE, health: 190 };
+  assert.deepStrictEqual(w.attack(7, 0), { action: 'attack' });
+  assert.deepStrictEqual([shot, w.fuel], [[[7, 0]], 5]);
+  const B = { w, st: { hitAt: 40 } };
+  w.sentR2 = 0; w.enemies = [{ x: 12, y: 5, unit: S.PROPHET }];
+  sayRescue(B); assert.deepStrictEqual(sent, []);                                           // 5 fuel left: no spot
+  w.fuel = 25; w.attack(7, 0); sayRescue(B);                                                // 15 left: the spot goes out
+  assert.deepStrictEqual(sent, [[encXY(0, 12, 5), FAR.ENEMY]]);
+  w.me = { ...w.me, unit: S.PROPHET }; w.fuel = 100; w.attack(0, 5); assert.strictEqual(w.fuel, 75);   // a prophet's 25
+});
+
 test('military: after a kill, report it and march on the nearest other known enemy castle, else wait', () => {
   const B = { round: 500, w: { me: { x: 10, y: 40 } },
     st: { tIdx: 1, known: [[30, 50], [10, 45], [12, 60]], dead: new Set(), reports: [], waitUntil: 0, target: null } };

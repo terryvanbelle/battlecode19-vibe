@@ -81,7 +81,8 @@
   h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
   **Then, one block at a time** (each v11 candidate rebuilt on v12 with its switches unchanged and its
   pre-registration kept; bars relative to the champion recomputed from v12's panel games (h185's 1651-1658,
-  1831-1834, 1835-1846 and the v12 control block) before the candidate's block is read; TRAINING_LOG 2026-10-26 10:39):
+  1831-1834, 1835-1846 and the v12 control block) before the candidate's block is read; TRAINING_LOG 2026-10-26 10:39;
+  all but h195 rebuilt again at 16:40 with the World.attack fuel fix, hashes below):
   h195 (v12 + DEF_SAFE 2, dist/h195 db45575beb6a: pilgrims too go on a free tile the enemy attackers in sight cannot
   kill them on before their first turn, and none is built while every free tile is one; replica 1446, seed 2321: 17
   stillborn pioneers, each unknown to its castle, resent every 80 turns; basics first, so first after the control
@@ -89,35 +90,35 @@
   exposed tile beside a free safe one) at most a quarter of v12's, pilgrims built at least 0.9 of v12's; studied
   StoneT2000.BC19-bot1v43:seed-2321; TRAINING_LOG 2026-10-26 10:45; v12's 72 games give 0.47 safer and 34.08 built per
   game; bars over v12's 108 games: safer <= 0.118 per game, built >= 31.1: 12:11, 12:27 bullet);
-  h203 (v12 + ESCORT_BACK 2, dist/h203 565a1b43c349: an escort with 20+ health whose only enemy attacker or castle in
+  h203 (v12 + ESCORT_BACK 2, dist/h203 7f352326b9eb: an escort with 20+ health whose only enemy attacker or castle in
   sight is one prophet charges it instead of going home; 50 of v12's 153 escort hits were by a lone prophet in sight,
   among them always-lost wololo 2644, which v11 won red 3 of 3 by that charge; ordinary rule; studied
   m-schier.battlecode-2019-wololo:seed-2644,StoneT2000.BC19-bot1v43:seed-2321; mechanism check tools/reads/eschits.mjs:
   shooter dead within 12 rounds in half the lone-prophet hits, v12 18 of 50; TRAINING_LOG 2026-10-26 14:57);
-  h198 (= h187 on v12: v12 + CHAIN_WALL 28, dist/h198 b6e939144ef7; h172's; studied cells uvafan 2046, 1653,
+  h198 (= h187 on v12: v12 + CHAIN_WALL 28, dist/h198 28c0ca9175f7; h172's; studied cells uvafan 2046, 1653,
   IanCoolidge0 1036; moved up 2026-10-26 15:49: v12 loses uvafan 2046 on health at r1000 after its three chain lines,
   which saw 29, 33 and 74 enemy attackers, lost 19 churches; TRAINING_LOG 2026-10-26 15:49);
-  h201 (v12 + ECON_RICH 100, dist/h201 f3833637f632: before r100 the peacetime army builds from the bank past 100 K
+  h201 (v12 + ECON_RICH 100, dist/h201 153f6da1dee7: before r100 the peacetime army builds from the bank past 100 K
   above the reserves; v12 banks 300+ K at r100 in 36 of its 72 panel games, army 2-11; ordinary rule; studied
   StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046; mechanism check tools/reads/bank.sh: TRAINING_LOG
   2026-10-26 11:47);
-  h202 (v12 + CHAIN_FKEEP 1, dist/h202 4e7b143bb9bc: from CHAIN_ROUND the peacetime army keeps the chain's fuel too;
+  h202 (v12 + CHAIN_FKEEP 1, dist/h202 a7c9a4cfd5ae: from CHAIN_ROUND the peacetime army keeps the chain's fuel too;
   v12 starves the chain of fuel in 19 of 108 panel games, its 4 losses among them all IanCoolidge0 1036, a cell v11
   won 6 of 6; ordinary rule; studied IanCoolidge0.battlecode20~69ce88:seed-1036; TRAINING_LOG 2026-10-26 13:37);
-  h196 (= h194 on v12: v12 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h196 70a8617acfee: h184's race
+  h196 (= h194 on v12: v12 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h196 ba281d6c0d4d: h184's race
   part alone; general panel rule, other cells z >= 0 to accept; studied awesomelemonade.Battlecode2019:seed-2518,
   StoneT2000.BC19-bot1v43:seed-2591; mechanism read pioneers.mjs: the turn-3 pioneer founds its church in at least
   half of the games on the seven maps where it sends; TRAINING_LOG 2026-10-26 08:53);
-  h197 (= h186 on v12: v12 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h197 7e320236f615; h174's: idle miners take free
+  h197 (= h186 on v12: v12 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h197 65c0c1991ce3; h174's: idle miners take free
   safe home depots; basics-fix rule; studied cells awesomelemonade.Battlecode2019:seed-2518, uvafan.bc2019:seed-2046;
   mechanism read stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 75% of the champion's; TRAINING_LOG
   2026-10-25 09:12, 10:12);
-  h199 (= h188 on v12: v12 + ECON_NOPLAN 1, dist/h199 4ed3f18bc8de; h173's) on the targeted panel
+  h199 (= h188 on v12: v12 + ECON_NOPLAN 1, dist/h199 619a37e5c4ad; h173's) on the targeted panel
   progress/panels/noplan-m1.json (the six bots on the five pool maps where no castle plans a church): first a bots/v12
   control block (`PANEL=progress/panels/noplan-m1.json tools/panel_submit.sh bots/v12 "v12 control, noplan-m1"`),
   panelsim on the design (> 10% false accepts: a second control block first), then h199; score with `contest19.py
   pool CONTROL progress/panels/noplan-m1.pool BLOCK...` (TRAINING_LOG 2026-10-24 15:32);
-  h200 (= h191 on v12: v12 + PIONEER_TIMEOUT_HOME 80, dist/h200 366fc1e13c2f: a pioneer out 80 turns still more than a
+  h200 (= h191 on v12: v12 + PIONEER_TIMEOUT_HOME 80, dist/h200 468b17598cc1: a pioneer out 80 turns still more than a
   king step from its site gives it up and mines at home; basics-fix rule; bars parked pioneers at most half the
   champion's a game and churches at least 0.9 of its (TRAINING_LOG 2026-10-26 00:02); last: h170 and h190, the same
   class, passed their mechanism reads and lost, LEARNINGS 48).

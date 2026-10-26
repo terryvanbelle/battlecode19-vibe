@@ -94,7 +94,9 @@ export class World {
 
   // Actions, canonical offsets in, engine actions out.
   move(dx, dy) { const [a, b] = this.T.dirE(dx, dy); return this.api.move(a, b); }
-  attack(dx, dy) { const [a, b] = this.T.dirE(dx, dy); return this.api.attack(a, b); }
+  // An attack is charged as a build is (below): the castle that shot with 10-19 fuel and then radioed sayRescue's spot
+  // had its shot refused, "Not enough fuel to attack." (replica 1834, 1845, seed 1036: v12, 5 in its 108 panel games).
+  attack(dx, dy) { const [a, b] = this.T.dirE(dx, dy); this.fuel -= STATS[this.me.unit].atkFuel; return this.api.attack(a, b); }
   // A build is charged too, so a signal sent after it this turn (struct.js sayRescue) leaves its fuel: the engine
   // takes the turn's signal fuel before it checks the build's price (game.js:832-893).
   build(unit, dx, dy) {
