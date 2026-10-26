@@ -6463,3 +6463,16 @@ h185's build, all 0): h196 = h194 (70a8617acfee), h197 = h186 (7e320236f615), h1
   sides, 36 games; bumped), ladder resubmitted as 229; tools/rate_ours.sh asked six field teams for ranked matches
   against v12 (1859-1864). Once played it joins progress/panels/v12-m1.pool, and h195's bars come from v12's 108 panel
   games (stillborn.mjs TEAM 2 census over h185's 72 running now) before any h195 game is read.
+- (11:33) h195's bars, part 1: the stillborn-pilgrim census over v12's 72 panel games (h185's 1651-1658, 1831-1846;
+  scratchpad stillpil_v12.txt): per game 34.08 pilgrims built, 4.31 stillborn (43 K), 0.22 by castles, **0.47 safer**
+  (34 in 72; botfinalsafe 203 red 11, wololo 836 red 5). The control block's 36 games join before h195 is read; on
+  these 72 alone the bars would be safer <= 0.118 per game and built >= 30.7. The studied cell (bot1v43 2321 blue) has
+  no stillborn pilgrims under v12: the game ends at r124 and r126 (v11: r212, r217, r460).
+- (11:33) **Why v12 loses bot1v43 2321 blue by r126** (1656, 1840): the economy is v11's to the round through r100 (12
+  pilgrims, one church at r42, bank 460 K, army 4: ECON_UNTIL holds the peacetime army, every depot is served and no
+  pioneer is out, so the castle built one pilgrim in r43-99) while bot1v43 churched (25,16) and (19,16), 9 tiles from
+  our castle (33,9) and out of its sight, and built prophets there. At r100 our castle and church built 10 units in 5
+  rounds, then pilgrims (r105-108); the first fight (r111-118) killed the two early crusaders, a preacher and 6
+  pilgrims, and 12 prophets took the castle at r126. v11 reached army 20 at r125 the same way and fell at r212-217.
+  The bank-at-r100 hole was ECON_RICH's case (h116, seed 2321: 535 K at r100), rejected in v7-era self-play (t -1.07
+  vs h87), never panel-tested. A sweep of v12's 72 panel games (bank and army at r50-125, ours and theirs) is running.
