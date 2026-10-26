@@ -164,3 +164,6 @@ Can you add BT ratings to rating-history.png?
 
 ## 44. 2026-10-25 21:45 PDT
 v11 doesn't seem to appear anywhere in progress/  v10 doesn't appear either in rating-history.png
+
+## 45. 2026-10-26 06:12 PDT
+Just got up, can you give me a summary?
