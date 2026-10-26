@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 20:12 PDT)
+## State (2026-10-25 21:22 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -60,31 +60,36 @@
   accepted).
   **Replica queue (21:01): 3 waiting (all ranked), 8 running.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: the v11 control block** (`tools/panel_submit.sh bots/v11 "v11 control, v7-m1 both sides"`; matches
-  in tools/progress/submissions.tsv): it joins progress/panels/v11-m1.pool before any v11-based block is scored.
+  **In play: the v11 control block = matches 1455-1466** (submission 204, requests 712-723; ladder 205; waiter
+  scratchpad wait_block.sh 1455 1466): it joins progress/panels/v11-m1.pool before any v11-based block is scored.
   h178 was accepted as v11 (two blocks 1427-1438 + 1441-1452; TRAINING_LOG 2026-10-25 20:50); h175 as v10; h170
   rejected (1379-1390, z -1.71).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
-  2026-10-25 15:51; every candidate below is rebuilt on v11 with its switches unchanged, 20:50):
-  h183 (v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7 + PIONEER_RACE 2, dist/h183 239539f40dbe: a turn-6 pioneer to the
+  2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50):
+  h184 (= h183 on v11: v11 + PIONEER_EARLY 6 + PIONEER_OPEN 7 + PIONEER_RACE 2, dist/h184 a78b4d8603e8: a turn-6 pioneer to the
   first planned cluster we reach 7+ king steps before the enemy; in a team with none, a castle whose plan opens with
   a race (m <= 1: 2518, 2591) sends its turn-3 pioneer there; replaces h177, closed unplayed; ordinary rule; studied
   cells wololo 836, 2013, botfinalsafe 1706, awesomelemonade 2518, bot1v43 2591; mechanism read pioneers.mjs (the
   r<=6 pioneer churches in 2/3+ of firing-map games); TRAINING_LOG 2026-10-25 15:45, 15:51, 17:56);
-  h179 (v10 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h179 2faea994919d; h171's; the fix for escorts
+  h189 (v11 + TAKEN_SEEN 1, dist/h189 bca186cf7eb6: a pioneer that sees an enemy church or castle within EXPAND_SEEN 5
+  of its site reports it taken whatever EXPAND_ROUND, and its castle frees the slot; replica 1421, seed 1712;
+  TRAINING_LOG 2026-10-25 20:37): driver diagnostic on 1712 and the v10 pioneer census (pioneers.mjs over 1391-1426:
+  pioneers sent after the enemy held their site; scratchpad econ/pioneers_v10_{a,b,c}.txt) running; then its
+  pre-registration (basics-fix rule likely);
+  h185 (= h179 on v11: v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h185 e4a146ede62f; h171's; the fix for escorts
   that never leave home on small maps, LATTICE_R 12 around their site covering it (2591); studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
   tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);
-  h180 (v10 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h180 45123f763cfb; h174's: idle miners take free safe home
+  h186 (= h180 on v11: v11 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h186 21bd58ff32dc; h174's: idle miners take free safe home
   depots; basics-fix rule; studied cells awesomelemonade.Battlecode2019:seed-2518, uvafan.bc2019:seed-2046; mechanism
-  read stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 75% of v10's (v9 41.2, bar 30.9); TRAINING_LOG
+  read stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 75% of v11's (v9 41.2, bar then 30.9); TRAINING_LOG
   2026-10-25 09:12, 10:12);
-  h181 (v10 + CHAIN_WALL 28, dist/h181 1b367520ea40; h172's; studied cells uvafan 2046, 1653, IanCoolidge0 1036);
-  h182 (v10 + ECON_NOPLAN 1, dist/h182 fa74c6f4dc8f; h173's) on the targeted panel progress/panels/noplan-m1.json
-  (the six bots on the five pool maps where no castle plans a church): first a bots/v10 control block
-  (`PANEL=progress/panels/noplan-m1.json tools/panel_submit.sh bots/v10 "v10 control, noplan-m1"`), panelsim on the
-  design (> 10% false accepts: a second control block first), then h182; score with `contest19.py pool CONTROL
+  h187 (= h181 on v11: v11 + CHAIN_WALL 28, dist/h187 c7fcded6f4a7; h172's; studied cells uvafan 2046, 1653, IanCoolidge0 1036);
+  h188 (= h182 on v11: v11 + ECON_NOPLAN 1, dist/h188 91129886bd9f; h173's) on the targeted panel progress/panels/noplan-m1.json
+  (the six bots on the five pool maps where no castle plans a church): first a bots/v11 control block
+  (`PANEL=progress/panels/noplan-m1.json tools/panel_submit.sh bots/v11 "v11 control, noplan-m1"`), panelsim on the
+  design (> 10% false accepts: a second control block first), then h188; score with `contest19.py pool CONTROL
   progress/panels/noplan-m1.pool BLOCK...` (TRAINING_LOG 2026-10-24 15:32).
   h167's mechanism reads are done (TRAINING_LOG 2026-10-25 09:43).
   ECONOMICS rows 4, 5, 6, 10 dropped (TRAINING_LOG 2026-10-24 21:22, 22:10; 2026-10-25 04:22); rows 9 (ECON_SAT),
