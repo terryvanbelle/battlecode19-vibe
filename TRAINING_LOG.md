@@ -5676,3 +5676,12 @@ game (v10 11.60 over 1391-1426; bar at most 2.90 over both blocks, judged after 
 (v10 14.93), but stillborn in all 19.28 (v10 21.77) and 507 K (v10 552): the placement works, yet most saved
 newborns still die young (wins 14.5, losses 24.1 a game), the walk-in census's newborn line (24.4 walk-ins, 14.2
 deaths a game for v10).
+
+## 2026-10-25 19:26 PDT: progress refresh; submission number corrected; a refresh read a running block
+
+progress/ refreshed (19:24 and 19:26 PDT; replica snapshot 19:23). The 18:58 entry's "submission 203" for h178's
+block 2 was wrong: 202 is the candidate, 203 the v10 ladder resubmission (tools/progress/submissions.tsv corrected;
+the first refresh flagged us:sub202 with no attempts row). tools/panel_submit.sh now labels its two lines
+("candidate submission N", "ladder submission M"). The refresh ran while block 2 was in play, so ELO.md's h178 row
+includes 4 of its 12 matches: a look at a running block (LEARNINGS 38, extended). h178's rule (basics-fix) and bar
+(stillborn safer at most 2.90 a game) were fixed at 17:05 and 18:58 and stay as they are.

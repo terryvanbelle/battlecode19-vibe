@@ -7,7 +7,8 @@
 # bumps our queue (tools/bump_ours.sh --ours). PANEL (default progress/panels/v7-m1.json) holds each opponent's maps; a
 # targeted panel (TRAINING_ALGORITHM §4: a map-conditional switch) names another file. Scrims the replica refuses (its
 # hourly limit, HTTP 429) are requested again every 15 minutes, with the candidate resubmitted first, until all are in.
-# Prints the scrim lines.
+# Prints the scrim lines and the two submissions, labelled ("candidate submission N", "ladder submission M":
+# record the candidate's number, not the last line's).
 set -uo pipefail
 cd "$(dirname "$0")/.."
 dist=$1; msg=$2
@@ -19,9 +20,9 @@ PANEL=${PANEL:-progress/panels/v7-m1.json}
 # One block at a time: a scrim plays the submission current when it was requested, so two runs must not interleave.
 exec 9>"${TMPDIR:-/tmp}/panel_submit.lock"; flock 9
 while [ -n "$todo" ]; do
-  python3 -I $C submit "$dist" -m "$msg" | tail -1
+  python3 -I $C submit "$dist" -m "$msg" | tail -1 | sed 's/^/candidate /'
   out=$(python3 -I $C scrim --vs "$todo" --panel "$PANEL" 2>&1); echo "$out"
-  python3 -I $C submit "$LADDER" -m "$(basename "$LADDER") ladder build" | tail -1
+  python3 -I $C submit "$LADDER" -m "$(basename "$LADDER") ladder build" | tail -1 | sed 's/^/ladder /'
   tools/bump_ours.sh --ours > /dev/null
   todo=$(echo "$out" | sed -n 's/^refused: vs \([^:]*\):.*/\1/p' | paste -sd, -)
   if [ -n "$todo" ]; then echo "refused, again in 15 min: $todo"; sleep 900; fi

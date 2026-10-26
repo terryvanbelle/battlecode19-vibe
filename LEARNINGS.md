@@ -235,6 +235,9 @@
    `contest19.py matches` prints every finished match's score, a running block's too: while a block plays, take its
    status from `field.py queue` (running and waiting ids only). At 11:01 2026-10-25 a matches listing showed 10 of
    h170's 12 scores with its bars and rule already fixed (07:42, 09:57); nothing was changed on them.
+   The progress refresh is another such reader: ELO.md and ATTEMPTS.md count every finished game, a running block's
+   too, so refresh between blocks, never during one (2026-10-25 19:26: a refresh during h178's block 2 put 4 of its 12
+   matches in h178's row; its rule and bar were fixed at 17:05 and 18:58, nothing was changed).
 
 39. **A switch that acts on a few maps is invisible to a general panel; test it where it acts.** ECON_NOPLAN (h160)
    changes play only on maps where we plan no church: 5 of the replica's 40 maps, 2 of the panel's 18 cells, so even
