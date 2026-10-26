@@ -67,8 +67,9 @@
   under the ordinary rule (block 1 rejects at side-aware z < 0.5; two blocks accept at z >= 2 with others >= 0,
   reject at z < 1, else a third block). Mechanism read (pioneers.mjs, reported with the verdict): on the firing maps
   the r<=6 pioneer churches in 2/3+ of games and our first church comes earlier than in v11's games of the same
-  cells (v11's census: scratchpad econ/pioneers_v11.txt + pioneers_v11_c.txt, the control block's running), fixed
-  before the block is read. h190 was rejected on its block 1 (1492-1503, z -1.42; TRAINING_LOG 2026-10-26 00:42).
+  cells: v11's first church is 28-73 on the firing maps, never on 2518 and 2591, 836 mixed (census scratchpad
+  econ/pioneers_v11.txt + pioneers_v11_c.txt; read fixed in TRAINING_LOG 2026-10-26 01:24: earlier than v11's cell
+  median in more cells than later). h190 was rejected on its block 1 (1492-1503, z -1.42; TRAINING_LOG 2026-10-26 00:42).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
   2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191 and h192; h184

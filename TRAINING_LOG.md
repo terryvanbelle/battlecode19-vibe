@@ -5957,3 +5957,17 @@ comparison, fixed before its block is read), then h190's parked read for the rec
   Studied cells: botfinalsafe 1706, bot1v43 2321. No-op check (HUNT_SLACK 0) and a driver diagnostic (h192 red vs v11
   blue on 1706 to r450: does it find v11's own chainer?) run next.
 - **Panel order**: h184 (in play), **h192**, h191, h185, h186, h187, h188.
+
+## 2026-10-26 01:24 PDT: h184's mechanism comparison fixed from v11's 108 panel games (before block 1513-1524 is read)
+
+- v11's pioneer census is complete (scratchpad econ/pioneers_v11.txt, 72 games of 1441-1466, + pioneers_v11_c.txt, 36
+  of the control block 1427-1438). h184's firing maps (h177's nine: 1706, 1712, 2013, 2321, 2740, 388, 836, 1036,
+  2797; plus 2518 and 2591 for PIONEER_RACE) make 24 panel cells (1712 has two opponents), 72 of v11's games.
+- **v11's first church per cell** (three games each, red / blue): 1706 40/40; 1712 41 (both opponents, both sides);
+  2013 49,43,49 / 49; 2321 42/42; 2740 73/73; 388 46/46; 836 187,187,47 / 148,never,88; 1036 34/34; 2797 28/28; 2518
+  never/never; 2591 never/never. 59 of 72 with a church, median 41. v11 builds no pioneer by r6 on any of them.
+  Pilgrims at r100 averaged 13.11 (2518 3, 2591 2-3).
+- **Mechanism read, fixed now**: over h184's games on these 24 cells, (a) the pioneers built by r6 found their
+  church in at least two thirds of the games that build one (failed below half), and (b) h184's first church is
+  earlier than v11's median for that cell in more cells than it is later (a game with no church counts as never;
+  ties don't count). Reported, not bars: pilgrims at r100 against 13.11, castles lost a game.
