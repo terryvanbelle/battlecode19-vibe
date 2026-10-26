@@ -67,7 +67,7 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted).
-  **Replica queue (12:24): 126 waiting (118 ranked; VM 11 GB free); v12's rated 1859-1860 play, 1861-1864 then h195's next.** While 30+ wait: no local VM jobs, our blocks one
+  **Replica queue (12:53): 119 waiting (114 ranked; VM 11 GB free); of ours 1859-1876, 8 played, 6 playing, 4 waiting.** While 30+ wait: no local VM jobs, our blocks one
   at a time and bumped to the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   The v12 control block (1847-1858) finished 12:10, 23 of 36, and joined progress/panels/v12-m1.pool; v12's rated
   matches 1859-1864 wait in the queue.
