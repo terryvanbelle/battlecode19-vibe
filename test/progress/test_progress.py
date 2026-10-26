@@ -204,7 +204,6 @@ class TestElo(Base):
                                                  {'name': 'unmet'}]}
         a = quiet(elo.analyse, rows, bundle)
         self.assertEqual(sorted(a['field']), ['fieldx', 'starter'])
-        self.assertEqual(a['incumbent'], 'us:v1')
         self.assertEqual(a['played'], ['us:v0', 'us:v1'])
         self.assertEqual(a['unmet'], ['unmet'])
         self.assertEqual(a['ours'][:2], ['us:v0', 'us:v1'])
@@ -229,6 +228,11 @@ class TestVia(Base):
         md = elo.render_md(rows, a, None, [])
         self.assertIn('also played as a candidate: v1 = h2 (2 games, 1-1)', md)
         self.assertIn('Accepted builds with no recorded game: v2.', md)
+        self.assertIn('| v2 | accepted, no games yet | – | – | 0 | – | – | – |', md)
+        # A champion without games of its own takes its row from the candidate it was accepted as.
+        a['via']['us:v2'] = 'cand:h2'
+        md = elo.render_md(rows, a, None, [])
+        self.assertRegex(md, r'\| v2 \| accepted, no games yet: as h2 \| \d+ ± \d+ \| \d+ of \d+ \| 2 \| 1-1 \|')
         try:
             import matplotlib  # noqa: F401
         except ImportError:
@@ -300,12 +304,34 @@ class TestReplicaViews(Base):
         f = rating_history.first_rated(ours, 'vibe19')
         self.assertEqual({s: (d['match'], d['matches']) for s, d in f.items()}, {1: (4, 3), 2: (7, 1)})
 
-        # BT steps: one per completed rated match, the fit's rating of its submission's build (None without games).
-        fit = ({'us:v1': 1600.0, 'us:sub2': 1500.0}, {'us:v1': 20.0, 'us:sub2': 0.0}, {'us:v1': 10})
-        bundle = {'team': 'vibe19', 'ours': ours}
-        steps = rating_history.bt_steps(bundle, fit, {1: 'us:v1'})
-        self.assertEqual([(q, b, e) for _, q, b, e in steps], [('us:v1', 1600.0, 20.0), ('us:v1', 1600.0, 20.0),
-                                                               ('us:sub2', None, None)])
+        # Reigns: every accepted build of the roster from its acceptance to the next (the last to the fetch time),
+        # with its rated matches and BT from its own games, else its accepting candidate's ('as'), else None.
+        roster = os.path.join(self.dir, 'ROSTER.tsv')
+        with open(roster, 'w') as fh:
+            fh.write('name\thash\tdate_pdt\tnote\n'
+                     'v1\taa\t2026-10-21 05:00\tfoundation\n'
+                     'spar1\tbb\t2026-10-21 05:10\tsparring\n'
+                     'v2\tcc\t2026-10-21 05:20\th7 = v1 + X 1\n'
+                     'v3\tdd\t2026-10-21 05:40\th9 = v2 + Y 1\n')
+        champs = rating_history.champions(roster)
+        self.assertEqual([(q, f'{t:%H:%M}') for q, t in champs], [('us:v1', '12:00'), ('us:v2', '12:20'),
+                                                                   ('us:v3', '12:40')])
+        self.assertEqual(rating_history.champions(os.path.join(self.dir, 'missing.tsv')), [])
+        fit = ({'us:v1': 1600.0, 'cand:h7': 1700.0, 'cand:h9': 1800.0, 'us:v3': 1750.0},
+               {'us:v1': 20.0, 'cand:h7': 30.0, 'cand:h9': 40.0, 'us:v3': 50.0},
+               {'us:v1': 10, 'cand:h7': 36, 'us:v3': 5})
+        bundle = {'team': 'vibe19', 'ours': ours, 'fetched_at': '2026-10-21T13:00:00Z'}
+        rg = rating_history.reigns(bundle, fit, champs, {'us:v2': 'cand:h7', 'us:v3': 'cand:h9'},
+                                   {1: 'us:v1', 2: 'us:v2'})
+        self.assertEqual([(g['player'], f"{g['t1']:%H:%M}", g['rated'], g['as'], g['bt']) for g in rg],
+                         [('us:v1', '12:20', 3, None, (1600.0, 20.0, 10)),
+                          ('us:v2', '12:40', 1, 'cand:h7', (1700.0, 30.0, 36)),
+                          ('us:v3', '13:00', 0, None, (1750.0, 50.0, 5))])
+        # No games of its own or its candidate's: drawn nowhere, listed with a dash.
+        rg = rating_history.reigns(bundle, fit, champs[:2], {}, {1: 'us:v1'})
+        self.assertEqual([g['bt'] for g in rg], [(1600.0, 20.0, 10), None])
+        md = rating_history.render_md([], [], bundle, None, rg)
+        self.assertIn('| v2 | 2026-10-21 05:20 | now | 0 | – | 0 |', md)
 
         # Scale: replica mean (displayed + 1500 * 0.85**n) on BT over field teams with min_n rated matches.
         def rm(a, b):

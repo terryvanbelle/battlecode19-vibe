@@ -25,6 +25,13 @@ is not handled here: tools/galaxy19/contest19.py submits and plays for it.
         team challenges --n opponents that have played, at or above its rating, spread from the top of the ladder
         down (boost_opponents). Then move their matches up the execute queue on the VM:
         sudo python3 -I tools/galaxy19/spool_bump.py --team A,B
+  python3 tools/galaxy19/field.py rate [--team vibe19] [--n 6] [--dry-run]
+        ranked matches for our new ladder build (PROMPTS 44): the n field teams rated closest at or below our team
+        each challenge it, ranked (rate_challengers). Our team cannot ask for one: galaxy takes ranked requests only
+        upward and we play at the top, so without this a build is rated by the daily autoscrim (about 4 matches a
+        day) and the rare spare-cycle challenge (activity waits for an almost empty queue, and only the 3 teams just
+        below us pick us), and a champion replaced within a day may never play a rated match (v10). tools/panel_submit.sh runs
+        it after a control block (the champion's first block, its ladder submission just made).
 
 External bots: compiled by tools/bench/compile_field.py into $BENCH_ROOT/compiled/<name>/bot.js (one JavaScript
 bundle each; Java/Python were transpiled locally). The roster is tools/bench/roster.tsv (compile == ok and smoke not
@@ -272,6 +279,43 @@ def boost(c, acc, names, n, dry_run=False):
     return made
 
 
+def rate_challengers(ladder, team_id, n):
+    """The n active teams that have played (rating above 0) closest at or below team_id's rating, nearest first
+    (galaxy: a ranked request goes only to a team rated at or above the challenger); [] when team_id is missing or
+    unrated."""
+    me = next((t for t in ladder if t['id'] == team_id), None)
+    if me is None or me['rating'] is None:
+        return []
+    pool = sorted((t for t in ladder if t['id'] != team_id and t['active'] and t['status'] == 'R'
+                   and (t['rating'] or 0) > 0 and t['rating'] <= me['rating']),
+                  key=lambda t: (me['rating'] - t['rating'], t['id']))
+    return pool[:n]
+
+
+def rate(c, acc, team, n, dry_run=False):
+    """Ranked requests to our team `team` from rate_challengers among the field teams we hold accounts for. Returns
+    the requests made."""
+    ladder = cl.rankings(c)
+    me = next((t for t in ladder if t['name'] == team), None)
+    if me is None:
+        log(f'rate: {team}: not on the ladder; nothing requested')
+        return 0
+    by_id = {a['team_id']: a for t, a in acc.items() if a.get('team_id') and t not in OUR_TEAMS}
+    made = 0
+    for ch in rate_challengers([t for t in ladder if t['id'] == me['id'] or t['id'] in by_id], me['id'], n):
+        if dry_run:
+            log(f'rate (dry run): {ch["name"]} (rating {ch["rating"]:.0f}) -> {team} (rating {me["rating"]:.0f})')
+            continue
+        a = by_id[ch['id']]
+        try:
+            r = cl.request(cl.Session(c, a['user'], a['password']), me['id'], True, [], '?', c.episode)
+            made += 1
+            log(f'rate: request {r["id"]}: {ch["name"]} -> {team} (ranked)')
+        except cl.ApiError as e:
+            log(f'rate: refused: {ch["name"]} -> {team}: {e}')
+    return made
+
+
 def activity(c, acc, poll=60, once=False, seed_=None, n_maps=3, low=2):
     rnd = random.Random(seed_)
     ids, sess, rest, stop = {}, {}, {}, {'now': False}
@@ -339,6 +383,8 @@ def main(argv=None):
     p.add_argument('--poll', type=int, default=60); p.add_argument('--low', type=int, default=2)
     p = sub.add_parser('boost'); p.add_argument('--teams', required=True); p.add_argument('--n', type=int, default=5)
     p.add_argument('--dry-run', action='store_true')
+    p = sub.add_parser('rate'); p.add_argument('--team', default=OUR_TEAMS[0]); p.add_argument('--n', type=int, default=6)
+    p.add_argument('--dry-run', action='store_true')
     a = ap.parse_args(argv)
     if a.cmd == 'plan':
         rows = entrants()
@@ -364,6 +410,8 @@ def main(argv=None):
         activity(c, acc, a.poll, a.once, low=a.low)
     elif a.cmd == 'boost':
         log(f'boost: {boost(c, acc, [x for x in a.teams.split(",") if x], a.n, a.dry_run)} request(s)')
+    elif a.cmd == 'rate':
+        log(f'rate: {rate(c, acc, a.team, a.n, a.dry_run)} request(s)')
     return 0
 
 

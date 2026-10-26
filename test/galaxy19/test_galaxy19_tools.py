@@ -295,6 +295,17 @@ class Field(unittest.TestCase):
         self.assertEqual(field.boost_opponents(ladder, 1, 3), [])
         self.assertEqual(field.boost_opponents(ladder, 99, 3), [])
 
+    def test_rate_challengers(self):
+        ladder = [team(1, 1700), team(2, 1650), team(3, 1650), team(4, 1600), team(5, 0), team(6, None),
+                  team(7, 1690, active=False), team(8, 1800)]
+        ids = lambda xs: [t['id'] for t in xs]  # noqa: E731
+        # At or below the team, nearest first (ties by id); never itself, a team above, an inactive or unrated one.
+        self.assertEqual(ids(field.rate_challengers(ladder, 1, 3)), [2, 3, 4])
+        self.assertEqual(ids(field.rate_challengers(ladder, 1, 9)), [2, 3, 4])   # not 5: it has never played
+        self.assertEqual(ids(field.rate_challengers(ladder, 2, 2)), [3, 4])   # an equal rating may challenge
+        self.assertEqual(field.rate_challengers(ladder, 6, 3), [])            # unrated
+        self.assertEqual(field.rate_challengers(ladder, 99, 3), [])
+
     def test_queue_census(self):
         m = lambda i, st, ranked=True: {'id': i, 'status': st, 'is_ranked': ranked,  # noqa: E731
                                         'participants': [{'teamname': f'a{i}'}, {'teamname': f'b{i}'}]}

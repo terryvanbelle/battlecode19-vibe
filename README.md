@@ -30,7 +30,7 @@ An autonomous attempt at a champion bot for Battlecode 2019 ("Crusade"), JavaScr
 | `progress/progress.png` | the accepted builds in order: rating, and expected field score % |
 | [`progress/ATTEMPTS.md`](progress/ATTEMPTS.md) | every attempt and its funnel stages (source `progress/attempts.csv`; `tools/progress/attempts.py set`) |
 | [`progress/ladder.md`](progress/ladder.md), `ladder.png` | snapshot of the replica's Rankings page |
-| [`progress/rating-history.md`](progress/rating-history.md), `rating-history.png` | our team's replica rating after each rated match, submissions marked; below, the BT rating (progress/ELO.md) of the build behind the rated matches |
+| [`progress/rating-history.md`](progress/rating-history.md), `rating-history.png` | our team's replica rating after each rated match, submissions marked; below, each champion's BT rating (progress/ELO.md) over its reign, with the rated matches it played |
 | `progress/games.csv` | every game: run, seq, teamA, teamB, map, winner, rounds, reason, seed, a_side, time |
 
 Refresh everything (pulls the VM's batch files and the replica's data, refits, redraws; safe to rerun):

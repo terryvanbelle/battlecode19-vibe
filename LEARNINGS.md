@@ -295,3 +295,10 @@
    teams have played a few dozen, while BT fits every game. So the replica rating has not converged to BT (as it did
    in another year's long practice) and a gap between our replica rating and a build's BT is not a gap in strength
    (progress/rating-history.md computes the ratio on each refresh, scale()). (2026-10-25 19:10)
+
+47. **Chart every champion over its reign, not only the builds a sparse event stream happened to sample.** A panel
+   keyed to rated matches (about 4 a day while our blocks keep the queue busy: the daily autoscrim) skipped every champion replaced within a day (v0,
+   v2, v4, v6, v10), and a champion before its control block has no games of its own: the owner saw neither v10 nor
+   v11 (PROMPTS 44). Draw each accepted build from its acceptance to the next, labelled with its sample count, falling
+   back to its accepting candidate's games (marked as such); and give each new champion rated matches at once (the
+   field's ranked challenges after its control block: tools/rate_ours.sh). (2026-10-25 22:17)

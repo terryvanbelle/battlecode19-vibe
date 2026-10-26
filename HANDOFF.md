@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 21:22 PDT)
+## State (2026-10-25 22:24 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -38,7 +38,8 @@
   main tree's out/). Screen job template: ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 +
   32 z's; the next adds a z. Nothing runs on it. v9 passed symcheck to r1000 on seeds 3, 1, 2, 2321 (job
   ...1000symv9, out/sym_v9_r1000.log, TRAINING_LOG 2026-10-25 08:24); v10 passed it too (job
-  ...1000symv10, out/sym_v10_r1000.log, TRAINING_LOG 2026-10-25 21:02); symcheck past a few hundred rounds never runs on the driver
+  ...1000symv10, out/sym_v10_r1000.log, TRAINING_LOG 2026-10-25 21:02) and v11 (job ...1000symv11,
+  out/sym_v11_r1000.log, TRAINING_LOG 2026-10-25 22:23); symcheck past a few hundred rounds never runs on the driver
   (LEARNINGS 13). **Saturn stays at 8 slots (TRAINING_LOG 2026-10-24 22:54):** candidates go straight to the replica
   panel (driver diagnostics as the pre-filter); the VM screens retired. In ~/jobq/superseded, not run: h160, h156,
   h159, h152, h153. Deploy saturn only between panel blocks (`tools/galaxy19/deploy/deploy.sh app`, then `sudo
@@ -58,10 +59,14 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted).
-  **Replica queue (21:01): 3 waiting (all ranked), 8 running.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (22:23): 4 waiting (all ranked), 8 running.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: the v11 control block = matches 1455-1466** (submission 204, requests 712-723; ladder 205; waiter
   scratchpad wait_block.sh 1455 1466): it joins progress/panels/v11-m1.pool before any v11-based block is scored.
+  After it, `tools/panel_submit.sh` runs `tools/rate_ours.sh` on every control block (PROMPTS 44: the 6 field teams
+  rated just below us challenge the new ladder build, ranked; our team cannot ask, being #1); v11's ran by hand at
+  21:54, requests 724-729. Refresh progress/ (`tools/progress-refresh.sh`) once the control block is in, never
+  during it: rating-history and ELO.md then show v11 with games of its own.
   h178 was accepted as v11 (two blocks 1427-1438 + 1441-1452; TRAINING_LOG 2026-10-25 20:50); h175 as v10; h170
   rejected (1379-1390, z -1.71).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are

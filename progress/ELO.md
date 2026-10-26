@@ -21,6 +21,7 @@ Our builds (accepted = bots/ROSTER.tsv v*, candidate = a dist/ bundle, sparring 
 | v8 | accepted | 1730 ± 66 | 32 of 201 | 356 | 160-196 | 82.7% | 29.7% (vs 9) |
 | v9 | accepted | 1816 ± 114 | 12 of 201 | 48 | 21-27 | 86.9% | 35.8% (vs 7) |
 | v10 | accepted | 1805 ± 127 | 14 of 201 | 36 | 17-19 | 86.4% | 34.4% (vs 7) |
+| v11 | accepted, no games yet: as h178 | 1827 ± 95 | 9 of 201 | 72 | 36-36 | 87.4% | 35.0% (vs 6) |
 | block | candidate | 1743 ± 162 | 27 of 201 | 20 | 12-8 | 83.3% | 31.1% (vs 9) |
 | camp | candidate | 1743 ± 162 | 28 of 201 | 20 | 12-8 | 83.3% | 31.1% (vs 9) |
 | h100 | candidate | 1664 ± 69 | 64 of 201 | 200 | 97-103 | 79.0% | 31.6% (vs 15) |
@@ -138,7 +139,7 @@ Accepted builds whose code also played as a candidate: v4 = h6 (158 games, 94-64
 
 No projection of the field score over time (2023's field-score charts) yet: it needs accepted builds spread over several days and a field larger than a handful of bots.
 
-All players. Our record = the incumbent's (v10) win rate and W-L against the bot, else the latest accepted build that met it.
+All players. Our record = the win rate and W-L against the bot of the latest accepted build with games of its own that met it.
 
 | rank | player | kind | rating | ± 95% | games | W-L | our record |
 |---|---|---|---|---|---|---|---|

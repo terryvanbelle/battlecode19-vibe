@@ -8,7 +8,8 @@
 # targeted panel (TRAINING_ALGORITHM §4: a map-conditional switch) names another file. Scrims the replica refuses (its
 # hourly limit, HTTP 429) are requested again every 15 minutes, with the candidate resubmitted first, until all are in.
 # Prints the scrim lines and the two submissions, labelled ("candidate submission N", "ladder submission M":
-# record the candidate's number, not the last line's).
+# record the candidate's number, not the last line's). After a control block (DIST_DIR = $LADDER) on the default
+# panel, tools/rate_ours.sh asks RATE_N (6) field teams for ranked matches against the new ladder build.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 dist=$1; msg=$2
@@ -27,3 +28,8 @@ while [ -n "$todo" ]; do
   todo=$(echo "$out" | sed -n 's/^refused: vs \([^:]*\):.*/\1/p' | paste -sd, -)
   if [ -n "$todo" ]; then echo "refused, again in 15 min: $todo"; sleep 900; fi
 done
+# A control block (the champion's own build, default panel) is a new ladder build's first block: the field's ranked
+# challenges rate it now rather than at the daily autoscrim (tools/rate_ours.sh, RATE_N=0 skips; PROMPTS 44).
+if [ "${dist%/}" = "${LADDER%/}" ] && [ "$PANEL" = progress/panels/v7-m1.json ] && [ "${RATE_N:-6}" -gt 0 ]; then
+  tools/rate_ours.sh "${RATE_N:-6}" | tail -1
+fi

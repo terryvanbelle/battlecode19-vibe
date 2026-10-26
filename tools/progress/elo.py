@@ -53,14 +53,13 @@ def analyse(rows, bundle=None):
     order = {p: i for i, p in enumerate(accepted)}
     ours.sort(key=lambda p: (elolib.kind(p) != 'ours', order.get(p, 99), elolib.build_of(p)))
     played = [p for p in accepted if games[p]]
-    incumbent = played[-1] if played else None
     via = {p: c for p, c in elolib.accepted_via().items() if p in order and games.get(c)}
     rec = elolib.records(rows)
     src = collections.defaultdict(set)
     for r in rows:
         src[frozenset((r['teamA'], r['teamB']))].add('local' if elolib.is_local(r) else 'replica')
     return {'R': R, 'SE': SE, 'games': games, 'wins': wins, 'players': players, 'field': field, 'rank': rank,
-            'ours': ours, 'accepted': accepted, 'played': played, 'incumbent': incumbent, 'via': via, 'rec': rec,
+            'ours': ours, 'accepted': accepted, 'played': played, 'via': via, 'rec': rec,
             'src': src,
             'unmet': [t for t in ladder_teams(bundle) if not games[t]]}
 
@@ -71,8 +70,8 @@ def higher(a, p):
 
 
 def our_record(a, bot):
-    """The incumbent's W-L against a field bot (else the latest accepted build that met it), as text."""
-    for p in ([a['incumbent']] if a['incumbent'] else []) + a['played'][::-1]:
+    """W-L against a field bot of the latest accepted build with games of its own that met it, as text."""
+    for p in a['played'][::-1]:
         w, n = a['rec'].get((p, bot), (0, 0))
         if n:
             return f"{w / n:.0%} ({elolib.build_of(p)} {w}-{n - w})"
@@ -110,10 +109,19 @@ def render_md(rows, a, bundle=None, summary=()):
         f"Field score = expected score against every rated field bot ({len(fld)}), one game each; vs higher = the "
         f"same against only the field bots rated above, with their count.", '',
         '| build | kind | rating | rank | games | record | field score | vs higher |', '|---|---|---|---|---|---|---|---|']
-    for p in a['ours']:
-        lines.append(f"| {elolib.build_of(p)} | {KIND_TEXT[elolib.kind(p)]} | {R[p]:.0f} ± {1.96 * SE[p]:.0f} | "
-                     f"{a['rank'][p]} of {len(a['players'])} | {games[p]} | {wins[p]}-{games[p] - wins[p]} | "
-                     f"{elolib.field_score(R, p, fld):.1%} | {higher(a, p)} |")
+    # An accepted build with no games of its own yet (the champion before its control block) keeps its row, at the
+    # rating of the candidate it was accepted as where that played (its accepting blocks: biased up).
+    order = {p: i for i, p in enumerate(a['accepted'])}
+    for p in sorted(set(a['ours']) | set(a['accepted']),
+                    key=lambda p: (elolib.kind(p) != 'ours', order.get(p, 99), elolib.build_of(p))):
+        c = p if games.get(p) else a['via'].get(p)
+        if not c:
+            lines.append(f"| {elolib.build_of(p)} | accepted, no games yet | – | – | 0 | – | – | – |")
+            continue
+        lines.append(f"| {elolib.build_of(p)} | {KIND_TEXT[elolib.kind(p)]}"
+                     f"{'' if c == p else f', no games yet: as {elolib.build_of(c)}'} | {R[c]:.0f} ± {1.96 * SE[c]:.0f} | "
+                     f"{a['rank'][c]} of {len(a['players'])} | {games[c]} | {wins[c]}-{games[c] - wins[c]} | "
+                     f"{elolib.field_score(R, c, fld):.1%} | {higher(a, c)} |")
     if summary:
         lines += ['', 'Sources (`tools/progress/games.py`):', ''] + [f'- {l}' for l in summary]
     missing = [elolib.build_of(p) for p in a['accepted'] if not games[p]]
@@ -125,12 +133,11 @@ def render_md(rows, a, bundle=None, summary=()):
             for p, c in a['via'].items()) + ". Those games stay under the candidate's name: where they are the "
             "panel blocks that accepted it, they were selected for passing and overstate it (LEARNINGS 33). "
             "progress.png shows them beside the build's own games as hollow grey points."]
-    inc = elolib.build_of(a['incumbent']) if a['incumbent'] else '-'
     lines += ['', '![ratings](elo.png)', '', '![accepted builds](progress.png)', '',
               "No projection of the field score over time (2023's field-score charts) yet: it needs accepted builds "
               "spread over several days and a field larger than a handful of bots.", '',
-              f"All players. Our record = the incumbent's ({inc}) win rate and W-L against the bot, else the latest "
-              "accepted build that met it.", '',
+              "All players. Our record = the win rate and W-L against the bot of the latest accepted build with "
+              "games of its own that met it.", '',
               '| rank | player | kind | rating | ± 95% | games | W-L | our record |', '|---|---|---|---|---|---|---|---|']
     for p in a['players']:
         name = f'**{p}**' if not elolib.is_field(p) else p
@@ -201,6 +208,10 @@ def render_progress_png(a, path, ngames):
                     fmt='o', mfc='white', color='0.55', capsize=3,
                     label="its games as the candidate before acceptance (accepting blocks: biased up)")
         a1.legend(fontsize=7, loc='upper center')
+        for i in vx:
+            if subs[i] not in a['played']:
+                a1.annotate(f'as {elolib.build_of(via[subs[i]])}', (i + 0.2, R[via[subs[i]]]), textcoords='offset points',
+                            xytext=(6, -3), fontsize=8, color='0.4')
     a1.set_ylabel('rating (BT, Elo scale)')
     a1.grid(alpha=.3)
     a1.set_title(f'Accepted builds ({ngames} games; {len(fld)} rated field bots)')
@@ -213,10 +224,16 @@ def render_progress_png(a, path, ngames):
     a2.set_xlim(-0.5, max(len(subs) - 0.5, 0.5))
     for i, v in zip(own, fs):
         a2.annotate(f'{v:.0f}%', (i, v), textcoords='offset points', xytext=(0, 6), ha='center', fontsize=8)
-    missing = [elolib.build_of(p) for p in a['accepted'] if p not in a['played']]
+    for i in [i for i in vx if subs[i] not in a['played']]:
+        v = 100 * elolib.field_score(R, via[subs[i]], fld)
+        a2.plot([i], [v], 'o', mfc='white', color='0.55')
+        a2.annotate(f'{v:.0f}% (as {elolib.build_of(via[subs[i]])})', (i, v), textcoords='offset points', xytext=(0, 6),
+                    ha='center', fontsize=8, color='0.4')
+    missing = [p for p in a['accepted'] if p not in a['played']]
     if missing:
-        a2.annotate(f"no games of its own yet: {', '.join(missing)}", (0.01, 0.03), xycoords='axes fraction',
-                    fontsize=8, color='0.4')
+        a2.annotate(f"no games of its own yet: {', '.join(elolib.build_of(p) for p in missing)}"
+                    + (' (hollow: its games as the candidate)' if any(p in via for p in missing) else ''),
+                    (0.01, 0.03), xycoords='axes fraction', fontsize=8, color='0.4')
     fig.tight_layout()
     fig.savefig(path + '.tmp.png', dpi=110)
     plt.close(fig)

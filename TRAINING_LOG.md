@@ -5745,3 +5745,39 @@ buildToward); its own r1000 symcheck goes to the VM queue after the commit. Repl
 running; VM disk 2.3 GB free. The pioneer census for TAKEN_SEEN (pioneers.mjs over v10's 108 panel games) was
 stopped after 1394-1396 and 1397's first two games so the no-op check has the driver alone; it resumes at 1397's
 seed-1712 game.
+
+## 2026-10-25 22:17 PDT: PROMPTS 44: v11 missing from progress/, v10 from rating-history.png
+Causes. (1) rating-history.png's BT panel drew the build behind each rated match, and v10 played none: it reigned
+15:26-20:50, between two daily autoscrims (about 4 rated matches a day for us, ~05:00); our team cannot request a
+ranked match (galaxy sends one only to a team rated at or above the requester; we are #1), and the field's
+spare-cycle ranked challenges (field.py activity) wait for fewer than 2 matches queued and pick us only from the 3
+teams just below, so they are rare while our blocks play (44 of our 64 rated matches came from them, mostly on 10-21). v0, v2, v4 and v6 also
+reigned without one. (2) v11 has no games of its own until its control block (1455-1466, playing): ELO.md listed it
+only in a sentence, progress.png as an unlabelled hollow point, rating-history not at all.
+Fixes. rating_history.py draws every champion of bots/ROSTER.tsv over its reign (acceptance to the next, the last to
+the data's time) at its BT rating with its 95% band and its rated-match count; a champion without games of its own
+dashed and hollow at its accepting candidate's rating (biased up); a champion table in rating-history.md; the top
+panel carries the last rating dashed to the data's time ("no rated match since"). ELO.md's build table lists an
+accepted build with no games (v11: as h178, 1827 +-95, 72 games); progress.png labels it "as h178" and gives it a
+hollow field score. "Our record" no longer names an incumbent (it was v10, the latest build with games, not the
+champion). New `field.py rate` / `tools/rate_ours.sh`: the n field teams rated just below us challenge our ladder
+build, ranked; `tools/panel_submit.sh` runs it after each control block (RATE_N, default 6). Ran for v11 at 21:54:
+requests 724-729 (mvpatel2000, uvafan, wololo, IanCoolidge0 ~f649f3, yujinwunz, botfinalsafe; ladder submission 205).
+Charts re-rendered from the 21:14 data (latest match 1454: nothing of the running control block); the full refresh
+follows the control block.
+
+## 2026-10-25 22:20 PDT: h189 driver diagnostic (TAKEN_SEEN 1), seed 1712
+h189 red vs v11 blue on seed 1712 to r1000 (scratchpad h189/d1712): v11 won on health; h189 0 exceptions, errors or
+timeouts. TAKEN_SEEN fires as designed: the r35 pioneer to (30,17) mined there after blue churched at r77; the r30
+pioneer to (28,44) gave up when it saw blue's church at (33,44) (built r66) and retargeted. But once the 200-round
+rest ran out the castle sent pioneers to (28,44) again at r268, 349, 430, 679 and 841, none arriving (none saw the
+church, so none reported it). Possible follow-up switch: a longer rest for a cluster reported taken, or for one whose
+pioneers never arrive. The census of pioneers sent to held sites over v11's panel games (pioneers.mjs) is running.
+
+## 2026-10-25 22:23 PDT: v11 passes symcheck to r1000; check-in
+v11's symcheck to r1000 on the VM (job ...1000symv11, out/sym_v11_r1000.log): seeds 3, 1, 2 and 2321 all ok
+(188, 220, 86 and 142 robots at r1000). VM jobq empty; disk 2.3 GB free (journal already 41 MB). Replica queue
+4 waiting (all ranked), 8 running: the v11 control block's last games (1461, 1462, 1464, 1466) and the first
+rate_ours.sh matches (1467, 1468). Match 1342 (UpperArlingtonHighSchool vs awesomelemonade, the 09:00 autoscrim)
+shows RUN since 09:00 but is not stuck: saturn slot 2 took it at 18:52 and is on its third game, about 100 minutes
+a game (slow bots), so it holds one of the 8 slots for about five hours.
