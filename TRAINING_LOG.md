@@ -6366,3 +6366,9 @@ every request refused (ladder 219, 221, 223, 225). Score: `tools/panel_pool.sh 1
 1651-1658,1831-1834 --studied <h185's six>`. The autoscrim fired at 09:00 PDT (24 h after the last): 178 waiting, 174
 ranked. Queue rule (HANDOFF): our blocks one at a time and bumped (1831-1834 bumped to the front at once), no local VM
 jobs; h194 waits for h185's block to end.
+
+## 2026-10-26 09:12 PDT: replica queue census after the autoscrim
+176 waiting over 86 teams, at most 6 a team (IanCoolidge0 ~69ce88 6, ours 6 (h185's last four and ranked
+ladder matches), awesomelemonade and four others 5): no bot holds the lion's share, so none is dropped (owner,
+PROMPTS 20-21). All 8 execute slots play; yesterday's 174 took until 22:52 to fall under 30 (about 11 matches an
+hour). Until then: our blocks one at a time and bumped, no local VM jobs.
