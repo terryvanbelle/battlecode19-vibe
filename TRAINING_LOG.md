@@ -5862,6 +5862,6 @@ Replica queue 5 waiting (2 ranked), 8 running (six of them h190's block); VM job
 free. v11's other three rate_ours.sh matches: 1467 lost 1-2 to mvpatel2000 (won 836 red by castles at r1000; lost
 1915 red and 2644 blue on health at r1000), 1471 won 2-1 against yujinwunz (826 blue, 53 blue r564; lost 2591 red by
 castles r784), 1472 lost 1-2 to botfinalsafe (won 520 blue at r1000; lost 799 red by castles r334 and 836 red r965).
-All six 2-4 (16 of the 18 games' results known: 1468-1470 at 23:24). The two health losses to mvpatel2000 and the
+The six matches: 2-4, 7 of 18 games (1468-1470 at 23:24). The two health losses to mvpatel2000 and the
 r334 loss to botfinalsafe on 799 are the ones to read when the driver is free. Census for h190's and h191's bars 92
 of 108; h191's no-op check and h170's record read follow it on the driver.
