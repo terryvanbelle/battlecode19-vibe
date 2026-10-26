@@ -5585,3 +5585,15 @@ tools/reads/stillborn.mjs over 1391-1426 (108 lines for 108 games; scratchpad ec
 game (W 8.06, L 15.15; uvafan 38.78, wololo 9.94, botfinalsafe 7.89, awesomelemonade 7.78, bot1v43 2.83,
 IanCoolidge0 2.39); stillborn 21.77 a game, their karbonite 552. h178's bar, fixed at 15:26 as a quarter of this rate:
 **2.90** over its blocks, computed before any h178 game is read (block 1 running).
+
+## 2026-10-25 17:54 PDT: check-in; PIONEER_RACE in (no-op IDENTICAL); h183 built
+
+Queue 57 waiting (all ranked); h178 block 1: 1429-1432 and 1435 done, the rest running. VM disk 2.4 GB free; jobq
+empty. **PIONEER_RACE** (src/bot, default 0; castle.js planClusters counts the team's planned clusters with m >=
+PIONEER_OPEN, earlyPioneer races when there are none and the plan's first cluster has m < PIONEER_RACE): defaults
+build 7f084c18e568 against itself on 799 to r300, driver alone, **IDENTICAL** to bots/v10; unit tests 173 of 173 (the
+PIONEER_OPEN test now also pins PIONEER_RACE 2: 2518's m-0 site goes early, 1706 unchanged, 2644 none) and the 64
+galaxy19 tests pass. **h183** = v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7 + PIONEER_RACE 2 (dist/h183 239539f40dbe):
+h177 everywhere but 2518 and 2591 (the pool maps whose team plans no cluster with m >= 7 and opens with m <= 1), where
+the castle's turn-3 pioneer races for the centre site. Driver diagnostic (h183 red against v10 on 2591 and 2518 to
+r80; v10 against itself on 2591 for the idle escorts) running.

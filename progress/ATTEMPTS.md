@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 138 other, 47 rejected, 20 accepted, 9 dropped, 6 in progress, 4 sparring partners (224 rows).
+Totals: 139 other, 47 rejected, 20 accepted, 9 dropped, 6 in progress, 4 sparring partners (225 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -238,3 +238,4 @@ Totals: 138 other, 47 rejected, 20 accepted, 9 dropped, 6 in progress, 4 sparrin
 | `h181` | 2026-10-25 15:26 | v10 | v10 + CHAIN_WALL 28: h172's switch on v10 (ECONOMICS row 8; dist/h181 1b367520ea40) |  |  |  |  | built; panel after h180 |
 | `h182` | 2026-10-25 15:26 | v10 | v10 + ECON_NOPLAN 1: h173's switch on v10 (dist/h182 fa74c6f4dc8f); targeted panel noplan-m1 after a v10 control block there |  |  |  |  | built; targeted panel after h181 |
 | `v10` | 2026-10-25 15:26 | v9 | Frozen snapshot of h175 (bots/v10): v9 + MUSTER_RESCUE 100 (a structure hit in its last 3 turns radios the nearest attacker in sight; held crusaders whose home lies within r2 100 engage); the replica build since submission 199 (control block 1415-1426 = submission 198) |  |  | submission 198 (control block), 199 | vs StoneT2000.BC19-bot1v43 3-3 (replica); vs m-schier.battlecode-2019-wololo 1-2 (replica) | ACCEPTED 15:26 as v10 (h175 row: replica panel, two blocks 37 of 72, z 0.40, basics-fix rule) |
+| `h183` | 2026-10-25 17:54 | v10 | v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7 + PIONEER_RACE 2: h177, and in a team with no cluster 7+ king steps ahead a castle whose plan opens with a race (m <= 1) sends its turn-3 pioneer there (2518, 2591; dist/h183 239539f40dbe; ECONOMICS row 18) |  |  |  |  | built; driver diagnostic on 2591 and 2518 running |
