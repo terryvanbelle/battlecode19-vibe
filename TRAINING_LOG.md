@@ -5907,3 +5907,17 @@ r120. The walk-in line (structures' knowledge, SIEGE h135-h138) was closed at 20
 the centre race, which h184 (h183 on v11; h183's diagnostic churched the centre at r18 here) is built for, as for
 2518. With h170's read (00:26) lowering h191's prior, **the panel order after h190 is h184, then h191**, then h185-h188
 (an order of untried candidates; no rule or bar changed).
+
+## 2026-10-26 00:42 PDT: h190 rejected on block 1 (matches 1492-1503); h184 block 1 submitted
+h190 (v11 + TAKEN_SEEN 1 + PIONEER_TIMEOUT_REST 2 + PIONEER_LOST_DOUBLE 1) on the v7-m1 panel, both sides (wololo's
+two matches checked from the games: 1492 red, 1493 blue), scored as pre-registered with `tools/panel_pool.sh
+1427-1438 progress/panels/v11-m1.pool 1492-1503 --studied ...`: **16 of 36**, pooled expectation 18.3 (z -1.11);
+side-aware **z -1.42** (effect -146 Elo, 95% -347 to +57). Studied cells (uvafan 1712, botfinalsafe 2740, wololo 836,
+awesomelemonade 2518) 1 of 8 against 1.8 (z -1.19); other cells 15 of 28 against 16.5 (z -1.02). Won two cells v11
+never won (bot1v43 2591 blue, uvafan 1712 blue); lost four it always won (IanCoolidge0 1036 red, bot1v43 2321 red,
+botfinalsafe 2740 red, uvafan 1653 blue). The basics-fix rule rejects block 1 at z < -1: **rejected**. Its z lies
+outside +-1, so the block stays out of the pool file. Its mechanism read (parked.mjs: toTaken, churches) runs for the
+record when the driver is free. With h170 (z -1.71), two pioneer-waste fixes have now scored below the champion on
+their first block; h191 (the pilgrim side) keeps its place after h184, with that prior.
+**Next block: h184** (submission 208, requests 770-781 = matches 1513-1524, ladder 209, bumped; ordinary rule, pre-registered 2026-10-25 17:56 as h183; bars relative to
+v11, the pioneer census over its control block running, fixed before the block is read).

@@ -61,24 +61,18 @@
   accepted).
   **Replica queue (00:26): 2 waiting (2 ranked), 8 running (five h190's).** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: h190 block 1 = matches 1492-1503** (submission 206, requests 749-760; ladder 207; waiter scratchpad
-  wait_block.sh 1492 1503): scored with `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1492-1503 --studied
-  uvafan.bc2019:seed-1712,StoneT2000.BC19-botfinalsafe:seed-2740,m-schier.battlecode-2019-wololo:seed-836,awesomelemonade.Battlecode2019:seed-2518`
-  under the basics-fix rule (TRAINING_LOG 2026-10-25 22:42); its bars come from v11's parked.mjs census over its 108
-  panel games (scratchpad econ/parked_v11.txt): toTaken <= 3.27 a game, churches >= 9.58 a game (TRAINING_LOG
-  2026-10-26 00:02). Check the wololo matches'
-  sides (both listed vibe19-first while queued). The v11 control block (1455-1466) finished 19 of 36 and is in the
-  v11 pool; `tools/panel_submit.sh` runs `tools/rate_ours.sh` after every control block (PROMPTS 44); v11's ran by
-  hand at 21:54 (requests 724-729 = matches 1467-1472).
+  **In play: h184 block 1 = matches 1513-1524** (submission 208, requests 770-781; ladder 209; waiter scratchpad
+  wait_block.sh 1513 1524): scored with `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1513-1524 --studied
+  m-schier.battlecode-2019-wololo:seed-836,m-schier.battlecode-2019-wololo:seed-2013,StoneT2000.BC19-botfinalsafe:seed-1706,awesomelemonade.Battlecode2019:seed-2518,StoneT2000.BC19-bot1v43:seed-2591`
+  under the ordinary rule (block 1 rejects at side-aware z < 0.5; two blocks accept at z >= 2 with others >= 0,
+  reject at z < 1, else a third block). Mechanism read (pioneers.mjs, reported with the verdict): on the firing maps
+  the r<=6 pioneer churches in 2/3+ of games and our first church comes earlier than in v11's games of the same
+  cells (v11's census: scratchpad econ/pioneers_v11.txt + pioneers_v11_c.txt, the control block's running), fixed
+  before the block is read. h190 was rejected on its block 1 (1492-1503, z -1.42; TRAINING_LOG 2026-10-26 00:42).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
   2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191; h184
-  before h191 from 2026-10-26 00:31):
-  h184 (= h183 on v11: v11 + PIONEER_EARLY 6 + PIONEER_OPEN 7 + PIONEER_RACE 2, dist/h184 a78b4d8603e8: a turn-6 pioneer to the
-  first planned cluster we reach 7+ king steps before the enemy; in a team with none, a castle whose plan opens with
-  a race (m <= 1: 2518, 2591) sends its turn-3 pioneer there; replaces h177, closed unplayed; ordinary rule; studied
-  cells wololo 836, 2013, botfinalsafe 1706, awesomelemonade 2518, bot1v43 2591; mechanism read pioneers.mjs (the
-  r<=6 pioneer churches in 2/3+ of firing-map games); TRAINING_LOG 2026-10-25 15:45, 15:51, 17:56);
+  went before h191 from 2026-10-26 00:31):
   h191 (v11 + PIONEER_TIMEOUT_HOME 80, dist/h191 5a3687700398: a pioneer out 80 turns still more than a king step from
   its site gives it up and mines at home, the pilgrim side of h190's zombie pioneers; basics-fix rule; bars parked
   pioneers <= 1.53 a game and churches >= 9.58 a game (TRAINING_LOG 2026-10-26 00:02); no-op check passed 00:11;
