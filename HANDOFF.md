@@ -33,8 +33,8 @@
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Screen job template: ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 +
   32 z's; the next adds a z. Nothing runs on it. v9 passed symcheck to r1000 on seeds 3, 1, 2, 2321 (job
-  ...1000symv9, out/sym_v9_r1000.log, TRAINING_LOG 2026-10-25 08:24); v10's r1000 symcheck (the same job with bots/v10)
-  runs once the replica queue is under 30; symcheck past a few hundred rounds never runs on the driver
+  ...1000symv9, out/sym_v9_r1000.log, TRAINING_LOG 2026-10-25 08:24); v10's r1000 symcheck waits in
+  ~/jobq/hold/1792609846000000004b01b1a3d5771000symv10.sh: move it to ~/jobq/pending once the replica queue is under 30; symcheck past a few hundred rounds never runs on the driver
   (LEARNINGS 13). **Saturn stays at 8 slots (TRAINING_LOG 2026-10-24 22:54):** candidates go straight to the replica
   panel (driver diagnostics as the pre-filter); the VM screens retired. In ~/jobq/superseded, not run: h160, h156,
   h159, h152, h153. Deploy saturn only between panel blocks (`tools/galaxy19/deploy/deploy.sh app`, then `sudo

@@ -5639,3 +5639,12 @@ prophet's vision of 64). Running over v10's 108 panel games.
 
 Queue 48 waiting (all ranked); h178 block 1: 10 of 12 matches done, 1433-1434 (uvafan) running. VM disk 2.4 GB free;
 jobq empty. Walk-in census 56 of 108 games.
+
+## 2026-10-25 18:28 PDT: v10's r1000 symcheck staged on the VM (held until the queue is under 30)
+
+vm_sync pushed src, tools, test, maps, engine, bots, dist, build to the VM (bots/v10 there now, sha 24ba82513211).
+Its tools/ swap left ~/projects/vibe/2019/.tools.old behind: four root-owned .pyc files in
+.tools.old/galaxy19/replica_gcp/__pycache__ (from an old root run) blocked the plain rm; removed that one path with
+sudo; no other file in ~/projects/vibe/2019 or 2019-next is owned by anyone else. Job
+~/jobq/hold/1792609846000000004b01b1a3d5771000symv10.sh (v9's job with bots/v10: symcheck.js, seeds 3, 1, 2, 2321,
+1000 rounds, out/sym_v10_r1000.log) moves to ~/jobq/pending once fewer than 30 replica matches wait.
