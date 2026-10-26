@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 05:54 PDT)
+## State (2026-10-26 06:31 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -29,10 +29,13 @@
   z < 0.5; two blocks accept at z >= 2 (other cells z >= 0), reject at z < 1, else a third block at z >= 2. The
   basics-fix rule (h170, fixed 2026-10-25 04:26): two blocks, block 1 rejects only at z < -1; accept at z >= 0
   (others z >= 0) if the mechanism reads pass, else the ordinary rule.
-- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free (2.9 GB at 05:53 on 2026-10-26; 3.2 GB at 00:26 after deleting ~/.gradle/caches, daemon and wrapper (prior-year Gradle, 1 GB); 2.4 GB at 18:24 on
-  2026-10-25; 2.5 GB at 16:26 after deleting ~/.gradle/daemon/7.6/daemon-*.out.log: 651 logs of Aug 27-Sep 1, before this project,
-  277 MB; 2.2 GB before). Prune a screen's out/rp_* once its candidate is decided; next candidates if needed: the
-  journal (155 MB, `sudo journalctl --vacuum-size=50M`), /var/log (243 MB).
+- **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free. **11 GB free since 06:30
+  2026-10-26** (2.9 GB before): the prior-year sweep (PROMPTS 46; TRAINING_LOG 06:30) deleted the 2023 replica's
+  storage (6.0 GB), its Postgres cluster 15/main, unit files, CLIs and bcreplica's files, the VM's 2023 project trees
+  (~/projects/vibe/2023, bc23-benchmarks, bc23-viewer-3.0.15), ~/jdk, ~/jdk21, ~/.gradle, ~/.npm and other pre-October
+  tool directories; what bc19 uses of the 2023 replica stays (tools/galaxy19/README.md). Prune a screen's out/rp_* once
+  its candidate is decided; next levers if needed: the journal (`sudo journalctl --vacuum-size=50M`), /var/log,
+  `sudo apt-get clean` (79 MB).
 - **VM queue** (`~/jobq`; the runner takes pending jobs in locale `ls | sort` order; gates run from the shadow tree
   ~/projects/vibe/2019-next: rsynced tools/ and test/, bots/dist/engine/maps linked to the main tree, outputs in the
   main tree's out/). Screen job template: ~/jobq/done/...19zzzzzzzzzzzzzzzzzzzzzzz.sh (h148). Last job name ...19 +

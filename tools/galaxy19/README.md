@@ -4,6 +4,11 @@ The bc19 replica is a private copy of the official judging site, galaxy (the sia
 local stand-in for saturn, the game runner. It runs on the VM `battlecode-dev` and plays only our engine
 (`engine/`, bc19 0.4.7). It is built on the 2023 replica (`/opt/bc23-galaxy`: siarnaq at galaxy commit f343088, its
 venv, the built frontend, and the shared Caddy). How the owner opens it is in `ACCESS.md` at the repository root.
+The rest of the 2023 replica was deleted on 2026-10-26 (PROMPTS 46: its storage, database cluster `15/main`, units,
+user files and project tree). What stays is what this replica uses: `/opt/bc23-galaxy` (copied by `galaxy-setup.sh`'s
+opt step on a fresh install), `/srv/bc23-galaxy/frontend` (the frontend step's source), and the Caddy chain:
+`bc23-replica-caddy.service`, its boot-time render (`bc23-replica-hostname.service`, `/usr/local/lib/bc23-replica`,
+`/usr/local/lib/bc23-galaxy`, `/etc/bc23-replica`).
 
 ## Isolation (CLAUDE.md rules 5 and 6)
 

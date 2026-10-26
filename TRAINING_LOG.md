@@ -6143,3 +6143,34 @@ its cluster's end; their churches built 8-217 military each. Cells where we do d
 the 29 lost games of those five cells (9.7 of a 36-game block); what a strike gets depends on
 who sees the church first and what guards it (next read: econ/seen.mjs, our sightings and its guards in its first 15
 rounds).
+
+## 2026-10-26 06:30 PDT: PROMPTS 46: prior-year sweep of the VM (2.9 GB free -> 11 GB)
+
+Deleted on battlecode-dev (prior-year files, PROMPTS 2 and 46), each path by name:
+- the 2023 replica's data: the contents of `/srv/bc23-galaxy/storage` (6.0 GB), `/home/bcreplica/galaxy` (79 MB),
+  `/home/bcreplica/replica` (185 MB), the Postgres cluster `15/main` (port 5432; its one database `siarnaq`, owner
+  bcreplica; `pg_dropcluster --stop 15 main`, 103 MB);
+- its stopped, disabled units in /etc/systemd/system: bc23-galaxy-relay.service, bc23-galaxy-saturn.service,
+  bc23-galaxy-scheduler.service, bc23-galaxy-scheduler.timer, bc23-galaxy-web.service, bc23-replica-api.service,
+  bc23-replica-autoscrim.service, bc23-replica-autoscrim.timer, bc23-replica-worker.service, bc23-replica.slice
+  (daemon-reload); its CLIs /usr/local/bin/bc23-galaxy-manage and /usr/local/bin/bc23-replica; the operator crontab's
+  only line (`30 */6 * * * bash ~/projects/vibe/2023/tools/galaxy/prune-local.sh`, 2023 replay pruning);
+- the VM's 2023 trees: ~/projects/vibe/2023 (279 MB), ~/projects/vibe/bc23-benchmarks (670 MB),
+  ~/projects/vibe/bc23-viewer-3.0.15 (7 MB);
+- pre-project tools and caches (no file newer than 2026-10-20): ~/jdk (JDK 8u504, the 2023 replica's Java), ~/jdk21,
+  ~/.gradle (the rest), ~/.npm, ~/.cache/{JNA,fontconfig,pip}, ~/carol-kscan, ~/replaydump, ~/cc32 (2023/2024
+  flatbuffers tools, 2026-09-08/09), ~/scratch-side-abl and ~/scratch-side-xform (2023 maps and Java, 2026-10-20);
+  /var/log/caddy/galaxy-access-2026-10-2*.log.gz (the 2023 site's five rolled logs).
+
+Kept, because the bc19 replica uses them (tools/galaxy19/README.md): `/opt/bc23-galaxy` (siarnaq source and venv,
+copied on a fresh install), `/srv/bc23-galaxy/frontend` (the frontend step's source; static and viewer, 12 MB, beside
+it), and the Caddy chain that fronts the bc19 site (bc23-replica-caddy.service with its bc19 drop-in, the boot-time
+render bc23-replica-hostname.service, bc23-replica-egress.service, /usr/local/lib/bc23-replica, /usr/local/lib/bc23-galaxy,
+/etc/bc23-replica, /etc/bc23-galaxy). The bcreplica user stays (its egress rule names it). Checked after: bc19 web,
+saturn, relay, activity, scheduler timer, postgresql@15-bc19 and Caddy active; `caddy validate` passes; the 2023
+print-site render still runs; the site answers 401 (basic auth); field.py queue reads the API. A stale failed
+transient unit of ours (run-u11061, an old sandbox probe) was reset.
+
+PROMPTS 47 (the unranked uvafan-wololo match): field.py activity lets the top-rated team challenge one of the 3 teams
+just below it, unranked (galaxy takes ranked requests only upward, so the top team can make none). uvafan passed
+wololo at the top (1617.7 to 1616.7); request 863 (06:01 PDT) is uvafan's unranked challenge to wololo.
