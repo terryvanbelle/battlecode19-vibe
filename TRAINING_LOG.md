@@ -6391,3 +6391,25 @@ Both blocks finished (h185's at 09:41); replays fetched, sides checked (odd matc
 Candidate submission 226 (dist/h185 e4a146ede62f), requests 920-931 all accepted (the hour's limit had room), ladder
 227 (bots/v11); `tools/bump_ours.sh --ours` moved them to the queue's front (169 waiting, 157 ranked). Waiter:
 scratchpad wait_block.sh 1835 1846. h194's block 1 follows it.
+
+## 2026-10-26 10:12 PDT: where the army stood when v11's castles fell (castles.mjs over v11's 108 panel games)
+New read tools/reads/castles.mjs TEAM REPLAY: per castle lost, the enemy attackers within r2 100 and our military
+alive within r2 100 / 100-400 / beyond, and how many of each fired in the castle's last 20 rounds. Over v11's panel
+games (1427-1438, 1441-1452, 1455-1466; scratchpad castles_v11.txt): 50 castles lost; 18 fell with no unit of ours
+within r2 400 (the army already spent); 14 fell with 10 or more of our units within r2 400 that had not fired in 20
+rounds: bot1v43 2321 blue in all three blocks (25-43 units within r2 100 of castle (33,9), 0-10 firing), uvafan 1712
+red in all three (8-15 within r2 100, 26-32 beyond r2 400), wololo 2013 blue (12 within r2 400), wololo 836, and
+IanCoolidge's 203.
+- **botfinalsafe 799 red (1472, v11's ladder match; lost both castles by r334):** a ball of ~10 botfinalsafe prophets
+  rolled our centre churches (r243-255), then shot castle (42,7) dead in r255-274 while 29 of our units held the
+  lattice of church (57,10) 15 tiles east (r2 234: beyond MUSTER_RESCUE's r2 100 and FAR.ENEMY's reach); one of them
+  fired. The castle's newborn prophets died one a round on (41-43,8). Castle (9,12) fell at r334 with 35 units far
+  off. The castle recall (RECALL, h110) was rejected on a local screen in the v7 era (castles lost 35 vs 24 in
+  self-play); the field's prophet balls are not our self-play's marches.
+- **bot1v43 2321 blue (1446):** a basics hole, not the army: our castle (33,9) sent pioneers to the four centre sites
+  every 80 rounds (r341-353, r422-434), each built on (32,10), the tile toward the site, in reach of a bot1v43 prophet
+  camping at (27,16) (r2 61; the castle sees it at r2 85); each died that round, before its first turn, so the castle
+  never learned it was lost (resolvePending finds no newborn; the pioneer entry waits out its 80 turns, then the
+  castle resends). stillborn.mjs, now with a UNITS argument (`stillborn.mjs TEAM 2 REPLAY` for pilgrims): 17 of the
+  game's 33 pilgrims stillborn, all built by the castle on an exposed tile, 14 of them beside a free safe tile;
+  military 0 of 64 (DEF_SAFE covers those). Census of stillborn pilgrims over v11's 108 games running.
