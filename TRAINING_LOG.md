@@ -6015,3 +6015,16 @@ comparison, fixed before its block is read), then h190's parked read for the rec
   bursts: botfinalsafe 1706 7 (both sides, 6 games), bot1v43 2321 blue 2 (of 3 games), botfinalsafe 203 2.
 - **h192's bar** (pre-registered 01:08 as at most half of v11's): **near bursts at most 0.051 a game**, i.e. at most
   3 in its 72 games of two blocks. Reported with it: kills, castles lost, stagers and hunted against the numbers above.
+
+## 2026-10-26 02:24 PDT: h184 panel block 1 (1513-1524): 22 of 36, side-aware z 2.27: on to block 2
+
+- `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1513-1524 --studied ...` (v11's 108 games, both sides
+  checked in match.json): **22 of 36 against a pooled 18.3, z 1.81; side-aware z 2.27** (+238 Elo, 95% +34 to +439).
+  Studied cells 4 of 10 against 0.6 (z 4.79): won awesomelemonade 2518 on both sides (v11 0 of 6), botfinalsafe 1706
+  blue (v11 0 of 6) and uvafan 1712 blue (v11 0 of 6, a round-1000 cell); lost wololo 836 and 2013 blue, bot1v43
+  2591 both sides and botfinalsafe 1706 red. Other cells 18 of 26 against 17.7 (z 0.20); lost awesomelemonade 1712
+  red (v11 6 of 6).
+- Ordinary rule, block 1 rejects at z < 0.5: **not rejected**. Block 2 next (two blocks accept at z >= 2 with the
+  other cells >= 0, reject at z < 1, else a third). The mechanism read (pioneers.mjs on the firing maps against the
+  bar fixed at 01:24) runs on the driver after the squatters census and is reported with the verdict. progress/
+  refreshed between the blocks.
