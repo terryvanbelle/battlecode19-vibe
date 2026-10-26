@@ -6104,3 +6104,20 @@ same way; the verdict takes both blocks' z under the ordinary rule.
   church earlier than v11's cell median in 22 cells, later in none; pilgrims at r100 15.04. **Both blocks: 44 of 48
   (0.92), earlier 44, later 0: the mechanism read passes.** Castles lost 0.361 a game in block 2, **0.333 over both**
   (v11 0.463); near bursts 0.097 (v11 0.102). The verdict waits on block 3's z (cumulative >= 2 with others >= 0).
+
+## 2026-10-26 04:57 PDT: wololo 836 (v11 0 of 6, h184 0 of 4) read: a forward church at r23 and its prophets
+
+- `tools/replay.js timeline` and scratchpad econ/timeline.mjs on v11's 1427 game 3 (red, lost by castles r747) and
+  1428 game 3 (blue, lost r561); map 836 mirrored in y, our castles near (40,19) and (21,19) as red.
+- Both sides the same: wololo's crusader born r3 walks at us; **at r23 a wololo pilgrim churches (45,31) / (45,28),
+  r2 205 from our nearer castle, a row or two from the midline**, and from r28 its prophets stand at r2 58-100 of that
+  castle. Our 4 crusaders of r12-15 die at r34-37 a few tiles out (to the crusader and the first prophet); every
+  crusader, prophet and preacher the castle builds from r33 dies at age 1-20 (red: 22 prophets, 6 crusaders and 3
+  preachers dead by r300). Blue: a second forward church at (45,31) r55 (r2 136) with three preachers.
+- The economy starves behind it: red holds 8 pilgrims and no church r25-r150, the bank at 9-80 K, K mined 476 by r100
+  (wololo 1,476; 5 churches); a castle falls at r200; at r300 wololo has 230 military to our 3.
+- The one structure that feeds the siege stands alone for its first 5 rounds (r23-r27), 13 tiles from our castle,
+  with our 4 crusaders 9-10 tiles from it. CHURCH_FIRST_R2 (h58, v5 era: enemy churches within r2 144 of home first)
+  failed a local delivery against our own chains and never met the field; 836's church stands at r2 205. A
+  candidate (an early strike on a forward enemy church while it stands unguarded) waits for h184's verdict, to be
+  built on the champion it gives.
