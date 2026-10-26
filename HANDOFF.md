@@ -67,7 +67,7 @@
   rate and power: `python3 -I tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195 rejected).
-  **Replica queue (16:49): 72 waiting (61 ranked; VM 11 GB free); h203 block 1 running.** While 30+ wait: no
+  **Replica queue (16:56): 72 waiting (61 ranked; VM 11 GB free); h203 block 1 running (1903 first).** While 30+ wait: no
   local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the autoscrim held
   (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 16:48 (between blocks; rating-history 75 rated matches).
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
