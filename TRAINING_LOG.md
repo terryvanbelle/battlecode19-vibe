@@ -6615,3 +6615,23 @@ Pre-registration: ordinary panel rule against v12's pool. Studied cells: wololo 
 Mechanism read (a check, not a decision input): eschits.mjs over our side of its blocks: the shooter dies within 12
 rounds in at least half of the lone-prophet hits (v12: 18 of 50). Order: next after h195, before h201: it targets an
 always-lost cell with the exact play that won it for v11, the most direct evidence in the queue.
+
+## 2026-10-26 15:34 PDT: h195 two blocks 50 of 72 (z 1.08), stillborn read fails its bar: block 3 submitted
+
+- h195 block 2 (1877-1888) ended at 15:11. Both blocks (`tools/panel_pool.sh 1651-1658,1831-1834
+  progress/panels/v12-m1.pool 1865-1888 --studied StoneT2000.BC19-bot1v43:seed-2321`): **50 of 72**, pooled
+  expectation 46.3 (z 1.24); side-aware 47.3, **z 1.08** (effect +77 Elo, 95% -62 to +216); studied cell bot1v43 2321
+  2 of 4 (expectation 2.0); other cells 48 of 68 (expectation 45.3, z 1.14). Lost as v12 loses: wololo 2644 and
+  uvafan 2046 (both sides, 0 of 4 each), wololo 836 red 0 of 2.
+- Mechanism read (registered 10:45, bars set 12:11 from v12's 108 games): `tools/reads/stillborn.mjs TEAM 2` over
+  our side of both blocks (scratchpad stillborn_h195.txt): **safer 0.28 a game** (20 in 72) against the bar of at
+  most 0.118 (v12 0.47): **fails**; built 34.96 a game against the bar of at least 31.1 (v12 34.56): passes;
+  stillborn 4.35 (v12 4.42). The 20 safer cases sit in cells we win (wololo 836 and 2013, awesomelemonade 2797 and
+  1712) and IanCoolidge0 203 red; the read counts every enemy unit, seen or not, and the switch acts only on the
+  attackers in the builder's sight, so part of v12's 0.47 was never in its reach (a check for later, not for this
+  decision).
+- So the basics-fix acceptance at z >= 0 does not apply; the ordinary bars do: z 1.08 lies between 1 and 2, so a
+  third block, accepted at cumulative z >= 2 (other cells z >= 0). **h195 block 3 = matches 1891-1902** (candidate
+  submission 236, ladder 237), bumped.
+- Replica queue 83 waiting (71 ranked); v12's rating chain: 1796 waits on 1788 (played, unrated), which waits on
+  1738 (arya-k vs awesomelemonade, running).
