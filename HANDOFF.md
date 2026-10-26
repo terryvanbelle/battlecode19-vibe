@@ -65,7 +65,8 @@
   wait_block.sh 1492 1503): scored with `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1492-1503 --studied
   uvafan.bc2019:seed-1712,StoneT2000.BC19-botfinalsafe:seed-2740,m-schier.battlecode-2019-wololo:seed-836,awesomelemonade.Battlecode2019:seed-2518`
   under the basics-fix rule (TRAINING_LOG 2026-10-25 22:42); its bars come from v11's parked.mjs census over its 108
-  panel games (scratchpad econ/parked_v11.txt, running), fixed before the block is read. Check the wololo matches'
+  panel games (scratchpad econ/parked_v11.txt): toTaken <= 3.27 a game, churches >= 9.58 a game (TRAINING_LOG
+  2026-10-26 00:02). Check the wololo matches'
   sides (both listed vibe19-first while queued). The v11 control block (1455-1466) finished 19 of 36 and is in the
   v11 pool; `tools/panel_submit.sh` runs `tools/rate_ours.sh` after every control block (PROMPTS 44); v11's ran by
   hand at 21:54 (requests 724-729 = matches 1467-1472).
@@ -74,7 +75,7 @@
   2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191):
   h191 (v11 + PIONEER_TIMEOUT_HOME 80, dist/h191 5a3687700398: a pioneer out 80 turns still more than a king step from
   its site gives it up and mines at home, the pilgrim side of h190's zombie pioneers; basics-fix rule; bars parked
-  pioneers per game <= 0.5x v11's and churches >= 0.9x, from the same census; no-op check first, when the driver is
+  pioneers <= 1.53 a game and churches >= 9.58 a game (TRAINING_LOG 2026-10-26 00:02); no-op check first, when the driver is
   free; TRAINING_LOG 2026-10-25 23:32);
   h184 (= h183 on v11: v11 + PIONEER_EARLY 6 + PIONEER_OPEN 7 + PIONEER_RACE 2, dist/h184 a78b4d8603e8: a turn-6 pioneer to the
   first planned cluster we reach 7+ king steps before the enemy; in a team with none, a castle whose plan opens with

@@ -5865,3 +5865,14 @@ castles r784), 1472 lost 1-2 to botfinalsafe (won 520 blue at r1000; lost 799 re
 The six matches: 2-4, 7 of 18 games (1468-1470 at 23:24). The two health losses to mvpatel2000 and the
 r334 loss to botfinalsafe on 799 are the ones to read when the driver is free. Census for h190's and h191's bars 92
 of 108; h191's no-op check and h170's record read follow it on the driver.
+
+## 2026-10-26 00:02 PDT: h190's and h191's mechanism bars fixed from v11's 108 panel games (before either is read)
+parked.mjs over v11's panel games (1427-1438, 1441-1452, 1455-1466; scratchpad econ/parked_v11.txt, 108 lines):
+868 pioneers sent (8.04 a game), 209 churched, 36 mined first, 292 died, 331 parked (alive at the end with none of
+those: 3.06 a game), 0 gave up; 505 sent to a site the enemy held and we did not (4.68 a game); 1,150 churches
+(10.65 a game). By block: toTaken 4.89, 4.58, 4.56; parked 3.36, 2.92, 2.92; churches 11.81, 10.11, 10.03.
+- **h190** (pre-registered 22:42): toTaken at most **3.27 a game** (0.7x) and churches at least **9.58 a game**
+  (0.9x) over its two blocks.
+- **h191** (pre-registered 23:32): parked at most **1.53 a game** (0.5x) and churches at least **9.58 a game**.
+(parked.mjs counts a site held when an enemy structure stood within 3 king steps at the send and none of ours did,
+so its 505 exceed pioneers.mjs's 341 at 22:42, which counts the round an enemy church first stood there.)
