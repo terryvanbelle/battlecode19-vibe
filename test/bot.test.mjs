@@ -12,7 +12,7 @@ import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pio
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy, hitTrack, sayRescue } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
-import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, stallRetarget } from '../src/bot/pilgrim.js';
+import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, siteTaken, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, canHit, PRIORITY } from '../src/bot/combat.js';
@@ -48,6 +48,13 @@ const PRE_V10 = { MUSTER_RESCUE: 0 };
 const testPreV10 = (name, fn) => test(name, () => {
   const saved = { ...CFG };
   Object.assign(CFG, PRE_V10);
+  try { fn(); } finally { Object.assign(CFG, saved); }
+});
+// v11 (2026-10-25) turned on h178's safe newborn tiles; tests of build placement written against v10 pin v10's values.
+const PRE_V11 = { DEF_SAFE: 0 };
+const testPreV11 = (name, fn) => test(name, () => {
+  const saved = { ...CFG };
+  Object.assign(CFG, PRE_V11);
   try { fn(); } finally { Object.assign(CFG, saved); }
 });
 
@@ -526,7 +533,7 @@ test('struct: DEF_SEEN counts as defenders only our military that see the attack
   } finally { CFG.DEF_SEEN = saved; }
 });
 
-test('struct: SAFE_BUILD never builds onto a tile where the enemies in sight would kill the newborn before it acts', () => {
+testPreV11('struct: SAFE_BUILD never builds onto a tile where the enemies in sight would kill the newborn before it acts', () => {
   const saved = CFG.SAFE_BUILD;
   try {
     const g = new Game(3, 100, 20, false, false);
@@ -1321,6 +1328,48 @@ test('pilgrim: PIONEER_FAST pioneers take full r2 4 steps on a short bank', () =
     assert.ok(off.r2 > 0 && off.r2 <= 2, off.info);
     assert.strictEqual(on.r2, 4, on.info);
   } finally { CFG.PIONEER_FAST = saved; }
+});
+
+test('pilgrim: TAKEN_SEEN gives up a site with an enemy church beside it in sight, reports it taken, and mines', () => {
+  const saved = CFG.TAKEN_SEEN, savedER = CFG.EXPAND_ROUND;
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let P = null;
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]]) if (!P && free(castle.x + dx, castle.y + dy)) P = [castle.x + dx, castle.y + dy];
+    const pil = { id: 4001, team: 0, unit: S.PILGRIM, x: P[0], y: P[1], turn: 20, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    g.robots.push(pil);
+    const w0 = worldFor(g, pil);
+    const B0 = { api: w0.api, w: w0, round: 30, birthRound: 11, st: {}, deps: null, clusters: null, rnd: rng(2) };
+    B0.offs = offsets(4); B0.nav = new Nav(w0, B0.offs, B0.rnd);
+    econ(B0);
+    // A cluster whose site has a free tile within EXPAND_SEEN king steps that the pilgrim sees: an enemy church there.
+    // Canonical coordinates are the engine's for red on this map, so the church goes in at the same tile.
+    let site = null, E = null, ci = -1;
+    for (const [i, c] of B0.clusters.entries()) {
+      if (E) break;
+      for (let dy = -2; dy <= 2 && !E; dy++) for (let dx = -2; dx <= 2 && !E; dx++) {
+        const [ex, ey] = [c.site[0] + dx, c.site[1] + dy], [gx, gy] = w0.T.toE(ex, ey);
+        if (free(gx, gy) && d2(ex, ey, w0.me.x, w0.me.y) <= 100 && king(ex, ey, w0.me.x, w0.me.y) > 1) { E = [gx, gy]; site = c.site.slice(); ci = i; }
+      }
+    }
+    assert.ok(E, 'a cluster site in sight');
+    g.robots.push({ id: 4002, team: 1, unit: S.CHURCH, x: E[0], y: E[1], turn: 5, health: 100, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const run = (seen, er) => {
+      CFG.TAKEN_SEEN = seen; CFG.EXPAND_ROUND = er;
+      const w = worldFor(g, pil); let talked = 0; w.api.castleTalk = v => { talked = v; };
+      const B = { ...B0, api: w.api, w, st: { site: site.slice(), cluster: ci, structs: [] } };
+      w.update();
+      return { gave: siteTaken(B), talked, site: B.st.site, target: B.st.target };
+    };
+    const off = run(0, 0), on = run(1, 0), late = run(0, 50), early = run(0, 31);
+    assert.deepStrictEqual([off.gave, off.talked, off.site], [false, 0, site]);
+    assert.deepStrictEqual([on.gave, on.talked, on.site], [true, CT.TAKEN + ci, null]); assert.ok(on.target);
+    assert.strictEqual(late.gave, false);                     // EXPAND_ROUND alone: only from its round (B.round 30)
+    assert.deepStrictEqual([early.gave, early.talked], [false, 0]);
+    const er = run(0, 20); assert.deepStrictEqual([er.gave, er.talked], [true, CT.TAKEN + ci]);
+  } finally { CFG.TAKEN_SEEN = saved; CFG.EXPAND_ROUND = savedER; }
 });
 
 test('pilgrim: PIONEER_GIVEUP drops a site it gets no nearer to under enemy eyes, reports it taken, and mines', () => {

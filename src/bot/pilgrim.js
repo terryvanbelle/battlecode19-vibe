@@ -158,14 +158,7 @@ function pilgrimAct(B) {
   for (const r of w.friends) if ((r.unit === CASTLE || r.unit === CHURCH) && !st.structs.some(s => s.x === r.x && s.y === r.y)) { st.structs.push({ x: r.x, y: r.y }); st.depKey = null; }
   st.structs = st.structs.filter(s => { if (w.occ(s.x, s.y) === 0) { st.depKey = null; return false; } return true; });
 
-  // CFG.EXPAND_ROUND: a pioneer sent from that round that sees an enemy church or castle near its site reports the
-  // cluster taken (CT.TAKEN; the castle rests it) and mines near home instead.
-  if (st.site && CFG.EXPAND_ROUND && B.round >= CFG.EXPAND_ROUND && w.enemies.some(e => (e.unit === CASTLE || e.unit === CHURCH) &&
-      king(e.x, e.y, st.site[0], st.site[1]) <= CFG.EXPAND_SEEN)) {
-    if (st.cluster >= 0 && st.cluster < 40) w.talk(CT.TAKEN + st.cluster);
-    const h = st.structs[0] || me;
-    st.site = null; st.target = freeDepotNear(B, h.x, h.y, null);
-  }
+  siteTaken(B);
 
   // CFG.CHAIN_ROUND: a chainer walks, waits and builds the first church; a link pilgrim builds the next one.
   if (st.chain) { const a = pilgrimChain(B, go); if (a !== undefined) return a; }
@@ -246,6 +239,21 @@ function pilgrimAct(B) {
 // CFG.PIONEER_GIVEUP: count the turns a pioneer spends no nearer its site than its best while an enemy attacker is in
 // sight; at PIONEER_GIVEUP it reports the cluster taken, drops the site and takes the nearest free depot (true: the
 // caller falls through to mining). CFG.PIONEER_STALL_ANY: the same at that many turns no nearer, with or without enemies.
+// A pioneer that sees an enemy church or castle within EXPAND_SEEN king steps of its site reports the cluster taken
+// (CT.TAKEN; the castle rests it 200 rounds) and mines near home instead: CFG.EXPAND_ROUND, from that round;
+// CFG.TAKEN_SEEN, always (replica 1421, v10 red vs uvafan on 1712: pioneers sent at r34-35 to two sites uvafan churched
+// at r22 lived to r222 without arriving, holding two of the castle's three slots; the castle re-sent to the same sites
+// at r115-116, and its two safe clusters, m17 and m19, never got a pioneer). True when it gave the site up.
+export function siteTaken(B) {
+  const w = B.w, me = w.me, st = B.st;
+  if (!st.site || !((CFG.EXPAND_ROUND && B.round >= CFG.EXPAND_ROUND) || CFG.TAKEN_SEEN)) return false;
+  if (!w.enemies.some(e => (e.unit === CASTLE || e.unit === CHURCH) && king(e.x, e.y, st.site[0], st.site[1]) <= CFG.EXPAND_SEEN)) return false;
+  if (st.cluster >= 0 && st.cluster < 40) w.talk(CT.TAKEN + st.cluster);
+  const h = st.structs[0] || me;
+  st.site = null; st.target = freeDepotNear(B, h.x, h.y, null);
+  return true;
+}
+
 export function siteStalled(B) {
   const w = B.w, me = w.me, st = B.st, k = king(me.x, me.y, st.site[0], st.site[1]);
   if (st.siteBest === undefined || k < st.siteBest) { st.siteBest = k; st.siteStall = 0; st.siteIdle = 0; return false; }

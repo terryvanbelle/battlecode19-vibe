@@ -19,6 +19,9 @@ export const CFG = {
                              // 30 clusters on replica seed 2924, three on our half)
   EXPAND_KEEP: 12,
   EXPAND_SEEN: 5,            // ...and a pioneer that sees an enemy structure this near its site reports it taken (CT.TAKEN)
+  TAKEN_SEEN: 0,             // 1: ...from round 1 whatever EXPAND_ROUND, and its castle frees the pioneer's slot
+                             // (pilgrim.js siteTaken; replica 1421, 1712: two of a castle's three slots held to r115 by
+                             // pioneers to sites uvafan churched at r22, its m17 and m19 clusters never sent one)
   PIONEER_GIVEUP: 0,         // >0: a pioneer that goes this many turns with an enemy attacker in sight and no nearer its site
                              // (king steps) than its best gives the site up: reports it taken (CT.TAKEN: castles rest it 200
                              // rounds and free its pioneer slot) and mines (replica seed 1325 self-play: pioneers waited
@@ -279,8 +282,9 @@ export const CFG = {
   SAFE_BUILD: 0,             // 1: structures never build a robot on a tile where the enemy attackers in sight could kill it
                              // before its first turn (struct.js exposure; replica 414-3, seed 836: four prophets in a row
                              // died unborn on one church tile); 2: counting only attackers with no other target of ours
-  DEF_SAFE: 0,               // 1: a structure's military newborn goes on a free tile where the enemy attackers in sight
-                             // could kill it before its first turn only when every free tile is one (struct.js buildToward)
+  DEF_SAFE: 1,               // 1: a structure's military newborn goes on a free tile where the enemy attackers in sight
+                             // could kill it before its first turn only when every free tile is one (struct.js buildToward).
+                             // 1 is v11's (h178, TRAINING_LOG 2026-10-25 20:50); 0 was v10's.
   PLAN_SERVE_PILGRIM: 0,     // 1: church planning counts a depot as served by pilgrim moves (as staffing does), and
                              // churches a cluster with >= 2 unserved depots (or all, if smaller); 0: any depot within
                              // 2*SERVE_MOVES king steps marks the whole cluster served (seed 1755: never staffed)

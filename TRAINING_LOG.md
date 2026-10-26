@@ -5696,3 +5696,52 @@ structure's knowledge could have saved are 6.5 a game (7.5 in losses), about 4% 
 line (h135-h138: structures radio enemy prophets to newborns, units keep out of remembered prophets' reach) tried
 exactly this on v7 and was closed at panel z 0.33. Not a new candidate; the census is kept as a reference read
 (scratchpad econ/walkin.mjs, walkin2_v10.txt).
+
+## 2026-10-25 20:37 PDT: h178 two blocks z 0.00; the 1712 stall: pioneers held by sites the enemy holds; TAKEN_SEEN
+
+**h178** two blocks (1427-1438, 1441-1452): 36 of 72, pooled expectation 36.0, side-aware z 0.00 (effect -0 Elo, 95%
+-159 to +160); studied cells 0 of 8 (expectation 0.2); other cells 36 of 64, z 0.11. Basics-fix rule: accept at z >= 0
+with others >= 0 if the mechanism read passes (stillborn safer at most 2.90 a game over both blocks; block 1 2.78).
+Block 2's read is running; the decision follows it.
+
+**The 1712 stall** (replica 1421 game 3, v10 red vs uvafan; tools/replay.js rounds/events, reads/pioneers.mjs):
+uvafan had 6 churches and 37 pilgrims at r100, we had 2 and 15 with 355 K banked; our castles built one pilgrim
+between r37 and r99 and 2 churches all game (r41, r53). Castle (3,21) (canonical) planned c8 (m1), c9 (m0), c5, c6,
+c3 (m19), c2 (m17); uvafan churched between c8 and c9 at r22. Our pioneers to c8 and c9 left at r34-35, never arrived,
+and lived to r222 and beyond, holding two of the castle's three slots (PIONEERS_TEAM 6 over 2 castles) until the
+80-turn timeout; at r115-116 the castle sent two more to the same sites (not lost, not reported taken), and c6's two
+pioneers (r67, r148) never arrived either. c3 and c2, safe land, never got a pioneer; uvafan churched c3 at r147. The
+other castle re-sent to (28,44), uvafan's since r46, at r148, r229, r310, r391 and r472.
+Cause: the pioneer's report "an enemy church or castle within EXPAND_SEEN of my site" (CT.TAKEN; the castle rests the
+cluster 200 rounds) runs only with EXPAND_ROUND (0 since h27), and the castle frees a pioneer's slot on CT.TAKEN only
+with PIONEER_GIVEUP or PIONEER_STALL_ANY. New switch **TAKEN_SEEN** (pilgrim.js siteTaken, castle.js): the report always
+runs, and the castle frees the slot. Narrower than h170's PIONEER_STALL_ANY (rejected, z -1.71: gives up after 40 turns
+no nearer, whatever it sees): it fires only on an enemy structure seen at the site. Unit test added. A census of
+v10's 108 games (pioneers.mjs: pioneers sent after the enemy held their site, never arrived) sizes it; it runs behind
+h178's read.
+
+## 2026-10-25 20:50 PDT: h178 ACCEPTED as v11 (basics-fix rule)
+
+h178 = v10 + DEF_SAFE 1. Two blocks (1427-1438, 1441-1452): 36 of 72 against the pooled expectation 36.0, side-aware z
+0.00 (exactly 0 at full precision; effect 0 Elo, 95% -159 to +160); other cells 36 of 64, z 0.11; studied cells 0 of
+8 (expectation 0.23). Mechanism read (tools/reads/stillborn.mjs, per game; v10 over its 108 panel games 1391-1426 in
+brackets): safer 2.68 over both blocks (block 1 2.78, block 2 2.58; bar 2.90 = a quarter of v10's 11.60), exposed
+6.06 (14.93), stillborn 18.51 (21.77), K lost unborn 465 (552), built 177.0 (180.9). The rule pre-registered at
+15:26 (accept at z >= 0 with others >= 0 if the mechanism read passes) accepts it: v11 = bots/v11 (4a802965e3a3).
+Strength is unchanged within the panel's resolution: the gain is the basics (2.68 newborns a game no longer fed to
+campers on a tile with a safer one free), the outcome neutral.
+Promotion: DEF_SAFE defaults to 1 (config.js; tests written against v10's placement pin it with testPreV11);
+panel_submit.sh's ladder default is bots/v11; progress/panels/v11-m1.pool = 1441-1452 with 1427-1438 as the control
+argument, and a fresh v11 control block joins it before any v11-based block is scored (as for v9 and v10). h179-h183
+are rebuilt on v11 with their switches unchanged; their pre-registrations stand, with bars relative to the champion
+recomputed from v11's panel games once its control block is in.
+
+## 2026-10-25 21:02 PDT: v10 passes symcheck to r1000; check-in
+
+v10's r1000 symcheck (VM job ...1000symv10, nice 15; tools/symcheck.js --bot bots/v10 --seeds 3,1,2,2321 --rounds
+1000; out/sym_v10_r1000.log): every move mirrored on all four seeds to r1000 (seed 3 140 robots, 1 194, 2 110, 2321
+106). v11 differs from v10 only in DEF_SAFE's placement choice, which runs in the canonical frame (struct.js
+buildToward); its own r1000 symcheck goes to the VM queue after the commit. Replica queue 3 waiting (ranked 3), 8
+running; VM disk 2.3 GB free. The pioneer census for TAKEN_SEEN (pioneers.mjs over v10's 108 panel games) was
+stopped after 1394-1396 and 1397's first two games so the no-op check has the driver alone; it resumes at 1397's
+seed-1712 game.

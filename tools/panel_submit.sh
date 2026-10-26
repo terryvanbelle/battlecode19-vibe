@@ -1,5 +1,5 @@
 #!/bin/bash
-# Play one replica panel block for a candidate build, then restore the ladder build ($LADDER, default bots/v10; TRAINING_ALGORITHM step 7).
+# Play one replica panel block for a candidate build, then restore the ladder build ($LADDER, default bots/v11; TRAINING_ALGORITHM step 7).
 #   tools/panel_submit.sh DIST_DIR "message" [BOT,BOT,...]
 # Submits DIST_DIR, requests the panel scrims against BOTS (default: the v7-m1 panel's six, each twice: NAME@+ with us
 # red in all three games and NAME@- blue, so a block plays every cell on both sides: 36 games; SIDES=mixed requests
@@ -15,7 +15,7 @@ dist=$1; msg=$2
 todo=${3:-m-schier.battlecode-2019-wololo,StoneT2000.BC19-botfinalsafe,StoneT2000.BC19-bot1v43,uvafan.bc2019,awesomelemonade.Battlecode2019,IanCoolidge0.battlecode20~69ce88}
 if [ -z "${3:-}" ] && [ "${SIDES:-both}" = both ]; then todo=$(echo "$todo" | tr , '\n' | sed 's/.*/&@+,&@-/' | paste -sd, -); fi
 C=tools/galaxy19/contest19.py
-LADDER=${LADDER:-bots/v10}   # the champion, resubmitted as our ladder build after each block
+LADDER=${LADDER:-bots/v11}   # the champion, resubmitted as our ladder build after each block
 PANEL=${PANEL:-progress/panels/v7-m1.json}
 # One block at a time: a scrim plays the submission current when it was requested, so two runs must not interleave.
 exec 9>"${TMPDIR:-/tmp}/panel_submit.lock"; flock 9

@@ -96,7 +96,7 @@ export function castleTurn(B) {
     // send it itself next, and asks that church nothing for HOP_REST turns.
     if (p.hop >= 0 && p.id === 0 && me.turn - p.since > 2) { st.hopFail.set(p.hop, me.turn); return false; }
     if (CFG.ESCORT && !p.esc && me.turn - p.since > p.d + CFG.ESCORT_SLACK) { p.esc = true; openEscort(B, p.cluster); }
-    if ((CFG.PIONEER_GIVEUP || CFG.PIONEER_STALL_ANY) && st.taken.has(p.cluster) && st.taken.get(p.cluster) >= p.since) return false;   // it gave up
+    if ((CFG.PIONEER_GIVEUP || CFG.PIONEER_STALL_ANY || CFG.TAKEN_SEEN) && st.taken.has(p.cluster) && st.taken.get(p.cluster) >= p.since) return false;   // it gave up
     const late = me.turn - p.since > 80;
     if (late && CFG.PIONEER_TIMEOUT_REST && !st.churched.has(p.cluster)) st.lost.set(p.cluster, me.turn);
     return !st.churched.has(p.cluster) && !late;
