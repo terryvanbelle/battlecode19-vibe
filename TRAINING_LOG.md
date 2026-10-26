@@ -6635,3 +6635,11 @@ always-lost cell with the exact play that won it for v11, the most direct eviden
   submission 236, ladder 237), bumped.
 - Replica queue 83 waiting (71 ranked); v12's rating chain: 1796 waits on 1788 (played, unrated), which waits on
   1738 (arya-k vs awesomelemonade, running).
+
+## 2026-10-26 15:58 PDT: h203 driver check: inert against our own builds
+
+h203 and bots/v12 (red) against dist/turtle, dist/camp and bots/v12 (blue) on 2644, 2321, 388, 1706, 2740 to r150
+(scratchpad duel_diag.sh; one game at a time; no errors, timeouts or exceptions): all 15 h203 replays are
+byte-identical to v12's. Our builds' prophets first hit an escort from r2 52, outside its sight (eschits.mjs: seen
+0 in all 6 hits), so the duel never arises in self-play; it acts only where an enemy prophet comes into an escort's
+sight alone (50 of v12's 153 panel hits). The unit test covers the behaviour; the panel decides.
