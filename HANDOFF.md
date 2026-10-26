@@ -94,6 +94,9 @@
   among them always-lost wololo 2644, which v11 won red 3 of 3 by that charge; ordinary rule; studied
   m-schier.battlecode-2019-wololo:seed-2644,StoneT2000.BC19-bot1v43:seed-2321; mechanism check tools/reads/eschits.mjs:
   shooter dead within 12 rounds in half the lone-prophet hits, v12 18 of 50; TRAINING_LOG 2026-10-26 14:57);
+  h198 (= h187 on v12: v12 + CHAIN_WALL 28, dist/h198 b6e939144ef7; h172's; studied cells uvafan 2046, 1653,
+  IanCoolidge0 1036; moved up 2026-10-26 15:49: v12 loses uvafan 2046 on health at r1000 after its three chain lines,
+  which saw 29, 33 and 74 enemy attackers, lost 19 churches; TRAINING_LOG 2026-10-26 15:49);
   h201 (v12 + ECON_RICH 100, dist/h201 f3833637f632: before r100 the peacetime army builds from the bank past 100 K
   above the reserves; v12 banks 300+ K at r100 in 36 of its 72 panel games, army 2-11; ordinary rule; studied
   StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046; mechanism check tools/reads/bank.sh: TRAINING_LOG
@@ -109,8 +112,6 @@
   safe home depots; basics-fix rule; studied cells awesomelemonade.Battlecode2019:seed-2518, uvafan.bc2019:seed-2046;
   mechanism read stuckM per game (tools/reads/idle.mjs, 300 rounds) at most 75% of the champion's; TRAINING_LOG
   2026-10-25 09:12, 10:12);
-  h198 (= h187 on v12: v12 + CHAIN_WALL 28, dist/h198 b6e939144ef7; h172's; studied cells uvafan 2046, 1653,
-  IanCoolidge0 1036);
   h199 (= h188 on v12: v12 + ECON_NOPLAN 1, dist/h199 4ed3f18bc8de; h173's) on the targeted panel
   progress/panels/noplan-m1.json (the six bots on the five pool maps where no castle plans a church): first a bots/v12
   control block (`PANEL=progress/panels/noplan-m1.json tools/panel_submit.sh bots/v12 "v12 control, noplan-m1"`),

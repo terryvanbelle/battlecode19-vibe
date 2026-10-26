@@ -6643,3 +6643,19 @@ h203 and bots/v12 (red) against dist/turtle, dist/camp and bots/v12 (blue) on 26
 byte-identical to v12's. Our builds' prophets first hit an escort from r2 52, outside its sight (eschits.mjs: seen
 0 in all 6 hits), so the duel never arises in self-play; it acts only where an enemy prophet comes into an escort's
 sight alone (50 of v12's 153 panel hits). The unit test covers the behaviour; the panel decides.
+
+## 2026-10-26 15:49 PDT: uvafan 2046, an always-lost cell: three chain lines into a prophet wall; h198 moved up
+
+v12 red against uvafan on 2046 (match 1853, r1000, lost on health 1,140 to 6,290; blue 1854 the same story):
+- No shot before r352 on either side. Both teams mine their castles' depots (our half holds 3 karbonite and 4 fuel
+  depots, staffed 52-91% of rounds 400-900; scratchpad depots.mjs) and neither builds a church to r350. Mined by r1000:
+  ours K 4,498 F 29,970, uvafan's K 5,428 F 36,040, so the economies are close.
+- Our three chain lines (scratchpad study/lines.js): r352, 7 churches, whose nearest church saw 29 enemy attackers;
+  r598, 4 churches, 33; r715, 8 churches, 74. None killed a castle. All 19 churches were lost (950 K), with 59
+  preachers of 59 built, 55 crusaders of 70 and 14 prophets of 15: about 4,000 K of units lost, against 40 of
+  uvafan's prophets killed.
+- uvafan banks into 164 prophets and spends its last karbonite on 79 crusaders in r900-1000 (40 HP for 15 K). v12's
+  endgame does the same (0 to 15 crusaders) but holds only 550 K at r900.
+CHAIN_WALL 28 (h198, h164's pre-registration with studied cells uvafan 2046, 1653 and IanCoolidge0 1036) ends a line
+whose church sees 28+ and rests the chain 300 rounds; all three lines here are over the threshold. Order changed
+before any h198 game: h195 (block 3 running), h203, **h198**, h201, h202, h196, h197, h199, h200.
