@@ -6054,3 +6054,13 @@ comparison, fixed before its block is read), then h190's parked read for the rec
   pilgrims and units never come within sight of those tiles, so HUNT (a pilgrim must see the miner) cannot fire
   there: ECONOMICS row 12 as written does not reach this case. It is contested centre land the field takes with an
   escort (row 11's von Thünen premium, and h184's pioneer race, which won uvafan 1712 blue in its block 1).
+
+## 2026-10-26 03:34 PDT: h184's mechanism read on block 1 (1513-1524): it does what it was built to do
+
+pioneers.mjs over block 1 (scratchpad econ/pioneers_h184_b1.txt), the 24 firing cells against v11's cell medians
+(bar fixed 01:24): **every game builds a pioneer at r3, and it founds its church in 22 of 24 (0.92, bar 2/3)**; the
+two that fail are bot1v43 2591, both sides (no church; lost r154-161, as v11). **First church earlier than v11's
+cell median in 22 cells, later in none** (ties: 2591 both, never). First churches: 1706 r11 (v11 40), 1712 r22 (41),
+2013 r15 (49), 2321 r13 (42), 2740 r28 (73), 388 r25 (46), 836 r24 (v11 187 red, 148 blue), 1036 r18 (34), 2797 r13
+(28), 2518 r14 (v11 never: won both sides). Pilgrims at r100 14.79 a game (v11 13.11). Block 2's read follows the
+same way; the verdict takes both blocks' z under the ordinary rule.
