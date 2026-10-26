@@ -5876,3 +5876,8 @@ those: 3.06 a game), 0 gave up; 505 sent to a site the enemy held and we did not
 - **h191** (pre-registered 23:32): parked at most **1.53 a game** (0.5x) and churches at least **9.58 a game**.
 (parked.mjs counts a site held when an enemy structure stood within 3 king steps at the send and none of ours did,
 so its 505 exceed pioneers.mjs's 341 at 22:42, which counts the round an enemy church first stood there.)
+
+## 2026-10-26 00:11 PDT: PIONEER_TIMEOUT_HOME's no-op check passes
+The defaults build (src/bot with PIONEER_TIMEOUT_HOME 0) replays bots/v11 against itself on 799 to r300 IDENTICAL,
+driver alone; tools/unit-tests.sh 175 of 175 node tests, 65 Python tests OK. Next on the driver: h170's parked read
+(for the record), then h191's diagnostic (h191 red vs v11 blue on 1712 to r1000, parked.mjs on both sides).
