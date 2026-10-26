@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 09:11 PDT)
+## State (2026-10-26 09:24 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -62,7 +62,7 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted).
-  **Replica queue (09:10): 178 waiting (174 ranked): the daily autoscrim fired at 09:00; h193 block 1's last matches and h185 block 1 play bumped.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (09:24): 172 waiting (all ranked; the daily autoscrim fired at 09:00); h193 block 1's last match (1645) and h185 block 1's last five play.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: h193 block 1 = matches 1639-1650** (submission 216, requests 896-907; ladder 217; waiter scratchpad
   wait_block.sh 1639 1650). h193 = v11 + STRIKE_FAR 3 (dist/h193 18d81e3ab45c: a pilgrim radios an enemy church once,
