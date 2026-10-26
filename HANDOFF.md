@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 08:43 PDT)
+## State (2026-10-26 08:56 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -62,7 +62,7 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted).
-  **Replica queue (08:03): 13 waiting (12 of them h193 block 1), h192 block 1's last match running.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (08:41): 11 waiting (ranked 2), 8 running: h193 block 1 and the first of h185 block 1.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: h193 block 1 = matches 1639-1650** (submission 216, requests 896-907; ladder 217; waiter scratchpad
   wait_block.sh 1639 1650). h193 = v11 + STRIKE_FAR 3 (dist/h193 18d81e3ab45c: a pilgrim radios an enemy church once,
@@ -73,6 +73,10 @@
   mechanism bar per block (forward.mjs, strike.mjs on h193's side over the 10 studied-cell games): a near enemy
   church destroyed in 4 or more (v11: 0 of 30), strikers built in 6 or more. Score: `tools/panel_pool.sh 1427-1438
   progress/panels/v11-m1.pool 1639-1650 --studied <the five>`.
+  **Being submitted: h185 block 1** (`tools/panel_submit.sh dist/h185 ...`, output scratchpad submit_h185_b1.txt;
+  candidate submissions 218, 220, ladder 219, 221): 8 of its 12 requests are in; the 4 against awesomelemonade and
+  IanCoolidge0 were refused by the replica's hourly scrim limit (HTTP 429) and the script retries them every 15 min.
+  Its rule and reads are in the h185 entry below; its matches go here when the script ends.
   h192 was REJECTED on block 1 (14 of 36, z -2.65, others -2.83; TRAINING_LOG 2026-10-26 08:21); h184 on three
   blocks (62 of 108, z 2.51, others -0.85; 06:37); h190 on its block 1 (z -1.42; 00:42). progress/ waits for a gap
   between blocks (LEARNINGS 38; last refresh 06:37).
@@ -80,7 +84,11 @@
   recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
   2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50, except h191; h191
   last from 01:37):
-  h185 (= h179 on v11: v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h185 e4a146ede62f; h171's; the fix for escorts
+  h194 (v11 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h194 bf489b929599: h184's race part alone; general
+  panel rule, other cells z >= 0 to accept; studied awesomelemonade.Battlecode2019:seed-2518,StoneT2000.BC19-bot1v43:seed-2591;
+  mechanism read pioneers.mjs: the turn-3 pioneer founds its church in at least half of the games on the seven maps
+  where it sends; TRAINING_LOG 2026-10-26 08:53);
+  h185 (in play above; = h179 on v11: v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h185 e4a146ede62f; h171's; the fix for escorts
   that never leave home on small maps, LATTICE_R 12 around their site covering it (2591); studied cells
   uvafan 1712, awesomelemonade 2518, wololo 836, 2644, bot1v43 388, botfinalsafe 2740; mechanism read
   tools/reads/escorts.mjs, mean hit6: escorts dead within 6 rounds of a prophet or castle hit under 40%, h157 69%);

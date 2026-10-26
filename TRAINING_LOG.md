@@ -6295,3 +6295,30 @@ settle it: **our team 38 timeouts in 3.86 M turns (0.98 per 100k), 74 frozen, 0 
 floor set by the shared process would be; IanCoolidge0's lighter bot is lower (0.17). At 0.35 killed turns a game,
 each costing one robot one turn, time is not a lever now (LEARNINGS 31 said so from profiling: ~2 ms of our code a
 turn). Basics check holds: zero exceptions, overruns at the environment's floor.
+
+## 2026-10-26 08:53 PDT: h194 (h184's race part alone) built and pre-registered
+- h184 by cell over its three blocks against v11's 108 panel games (one game a block): gained awesomelemonade 2518
+  both sides 3/3 (v11 0/3 each), botfinalsafe 1706 blue 3/3 (0/3), uvafan 1712 blue 3/3 (0/3), wololo 2013 red 2/3
+  (1/3), botfinalsafe 2740 blue 3/3 (2/3); lost awesomelemonade 1712 red 0/3 (3/3), bot1v43 2321 red 1/3 (3/3),
+  IanCoolidge0 203 red 2/3 and 1036 blue 2/3 (3/3 each). On 2518 and 2591 it plays RACE only (no castle of ours has a
+  cluster 7+ king steps ahead); elsewhere OPEN sends the turn-3 pioneer home-side, which won 1706 blue and uvafan 1712
+  blue and gave the centre to awesomelemonade on 1712 red (04:30).
+- **h194** = v11 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2 (dist/h194 bf489b929599; CFG diff vs v11 only
+  those, plus the unset HUNT_SLACK, PIONEER_TIMEOUT_HOME, TAKEN_SEEN and STRIKE_FAR keys at 0). OPEN 99 leaves no
+  cluster "safe", so every castle whose plan opens with a race (m < 2) sends its turn-3 pioneer there and no other
+  castle sends one early. Static plans (scratchpad econ/early_sim.mjs over tools/plan.mjs; the same on both sides):
+  it sends on 836 ((22,19) to c7 m0 d22), 2740 ((51,3) to c7 m0 d47), 2591 ((15,5) to c1 m0 d17, as h184), 2321
+  ((9,11) to c5 m0 d16), 1712 ((3,21) to c8 m1 d10), 2518 ((30,7) to c1 m0 d13, as h184) and 1036 ((27,13) to c6 m0
+  d15); on 2644, 2013, 1706, 203, 388, 1653, 2046 and 2797 it plays as v11 (first cluster not a race, or no plan).
+  Each send goes to v11's own first cluster, about 20 rounds earlier (v11's first pioneers leave at r23-24 on 2518
+  and 2591 and never found those churches: the enemy's stands by r14 and r23).
+- **Pre-registration** (before any h194 replica game): the general panel rule (block 1 rejects at side-aware z < 0.5;
+  after block 2 accept at z >= 2, reject at z < 1, else block 3, accepted at cumulative z >= 2); designed from studied
+  cells, so acceptance also needs the other cells' z >= 0. Studied cells: awesomelemonade 2518 and bot1v43 2591, both
+  sides. Score: `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool BLOCK... --studied
+  awesomelemonade.Battlecode2019:seed-2518,StoneT2000.BC19-bot1v43:seed-2591`. Mechanism read
+  (tools/reads/pioneers.mjs on h194's side): in the games where its static plan sends (the seven maps above: 16 of a
+  block's 36), the turn-3 pioneer founds its church in at least half. Prediction: 2518 as h184 (both sides won);
+  awesomelemonade 1712 red as v11 (the centre is not given up); 1706 blue and uvafan 1712 blue back to v11's 0.
+- **Panel order**: h193 (in play), h185 (being submitted), **h194**, h186, h187, h188, h191: h194 repeats a measured
+  gain (h184's 2518 cells, z 7.48 over the studied cells) without the sends that cost h184 its other cells.
