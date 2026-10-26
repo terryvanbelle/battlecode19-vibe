@@ -6530,9 +6530,10 @@ our churches, army, karbonite and fuel at r200-700. The chain fires only when th
 CHAIN_F (3500 fuel); from CHAIN_ROUND the peacetime army leaves CHAIN_K karbonite but no fuel. Games where the
 karbonite was met and the fuel not, at some checkpoint r250-700: **v11 9 of 108 (won 8), v12 19 of 108 (won 15)**;
 v12's 4 such losses are all IanCoolidge0 1036 (1834 blue, 1845 red, 1857 red, 1858 blue), the cell v11 won 6 of 6
-(red by castles at r375-485 with lines: the 12:27 bullet under 12:11). The 15 wins are mostly r1000 games decided on health (uvafan
-1653 x6, wololo 836 blue x3, IanCoolidge0 1036 red 1833, bot1v43 388 red 1851) or castle kills by r480 (bot1v43 388
-and 2321 red): there the fuel went into units, and a kept bank would cost army. The trade is the panel's to judge.
+(red by castles at r375-485 with lines: the 12:27 bullet under 12:11). The 15 wins are mostly r1000 games decided
+on health (uvafan 1653 x6, wololo 836 blue x3, IanCoolidge0 1036 red 1833, bot1v43 388 red 1851) or castle kills by
+r480 (bot1v43 388 and 2321 red): there the fuel went into units, and a kept bank would cost army. The trade is the
+panel's to judge.
 **h202 = v12 + CHAIN_FKEEP 1** (new switch, default 0; struct.js: from CHAIN_ROUND the peacetime army's fuel reserve
 adds CHAIN_F, as its karbonite reserve adds CHAIN_K; threat responses unaffected; dist/h202 4e7b143bb9bc). Unit test
 added (r300: default builds at 2000 fuel, kept waits, builds past CHAIN_F + its reserve; before CHAIN_ROUND keeps
