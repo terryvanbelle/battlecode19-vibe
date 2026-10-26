@@ -67,10 +67,10 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted).
-  **Replica queue (11:17): 126 waiting (all ranked); none of ours plays (the v12 control block is next; progress/ refreshed 11:14).** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (11:17): 126 waiting (all ranked). The v12 control block is in: matches 1847-1858 (submission 228, bumped; ladder 229; rated 1859-1864); progress/ refreshed 11:14.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **Next: the v12 control block** (`tools/panel_submit.sh bots/v12 "v12 control"`); progress/ was refreshed in the gap
-  between blocks (11:14, LEARNINGS 38). h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26
+  **Now: the v12 control block, matches 1847-1858** (submitted 11:20); when played, add it to progress/panels/v12-m1.pool
+  and finish h195's bars (the census over h185's 72 games plus this block's 36). h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26
   09:42), h192 on block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
   **Then, one block at a time** (each v11 candidate rebuilt on v12 with its switches unchanged and its
   pre-registration kept; bars relative to the champion recomputed from v12's panel games (h185's 1651-1658,

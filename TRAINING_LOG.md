@@ -6459,3 +6459,7 @@ h185's build, all 0): h196 = h194 (70a8617acfee), h197 = h186 (7e320236f615), h1
   beside the builder); bot1v43 2321 blue holds 18 of the 69 safer cases (23 stillborn in 3 games), IanCoolidge 203
   red the most stillborn (65 of 169, a cell we win). So h195's tile choice moves about 0.6 pilgrims a game; its
   no-build rule acts only on attackers in the builder's sight. Its bars are taken from v12's games, as registered.
+- (11:20) **v12 control block submitted**: submission 228 (bots/v12 e4a146ede62f), matches 1847-1858 (the v7-m1 panel, both
+  sides, 36 games; bumped), ladder resubmitted as 229; tools/rate_ours.sh asked six field teams for ranked matches
+  against v12 (1859-1864). Once played it joins progress/panels/v12-m1.pool, and h195's bars come from v12's 108 panel
+  games (stillborn.mjs TEAM 2 census over h185's 72 running now) before any h195 game is read.
