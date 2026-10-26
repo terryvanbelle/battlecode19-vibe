@@ -67,10 +67,10 @@
   rate and power: `python3 -I tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted).
-  **Replica queue (15:34): 83 waiting (71 ranked; VM 11 GB free); h195 block 3 queued, bumped.** While 30+ wait: no
+  **Replica queue (15:52): 78 waiting (71 ranked; VM 11 GB free); h195 block 3 running, bumped.** While 30+ wait: no
   local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the autoscrim held
-  (TRAINING_LOG 2026-10-25 09:12). v12's rated matches 1859-1864 have played (13 of 18) but wait to be rated: our chain
-  stops at 1796, whose opponent's ranked match 1788 is queued (bumped 14:09; TRAINING_LOG 2026-10-26 14:09).
+  (TRAINING_LOG 2026-10-25 09:12). v12's rating chain moves again: 1796 rated by 15:52 (after 1738 and 1788), so
+  1859-1864 (13 of 18) follow; refresh rating-history once h195 block 3 ends.
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
   **Now: h195 block 3** = matches 1891-1902 (submission 236; ladder 237). Blocks 1-2 (1865-1888): 50 of 72,
   side-aware z 1.08, others 1.14; the stillborn read failed its bar (safer 0.28 a game, bar 0.118), so the ordinary
