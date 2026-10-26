@@ -6121,3 +6121,25 @@ same way; the verdict takes both blocks' z under the ordinary rule.
   failed a local delivery against our own chains and never met the field; 836's church stands at r2 205. A
   candidate (an early strike on a forward enemy church while it stands unguarded) waits for h184's verdict, to be
   built on the champion it gives.
+
+## 2026-10-26 05:42 PDT: forward-church census over v11's 108 reference games (tools/reads/forward.mjs, new)
+
+`tools/reads/games.sh forward.mjs -- 1427-1438 1441-1452 1455-1466`: enemy churches founded within r2 400 of a living
+castle of ours (either half), whether we ever destroyed them, what they built.
+
+| games | n | won | castles lost / game | military they built / game | near churches we destroyed |
+|---|---|---|---|---|---|
+| no near church | 35 | 28 (0.80) | 0.00 | 0 | - |
+| a near church | 73 | 27 (0.37) | 0.68 | 81 | 61 of 295 |
+| first founded by r40 | 42 | 13 (0.31) | 0.86 | 85 | 31 of 172 |
+| first founded r41-100 | 23 | 12 (0.52) | 0.35 | 76 | 22 of 60 |
+
+Confounded by opponent and map, but the cells v11 loses outright all hold an early near church **we never touch**:
+wololo 836 (founded r23, r2 205; destroyed 0 of 23; 0 of 6 won), awesomelemonade 2518 (r14, r2 290; 0 of 12; 0 of 6),
+botfinalsafe 2591 (r23, r2 233; 0 of 15; 0 of 6), uvafan 1712 (r22, r2 225-244, standing all 978 rounds; 0 of 10;
+0 of 6), wololo 2013 (r46, r2 296; 0 of 17; 1 of 6). 30 games, 1 won, and every early church stands to the end or
+its cluster's end; their churches built 8-217 military each. Cells where we do destroy them win (IanCoolidge 1036:
+2 a game, 6 of 6; awesomelemonade 2797: r58 church r2 145 dead 21-45 rounds later, 6 of 6). Price: the upper bound is
+the 29 lost games of those five cells (13.4 of the panel's 36-game block at v11's rate); what a strike gets depends on
+who sees the church first and what guards it (next read: econ/seen.mjs, our sightings and its guards in its first 15
+rounds).
