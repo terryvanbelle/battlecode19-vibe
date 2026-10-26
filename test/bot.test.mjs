@@ -6,13 +6,13 @@ import * as S from '../src/bot/specs.js';
 import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
-import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot } from '../src/bot/comms.js';
+import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot, GUARD_STRIKE } from '../src/bot/comms.js';
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot } from '../src/bot/military.js';
-import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers } from '../src/bot/castle.js';
+import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers, hearStrike, strikeFar } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy, hitTrack, sayRescue } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
-import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, hotRetarget, hereRetarget, siteStalled, siteTaken, siteTimeout, stallRetarget } from '../src/bot/pilgrim.js';
+import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, strikeSpot, hotRetarget, hereRetarget, siteStalled, siteTaken, siteTimeout, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, canHit, PRIORITY } from '../src/bot/combat.js';
@@ -2958,6 +2958,98 @@ test('military: CREEP_ROUND moves the lattice a unit holds toward the enemy over
     CFG.CREEP_ROUND = 0;
     assert.deepStrictEqual(target(530, false), before);             // off: as before
   } finally { CFG.CREEP_ROUND = saved.R; CFG.CREEP_EVERY = saved.E; }
+});
+
+test('STRIKE_FAR: pilgrims radio an enemy church once; the nearest castle owes crusaders that walk to it', () => {
+  const saved = [CFG.STRIKE_FAR, CFG.STRIKE_FAR_R2, CFG.STRIKE_SAFE_R2, CFG.STRIKE_FUEL];
+  try {
+    CFG.STRIKE_FAR = 3; CFG.STRIKE_FAR_R2 = 400; CFG.STRIKE_SAFE_R2 = 100; CFG.STRIKE_FUEL = 150;
+    const C = (id, x, y, team = 1) => ({ id, team, unit: S.CHURCH, x, y, seen: true });
+    // Pilgrim: the nearest church in sight, once; quiet after hearing another pilgrim radio it, or on a thin bank.
+    const sent = [], st = {};
+    const look = (enemies, robots = [], fuel = 1000) => {
+      const w = { me: { id: 1, x: 10, y: 10 }, n: 40, enemies, robots, fuel, sentR2: 0, signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; } };
+      strikeSpot({ w, st });
+    };
+    look([C(50, 14, 14), C(51, 12, 11)]);
+    assert.deepStrictEqual(sent, [[encXY(0, 12, 11), FAR.STRIKE]]);
+    look([C(50, 14, 14), C(51, 12, 11)]);
+    assert.deepStrictEqual(sent[1], [encXY(0, 14, 14), FAR.STRIKE]);
+    look([C(50, 14, 14), C(51, 12, 11)]);
+    assert.strictEqual(sent.length, 2);
+    const heard = { id: 9, team: 0, seen: false, signal: encXY(0, 20, 20), signal_radius: FAR.STRIKE };
+    look([C(52, 20, 20)], [heard]); look([C(53, 21, 21)], [], 100);
+    assert.strictEqual(sent.length, 2, 'heard, or a thin bank: quiet');
+    assert.deepStrictEqual(decFarRobot(heard), { type: SIG.STRIKE, x: 20, y: 20, extra: 0 });
+
+    // Castle: it owes STRIKE_FAR crusaders to a radioed church within r2 400 of it when no castle of ours is nearer and
+    // the church stands beyond r2 100 of every enemy castle (mirror (x, n-1-y)); each tile once.
+    const castleB = (me, castles, robots, enemies = [], occ = () => -1) => {
+      const w = { me, n: 40, robots, enemies, occ, mirror: (x, y) => [x, 39 - y] };
+      return { w, st: { castles: new Map(castles.map((c, i) => [i + 1, c])), order: castles } };
+    };
+    const radio = (x, y) => ({ id: 70, team: 0, seen: false, signal: encXY(0, x, y), signal_radius: FAR.STRIKE });
+    const me = { id: 1, x: 10, y: 5 };
+    let B = castleB(me, [me, { x: 30, y: 5 }], [radio(12, 20)]);
+    hearStrike(B);
+    assert.deepStrictEqual(B.st.strikes, [{ x: 12, y: 20, left: 3 }]);
+    hearStrike(B);
+    assert.strictEqual(B.st.strikes.length, 1, 'once per tile');
+    for (const [why, castles, at] of [['beyond r2 400', [me], [10, 26]], ['another castle nearer', [me, { x: 16, y: 18 }], [12, 20]],
+      ['within r2 100 of an enemy castle', [me, { x: 30, y: 30 }], [25, 9]]]) {
+      B = castleB(me, castles, [radio(at[0], at[1])]);
+      hearStrike(B);
+      assert.deepStrictEqual(B.st.strikes, [], why);
+    }
+    // A church the castle itself sees counts too; a debt ends when the castle sees the tile without the church.
+    B = castleB(me, [me], [], [C(60, 13, 12)]);
+    hearStrike(B);
+    assert.deepStrictEqual(B.st.strikes, [{ x: 13, y: 12, left: 3 }]);
+    B.w.enemies = []; B.w.occ = () => 0;
+    hearStrike(B);
+    assert.deepStrictEqual(B.st.strikes, []);
+    // strikeFar builds a crusader toward it, radioing SIG.GUARD at r2 GUARD_STRIKE; a turn whose radio is taken waits.
+    const sigs = [];
+    const bw = { me: { x: 10, y: 5, turn: 30 }, n: 40, enemies: [], fuel: 1000, karbonite: 200, sentR2: 0, free: () => true, isDepot: () => false,
+      canAfford: () => true, signal(v, r2) { sigs.push([v, r2]); this.sentR2 = r2; }, build: (u, dx, dy) => ({ action: 'build', u, dx, dy }) };
+    const SB = { w: bw, st: { strikes: [{ x: 13, y: 12, left: 1 }] }, round: 30 };
+    bw.sentR2 = 4; assert.strictEqual(strikeFar(SB), null); bw.sentR2 = 0;
+    const a = strikeFar(SB);
+    assert.strictEqual(a.u, S.CRUSADER);
+    assert.deepStrictEqual(sigs, [[encXY(SIG.GUARD, 13, 12), GUARD_STRIKE]]);
+    assert.ok(d2(10 + a.dx, 5 + a.dy, 13, 12) < d2(10, 5, 13, 12), 'toward it');
+    assert.strictEqual(strikeFar(SB), null, 'paid off');
+
+    // Military: a crusader born to a GUARD at r2 GUARD_STRIKE walks toward the church tile (out of sight);
+    // born to the same GUARD at r2 2 (an escort), it is no striker.
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    const ring = (cx, cy, lo, hi) => { for (let r = lo; r <= hi; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++)
+      if (Math.max(Math.abs(dx), Math.abs(dy)) === r && free(cx + dx, cy + dy)) return [cx + dx, cy + dy]; return null; };
+    const at = ring(castle.x, castle.y, 1, 1), tgt = at && ring(castle.x, castle.y, 13, 15);
+    assert.ok(at && tgt);
+    const run = (r2) => {
+      const cru = { id: 4004, team: 0, unit: S.CRUSADER, x: at[0], y: at[1], turn: 1, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      g.robots.push(cru);
+      try {
+        const cw = worldFor(g, castle), [sx, sy] = cw.T.toC(tgt[0], tgt[1]);
+        castle.signal = encXY(SIG.GUARD, sx, sy); castle.signal_radius = r2;
+        const w = worldFor(g, cru), B = { api: w.api, w, round: 20, st: {}, deps: null, clusters: null, rnd: rng(2) };
+        w.shadow[tgt[1]][tgt[0]] = -1;   // the church tile out of sight (worldFor's robot sees the whole map)
+        B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        return { a: militaryTurn(B), B };
+      } finally { g.robots.pop(); castle.signal = 0; castle.signal_radius = 0; }
+    };
+    const e2 = (x, y) => (x - tgt[0]) ** 2 + (y - tgt[1]) ** 2;
+    const on = run(GUARD_STRIKE);
+    assert.ok(on.B.st.strike && on.a && on.a.action === 'move', 'a striker walks');
+    assert.ok(e2(at[0] + on.a.dx, at[1] + on.a.dy) < e2(at[0], at[1]));
+    const esc = run(2);
+    assert.ok(esc.B.st.guardAt && !esc.B.st.strike, 'an escort is no striker');
+    CFG.STRIKE_FAR = 0;
+    assert.ok(!run(GUARD_STRIKE).B.st.strike, 'off: no striker');
+  } finally { [CFG.STRIKE_FAR, CFG.STRIKE_FAR_R2, CFG.STRIKE_SAFE_R2, CFG.STRIKE_FUEL] = saved; }
 });
 
 test('struct: STRIKE_R2: a church that sees an enemy church 4 tiles off and no attacker builds a preacher toward it', () => {

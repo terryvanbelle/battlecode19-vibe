@@ -3,7 +3,7 @@
 // Enemy castles are exactly the mirrors of ours (canonical frame: (x, n-1-y)).
 import { CFG, defReserveK } from './config.js';
 import { STATS, CHURCH, PILGRIM, CRUSADER } from './specs.js';
-import { SIG, encXY, encNum, CT, FAR } from './comms.js';
+import { SIG, encXY, encNum, CT, FAR, decFarRobot, GUARD_STRIKE } from './comms.js';
 import { bfs } from './mapinfo.js';
 import { offsets, d2 } from './util.js';
 import { structInit, structTurn, buildToward } from './struct.js';
@@ -11,7 +11,7 @@ import { chainLaunch } from './chain.js';
 
 const KING = offsets(2), PILGRIM_OFFS = offsets(4);
 
-export { callAttack, callDue, planClusters, expandPlan, nextPioneer, pioneerDue, pioneer };
+export { callAttack, callDue, planClusters, expandPlan, nextPioneer, pioneerDue, pioneer, hearStrike, strikeFar };
 
 export function castleTurn(B) {
   const w = B.w, me = w.me, st = B.st;
@@ -110,9 +110,11 @@ export function castleTurn(B) {
   if (CFG.RECALL) callRecall(B);
   callAttack(B);
   st.pioneerDue = pioneerDue(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
+  if (CFG.STRIKE_FAR && st.order) hearStrike(B);
   const act = structTurn(B, allIds, () => (CFG.ESCORT_FIRST ? escort(B) : null) || pioneer(B) || (CFG.ESCORT ? escort(B) : null) ||
     (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null),
-    CFG.PIONEER_EARLY || CFG.ESCORT_EARLY ? () => (CFG.ESCORT_EARLY ? escort(B) : null) || (CFG.PIONEER_EARLY ? earlyPioneer(B) : null) : null);
+    CFG.PIONEER_EARLY || CFG.ESCORT_EARLY || CFG.STRIKE_FAR ? () => (CFG.STRIKE_FAR ? strikeFar(B) : null) ||
+      (CFG.ESCORT_EARLY ? escort(B) : null) || (CFG.PIONEER_EARLY ? earlyPioneer(B) : null) : null);
   if (CFG.CASTLE_POST) callPost(B);   // after the build, so a newborn's radio comes first
   return act === HOPPED ? null : act;
 }
@@ -328,6 +330,45 @@ export function escort(B) {
   const b = buildToward(B, CFG.ESCORT_UNIT, e.x, e.y, encXY(SIG.GUARD, e.x, e.y));
   if (!b) return null;
   e.left--;
+  return b.act;
+}
+
+// CFG.STRIKE_FAR: enemy churches radioed by our pilgrims (FAR.STRIKE) or in this castle's sight. This castle owes
+// STRIKE_FAR crusaders to each (once per tile) that lies within r2 STRIKE_FAR_R2 of it, no nearer another castle of ours
+// (ties: canonical order) and beyond r2 STRIKE_SAFE_R2 of every enemy castle (mirrors of ours); a debt ends when the
+// castle sees the tile without an enemy church.
+function hearStrike(B) {
+  const w = B.w, st = B.st, me = w.me, n = w.n;
+  const seen = st.strikeSeen || (st.strikeSeen = new Set());
+  st.strikes = (st.strikes || []).filter(s => {
+    const o = w.occ(s.x, s.y);
+    return s.left > 0 && (o < 0 || w.enemies.some(e => e.unit === CHURCH && e.x === s.x && e.y === s.y));
+  });
+  const heard = [];
+  for (const r of w.robots) {
+    if (r.id === me.id || (r.seen && r.team !== me.team)) continue;
+    const m = decFarRobot(r);
+    if (m && m.type === SIG.STRIKE) heard.push(m);
+  }
+  for (const e of w.enemies) if (e.unit === CHURCH) heard.push(e);
+  const ci = c => c.y * n + c.x, own = [...st.castles.values()], mine = d => d2(me.x, me.y, d.x, d.y);
+  for (const c of heard) {
+    const k = ci(c), dm = mine(c);
+    if (seen.has(k) || dm > CFG.STRIKE_FAR_R2) continue;
+    if (own.some(o => { const q = d2(o.x, o.y, c.x, c.y); return q < dm || (q === dm && ci(o) < ci(me)); })) continue;
+    if (st.order.some(o => { const [x, y] = w.mirror(o.x, o.y); return d2(x, y, c.x, c.y) <= CFG.STRIKE_SAFE_R2; })) continue;
+    seen.add(k);
+    st.strikes.push({ x: c.x, y: c.y, left: CFG.STRIKE_FAR });
+  }
+}
+
+// Build the next striker owed, radioing it the church at r2 GUARD_STRIKE (a turn whose radio is taken waits).
+function strikeFar(B) {
+  const w = B.w, st = B.st, s = st.strikes && st.strikes.find(q => q.left > 0);
+  if (!s || w.sentR2 || !w.canAfford(CRUSADER, defReserveK(B), CFG.MIL_FUEL_RESERVE)) return null;
+  const b = buildToward(B, CRUSADER, s.x, s.y, encXY(SIG.GUARD, s.x, s.y), GUARD_STRIKE);
+  if (!b) return null;
+  s.left--;
   return b.act;
 }
 

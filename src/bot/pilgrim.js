@@ -3,7 +3,7 @@
 import { CFG, defReserveK } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, KARB_CAP, FUEL_CAP } from './specs.js';
 import { d2, king, ADJ, rng } from './util.js';
-import { SIG, FAR, dec, encNum, encXY, CT } from './comms.js';
+import { SIG, FAR, dec, decFarRobot, encNum, encXY, CT } from './comms.js';
 import { econ, bfs } from './mapinfo.js';
 import { fuelStep } from './nav.js';
 import { isAttacker, retreatStep, THREAT_R2 } from './combat.js';
@@ -142,6 +142,28 @@ export function huntSpot(B) {
   w.signal(encXY(0, best.x, best.y), FAR.HUNT);
 }
 
+// CFG.STRIKE_FAR: the nearest enemy church in sight that no pilgrim of ours radioed in this one's hearing is radioed
+// once (FAR.STRIKE, 30 tiles, 31 fuel) while the bank holds STRIKE_FUEL; castles choose whether to strike it
+// (castle.js hearStrike).
+export function strikeSpot(B) {
+  const w = B.w, me = w.me, st = B.st, n = w.n, done = st.struck || (st.struck = new Set());
+  for (const r of w.robots) {
+    if (r.id === me.id || (r.seen && r.team !== me.team)) continue;
+    const m = decFarRobot(r);
+    if (m && m.type === SIG.STRIKE) done.add(m.y * n + m.x);
+  }
+  if (w.sentR2 || w.fuel < CFG.STRIKE_FUEL) return;
+  let best = null, bd = 1e9;
+  for (const e of w.enemies) {
+    if (e.unit !== CHURCH || done.has(e.y * n + e.x)) continue;
+    const d = d2(e.x, e.y, me.x, me.y);
+    if (d < bd || (d === bd && e.y * n + e.x < best.y * n + best.x)) { bd = d; best = e; }
+  }
+  if (!best) return;
+  done.add(best.y * n + best.x);
+  w.signal(encXY(0, best.x, best.y), FAR.STRIKE);
+}
+
 export function pilgrimTurn(B) {
   const a = pilgrimAct(B);
   // CFG.PIONEER_CALL: a pioneer that sees a mobile enemy attacker by its site calls its castle's escort (CT.BLOCKED).
@@ -149,6 +171,7 @@ export function pilgrimTurn(B) {
   if (CFG.PIONEER_CALL && s && B.w.enemies.some(e => isAttacker(e.unit) && e.unit !== CASTLE && d2(e.x, e.y, s[0], s[1]) <= CFG.PIONEER_CALL))
     B.w.talk(CT.BLOCKED);
   if (CFG.HUNT) huntSpot(B);
+  if (CFG.STRIKE_FAR) strikeSpot(B);
   return a;
 }
 

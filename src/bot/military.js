@@ -4,7 +4,7 @@ import { CFG } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, king, rng } from './util.js';
 import { fuelStep } from './nav.js';
-import { SIG, CT, FAR, dec, encXY, decFarRobot } from './comms.js';
+import { SIG, CT, FAR, dec, encXY, decFarRobot, GUARD_STRIKE } from './comms.js';
 import { isAttacker, pickTarget, preacherTarget, retreatStep, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
 import { learnRound } from './chain.js';
 
@@ -19,7 +19,10 @@ function init(B) {
       const m = dec(r.signal);
       if (m.type === SIG.ROUND) B.birthRound = m.v;
       else if (m.type === SIG.CHAIN && CFG.CHAIN_ROUND) st.chainT = [m.x, m.y];   // born in a church chain (chain.js)
-      else if (m.type === SIG.GUARD && (CFG.ESCORT || CFG.ESCORT_FIRST)) st.guardAt = { x: m.x, y: m.y };   // escort: a pioneer's site
+      else if (m.type === SIG.GUARD && (CFG.ESCORT || CFG.ESCORT_FIRST || CFG.STRIKE_FAR)) {
+        st.guardAt = { x: m.x, y: m.y };   // escort: a pioneer's site
+        if (CFG.STRIKE_FAR && r.signal_radius === GUARD_STRIKE) st.strike = { x: m.x, y: m.y };   // a striker (strikeWalk)
+      }
       else if (m.type === SIG.THREAT && CFG.MUSTER) st.muster = { x: m.x, y: m.y, until: CFG.MUSTER === 2 ? Infinity : me.turn + CFG.MUSTER_WAIT };   // musterHold
     }
   }
@@ -379,6 +382,14 @@ function holdTarget(B) {
   return (st.lt = latticeTarget(B));
 }
 
+// CFG.STRIKE_FAR: a striker walks at full speed to the enemy church it was built against (castle.js strikeFar) until
+// it sees that tile without it (undefined: then it holds the lattice there); in sight, the church is engaged above.
+function strikeWalk(B) {
+  const w = B.w, s = B.st.strike, o = w.occ(s.x, s.y);
+  if (o >= 0 && !w.enemies.some(e => e.unit === CHURCH && e.x === s.x && e.y === s.y)) { B.st.strike = null; return undefined; }
+  return go(B, 'K' + s.x + ',' + s.y, [[s.x + 1, s.y], [s.x - 1, s.y], [s.x, s.y + 1], [s.x, s.y - 1]]);
+}
+
 export function militaryTurn(B) {
   const w = B.w, me = w.me, st = B.st, u = me.unit, S = STATS[u];
   if (!st.ready) init(B);   // until it completes: a turn killed mid-init (200 ms) leaves it half done
@@ -432,6 +443,7 @@ export function militaryTurn(B) {
     const hu = CFG.HUNT && st.hunt;
     if (!e && hu && !marching && me.turn - hu.t <= CFG.HUNT_EVERY && d2(hu.x, hu.y, me.x, me.y) <= CFG.HUNT_R2) e = hu;
     if (e) return go(B, 'e' + e.x + ',' + e.y, [[e.x + 1, e.y], [e.x - 1, e.y], [e.x, e.y + 1], [e.x, e.y - 1]]);
+    if (st.strike && !marching) { const a = strikeWalk(B); if (a !== undefined) return a; }
   } else if (CFG.SPOT && (CFG.SPOT_MASK >> PROPHET & 1)) {
     // A prophet that heard a spot near its post (or itself, marching) walks into the band it can fire from, then holds.
     const sp = st.spot;

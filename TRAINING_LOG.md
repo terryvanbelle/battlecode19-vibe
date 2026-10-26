@@ -6218,3 +6218,49 @@ or OPEN only where it does not give up a contested cluster v11 would take) needs
 h192 block 1 (v11 + HUNT 2 + HUNT_SLACK 4, basics-fix rule, bar near bursts <= 0.051 a game): submission 214,
 requests 873-884, matches 1616-1627, ladder 215; progress/ refreshed 06:37-06:38 between the blocks. Waiter:
 scratchpad wait_block.sh 1616 1627.
+
+## 2026-10-26 08:00 PDT: h193 (far church strike) built and checked; pre-registered
+h193 = v11 + STRIKE_FAR 3 (dist/h193 18d81e3ab45c; config.js STRIKE_FAR, STRIKE_FAR_R2 400, STRIKE_SAFE_R2 100,
+STRIKE_FUEL 150, all new, defaults off). A pilgrim that sees an enemy church radios it once (FAR.STRIKE, r2 902,
+31 fuel, while the bank holds 150; a pilgrim that heard the radio stays quiet: pilgrim.js strikeSpot). The castle of ours
+nearest the church, when it lies within r2 400 of that castle and beyond r2 100 of every enemy castle, owes it 3
+crusaders, built ahead of its economy pilgrims (the `first` hook), each told SIG.GUARD at r2 3 (comms.js
+GUARD_STRIKE: the radius marks a striker, so escort guards keep their meaning). A striker walks at full speed (no
+cruise cap) to the church until it sees that tile without it, engaging what stands within r2 196 of the site on the
+way, then holds the lattice there (military.js strikeWalk; castle.js hearStrike, strikeFar). Castles see churches in
+their own sight the same way. Read for it: tools/reads/strike.mjs (new: radios, strikers, strikers lost, their hits on
+churches, churches destroyed and by whom).
+
+Why, and the price: TRAINING_LOG 05:42 and 06:32 (the five cells v11 wins 1 of 30, each holding an early forward
+church nobody of ours touches). Correction to 05:42: map 2591 is bot1v43's (progress/panels/v7-m1.json), not
+botfinalsafe's. Every such church in v11's lost games stood at r2 113-305 of the nearest enemy castle (scratchpad
+seen2.mjs, 48 churches), so the r2-100 safety filter skips none of them. Their guards (units within r2 36): wololo 836
+a crusader and a prophet by +5, 2-3 prophets by +10-25; wololo 2013 1-2 prophets; bot1v43 2591 2 prophets at +5, none
+by +15; awesomelemonade 2518 (the r29 church; the r14 one is never seen) 2 prophets; uvafan 1712 a crusader and a
+preacher by +5, a prophet more by +15 (scratchpad seenu.mjs, one game each). Prophets cannot hit within r2 16, so
+three crusaders beside the church outfight two of them; uvafan's preacher is v11's own answer, the hard case.
+
+Checks: no-op IDENTICAL (defaults build vs bots/v11, 799 to r300, driver alone); tools/unit-tests.sh 176 of 176 node tests, 65 Python OK; unit test added (pilgrim radio once,
+hearing and fuel gates; castle debt: nearest castle, r2 400, r2-100 safety, once per tile, own sight, ends when the
+tile is seen empty; strikeFar's build and r2-3 radio; striker walk vs escort vs off). Driver diagnostic vs v11 to r400
+(strike.mjs; strikers' lives from scratchpad strikers.mjs):
+
+| map | h193 side | radios | strikers (first round) | lost | hits on churches | enemy churches destroyed |
+|---|---|---|---|---|---|---|
+| 836 | red / blue (identical, mirror) | 18 | 3 (r35) | 3 | 7 | 6 |
+| 1712 | red | 20 | 6 (r67) | 6 | 1 | 2 |
+| 1712 | blue (won by castles r241) | 16 | 6 (r69) | 5 | 0 | 6 |
+
+The mechanism fires as designed, but against v11 every striker dies to the preacher v11's church builds against
+crusaders in its sight (836: the first striker hit the church 7 times, 70 of its 100 HP, then died at r47; the
+others arrived 1 and 10 rounds later and died within 4-6 rounds). The field's forward churches are guarded by prophets
+instead, which is the case the strike was designed for; self-play cannot measure it. Radios run 16-20 a game (each new
+pilgrim that has not heard one radios a church once: about 550 fuel by r400).
+
+Pre-registered before any h193 replica game: the panel rule (block 1 rejects at side-aware z < 0.5; after block 2
+accept at z >= 2, reject at z < 1, else a third block, accepted at z >= 2). Designed from the studied cells
+m-schier.battlecode-2019-wololo:seed-836, m-schier.battlecode-2019-wololo:seed-2013, StoneT2000.BC19-bot1v43:seed-2591,
+uvafan.bc2019:seed-1712, awesomelemonade.Battlecode2019:seed-2518, so acceptance also needs the other cells at z >= 0.
+Mechanism bar (forward.mjs and strike.mjs on h193's side, each block's 10 studied-cell games): a near enemy church
+destroyed in at least 4 of the 10 (v11: 0 of 30) and strikers built in at least 6 of the 10. Score:
+`tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool BLOCK --studied <the five>`.

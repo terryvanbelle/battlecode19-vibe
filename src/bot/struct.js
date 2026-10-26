@@ -113,7 +113,7 @@ export function exposure(w, x, y, only) {
 // CFG.DEF_SAFE: a military newborn goes on such a tile only when every free tile is one (replica 1373, seed 1884:
 // castle (0,14) built a prophet a round on (0,15), the tile nearest two enemy prophets, from r247; each died that
 // round, 162 of v9's 222 military newborns in the game, while a free tile out of one prophet's reach stood beside it).
-export function buildToward(B, unit, tx, ty, signal) {
+export function buildToward(B, unit, tx, ty, signal, sigR2 = 2) {
   const w = B.w, me = w.me; let best = null, bd = 1e9;
   const safe = CFG.SAFE_BUILD && w.enemies.some(e => STATS[e.unit].damage > 0);
   const shun = CFG.DEF_SAFE && unit >= CRUSADER && w.enemies.some(e => STATS[e.unit].damage > 0);
@@ -124,7 +124,7 @@ export function buildToward(B, unit, tx, ty, signal) {
     if (dd < bd) { bd = dd; best = [dx, dy]; }
   }
   if (!best) return null;
-  if (signal !== undefined && !w.sentR2 && w.fuel >= STATS[unit].costF + 2) w.signal(signal, 2);
+  if (signal !== undefined && !w.sentR2 && w.fuel >= STATS[unit].costF + 2) w.signal(signal, sigR2);
   B.st.pending = null; B.st.built = unit;
   if (CFG.FEED_STOP && unit >= CRUSADER) B.st.kidPending = { x: me.x + best[0], y: me.y + best[1], unit };
   return { act: w.build(unit, best[0], best[1]), x: me.x + best[0], y: me.y + best[1] };

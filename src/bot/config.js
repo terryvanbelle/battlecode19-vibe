@@ -246,6 +246,17 @@ export const CFG = {
   HUNT_FUEL: 150,
   HUNT_R2: 400,
   HUNT_SLACK: 0,             // rows past the midline (canonical y < n/2 + this) where HUNT still counts a pilgrim in our half
+  STRIKE_FAR: 0,             // >0: a pilgrim radios an enemy church in sight once (FAR.STRIKE, 31 fuel, while the bank holds
+                             // STRIKE_FUEL; one that heard it radioed stays quiet: pilgrim.js strikeSpot); the castle of ours
+                             // nearest it, within r2 STRIKE_FAR_R2 and with the church beyond r2 STRIKE_SAFE_R2 of every
+                             // enemy castle, builds STRIKE_FAR crusaders ahead of its economy that walk at full speed to the
+                             // church until they see its tile without it, then hold the lattice there (castle.js strikeFar;
+                             // v11's 108 panel games: enemy churches within r2 400 of a castle of ours stood in 73, never
+                             // destroyed in the 30 games of the five cells v11 won 1 of; pilgrims saw them within 4 rounds
+                             // and nothing of ours went near; TRAINING_LOG 2026-10-26 06:32)
+  STRIKE_FAR_R2: 400,
+  STRIKE_SAFE_R2: 100,
+  STRIKE_FUEL: 150,
   // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
   MIL_ROTATION: [4, 3, 4, 3, 5],   // peacetime build order by unit type (prophet 4, crusader 3, preacher 5)
   MIX_BY_STOCK: null,        // [hi, lo]: a peacetime unit is a crusader while fuel / karbonite in the bank >= hi
