@@ -5833,3 +5833,10 @@ diagnostic (h190 red vs v11 blue, seed 1712, r1000) is running.
   The match list shows both wololo matches (1492, 1493) with vibe19 first while queued (the other @- requests show
   the opponent first): their sides are checked from the games when the block is in. v11's parked.mjs census over its
   108 panel games (h190's bars) is running on the driver.
+
+## 2026-10-25 23:24 PDT: check-in; v11's first rated matches
+Replica queue 12 waiting (2 ranked; the rest h190's block), 8 running; VM jobq empty, disk 2.3 GB free. v11's
+rate_ours.sh matches so far: 1468 lost 1-2 to uvafan (won seed-388 red by castles r399; lost 1822 blue on castles at
+r1000, 2330 blue on health), 1469 lost 0-3 to wololo (1915 blue by castles r215, 520 red by castles at r1000, 2591
+blue r793), 1470 won 2-1 against IanCoolidge0 ~f649f3 (747 blue r707, 2046 red r975; lost 2518 blue r141). Ratings
+wait behind 1467 (running). Census for h190's bars (parked.mjs, v11's 108 games): 20 lines.
