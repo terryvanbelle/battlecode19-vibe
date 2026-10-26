@@ -131,7 +131,8 @@ function planClusters(B) {
   const reach = d => ownP.some(f => { const v = f[d.y * n + d.x]; return v >= 0 && v <= CFG.SERVE_MOVES; });
   const enemyF = own.map(c => bfs(w, [w.mirror(c.x, c.y)], KING));
   const myIdx = own.findIndex(c => c.x === me.x && c.y === me.y);
-  st.plan = []; st.planAll = 0;   // planAll: clusters planned by any of our castles
+  st.plan = []; st.planAll = 0; st.safeAll = 0;   // planAll: clusters planned by any of our castles; safeAll: those
+                                                  // with m >= CFG.PIONEER_OPEN
   for (const c of B.clusters) {
     const [sx, sy] = c.site, k = sy * n + sx;
     const dOwn = ownF.map(f => f[k] < 0 ? 999 : f[k]);
@@ -140,7 +141,7 @@ function planClusters(B) {
     const served = ownP ? unserved < Math.min(2, c.depots.length)
       : c.depots.some(d => ownF.some(f => { const v = f[d.y * n + d.x]; return v >= 0 && v <= CFG.SERVE_MOVES * 2; }));
     if (served || dUs > dThem + CFG.CLAIM_MARGIN) continue;
-    st.planAll++;
+    st.planAll++; if (CFG.PIONEER_OPEN && dThem - dUs >= CFG.PIONEER_OPEN) st.safeAll++;
     let owner = 0; for (let i = 1; i < own.length; i++) if (dOwn[i] < dOwn[owner]) owner = i;
     if (owner === myIdx) st.plan.push({ cluster: c.i, d: dUs, m: dThem - dUs, value: c.nk * 2 + c.nf });
   }
@@ -250,11 +251,16 @@ function hopPioneer(B, next) {
 // reached the centre clusters at r11-23 and churched them by r14-53; ours left at r12-16, waiting for the bank to
 // hold PIONEER_DEPART_K + DEF_RESERVE_K after the economy pilgrims of turns 1-5). CFG.PIONEER_OPEN: it goes instead
 // to the first planned cluster we reach PIONEER_OPEN king steps before the enemy (safe land, no race).
+// CFG.PIONEER_RACE: when no castle of ours has such a cluster, it races for its plan's first cluster if that one is
+// a race (m < PIONEER_RACE): v9's first pioneers to m-0 sites left at r23-44 and churched 0 of 24; the enemy churched
+// 2518's at r14 and 2591's at r23 (TRAINING_LOG 2026-10-25 17:05).
 function earlyPioneer(B) {
   const w = B.w, st = B.st;
   if (st.earlySent || w.me.turn > CFG.PIONEER_EARLY) return null;
-  const next = CFG.PIONEER_OPEN ? nextPioneer(B, p => p.m >= CFG.PIONEER_OPEN) : nextPioneer(B);
-  if (!next || !(CFG.PIONEER_OPEN || next.m <= CFG.PLAN_CONTEST_FIRST) || !w.canAfford(PILGRIM, 0, 200)) return null;
+  const race = CFG.PIONEER_OPEN && CFG.PIONEER_RACE && !st.safeAll;
+  const next = CFG.PIONEER_OPEN && !race ? nextPioneer(B, p => p.m >= CFG.PIONEER_OPEN) : nextPioneer(B);
+  if (!next || !(CFG.PIONEER_OPEN ? !race || next.m < CFG.PIONEER_RACE : next.m <= CFG.PLAN_CONTEST_FIRST) ||
+    !w.canAfford(PILGRIM, 0, 200)) return null;
   const a = sendPioneer(B, next);
   if (a) st.earlySent = true;
   return a;

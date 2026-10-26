@@ -305,6 +305,10 @@ export const CFG = {
                              // without one send none early (v9's 108 panel games: its first pioneer left at r23-45 and
                              // founded its church in 1 of 48 losses and 31 of 48 wins; sent to a cluster with m <= 1,
                              // 0 of 24; with m >= 7, 12 of 12; TRAINING_LOG 2026-10-25 15:45)
+  PIONEER_RACE: 0,           // >0 (with PIONEER_OPEN): in a team none of whose castles has such a cluster, a castle whose
+                             // plan opens with a race (m < PIONEER_RACE) sends that early pioneer there (2518, 2591:
+                             // one site, m 0; v9's first pioneers to m-0 sites churched 0 of 24; TRAINING_LOG
+                             // 2026-10-25 17:05)
   CHURCH_SAVE: 0,            // >0: before this round a church's economy pilgrims leave a church's karbonite (50) in the
                              // bank: a waiting pioneer's CT.WAIT reaches castles only (replica 420-1, seed 2013: churches
                              // built 11 pilgrims in r40-100 while three pioneers waited 35-55 turns at free sites, the

@@ -1886,6 +1886,14 @@ test('castle: PIONEER_OPEN sends the early pioneer to the first planned cluster 
     assert.strictEqual(open.p.cluster, open.plan.find(q => q.m >= 7).cluster);   // the first such in plan order
     assert.strictEqual(run(2518, 7).p, null);                                     // no such cluster: none early
     assert.ok(run(2518, 0).p, 'PIONEER_EARLY alone sends the contested one');
+    // PIONEER_RACE 2: with no such cluster in the team's plan, 2518's only site (m 0) goes early; 1706 has one: unchanged;
+    // 2644 plans m 3 and m 6 (no race): none early.
+    saved.PIONEER_RACE = 2;
+    try {
+      const race = run(2518, 7).p; assert.ok(race && race.m === 0, 'PIONEER_RACE: the race site');
+      assert.strictEqual(run(1706, 7).p.cluster, open.p.cluster);
+      assert.strictEqual(run(2644, 7).p, null);
+    } finally { saved.PIONEER_RACE = 0; }
   } finally { Object.assign(CFG, saved); }
 });
 
