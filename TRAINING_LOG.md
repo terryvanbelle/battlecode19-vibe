@@ -5881,3 +5881,17 @@ so its 505 exceed pioneers.mjs's 341 at 22:42, which counts the round an enemy c
 The defaults build (src/bot with PIONEER_TIMEOUT_HOME 0) replays bots/v11 against itself on 799 to r300 IDENTICAL,
 driver alone; tools/unit-tests.sh 175 of 175 node tests, 65 Python tests OK. Next on the driver: h170's parked read
 (for the record), then h191's diagnostic (h191 red vs v11 blue on 1712 to r1000, parked.mjs on both sides).
+
+## 2026-10-26 00:26 PDT: check-in; VM disk pruned (~/.gradle); h170's parked read for the record
+- Replica queue 2 waiting (both ranked), 8 running (five of them h190's block 1: 1498, 1499, 1501-1503). VM jobq
+  empty. **VM disk** was 2.2 GB free (LEARNINGS 40 keeps 2 GB): deleted /home/terryvanbelle/.gradle/caches (638 MB),
+  /home/terryvanbelle/.gradle/daemon (103 MB) and /home/terryvanbelle/.gradle/wrapper (276 MB), the 2023/2024 Java
+  builds' Gradle 7.6 and 8.10 (no file in them newer than 2026-09-16, no Gradle process; prior-year files, PROMPTS 2):
+  3.2 GB free. The rest: /srv/bc23-galaxy 6.0 GB (the 2023 replica, never touched), /srv/bc19-galaxy/storage 3.4 GB
+  (our replays, about 2.3 MB a match).
+- **h170's mechanism read** (rejected 2026-10-25 11:16 on block 1, z -1.71; the read promised then; parked.mjs over
+  1379-1390, 36 games): 5.11 pioneers sent a game, 2.11 gave up (PIONEER_STALL_ANY), 1.11 parked (v9 3.01;
+  its bar was under 1.00), 0.89 mined first, 1.92 to held sites; churches 12.31 a game (v9 11.15; bar 10.03). So
+  h170 did most of what it was built to do (parked down 63%, churches up 10%) and still scored 15 of 36. For h190 and
+  h191 (same family): the pioneer waste is real and fixable, but one block of h170 found no score in fixing it. Their
+  rules and bars stand as pre-registered; the prior on a score gain from either is lower than ECONOMICS row 19's 0.12.
