@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 03:53 PDT)
+## State (2026-10-26 04:26 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -59,14 +59,15 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted).
-  **Replica queue (03:53): 2 waiting (ranked), 8 running (1 of them h184's block 2 1547-1558; 11 of 12 done).** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (04:26): 13 waiting (h184's block 3 1584-1595, bumped, and 1 ranked), 8 running.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: h184 block 2 = matches 1547-1558** (submission 210, requests 804-815; ladder 211; waiter scratchpad
-  wait_block.sh 1547 1558); block 1 = 1513-1524 (submission 208): 22 of 36, side-aware z 2.27, studied 4 of 10, others
-  z 0.20 (TRAINING_LOG 2026-10-26 02:24). Score both: `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1513-1524 1547-1558 --studied
+  **In play: h184 block 3 = matches 1584-1595** (submission 212, requests 841-852; ladder 213; waiter scratchpad
+  wait_block.sh 1584 1595); block 1 = 1513-1524 (submission 208): 22 of 36, z 2.27; block 2 = 1547-1558 (210): 20 of
+  36, z 1.04; two blocks 42 of 72, side-aware z 2.34, others -0.69, studied 8 of 20 (TRAINING_LOG 2026-10-26 04:23):
+  accept at three-block z >= 2 with the other cells' z >= 0, else reject. Score all three:
+  `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1513-1524 1547-1558 1584-1595 --studied
   m-schier.battlecode-2019-wololo:seed-836,m-schier.battlecode-2019-wololo:seed-2013,StoneT2000.BC19-botfinalsafe:seed-1706,awesomelemonade.Battlecode2019:seed-2518,StoneT2000.BC19-bot1v43:seed-2591`
-  under the ordinary rule (block 1 rejects at side-aware z < 0.5; two blocks accept at z >= 2 with others >= 0,
-  reject at z < 1, else a third block). Mechanism read (pioneers.mjs, reported with the verdict): on the firing maps
+  under the ordinary rule. Mechanism read (pioneers.mjs, reported with the verdict): on the firing maps
   the r<=6 pioneer churches in 2/3+ of games and our first church comes earlier than in v11's games of the same
   cells: v11's first church is 28-73 on the firing maps, never on 2518 and 2591, 836 mixed (census scratchpad
   econ/pioneers_v11.txt + pioneers_v11_c.txt; read fixed in TRAINING_LOG 2026-10-26 01:24: earlier than v11's cell

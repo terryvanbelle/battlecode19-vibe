@@ -56,3 +56,4 @@ submission	build	note
 206	cand:h190	panel candidate dist/h190 (b6346eeb1252), block 1 = matches 1492-1503, both sides (TRAINING_LOG 2026-10-25 23:19)
 208	cand:h184	panel candidate dist/h184 (a78b4d8603e8), block 1 = matches 1513-1524, both sides (TRAINING_LOG 2026-10-26 00:42)
 210	cand:h184	panel candidate dist/h184 (a78b4d8603e8), block 2 = matches 1547-1558, both sides (TRAINING_LOG 2026-10-26 02:24)
+212	cand:h184	panel candidate dist/h184 (a78b4d8603e8), block 3 = matches 1584-1595, both sides (TRAINING_LOG 2026-10-26 04:23)

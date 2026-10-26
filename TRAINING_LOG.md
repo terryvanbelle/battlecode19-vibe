@@ -6083,3 +6083,5 @@ same way; the verdict takes both blocks' z under the ordinary rule.
   (it was designed from studied cells); reject at z < 1. z 2.34 with others -0.69: neither, so **a third block**,
   accepted at cumulative z >= 2 with others >= 0. Block 2's mechanism read and castle count run on the driver;
   progress/ refreshed before block 3 goes in.
+- 04:26: h184 block 3 submitted: candidate submission 212 (requests 841-852, matches 1584-1595), ladder 213, bumped;
+  the queue held 1 waiting before it.
