@@ -67,14 +67,16 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted).
-  **Replica queue (13:23): 111 waiting (all ranked; VM 11 GB free); h195 block 1: 8 of 12 played, 4 playing.** While 30+ wait: no local VM jobs, our blocks one
-  at a time and bumped to the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  The v12 control block (1847-1858) finished 12:10, 23 of 36, and joined progress/panels/v12-m1.pool; v12's rated
-  matches 1859-1864 wait in the queue.
-  **Now: h195 block 1** = matches 1865-1876 (submissions 230 and 232, the last four after HTTP 429; ladder 233). Before it
-  is read: the stillborn census over 1847-1858 (after the castle-loss census over v12's 72 games, running), so the
-  bars rest on v12's 108 games. h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42), h192
-  on block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
+  **Replica queue (14:09): 104 waiting (92 ranked; VM 11 GB free); h195 block 2 queued, bumped.** While 30+ wait: no
+  local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the autoscrim held
+  (TRAINING_LOG 2026-10-25 09:12). v12's rated matches 1859-1864 have played (13 of 18) but wait to be rated: our chain
+  stops at 1796, whose opponent's ranked match 1788 is queued (bumped 14:09; TRAINING_LOG 2026-10-26 14:09).
+  Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
+  **Now: h195 block 2** = matches 1877-1888 (submission 234; ladder 235). Block 1 (1865-1876): 24 of 36, side-aware
+  z 0.20, studied 1 of 2. When block 2 ends: `panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool
+  1865-1888 --studied StoneT2000.BC19-bot1v43:seed-2321`, the stillborn read (bars below) over our side of both
+  blocks, then the basics-fix rule. h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42),
+  h192 on block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
   **Then, one block at a time** (each v11 candidate rebuilt on v12 with its switches unchanged and its
   pre-registration kept; bars relative to the champion recomputed from v12's panel games (h185's 1651-1658,
   1831-1834, 1835-1846 and the v12 control block) before the candidate's block is read; TRAINING_LOG 2026-10-26 10:39):
@@ -84,7 +86,7 @@
   block; basics-fix rule; mechanism read `tools/reads/stillborn.mjs TEAM 2 REPLAY` per game: safer (stillborn on an
   exposed tile beside a free safe one) at most a quarter of v12's, pilgrims built at least 0.9 of v12's; studied
   StoneT2000.BC19-bot1v43:seed-2321; TRAINING_LOG 2026-10-26 10:45; v12's 72 games give 0.47 safer and 34.08 built per
-  game, the control block's 36 still to add: 11:33);
+  game; bars over v12's 108 games: safer <= 0.118 per game, built >= 31.1: 12:11, 12:27 bullet);
   h201 (v12 + ECON_RICH 100, dist/h201 f3833637f632: before r100 the peacetime army builds from the bank past 100 K
   above the reserves; v12 banks 300+ K at r100 in 36 of its 72 panel games, army 2-11; ordinary rule; studied
   StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046; mechanism check tools/reads/bank.sh: TRAINING_LOG 2026-10-26 11:47);

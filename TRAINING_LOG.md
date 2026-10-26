@@ -6558,3 +6558,20 @@ Fix (tools/galaxy19/deploy/galaxy-setup.sh, `deploy.sh site`, Caddy reloaded 13:
 siarnaq's 401 as a 403 with no challenge, as the Basic path already did. Checked: a bogus Bearer token now gets 403 on
 /api/user/u/me/ and /api/episode/e/bc19/; gate + token + Bearer works for owner and vibe19. The frontend logs out on any
 failed token check (no 401-specific code in the bundle), and client.py treats 401 and 403 alike. LEARNINGS 49.
+
+## 2026-10-26 14:09 PDT: h195 block 1 24 of 36 (z 0.20): block 2 submitted; progress/ refreshed with v12's games
+
+- h195 block 1 (1865-1876): 24 of 36 against v12's pool, pooled expectation 23.1 (z 0.40), side-aware 23.7 (z 0.20,
+  +19 Elo, 95% -176 to +212); studied cell bot1v43 2321: 1 of 2 (expectation 1.0); other cells 23 of 34 (z 0.21). Not
+  below z -1, so block 2 (basics-fix rule). h195 block 2 = matches 1877-1888 (submission 234; ladder 235), bumped.
+- h185's escort mechanism read (escorts.mjs over 1651-1658, 1831-1846; registered 2026-10-26 as a check, not a decision
+  input): of 144 escorts, 102 were hit by a prophet or castle, and 31 of those (30%) died within 6 rounds of the first
+  hit (bar under 40%; h157 69%). Passes.
+- progress/ refreshed (owner, PROMPTS 49: the committed charts still drew v12 as h185's accepting blocks; the refresh
+  after its control block ended at 12:10 was skipped when h195 block 1 went straight in, against LEARNINGS 43). v12 now
+  plays as itself: 54 games, 36-18 (control block 1847-1858 23 of 36; ranked 1859-1864 13 of 18), BT 1904 +- 109, 5th of
+  209. rating-history.png still shows v12 with 0 rated matches: our rating chain waits at match 1796 (ranked, 09:00 PDT
+  autoscrim, played), whose opponent IanCoolidge0 ~f649f3 has an earlier ranked match (1788) still queued; siarnaq rates
+  a team's matches in order, so 1859-1864 wait too. Not a stall (rating_unstick.py counts it as a normal head); 1788
+  bumped to the front so the chain moves. rating-history.png: the "no rated match since" note moved into the legend
+  (beside the line it ran over the last submissions' markers).

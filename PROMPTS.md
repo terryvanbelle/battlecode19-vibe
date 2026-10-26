@@ -176,3 +176,6 @@ I see an Unranked match queued up between uvafan and wololo.  What's that about?
 
 ## 48. 2026-10-26 13:38 PDT
 I can no longer log into the replica, either as owner or vibe19
+
+## 49. 2026-10-26 14:05 PDT
+progress/ doesn't have v12, and it looks like the panel games for it are complete

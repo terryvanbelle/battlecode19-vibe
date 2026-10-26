@@ -203,9 +203,9 @@ def render_png(pts, rows, rg, team, path, sc=None, now=None):
                 label='rating after each rated match')
         if now and now > pts[-1][0]:
             # The rating holds until the next rated match: drawn dashed to the data's time, so a gap reads as one.
-            ax.plot([pts[-1][0], now], [pts[-1][1]] * 2, '--', color=CURVE, lw=1, alpha=.6)
-            ax.annotate(f'no rated match since {pacific(pts[-1][0]):%b %d %H:%M}', (now, pts[-1][1]),
-                        textcoords='offset points', xytext=(-4, 7), ha='right', fontsize=8, color=INK2)
+            # Named in the legend: a note beside the line reaches back over the last submissions' markers.
+            ax.plot([pts[-1][0], now], [pts[-1][1]] * 2, '--', color=CURVE, lw=1, alpha=.6,
+                    label=f'no rated match since {pacific(pts[-1][0]):%b %d %H:%M}')
     ys = [v for _, v in pts] + [r['rating'] for r in rows]
     mid = (min(ys) + max(ys)) / 2 if ys else 0
     xs = ([t for t, _ in pts] + [r['created'] for r in rows] + [g['t0'] for g in rg] + [g['t1'] for g in rg]
