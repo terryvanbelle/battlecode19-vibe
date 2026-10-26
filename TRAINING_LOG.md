@@ -5624,3 +5624,13 @@ r80; v10 against itself on 2591 for the idle escorts) running.
   our first church comes earlier than in v10's games of the same cells; failed if that pioneer churches in under
   half. Reported, not bars: pilgrims at r100 and castles lost a game against v10's 108 games.
 - Panel order: h178 (in play), **h183**, h179, h180, h181, then h182 on its targeted panel.
+
+## 2026-10-25 18:02 PDT: h183 inert on 836; a walk-in census started
+
+h183 red against v10 blue on 836 to r300 (det, the no-op flags) is **IDENTICAL** to h177 red against v10 blue: off
+2518 and 2591 h183 plays h177. Stillborn units of v10 not exposed on their build tile: 6.8 of 21.8 a game (losses
+9.9 of 29.5). A read (scratchpad econ/walkin.mjs) counts our military steps (moves, no attack) from a tile the enemy
+attackers could not kill the unit on onto one they could, the deaths within 2 rounds, and who saw the killers: the
+unit, else a structure of ours (r2 100), else nobody. On 2591 (1395, red): 6 such steps, 6 dead, all prophets within
+5 rounds of birth; 5 of the 6 into attackers only the castle saw (the campers at r2 65 from the newborn's tile, past a
+prophet's vision of 64). Running over v10's 108 panel games.
