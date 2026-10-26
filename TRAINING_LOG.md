@@ -6044,7 +6044,7 @@ comparison, fixed before its block is read), then h190's parked read for the rec
 - Association, not yet cause: a losing game hands the enemy our land. Next, the detail of one uvafan 1712 game
   (scratchpad econ/squatdetail.mjs: per tile K or F, the r2 of the nearest enemy military, of ours and of our
   structures) prices it and says whether a hunt could reach those miners.
-- 03:16: the detail of 1433 game 3 (v11 red vs uvafan, 1712; n 62, mirrored in x: our castles (5,46) (21,3), theirs
+- 03:17: the detail of 1433 game 3 (v11 red vs uvafan, 1712; n 62, mirrored in x: our castles (5,46) (21,3), theirs
   (56,46) (40,3), so our half is x <= 30). Every far tile lies in the centre columns x 26-30, a few tiles on our
   side of the midline: K (28,47) 840 turns from r69, (27,43) 812 from r74, (28,17) 676 from r218; F (30,18) 803,
   (27,44) 782, (29,18) 676, (26,12) 290, (30,11) 110. One or two pilgrims each, mining without a break to r999 with
