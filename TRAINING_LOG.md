@@ -6659,3 +6659,13 @@ v12 red against uvafan on 2046 (match 1853, r1000, lost on health 1,140 to 6,290
 CHAIN_WALL 28 (h198, h164's pre-registration with studied cells uvafan 2046, 1653 and IanCoolidge0 1036) ends a line
 whose church sees 28+ and rests the chain 300 rounds; all three lines here are over the threshold. Order changed
 before any h198 game: h195 (block 3 running), h203, **h198**, h201, h202, h196, h197, h199, h200.
+
+## 2026-10-26 15:56 PDT: wololo 836 red (v12 0 of 3, blue 3 of 3) is a turn-order split, not a mechanism
+
+v12 red (1847 game 3, lost on castles at r666) and blue (1848 game 3, won at r473) play move for move as mirrors
+to r57: our escorts kill wololo's crusader at r18 and die to its prophet at r24-26; wololo churches (43,36)-mirror at
+r22 and, at r49, (44,28) on our half, 10 tiles from our castle (39,18); r50 timelines match to the unit (ours 1
+church, 11 pilgrims, 272 K mined). At r58-60 the prophet exchange beside that church resolves in a different order
+(red's units act first in a round), and the games split: as red we lose the exchange and have 13 pilgrims at r100
+against 22 as blue; wololo out-mines us 24,086 K to 6,890 and takes both castles. No switch is designed from this
+cell: a change anywhere before r58 can flip it either way, and its replays say nothing about a policy.
