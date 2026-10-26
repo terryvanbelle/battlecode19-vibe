@@ -5561,3 +5561,9 @@ Interim, not a bar: v10's stillborn read over h175's 72 games gives `safer` 11.7
   the castle (beyond its reach), and died alone: 4 of 4 built r34-38, 3 of 3 built r107-109. Mined K 154 by r100
   (theirs 314); the castle died at r120. MUSTER's camper case did not fire: the prophets were still walking in
   (MUSTER_DWELL 3), and MUSTER holds crusaders only.
+
+## 2026-10-25 17:24 PDT: check-in
+
+Queue 64 waiting (56 ranked); h178 block 1 (1427-1438) running, our matches at the front. VM disk 2.4 GB free; jobq
+empty (no local VM jobs while 30+ wait). Fuel census of v10's 72 h175 games 59 of 72 on the driver; then the
+stillborn read over 1415-1426 (h178's bar), then PIONEER_RACE's no-op check and tests (h183, uncommitted).
