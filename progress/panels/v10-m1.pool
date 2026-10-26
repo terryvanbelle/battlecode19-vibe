@@ -3,3 +3,4 @@
 # (v9-m1.pool), a fresh v10 control block (1415-1426) joins before any v10-based block is scored. Rejected v10-based
 # blocks join when their own side-aware z is within +-1.
 1403-1414
+1415-1426

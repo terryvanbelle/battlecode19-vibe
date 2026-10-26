@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-25 16:26 PDT)
+## State (2026-10-25 17:07 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v10** (`bots/v10` = h175, bots/ROSTER.tsv); frozen history v0-v10,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -49,22 +49,23 @@
   add the tools/progress/submissions.tsv rows. Read: `contest19.py fetch --new --pages 6`, then for v10-based
   candidates `tools/panel_pool.sh 1391-1402 progress/panels/v10-m1.pool BLOCK... [--studied ...]` (it refuses a
   block with a match unfinished); a rejected block joins the pool file only when its own z lies within +-1. The
-  pool file holds h175's block 2 (1403-1414) and takes the v10 control block (1415-1426) when it finishes, before any
-  v10-based block is scored (TRAINING_LOG 2026-10-25 15:26, 15:51). The rule's false-accept rate and power: `python3 -I
+  pool file holds h175's block 2 (1403-1414) and the v10 control block (1415-1426, 17 of 36): v10's reference is 108
+  games (TRAINING_LOG 2026-10-25 15:26, 15:51, 17:05). The rule's false-accept rate and power: `python3 -I
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted).
-  **Replica queue (16:26): 73 waiting (all ranked; the v10 control block: 5 running, the rest done) after the 09:00 daily autoscrim** (4 a team, none dominant;
+  **Replica queue (17:05): 68 waiting (56 ranked, 12 ours: h178's block) after the 09:00 daily autoscrim** (4 a team, none dominant;
   about 12 h to clear at 8 slots). While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: the v10 control block = matches 1415-1426** (bots/v10 as the candidate, submission 198; bots/v10 the
-  ladder build, 199): no decision; it joins progress/panels/v10-m1.pool. h175 was accepted as v10 (TRAINING_LOG
+  **In play: h178 block 1 = matches 1427-1438** (submission 200; bots/v10 the ladder build, 201; waiter
+  scratchpad wait_block.sh 1427 1438): score with `tools/panel_pool.sh 1391-1402 progress/panels/v10-m1.pool 1427-1438
+  --studied uvafan.bc2019:seed-1712,uvafan.bc2019:seed-2046`, basics-fix rule. h175 was accepted as v10 (TRAINING_LOG
   2026-10-25 15:26); h170 rejected (1379-1390, z -1.71).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v10's 108 panel games, 1391-1426, before the candidate's block is read; TRAINING_LOG 2026-10-25 15:51):
-  h178 (v10 + DEF_SAFE 1, dist/h178 4a802965e3a3; h176's: military newborns built while enemy attackers are in
-  sight go on a tile they cannot kill them on, if one is free; basics-fix rule; studied cells uvafan.bc2019:seed-1712,
+  h178 (in play, above: v10 + DEF_SAFE 1, dist/h178 4a802965e3a3; h176's: military newborns built while enemy
+  attackers are in sight go on a tile they cannot kill them on, if one is free; studied cells uvafan.bc2019:seed-1712,
   uvafan.bc2019:seed-2046; mechanism read tools/reads/stillborn.mjs over its two blocks: `safer` at most a quarter of
-  v10's rate (v9 8.50, bar 2.13); TRAINING_LOG 2026-10-25 12:06);
+  v10's rate over 1391-1426; TRAINING_LOG 2026-10-25 12:06, 17:05);
   h177 (v10 + PIONEER_EARLY 6 + PIONEER_OPEN 7, dist/h177 902efcd0eaf7: a turn-6 pioneer to the first planned
   cluster we reach 7+ king steps before the enemy; ordinary rule; studied cells wololo 836, 2013, botfinalsafe 1706;
   mechanism read pioneers.mjs (the r<=6 pioneer churches in 2/3+ of firing-map games); first a driver diagnostic on

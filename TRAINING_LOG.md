@@ -5540,3 +5540,24 @@ Interim, not a bar: v10's stillborn read over h175's 72 games gives `safer` 11.7
   2faea994919d, h180 45123f763cfb, h181 1b367520ea40, h182 fa74c6f4dc8f. h177's inertness check on 2518, rerun on the new
   build: **IDENTICAL**. Late in the 836 game both teams sat on ~2,100 K with 0-370 fuel: a fuel census (scratchpad econ/fuel.mjs:
   rounds fuel-bound, with K for a prophet but not the fuel) runs on v10's panel games next.
+
+## 2026-10-25 17:06 PDT: v10 control block 17 of 36; h178 block 1 in play (1427-1438); v10's dead cells; 2591 read
+
+- **v10 control block** (submission 198, matches 1415-1426, finished 17:02): 17 of 36 (h175's two blocks, the same
+  build, 37 of 72). Joins progress/panels/v10-m1.pool (1403-1414, 1415-1426; control 1391-1402), so v10's reference is
+  108 games. h178's mechanism bar (pre-registered 15:26): stillborn `safer` at most a quarter of v10's rate over those
+  108 games; the number follows from v10's games alone and is computed next.
+- **h178 = v10 + DEF_SAFE 1** (dist/h178 4a802965e3a3) block 1: submission 200, requests 684-695, matches 1427-1438;
+  ladder back to bots/v10 (submission 201). Scored with `tools/panel_pool.sh 1391-1402 progress/panels/v10-m1.pool
+  1427-1438 --studied uvafan.bc2019:seed-1712,uvafan.bc2019:seed-2046` under the basics-fix rule. Queue 68 waiting.
+- **v10's dead cells** (108 games): every game lost on bot1v43 2591, botfinalsafe 1706, awesomelemonade 2518, wololo
+  2013 and 836, uvafan 1712 and 2046 (studied); every game won on IanCoolidge0 1036, uvafan 1653, bot1v43 388,
+  awesomelemonade 1712 and 2797. A cell turned pays 6 games of 108.
+- **2591 against bot1v43** (match 1395, red, lost by castles r120): a 32x32 map, one castle a side, 1 K and 1 F depot by
+  our castle, the plan's only church site the 10-depot centre cluster on the axis (m 0). bot1v43's turn-2 pilgrim
+  churched it at r23 (prophet guard r24); our first pioneer left at r24 and turned back at (10,13). The two
+  ESCORT_FIRST crusaders (r3-4) stood beside the castle all game (relaying a miner's cargo) until shot at r40-43. Each
+  defending prophet stepped one tile toward its lattice tile, into the band of the two prophets camped at r2 65-82 from
+  the castle (beyond its reach), and died alone: 4 of 4 built r34-38, 3 of 3 built r107-109. Mined K 154 by r100
+  (theirs 314); the castle died at r120. MUSTER's camper case did not fire: the prophets were still walking in
+  (MUSTER_DWELL 3), and MUSTER holds crusaders only.
