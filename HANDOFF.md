@@ -61,22 +61,17 @@
   accepted).
   **Replica queue (22:54): 2 waiting (both ranked), 8 running; control block down to 1461.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **In play: the v11 control block = matches 1455-1466** (submission 204, requests 712-723; ladder 205; waiter
-  scratchpad wait_block.sh 1455 1466): it joins progress/panels/v11-m1.pool before any v11-based block is scored.
-  After it, `tools/panel_submit.sh` runs `tools/rate_ours.sh` on every control block (PROMPTS 44: the 6 field teams
-  rated just below us challenge the new ladder build, ranked; our team cannot ask, being #1); v11's ran by hand at
-  21:54, requests 724-729. Refresh progress/ (`tools/progress-refresh.sh`) once the control block is in, never
-  during it: rating-history and ELO.md then show v11 with games of its own.
-  h178 was accepted as v11 (two blocks 1427-1438 + 1441-1452; TRAINING_LOG 2026-10-25 20:50); h175 as v10; h170
-  rejected (1379-1390, z -1.71).
+  **In play: h190 block 1 = matches 1492-1503** (submission 206, requests 749-760; ladder 207; waiter scratchpad
+  wait_block.sh 1492 1503): scored with `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1492-1503 --studied
+  uvafan.bc2019:seed-1712,StoneT2000.BC19-botfinalsafe:seed-2740,m-schier.battlecode-2019-wololo:seed-836,awesomelemonade.Battlecode2019:seed-2518`
+  under the basics-fix rule (TRAINING_LOG 2026-10-25 22:42); its bars come from v11's parked.mjs census over its 108
+  panel games (scratchpad econ/parked_v11.txt, running), fixed before the block is read. Check the wololo matches'
+  sides (both listed vibe19-first while queued). The v11 control block (1455-1466) finished 19 of 36 and is in the
+  v11 pool; `tools/panel_submit.sh` runs `tools/rate_ours.sh` after every control block (PROMPTS 44); v11's ran by
+  hand at 21:54 (requests 724-729 = matches 1467-1472).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
   recomputed from v11's panel games (1427-1452 and its control block) before the candidate's block is read; TRAINING_LOG
   2026-10-25 15:51; each candidate below is its v10 predecessor's switches rebuilt on v11, 20:50):
-  h190 FIRST (v11 + TAKEN_SEEN 1 + PIONEER_TIMEOUT_REST 2 + PIONEER_LOST_DOUBLE 1, dist/h190 b6346eeb1252: a castle
-  rests a timed-out pioneer's site as a lost one and doubles the rest per loss; h189 folded in, closed unplayed;
-  v11 sent 4.74 pioneers a game to sites the enemy held, 242 of 304 repeats right after a timed-out one; basics-fix
-  rule, mechanism reads parked.mjs toTaken <= 0.7x and churches >= 0.9x v11's 108 panel games, computed before block 1
-  is read; studied uvafan 1712, botfinalsafe 2740, wololo 836, awesomelemonade 2518; TRAINING_LOG 2026-10-25 22:42);
   h184 (= h183 on v11: v11 + PIONEER_EARLY 6 + PIONEER_OPEN 7 + PIONEER_RACE 2, dist/h184 a78b4d8603e8: a turn-6 pioneer to the
   first planned cluster we reach 7+ king steps before the enemy; in a team with none, a castle whose plan opens with
   a race (m <= 1: 2518, 2591) sends its turn-3 pioneer there; replaces h177, closed unplayed; ordinary rule; studied

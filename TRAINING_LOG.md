@@ -5821,3 +5821,15 @@ diagnostic (h190 red vs v11 blue, seed 1712, r1000) is running.
   block and three rated matches); rating-history.md's champion table follows.
 - Next: h190 block 1 once its driver diagnostic (seed 1712) is read; v11's parked.mjs census over its 108 panel games
   for h190's bars runs while that block plays, and is fixed before the block is read.
+
+## 2026-10-25 23:19 PDT: h190 driver diagnostic; h190 block 1 = matches 1492-1503
+- **Diagnostic** (h190 red vs v11 blue, seed 1712, r1000, no-op flags; scratchpad h190/d1712): v11 won on health;
+  h190 0 errors, exceptions, frozen or timeouts. parked.mjs, h190's side: 11 pioneers sent, 6 churched, 3 mined, 2
+  died, 0 parked, 3 gave up (TAKEN_SEEN), 1 sent to a held site; h189's game on the same seed: 14 sent, 5 parked, 0 to
+  a held site (a local mirror, not the uvafan cell, where v11 sent 84 in four games). The switches act as designed.
+- **h190 block 1**: submission 206 (requests 749-760), matches 1492-1503, bumped; ladder back to bots/v11 (submission
+  207). Scored as pre-registered at 22:42 with `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1492-1503
+  --studied uvafan.bc2019:seed-1712,StoneT2000.BC19-botfinalsafe:seed-2740,m-schier.battlecode-2019-wololo:seed-836,awesomelemonade.Battlecode2019:seed-2518`.
+  The match list shows both wololo matches (1492, 1493) with vibe19 first while queued (the other @- requests show
+  the opponent first): their sides are checked from the games when the block is in. v11's parked.mjs census over its
+  108 panel games (h190's bars) is running on the driver.
