@@ -202,6 +202,10 @@ export const CFG = {
                              // still from r200 to r400 in 5 of 9 games, the bank under CHAIN_K; seed 1706: 6-7 units to
                              // r585 against botfinalsafe's 124, the chain never fired)
   CHAIN_F: 3500,
+  CHAIN_FKEEP: 0,            // 1: ...and leaves CHAIN_F fuel too (replica, v12 on IanCoolidge0 1036 red: twice v11's
+                             // karbonite by r100, an army of 93 at r200 and 203 at r400 held the fuel at 400-2,100 from
+                             // r200 on, so no line fired: 4 churches to r974, 6,512 K banked; v11's lines took both
+                             // castles by r375-485)
   CHAIN_END_R2: 2,
   CHAIN_MIX: [5],
   CHAIN_BURST: 40,

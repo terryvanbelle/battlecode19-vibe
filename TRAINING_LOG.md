@@ -6523,3 +6523,22 @@ with no planned church) stays queued behind; if h201 is accepted, h199 is review
   bank 6,512 K and 10 fuel at r974, and IanCoolidge0's preachers took both castles at r960-974. The peacetime army
   keeps CHAIN_K karbonite back from CHAIN_ROUND but no fuel. A sweep of fuel and churches at r200-700 over v11's and
   v12's 108 panel games each (scratchpad bank/fuel.sh) is running to size it.
+
+## 2026-10-26 13:37 PDT: the chain starved of fuel in 19 of v12's 108 panel games; h202 (v12 + CHAIN_FKEEP 1) pre-registered
+Sweep of v11's and v12's 108 panel games each (scratchpad bank/fuel.sh; bank/fuel_v11v12.txt, fuel_v12b.txt):
+our churches, army, karbonite and fuel at r200-700. The chain fires only when the bank holds CHAIN_K (1000 K) and
+CHAIN_F (3500 fuel); from CHAIN_ROUND the peacetime army leaves CHAIN_K karbonite but no fuel. Games where the
+karbonite was met and the fuel not, at some checkpoint r250-700: **v11 9 of 108 (won 8), v12 19 of 108 (won 15)**;
+v12's 4 such losses are all IanCoolidge0 1036 (1834 blue, 1845 red, 1857 red, 1858 blue), the cell v11 won 6 of 6
+(red by castles at r375-485 with lines: the 12:27 bullet under 12:11). The 15 wins are mostly r1000 games decided on health (uvafan
+1653 x6, wololo 836 blue x3, IanCoolidge0 1036 red 1833, bot1v43 388 red 1851) or castle kills by r480 (bot1v43 388
+and 2321 red): there the fuel went into units, and a kept bank would cost army. The trade is the panel's to judge.
+**h202 = v12 + CHAIN_FKEEP 1** (new switch, default 0; struct.js: from CHAIN_ROUND the peacetime army's fuel reserve
+adds CHAIN_F, as its karbonite reserve adds CHAIN_K; threat responses unaffected; dist/h202 4e7b143bb9bc). Unit test
+added (r300: default builds at 2000 fuel, kept waits, builds past CHAIN_F + its reserve; before CHAIN_ROUND keeps
+nothing). No-op: the defaults build (3db048f811b6) replays bots/v12 against itself on 799 to r300 identically; unit
+tests 179/179 node + 65 Python. CFG diff against bots/v12: CHAIN_FKEEP only (plus the keys added since h185's build,
+inert; the regex also catches the ternary `CFG.CHAIN_F:0`). Pre-registration: the ordinary panel rule. Studied cell:
+IanCoolidge0 1036 (`--studied IanCoolidge0.battlecode20~69ce88:seed-1036`); others z >= 0, where the health wins
+it risks sit. Mechanism read (a check, not a decision input): chain lines fired (churches up 3+ after r200, fuel.sh)
+in IanCoolidge0 1036 in at least half its games. Order: after h201.

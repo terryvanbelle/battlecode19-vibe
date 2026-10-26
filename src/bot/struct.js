@@ -463,9 +463,11 @@ function structAct(B, allIds, extra, first) {
     const army = st.count ? st.count[3] + st.count[4] + st.count[5] : have;
     // CFG.CHAIN_GUARD: the guard quota does not wait for the chain's bank; only the army past it does.
     const resK = CFG.CHAIN_GUARD && chainOn && have < want ? reserveK - CFG.CHAIN_K : reserveK;
-    const held = musterArmy(B, resK, CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army);
+    // CFG.CHAIN_FKEEP: the chain's fuel waits in the bank as its karbonite does.
+    const resF = CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army + (CFG.CHAIN_FKEEP && chainOn ? CFG.CHAIN_F : 0);
+    const held = musterArmy(B, resK, resF);
     if (held !== undefined) return held;
-    if (w.canAfford(unit, resK, CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army)) {
+    if (w.canAfford(unit, resK, resF)) {
       const [ex, ey] = w.mirror(me.x, me.y);
       const sig = B.round ? encNum(SIG.ROUND, B.round) : undefined;
       const b = buildToward(B, unit, ex, ey, sig); if (b) { st.nDef++; return b.act; }

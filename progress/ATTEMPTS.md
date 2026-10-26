@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 144 other, 51 rejected, 23 accepted, 9 dropped, 7 in progress, 6 queued, 4 sparring partners (244 rows).
+Totals: 144 other, 51 rejected, 23 accepted, 9 dropped, 7 in progress, 7 queued, 4 sparring partners (245 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -258,3 +258,4 @@ Totals: 144 other, 51 rejected, 23 accepted, 9 dropped, 7 in progress, 6 queued,
 | `h199` | 2026-10-26 10:45 | v12 | v12 + ECON_NOPLAN 1: h188's switch on v12 (dist/h199 4ed3f18bc8de), targeted panel noplan-m1 |  |  |  |  | queued (h188's pre-registration) |
 | `h200` | 2026-10-26 10:45 | v12 | v12 + PIONEER_TIMEOUT_HOME 80: h191's switch on v12 (dist/h200 366fc1e13c2f) |  |  |  |  | queued (h191's pre-registration) |
 | `h201` | 2026-10-26 11:47 | v12 | v12 + ECON_RICH 100: before ECON_UNTIL (r100) the peacetime army builds from the bank past 100 K above the reserves (h116's switch, rejected in v7-era self-play, never panel-tested) (dist/h201 f3833637f632) |  |  |  |  | queued (pre-registered 2026-10-26 11:47; after h195) |
+| `h202` | 2026-10-26 13:37 | v12 | v12 + CHAIN_FKEEP 1: from CHAIN_ROUND the peacetime army leaves the chain's fuel (CHAIN_F 3500) in the bank as it leaves its karbonite (dist/h202 4e7b143bb9bc) |  |  |  |  | queued (pre-registered 2026-10-26 13:37; after h201) |

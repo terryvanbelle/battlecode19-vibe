@@ -678,6 +678,35 @@ test('struct: CHAIN_GUARD lets the guard quota past the chain reserve, not the a
   } finally { [CFG.CHAIN_GUARD, CFG.SERVE_MOVES] = saved; }
 });
 
+test('struct: CHAIN_FKEEP: from CHAIN_ROUND the peacetime army leaves the chain\'s fuel in the bank too', () => {
+  const saved = [CFG.CHAIN_FKEEP, CFG.SERVE_MOVES];
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    CFG.SERVE_MOVES = 1;   // every served depot is in sight and staffed below: the economy has nothing to build
+    let id = 4100;
+    for (let y = castle.y - 2; y <= castle.y + 2; y++) for (let x = castle.x - 2; x <= castle.x + 2; x++)
+      if (x >= 0 && y >= 0 && x < n && y < n && (g.karbonite_map[y][x] || g.fuel_map[y][x]) && !g.robots.some(q => q.x === x && q.y === y))
+        g.robots.push({ id: id++, team: 0, unit: S.PILGRIM, x, y, turn: 3, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const turn1 = (keep, round, fuel) => {
+      CFG.CHAIN_FKEEP = keep; castle.turn = round;   // a castle's round is its turn
+      const all = g.robots;
+      g.robots = all.filter(r => d2(r.x, r.y, castle.x, castle.y) <= 100);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 2000; w.fuel = fuel;   // past CHAIN_K, RICH_K and every other reserve
+      return castleTurn(B);
+    };
+    const mil = a => [S.CRUSADER, S.PROPHET, S.PREACHER].includes((a || {}).u);
+    assert.ok(CFG.CHAIN_ROUND > CFG.ECON_UNTIL && CFG.CHAIN_ROUND <= 300 && CFG.CHAIN_K + 300 < 2000 && !CFG.CHAIN_LIVE, 'v12 values');
+    const r = CFG.CHAIN_ROUND;
+    assert.ok(mil(turn1(0, r + 100, 2000)));                       // default: the army spends the chain's fuel
+    assert.strictEqual(turn1(1, r + 100, 2000), null);              // kept: below CHAIN_F and the army's reserve it waits
+    assert.ok(mil(turn1(1, r + 100, CFG.CHAIN_F + 2000)));         // past both: builds
+    assert.ok(mil(turn1(1, r - 50, 2000)));                        // before CHAIN_ROUND nothing is kept
+  } finally { [CFG.CHAIN_FKEEP, CFG.SERVE_MOVES] = saved; }
+});
+
 test('struct: ECON_RICH builds the peacetime army before ECON_UNTIL from the bank past it and the reserves only', () => {
   const saved = [CFG.ECON_RICH, CFG.SERVE_MOVES];
   try {
