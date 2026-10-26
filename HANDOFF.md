@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 06:41 PDT)
+## State (2026-10-26 08:04 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -62,7 +62,7 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted).
-  **Replica queue (06:40): 12 of ours waiting/running (h192 block 1), 2 ranked waiting.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (08:03): 13 waiting (12 of them h193 block 1), h192 block 1's last match running.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: h192 block 1 = matches 1616-1627** (submission 214, requests 873-884; ladder 215; waiter scratchpad
   wait_block.sh 1616 1627). h192 = v11 + HUNT 2 + HUNT_SLACK 4 (dist/h192 b15514aedf60: pilgrims radio a loitering
@@ -73,6 +73,15 @@
   StoneT2000.BC19-botfinalsafe:seed-1706, StoneT2000.BC19-bot1v43:seed-2321. Score:
   `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1616-1627 --studied
   StoneT2000.BC19-botfinalsafe:seed-1706,StoneT2000.BC19-bot1v43:seed-2321`; read bursts.mjs on its games.
+  **Also in play: h193 block 1 = matches 1639-1650** (submission 216, requests 896-907; ladder 217; waiter scratchpad
+  wait_block.sh 1639 1650). h193 = v11 + STRIKE_FAR 3 (dist/h193 18d81e3ab45c: a pilgrim radios an enemy church once,
+  FAR.STRIKE; the castle nearest it, within r2 400 and the church beyond r2 100 of every enemy castle, sends 3
+  crusaders at full speed to it; TRAINING_LOG 2026-10-26 08:00). Panel rule (block 1 rejects at z < 0.5; after block
+  2 accept at z >= 2, reject at z < 1, else block 3, accept at z >= 2), other cells z >= 0 to accept; studied
+  m-schier.battlecode-2019-wololo:seed-836,m-schier.battlecode-2019-wololo:seed-2013,StoneT2000.BC19-bot1v43:seed-2591,uvafan.bc2019:seed-1712,awesomelemonade.Battlecode2019:seed-2518;
+  mechanism bar per block (forward.mjs, strike.mjs on h193's side over the 10 studied-cell games): a near enemy
+  church destroyed in 4 or more (v11: 0 of 30), strikers built in 6 or more. Score: `tools/panel_pool.sh 1427-1438
+  progress/panels/v11-m1.pool 1639-1650 --studied <the five>`.
   h184 was REJECTED on three blocks (62 of 108, z 2.51, others -0.85; TRAINING_LOG 2026-10-26 06:37); h190 on its
   block 1 (z -1.42; 00:42).
   **Then, one block at a time** (each keeps its predecessor's pre-registration; bars relative to the champion are
@@ -99,11 +108,8 @@
   driver diagnostic clean 01:08; TRAINING_LOG 2026-10-25 23:32; last since 01:37: h170 and h190, the same
   class, passed their mechanism reads and lost, LEARNINGS 48).
   h167's mechanism reads are done (TRAINING_LOG 2026-10-25 09:43).
-  **In design (not built, not queued):** a far church strike (forward enemy churches within r2 400 of a castle stand
-  in 73 of v11's 108 panel games, never destroyed in the five cells v11 loses 29 of 30: pilgrims see them within 4
-  rounds, nothing of ours goes; 1-2 guards by +5; tools/reads/forward.mjs, TRAINING_LOG 2026-10-26 05:42, 06:32;
-  STRIKE_R2, h141's, struck only churches in a structure's own sight); h184's decomposition (RACE alone, or OPEN that
-  keeps a contested cluster v11 takes; TRAINING_LOG 06:37).
+  **In design (not built, not queued):** h184's decomposition (RACE alone, or OPEN that keeps a contested cluster v11
+  takes; TRAINING_LOG 06:37).
   ECONOMICS rows 4, 5, 6, 10 dropped (TRAINING_LOG 2026-10-24 21:22, 22:10; 2026-10-25 04:22); rows 9 (ECON_SAT),
   11 (PLAN_CONTEST_PREM, targeted panel), 12 (HUNT_DEPOT) unbuilt.
 - **Never-won panel cells** (LEARNINGS 33): wololo 2013 (h167 won it once, red), 836; botfinalsafe 1706 (h139 won it once); awesomelemonade

@@ -6264,3 +6264,8 @@ uvafan.bc2019:seed-1712, awesomelemonade.Battlecode2019:seed-2518, so acceptance
 Mechanism bar (forward.mjs and strike.mjs on h193's side, each block's 10 studied-cell games): a near enemy church
 destroyed in at least 4 of the 10 (v11: 0 of 30) and strikers built in at least 6 of the 10. Score:
 `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool BLOCK --studied <the five>`.
+
+## 2026-10-26 08:03 PDT: h193 block 1 = matches 1639-1650
+Submission 216, requests 896-907, matches 1639-1650, ladder 217 (bots/v11). It plays beside h192 block 1's last match
+(1622): blocks are separate submissions requested one run at a time (panel_submit.sh), and the replica queue is short
+(13 waiting, 12 of them h193's). Waiter: scratchpad wait_block.sh 1639 1650.
