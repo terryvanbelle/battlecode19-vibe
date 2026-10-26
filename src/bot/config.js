@@ -245,6 +245,7 @@ export const CFG = {
   HUNT_EVERY: 3,             // crusaders and preachers within r2 HUNT_R2 of it go for it
   HUNT_FUEL: 150,
   HUNT_R2: 400,
+  HUNT_SLACK: 0,             // rows past the midline (canonical y < n/2 + this) where HUNT still counts a pilgrim in our half
   // Damage per fuel: crusader 1.0, prophet 0.4, preacher 1.33 plus splash; HP per karbonite 2.7, 0.8, 2.0.
   MIL_ROTATION: [4, 3, 4, 3, 5],   // peacetime build order by unit type (prophet 4, crusader 3, preacher 5)
   MIX_BY_STOCK: null,        // [hi, lo]: a peacetime unit is a crusader while fuel / karbonite in the bank >= hi

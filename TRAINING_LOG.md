@@ -5926,3 +5926,34 @@ v11, the pioneer census over its control block running, fixed before the block i
 Replica queue 9 waiting (1 ranked; the rest h184's block 1513-1524), 8 running; VM disk 3.2 GB free; jobq empty.
 On the driver, one at a time: h191's diagnostic (1712 to r1000), then v11's control-block pioneer census (h184's
 comparison, fixed before its block is read), then h190's parked read for the record.
+
+## 2026-10-26 01:08 PDT: h191's diagnostic; chain kills in v11's dead cells; HUNT_SLACK; h192 built and pre-registered
+- **h191 diagnostic** (h191 red vs v11 blue, seed 1712, r1000, no-op flags; scratchpad h191/d1712): v11 won on
+  health; h191 0 errors, exceptions, frozen or timeouts. parked.mjs, h191's side: 9 pioneers sent, 5 churched, 3
+  mined (the timeout sends a pioneer home), 1 died, **0 parked** (v11's census: 3.06 a game). It acts as designed.
+- **Dead cells read** (scratchpad econ/timeline.mjs over v11's control-block games): wololo 2013 and 836 and
+  awesomelemonade 2518 show no church burst; **botfinalsafe 1706 (both sides) and bot1v43 2321 blue end in one-round
+  church chains**: 1457 (1706 red) 7 churches at r309 from (31,17) to beside our castle, preachers, the castle dead at
+  r314, with K 626 and F 13,244 banked (our own chain saves to CHAIN_K 1000); 1458 (1706 blue) 6 at r279, the castle
+  dead r338; 1460 (2321 blue) 6 at r210, the castle dead r212. **Their stagers stood still in our sight**
+  (scratchpad econ/stager.mjs): 1457's P#3883 at (32,18) r248-308, 61 rounds, seen every round by church (25,11) and
+  two pilgrims (out of a newborn prophet's reach from that church: r2 72, so INTERCEPT, h156, could not have hit it);
+  1458's at (32,15) r213-278, 66 rounds, by a pilgrim; 1460's at (23,9) r183-209, 27 rounds, at r2 100 from our
+  castle, by the castle and two pilgrims. Our 6 crusaders and a preacher stood r2 104-178 from 1457's stager.
+- **HUNT** (h56/h83, v5-v6 era: a pilgrim radios an enemy pilgrim loitering in our half; idle melee units go for it,
+  the chain stager) failed a local gate against our own chain then (castles lost 6 vs 6) and never met the field.
+  Its "our half" test (canonical y < n/2) misses 1458's stager, 3 rows past the midline of the 37-row map. New
+  switch **HUNT_SLACK** (pilgrim.js huntSpot, default 0 = v11): that many rows past the midline still count. Unit
+  test extended (slack 4: 3 rows past is radioed at turns 6, 9, 12; 4 rows past is not).
+- **h192** = v11 + HUNT 2 + HUNT_SLACK 4 (dist/h192 b15514aedf60; CFG diff vs v11 only those, plus the unset
+  TAKEN_SEEN, PIONEER_TIMEOUT_HOME and PIONEER_RACE at 0). New read tools/reads/bursts.mjs (bursts of 3+ enemy
+  churches in a round; near: one within r2 144 of a castle of ours; kills: castles dead within 100 rounds after a
+  near burst at them; stagers: enemy pilgrims 20+ rounds on one tile off depots within r2 400 of our castle; hunted:
+  those our melee units killed). On v11's games: 1457, 1458, 1460 near 1 kills 1 each; 1459, 1455 (2013) none.
+- **Pre-registration** (before any h192 replica game): basics-fix rule (two blocks; block 1 rejects only at z < -1;
+  accept at z >= 0 with others >= 0 if the mechanism read passes, else the ordinary rule). Mechanism read: bursts.mjs
+  over h192's two blocks against v11's 108 panel games (census to run on the driver, fixed before h192's block is
+  read): **near bursts per game at most half of v11's**; reported: kills, stagers, hunted, castles lost a game.
+  Studied cells: botfinalsafe 1706, bot1v43 2321. No-op check (HUNT_SLACK 0) and a driver diagnostic (h192 red vs v11
+  blue on 1706 to r450: does it find v11's own chainer?) run next.
+- **Panel order**: h184 (in play), **h192**, h191, h185, h186, h187, h188.

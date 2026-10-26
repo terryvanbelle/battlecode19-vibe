@@ -1077,7 +1077,7 @@ test('military: SPOT: a firing prophet radios its target for melee units in sigh
 });
 
 test('hunt: a pilgrim radios an enemy pilgrim that stood HUNT turns still in our half off depots; melee units go for it', () => {
-  const saved = [CFG.HUNT, CFG.HUNT_EVERY];
+  const saved = [CFG.HUNT, CFG.HUNT_EVERY, CFG.HUNT_SLACK];
   try {
     CFG.HUNT = 5; CFG.HUNT_EVERY = 3;
     const sent = [], st = {};
@@ -1103,6 +1103,10 @@ test('hunt: a pilgrim radios an enemy pilgrim that stood HUNT turns still in our
     quiet([P(12, 12)], 100);                           // bank under HUNT_FUEL
     quiet([P(12, 12), { id: 6, unit: S.CHURCH, x: 13, y: 10 }], 1000);   // next to its church: depositing
     assert.strictEqual(sent.length, 0);
+    CFG.HUNT_SLACK = 4; quiet([P(12, 19)], 1000);       // HUNT_SLACK: 3 rows past the midline counts as ours
+    assert.deepStrictEqual(sent.map(s => s[0] + ':' + s[1]), [6, 9, 12].map(t => t + ':' + encXY(0, 12, 19)));
+    quiet([P(12, 20)], 1000); CFG.HUNT_SLACK = 0;      // ...4 rows past it does not
+    assert.strictEqual(sent.length, 3); sent.length = 0;
 
     // A crusader that hears the hunt radio (sent here by the castle, a seen friend) walks toward it; off, it does not.
     const g = new Game(3, 100, 20, false, false), n = g.map.length;
@@ -1131,7 +1135,7 @@ test('hunt: a pilgrim radios an enemy pilgrim that stood HUNT turns still in our
     assert.strictEqual(off.B.st.hunt, undefined);
     assert.ok(!off.a || off.a.action !== 'move' || e2(at[0] + off.a.dx, at[1] + off.a.dy) >= e2(at[0], at[1]) || off.a.dx !== on.a.dx || off.a.dy !== on.a.dy,
       'off, the crusader goes about its own business');
-  } finally { [CFG.HUNT, CFG.HUNT_EVERY] = saved; }
+  } finally { [CFG.HUNT, CFG.HUNT_EVERY, CFG.HUNT_SLACK] = saved; }
 });
 
 test('military: SPOT_MASK 16: prophets radio with only prophets in sight and walk into the band of a heard spot', () => {
