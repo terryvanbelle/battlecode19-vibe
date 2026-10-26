@@ -6198,3 +6198,23 @@ military by it is 0.0 in every lost game. The local force is the 2 early crusade
 worth building needs a force raised for it (the castles hear a pilgrim's radio at r2 403: the church stands r2 205-306
 from them) or must arrive before the guards (2591's guards are gone by +10; 2518's church has none but is never seen,
 so it needs a scout). Not built yet: h184's verdict (block 3, one match left) decides the base.
+
+## 2026-10-26 06:37 PDT: h184 REJECTED on three blocks (others' z -0.85); h192 block 1 = matches 1616-1627
+
+h184 block 3 = matches 1584-1595 (submission 212): 20 of 36. `tools/panel_pool.sh 1427-1438
+progress/panels/v11-m1.pool 1513-1524 1547-1558 1584-1595 --studied <h184's five>`: **62 of 108, side-aware z 2.51
+(+155 Elo, 95% +34 to +275); studied cells 11 of 30 (expectation 1.8, z 7.48); other cells 51 of 78 (expectation
+53.1, z -0.85)**. The rule (pre-registered 04:23): three-block z >= 2 with the other cells' z >= 0 -> REJECTED.
+
+Where it moved, against v11's pool rates (cand of 3, one game a block): gains awesomelemonade 2518 both sides 3/3 (pool
+0/6), botfinalsafe 1706 blue 3/3 (0/6), uvafan 1712 blue 3/3 (0/6), wololo 2013 red 2/3 (1/6); losses
+awesomelemonade 1712 red 0/3 (6/6), bot1v43 2321 red 1/3 (3/3), IanCoolidge 203 red 2/3 (3/3). The early pioneer
+does what it was built for (44 of 48 cells churched earlier over blocks 1-2) and wins where the plan raced and lost;
+where v11 already won, the early send costs (1712 red: OPEN's home-side sends give up the centre the enemy then
+churches at r22; TRAINING_LOG 04:30). Lesson so far: the studied-cell gain is real (z 7.48) and the price falls on
+cells v11 already won; a decomposition (RACE alone: OPEN 99 makes every castle race its first contested cluster;
+or OPEN only where it does not give up a contested cluster v11 would take) needs its own blocks, after h192.
+
+h192 block 1 (v11 + HUNT 2 + HUNT_SLACK 4, basics-fix rule, bar near bursts <= 0.051 a game): submission 214,
+requests 873-884, matches 1616-1627, ladder 215; progress/ refreshed 06:37-06:38 between the blocks. Waiter:
+scratchpad wait_block.sh 1616 1627.
