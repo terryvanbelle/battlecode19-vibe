@@ -63,8 +63,8 @@
   candidates `tools/panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool BLOCK... [--studied ...]` (it
   refuses a block with a match unfinished); a rejected block joins the pool file only when its own z lies within
   +-1. The pool file holds h185's block 2 (1835-1846) and, once played, the v12 control block: v12's reference is then
-  108 games (as v11's 1427-1466: TRAINING_LOG 2026-10-25 20:50; v12: 2026-10-26 10:39). The rule's false-accept rate and power: `python3 -I
-  tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
+  108 games (as v11's 1427-1466: TRAINING_LOG 2026-10-25 20:50; v12: 2026-10-26 10:39). The rule's false-accept
+  rate and power: `python3 -I tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted).
   **Replica queue (15:34): 83 waiting (71 ranked; VM 11 GB free); h195 block 3 queued, bumped.** While 30+ wait: no
@@ -76,8 +76,8 @@
   side-aware z 1.08, others 1.14; the stillborn read failed its bar (safer 0.28 a game, bar 0.118), so the ordinary
   bars: accept at cumulative z >= 2 over three blocks (others >= 0), else reject (TRAINING_LOG 2026-10-26 15:34). When
   block 3 ends: `contest19.py fetch --new --pages 6`, `panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool
-  1865-1888 1891-1902 --studied StoneT2000.BC19-bot1v43:seed-2321`; refresh progress/ before the next block. h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42),
-  h192 on block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
+  1865-1888 1891-1902 --studied StoneT2000.BC19-bot1v43:seed-2321`; refresh progress/ before the next block.
+  h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42), h192 on block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
   **Then, one block at a time** (each v11 candidate rebuilt on v12 with its switches unchanged and its
   pre-registration kept; bars relative to the champion recomputed from v12's panel games (h185's 1651-1658,
   1831-1834, 1835-1846 and the v12 control block) before the candidate's block is read; TRAINING_LOG 2026-10-26 10:39):
@@ -95,7 +95,8 @@
   shooter dead within 12 rounds in half the lone-prophet hits, v12 18 of 50; TRAINING_LOG 2026-10-26 14:57);
   h201 (v12 + ECON_RICH 100, dist/h201 f3833637f632: before r100 the peacetime army builds from the bank past 100 K
   above the reserves; v12 banks 300+ K at r100 in 36 of its 72 panel games, army 2-11; ordinary rule; studied
-  StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046; mechanism check tools/reads/bank.sh: TRAINING_LOG 2026-10-26 11:47);
+  StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046; mechanism check tools/reads/bank.sh: TRAINING_LOG
+  2026-10-26 11:47);
   h202 (v12 + CHAIN_FKEEP 1, dist/h202 4e7b143bb9bc: from CHAIN_ROUND the peacetime army keeps the chain's fuel too;
   v12 starves the chain of fuel in 19 of 108 panel games, its 4 losses among them all IanCoolidge0 1036, a cell v11
   won 6 of 6; ordinary rule; studied IanCoolidge0.battlecode20~69ce88:seed-1036; TRAINING_LOG 2026-10-26 13:37);
