@@ -5668,3 +5668,11 @@ the losses come from attackers out of the unit's vision (crusader r2 49 and prea
 r2 64), a third of them in a structure's sight. Lead for a candidate: a structure radios the most dangerous attacker
 it sees so units near it keep off that attacker's range (12 deaths a game at most; the SIEGE line h135-h138 was
 about sieges, not this). Not ranked yet: the deaths include units that walked in to attack and traded.
+
+## 2026-10-25 19:22 PDT: h178 block 1 mechanism read
+
+stillborn.mjs over h178's block 1 (1427-1438, 36 games): newborns built where a safer free tile existed 2.78 a
+game (v10 11.60 over 1391-1426; bar at most 2.90 over both blocks, judged after block 2), exposed at build 6.25
+(v10 14.93), but stillborn in all 19.28 (v10 21.77) and 507 K (v10 552): the placement works, yet most saved
+newborns still die young (wins 14.5, losses 24.1 a game), the walk-in census's newborn line (24.4 walk-ins, 14.2
+deaths a game for v10).
