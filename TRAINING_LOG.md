@@ -6355,3 +6355,14 @@ the mechanism is read here; the panel decides.
   exactly this: h187 (CHAIN_WALL 28: a walled line ends the chain bank) and h186 (idle miners).
 No new candidate from this read: its levers are queued (h186, h187, h191) or closed (FEED_STOP h159, the endgame lines
 h8, h96, h104, TAKEN_SEEN h190).
+
+## 2026-10-26 09:10 PDT: h185 block 1 = matches 1651-1658 and 1831-1834; the daily autoscrim fired (178 waiting)
+h185 (v11 + ESCORT_HOLD_R 2 + ESCORT_FAST_R2 9 + ESCORT_BACK 1, dist/h185 e4a146ede62f) block 1 went in over 45
+minutes: candidate submission 218 with requests 908-915 (matches 1651-1658: wololo, botfinalsafe, bot1v43, uvafan,
+both sides) at 08:23; the four against awesomelemonade and IanCoolidge0 were refused by the replica's hourly scrim
+limit (HTTP 429: h193's 12 requests at 08:03 and these 8 filled the hour) and went in at the third retry with
+candidate submission 224 (requests 916-919, matches 1831-1834); submissions 220 and 222 were the same bundle with
+every request refused (ladder 219, 221, 223, 225). Score: `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool
+1651-1658,1831-1834 --studied <h185's six>`. The autoscrim fired at 09:00 PDT (24 h after the last): 178 waiting, 174
+ranked. Queue rule (HANDOFF): our blocks one at a time and bumped (1831-1834 bumped to the front at once), no local VM
+jobs; h194 waits for h185's block to end.

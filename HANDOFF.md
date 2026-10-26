@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 09:00 PDT)
+## State (2026-10-26 09:11 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v11** (`bots/v11` = h178, bots/ROSTER.tsv); frozen history v0-v11,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -62,7 +62,7 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted).
-  **Replica queue (09:00): 3 waiting (ranked 2), 8 running: h193 block 1's last three and h185 block 1's first five.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
+  **Replica queue (09:10): 178 waiting (174 ranked): the daily autoscrim fired at 09:00; h193 block 1's last matches and h185 block 1 play bumped.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
   the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
   **In play: h193 block 1 = matches 1639-1650** (submission 216, requests 896-907; ladder 217; waiter scratchpad
   wait_block.sh 1639 1650). h193 = v11 + STRIKE_FAR 3 (dist/h193 18d81e3ab45c: a pilgrim radios an enemy church once,
@@ -73,10 +73,10 @@
   mechanism bar per block (forward.mjs, strike.mjs on h193's side over the 10 studied-cell games): a near enemy
   church destroyed in 4 or more (v11: 0 of 30), strikers built in 6 or more. Score: `tools/panel_pool.sh 1427-1438
   progress/panels/v11-m1.pool 1639-1650 --studied <the five>`.
-  **Being submitted: h185 block 1** (`tools/panel_submit.sh dist/h185 ...`, output scratchpad submit_h185_b1.txt;
-  candidate submissions 218, 220, ladder 219, 221): 8 of its 12 requests are in; the 4 against awesomelemonade and
-  IanCoolidge0 were refused by the replica's hourly scrim limit (HTTP 429) and the script retries them every 15 min.
-  Its rule and reads are in the h185 entry below; its matches go here when the script ends.
+  **In play: h185 block 1 = matches 1651-1658 and 1831-1834** (submissions 218 and 224, requests 908-919; four
+  requests waited out the replica's hourly scrim limit, TRAINING_LOG 2026-10-26 09:10; waiter: wait_block.sh on both
+  ranges). Score: `tools/panel_pool.sh 1427-1438 progress/panels/v11-m1.pool 1651-1658,1831-1834 --studied <h185's
+  six, below>`; rule and mechanism read in h185's entry below.
   h192 was REJECTED on block 1 (14 of 36, z -2.65, others -2.83; TRAINING_LOG 2026-10-26 08:21); h184 on three
   blocks (62 of 108, z 2.51, others -0.85; 06:37); h190 on its block 1 (z -1.42; 00:42). progress/ waits for a gap
   between blocks (LEARNINGS 38; last refresh 06:37).
