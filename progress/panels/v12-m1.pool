@@ -3,3 +3,4 @@
 # progress/panels/v12-m1.pool BLOCK...). As v11's (v11-m1.pool), a fresh v12 control block joins before any v12-based
 # block is scored. Rejected v12-based blocks join when their own side-aware z is within +-1.
 1835-1846
+1847-1858

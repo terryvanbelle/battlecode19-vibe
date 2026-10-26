@@ -6498,3 +6498,11 @@ with no planned church) stays queued behind; if h201 is accepted, h199 is review
 - (12:00) Unit tests 178/178 node + 65 Python after tools/reads/bank.sh and its test. The first run failed one test,
   run_game --turnlog, on a boundary: a turn is logged when it is over --turnlog-ms (20) but its ms is written to 0.1,
   so a 20.04 ms turn reads 20 and failed the test's `ms > 20`; the test now asks >= 20 (3 of 3 alone passed before).
+
+## 2026-10-26 12:11 PDT: v12 control block 23 of 36; joins the v12 pool; h195 block 1 submitted
+- **v12 control block** (submission 228, matches 1847-1858, finished 12:10): 23 of 36 (h185's two blocks, the same
+  build, 25 and 24 of 36). Joins progress/panels/v12-m1.pool (1835-1846, 1847-1858; control 1651-1658,1831-1834):
+  v12's reference is 108 games, 72 won. Lost: wololo 2644 both sides and 836 red; botfinalsafe 1706 both sides, 203
+  red, 2740 blue; bot1v43 2321 blue (r133); uvafan 2046 both sides (r1000); IanCoolidge0 203 red, 1036 both sides.
+- h195 block 1 submitted (panel_submit.sh dist/h195, running). Its bars finish with the control block's 36 games in
+  the stillborn census, which runs on the driver after the castle-loss census over v12's 72 games (running).

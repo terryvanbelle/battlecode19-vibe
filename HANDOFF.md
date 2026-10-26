@@ -67,11 +67,15 @@
   tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and TRAINING_LOG (v8 era:
   h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175 accepted; v10 era: h178
   accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted).
-  **Replica queue (11:53): 132 waiting (all ranked; VM 11 GB free). The v12 control block is in, 4 of 12 played, 8 playing: matches 1847-1858 (submission 228, bumped; ladder 229; rated 1859-1864); progress/ refreshed 11:14.** While 30+ wait: no local VM jobs, our blocks one at a time and bumped to
-  the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
-  **Now: the v12 control block, matches 1847-1858** (submitted 11:20); when played, add it to progress/panels/v12-m1.pool
-  and finish h195's bars (the census over h185's 72 games plus this block's 36). h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26
-  09:42), h192 on block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
+  **Replica queue (11:53): 132 waiting (all ranked; VM 11 GB free).** While 30+ wait: no local VM jobs, our blocks one
+  at a time and bumped to the front (`tools/bump_ours.sh --ours`), the autoscrim held (TRAINING_LOG 2026-10-25 09:12).
+  The v12 control block (1847-1858) finished 12:10, 23 of 36, and joined progress/panels/v12-m1.pool; v12's rated
+  matches 1859-1864 wait in the queue.
+  **Now: h195 block 1** = matches 1865-1872 (submission 230; ladder 231) plus awesomelemonade and IanCoolidge0, refused
+  by the hourly limit and retried every 15 min by panel_submit.sh (a new candidate submission: add its row). Before it
+  is read: the stillborn census over 1847-1858 (after the castle-loss census over v12's 72 games, running), so the
+  bars rest on v12's 108 games. h193 was REJECTED on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42), h192
+  on block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
   **Then, one block at a time** (each v11 candidate rebuilt on v12 with its switches unchanged and its
   pre-registration kept; bars relative to the champion recomputed from v12's panel games (h185's 1651-1658,
   1831-1834, 1835-1846 and the v12 control block) before the candidate's block is read; TRAINING_LOG 2026-10-26 10:39):
