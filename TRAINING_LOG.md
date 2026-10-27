@@ -7683,3 +7683,41 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
 - progress/ refreshed 13:44 (between blocks). **The ablation sweep (12:44) starts: h218 (MUSTER 0, dist/h218
   6bc61f8fd8ce) block 1 on v7-m1 = matches 2360-2371** (submission 282, submitted by 13:45, bumped to the queue's
   front). Score: `tools/panel_paired.sh progress/panels/v12.ref 2360-2371` (no studied cells).
+
+## 2026-10-27 14:18 PDT: plateau steps 3-5 while the sweep plays: the API has no unused lever; the opening gap is land
+- **Step 3, API and rules sweep** (RULES.md against src/bot): every robot API call is in use (signal, castleTalk,
+  buildUnit, move, mine, give for deposits and RELAY, attack, the maps, getVisibleRobots, isVisible, isRadioing) except
+  proposeTrade, which pays only when the enemy proposes the matching barter. One information channel is unused: castles
+  see the team of every robot listed, including enemy units radioing from out of sight (RULES §5), and world.js drops
+  every robot it cannot see. Census (scratchpad study/eradio.mjs, v12's 192 reference games, to r200): the field radioed
+  23,268 robot-turns; our castles heard **54 from out of sight, all IanCoolidge0 castles near r1** (castle positions,
+  which symmetry gives anyway); no other opponent's radio ever reached them. Closed: nothing to use.
+- **Step 4, the opening against the field** (ADVICE §11: compare the first rounds' event stream side by side). New read
+  scratchpad study/opening.mjs (the simulation stops at r60, 0.2 s a game) over the same 192 games, ours / theirs at
+  r60:
+  - wins (115): churches 1.5 / 1.5, pilgrims 11.6 / 8.9, karbonite mined 344 / 291, military built 3.0 / 4.4 and lost
+    0.7 / 1.5; our first church at median r42 to their r32.
+  - **losses (77): churches 0.9 / 1.4**, pilgrims 10.2 / 10.1, mined 326 / 328, military built 3.2 / 6.2 and lost 1.4 /
+    1.6; first church r43 to r34.
+  - We found churches about 10 rounds after the field in wins and losses alike, so the first church's round does not
+    separate them; the church count does (ours at least theirs in 90 of 115 wins, 44 of 77 losses). Pilgrims and mining
+    are level at r60 in the losses: the gap opens after it, on land (land census, 13:32: an enemy cluster on our half at
+    r100 in 37 of 77 losses).
+  - Who lost more military by r60: they did in 70 games (we won 74%), even in 95 (54%), we did in 27 (44%).
+- **The 2644 loss, re-read** (1651 game 2, v12 red): wololo builds a crusader at r1 and a prophet at r5. Its crusader
+  dies at r11 to our two escorts (built r4-5), and one escort dies at r14 to the prophet. The other, hit by the prophet,
+  goes home (ESCORT_BACK 1) and stands there r22-60. The prophet holds the centre cluster (rows 19-22, astride the
+  midline), and wololo churches it at r53 at (28,19), on our half (12 king steps from our castle, 15 from theirs), from
+  a pilgrim built at r15, and its centre church builds 7 pilgrims r79-90: wololo has 18 pilgrims and 500 K mined at r100
+  to our 6 and 246. Our second pioneer (built r40) stood near (36,15) r44-55, went south and died at r71 at (35,19) to a
+  prophet. This is h203's case (ESCORT_BACK 2, the duel; paired score of its block 1903-1914 today: D 11, gained 5, lost
+  6, t -0.43, 2644 lost on both sides) and h206's (PIONEER_IDLE 2; on 2644 its r6 pioneer stood near (35,14) r33-54
+  while wololo's prophet and pilgrim stood at (28,18) and (29,20), and died at r71; t 0.99 over two blocks, 2644 lost on
+  both sides). The re-read found no case that has not already been built.
+- **Step 5, cross-year principles** (readroom ADVICE §11, 12, 29-31). The ones that apply now: the unit that expands is
+  the economy; when every single change fails, look for a jointly necessary pair of near-misses, with a counter for each
+  half; re-test an old rejection when its mechanism fired and its margin sat inside the old instrument's resolution;
+  design a structural programme on paper from census numbers, with stages and a closing criterion.
+- Next, after the sweep's second block (h214), not before: step 6's pair from this read, h206 + h203 (an early pioneer
+  to a contested site, and an escort that duels the lone prophet guarding it), pre-registered with a counter for each
+  half before it is built into the queue.
