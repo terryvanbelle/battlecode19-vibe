@@ -6974,3 +6974,55 @@ neutral candidate accepted 5.1% (rho 0.1) and 5.2% (rho 0.2), power at pi 0.75 2
   VoidMercy, arya-k, moreda-a a31, j-mao); those entries are removed (their maps stay in the match archives), so each
   panel file names exactly its block's opponents. Unit test test_panel_sets: the four files' opponents, three distinct
   maps each, no map repeated for an opponent across sets.
+
+## 2026-10-26 20:56 PDT: h201 REJECTED on block 1 by the paired rule (t 0.00); v12 passes symcheck to r1000
+
+h201 (v12 + ECON_RICH 100, dist/h201 153f6da1dee7), block 1 = matches 1927-1938 (submission 242), scored by the paired
+fresh-cell rule (`tools/panel_paired.sh progress/panels/v12.ref 1927-1938 --studied
+StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046`): 36 cells, 26 alike; D 10 (gained 6, lost 4), net +0.00, **t
+0.00 <= 0: REJECTED**. Studied cells: D 1 (lost bot1v43 2321 red, a cell v12 won 3 of 3), t -1.00; other cells D 9
+(gained 6, lost 3), t 0.46. Lost cells v12 won every time: bot1v43 2321 red, wololo 836 blue, uvafan 1712 red. Pooled
+description (`tools/panel_pool.sh 1847-1858 progress/panels/v12-m1.pool 1927-1938`): 24 of 36, expectation 23.5, z 0.24
+(side-aware 0.12); the block joins progress/panels/v12-m1.pool. The mechanism check (tools/reads/bank.sh, not a decision
+input) runs after the driver's diagnostic games.
+
+v12's symcheck to r1000 on the VM (job symv12, nice 15, out/sym_v12_r1000.log): seeds 3, 1, 2 and 2321 all ok (152, 212,
+86 and 118 robots at r1000). Every accepted build from v9 on has passed it.
+
+## 2026-10-26 21:14 PDT: h206 = v12 + PIONEER_IDLE 2 pre-registered (an idle castle's first two pioneers leave on 40 K)
+
+Two reads gave the case. (1) v11 vs mvpatel2000 on 2644 (replica 1467, v11 blue at (39,34)): our castle built 3 pilgrims
+and 2 crusaders r1-5, then nothing r6-39 on 40+ K; its pioneers left r40-41 and died r65-66, and our first church came
+at r929 (mined 1,598 K to 12,430, army 21 to 404). mvpatel2000 sent pioneers at r7 and r14 from an equally poor home and
+churched the centre at r65. (2) The opening census of v12's 108 panel games (new read tools/reads/idlecastle.mjs: castle
+turns with no build and no attack while the bank held 40 K and 50 F, before our first church): 24 or more such turns in
+every game, first at r3-15; our first church r28-75 (median 44.5), none before r150 in 18 games (botfinalsafe 203,
+uvafan 1653 and 2046, where no castle plans a church: h199's case), the enemy's first church earlier in 60 of 108
+(awesomelemonade 1712 r11 to our 41, 2797 r13 to 28; bot1v43 2321 r16-20 to 42; wololo 836 r22 to 46). On the 30 cells
+where v12 founds a church before r150 the castles idle 1,295 turns a block. The castle waits for PIONEER_DEPART_K: a
+pioneer leaves on a pilgrim, DEF_RESERVE_K and 50 more (90 K), and on poor maps that bank takes 30 rounds while nothing
+else is bought.
+
+**PIONEER_IDLE N** (castle.js pioneer; struct.js marks st.noDepot when no home depot is left to staff this turn): such a
+castle sends its first N pioneers in flight on a pilgrim and DEF_RESERVE_K (40 K); later ones keep the margin. Unlike
+PIONEER_DEPART_K 0 (h97: the pioneer waited at its site while its castle spent the bank on depot pilgrims) it acts only
+on a castle with nothing else to buy. Default 0 plays byte-identical to v12 (799 to r300); unit tests 182 + 67 pass.
+Driver diagnostics, h206 against v12 in both seats to r160 (first church by seat; v12's from v12 against itself):
+- No cap: on 1241 the lone castle (PIONEERS_TEAM 6 gives it six slots) sent six pioneers r6-38 on 40 K each; the bank
+  stayed at 36-46 K and the first church came at r59 (v12 54 and 48).
+- Cap 1: on 1712 castle (5,46)'s first pioneer (r4) went to a contested centre site and never founded; the one that
+  founds (6,33) then waited for 90 K: r45 (v12 41).
+- **Cap 2 (h206, dist/h206 bf82caa846ed):** first church earlier than v12's in the same seat in 9 of 12 seats on 1241,
+  2644, 1712, 2797, 836 and 2321 (1241 r37/37 to 54/48, 2644 39/39 to 51/50, 836 24/31 to 33/43, 2321 43/26 to 43/37,
+  2797 26/26 to 28/28; 1712 44/44 to 41/43, two preachers spent the bank at r28-29); median r37 to r43. Castle idle
+  turns before the first church 266 to v12's 428.
+- **Pre-registration.** Paired fresh-cell rule (TRAINING_ALGORITHM §4): block 1 on v7-m1 rejects at t <= 0, accepts at t
+  >= 2 with D >= 4 and the other cells' t >= 0; block 2 on v7-m2 (after v12's control block there) rejects at t <= 1,
+  block 3 at t <= 1.5, block 4 accepts at t >= 2. Studied cells: m-schier.battlecode-2019-wololo:seed-2644 (v12's
+  opening there was read for the design: one karbonite miner, church r51). The census read one opening statistic in
+  every cell, not outcomes.
+- **Mechanism read, not a decision input:** `node tools/reads/idlecastle.mjs TEAM REPLAY` on our side of the block's
+  games, over the 30 cells where v12 founds a church before r150: our first church earlier than v12's in that cell in at
+  least 20 of 30 games, and idle castle turns at most 75% of v12's 1,295.
+- Queue place: first (it acts on the opening of 30 of 36 cells). h196 (PIONEER_EARLY/OPEN/RACE: the turn-3 race pioneer)
+  acts on the same pioneers; if h206 is accepted, h196 is reviewed against it before its block.

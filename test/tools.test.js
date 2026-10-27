@@ -753,6 +753,12 @@ test('reads: idle, parked and escort reads on replica games', () => {
   assert.deepStrictEqual(run('burstloss.mjs', '0', path.join(FIX, 'burst_s203_1845-1.bc19')), [{ churches: 4, built: 30, k: 900,
     young: 30, youngNil: 24, dmg: 230, kills: 4, killsC: 0, foes: [4, 10, 22, 27], stop: { units: 16, k: 480, dmg: 40, kills: 0, killsC: 0 } }]);
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'burstloss.mjs'), '2', chain], { stdio: 'pipe' }));
+  // idlecastle.mjs: 1180 game 1 (wololo 2013, v9 red): v9's castles sat on 40+ K without building on 40 turns from r6
+  // before its first church (r49, wololo's r46).
+  const held = path.join(FIX, 'held_s2013_1180-1.bc19');
+  assert.deepStrictEqual(run('idlecastle.mjs', '0', held), [{ idle: 40, first: 6, church: 49, theirs: 46, pilgrims: 7, dead: 5 }]);
+  assert.deepStrictEqual(run('idlecastle.mjs', '1', held), [{ idle: 31, first: 14, church: 46, theirs: 49, pilgrims: 6, dead: 0 }]);
+  assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'idlecastle.mjs'), '2', held], { stdio: 'pipe' }));
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'idle.mjs'), '2', '300', g], { stdio: 'pipe' }));
   // 1180 game 1 (wololo 2013, v9 red): the castle fell at r204 with three held crusaders within 10 steps, none shooting.
   assert.deepStrictEqual(run('held.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')),
