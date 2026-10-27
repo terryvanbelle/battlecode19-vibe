@@ -102,8 +102,10 @@
   uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036 progress/panels/v12.ref 2348-2359`; block 1 rejects
   at t <= 0, accepts at t >= 2 with D >= 4 and others t >= 0; else block 2 on v7-m2 (rejects at t <= 1), block 3 on
   v7-m3 (rejects at t <= 1.5). Mechanism check on its games past r600 with castles level or ahead: the churches' held
-  crusaders (latebuilds round3) and military plus church K lost after r600 (median at most 1,148). Then h204, h205.
-  Refresh progress/ between blocks only (last 12:29, after h211's block 1).
+  crusaders (latebuilds round3) and military plus church K lost after r600 (median at most 1,148). Then the ablation
+  sweep (plateau protocol step 2; TRAINING_LOG 2026-10-27 12:44): h218 (MUSTER 0), h214 (ECON_UNTIL 0), h212
+  (CHAIN_ROUND 0), h215, h220, h216, h219, h221, h222, h217, one block 1 at a time on v7-m1, same rule, no studied
+  cells; then h204, h205. Refresh progress/ between blocks only (last 12:29, after h211's block 1).
   h201 was REJECTED on block 1 (paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-26 20:56; mechanism
   check passed, 21:33), h198 REJECTED on block 1 (paired t 0.00, D 9; 19:25), h203 REJECTED on
   block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z 1.00; TRAINING_LOG
