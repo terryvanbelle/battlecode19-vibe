@@ -67,7 +67,7 @@
   rate and power: `python3 -I tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195 rejected).
-  **Replica queue (16:56): 72 waiting (61 ranked; VM 11 GB free); h203 block 1 running (1903 first).** While 30+ wait: no
+  **Replica queue (17:25): 68 waiting (61 ranked; VM 11 GB free); h203 block 1 running (4 of 12 playing).** While 30+ wait: no
   local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the autoscrim held
   (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 16:48 (between blocks; rating-history 75 rated matches).
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
@@ -97,6 +97,9 @@
   h202 (v12 + CHAIN_FKEEP 1, dist/h202 a7c9a4cfd5ae: from CHAIN_ROUND the peacetime army keeps the chain's fuel too;
   v12 starves the chain of fuel in 19 of 108 panel games, its 4 losses among them all IanCoolidge0 1036, a cell v11
   won 6 of 6; ordinary rule; studied IanCoolidge0.battlecode20~69ce88:seed-1036; TRAINING_LOG 2026-10-26 13:37);
+  h204 (v12 + CHAIN_ROUND 150, dist/h204 066cde4ddabb: chainers and the chain bank from r150; our line alone won 63
+  of 78 of v12's panel games, theirs alone 1 of 11; ordinary rule, no studied cells; mechanism check chainrace.mjs
+  median first line <= r245 (v12 r272); TRAINING_LOG 2026-10-26 17:14, 17:26);
   h196 (= h194 on v12: v12 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h196 ba281d6c0d4d: h184's race
   part alone; general panel rule, other cells z >= 0 to accept; studied awesomelemonade.Battlecode2019:seed-2518,
   StoneT2000.BC19-bot1v43:seed-2591; mechanism read pioneers.mjs: the turn-3 pioneer founds its church in at least

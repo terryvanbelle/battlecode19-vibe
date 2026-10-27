@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 144 other, 52 rejected, 23 accepted, 9 dropped, 7 in progress, 7 queued, 4 sparring partners (246 rows).
+Totals: 144 other, 52 rejected, 23 accepted, 9 dropped, 8 queued, 7 in progress, 4 sparring partners (247 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -260,3 +260,4 @@ Totals: 144 other, 52 rejected, 23 accepted, 9 dropped, 7 in progress, 7 queued,
 | `h201` | 2026-10-26 11:47 | v12 | v12 + ECON_RICH 100: before ECON_UNTIL (r100) the peacetime army builds from the bank past 100 K above the reserves (h116's switch, rejected in v7-era self-play, never panel-tested) (dist/h201 153f6da1dee7) |  |  |  |  | queued (pre-registered 2026-10-26 11:47; after h195) |
 | `h202` | 2026-10-26 13:37 | v12 | v12 + CHAIN_FKEEP 1: from CHAIN_ROUND the peacetime army leaves the chain's fuel (CHAIN_F 3500) in the bank as it leaves its karbonite (dist/h202 a7c9a4cfd5ae) |  |  |  |  | queued (pre-registered 2026-10-26 13:37; after h201) |
 | `h203` | 2026-10-26 14:57 | v12 | v12 + ESCORT_BACK 2: an escort with 20+ health whose only enemy attacker or castle in sight is one prophet charges it instead of going home (dist/h203 7f352326b9eb) |  |  |  |  | in progress (block 1 = 1903-1914; TRAINING_LOG 2026-10-26 16:48) |
+| `h204` | 2026-10-26 17:26 | v12 | v12 + CHAIN_ROUND 150: castles send chainers and the peacetime army keeps CHAIN_K from r150, not r200, so lines fire ~50 rounds sooner (dist/h204 066cde4ddabb) |  |  |  |  | queued |

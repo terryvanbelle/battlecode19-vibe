@@ -6749,3 +6749,21 @@ cell: a change anywhere before r58 can flip it either way, and its replays say n
 - **Where our lines end** (chainrace_v12.txt, our 156 lines): last church within r2 2 of a castle 24 kills of 33,
   r2 3-25 52 of 81, farther 10 of 42 (uvafan 21 such lines, 4 kills; IanCoolidge0 11, 0). A line stops where no free
   tile is nearer (units in the way) or a link cannot pay; the far ones are h198's (CHAIN_WALL 28) case.
+
+## 2026-10-26 17:26 PDT: h204 (v12 + CHAIN_ROUND 150) built and pre-registered
+- Why: the chain race decides games (17:14: our line alone 63 of 78 won, theirs alone 1 of 11), and our lines fired in
+  r200-299 took a castle within 60 rounds 41 of 59 times, r300-399 17 of 39, r400-499 17 of 19 (a mix of
+  opponents, not a dose curve). Our first line fires at median r272 (quartiles 260-305, first r223). CHAIN_ROUND was
+  set to 200 once, in the v6 era (h72), and has never met the replica panel; h55/h66's 150 belonged to the older,
+  smaller chain (300 K, 12 steps out).
+- **h204 = v12 + CHAIN_ROUND 150** (dist/h204 066cde4ddabb, with the World.attack fix; CFG diff against bots/v12:
+  CHAIN_ROUND only, plus keys added since v12, inert). From r150 castles send chainers (castle i at 150 + 30 i) and the
+  peacetime army leaves CHAIN_K in the bank, so lines fire about 50 rounds sooner with the same 1000 K behind them, on a
+  smaller army. Driver diagnostic, h204 red against bots/v12 blue on 203 to r450 (det; one game, not a verdict): our
+  first line fired at r231 (v12's on that map: r308-309), 7 links to r2 4 of the middle castle, and its burst killed
+  18 blue units (army 43 to 25) but not the castle; v12's line at r352 took one of ours (r357); ours at r437 took one
+  (r442). 0 exceptions, 0 timeouts.
+- Pre-registration: the ordinary panel rule against v12's pool (block 1 rejects at side-aware z < 0.5; two blocks
+  accept at z >= 2, reject below 1; else a third, accepted at cumulative z >= 2). No studied cells (a general switch).
+  Mechanism check (not a decision input): chainrace.mjs over our side of its blocks, median first-line round at most
+  245 (v12 272). Queue place: after h202, before h196.
