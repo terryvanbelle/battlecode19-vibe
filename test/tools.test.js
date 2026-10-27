@@ -759,6 +759,12 @@ test('reads: idle, parked and escort reads on replica games', () => {
   assert.deepStrictEqual(run('idlecastle.mjs', '0', held), [{ idle: 40, first: 6, church: 49, theirs: 46, pilgrims: 7, dead: 5 }]);
   assert.deepStrictEqual(run('idlecastle.mjs', '1', held), [{ idle: 31, first: 14, church: 46, theirs: 49, pilgrims: 6, dead: 0 }]);
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'idlecastle.mjs'), '2', held], { stdio: 'pipe' }));
+  // siege.mjs: in the same game wololo's attackers covered v9's home karbonite from out of its castles' reach in 18
+  // rounds, 15 of them unmined, the longest run 8 from r167 (the castle fell at r204); v9's covered wololo's in 8 (7).
+  assert.deepStrictEqual(run('siege.mjs', '0', held), [{ covered: 18, denied: 15, longest: 8, from: 167 }]);
+  assert.deepStrictEqual(run('siege.mjs', '1', held), [{ covered: 8, denied: 7, longest: 5, from: 112 }]);
+  assert.deepStrictEqual(run('siege.mjs', '1', chain), [{ covered: 0, denied: 0, longest: 0, from: null }]);
+  assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'siege.mjs'), '2', held], { stdio: 'pipe' }));
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'idle.mjs'), '2', '300', g], { stdio: 'pipe' }));
   // 1180 game 1 (wololo 2013, v9 red): the castle fell at r204 with three held crusaders within 10 steps, none shooting.
   assert.deepStrictEqual(run('held.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')),

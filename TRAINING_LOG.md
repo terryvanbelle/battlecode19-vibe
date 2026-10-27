@@ -7057,3 +7057,15 @@ Correction to 21:33's heading: h201 gained 4 of the rich cells and lost none the
 Two leads, unbuilt: a structure that sees an enemy attacker covering a home depot from outside its own reach could call
 crusaders onto it (a prophet cannot hit within r2 16), and a chain reserve sized to income (CHAIN_LIVE 1, h148, was
 rejected on v8's panel). Before either: how often v12's panel games show them.
+
+## 2026-10-26 22:12 PDT: depot sieges in v12's panel games are front lines, not losses; the siege-breaker lead parked
+
+New read tools/reads/siege.mjs (with its test): rounds in which an enemy crusader, prophet or preacher can attack one of
+our home karbonite depots (within 3 king steps of a living castle or church) from where no castle of ours reaches it,
+and in which that depot went unmined. 1467-1 (1915, v11): 895 rounds from r106, the 21:42 case. Over v12's 108 panel
+games (our side; scratchpad siege_v12.txt): 85 games have such rounds, 26 have more than 100, and those 26 were won 20
+times (77%, v12's base 72 of 108, 67%). The long ones are fronts: awesomelemonade 1712 and 2797 (229-447 rounds from
+r53-143, won all 12), IanCoolidge0 1036 red (237, 819, 817 rounds from r165-246, lost two: there v12 held 141 units at
+r300 and banked 1,282-6,512 K while its fuel fell to 578 at r600 and 10 at r974: h202's cell), botfinalsafe 203 red
+(8-494). No panel game shows 1915's single prophet keeping the miners off an undefended home. The siege-breaker (a
+structure calls crusaders onto a depot's coverer) is parked: the panel would not see it.
