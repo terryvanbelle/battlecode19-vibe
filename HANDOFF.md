@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-27 15:04 PDT)
+## State (2026-10-27 15:23 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both teams
   make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`, `dist/creep` (source +
@@ -77,9 +77,11 @@
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
   h198, h201, h206, h202, h207, h209, h211, h213 rejected; sweep: h218 rejected).
-  **Replica queue (15:04): 94 waiting (85 ranked, 9 ours; the daily autoscrim fired 09:00); h214 block 1 = 2372-2383: 3
-  running, 9 queued (submission 284, bumped to the front); VM 9.0 GB free, no VM jobs. Waiter: scratchpad
-  wait_block.sh 2372 2383. Workflow wf_9cd22802-9cc (read-only): a staged land programme for plateau step 7.**
+  **Replica queue (15:23): 88 waiting (85 ranked; the daily autoscrim fired 09:00); h214 block 1 = 2372-2383: 3 done,
+  7 running, 2 queued (submission 284, bumped to the front); VM 9.0 GB free, no VM jobs. Waiter: scratchpad
+  wait_block.sh 2372 2383. Plateau step 7 = the CLAIM programme (TRAINING_LOG 2026-10-27 15:13): stage 1's code
+  (CLAIM, CLAIM_FUND, default 0) is written and tested, uncommitted until the no-op check passes; then dist/h224 and
+  scratchpad claimdiag.sh (12 driver games); its block 1 is the fourth attempt after h213, after h212's.**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the
   autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 14:58 (after h218's block 1); next refresh between
   blocks.
