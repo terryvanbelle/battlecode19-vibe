@@ -7400,3 +7400,16 @@ whether an enemy attacker in the builder's sight threatened it or a robot of our
 The feed that matters is the answer to a real threat, built toward the attacker into the reach of its neighbours: 1,031
 of 1,480 such newborns in losses. h209 (MUSTER_TILE) covers the camper case; the rest (enemy melee in sight, or
 attackers that moved within MUSTER_DWELL) stays v8's answer.
+
+
+## 2026-10-27 09:30 PDT: h207 (HOARD_ROUND 600) REJECTED at block 3; h208 closed; h209's block 1 submitted
+h207's block 3 on v7-m3 (matches 2113-2118, submission 266, and 2123-2130, submission 274) won 25 of 42, as v12's
+control there (2099-2112, submission 264) did; paired on its own 42 cells D 4 (gained 2: wololo 2057 red, mvpatel2000
+836 red; lost 2: bot1v43 2965 blue, botfinalsafe 2674 red), t 0.00. Blocks 1-3 (`tools/panel_paired.sh --studied
+uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036 progress/panels/v12.ref 2046-2057 2068-2081 2113-2118
+2123-2130`): 120 cells, 102 alike, D 18 (gained 12, lost 6), net +5.00, **t 1.40 <= 1.5: REJECTED** (studied 4 cells t
+0.45, others 116 cells t 1.33). Holding the late army at home gained on blocks 1-2 and nothing on v7-m3. h208 (= h207 +
+HOARD_CHURCH 1) is built on h207 and closes unplayed. Next is h209 (v12 + MUSTER_TILE 1, dist/h209 c8b2001470f0,
+pre-registered 07:19, built on v12 as registered): block 1 on v7-m1 submitted at 09:30 (studied cell there IanCoolidge0
+203; uvafan 1822 and 2330 are on v7-m2). The autoscrim fired at 09:00 PDT: 163 waiting, all ranked. Queue rule: our
+blocks one at a time and bumped to the front, no local VM jobs.
