@@ -452,21 +452,11 @@ function structAct(B, allIds, extra, first) {
   { const a = frontPioneer(B); if (a) return a; }
 
   // 4. Peacetime army: a growing guard (prophets, every Nth a preacher), spending what the economy leaves.
-  // CFG.HOARD_ROUND: a hoarding castle builds held crusaders on the far side whenever its reserves allow and it sees a
-  // free hoard tile (military.js hoardTile) for each crusader of ours in sight not yet on one; else it banks.
+  // CFG.HOARD_ROUND: a hoarding castle builds held crusaders whenever its reserves allow (hoardBuild).
   if (hoarding(B)) {
     const army = st.count[3] + st.count[4] + st.count[5];
-    if (!feeding(B, null, 0) || !w.canAfford(CRUSADER, reserveK, CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army)) return null;
-    const [ex, ey] = w.mirror(me.x, me.y), F = CFG.HOARD_FAR;
-    const hold = (x, y) => hoardTile(w, me.x, me.y, ex, ey, x, y);
-    let room = 0;
-    for (let y = me.y - F; y <= me.y + F; y++) for (let x = me.x - F; x <= me.x + F; x++) if (hold(x, y) && w.free(x, y)) room++;
-    for (const r of w.friends) if (r.unit === CRUSADER && king(r.x, r.y, me.x, me.y) <= F && !hold(r.x, r.y)) room--;
-    if (room <= 0) return null;
-    const b = buildToward(B, CRUSADER, 2 * me.x - ex, 2 * me.y - ey, encNum(SIG.ROUND, B.round), HOARD_R2);
-    if (!b) return null;
-    st.nDef++;
-    return b.act;
+    if (!feeding(B, null, 0)) return null;
+    return hoardBuild(B, reserveK, CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army);
   }
   // CFG.ECON_RICH: before ECON_UNTIL only the bank past ECON_RICH + reserveK builds it (the economy had nothing to buy).
   // CFG.ECON_NOPLAN: a castle whose team planned no church has nothing to save for.
@@ -484,6 +474,8 @@ function structAct(B, allIds, extra, first) {
     const resF = CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army + (CFG.CHAIN_FKEEP && chainOn ? CFG.CHAIN_F : 0);
     const held = musterArmy(B, resK, resF);
     if (held !== undefined) return held;
+    // CFG.HOARD_CHURCH: from HOARD_ROUND a church's army is held crusaders too, on the same quota and reserves.
+    if (CFG.HOARD_CHURCH && me.unit === CHURCH && CFG.HOARD_ROUND > 0 && B.round >= CFG.HOARD_ROUND) return hoardBuild(B, resK, resF);
     if (w.canAfford(unit, resK, resF)) {
       const [ex, ey] = w.mirror(me.x, me.y);
       const sig = B.round ? encNum(SIG.ROUND, B.round) : undefined;
@@ -491,6 +483,24 @@ function structAct(B, allIds, extra, first) {
     }
   }
   return null;
+}
+
+// CFG.HOARD_ROUND: a crusader built toward the side away from the enemy, told (SIG.ROUND at r2 HOARD_R2) to hold a
+// hoard tile (military.js hoardTile), when the reserves allow and the structure sees a free hoard tile for each crusader
+// of ours in sight not yet on one; else null (it banks).
+function hoardBuild(B, resK, resF) {
+  const w = B.w, me = w.me, st = B.st;
+  if (!w.canAfford(CRUSADER, resK, resF)) return null;
+  const [ex, ey] = w.mirror(me.x, me.y), F = CFG.HOARD_FAR;
+  const hold = (x, y) => hoardTile(w, me.x, me.y, ex, ey, x, y);
+  let room = 0;
+  for (let y = me.y - F; y <= me.y + F; y++) for (let x = me.x - F; x <= me.x + F; x++) if (hold(x, y) && w.free(x, y)) room++;
+  for (const r of w.friends) if (r.unit === CRUSADER && king(r.x, r.y, me.x, me.y) <= F && !hold(r.x, r.y)) room--;
+  if (room <= 0) return null;
+  const b = buildToward(B, CRUSADER, 2 * me.x - ex, 2 * me.y - ey, encNum(SIG.ROUND, B.round), HOARD_R2);
+  if (!b) return null;
+  st.nDef++;
+  return b.act;
 }
 
 // CFG.INTERCEPT_R2 / INTERCEPT_DWELL: the nearest enemy pilgrim within INTERCEPT_R2, or standing INTERCEPT_DWELL turns on

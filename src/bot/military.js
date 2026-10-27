@@ -19,7 +19,8 @@ function init(B) {
       const m = dec(r.signal);
       if (m.type === SIG.ROUND) {
         B.birthRound = m.v;
-        if (CFG.HOARD_ROUND && r.unit === CASTLE && r.signal_radius === HOARD_R2 && me.unit === CRUSADER) {   // held: musterHold
+        if (CFG.HOARD_ROUND && (r.unit === CASTLE || (CFG.HOARD_CHURCH && r.unit === CHURCH)) && r.signal_radius === HOARD_R2 &&
+            me.unit === CRUSADER) {   // held: musterHold
           const [mx, my] = w.mirror(r.x, r.y);
           st.muster = { x: mx, y: my, until: Infinity, far: CFG.HOARD_FAR };
         }

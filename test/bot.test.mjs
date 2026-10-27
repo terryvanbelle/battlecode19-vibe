@@ -836,6 +836,38 @@ test('military: HOARD_ROUND: a crusader born to a castle\'s SIG.ROUND at r2 HOAR
   } finally { [CFG.HOARD_ROUND, CFG.HOARD_FAR] = saved; }
 });
 
+test('struct: HOARD_CHURCH: from HOARD_ROUND a church builds its army as held crusaders (SIG.ROUND at r2 HOARD_R2)', () => {
+  const saved = { ...CFG };
+  try {
+    CFG.SERVE_MOVES = 1;   // every depot near the church is staffed below: the economy has nothing to build
+    const { g, c, mk } = hopScene(), n = g.map.length;
+    let id = 4600;
+    const staff = [];
+    for (let y = c.site[1] - 4; y <= c.site[1] + 4; y++) for (let x = c.site[0] - 4; x <= c.site[0] + 4; x++)
+      if (x >= 0 && y >= 0 && x < n && y < n && (g.karbonite_map[y][x] || g.fuel_map[y][x])) staff.push(mk(id++, S.PILGRIM, x, y, 9));
+    const run = (hoard, church, round) => {
+      CFG.HOARD_ROUND = hoard; CFG.HOARD_CHURCH = church;
+      const ch = mk(4500, S.CHURCH, c.site[0], c.site[1], 5, { health: 100 });
+      const all = g.robots;
+      g.robots = [ch].concat(staff);
+      const w = worldFor(g, ch); g.robots = all;
+      const sent = []; w.api.signal = (v, r2) => sent.push([v, r2]); w.api.castleTalk = () => {};
+      const B = { api: w.api, w, birthRound: round - 4, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = 1600; w.fuel = 5000;   // past every reserve, the chain's CHAIN_K too
+      return { act: churchTurn(B) || {}, sent, w };
+    };
+    const def = run(0, 0, 650);
+    assert.ok(def.act.u >= S.CRUSADER && !def.sent.some(([, r2]) => r2 === HOARD_R2), `v12: ${def.act.u}`);
+    const h = run(600, 1, 650);
+    assert.strictEqual(h.act.u, S.CRUSADER);
+    assert.ok(h.sent.some(([v, r2]) => v === encNum(SIG.ROUND, 650) && r2 === HOARD_R2));   // told to hold
+    const [mx, my] = h.w.mirror(h.w.me.x, h.w.me.y), [tx, ty] = h.w.T.toC(c.site[0] + h.act.dx, c.site[1] + h.act.dy);
+    assert.ok(d2(tx, ty, mx, my) >= d2(h.w.me.x, h.w.me.y, mx, my));   // on the far side
+    assert.strictEqual(run(600, 0, 650).act.u, def.act.u);   // castles only
+    assert.strictEqual(run(600, 1, 550).act.u, def.act.u);   // before HOARD_ROUND
+  } finally { Object.assign(CFG, saved); }
+});
+
 test('struct: ECON_RICH builds the peacetime army before ECON_UNTIL from the bank past it and the reserves only', () => {
   const saved = [CFG.ECON_RICH, CFG.SERVE_MOVES];
   try {
