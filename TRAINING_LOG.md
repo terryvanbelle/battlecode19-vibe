@@ -6833,3 +6833,5 @@ late_deaths_v12.txt, enemy_castles.txt). 32 games reach r1000: 19 are decided on
   marches). A "walled castles stop calling attacks" switch on top of CHAIN_WALL would also stop uvafan 1653's attack
   waves, which take a castle at r471-541 in all 6 games (CHAIN_WALL fires there too: 46 line churches saw 28+), so it is
   not built before h198 (CHAIN_WALL 28) reads; h198's 2046 games show what the wall alone recovers.
+- Correction (18:36): ours exceeds theirs in 16 of the 19 health games, not 15; only botfinalsafe 2740 blue (1654,
+  1838, 1850: +520 to +2,590) comes out ahead. IanCoolidge0 203 blue (1858) loses 1,920 to their 1,100.
