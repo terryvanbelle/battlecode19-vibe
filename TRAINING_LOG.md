@@ -7507,3 +7507,42 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   accepts at t >= 2 with D >= 4 and others t >= 0, block 2 rejects at t <= 1, block 3 at t <= 1.5, block 4 accepts at t
   >= 2. Block 1 on v7-m1 now; h200 (PIONEER_TIMEOUT_HOME 80) acts on the same pioneers and is reviewed against h211 if
   h211 is accepted.
+
+
+## 2026-10-27 12:15 PDT: h211 REJECTED at block 1 (t 0.00); who takes castles; the reference's cells
+- h211 (v12 + ESCORT 2 + PIONEER_CALL 100, dist/h211 97cc0f3a3351) block 1 = matches 2336-2347 (submission 278),
+  finished 12:12: **24 of 36** (v12's mean on v7-m1 24.0): wololo 2/6, botfinalsafe 4/6, bot1v43 3/6, uvafan 4/6,
+  awesomelemonade 6/6, IanCoolidge0 5/6. `tools/panel_paired.sh --studied
+  IanCoolidge0.battlecode20~69ce88:seed-2674,mvpatel2000.Battlecode2019:seed-2797 progress/panels/v12.ref 2336-2347`: 36
+  cells, 26 alike, D 10 (gained 6, lost 4), net +0.00, **t 0.00 <= 0: REJECTED** (the studied cells are on v7-m2 and
+  v7-m3, so none played). Gained IanCoolidge0 1036 red and 203 both sides, botfinalsafe 203 both and 2740 blue; lost
+  IanCoolidge0 1036 blue, bot1v43 2321 red and 388 red, wololo 836 blue. No mechanism read (block 1 rejected; the driver
+  is on h213's diagnostic).
+- **The reference's cells** (match.json over the eight v12-era candidates' block 1 on v7-m1, h198 h201 h202 h203 h206
+  h207 h209 h211, 288 games, against v12.ref's 108 there): overall 0.674 against 0.667, but single cells sit far from
+  v12's three games, the same way for every candidate: IanCoolidge0 1036 red 7 of 8 (v12 1 of 3), 203 red 7/8 (1/3),
+  botfinalsafe 2740 blue 6/8 (1/3), 203 blue 8/8 (2/3); bot1v43 2321 red 2/8 (3/3), wololo 836 blue 2/8 (3/3), uvafan
+  1712 red 5/8 (3/3). Part of it is the World.attack fuel fix every candidate carries and v12 lacks (v12.ref's header:
+  it changes play on IanCoolidge0 1036), the rest three-game noise. It adds variance, not bias (net 0 over 288 games),
+  and the bar is not moved after seeing these numbers: v12.ref stays the reference until the next champion, whose own
+  blocks build its reference as v12's did.
+- **Who takes castles** (study/castlekill.mjs, new: each castle death's killer, the killer's birth tile and its builder;
+  over v12's 192 panel games, 1651-1658, 1831-1858, 1966-1979, 2099-2112; castlekill_v12.txt): our 168 enemy-castle
+  kills were 108 by units born within r2 100 of the castle from a church built from r200 (line bursts) and 60 by units
+  born farther (marches); the last kill of a won game was a line's in 60 wins and a march's in 49. Our 82 castles lost:
+  59 to marches, 17 to lines (15 of them StoneT2000's two bots), 6 to units their churches built before r200 near our
+  castles. The chain carries our offence: **h212** (v12 + CHAIN_ROUND 0, the chain's ablation, dist/h212 860968a5a3be)
+  is built and not queued.
+- **The economy in the losses** (study/econt.mjs, v12's 150 games of 1651-1658, 1831-1858, 1966-1979; econpred.py): at
+  r100 pilgrims 10 to 14, churches 1 to 2, military 4 to 6 and bank 425 K to 80 on equal karbonite mined (662 to 664);
+  at r200 military 31 to 37 and mined 1,398 to 1,888. The wins float a bank too (295 K to 80 at r100). Losses by kind
+  (match.json, 192 games): 38 with our castles gone before r1000, 9 at r1000 on castles, 30 on health, and the health
+  losses are not close (ours over theirs median 0.25, 5 of 30 at 0.75 or more). uvafan 2046 (1657 red, lossbuckets.mjs):
+  our military stays at 33 from r200 to r450 while the bank climbs from 270 K to 970 K (CHAIN_K kept from r200), the
+  line and its churches die at r301-400 (we lose 745 K military and 300 K churches, uvafan 325 K), and at r600 we hold
+  17 military to 91.
+- **Games past r600** (castlekill): castles level or ahead at r600 (ours lost no more than theirs): 40 losses with no
+  enemy castle killed after r600 and 3 with one; 26 wins without a late kill and 17 with one, 12 of them already ahead
+  on castles at r600 and 5 level (1834 203 IanCoolidge0, 1849 2740 and 1968 1915 botfinalsafe, 2109 388 and 2110 1884
+  IanCoolidge0). An endgame that holds the army at home bets the 5 against the 40: the structural slot (TRAINING_LOG
+  10:58) goes there (next entries).
