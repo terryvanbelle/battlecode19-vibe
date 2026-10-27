@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-27 01:00 PDT)
+## State (2026-10-27 01:55 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -74,22 +74,20 @@
   blocks. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
-  h198, h201 rejected).
-  **Replica queue (00:19): 15 waiting (2 ranked, 13 ours: the end of v12's m2 control, h206 block 2; VM 9.8 GB free,
-  no VM jobs).**
+  h198, h201, h206 rejected).
+  **Replica queue (01:55): 13 waiting (1 ranked, 12 ours: h202 block 1; VM 9.7 GB free, no VM jobs).**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
   the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 23:09 (after h206's block 1, before v12's m2
   control; rating-history 81 rated matches); next refresh between blocks.
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
-  v12's control block on v7-m2 = matches 1966-1979 (submission 246, ladder 247; 42 games, mvpatel2000 added) ended 00:59
-  and is in progress/panels/v12.ref. **Now: h206 block 2 on v7-m2** = matches 1980-1993 (submissions 248 and 256, the
-  second after the hourly limit's retry; waiter armed: scratchpad wait_block.sh 1980 1993). h206 = v12 + PIONEER_IDLE 2,
-  dist/h206 bf82caa846ed: a castle with no home depot left to staff sends its first two pioneers in flight on 40 K, not
-  90 K (TRAINING_LOG 2026-10-26 21:14). Block 1 (1942-1953): paired t 0.79, D 11 (gained 8, lost 3); mechanism passed:
-  first church earlier than v12's in 28 of 30 cells, idle 58% (TRAINING_LOG 23:08). When block 2 ends: fetch,
-  `tools/panel_paired.sh --studied m-schier.battlecode-2019-wololo:seed-2644 progress/panels/v12.ref 1942-1953 BLOCK2`
-  (the cells of both blocks, each once); block 2 rejects at t <= 1, accepts at t >= 2 with D >= 4 and others t >= 0;
-  else block 3 on v7-m3 (after v12's control there). Refresh progress/ between blocks only.
+  v12's control block on v7-m2 = matches 1966-1979 (submission 246; 18 of 42) is in progress/panels/v12.ref. h206 (v12 +
+  PIONEER_IDLE 2) was REJECTED at block 2 (1980-1993, 20 of 42; blocks 1+2 paired t 0.99 <= 1, D 21: gained 14, lost 7;
+  TRAINING_LOG 2026-10-27 01:52). **Now: h202 block 1 on v7-m1** = matches 2014-2025 (candidate submission 258, ladder
+  259; waiter armed: scratchpad wait_block.sh 2014 2025). When it ends: fetch, `tools/panel_paired.sh --studied
+  IanCoolidge0.battlecode20~69ce88:seed-1036 progress/panels/v12.ref 2014-2025` (pre-registered studied cell); block 1
+  rejects at t <= 0, accepts at t >= 2 with D >= 4 and others t >= 0; else block 2 on v7-m2 (v12's control there is
+  played). Mechanism read (a check): chain lines fired (churches up 3+ after r200) in IanCoolidge0 1036 in at least half
+  its games. Refresh progress/ between blocks only.
   h201 was REJECTED on block 1 (paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-26 20:56; mechanism
   check passed, 21:33), h198 REJECTED on block 1 (paired t 0.00, D 9; 19:25), h203 REJECTED on
   block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z 1.00; TRAINING_LOG

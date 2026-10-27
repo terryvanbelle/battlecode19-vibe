@@ -7203,3 +7203,22 @@ responses all walk into that reach. The global no-attack switches were rejected 
 -3), so the condition must be the opponent's: a candidate is worth building only if it can tell uvafan's lattice from
 the opponents whose castles our lines take. Next read: what our units can see of it (enemy units seen on our half, enemy
 losses there, prophets in sight of our structures) by r200-450, against v12's 72 m1 wins.
+
+## 2026-10-27 01:52 PDT: h206 REJECTED at block 2 (paired t 0.99 <= 1); h202 block 1 submitted
+
+h206 (v12 + PIONEER_IDLE 2) block 2 on v7-m2 = matches 1980-1993 (submissions 248 and 256), ended 01:49: 20 of 42 to
+v12's 18 of 42 in its control (1966-1979). By opponent, h206 / v12: awesomelemonade 6/6 / 4/6 (747 won both sides),
+mvpatel2000 4/6 / 2/6 (203 won both sides), wololo 1/6 / 0/6 (1375 blue), IanCoolidge0 4/6 / 4/6, uvafan 0/6 / 0/6,
+botfinalsafe and bot1v43 together 5/12 / 8/12 (lost 1915 blue, 203 blue and 1915 red, and bot1v43's 2321 red in block
+1).
+
+`tools/panel_paired.sh --studied m-schier.battlecode-2019-wololo:seed-2644 progress/panels/v12.ref 1942-1953 1980-1993`:
+78 cells, 57 alike, D 21 (gained 14, lost 7), net +4.00, t 0.99; studied cells D 0; other cells t 0.99. Block 2 alone:
+42 cells, D 10 (6 gained, 4 lost), net +2.00, t 0.63. Block 2 rejects at t <= 1: **h206 REJECTED**. The studied cell
+(wololo 2644, the map PIONEER_IDLE was built for) never moved: lost on both sides in block 1 as v12 does. The 14 gained
+cells are spread over five opponents (IanCoolidge0 5, botfinalsafe 4, awesomelemonade 2, mvpatel2000 2, wololo 1); 4 of
+the 7 lost are StoneT2000's (bot1v43 1915 red, 203 blue, 2321 red; botfinalsafe 1915 blue), the others IanCoolidge0 2674
+red, wololo 836 blue and uvafan 1712 red.
+
+Next: h202 (v12 + CHAIN_FKEEP 1) block 1 on v7-m1 = matches 2014-2025 (candidate submission 258, ladder 259; waiter
+armed). Then h204, h205, h196, h197, h199 (noplan-m1), h200.
