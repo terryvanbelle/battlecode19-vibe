@@ -6811,3 +6811,25 @@ within +-1, so 1903-1914 joins progress/panels/v12-m1.pool (v12's reference: 252
 - **h198 block 1 submitted** (v12 + CHAIN_WALL 28, dist/h198 28c0ca9175f7): submission 240, matches 1915-1926 (both
   sides; ladder 241), bumped. Pre-registration as h164's (2026-10-24 22:39): ordinary rule; studied uvafan 2046, 1653
   and IanCoolidge0 1036, accepted only with the other cells' side-aware z >= 0 too.
+
+## 2026-10-26 18:33 PDT: the round-1000 games: late marches cost health, but no switch moves more than a game or two
+Census over v12's 108 panel games (match.json reasons; replay.js events from r850; scratchpad r1000.py, late_v12.txt,
+late_deaths_v12.txt, enemy_castles.txt). 32 games reach r1000: 19 are decided on health (8 won, 11 lost), 13 on castles
+(10 won, 3 lost).
+- Builds from r850 are already mostly crusaders (the endgame dump): 15-133 crusaders a game against 0-38 prophets.
+  Swapping the late prophets and preachers for crusaders (+47 and +20 health each at the karbonite price) covers the
+  deficit only in 1850 (botfinalsafe 2740 blue, short 740) and 1849 (botfinalsafe 203 red, short 710). Which resource
+  binds varies: 1654 ends with 735 K and 55 fuel, 1850 with 6 K and 9,159 fuel, the 2046 games with 29,000+ fuel.
+- Health lost from r850 (castle 200, church 100, crusader 40, preacher 60, prophet 20, pilgrim 10): ours exceeds theirs
+  in 15 of the 19 health games, by 820-3,370; only botfinalsafe 2740 (3 of 5) and IanCoolidge0 203 blue come out ahead
+  (their pilgrims and churches die). uvafan 2046: we lose 1,730-2,420 a game to their 40-100, mostly 35-42 crusaders
+  that march into the wall; the deficit there is 5,150, so a late hold alone does not flip it.
+- Castle kills from r850 in our wins: 1849 botfinalsafe 2740 (r950, the elimination; the r950 rule in callAttack sends
+  every unit) and 1653 botfinalsafe 203 (r973, r999, already ahead from r313). The other ten castle-decided wins killed
+  before r850 (r307-822). A hold from r850 therefore risks about one win and saves about one loss (1849 203): below what
+  a panel block resolves. Not built.
+- 2046 is the one cell a policy could flip (0 of 6): its health gap is about the karbonite of the three chain lines
+  (2,800 K with their churches) plus the late marches; it needs the whole turtle answer (no lines into the wall, no
+  marches). A "walled castles stop calling attacks" switch on top of CHAIN_WALL would also stop uvafan 1653's attack
+  waves, which take a castle at r471-541 in all 6 games (CHAIN_WALL fires there too: 46 line churches saw 28+), so it is
+  not built before h198 (CHAIN_WALL 28) reads; h198's 2046 games show what the wall alone recovers.
