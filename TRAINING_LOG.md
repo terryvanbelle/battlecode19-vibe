@@ -6920,3 +6920,21 @@ mechanism read checks the burst, not where the saving goes.
   counts only deaths it sees (within r2 49, or never seen alive).
 - Queue place: after h204 (both act on chain lines; h202, h204 and h205 do not overlap: h202 keeps the chain's fuel,
   h204 starts lines at r150, h205 stops a dying burst).
+
+## 2026-10-26 19:44 PDT: h198's mechanism read passes (14 of 15 walled lines ended); the wall ends the bursts that trade
+
+Pre-registered read (2026-10-24 22:39, a mechanism note, not a decision input): over our side of h198's 36 block games
+(scratchpad study/lines.js and study/wall.js, wall_matches.sh 1915-1926), 15 chain lines had a new church that saw 28+
+enemy attackers; CT.WALL ended 14 of them (bar: at least half). **Passes.** The one it missed: uvafan 2046 blue, the
+r843 line (31 seen). The wall also cut two lines at 2 churches (IanCoolidge0 203 blue r301; lines.js counts 3+).
+- Why a working wall scored t 0.00: the 17:52 census had already priced its targets. Churches whose sight held 28+
+  attackers in their burst dealt 1.47 damage per K, three times the bursts' mean (0.51): a line that meets a crowd is
+  a line that trades, so the wall ended the bursts that paid. uvafan 2046 (the cell h198 was moved up for) still lost
+  on both sides, walls at r352 and r806 (red), r352 (blue). LEARNINGS 48's rule (price a counted waste before building
+  its fix) applies to a stop rule too: the wall was pre-registered at 2026-10-24 22:39, before the census priced it.
+- The two red uvafan losses in cells v12 won 3 of 3 (1653, 1712) are opponent noise, not the build: firstdiff on the
+  replays (scratchpad study/firstdiff.js) puts the first difference between v12's 1853 game and h198's 1921 game on
+  uvafan's turns (1653: round 47, a prophet; 1712: round 67, a church's preacher placed (1,0) against (0,1)), and
+  v12's own 1841 and 1853 games on 1712 red differ at the same uvafan turn (h198's 1921 copies 1841's choice there).
+  uvafan randomises from the opening, so its cells are noisy even when v12 won all three; the paired rule counts such a
+  cell at d = -1 or +1 from one game, as simulated (eta, the noisy share, 0.2 in panelsim).
