@@ -338,3 +338,10 @@
    to one prophet at r2 65 (replica m651-1, config.js SIEGE_NOW). Excluding tiles nearer the enemy than home and building only
    while a free such tile is in the builder's sight took the deaths to 0 of 40 (end health 5,060 to 7,000).
    (2026-10-27 03:38)
+
+52. **Before reading a diagnostic game, check that the switch fired in it; if it did not, build a partner that makes
+   the case.** h209 (MUSTER_TILE) against dist/camp on 2321 played a game byte-identical to v12's: the muster case never
+   arose there. dist/creep (our source as a prophet wall creeping toward us) made it arise, and the castle's
+   held-crusader feed fell from 25 to 4. h210 (DOOM_HOLD) against dist/creep was byte-identical to v12 again: v12's
+   newborns there died after their first step, not on a birth tile every attacker covered (study/doom.mjs: 0 doomed
+   builds). `cmp` against the champion's replay of the same game is the cheapest check. (2026-10-27 07:44)
