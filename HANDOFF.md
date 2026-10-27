@@ -77,9 +77,8 @@
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
   h198, h201, h206, h202, h207, h209 rejected).
-  **Replica queue (11:24): 147 waiting (141 ranked; the daily autoscrim fired 09:00, ours bumped to the front); h211
-  block 1 = 2336-2347: 1 of 12 done, 5 running; VM 9.2 GB free, no VM jobs. Waiter: scratchpad wait_block.sh 2336
-  2347.**
+  **Replica queue (11:53): 133 waiting (all ranked; the daily autoscrim fired 09:00); h211 block 1 = 2336-2347: 9 of
+  12 done, 3 running; VM 9.2 GB free, no VM jobs. Waiter: scratchpad wait_block.sh 2336 2347.**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
   the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 11:01 (after h209's block 1); next refresh
   between blocks.
