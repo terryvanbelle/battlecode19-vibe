@@ -880,7 +880,7 @@ test('struct: HOARD_CHURCH: from HOARD_ROUND a church builds its army as held cr
     const staff = [];
     for (let y = c.site[1] - 4; y <= c.site[1] + 4; y++) for (let x = c.site[0] - 4; x <= c.site[0] + 4; x++)
       if (x >= 0 && y >= 0 && x < n && y < n && (g.karbonite_map[y][x] || g.fuel_map[y][x])) staff.push(mk(id++, S.PILGRIM, x, y, 9));
-    const run = (hoard, church, round) => {
+    const run = (hoard, church, round, karb = 1600) => {
       CFG.HOARD_ROUND = hoard; CFG.HOARD_CHURCH = church;
       const ch = mk(4500, S.CHURCH, c.site[0], c.site[1], 5, { health: 100 });
       const all = g.robots;
@@ -888,7 +888,7 @@ test('struct: HOARD_CHURCH: from HOARD_ROUND a church builds its army as held cr
       const w = worldFor(g, ch); g.robots = all;
       const sent = []; w.api.signal = (v, r2) => sent.push([v, r2]); w.api.castleTalk = () => {};
       const B = { api: w.api, w, birthRound: round - 4, st: {}, deps: null, clusters: null, rnd: rng(1) };
-      w.karbonite = 1600; w.fuel = 5000;   // past every reserve, the chain's CHAIN_K too
+      w.karbonite = karb; w.fuel = 5000;   // 1600: past every reserve, the chain's CHAIN_K too
       return { act: churchTurn(B) || {}, sent, w };
     };
     const def = run(0, 0, 650);
@@ -900,6 +900,12 @@ test('struct: HOARD_CHURCH: from HOARD_ROUND a church builds its army as held cr
     assert.ok(d2(tx, ty, mx, my) >= d2(h.w.me.x, h.w.me.y, mx, my));   // on the far side
     assert.strictEqual(run(600, 0, 650).act.u, def.act.u);   // castles only
     assert.strictEqual(run(600, 1, 550).act.u, def.act.u);   // before HOARD_ROUND
+    // HOARD_CHURCH 2: a bank short of CHAIN_K past the reserves still pays held crusaders from HOARD_ROUND.
+    assert.strictEqual(run(600, 1, 650, 600).act.u, undefined);   // 1: the chain's bank waits
+    const h2 = run(600, 2, 650, 600);
+    assert.strictEqual(h2.act.u, S.CRUSADER);
+    assert.ok(h2.sent.some(([v, r2]) => v === encNum(SIG.ROUND, 650) && r2 === HOARD_R2));
+    assert.strictEqual(run(600, 2, 550, 600).act.u, run(0, 0, 550, 600).act.u);   // before HOARD_ROUND: v12's
   } finally { Object.assign(CFG, saved); }
 });
 

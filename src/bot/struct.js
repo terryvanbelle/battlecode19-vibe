@@ -406,7 +406,8 @@ function structAct(B, allIds, extra, first) {
   // chainer killed in between, built 136 units in r246-450 and no line fired).
   const chainOn = CFG.CHAIN_ROUND && (B.round >= CFG.CHAIN_ROUND || (CFG.CHAIN_KEEP && me.unit === CHURCH && !B.round)) &&
     !(me.unit === CASTLE && (chainsFailed(st) || chainsWalled(B))) &&   // CFG.CHAIN_FAILS, CFG.CHAIN_WALL
-    !(CFG.CHAIN_LIVE && me.unit === CASTLE && !st.chainAny) && !hoarding(B);   // CFG.HOARD_ROUND
+    !(CFG.CHAIN_LIVE && me.unit === CASTLE && !st.chainAny) && !hoarding(B) &&   // CFG.HOARD_ROUND
+    !(CFG.HOARD_CHURCH === 2 && me.unit === CHURCH && CFG.HOARD_ROUND > 0 && B.round >= CFG.HOARD_ROUND);
   const reserveK = defReserveK(B) + CFG.PEACE_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
     (CFG.FRONT_ROUND && st.frontAt !== undefined && B.round - st.frontAt < 40 ? STATS[CHURCH].costK : 0) +
     (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0) +

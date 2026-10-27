@@ -507,7 +507,9 @@ export const CFG = {
   HOARD_CHURCH: 0,           // 1 (with HOARD_ROUND): from that round a church's peacetime army, on its quota and reserves,
                              // is held crusaders on hoard tiles around it too (struct.js hoardBuild; v12's 70 panel games
                              // past r600: churches built 2,505 peacetime units after r600, castles 287; TRAINING_LOG
-                             // 2026-10-27).
+                             // 2026-10-27). 2: and from that round the church's reserves leave out the chain's bank
+                             // (CHAIN_K), which hoarding castles no longer keep: at 1, a church builds only while the bank
+                             // holds CHAIN_K past the reserves, and the castles' hoard spends it first.
   FEED_WINDOW: 20,
   FEED_REST: 50,
   // endgame
