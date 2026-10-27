@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 157 other, 62 rejected, 24 accepted, 9 dropped, 6 in progress, 6 queued, 4 sparring partners (268 rows).
+Totals: 158 other, 62 rejected, 24 accepted, 9 dropped, 6 in progress, 6 queued, 4 sparring partners (269 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -281,4 +281,5 @@ Totals: 157 other, 62 rejected, 24 accepted, 9 dropped, 6 in progress, 6 queued,
 | `h221` | 2026-10-27 12:44 | v12 | ablation: v12 + PIONEERS_TEAM 0 (v7's switch off) (dist/h221 5b7284af3c9f) |  |  |  |  | PRE-REGISTERED 2026-10-27 12:44 (ablation sweep, plateau protocol step 2): queued after h213 (8 of 10) |
 | `h222` | 2026-10-27 12:44 | v12 | ablation: v12 + PLAN_VALUE 0: nearest planned cluster first (v7's switch off) (dist/h222 14c1761d7f19) |  |  |  |  | PRE-REGISTERED 2026-10-27 12:44 (ablation sweep, plateau protocol step 2): queued after h213 (9 of 10) |
 | `h224` | 2026-10-27 15:13 | v12 | CLAIM stage 1: v12 + CLAIM 1 + CLAIM_FUND 1: one claim a team, a prophet holding our site of the first contested cluster (m 2-6) from turn 3, its pioneer on a pilgrim's cost with the church's karbonite kept (dist/h224 0331fcc083f3) |  |  |  |  | diagnostic: the claim fired 11 of 12, claimant and church bars pass; economy bar failed in 5 of 12 (r3 prophet took the turn 3-4 depot pilgrims): fix round 1 = h225 |
-| `h225` | 2026-10-27 16:00 | v12 | CLAIM stage 1, fix round 1: h224 + CLAIM_AFTER 1: the claimant comes on the owner castle's first turn whose depot pilgrims leave (dist/h225 f39140d6b775) |  |  |  |  | driver diagnostic running (the 12 games of h224, same bars) |
+| `h225` | 2026-10-27 16:00 | v12 | CLAIM stage 1, fix round 1: h224 + CLAIM_AFTER 1: the claimant comes on the owner castle's first turn whose depot pilgrims leave (dist/h225 f39140d6b775) |  |  |  |  | diagnostic: economy bar passed (12 of 12), churches earlier; missed claimant by r5 (2321 r6), pioneer by r8 (4 of 11 at r12), 1712 churches at r60: fix round 2 = h226 |
+| `h226` | 2026-10-27 16:24 | v12 | CLAIM stage 1, fix round 2 (the last): v12 + CLAIM 1 + CLAIM_FUND 1 + CLAIM_AT 4 + CLAIM_UNIT 3: a crusader claimant on the owner's turn 4, after one depot pilgrim (dist/h226 793f89e343aa) |  |  |  |  | no-op check, then the driver diagnostic (the 12 games of h224, same bars) |

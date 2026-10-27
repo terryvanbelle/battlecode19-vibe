@@ -305,14 +305,14 @@ function claimTile(w, [sx, sy], o, mirrors) {
 }
 
 // CFG.CLAIM: the claim's owner builds the claimant (radioing SIG.GUARD at its tile at r2 CLAIM_R2) as soon as it can
-// (CFG.CLAIM_AFTER: on the first turn its depot pilgrims leave), then, CLAIM_LEAD turns later, the claim's pioneer on a
-// pilgrim's cost (SIG.CHURCH at r2 CLAIM_R2: CFG.CLAIM_FUND).
-// A turn whose radio is taken waits: each newborn must hear it.
+// (CFG.CLAIM_AT: not before that turn; CFG.CLAIM_AFTER: on the first turn its depot pilgrims leave), then, CLAIM_LEAD
+// turns later, the claim's pioneer on a pilgrim's cost (SIG.CHURCH at r2 CLAIM_R2: CFG.CLAIM_FUND). A turn whose radio
+// is taken waits: each newborn must hear it.
 function claim(B) {
   const w = B.w, st = B.st, c = st.claim;
   if (!c || c.sent || w.sentR2) return null;
   if (!c.built) {
-    if (!w.canAfford(CFG.CLAIM_UNIT, 0, 2)) return null;
+    if (CFG.CLAIM_AT && w.me.turn < CFG.CLAIM_AT || !w.canAfford(CFG.CLAIM_UNIT, 0, 2)) return null;
     const b = buildToward(B, CFG.CLAIM_UNIT, c.x, c.y, encXY(SIG.GUARD, c.x, c.y), CLAIM_R2);
     if (!b) return null;
     c.built = w.me.turn;

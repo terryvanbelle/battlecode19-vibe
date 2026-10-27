@@ -7857,3 +7857,26 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   with `tools/panel_paired.sh progress/panels/v12.ref 2386-2399` (block 2 rejects at t <= 1, accepts at t >= 2 with D >=
   4).
 - h225 (CLAIM fix round 1, 16:00) is on the driver: the 12 games of h224's diagnostic, one at a time.
+
+## 2026-10-27 16:24 PDT: CLAIM fix round 1 (h225) keeps the economy and misses the timing bars; fix round 2 = h226
+- dist/h225 (CLAIM 1, CLAIM_FUND 1, CLAIM_AFTER 1; f39140d6b775), the same 12 driver games (scratchpad claimdiag_h225),
+  read with the same bars against the same v12 baseline (claimbase_v12, scratchpad claimcmp.py). 0 exceptions, timeouts,
+  frozen turns or errors.
+- **Passed.** Economy: pilgrims by r30 within 1 of v12's in 12 of 12 (836 8 vs 8, block 836 8 vs 8, 1712 8 vs 8, 2321 8
+  vs 9). On station by r20 in 10 of 11 (1706 r23); alive at r40 in 9 of 11 (camp 2644 died r14, 2321 r17); our church on
+  the claimed site in 11 of 11, earlier than h224's: r22-r39 (836 and block 836 r24 against h224's r33 and v12's r33;
+  2321 r23 against r38; v12 none on 2321).
+- **Missed.** The claimant came r4-r6 (2321 r6, bar r5: its castle staffs 5 depots, r1-r5). The pioneer left at r12 on
+  836, block 836, 1712 and 203 (bar r8): the prophet, bought as the depot pilgrims end, empties the bank (836: 30 K
+  before it on r5, 5 K from r5 to r10, the pioneer on r12). Churches at r60 on 1712: 1 against v12's 2 (v12's are at
+  (6,33) r41 and (30,17) r53; h225's claimed church (25,12) r22 built preachers at r22 and r55-57, and its castles built
+  4 crusaders and no pilgrim between the pioneer (r12) and r56).
+- **Fix round 2 (the last) = dist/h226: CLAIM 1, CLAIM_FUND 1, CLAIM_AT 4, CLAIM_UNIT 3** (CLAIM_AFTER 0; 793f89e343aa,
+  49,293 bytes). The arithmetic of the three seeds: h224's claimant on turn 3 cost 2-3 pilgrims, h225's after every
+  depot pilgrim came late and left the bank empty. CLAIM_AT 4 (new switch, default 0: the claimant no earlier than the
+  owner's turn 4) lets turn 3 build its depot pilgrim; CLAIM_UNIT 3 (a crusader, 15 K against 25 K) leaves the pioneer's
+  10 K by turn 6 (836's bank is 40 K after turn 3 in v12 and h225: 25 K after the crusader). A crusader moves r2 9 (the
+  prophet 4), sees r2 49 (not 64) and has 40 HP (not 20); it meets a crusader on equal terms, where h224's two melee
+  deaths were 20-HP prophets killed at r2 16 by crusaders. Unit test added (2644: turn 3 a depot pilgrim, turn 4 the
+  crusader with SIG.GUARD at r2 4, turn 6 the pioneer). Same 12 games, same bars; a miss closes stage 1 as an execution
+  failure (15:13), the defect named.

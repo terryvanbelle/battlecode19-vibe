@@ -103,6 +103,8 @@ export const CFG = {
   CLAIM_FUND: 0,             // 1 (with CLAIM): the claim's pioneer talks CT.CLAIM until it builds or gives up, and while
                              // one talks castles' economy pilgrims leave the church's karbonite in the bank (13:32: 20 of
                              // the losses' 29 waits at free sites had 50 K or less in the bank)
+  CLAIM_AT: 0,               // >0 (with CLAIM): the claimant no earlier than the owner's turn CLAIM_AT (4: one depot pilgrim
+                             // on turn 3 first; h225's claimant after all of them came r4-r6 and its pioneer r12 in 4 of 11)
   CLAIM_AFTER: 0,            // 1 (with CLAIM): the claimant comes after the owner's depot pilgrims (structTurn's extra hook,
                              // not first): h224's turn-3 prophet took 2-3 of v12's turn 3-4 pilgrims on 836, 1712 and 2321
                              // (TRAINING_LOG 2026-10-27 16:00)
