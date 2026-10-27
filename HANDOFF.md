@@ -78,7 +78,7 @@
   **Replica queue (06:33): 18 waiting (1 ranked, 17 ours: v12 control 2099-2112, h207 block 3 2113-2118; 8 more scrims
   after HTTP 429); VM 9.5 GB free, no VM jobs.**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
-  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 04:46 (after h207's block 1); next refresh
+  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 06:38 (after h207's block 2); next refresh
   between blocks.
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
   v12's control block on v7-m2 = matches 1966-1979 (submission 246; 18 of 42) is in progress/panels/v12.ref. h206 (v12 +
@@ -96,7 +96,7 @@
   3 matches>`; block 3 rejects at t <= 1.5, accepts at t >= 2 with D >= 4 and others t >= 0; else block 4 on v7-m4 (v12
   control there first), which accepts at t >= 2. Next after h207: h208 (= h207 + HOARD_CHURCH 1, dist/h208 eb432410f84f:
   churches' peacetime army held too; churches built 2,505 peacetime units after r600 in v12's 70 long panel games,
-  castles 287; pre-register when h207 is decided). Refresh progress/ between blocks only (last 04:46; due now, before
+  castles 287; pre-register when h207 is decided). Refresh progress/ between blocks only (last 06:38, before
   block 3's first game ends).
   h201 was REJECTED on block 1 (paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-26 20:56; mechanism
   check passed, 21:33), h198 REJECTED on block 1 (paired t 0.00, D 9; 19:25), h203 REJECTED on
