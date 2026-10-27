@@ -68,3 +68,4 @@ submission	build	note
 236	cand:h195	panel candidate dist/h195 (db45575beb6a), block 3 = matches 1891-1902, both sides (TRAINING_LOG 2026-10-26 15:34)
 238	cand:h203	panel candidate dist/h203 (7f352326b9eb), block 1 = matches 1903-1914, both sides (TRAINING_LOG 2026-10-26 16:48)
 240	cand:h198	panel candidate dist/h198 (28c0ca9175f7), block 1 = matches 1915-1926, both sides (TRAINING_LOG 2026-10-26 18:15)
+242	cand:h201	panel candidate dist/h201 (153f6da1dee7), block 1 = matches 1927-1938, both sides (TRAINING_LOG 2026-10-26 19:25)

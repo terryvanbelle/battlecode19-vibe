@@ -6883,3 +6883,20 @@ late_deaths_v12.txt, enemy_castles.txt). 32 games reach r1000: 19 are decided on
   block 2, if any, plays v7-m2 after a v12 control block there. The pooled z is still printed (panel_pool.sh) as a
   description, not a decision. Every queued candidate keeps its switches and mechanism read; "ordinary rule" now means
   this one. No decided candidate is reopened (§4: no rule applies backwards).
+
+
+## 2026-10-26 19:25 PDT: h198 REJECTED on block 1 by the paired rule (t 0.00); h201 block 1 in play
+ h198 (v12 + CHAIN_WALL 28, dist/h198 28c0ca9175f7), block 1 = matches 1915-1926 (submission 240), the first block
+scored by the paired fresh-cell rule pre-registered at 18:59 (`tools/panel_paired.sh progress/panels/v12.ref 1915-1926
+--studied uvafan.bc2019:seed-2046,uvafan.bc2019:seed-1653,IanCoolidge0.battlecode20~69ce88:seed-1036`): 36 cells, 27
+alike; D 9 (gained 5, lost 4), net +0.00, **t 0.00 <= 0: REJECTED**. Studied cells: D 3 (gained 1, lost 2), t -0.53:
+uvafan 2046 lost on both sides, as v12 does (the cell the wall was moved up for); uvafan 1653 red lost (v12 3 of 3);
+IanCoolidge0 1036 red gained (v12 1 of 3), blue lost (v12 1 of 3). Other cells: D 6 (gained 4, lost 2), t 0.45: gained
+IanCoolidge0 203 both sides, botfinalsafe 203 blue and 2740 blue; lost botfinalsafe 203 red and uvafan 1712 red (v12 3
+of 3). Described by the pooled score (no longer a decision input): 24 of 36, side-aware z 0.15 against v12-m1.pool; the
+block joins the pool (z within +-1). The pre-registered mechanism read (our lines whose churches saw 28+ that CT.WALL
+ended, at least half) runs on the driver; its result follows in a later entry, as a mechanism note only.  h201 (v12 +
+ECON_RICH 100, dist/h201 153f6da1dee7) block 1 = matches 1927-1938 (submission 242; ladder 243 = bots/v12) on v7-m1,
+bumped; pre-registration as at 11:47 under the paired rule, studied StoneT2000.BC19-bot1v43:seed-2321 and
+uvafan.bc2019:seed-2046, mechanism check tools/reads/bank.sh. Replica queue 22 waiting at 19:23, so the VM symcheck of
+v12 to round 1000 held since the queue passed 30 went to the VM's pending queue.

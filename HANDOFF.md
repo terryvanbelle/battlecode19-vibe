@@ -72,33 +72,28 @@
   tools/galaxy19/panelsim.py`. progress/panels/v12-m1.pool (the pooled description) still lists the rejected
   blocks. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
-  accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203
-  rejected).
-  **Replica queue (19:09): 34 waiting (34 ranked; VM 11 GB free); h198 block 1: 10 of 12 done, 1921 and 1926 play.**
+  accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
+  h198 rejected).
+  **Replica queue (19:23): 22 waiting (22 ranked; VM 10 GB free; the v12 r1000 symcheck released to the VM queue).**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
-  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 18:09 (between blocks; rating-history 75
-  rated matches).
+  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 18:09 (before h198's block; rating-history 75
+  rated matches); next refresh after h201's block, before the next one.
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
-  **Now: h198 block 1** = matches 1915-1926 (submission 240; ladder 241; waiter on the driver). When it ends:
-  `contest19.py fetch --new --pages 6`, `tools/panel_paired.sh progress/panels/v12.ref 1915-1926 --studied
-  uvafan.bc2019:seed-2046,uvafan.bc2019:seed-1653,IanCoolidge0.battlecode20~69ce88:seed-1036`; the paired rule
-  (block 1 rejects at t <= 0, accepts at t >= 2 with D >= 4 and the other cells' t >= 0; else block 2 on v7-m2 after
-  v12's control block there); mechanism read (not a decision input): lines whose churches saw 28+ that CT.WALL ended,
-  at least half (TRAINING_LOG 2026-10-24 22:39); refresh progress/ before the next block.
-  h203 was REJECTED on block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z
-  1.00; TRAINING_LOG 2026-10-26 16:48), h193 on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42), h192 on
-  block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
+  **Now: h201 block 1** = matches 1927-1938 (submission 242; ladder 243; waiter on the driver). h201 = v12 + ECON_RICH
+  100, dist/h201 153f6da1dee7: before r100 the peacetime army builds from the bank past 100 K above the reserves; v12
+  banks 300+ K at r100 in 36 of its 72 panel games, army 2-11 (TRAINING_LOG 2026-10-26 11:47). When it ends:
+  `contest19.py fetch --new --pages 6`, `tools/panel_paired.sh progress/panels/v12.ref 1927-1938 --studied
+  StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046`; the paired rule (block 1 rejects at t <= 0, accepts at
+  t >= 2 with D >= 4 and the other cells' t >= 0; else block 2 on v7-m2 after v12's control block there); mechanism
+  check (not a decision input) tools/reads/bank.sh; refresh progress/ before the next block.
+  h198 was REJECTED on block 1 (paired t 0.00, D 9: gained 5, lost 4; TRAINING_LOG 2026-10-26 19:25), h203 REJECTED on
+  block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z 1.00; TRAINING_LOG
+  2026-10-26 16:48), h193 on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42), h192 on block 1 (z -2.65;
+  08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
   **Then, one block at a time** (each v11 candidate rebuilt on v12 with its switches unchanged and its
   pre-registration kept; bars relative to the champion recomputed from v12's panel games (h185's 1651-1658,
   1831-1834, 1835-1846 and the v12 control block) before the candidate's block is read; TRAINING_LOG 2026-10-26 10:39;
   rebuilt again at 16:40 with the World.attack fuel fix, hashes below):
-  h198 (= h187 on v12: v12 + CHAIN_WALL 28, dist/h198 28c0ca9175f7; h172's; studied cells uvafan 2046, 1653,
-  IanCoolidge0 1036; moved up 2026-10-26 15:49: v12 loses uvafan 2046 on health at r1000 after its three chain lines,
-  which saw 29, 33 and 74 enemy attackers, lost 19 churches; TRAINING_LOG 2026-10-26 15:49);
-  h201 (v12 + ECON_RICH 100, dist/h201 153f6da1dee7: before r100 the peacetime army builds from the bank past 100 K
-  above the reserves; v12 banks 300+ K at r100 in 36 of its 72 panel games, army 2-11; paired rule; studied
-  StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046; mechanism check tools/reads/bank.sh: TRAINING_LOG
-  2026-10-26 11:47);
   h202 (v12 + CHAIN_FKEEP 1, dist/h202 a7c9a4cfd5ae: from CHAIN_ROUND the peacetime army keeps the chain's fuel too;
   v12 starves the chain of fuel in 19 of 108 panel games, its 4 losses among them all IanCoolidge0 1036, a cell v11
   won 6 of 6; paired rule; studied IanCoolidge0.battlecode20~69ce88:seed-1036; TRAINING_LOG 2026-10-26 13:37);
