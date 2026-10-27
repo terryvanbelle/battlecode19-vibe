@@ -121,12 +121,12 @@ its trigger fires elsewhere.
 
 - The unit of evidence is the **paired cell** `(opponent, map, side, seed)`, candidate vs control on the same cell.
   Identical outcomes carry no information. With D discordant cells and net = gained − lost, t = net / √D.
-- **A replayed cell is not new evidence.** Where the engine and most opponents are deterministic, a build plays most
-  cells the same way every time (four in five here: one result in all three of a champion's blocks), so a second
-  block on the same cells mostly repeats the first. Scoring such blocks as independent games (a pooled z over the
-  cell rates, V = Σ p(1 − p), nearly 0 on a cell that never varies) grows z by about √blocks from the same few
-  changed cells: simulated, that rule accepted a neutral candidate 17-30% of the time, not the 7% an
-  independent-games model predicted.
+- **A repeated cell is not new evidence.** Where most cells are lopsided, a build gets one result on them every time
+  (four in five here: one result in all three of a champion's blocks, though every opponent randomised and the games
+  themselves differed), so a second block on the same cells mostly repeats the first. Scoring such blocks as
+  independent games (a pooled z over the cell rates, V = Σ p(1 − p), nearly 0 on a cell that never varies) grows z by
+  about √blocks from the same few changed cells: simulated, that rule accepted a neutral candidate 17-30% of the time,
+  not the 7% an independent-games model predicted.
 - **Paired fresh-cell rule.** Each block plays a new set of cells: the panel's opponents on map sets drawn once
   (three maps an opponent, both sides; sets 1, 2, 3, 4 in order, never repeated within a candidate). The champion's
   reference on a set is its own games there (its accepting blocks, its control blocks), played once per reign before

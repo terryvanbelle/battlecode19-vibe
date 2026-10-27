@@ -36,7 +36,7 @@
   sqrt(sum d^2); block 1 rejects at t <= 0; any block accepts at t >= 2 with D >= 4 (studied cells: others t >= 0
   too); block 2 rejects at t <= 1, block 3 at t <= 1.5; block 4 accepts at t >= 2. Basics-fix: t >= 0 after two
   blocks with the mechanism bar met. The pooled z (panel_pool.sh) is printed as a description only: on repeated
-  deterministic cells it accepted neutral candidates 17-30% of the time.
+  lopsided cells (one result every time) it accepted neutral candidates 17-30% of the time.
 - **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free. **11 GB free since 06:30
   2026-10-26** (2.9 GB before): the prior-year sweep (PROMPTS 46; TRAINING_LOG 06:30) deleted the 2023 replica's
   storage (6.0 GB), its Postgres cluster 15/main, unit files, CLIs and bcreplica's files, the VM's 2023 project trees

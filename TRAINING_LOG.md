@@ -6938,3 +6938,20 @@ r843 line (31 seen). The wall also cut two lines at 2 churches (IanCoolidge0 203
   v12's own 1841 and 1853 games on 1712 red differ at the same uvafan turn (h198's 1921 copies 1841's choice there).
   uvafan randomises from the opening, so its cells are noisy even when v12 won all three; the paired rule counts such a
   cell at d = -1 or +1 from one game, as simulated (eta, the noisy share, 0.2 in panelsim).
+
+## 2026-10-26 19:57 PDT: correction to 18:59: panel cells are lopsided, not replays; every opponent randomises
+
+The 18:59 entry said repeated blocks "replay deterministic cells". The games are not replays. firstdiff (scratchpad
+study/firstdiff.js, noise_v12.sh) between v12's own two games in each of the 36 v7-m1 cells (h185's block 2, matches
+1835-1846, against the v12 control, 1847-1858): 2 cells byte-identical (wololo 2644 red, awesomelemonade 2518 blue);
+in the other 34 the first difference is always on the opponent's turn, never ours (our bot is deterministic), at r16
+(bot1v43 388 red) to r524 (wololo 2644 blue): before r50 in 8 cells (bot1v43 388 red, botfinalsafe 203 red, uvafan
+1653 both sides, awesomelemonade 2797 and 1712 both sides), r50-r199 in 18, r200+ in 8. All six panel opponents
+randomise.
+- What the 18:59 analysis rests on is unchanged: the outcome repeats (29 of 36 cells gave v12 one result in all three
+  blocks) because most cells are lopsided, p near 0 or 1, not because the game repeats. The paired rule, its simulation
+  (fixed cells plus an eta share of coin cells) and its bars stand; the wording is corrected in LEARNINGS 50,
+  TRAINING_ALGORITHM §4 and HANDOFF.
+- A consequence for reading single cells: a cell the champion won 3 of 3 can still be lost once by the opponent's
+  randomness (h198's uvafan 1653 and 1712 red, 19:44); one game in such a cell is weak evidence, which is why the rule
+  sums over cells and asks for D >= 4.
