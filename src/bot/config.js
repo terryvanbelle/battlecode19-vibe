@@ -476,6 +476,18 @@ export const CFG = {
                              // 1180, seed 2013: wololo's prophets shot castle (15,14) dead in r177-204, r2 61 from it,
                              // while three held crusaders stood 2-4 tiles from it, out of the prophets' sight). 100 is
                              // v10's (h175, TRAINING_LOG 2026-10-25 15:26); 0 was v9's.
+  MUSTER_TILE: 0,            // 1 (with MUSTER 2): a structure building a held crusader (musterAct, musterArmy) picks its
+                             // hold tile from what it sees (r2 100; the crusader sees 49): a free lattice tile 2-4 king
+                             // steps out, no nearer the camper than home, out of reach (THREAT_R2) of every enemy
+                             // attacker in its sight, not given in the last MUSTER_TILE_TTL turns and not one whose
+                             // holder died there in the last MUSTER_TILE_BAN; none, it builds none. It radios the tile
+                             // (SIG.THREAT at r2 MUSTER_R2) and the crusader holds that tile (struct.js
+                             // musterTile, military.js tileHold; v12's 150 panel games: 991 held crusaders died within 5
+                             // rounds of birth, in 68 games; 1973 seed 1822: one castle's 162 in r450-950, each to one
+                             // of ~50 uvafan prophets at r2 82 from it, out of the crusader's sight; TRAINING_LOG
+                             // 2026-10-27).
+  MUSTER_TILE_TTL: 12,
+  MUSTER_TILE_BAN: 100,
   HOARD_ROUND: 0,            // >0: from this round a castle whose team is not behind on castles (ours alive >= the
                              // enemy's not reported destroyed, CT.DEAD; chain.js hoarding) calls no general attack, sends
                              // no chainer and keeps no chain bank; its peacetime army builds crusaders (the most health per

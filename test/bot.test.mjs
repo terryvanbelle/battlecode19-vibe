@@ -6,11 +6,11 @@ import * as S from '../src/bot/specs.js';
 import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
-import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot, GUARD_STRIKE, HOARD_R2 } from '../src/bot/comms.js';
+import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot, GUARD_STRIKE, HOARD_R2, MUSTER_R2 } from '../src/bot/comms.js';
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot, hoardTile } from '../src/bot/military.js';
 import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers, hearStrike, strikeFar } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
-import { structInit, buildToward, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy, hitTrack, sayRescue } from '../src/bot/struct.js';
+import { structInit, buildToward, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy, musterTile, hitTrack, sayRescue } from '../src/bot/struct.js';
 import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, strikeSpot, hotRetarget, hereRetarget, siteStalled, siteTaken, siteTimeout, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
@@ -3076,6 +3076,117 @@ testPreV10('military: MUSTER 2: a held crusader holds rings 2-4 king steps from 
     step(st, 0, 0, [{ id: 4006, team: 1, unit: S.CRUSADER, x: tgt[0], y: tgt[1], turn: 9, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 }]);
     assert.strictEqual(st.muster, null);                                              // an enemy crusader in sight
   } finally { CFG.MUSTER = saved; }
+});
+
+test('struct: MUSTER_TILE: a held crusader is built out of reach and told a free far-side lattice tile no attacker in sight reaches', () => {
+  const saved = { MUSTER: CFG.MUSTER, MUSTER_TILE: CFG.MUSTER_TILE, SIEGE: CFG.SIEGE };
+  try {
+    CFG.MUSTER = 2; CFG.MUSTER_TILE = 1;
+    let id = 100;
+    const P = (x, y, unit = S.PROPHET) => ({ id: id++, x, y, unit });
+    const sent = [], built = [];
+    const fw = { me: { x: 10, y: 10, turn: 40, unit: S.CHURCH }, sentR2: 0, fuel: 500, enemies: [P(10, 20), P(2, 6)], friends: [],
+      canAfford: () => true, free: () => true, isDepot: () => false,
+      signal(v, r2) { sent.push([v, r2]); this.sentR2 = r2; }, build(unit, dx, dy) { built.push([unit, dx, dy]); return { u: unit, dx, dy }; } };
+    const st = { mus: { ids: new Set(), pend: null, rel: -1, seen: new Map() }, nDef: 0, camp: { t: 40, x: 10, y: 20 } };
+    const B = { w: fw, st };
+    const army = turn => { fw.me.turn = turn; fw.sentR2 = 0; st.camp.t = turn; return musterArmy(B, 0, 0); };
+    // Ring 2's far-side lattice tiles r2 5+ out: (8,8) and (12,8); (8,8) is in reach of the prophet at (2,6) (r2 40).
+    assert.deepStrictEqual(musterTile(B, 10, 20), [12, 8]);
+    const a = army(40);
+    assert.deepStrictEqual([a.u, a.dx, a.dy], [S.CRUSADER, 1, -1]);                  // on (11,9), nearest its tile
+    assert.deepStrictEqual([sent, st.mus.pend, st.nDef], [[[encXY(SIG.THREAT, 12, 8), MUSTER_R2]], { x: 11, y: 9 }, 1]);
+    // Given: not again for MUSTER_TILE_TTL turns; ring 3's farthest from the camper out of reach is (13,7).
+    fw.me.turn = 41; assert.deepStrictEqual(musterTile(B, 10, 20), [13, 7]);
+    fw.me.turn = 40 + CFG.MUSTER_TILE_TTL; assert.deepStrictEqual(musterTile(B, 10, 20), [12, 8]);
+    // Its crusader stands on it, then is gone from sight (dead): banned MUSTER_TILE_BAN turns.
+    fw.friends = [{ id: 77, unit: S.CRUSADER, x: 12, y: 8 }]; musterTrack(B);
+    fw.friends = []; fw.me.turn = 53; musterTrack(B);
+    assert.deepStrictEqual(musterTile(B, 10, 20), [13, 7]);
+    fw.me.turn = 53 + CFG.MUSTER_TILE_BAN; musterTrack(B); assert.deepStrictEqual(musterTile(B, 10, 20), [12, 8]);
+    // One that walks off alive frees it at once.
+    sent.length = 0; army(200); assert.deepStrictEqual(sent, [[encXY(SIG.THREAT, 12, 8), MUSTER_R2]]);
+    fw.friends = [{ id: 78, unit: S.CRUSADER, x: 12, y: 8 }]; fw.me.turn = 201; musterTrack(B);
+    fw.friends = [{ id: 78, unit: S.CRUSADER, x: 12, y: 9 }]; fw.me.turn = 202; musterTrack(B);
+    assert.deepStrictEqual(musterTile(B, 10, 20), [12, 8]);
+    // Every far-side tile in reach (a prophet at (10,4)), or the radio taken: no build.
+    fw.enemies.push(P(10, 4)); sent.length = 0;
+    assert.strictEqual(musterTile(B, 10, 20), null);
+    assert.strictEqual(army(203), null);
+    fw.enemies.pop(); fw.me.turn = 204; fw.sentR2 = 2; st.camp.t = 204; assert.strictEqual(musterArmy(B, 0, 0), null);
+    assert.deepStrictEqual([sent, built.length], [[], 2]);                         // turns 40 and 200 only
+    // The build tile nearest the hold tile, (11,9), in reach of a preacher at (11,15) (r2 36): (10,9) instead.
+    const st2 = { mus: { ids: new Set(), pend: null, rel: -1, seen: new Map() }, nDef: 0 };
+    fw.enemies.push(P(11, 15, S.PREACHER)); fw.sentR2 = 0; fw.me.turn = 300;
+    const b = musterAct({ w: fw, st: st2 }, [fw.enemies[0]], 0, true);
+    assert.deepStrictEqual([b.u, b.dx, b.dy, sent], [S.CRUSADER, 0, -1, [[encXY(SIG.THREAT, 12, 8), MUSTER_R2]]]);
+    // CFG.SIEGE units do not take a tile radio for a prophet.
+    CFG.SIEGE = 30;
+    const U = { w: { n: 24, me: { id: 5, team: 0, unit: S.PROPHET, x: 10, y: 6, turn: 2 }, friends: [], enemies: [],
+      robots: [{ id: 3, team: 0, unit: S.CASTLE, x: 10, y: 5, seen: true, signal: encXY(SIG.THREAT, 10, 16), signal_radius: MUSTER_R2 }] }, st: {} };
+    watchThreats(U); assert.strictEqual(U.st.threats.size, 0);
+    CFG.MUSTER_TILE = 0; watchThreats(U); assert.strictEqual(U.st.threats.size, 1);
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('military: MUSTER_TILE: a crusader told a tile holds it, steps off while an attacker it sees reaches it, and trades a taken one', () => {
+  const saved = { MUSTER: CFG.MUSTER, MUSTER_TILE: CFG.MUSTER_TILE };
+  try {
+    CFG.MUSTER = 2; CFG.MUSTER_TILE = 1;
+    const g = new Game(3, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const cw = worldFor(g, castle), [hx, hy] = cw.T.toC(castle.x, castle.y);
+    const ok = (x, y) => cw.free(x, y) && !cw.isDepot(x, y) && latticeTile(x, y) && d2(x, y, hx, hy) >= CFG.LATTICE_MIN_R2;
+    // A build tile A, its hold tile T (king 2, one move away) and a tile E for an enemy prophet that the crusader on T
+    // sees (r2 17-49: out of its attack) with a free tile within one move of T out of its reach.
+    let A = null, T = null, E = null;
+    for (const [dx, dy] of [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]]) {
+      const ax = hx + dx, ay = hy + dy; if (A || !cw.free(ax, ay)) continue;
+      for (let y = hy - 2; y <= hy + 2 && !A; y++) for (let x = hx - 2; x <= hx + 2 && !A; x++) {
+        if (king(x, y, hx, hy) !== 2 || !ok(x, y) || d2(x, y, ax, ay) > 9) continue;
+        for (let ey = y - 7; ey <= y + 7 && !A; ey++) for (let ex = x - 7; ex <= x + 7 && !A; ex++) {
+          const q = d2(ex, ey, x, y); if (q <= 16 || q > 49 || !cw.free(ex, ey)) continue;
+          let cold = false;
+          for (let cy = y - 3; cy <= y + 3; cy++) for (let cx = x - 3; cx <= x + 3; cx++)
+            if (d2(cx, cy, x, y) <= 9 && cw.free(cx, cy) && d2(cx, cy, ex, ey) > 64) cold = true;
+          if (cold) { A = [ax, ay]; T = [x, y]; E = [ex, ey]; }
+        }
+      }
+    }
+    assert.ok(A && T && E);
+    const own = g.robots.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100);
+    const [cx0, cy0] = cw.T.toE(A[0], A[1]);
+    const crus = { id: 4005, team: 0, unit: S.CRUSADER, x: cx0, y: cy0, turn: 1, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    const all = g.robots;
+    const step = (st, sig, radius, extra = []) => {
+      castle.signal = sig; castle.signal_radius = radius;
+      g.robots = own.concat([crus], extra);
+      try {
+        const w = worldFor(g, crus), B = { api: w.api, w, round: 20, birthRound: 20, st, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        const a = militaryTurn(B);
+        return a && a.action === 'move' ? cw.T.toC(crus.x + a.dx, crus.y + a.dy) : a;
+      } finally { g.robots = all; castle.signal = 0; castle.signal_radius = 0; }
+    };
+    const st = {};
+    assert.deepStrictEqual(step(st, encXY(SIG.THREAT, T[0], T[1]), MUSTER_R2), T);   // one move onto its tile
+    assert.deepStrictEqual([st.muster.x, st.muster.y, st.muster.tile], [T[0], T[1], true]);
+    [crus.x, crus.y] = cw.T.toE(T[0], T[1]); crus.turn = 2;
+    assert.strictEqual(step(st, 0, 0), null);                                         // holds it
+    const [ex, ey] = cw.T.toE(E[0], E[1]);
+    const foe = { id: 4006, team: 1, unit: S.PROPHET, x: ex, y: ey, turn: 9, health: 20, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    crus.turn = 3; const off = step(st, 0, 0, [foe]);
+    assert.ok(Array.isArray(off) && d2(off[0], off[1], E[0], E[1]) > 64 && st.muster, 'stepped to ' + off);
+    // Back at A with a pilgrim of ours on T: it takes another free lattice tile 2-4 king steps from home.
+    [crus.x, crus.y] = cw.T.toE(A[0], A[1]); crus.turn = 4;
+    const [px, py] = cw.T.toE(T[0], T[1]);
+    step(st, 0, 0, [{ id: 4007, team: 0, unit: S.PILGRIM, x: px, y: py, turn: 9, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 }]);
+    const k = king(st.muster.x, st.muster.y, hx, hy);
+    assert.ok(!(st.muster.x === T[0] && st.muster.y === T[1]) && k >= 2 && k <= 4 && ok(st.muster.x, st.muster.y));
+    // MUSTER_TILE 0: the same radio names a camper (rings 2-4 hold).
+    CFG.MUSTER_TILE = 0; const st0 = {}; [crus.x, crus.y] = cw.T.toE(A[0], A[1]); crus.turn = 1;
+    step(st0, encXY(SIG.THREAT, T[0], T[1]), MUSTER_R2); assert.ok(st0.muster && !st0.muster.tile);
+  } finally { Object.assign(CFG, saved); }
 });
 
 test('struct: MUSTER_RESCUE: a structure hit in its last 3 turns radios the nearest attacker in sight as a spot', () => {

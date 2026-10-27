@@ -3,9 +3,9 @@ import { CFG, defReserveK } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, king, ADJ, offsets } from './util.js';
 import { bfs, econ } from './mapinfo.js';
-import { SIG, FAR, encXY, encNum, HOARD_R2 } from './comms.js';
+import { SIG, FAR, encXY, encNum, HOARD_R2, MUSTER_R2 } from './comms.js';
 import { isAttacker, pickTarget, canHit, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
-import { watchDeaths, hoardTile } from './military.js';
+import { watchDeaths, hoardTile, latticeTile } from './military.js';
 import { chainsFailed, chainsWalled, hoarding } from './chain.js';
 
 const PILGRIM_OFFS = offsets(4);
@@ -286,6 +286,15 @@ export function musterTrack(B) {
     m.pend = null;
   }
   for (const id of [...m.ids]) if (!w.friends.some(f => f.id === id)) m.ids.delete(id);
+  if (CFG.MUSTER_TILE && m.given) for (const [k, t] of m.given) {
+    const x = k & 63, y = k >> 6, f = w.friends.find(r => r.x === x && r.y === y && r.unit === CRUSADER);
+    if (f) { t.id = f.id; continue; }
+    if (t.id !== undefined) {   // its holder left: banned if it died (a crusader walks at most 3 tiles out of sight r2 100)
+      if (!w.friends.some(r => r.id === t.id)) t.ban = me.turn + CFG.MUSTER_TILE_BAN;
+      t.id = undefined; t.at = -1e9;
+    }
+    if (t.ban <= me.turn && me.turn - t.at >= CFG.MUSTER_TILE_TTL) m.given.delete(k);
+  }
   if (m.rel >= 0 && (me.turn - m.rel >= CFG.MUSTER_WAIT || !w.enemies.some(e => isAttacker(e.unit)))) m.rel = -1;
 }
 // Against campers (out = musterCase): hold crusaders, built while ours do not outnumber the attackers 2A + 1 (v8's
@@ -306,7 +315,7 @@ export function musterAct(B, out, hold, short) {
     return null;
   }
   if (!short || !w.canAfford(CRUSADER, hold, 2)) return null;
-  const b = buildToward(B, CRUSADER, 2 * me.x - e.x, 2 * me.y - e.y, encXY(SIG.THREAT, e.x, e.y));
+  const b = CFG.MUSTER_TILE ? tileBuild(B, e) : buildToward(B, CRUSADER, 2 * me.x - e.x, 2 * me.y - e.y, encXY(SIG.THREAT, e.x, e.y));
   if (!b) return null;
   m.pend = { x: b.x, y: b.y };
   return b.act;
@@ -316,10 +325,51 @@ export function musterArmy(B, resK, fuelK) {
   const st = B.st, w = B.w, me = w.me, c = st.camp;
   if (!(CFG.MUSTER === 2 && c && c.t === me.turn)) return undefined;
   if (!w.canAfford(CRUSADER, resK, fuelK)) return null;
-  const b = buildToward(B, CRUSADER, 2 * me.x - c.x, 2 * me.y - c.y, encXY(SIG.THREAT, c.x, c.y));
+  const b = CFG.MUSTER_TILE ? tileBuild(B, c) : buildToward(B, CRUSADER, 2 * me.x - c.x, 2 * me.y - c.y, encXY(SIG.THREAT, c.x, c.y));
   if (!b) return null;
   st.mus.pend = { x: b.x, y: b.y }; st.nDef++;
   return b.act;
+}
+// CFG.MUSTER_TILE: tiles in reach (THREAT_R2) of an enemy attacker this structure sees.
+function hotFor(w) {
+  const th = w.enemies.filter(e => THREAT_R2[e.unit] > 0);
+  return (x, y) => th.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]);
+}
+// CFG.MUSTER_TILE: the hold tile for a held crusader against the camper at (cx, cy): a free lattice tile 2-4 king steps
+// out (r2 LATTICE_MIN_R2 from here, no depot), no nearer the camper than this structure, in reach of no enemy attacker
+// in sight, not given in the last MUSTER_TILE_TTL turns nor banned; the nearest ring first, then the farthest from the
+// camper. Null if none.
+export function musterTile(B, cx, cy) {
+  const w = B.w, me = w.me, m = B.st.mus, g = m.given || (m.given = new Map()), hot = hotFor(w), home = d2(me.x, me.y, cx, cy);
+  let best = null, bs = Infinity;
+  for (let y = me.y - 4; y <= me.y + 4; y++) for (let x = me.x - 4; x <= me.x + 4; x++) {
+    const k = king(x, y, me.x, me.y);
+    if (k < 2 || !latticeTile(x, y) || !w.free(x, y) || w.isDepot(x, y) || d2(x, y, me.x, me.y) < CFG.LATTICE_MIN_R2) continue;
+    if (d2(x, y, cx, cy) < home || hot(x, y)) continue;
+    const t = g.get(y * 64 + x);
+    if (t && (t.ban > me.turn || me.turn - t.at < CFG.MUSTER_TILE_TTL)) continue;
+    const s = k * 1e4 - d2(x, y, cx, cy);
+    if (s < bs) { bs = s; best = [x, y]; }
+  }
+  return best;
+}
+// CFG.MUSTER_TILE: build a held crusader on the free adjacent tile in reach of no enemy attacker in sight nearest its
+// hold tile (musterTile), radioed to it at r2 MUSTER_R2; null (no build) when either is lacking or the radio is taken.
+function tileBuild(B, c) {
+  const w = B.w, me = w.me;
+  if (w.sentR2) return null;
+  const t = musterTile(B, c.x, c.y);
+  if (!t) return null;
+  const hot = hotFor(w); let bt = null, bd = 1e9;
+  for (const [dx, dy] of ADJ) {
+    const x = me.x + dx, y = me.y + dy; if (!w.free(x, y) || hot(x, y)) continue;
+    const dd = d2(x, y, t[0], t[1]) * 4 + (w.isDepot(x, y) ? 3 : 0);
+    if (dd < bd) { bd = dd; bt = [x, y]; }
+  }
+  if (!bt) return null;
+  const b = buildToward(B, CRUSADER, bt[0], bt[1], encXY(SIG.THREAT, t[0], t[1]), MUSTER_R2);
+  if (b) B.st.mus.given.set(t[1] * 64 + t[0], { at: me.turn, ban: 0, id: undefined });
+  return b;
 }
 
 // CFG.WATCH: radio, as a spot, the nearest enemy attacker within r2 100 that no military unit of ours sees.

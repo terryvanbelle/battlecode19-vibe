@@ -21,6 +21,7 @@ export const SIG = {
 };
 export const GUARD_STRIKE = 3;   // the r2 of a SIG.GUARD that makes the newborn a striker (buildToward sends others at 2)
 export const HOARD_R2 = 3;       // the r2 of a castle's SIG.ROUND that makes the newborn crusader a held one (CFG.HOARD_ROUND)
+export const MUSTER_R2 = 3;      // the r2 of a SIG.THREAT whose (x, y) is the newborn's hold tile, not the camper (CFG.MUSTER_TILE)
 export function encXY(type, x, y) { return (type << 12) | (x << 6) | y; }
 export function encNum(type, v) { return (type << 12) | (v & 4095); }
 export function dec(sig) { return { type: sig >> 12, x: (sig >> 6) & 63, y: sig & 63, v: sig & 4095 }; }

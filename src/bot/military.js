@@ -4,7 +4,7 @@ import { CFG } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, king, rng } from './util.js';
 import { fuelStep } from './nav.js';
-import { SIG, CT, FAR, dec, encXY, decFarRobot, GUARD_STRIKE, HOARD_R2 } from './comms.js';
+import { SIG, CT, FAR, dec, encXY, decFarRobot, GUARD_STRIKE, HOARD_R2, MUSTER_R2 } from './comms.js';
 import { isAttacker, pickTarget, preacherTarget, retreatStep, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
 import { learnRound } from './chain.js';
 
@@ -30,7 +30,10 @@ function init(B) {
         st.guardAt = { x: m.x, y: m.y };   // escort: a pioneer's site
         if (CFG.STRIKE_FAR && r.signal_radius === GUARD_STRIKE) st.strike = { x: m.x, y: m.y };   // a striker (strikeWalk)
       }
-      else if (m.type === SIG.THREAT && CFG.MUSTER) st.muster = { x: m.x, y: m.y, until: CFG.MUSTER === 2 ? Infinity : me.turn + CFG.MUSTER_WAIT };   // musterHold
+      else if (m.type === SIG.THREAT && CFG.MUSTER) {   // musterHold
+        st.muster = CFG.MUSTER_TILE && r.signal_radius === MUSTER_R2 ? { x: m.x, y: m.y, until: Infinity, tile: true }
+          : { x: m.x, y: m.y, until: CFG.MUSTER === 2 ? Infinity : me.turn + CFG.MUSTER_WAIT };
+      }
     }
   }
   if (st.chainT) learnRound(B);
@@ -171,6 +174,7 @@ function go(B, key, sources, cap, avoid) {
 // CFG.HOARD_ROUND (m.far: rings 2 to HOARD_FAR, m the mirror of the home castle): held on hoard tiles (latticeOk and
 // hoardTile), crossing other tiles only on the way out.
 function musterHold(B) {
+  if (B.st.muster.tile) return tileHold(B);
   const w = B.w, me = w.me, h = B.st.home, m = B.st.muster, S = STATS[me.unit], far = m.far || (CFG.MUSTER === 2 ? 4 : 2);
   const th = w.enemies.filter(e => THREAT_R2[e.unit] > 0);
   const hot = (x, y) => d2(x, y, m.x, m.y) <= 64 || th.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]);
@@ -184,6 +188,34 @@ function musterHold(B) {
     if (r2 === 0 || r2 > r) continue;
     const x = me.x + dx, y = me.y + dy;
     if (king(x, y, h.x, h.y) > far || !w.free(x, y)) continue;
+    const s = score(x, y); if (s < bs) { bs = s; best = [dx, dy]; }
+  }
+  return best ? w.move(best[0], best[1]) : null;
+}
+// CFG.MUSTER_TILE (m.tile: the structure radioed the tile, not the camper): hold that tile, stepping off it while an
+// enemy attacker in sight reaches it; one another robot stands on is traded for the nearest free lattice tile 2-4 king
+// steps from home that no attacker in sight reaches.
+function tileHold(B) {
+  const w = B.w, me = w.me, h = B.st.home, m = B.st.muster, S = STATS[me.unit];
+  const th = w.enemies.filter(e => THREAT_R2[e.unit] > 0);
+  const hot = (x, y) => th.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]);
+  const on = me.x === m.x && me.y === m.y;
+  if (on && !hot(me.x, me.y)) return null;
+  if (!on && w.occ(m.x, m.y) > 0) {
+    let t = null, td = 1e9;
+    for (let y = h.y - 4; y <= h.y + 4; y++) for (let x = h.x - 4; x <= h.x + 4; x++) {
+      if (king(x, y, h.x, h.y) < 2 || !latticeOk(B, x, y) || !w.free(x, y) || hot(x, y)) continue;
+      const dd = d2(x, y, m.x, m.y); if (dd < td) { td = dd; t = [x, y]; }
+    }
+    if (t) { m.x = t[0]; m.y = t[1]; }
+  }
+  const score = (x, y) => (hot(x, y) ? 2e6 : 0) + d2(x, y, m.x, m.y);
+  const r = fuelStep(w.fuel, S.speed, S.fuelPerMove, 60);
+  let best = null, bs = score(me.x, me.y);
+  for (const [dx, dy, r2] of B.offs) {
+    if (r2 === 0 || r2 > r) continue;
+    const x = me.x + dx, y = me.y + dy;
+    if (!w.free(x, y)) continue;
     const s = score(x, y); if (s < bs) { bs = s; best = [dx, dy]; }
   }
   return best ? w.move(best[0], best[1]) : null;
@@ -288,7 +320,7 @@ export function watchThreats(B) {
   const w = B.w, me = w.me, st = B.st, t = me.turn, V = STATS[me.unit].vision;
   const m = st.threats || (st.threats = new Map());
   for (const r of w.robots) if (r.seen && r.team === me.team && (r.unit === CASTLE || r.unit === CHURCH) && r.signal > 0 && r.signal_radius <= 25) {
-    const s = dec(r.signal); if (s.type === SIG.THREAT) m.set(s.y * 64 + s.x, t);
+    const s = dec(r.signal); if (s.type === SIG.THREAT && !(CFG.MUSTER_TILE && r.signal_radius === MUSTER_R2)) m.set(s.y * 64 + s.x, t);
   }
   for (const e of w.enemies) if (e.unit === PROPHET) m.set(e.y * 64 + e.x, t);
   for (const [k, at] of m) {
