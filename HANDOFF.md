@@ -100,6 +100,10 @@
   h204 (v12 + CHAIN_ROUND 150, dist/h204 066cde4ddabb: chainers and the chain bank from r150; our line alone won 63
   of 78 of v12's panel games, theirs alone 1 of 11; paired rule, no studied cells; mechanism check chainrace.mjs
   median first line <= r245 (v12 r272); TRAINING_LOG 2026-10-26 17:14, 17:26);
+  h205 (v12 + CHAIN_STOPLOSS 3, dist/h205 30d92bbe37f7: a line church that saw 3 of its burst units die within 5 turns
+  of birth ends its burst; on v12's 108 panel games 136 K a game at half the bursts' damage per K; paired rule; studied
+  uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-203; mechanism read burstloss.mjs 3 5: skipped units a
+  game at most half v12's 4.9; TRAINING_LOG 2026-10-26 17:52, 19:31);
   h196 (= h194 on v12: v12 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h196 ba281d6c0d4d: h184's race
   part alone; paired rule, other cells t >= 0 to accept; studied awesomelemonade.Battlecode2019:seed-2518,
   StoneT2000.BC19-bot1v43:seed-2591; mechanism read pioneers.mjs: the turn-3 pioneer founds its church in at least
@@ -117,11 +121,7 @@
   king step from its site gives it up and mines at home; basics-fix rule; bars parked pioneers at most half the
   champion's a game and churches at least 0.9 of its (TRAINING_LOG 2026-10-26 00:02); last: h170 and h190, the same
   class, passed their mechanism reads and lost, LEARNINGS 48).
-  h185's mechanism read (escorts.mjs over both blocks, mean hit6 under 40%; not a decision input) runs on the driver.
-  **Built, off, not queued:** CHAIN_STOPLOSS (chain.js burstLosses): a line church that saw 3 of its burst units die
-  within 5 turns of birth ends its burst; on v12's 108 panel games that skips 136 K a game at half the bursts' damage
-  per K, 4,170 K of it on uvafan 2046 at no damage. The candidate goes on whichever base h198 (CHAIN_WALL 28) leaves:
-  without the wall's rest the saved karbonite funds the next line into the same wall (TRAINING_LOG 2026-10-26 17:52).
+  h185's escort read passed: 31 of 102 hit escorts died within 6 rounds, 30% (bar < 40%; TRAINING_LOG 2026-10-26 14:09).
   **In design (not built, not queued):** h184's OPEN part that keeps a contested cluster v11 takes (h184 + KEEP;
   TRAINING_LOG 06:37, 08:53); a castle recall for field prophet balls (castles.mjs: 14 of v11's 50 castle losses had 10
   or more unfired units within r2 400; RECALL h110 was rejected in self-play; TRAINING_LOG 2026-10-26 10:12).

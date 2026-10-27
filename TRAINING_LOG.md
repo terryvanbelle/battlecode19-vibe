@@ -6900,3 +6900,23 @@ ECON_RICH 100, dist/h201 153f6da1dee7) block 1 = matches 1927-1938 (submission 2
 bumped; pre-registration as at 11:47 under the paired rule, studied StoneT2000.BC19-bot1v43:seed-2321 and
 uvafan.bc2019:seed-2046, mechanism check tools/reads/bank.sh. Replica queue 22 waiting at 19:23, so the VM symcheck of
 v12 to round 1000 held since the queue passed 30 went to the VM's pending queue.
+
+## 2026-10-26 19:31 PDT: h205 = v12 + CHAIN_STOPLOSS 3 pre-registered (h198 left v12 as the base)
+
+The 17:52 plan put the stop-loss candidate on whichever base h198 left; h198 was rejected at 19:25, so the base is v12.
+**h205** = v12 + CHAIN_STOPLOSS 3 (`node tools/build_bot.js src/bot dist/h205 --cfg CHAIN_STOPLOSS=3`, dist/h205
+30d92bbe37f7; CHAIN_STOPLOSS_AGE 5 by default): a line church that saw 3 of its burst units die within 5 turns of birth
+ends its burst. On v12's 108 panel games that rule skips 528 units, 14,690 K (136 K a game), whose damage was 0.27 per K
+against the bursts' 0.51; the saved karbonite goes back to the bank for the peacetime army and the next line. The risk
+the 17:52 entry names stands: without a wall's rest the saving can fund the next line into the same wall, so the
+mechanism read checks the burst, not where the saving goes.
+- **Pre-registration.** Paired fresh-cell rule (TRAINING_ALGORITHM §4): block 1 on v7-m1 rejects at t <= 0, accepts at
+  t >= 2 with D >= 4 and the other cells' t >= 0; block 2 on v7-m2 (after v12's control block there) rejects at t <= 1,
+  block 3 at t <= 1.5, block 4 accepts at t >= 2. Studied cells: uvafan.bc2019:seed-2046 (both sides, 0 of 6 for v12;
+  4,170 K of the skipped karbonite at no damage lost) and IanCoolidge0.battlecode20~69ce88:seed-203 (both sides; 3,010 K
+  skipped at 1,280 damage, the one studied cell where the stop costs damage).
+- **Mechanism read, not a decision input:** `tools/reads/burstloss.mjs TEAM REPLAY 3 5` over our side of the block's
+  games: the units the stop rule would still skip, per game, at most half of v12's 4.9 (528 over 108), since the bot
+  counts only deaths it sees (within r2 49, or never seen alive).
+- Queue place: after h204 (both act on chain lines; h202, h204 and h205 do not overlap: h202 keeps the chain's fuel,
+  h204 starts lines at r150, h205 stops a dying burst).

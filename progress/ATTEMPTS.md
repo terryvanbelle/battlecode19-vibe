@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 144 other, 54 rejected, 23 accepted, 9 dropped, 7 in progress, 6 queued, 4 sparring partners (247 rows).
+Totals: 144 other, 54 rejected, 23 accepted, 9 dropped, 7 in progress, 7 queued, 4 sparring partners (248 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -261,3 +261,4 @@ Totals: 144 other, 54 rejected, 23 accepted, 9 dropped, 7 in progress, 6 queued,
 | `h202` | 2026-10-26 13:37 | v12 | v12 + CHAIN_FKEEP 1: from CHAIN_ROUND the peacetime army leaves the chain's fuel (CHAIN_F 3500) in the bank as it leaves its karbonite (dist/h202 a7c9a4cfd5ae) |  |  |  |  | queued (pre-registered 2026-10-26 13:37; after h201) |
 | `h203` | 2026-10-26 14:57 | v12 | v12 + ESCORT_BACK 2: an escort with 20+ health whose only enemy attacker or castle in sight is one prophet charges it instead of going home (dist/h203 7f352326b9eb) |  |  | block 1 = matches 1903-1914 (submission 238): 23 of 36, side-aware z -0.78 | vs IanCoolidge0.battlecode20~69ce88 5-1 (replica); vs StoneT2000.BC19-bot1v43 4-2 (replica); vs StoneT2000.BC19-botfinalsafe 2-4 (replica); vs awesomelemonade.Battlecode2019 6-0 (replica); vs m-schier.battlecode-2019-wololo 2-4 (replica); vs uvafan.bc2019 4-2 (replica) | REJECTED 2026-10-26 18:15: block 1 (matches 1903-1914) 23 of 36, side-aware z -0.78 (< 0.5), studied 1 of 4 (z -0.04), others 22 of 32 (z -0.81); the block joins v12-m1.pool |
 | `h204` | 2026-10-26 17:26 | v12 | v12 + CHAIN_ROUND 150: castles send chainers and the peacetime army keeps CHAIN_K from r150, not r200, so lines fire ~50 rounds sooner (dist/h204 066cde4ddabb) |  |  |  |  | queued |
+| `h205` | 2026-10-26 19:31 | v12 | v12 + CHAIN_STOPLOSS 3: a line church that saw 3 of its burst units die within 5 turns of birth ends its burst (dist/h205 30d92bbe37f7) |  |  |  |  | queued (pre-registered 2026-10-26 19:31; after h204) |
