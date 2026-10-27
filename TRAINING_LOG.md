@@ -7069,3 +7069,13 @@ r53-143, won all 12), IanCoolidge0 1036 red (237, 819, 817 rounds from r165-246,
 r300 and banked 1,282-6,512 K while its fuel fell to 578 at r600 and 10 at r974: h202's cell), botfinalsafe 203 red
 (8-494). No panel game shows 1915's single prophet keeping the miners off an undefended home. The siege-breaker (a
 structure calls crusaders onto a depot's coverer) is parked: the panel would not see it.
+
+## 2026-10-26 22:16 PDT: basics check on overruns and exceptions since v11: still the environment's floor
+Our side's error counts in the replica's match.json (scratchpad errrate.py: per team, timeouts = vm2's 200 ms kill,
+frozen = clock overdrawn, exceptions = uncaught), read the way LEARNINGS 31 says, against the opponents in the same
+games: v12's 108 panel games 33 timeouts in 4.71 M turns (0.70 per 100k), 26 frozen, 5 exceptions; the opponents 261 in
+4.71 M (5.54 per 100k), 2,540 frozen, 22,157 exceptions. The finished candidate blocks since: h195 0.80 per 100k (6
+exceptions), h203 0.78, h198 0.91, h201 0.95 (0 exceptions each); their opponents 3.73-4.34. v11 was 0.98. All 11
+exceptions are "Not enough fuel to attack" from builds older than 16:40's World.attack fuel check (v12 is a frozen
+snapshot from before it; h198, h201, h203 and h206 carry it). No lever here: at about 0.3 killed turns a game our rate
+is the shared process's floor (08:42); the next champion clears the exception.
