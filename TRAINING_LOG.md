@@ -7438,3 +7438,72 @@ Three scratchpad reads over v12's 150 panel games (1651-1658, 1831-1858, 1966-19
 - Overruns (match.json): v12's 156 replica games 45 vm2 kills and 146 frozen turns, at most 23 in a game (the long
   836/616 games), against the opponents' far larger counts in the same games: the floor LEARNINGS 31 describes.
 Nothing here is a new switch beyond those queued; the feed's lever stays h209 (held crusaders' tiles).
+
+
+## 2026-10-27 10:58 PDT: h209 REJECTED at block 1 (t 0.00); reads: mvpatel2000, stalled pioneers, the r900 march
+- h209 (v12 + MUSTER_TILE 1, dist/h209 c8b2001470f0) block 1 = matches 2324-2335 (submission 276), scored 10:54: 24 of
+  36 (v12's mean on v7-m1 24.0): wololo 1/6, botfinalsafe 3/6, bot1v43 4/6, uvafan 4/6, awesomelemonade 6/6,
+  IanCoolidge0 6/6. `tools/panel_paired.sh --studied
+  IanCoolidge0.battlecode20~69ce88:seed-203,uvafan.bc2019:seed-1822,uvafan.bc2019:seed-2330 progress/panels/v12.ref
+  2324-2335`: 36 cells, 26 alike, D 10 (gained 6, lost 4), net +0.00, **t 0.00 <= 0: REJECTED** (studied 2 cells: D 2,
+  both gained, t 1.34; others 34 cells: D 8, gained 4, lost 4, t -0.47). Gained IanCoolidge0 1036 and 203 on both sides
+  and botfinalsafe 203 on both; lost bot1v43 2321 red, botfinalsafe 2740 blue, wololo 2013 red and wololo 836 blue.
+- **mvpatel2000's bank** (study/econt.mjs over v12's control games 1978, 1979, 2111, 2112): on equal income we float a
+  bank it does not. 2046 (492 mined by each side at r100): our bank 440 K at r100 against 105-115, military 2 against
+  17-19; at r300 750 K against 90-95, military 32 against 57-64. 203: 480-530 K at r100, military 8 against 17-18 (203's
+  plan has one church for three castles, so ECON_UNTIL holds the bank). 705: 509-580 K at r100. mvpatel2000's bank stays
+  at 15-155 K through r300 in the nine games it won; it banked more only in two of the three we won (1,325 K at r300 on
+  747 in 1979, 380 K on 836 in 2112). Spending the pre-r100 bank was ECON_RICH's job (h116, h139, h144, h145, h201; h201
+  paired t 0.00), so no new switch.
+- 203 against mvpatel2000 (1978, second game): military spend about equal (6,475 K against 6,280) but we lost 6,420 K of
+  ours (military 25 against 75 at r900, 3 against 65 at r1000). 836 as red (2111): we mined 2.3 times as much by r200
+  (4,900 against 1,706) and had military 337 against 281 at r900; the r900 march then lost 2,575 K against 285 and the
+  game went to mvpatel2000 on health, 12,000 to 14,040 (it built 26 churches).
+- **The r900 march** (study/r900.mjs over the 79 of v12's panel games that passed r900): the standing at r900 by the
+  round-1000 tiebreak matched the result in 70 (won ahead 33, lost behind 37). Won from behind 4 (1653 203 botfinalsafe
+  with 2 castle kills, 2101 2674 bot1v43 with 1, 1838 2740 and 1846 1036 on health); lost from ahead 5 (1654 2740
+  outbuilt; 1845 and 1857 IanCoolidge0 1036 red, both castles lost at r974 and r972 with the army out; 1849 203, a
+  castle lost; 2111 836 mvpatel2000, the march above). K lost after r900: in losses ours 48,745 against theirs 26,960,
+  in wins 30,225 against 28,575; castles killed after r900: 7 in wins, 3 in losses. Nine games of 79 could turn on
+  ATTACK_LATE and they point both ways; h207 (late army held at home) was rejected at t 1.40. No switch.
+- **Stalled pioneers on 2797** (2112, first game, we blue): our pioneers to (4,45) (m 25, built r14), (1,32) (r24) and
+  (50,32) (r27) never arrived; mvpatel2000 churched those sites at r117, r106 and r78. study/pionpath.mjs shows one
+  enemy crusader at (4,43) from r20 and our pioneer pacing at (9,48)-(11,44) for 100 rounds. mvpatel2000 also took
+  clusters on our half and built 5 churches without depots 7-11 king steps from our castle (r121-149). Census
+  (study/pion2.mjs over v12's 150 panel games): first-to-site pioneers alive but not at their site by their build round
+  + king steps + 10, before r150: 63 in the 90 wins, 48 in the 60 losses; the enemy later churched that site in 44 of
+  the 48 in losses and 37 of the 63 in wins. Lost en route: 30 in wins, 31 in losses. The trigger fires in about two
+  games of three, so a switch on it is not a one-replay fix: h211 (next entry).
+- Process (TRAINING_ALGORITHM §3): every attempt since v7 has been one small switch, against the rule of one structural
+  attempt in every four, and the periodic ablation of what v12 carries was never completed. h211 is a re-test (ADVICE
+  §29) already built; the attempt after it goes to the structural track, ahead of h204 and h205.
+
+
+## 2026-10-27 11:00 PDT: h211 pre-registered (v12 + ESCORT 2 + PIONEER_CALL 100: crusaders for stalled pioneers)
+- **h211** = v12 + ESCORT 2 + PIONEER_CALL 100 (ESCORT_UNIT 3, ESCORT_SLACK 10 and the escort walk are v12's; dist/h211
+  97cc0f3a3351, `node tools/build_bot.js src/bot dist/h211 --cfg ESCORT=2 --cfg PIONEER_CALL=100`, with the World.attack
+  fuel fix like the queued rebuilds; a pure switch build). A castle whose pioneer is 10 turns past its king-step
+  distance and not at its site, or lost, builds 2 crusaders sent to the site with SIG.GUARD; a pioneer that sees a
+  mobile enemy attacker within r2 100 of its site talks CT.BLOCKED and its castle opens that escort at once. v12's
+  ESCORT_HOLD_R 2 and ESCORT_FAST_R2 9 take the escorts onto the site, and ESCORT_BACK 1 keeps them there while an enemy
+  crusader or preacher is within r2 25.
+- A re-test (ADVICE §29): h103 (v7 + ESCORT 2 + ESCORT_UNIT 3) was rejected on the replica at pooled z 0.35 (438-443 +
+  700-705, 12 of 36 to 11.2), inside that instrument's resolution and before ESCORT_HOLD_R fixed escorts that stopped on
+  the first lattice tile 12 king steps from their site (TRAINING_LOG 2026-10-24 09:48); h119 (= h103 + PIONEER_CALL 100)
+  closed unplayed when v8 replaced v7.
+- Trigger (previous entry): first-to-site pioneers stalled before r150 in 63 of v12's 90 panel wins' pioneers and 48 of
+  its 60 losses', with the enemy churching the site in 44 of those 48. Studied cells, where v12 lost with a parked enemy
+  attacker by the site: IanCoolidge0.battlecode20~69ce88:seed-2674 (v7-m2; v12 lost blue: two crusaders on our m-21 site
+  from r14) and mvpatel2000.Battlecode2019:seed-2797 (v7-m3; v12 lost both sides: one crusader at (4,43) from r20).
+  IanCoolidge0 2644, PIONEER_CALL's first case (v6, 419-2), is not studied: v12 won it 6 of 6.
+- Diagnostic (driver, `--det --max-rounds 300` with the fast flags): h211 and v12, each red against v12 on 2797, play
+  the same game by every measure printed (health 5,770 to 5,150 at r301; all 5 pioneers at their sites r27-39 and
+  churched r28-56; 0 SIG.GUARD builds; 0 errors, exceptions or timeouts; net_isolated True): the switch is inert where
+  no pioneer stalls. Self-play cannot park an attacker on our site (TRAINING_LOG 2026-10-23 11:02), so the mechanism
+  check reads the replica games: structure builds radioing SIG.GUARD (study/opening.mjs) and first-pioneer churches
+  (study/pion2.mjs) in h211's games against v12's in the same cells, the studied ones first.
+- Rule: paired fresh cells against progress/panels/v12.ref with `--studied
+  IanCoolidge0.battlecode20~69ce88:seed-2674,mvpatel2000.Battlecode2019:seed-2797`; block 1 rejects at t <= 0, any block
+  accepts at t >= 2 with D >= 4 and others t >= 0, block 2 rejects at t <= 1, block 3 at t <= 1.5, block 4 accepts at t
+  >= 2. Block 1 on v7-m1 now; h200 (PIONEER_TIMEOUT_HOME 80) acts on the same pioneers and is reviewed against h211 if
+  h211 is accepted.
