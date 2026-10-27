@@ -76,11 +76,11 @@
   blocks. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
-  h198, h201, h206, h202 rejected).
+  h198, h201, h206, h202, h207 rejected).
   **Replica queue (09:52): 165 waiting (154 ranked; the daily autoscrim fired 09:00); h209 block 1: 2324 running, the
   rest at the queue's front; VM 9.3 GB free, no VM jobs. Waiter: scratchpad wait_block.sh 2324 2335.**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
-  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 06:38 (after h207's block 2); next refresh
+  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 09:36 (after h207's block 3); next refresh
   between blocks.
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
   v12's control block on v7-m2 = matches 1966-1979 (submission 246; 18 of 42) is in progress/panels/v12.ref. h206 (v12 +
