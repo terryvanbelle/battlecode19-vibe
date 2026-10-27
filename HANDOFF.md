@@ -30,10 +30,13 @@
   (testPreV8 pins v7's values); v7 = h87 (testPreV7 pins v6's).
 - **Acceptance** (TRAINING_ALGORITHM step 6-7, §4; LEARNINGS 32, 33): a local screen vs the champion only rejects
   (20 cells, par 2: t <= -1.5, castles lost at sign-flip p < 0.05, or an exception the champion lacks, printed by
-  `tools/paired.js --h2h` as its verdict); the replica panel accepts by the pooled side-aware z: block 1 reject at
-  z < 0.5; two blocks accept at z >= 2 (other cells z >= 0), reject at z < 1, else a third block at z >= 2. The
-  basics-fix rule (h170, fixed 2026-10-25 04:26): two blocks, block 1 rejects only at z < -1; accept at z >= 0
-  (others z >= 0) if the mechanism reads pass, else the ordinary rule.
+  `tools/paired.js --h2h` as its verdict); the replica panel decides by the **paired fresh-cell rule** (from h198's
+  block 1; TRAINING_ALGORITHM §4, LEARNINGS 50, TRAINING_LOG 2026-10-26 18:59): block k plays map set v7-mk; each
+  (opponent, map, side) cell once, d = candidate mean - champion mean (progress/panels/v12.ref), t = net /
+  sqrt(sum d^2); block 1 rejects at t <= 0; any block accepts at t >= 2 with D >= 4 (studied cells: others t >= 0
+  too); block 2 rejects at t <= 1, block 3 at t <= 1.5; block 4 accepts at t >= 2. Basics-fix: t >= 0 after two
+  blocks with the mechanism bar met. The pooled z (panel_pool.sh) is printed as a description only: on repeated
+  deterministic cells it accepted neutral candidates 17-30% of the time.
 - **VM disk** (LEARNINGS 40): every check-in reads `df -h /` on the VM and keeps 2 GB free. **11 GB free since 06:30
   2026-10-26** (2.9 GB before): the prior-year sweep (PROMPTS 46; TRAINING_LOG 06:30) deleted the 2023 replica's
   storage (6.0 GB), its Postgres cluster 15/main, unit files, CLIs and bcreplica's files, the VM's 2023 project trees
@@ -59,13 +62,15 @@
   `tools/panel_submit.sh dist/hN "message"` (submits, scrims each opponent twice, NAME@+ and NAME@-, so the block's 36
   games play every cell on both sides (red wins about 13 points more often within a cell: LEARNINGS 37); resubmits
   the ladder build, bumps; retries what the hourly limit refuses (HTTP 429) every 15 min; a lock keeps blocks apart);
-  add the tools/progress/submissions.tsv rows. Read: `contest19.py fetch --new --pages 6`, then for v12-based
-  candidates `tools/panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool BLOCK... [--studied ...]` (it
-  refuses a block with a match unfinished); a rejected block joins the pool file only when its own z lies within
-  +-1. The pool file holds h185's block 2 (1835-1846), the v12 control block (1847-1858), rejected h195's three
-  (1865-1888, 1891-1902) and h203's one (1903-1914): v12's reference is 252 games (TRAINING_LOG 2026-10-26 10:39,
-  16:48, 18:15). The rule's false-accept
-  rate and power: `python3 -I tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and
+  add the tools/progress/submissions.tsv rows. Block k of a candidate plays map set k: `PANEL=progress/panels/v7-mK.json
+  tools/panel_submit.sh dist/hN "message"` (v7-m1 is the default). Before a candidate's block on v7-m2, m3 or m4 is
+  scored, v12 plays that set once (`PANEL=progress/panels/v7-mK.json tools/panel_submit.sh bots/v12 "v12 control,
+  v7-mK"`) and the block's ids join progress/panels/v12.ref. Read: `contest19.py fetch --new --pages 6`, then
+  `tools/panel_paired.sh progress/panels/v12.ref BLOCK... [--studied ...]` (it refuses a block with a match
+  unfinished, and cells v12 has not played). v12.ref holds v12's own games only: h185's two blocks and the v12
+  control (1651-1658, 1831-1858), 108 games on v7-m1. The rules' false-accept rate and power: `python3 -I
+  tools/galaxy19/panelsim.py`. progress/panels/v12-m1.pool (the pooled description) still lists the rejected
+  blocks. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203
   rejected).
@@ -75,11 +80,11 @@
   rated matches).
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
   **Now: h198 block 1** = matches 1915-1926 (submission 240; ladder 241; waiter on the driver). When it ends:
-  `contest19.py fetch --new --pages 6`, `panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool 1915-1926
-  --studied uvafan.bc2019:seed-2046,uvafan.bc2019:seed-1653,IanCoolidge0.battlecode20~69ce88:seed-1036`; ordinary
-  rule (block 1 rejects at z < 0.5), accepted only with the other cells' side-aware z >= 0 too; mechanism read (not a
-  decision input): lines whose churches saw 28+ that CT.WALL ended, at least half (TRAINING_LOG 2026-10-24 22:39);
-  refresh progress/ before the next block.
+  `contest19.py fetch --new --pages 6`, `tools/panel_paired.sh progress/panels/v12.ref 1915-1926 --studied
+  uvafan.bc2019:seed-2046,uvafan.bc2019:seed-1653,IanCoolidge0.battlecode20~69ce88:seed-1036`; the paired rule
+  (block 1 rejects at t <= 0, accepts at t >= 2 with D >= 4 and the other cells' t >= 0; else block 2 on v7-m2 after
+  v12's control block there); mechanism read (not a decision input): lines whose churches saw 28+ that CT.WALL ended,
+  at least half (TRAINING_LOG 2026-10-24 22:39); refresh progress/ before the next block.
   h203 was REJECTED on block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z
   1.00; TRAINING_LOG 2026-10-26 16:48), h193 on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42), h192 on
   block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
@@ -91,17 +96,17 @@
   IanCoolidge0 1036; moved up 2026-10-26 15:49: v12 loses uvafan 2046 on health at r1000 after its three chain lines,
   which saw 29, 33 and 74 enemy attackers, lost 19 churches; TRAINING_LOG 2026-10-26 15:49);
   h201 (v12 + ECON_RICH 100, dist/h201 153f6da1dee7: before r100 the peacetime army builds from the bank past 100 K
-  above the reserves; v12 banks 300+ K at r100 in 36 of its 72 panel games, army 2-11; ordinary rule; studied
+  above the reserves; v12 banks 300+ K at r100 in 36 of its 72 panel games, army 2-11; paired rule; studied
   StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046; mechanism check tools/reads/bank.sh: TRAINING_LOG
   2026-10-26 11:47);
   h202 (v12 + CHAIN_FKEEP 1, dist/h202 a7c9a4cfd5ae: from CHAIN_ROUND the peacetime army keeps the chain's fuel too;
   v12 starves the chain of fuel in 19 of 108 panel games, its 4 losses among them all IanCoolidge0 1036, a cell v11
-  won 6 of 6; ordinary rule; studied IanCoolidge0.battlecode20~69ce88:seed-1036; TRAINING_LOG 2026-10-26 13:37);
+  won 6 of 6; paired rule; studied IanCoolidge0.battlecode20~69ce88:seed-1036; TRAINING_LOG 2026-10-26 13:37);
   h204 (v12 + CHAIN_ROUND 150, dist/h204 066cde4ddabb: chainers and the chain bank from r150; our line alone won 63
-  of 78 of v12's panel games, theirs alone 1 of 11; ordinary rule, no studied cells; mechanism check chainrace.mjs
+  of 78 of v12's panel games, theirs alone 1 of 11; paired rule, no studied cells; mechanism check chainrace.mjs
   median first line <= r245 (v12 r272); TRAINING_LOG 2026-10-26 17:14, 17:26);
   h196 (= h194 on v12: v12 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h196 ba281d6c0d4d: h184's race
-  part alone; general panel rule, other cells z >= 0 to accept; studied awesomelemonade.Battlecode2019:seed-2518,
+  part alone; paired rule, other cells t >= 0 to accept; studied awesomelemonade.Battlecode2019:seed-2518,
   StoneT2000.BC19-bot1v43:seed-2591; mechanism read pioneers.mjs: the turn-3 pioneer founds its church in at least
   half of the games on the seven maps where it sends; TRAINING_LOG 2026-10-26 08:53);
   h197 (= h186 on v12: v12 + PILGRIM_HERE 1 + PILGRIM_STALL 25, dist/h197 65c0c1991ce3; h174's: idle miners take free

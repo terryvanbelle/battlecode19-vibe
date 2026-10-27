@@ -86,7 +86,7 @@ the ladder and calibrated with a full field block the same day. Then run a corre
    with the incumbent lately, not the rating list alone), on maps drawn once per opponent and kept, every cell played
    **from both sides** (the side to move first can matter more than a candidate). Where a match keeps the build it was
    created with, submit the candidate only while its matches are created, then resubmit the incumbent. Score by the
-   pooled rule (§4); a block is scored only once all its games have finished.
+   paired fresh-cell rule (§4); a block is scored only once all its games have finished.
 8. **On accept**: snapshot; submit as the active build; run the progress refresh (ratings, charts, attempts table,
    handoff); commit and push the same hour; mine the new ladder games for the next target. The new build has no games
    at that refresh, so refresh again when its first games finish, and after every scored block.
@@ -121,32 +121,34 @@ its trigger fires elsewhere.
 
 - The unit of evidence is the **paired cell** `(opponent, map, side, seed)`, candidate vs control on the same cell.
   Identical outcomes carry no information. With D discordant cells and net = gained − lost, t = net / √D.
-- **The control is a sample too.** Where the ladder's games are not deterministic, one control block mislabels cells:
-  a candidate "loses" the cells the control won by luck and "gains" those it lost by luck, and every neutral candidate
-  reads net ≈ 0. Pool each cell's record over the incumbent's own blocks and the neutral rejected candidates' blocks,
-  and score a candidate by wins minus the pooled expectation: z = (W − E) / √V, E = Σ p, V = Σ p(1 − p).
-- **The cell includes the side.** p per (opponent, map, side) = (w_s + k·p_c) / (n_s + k), k = 2, where
-  p_c = (w + ½) / (n + 1) is the side-blind cell rate: the side's own record, shrunk toward the cell's while it is thin.
-- **This z is a rating test.** It is the score test for one Bradley-Terry (logit) gain d over the pooled cell rates,
-  every (opponent, map, side) cell its own opponent: logit p = logit p_cell + d. Report d on the Elo scale with the
-  interval where z(d) = ±1.96 (the effect size, comparable across candidates). A plain BT fit on the panel (one
-  rating per opponent, maps and sides ignored) adds nothing: against the same opponents a player's BT rating is a
-  monotone function of its wins, and dropping the cells only adds variance. Ladder ratings (BT over all games) are
-  for watching the field, never for accepting: the ladder's opponents differ between builds.
-- **Pooled rule**: after block 1 reject at z < 0.5; after block 2 accept at cumulative z ≥ 2, reject at z < 1, else a
-  third block, accepted at z ≥ 2. A rejected candidate's block joins the pool only when its own z lay within ±1 (a
-  clearly worse candidate's block lowers every later expectation). A fix that removes a basics failure may be
-  accepted at z ≥ 0. Simulated on a real pool redrawn every trial (so the pool's own noise counts), these bars on
-  36-game both-sides blocks accept a neutral candidate 7% of the time and one worth +1 / +1.5 / +2 wins per 18 games
-  45% / 70% / 85% of the time, in about two blocks; 18-game blocks with one random side per cell reach 28% / 46% / 66%.
-- **The pool is not a test set.** A candidate designed from particular panel cells lists them in its pre-registration;
-  it is accepted only if its z over the other cells is ≥ 0 as well. Version the panel (§5) before every cell has
+- **A replayed cell is not new evidence.** Where the engine and most opponents are deterministic, a build plays most
+  cells the same way every time (four in five here: one result in all three of a champion's blocks), so a second
+  block on the same cells mostly repeats the first. Scoring such blocks as independent games (a pooled z over the
+  cell rates, V = Σ p(1 − p), nearly 0 on a cell that never varies) grows z by about √blocks from the same few
+  changed cells: simulated, that rule accepted a neutral candidate 17-30% of the time, not the 7% an
+  independent-games model predicted.
+- **Paired fresh-cell rule.** Each block plays a new set of cells: the panel's opponents on map sets drawn once
+  (three maps an opponent, both sides; sets 1, 2, 3, 4 in order, never repeated within a candidate). The champion's
+  reference on a set is its own games there (its accepting blocks, its control blocks), played once per reign before
+  a candidate's block on that set is scored. Per cell (opponent, map, side), d = the candidate's mean result minus the
+  champion's, each cell counted once however many games it has; t = Σd / √Σd², D = cells with d ≠ 0. Block 1 rejects
+  at t ≤ 0; any block accepts at t ≥ 2 with D ≥ 4; block 2 rejects at t ≤ 1, block 3 at t ≤ 1.5; a fourth block
+  accepts at t ≥ 2. Simulated (cells changed by the candidate 5-30%, opponent noise on 20%): a neutral candidate is
+  accepted 5-6% of the time; one that wins 75% of the cells it changes 13% / 22% / 44% / 65% of the time at 5% /
+  10% / 20% / 30% of cells changed. A switch that changes few cells needs cells where it acts (a targeted panel), not
+  more blocks of the same ones. A fix that removes a basics failure may be accepted at t ≥ 0 after two blocks, with
+  its mechanism bar met. Where an opponent plays at random, one reference game a cell is noisy; the noise only adds
+  discordant cells of either sign (less power, no bias).
+- Ladder ratings (Bradley-Terry over all games) are for watching the field, never for accepting: the ladder's
+  opponents differ between builds, and a champion's accepting blocks bias its own rating up.
+- **The panel is not a test set.** A candidate designed from particular panel cells lists them in its pre-registration;
+  it is accepted only if its t over the other cells is ≥ 0 as well. Version the panel (§5) before every cell has
   been studied.
 - **A map-conditional switch gets a targeted panel.** A switch that changes play only on maps picked out from the map
   alone, before any game (say, maps where the bot plans no expansion), is diluted on the general panel to the few
   cells that qualify. Check that it is inert elsewhere (a replay on a non-qualifying map identical to the champion's),
   then judge it on a targeted panel: the general panel's opponents on the qualifying maps of the ladder's pool,
-  assigned by a fixed rotation, the champion's control block on the same cells played first, the same pooled rule, and
+  assigned by a fixed rotation, the champion's control block on the same cells played first, the same paired rule, and
   the design's simulated false-accept rate checked before the first candidate block is scored. Its worth to the whole
   ladder is that effect times the qualifying maps' share of the pool.
 - **No rule applies backwards.** A rejected candidate is never reopened under a rule written after its rejection
@@ -164,8 +166,8 @@ its trigger fires elsewhere.
   site's own sequential rating is for seeding only.
 - Never read a running batch. Never move a bar after seeing a number. Never reinterpret a null. A single fixed-seed
   game is a filter, never a verdict. Read the shape of a diff: one-directional on one map or side is real; scattered
-  and mixed is noise. Pool only the incumbent's lineage (its own blocks and its neutral candidates), never an older
-  champion's history. An agent given replica data gets finished matches only.
+  and mixed is noise. The reference is the champion's own games, never another build's. An agent given replica
+  data gets finished matches only.
 
 ## 5. Using the ladder like a contestant
 
@@ -201,7 +203,7 @@ A closure says an implementation failed; only a ceiling (arithmetic, engine) lic
 - **Never idle.** Keep at least three jobs queued on the compute machine and an idle filler that plays the shipped
   build on fresh cells. A background watcher wakes the session on finished work, a stuck or dead component, low disk, or
   a heartbeat; it is re-armed at the end of every turn.
-- **Rules live in tools that refuse**, not in memory: no paired read on mismatched cells, no pooled score of a block
+- **Rules live in tools that refuse**, not in memory: no paired read on mismatched cells, no panel score of a block
   with an unfinished game, no result row without code-hash provenance; the screen prints its own verdict.
 - **Records**: an append-only training log (one entry per attempt: target, trace, pre-registration, counters, gate
   numbers, decision, what it closed, next); a closed-directions ledger; `LEARNINGS.md` for durable lessons, each with
@@ -218,7 +220,7 @@ A closure says an implementation failed; only a ceiling (arithmetic, engine) lic
 |---|---|
 | Delivery block | 24 paired cells, extend to 48 |
 | Local screen | 20 paired cells (both sides); rejects only: t ≤ −1.5, castles-lost sign-flip p < 0.05, a new exception |
-| Ladder panel block | 6-8 field bots near our rating × 3 maps × both sides; pooled side-aware z of §4 (0.5 / 2 and 1 / 2) |
+| Ladder panel block | 6-8 field bots near our rating × 3 fresh maps × both sides; paired t of §4 (0 / 2, 1, 1.5) |
 | Rating pair cap | 200 games per pair |
 | Area switch | 3 consecutive rejects |
 | Structural share | ≥ 1 in 4 attempts |

@@ -319,3 +319,11 @@
    401, and Chrome, which had also attached its cached gate login to them before the JWT header replaced it, took the
    401 as that login rejected and dropped it; the owner could then log in neither at the gate nor on the site
    (PROMPTS 48). The Basic path already rewrote 401 to 403; the JWT path now does too. (2026-10-26 13:51)
+
+50. **On a deterministic ladder a repeated block is a replay, not a sample.** A build played 29 of 36 panel cells
+   (v12; h195 31) the same way in all three of its blocks, so a candidate's second and third blocks on the same cells
+   re-counted the few cells it had changed, and the pooled z (V = Σ p(1 − p), about 0.01 on a cell that never varies)
+   grew with √blocks. Counting each cell once, v12's acceptance (z 5.38) is 8 changed cells won, 1 lost (sign t 2.33);
+   v9's (z 2.78) was 2 cells (t 1.41). Simulated with cells that repeat, the pooled rule accepted a neutral candidate
+   17-30% of the time against the 7% its independent-games simulator had promised. Score each cell once against the
+   champion's own games, and put each further block on fresh maps (TRAINING_ALGORITHM §4). (2026-10-26 18:59)

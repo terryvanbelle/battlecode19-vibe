@@ -398,19 +398,17 @@ class Contest(unittest.TestCase):
             contest19.named(ladder, 4, ['no such team'])
 
     def test_panelsim(self):
-        prior = [('o', 'm1', 'red', 1), ('o', 'm1', 'red', 0), ('o', 'm1', 'blue', 0), ('o', 'm2', 'red', 1)]
-        cells = panelsim.truth(prior)
-        # Both sides of every (opponent, map), with the pool's games on that side; m2 blue has none.
-        self.assertEqual(sorted((c, n) for c, (q, n) in cells.items()),
-                         [(('o', 'm1', 'blue'), 1), (('o', 'm1', 'red'), 2), (('o', 'm2', 'blue'), 0), (('o', 'm2', 'red'), 1)])
-        rates = [.2, .5, .8]
-        s = panelsim.shift_for(rates, 0.3)
-        self.assertAlmostEqual(sum(1 / (1 + math.exp(-(math.log(p / (1 - p)) + s))) for p in rates) - sum(rates), 0.3, 6)
         rnd = random.Random(1)
-        self.assertEqual(panelsim.trial(cells, -12, 'both', rnd), ('reject', 1))   # loses everything: block 1
-        self.assertEqual(panelsim.trial(cells, 12, 'both', rnd), ('accept', 3))    # wins all: 8 games stay below z 2
-        (d, acc, blocks), = panelsim.simulate(prior, [0], 50, 'mixed')
-        self.assertTrue(0 <= acc <= 1 and 1 <= blocks <= 3)
+        self.assertEqual(set(panelsim.block(1, 1, 0, rnd)), {(False, 0, 1)})       # acts everywhere, our way
+        self.assertEqual(set(panelsim.block(0, .5, 1, rnd)), {(True, None, None)})  # all opponent noise
+        self.assertEqual(len(panelsim.block(.2, .5, .2, rnd)), 36)
+        self.assertEqual(panelsim.paired_trial(1, 1, 0, rnd), ('accept', 1))       # D 36, t 6
+        self.assertEqual(panelsim.paired_trial(1, 0, 0, rnd), ('reject', 1))
+        self.assertEqual(panelsim.paired_trial(0, .5, 0, rnd), ('reject', 1))      # changes nothing: t 0
+        self.assertEqual(panelsim.pooled_trial(1, 1, 0, rnd), ('accept', 2))       # the old rule needs two blocks
+        self.assertEqual(panelsim.pooled_trial(0, .5, 0, rnd)[0], 'reject')
+        acc, blocks = panelsim.simulate('paired', .2, .5, .2, 400)
+        self.assertTrue(acc <= .12 and 1 <= blocks <= 4)
 
     def test_split_order(self):
         self.assertEqual([contest19.split_order(s) for s in ('a~b@+', 'a~b@-', 'a~b', 'x@')],
@@ -495,6 +493,55 @@ class Compare(unittest.TestCase):
         s = 1 / (1 + math.exp(hi / (400 / math.log(10))))
         self.assertAlmostEqual((1 - 2 * s) / math.sqrt(2 * s * (1 - s)), 1.96, places=6)
         self.assertEqual(contest19.effect(rows[1:])[0], -math.inf)
+
+    def test_paired_cells_once(self):
+        root = tempfile.mkdtemp(dir=TMP)
+        us = contest19.TEAM
+        def match(i, games):                  # games: (map, our side, won)
+            os.makedirs(os.path.join(root, str(i)))
+            with open(os.path.join(root, str(i), 'match.json'), 'w') as f:
+                json.dump({'games': [{'red_team': us if s == 'red' else 'X', 'blue_team': 'X' if s == 'red' else us,
+                                      'map': m, 'rounds': 1000, 'reason': 'health', 'winner_team': us if w else 'X'}
+                                     for m, s, w in games]}, f)
+        # champion: seed-1 red won twice, seed-2 red lost twice, seed-3 red 1 of 2, seed-1 blue lost
+        match(10, [('seed-1', 'red', 1), ('seed-2', 'red', 0), ('seed-3', 'red', 1)])
+        match(11, [('seed-1', 'red', 1), ('seed-2', 'red', 0), ('seed-3', 'red', 0)])
+        match(12, [('seed-1', 'blue', 0)])
+        # candidate, two blocks replaying the same cells: a repeat is the same cell, not new evidence
+        match(20, [('seed-1', 'red', 1), ('seed-2', 'red', 1), ('seed-3', 'red', 1)])
+        match(21, [('seed-1', 'red', 1), ('seed-2', 'red', 1), ('seed-3', 'red', 1)])
+        match(22, [('seed-1', 'blue', 0), ('seed-4', 'red', 1)])       # seed-4: no champion game
+        ref = os.path.join(root, 'ref')
+        with open(ref, 'w') as f:
+            f.write('10-11  # its accepting blocks\n# a comment\n12\n')
+        run = lambda *a: subprocess.run([os.path.join(REPO, 'tools', 'panel_paired.sh'), *a], capture_output=True,
+                                        text=True, env=dict(os.environ, GALAXY19_REPLAYS=root))
+        # d: seed-1 red 0, seed-2 red +1, seed-3 red +0.5: net 1.5, t = 1.5 / sqrt(1.25)
+        r = run(ref, '20-21')
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn('~ paired: 3 cells, 1 alike; D 2 (gained 2, lost 0), net +1.50, t 1.34', r.stdout)
+        self.assertRegex(r.stdout, r'X +seed-2 +red +champion 0/2  cand 2/2  d \+1\.00')
+        self.assertNotIn('seed-1', r.stdout)                       # alike cells are not listed
+        last = lambda r: r.stdout.splitlines()[-1]
+        self.assertEqual(last(run('10-12', '20')), last(run(ref, '20-21')))   # REF as ids; one block or two alike
+        r = run('--studied', 'X:seed-2', ref, '20')
+        self.assertIn('~ studied cells: 1, D 1 (gained 1, lost 0), net +1.00, t 1.00', r.stdout)
+        self.assertIn('~ other cells: 2, D 1 (gained 1, lost 0), net +0.50, t 1.00', r.stdout)
+        r = run(ref, '22')
+        self.assertEqual(r.returncode, 3)
+        self.assertIn("~ NO REFERENCE: the champion has no game on 1 cells", r.stdout)
+        self.assertNotIn('t ', r.stdout.split('NO REFERENCE')[0])
+        r = run(ref, '22-23')
+        self.assertEqual(r.returncode, 3)
+        self.assertIn('PARTIAL: matches not finished or not downloaded: [23]', r.stdout)
+        r = run('--partial', ref, '22-23')
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn('~ paired: 1 cells, 1 alike; D 0 (gained 0, lost 0), net +0.00, t 0.00', r.stdout)
+        rows, unref, s = contest19.paired_score([('X', 'm', 'red', 1)] * 2 + [('X', 'm', 'red', 0)],
+                                                [('X', 'm', 'red', 0), ('Y', 'm', 'red', 1)])
+        self.assertEqual((rows[0][3:7], unref), ((2, 3, 0, 1), [('Y', 'm', 'red')]))
+        self.assertAlmostEqual(s['t'], -1.0)
+        self.assertEqual((s['D'], s['lost']), (1, 1))
 
 
 class Client(unittest.TestCase):

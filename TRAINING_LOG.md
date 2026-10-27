@@ -6850,3 +6850,36 @@ late_deaths_v12.txt, enemy_castles.txt). 32 games reach r1000: 19 are decided on
   prophet. Red then built 14 pilgrims and 64 prophets in 609 rounds (mined 1,950 K; 576 K by r200) while blue
   had 22 pilgrims, 2 churches and an army of 31 at r200; red's castle fell at r609 (v12 r330), blue's at r932 (v12
   r601). h203 made the 2644 games longer, not won: the cell is lost on the economy behind the escort.
+
+
+## 2026-10-26 18:59 PDT: blocks replay deterministic cells; the pooled rule gives way to a paired fresh-cell rule
+- **Replication.** Per (opponent, map, side) cell over a build's three blocks: v12 (1651-1658, 1831-1858) gave one
+  result in all three games on 29 of 36 cells (16 of them with the same game length), h195 (1865-1888, 1891-1902) on 31
+  of 36. So blocks 2 and 3 of a candidate mostly replay block 1, and the pooled side-aware z (each game an independent
+  draw at the pool's cell rate; V = Σ p(1 - p), about 0.013 on a cell the pool never saw vary) counts a changed cell
+  once per block: in a block whose noisy cells give V about 1.8, one net cell gives z about 0.75 / 1.05 / 1.29 over
+  three blocks, two give 2.1 after two blocks.
+- **Accepted champions, each cell once** (scratchpad paired.py: candidate's mean result per cell against the previous
+  champion's pool): h185 (v12) 10 cells gained, 4 lost, of them deterministic (one result in every game of both) 8 and
+  1, sign t 2.33 (its pooled z was 5.38); h167 (v9) 2 and 0, t 1.41 (z 2.78); h175 (v10) and h178 (v11), basics-fix
+  accepts, 1-0 and 1-1. Rejected: h184 4-2 (det 4-1), h195 1-0, h203 3-3 (det 1-3).
+- **Simulation** (tools/galaxy19/panelsim.py, rewritten: a block's 36 cells, 20% opponent noise, the champion's result
+  fixed elsewhere and the candidate's equal to it unless its change acts there, probability rho, then ours with
+  probability pi; the pooled rule scored by contest19.pool_score itself against a 6-game pool a cell). Neutral (pi 0.5)
+  at rho 0.05 / 0.1 / 0.2 / 0.3: **pooled rule 16.9 / 22.1 / 27.4 / 30.4% accepted**; the paired fresh-cell rule 5.6 /
+  5.9 / 5.1 / 5.0%. At pi 0.75: pooled 29 / 46 / 69 / 81%, paired 13 / 22 / 44 / 65%. The old panelsim drew every game
+  independently and reported 7.3%: the defect was in the simulator's model, not the arithmetic.
+- **New rule** (TRAINING_ALGORITHM §4, step 7; LEARNINGS 50): each block on a fresh map set (progress/panels/v7-m1.json
+  then v7-m2, v7-m3, v7-m4, drawn now with random.Random(20261026): each panel opponent 9 of the 40 public maps not in
+  its v7-m1 set, three a set); the champion's reference = its own games (progress/panels/v12.ref: h185's two blocks and
+  the v12 control on v7-m1; a v12 control block on each later set before a candidate's block there is scored); per cell
+  d = candidate mean - champion mean, each cell once, t = net / sqrt(sum d^2), D = cells with d != 0. Block 1 rejects at
+  t <= 0; accept at t >= 2 with D >= 4 after any block (studied cells: also t >= 0 over the others); block 2 rejects at
+  t <= 1, block 3 at t <= 1.5; block 4 accepts at t >= 2. Basics-fix accept: t >= 0 after two blocks with the mechanism
+  bar met. Scored by `tools/panel_paired.sh REF BLOCK...` (contest19.py paired; unit test: repeats count once, studied
+  split, refuses unfinished blocks and cells with no reference game).
+- **Applies from h198's block 1** (1915-1926, still playing, not read): `tools/panel_paired.sh progress/panels/v12.ref
+  1915-1926 --studied uvafan.bc2019:seed-2046,uvafan.bc2019:seed-1653,IanCoolidge0.battlecode20~69ce88:seed-1036`. Its
+  block 2, if any, plays v7-m2 after a v12 control block there. The pooled z is still printed (panel_pool.sh) as a
+  description, not a decision. Every queued candidate keeps its switches and mechanism read; "ordinary rule" now means
+  this one. No decided candidate is reopened (§4: no rule applies backwards).

@@ -29,6 +29,11 @@ as a team on the official site would act. Standard library only; run on the driv
         line, '#' comments; a block also named as a candidate is left out of the pool): wins - E over sqrt(V), side-
         blind (cell = opponent, map) and side-aware (cell = opponent, map, our side). A candidate block with a match
         not downloaded (finished) is refused (exit 3) unless --partial. Local files only
+  python3 tools/galaxy19/contest19.py paired [--partial] [--studied ...] REF BLOCK [BLOCK...]   (tools/panel_paired.sh)
+        candidate blocks against the champion's own games on the same cells (REF: match ids, or a file of them one
+        block a line, '#' comments), each (opponent, map, side) cell once: d = candidate mean - champion mean, t = net
+        / sqrt(sum d^2) (TRAINING_ALGORITHM §4, paired fresh-cell rule). Refused (exit 3) while a candidate match is
+        not downloaded or a candidate cell has no reference game, unless --partial. Local files only
 """
 import argparse
 import json
@@ -274,6 +279,65 @@ def pool_cmd(a):
     return 0
 
 
+def paired_score(ref, cand):
+    """The candidate's cells (opponent, map, our side, won) against the champion's reference games on the same cells,
+    each cell counted once however many games it has (TRAINING_ALGORITHM §4, paired fresh-cell rule): d = the
+    candidate's mean result there minus the champion's. Returns rows (opponent, map, side, ref wins, ref games, cand
+    wins, cand games, d), the candidate's cells with no reference game, and {'cells', 'D' (cells with d != 0),
+    'gained', 'lost', 'net' (sum of d), 't' (net / sqrt(sum of d^2), 0 when no cell differs)}."""
+    def tally(games):
+        t = {}
+        for o, m, s, w in games:
+            x = t.setdefault((o, m, s), [0, 0])
+            x[0] += w
+            x[1] += 1
+        return t
+    r, c = tally(ref), tally(cand)
+    rows = [(*k, *r[k], *c[k], c[k][0] / c[k][1] - r[k][0] / r[k][1]) for k in sorted(c) if k in r]
+    ds = [x[-1] for x in rows]
+    net, s2 = sum(ds), sum(d * d for d in ds)
+    return rows, [k for k in sorted(c) if k not in r], {
+        'cells': len(rows), 'D': sum(1 for d in ds if d), 'gained': sum(1 for d in ds if d > 0),
+        'lost': sum(1 for d in ds if d < 0), 'net': net, 't': net / s2 ** 0.5 if s2 > 0 else 0.0}
+
+
+def paired_cmd(a):
+    games = lambda spec: block_cells_all(block_ids(spec), a.dir)
+    missing = lambda spec: [i for i in block_ids(spec) if not os.path.exists(os.path.join(a.dir, str(i), 'match.json'))]
+    specs = [a.ref]
+    if os.path.isfile(a.ref):
+        with open(a.ref) as f:
+            specs = [b for b in (line.split('#')[0].strip() for line in f) if b]
+    ref = [g for s in specs for g in games(s)]
+    miss = [i for s in specs for i in missing(s)]
+    if miss:
+        print(f'~ reference matches not downloaded: {miss}')
+    todo = [i for b in a.blocks for i in missing(b)]
+    if todo and not a.partial:
+        print(f'~ PARTIAL: matches not finished or not downloaded: {todo}; refused (--partial scores the rest)')
+        return 3
+    cand = [g for b in a.blocks for g in games(b)]
+    rows, unref, s = paired_score(ref, cand)
+    if unref and not a.partial:
+        print(f'~ NO REFERENCE: the champion has no game on {len(unref)} cells (play its control block on that set '
+              f'first): {unref[:6]}; refused')
+        return 3
+    for opp, mp, sd, rw, rn, cw, cn, d in rows:
+        if d:
+            print(f'{opp[:40]:40} {mp:10} {sd:4}  champion {rw}/{rn}  cand {cw}/{cn}  d {d:+.2f}')
+    print(f'~ paired: {s["cells"]} cells, {s["cells"] - s["D"]} alike; D {s["D"]} (gained {s["gained"]}, lost '
+          f'{s["lost"]}), net {s["net"]:+.2f}, t {s["t"]:.2f}')
+    if a.studied:
+        # A candidate designed from some cells must also hold its own (t >= 0) on the others.
+        marks = [x.split(':', 1) for x in a.studied.split(',')]
+        hit = lambda g: any(g[0].startswith(o) and g[1] == m for o, m in marks)
+        for name, part in (('studied', [g for g in cand if hit(g)]), ('other', [g for g in cand if not hit(g)])):
+            x = paired_score(ref, part)[2]
+            print(f'~ {name} cells: {x["cells"]}, D {x["D"]} (gained {x["gained"]}, lost {x["lost"]}), '
+                  f'net {x["net"]:+.2f}, t {x["t"]:.2f}')
+    return 0
+
+
 def opponent(m, my_id):
     ps = m.get('participants') or []
     me = next((p for p in ps if p.get('team') == my_id), None)
@@ -301,9 +365,14 @@ def main(argv=None):
     p.add_argument('--partial', action='store_true'); p.add_argument('--k', type=float, default=2.0)
     p.add_argument('--dir', default=REPLAYS)
     p.add_argument('--studied', help='OPPONENT_PREFIX:MAP,... the cells the candidate was designed from')
+    p = sub.add_parser('paired'); p.add_argument('ref'); p.add_argument('blocks', nargs='+')
+    p.add_argument('--partial', action='store_true'); p.add_argument('--dir', default=REPLAYS)
+    p.add_argument('--studied', help='OPPONENT_PREFIX:MAP,... the cells the candidate was designed from')
     a = ap.parse_args(argv)
     if a.cmd == 'compare':
         return compare_cmd(a)
+    if a.cmd == 'paired':
+        return paired_cmd(a)
     if a.cmd == 'pool':
         return pool_cmd(a)
     c = cl.Client(a.site)

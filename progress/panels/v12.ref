@@ -1,0 +1,9 @@
+# v12's own games (bots/v12, h185's build) for the paired fresh-cell rule (TRAINING_ALGORITHM §4; tools/panel_paired.sh
+# progress/panels/v12.ref BLOCK...), one block a line. Set v7-m1 (progress/panels/v7-m1.json) has three v12 games a
+# cell; sets v7-m2, v7-m3, v7-m4 get one v12 control block each (PANEL=progress/panels/v7-mN.json
+# tools/panel_submit.sh bots/v12 "v12 control, v7-mN"), played before a candidate's block on that set is scored.
+# Candidates built after 2026-10-26 16:40 carry the World.attack fuel fix that v12 lacks (it changes play only on
+# turns the engine would refuse a castle's shot: IanCoolidge0 1036 so far).
+1651-1658,1831-1834   # v7-m1: h185 block 1
+1835-1846             # v7-m1: h185 block 2
+1847-1858             # v7-m1: v12 control
