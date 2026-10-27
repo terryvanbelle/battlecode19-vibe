@@ -6955,3 +6955,22 @@ randomise.
 - A consequence for reading single cells: a cell the champion won 3 of 3 can still be lost once by the opponent's
   randomness (h198's uvafan 1653 and 1712 red, 19:44); one game in such a cell is weak evidence, which is why the rule
   sums over cells and asks for D >= 4.
+
+
+## 2026-10-26 20:02 PDT: mvpatel2000, the field's top BT, joins map sets v7-m2 to m4 before any game on them
+ The ladder snapshot of 18:09 (progress/ladder.md) puts mvpatel2000.Battlecode2019 first by BT, 2035 +- 121 (57-12),
+ahead of wololo 2006 and v12 1898; it beat wololo 8 of 9 and every build of ours it met 2 of 3 or 3 of 3 (v7 3-0, v8
+2-1, v9 2-1, v11 2-1), seven of the nine at r1000 on health. It was not on the panel (v7-m1 was drawn when it had few
+games). The paired rule's later sets have not played a game, so the panel can change there without seeing an outcome:
+**v7-m2, m3 and m4 now add mvpatel2000** as a seventh opponent (42 cells a block), its 9 maps drawn with
+random.Random(20261027).sample of the 40 public maps, three a set in draw order: m2 747, 203, 705; m3 836, 2797, 2046;
+m4 520, 1241, 60 (none is one of the three it played v8 on, 799, 826, 2330). v7-m1 keeps its six: block 1 of every
+candidate and v12's reference there are unchanged. panelsim with 42 cells a block (paired, eta 0.2, 3000 trials): a
+neutral candidate accepted 5.1% (rho 0.1) and 5.2% (rho 0.2), power at pi 0.75 24% and 49% (36 cells: 5.9, 5.1, 22, 44).
+- v12's control block on each later set now includes mvpatel2000's cells, as any candidate block there does;
+  `tools/panel_paired.sh` refuses a candidate cell with no v12 game, so the two cannot drift apart unseen.
+- tools/panel_submit.sh now plays every opponent its PANEL file names (it had the six hard-coded). v7-m1.json had also
+  held the recorded map draws of the v8 field scrims (matches 770-776: mvpatel2000, rafekruse bc19, yujinwunz,
+  VoidMercy, arya-k, moreda-a a31, j-mao); those entries are removed (their maps stay in the match archives), so each
+  panel file names exactly its block's opponents. Unit test test_panel_sets: the four files' opponents, three distinct
+  maps each, no map repeated for an opponent across sets.

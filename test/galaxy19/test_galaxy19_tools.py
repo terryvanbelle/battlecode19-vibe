@@ -380,6 +380,28 @@ class Contest(unittest.TestCase):
         contest19.panel_maps(panel, 'Y', maps, 3, random.Random(3))
         self.assertEqual(sorted(panel), ['X', 'Y'])
 
+    def test_panel_sets(self):
+        # The paired rule's map sets (TRAINING_ALGORITHM §4): each file names exactly its block's opponents (tools/
+        # panel_submit.sh plays every one), three distinct maps each, and no opponent meets a map twice across sets.
+        sets = []
+        for k in (1, 2, 3, 4):
+            with open(os.path.join(REPO, 'progress', 'panels', 'v7-m%d.json' % k)) as f:
+                sets.append(json.load(f))
+        six = ['m-schier.battlecode-2019-wololo', 'StoneT2000.BC19-botfinalsafe', 'StoneT2000.BC19-bot1v43',
+               'uvafan.bc2019', 'awesomelemonade.Battlecode2019', 'IanCoolidge0.battlecode20~69ce88']
+        self.assertEqual(list(sets[0]), six)
+        for s in sets[1:]:
+            self.assertEqual(list(s), six + ['mvpatel2000.Battlecode2019'])
+        seen = {}
+        for s in sets:
+            for opp, maps in s.items():
+                self.assertEqual(len(set(maps)), 3, opp)
+                self.assertFalse(set(maps) & seen.get(opp, set()), opp)
+                seen.setdefault(opp, set()).update(maps)
+        out = subprocess.run(['python3', '-I', '-c', 'import json, sys; print(",".join(json.load(open(sys.argv[1]))))',
+                              os.path.join(REPO, 'progress', 'panels', 'v7-m2.json')], capture_output=True, text=True)
+        self.assertEqual(out.stdout.strip().split(','), six + ['mvpatel2000.Battlecode2019'])
+
     def test_plan(self):
         ladder = [team(i, 100 + 10 * i) for i in range(1, 8)]
         plan = contest19.plan_scrims(ladder, 4, 4, 3)

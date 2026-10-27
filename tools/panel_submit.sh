@@ -1,11 +1,13 @@
 #!/bin/bash
 # Play one replica panel block for a candidate build, then restore the ladder build ($LADDER, default bots/v12; TRAINING_ALGORITHM step 7).
 #   tools/panel_submit.sh DIST_DIR "message" [BOT,BOT,...]
-# Submits DIST_DIR, requests the panel scrims against BOTS (default: the v7-m1 panel's six, each twice: NAME@+ with us
-# red in all three games and NAME@- blue, so a block plays every cell on both sides: 36 games; SIDES=mixed requests
-# each once with galaxy's random alternating order, the 18-game blocks up to match 972), resubmits $LADDER and
-# bumps our queue (tools/bump_ours.sh --ours). PANEL (default progress/panels/v7-m1.json) holds each opponent's maps; a
-# targeted panel (TRAINING_ALGORITHM §4: a map-conditional switch) names another file. Scrims the replica refuses (its
+# Submits DIST_DIR, requests the panel scrims against BOTS (default: every opponent the PANEL file names, each twice:
+# NAME@+ with us red in all three games and NAME@- blue, so a block plays every cell on both sides, 6 games an
+# opponent; SIDES=mixed requests each once with galaxy's random alternating order, the 18-game blocks up to match
+# 972), resubmits $LADDER and bumps our queue (tools/bump_ours.sh --ours). PANEL (default progress/panels/v7-m1.json)
+# names the block's opponents and each one's maps (scrim --panel records a draw for an opponent missing from the file,
+# so no other scrim uses a panel file); a targeted panel (TRAINING_ALGORITHM §4: a map-conditional switch) names
+# another file. Scrims the replica refuses (its
 # hourly limit, HTTP 429) are requested again every 15 minutes, with the candidate resubmitted first, until all are in.
 # Prints the scrim lines and the two submissions, labelled ("candidate submission N", "ladder submission M":
 # record the candidate's number, not the last line's). After a control block (DIST_DIR = $LADDER) on the default
@@ -13,11 +15,13 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 dist=$1; msg=$2
-todo=${3:-m-schier.battlecode-2019-wololo,StoneT2000.BC19-botfinalsafe,StoneT2000.BC19-bot1v43,uvafan.bc2019,awesomelemonade.Battlecode2019,IanCoolidge0.battlecode20~69ce88}
+PANEL=${PANEL:-progress/panels/v7-m1.json}
+bots=$(python3 -I -c 'import json, sys; print(",".join(json.load(open(sys.argv[1]))))' "$PANEL")
+todo=${3:-$bots}
+[ -n "$todo" ] || { echo "no opponents in $PANEL" >&2; exit 2; }
 if [ -z "${3:-}" ] && [ "${SIDES:-both}" = both ]; then todo=$(echo "$todo" | tr , '\n' | sed 's/.*/&@+,&@-/' | paste -sd, -); fi
 C=tools/galaxy19/contest19.py
 LADDER=${LADDER:-bots/v12}   # the champion, resubmitted as our ladder build after each block
-PANEL=${PANEL:-progress/panels/v7-m1.json}
 # One block at a time: a scrim plays the submission current when it was requested, so two runs must not interleave.
 exec 9>"${TMPDIR:-/tmp}/panel_submit.lock"; flock 9
 while [ -n "$todo" ]; do

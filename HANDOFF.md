@@ -57,10 +57,11 @@
   systemctl restart bc19-galaxy-saturn`; a restart retries every running game).
   Read a screen: rsync out/hN_v9.jsonl, `node tools/paired.js out/hN_v9.jsonl --h2h`.
 - **Replica panels** (progress/panels/v7-m1.json: six field bots, wololo, botfinalsafe, bot1v43, uvafan,
-  awesomelemonade, IanCoolidge0 ~69ce88, three maps each). Ladder build: bots/v12 from the v12 control block on
+  awesomelemonade, IanCoolidge0 ~69ce88, three maps each; v7-m2, m3 and m4 add mvpatel2000, the field's top BT, 2035:
+  42 games a block; TRAINING_LOG 2026-10-26 20:02). Ladder build: bots/v12 from the v12 control block on
   (`tools/panel_submit.sh` resubmits $LADDER, default bots/v12, after each block). Play a block with
-  `tools/panel_submit.sh dist/hN "message"` (submits, scrims each opponent twice, NAME@+ and NAME@-, so the block's 36
-  games play every cell on both sides (red wins about 13 points more often within a cell: LEARNINGS 37); resubmits
+  `tools/panel_submit.sh dist/hN "message"` (submits, scrims every opponent the PANEL file names twice, NAME@+ and
+  NAME@-, so the block plays every cell on both sides (red wins about 13 points more often within a cell: LEARNINGS 37); resubmits
   the ladder build, bumps; retries what the hourly limit refuses (HTTP 429) every 15 min; a lock keeps blocks apart);
   add the tools/progress/submissions.tsv rows. Block k of a candidate plays map set k: `PANEL=progress/panels/v7-mK.json
   tools/panel_submit.sh dist/hN "message"` (v7-m1 is the default). Before a candidate's block on v7-m2, m3 or m4 is
