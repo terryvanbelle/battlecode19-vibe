@@ -7586,3 +7586,41 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   median military plus church K lost after r600 is at most 1,148 (h207's bar: half of v12's 2,295 on v7-m1).
 - Order: block 1 on v7-m1 now; then h204, h205, h196, h197, h199, h200. h212 (the chain's ablation) stays built and
   unqueued.
+
+## 2026-10-27 12:44 PDT: plateau protocol step 2: an ablation sweep of what v12 carries (h212, h214-h222) pre-registered
+- Since v12 (accepted 2026-10-26 10:39) nine candidates in a row were rejected (h195, h203, h198, h201, h206, h202,
+  h207, h209, h211). TRAINING_ALGORITHM §6 escalates in order: the correctness audit (done 2026-10-24, PROMPTS 34), then
+  **ablate everything we carry** (never done since v7; 10:58), then the later steps; h213 (12:27) is step 7's structural
+  attempt, already in play. The sweep comes next, ahead of h204, h205, h196, h197, h199 and h200.
+- What v12 carries without field evidence by today's rule: v6's and v7's switches were accepted on local self-play
+  numbers (h50 t 2.20, h87 t 2.06), which §2 no longer lets accept anything; v8 (ESCORT_FIRST, pooled z 2.54 over three
+  blocks of the same cells) and v9 (MUSTER 2, side-aware z 2.78; counted once a cell, 2 cells, t 1.41) under the pooled
+  rule that accepts a neutral candidate 17-30% of the time (LEARNINGS 50); v10 (MUSTER_RESCUE) and v11 (DEF_SAFE) as
+  basics fixes at z 0.40 and 0.00. v12's own switches (8 cells gained, 1 lost) and v5's defect repairs (RELAY,
+  LATTICE_STICKY, NAV_FIT, PILGRIM_SAFE_STEP: repairs transferred in every season, §3) are not swept.
+- One switch off per build, every other default v12's (src at e7f87a4: the World.attack fuel fix every candidate
+  carries; HOARD_* off), in this order, the weakest evidence and the likeliest harm first:
+  - 1. **h218** MUSTER 0 (6bc61f8fd8ce): no held crusaders against campers; MUSTER_RESCUE (v10) acts only with MUSTER 2,
+    so this removes v9 and v10 together. v12 feeds its held crusaders (07:19).
+  - 2. **h214** ECON_UNTIL 0 (2e0b3ce253ef): the peacetime army builds before r100. The bank idles at r100 (ECONOMICS §2
+    item 3, v8's field games: ours 335 K, the field's 92; army 4 to 10). h201 (ECON_RICH 100, a partial release) was
+    rejected at t 0.00.
+  - 3. **h212** CHAIN_ROUND 0 (860968a5a3be): no church chain (v7). Lines made 108 of v12's 168 castle kills (12:15) and
+    the chain's bank holds 1,000 K from r200 (uvafan 2046: military flat at 33 while the bank climbs to 970 K).
+  - 4. **h215** PEACE_RESERVE_K 0 (58eabebea4e1) (v7).
+  - 5. **h220** DEF_RESERVE_K 0 (41392929d5a4) (v7).
+  - 6. **h216** MARCH_MASK 56 (41a62375dfb8): prophets and preachers obey attack orders before r900 too (v6's 8:
+    crusaders only).
+  - 7. **h219** PIONEER_RESERVE 0 (09eb33b34003) (v6).
+  - 8. **h221** PIONEERS_TEAM 0 (5b7284af3c9f); 9. **h222** PLAN_VALUE 0 (14c1761d7f19) (v7's planning).
+  - 10. **h217** ESCORT_FIRST 0 (964d301ba590): no escorts (v8); v12's escort switches act on these units, so it removes
+    v12's gain too and goes last.
+- Driver smoke (each red vs bots/v12 on 2046 to r300, --det, fast flags; scratchpad abl/): 0 errors, exceptions,
+  timeouts and frozen turns in all ten. At r300 v12's own game stands 1,640 to 1,640 in health; h212 (1,930 to 1,650),
+  h214, h215 and h220 differ, the other six match it (their switches do not change health there by r300), so their off
+  paths meet the field first on the panel; unit tests already run MUSTER 0 and ESCORT_FIRST 0 (testPreV9, testPreV8).
+- Rule (each build its own candidate, fixed now): paired fresh cells against progress/panels/v12.ref, no studied cells
+  (none was picked from cells); block 1 on v7-m1 rejects at t <= 0 (the switch stays); any block accepts at t >= 2 with
+  D >= 4 (the switch's default goes off; a new champion); block 2 on v7-m2 rejects at t <= 1, block 3 on v7-m3 at t <=
+  1.5, block 4 accepts at t >= 2. One block in play at a time while 30+ wait; h213's blocks go first. If one ablation is
+  accepted, the rest are rebuilt on the new champion before their blocks.
