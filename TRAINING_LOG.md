@@ -7647,3 +7647,39 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   r100 for an economy that has nothing to buy there: h199 (ECON_NOPLAN 1, a castle whose team planned no church) and the
   sweep's h214 (ECON_UNTIL 0) act on these cells; h201 (ECON_RICH 100) did not flip uvafan 2046.
 - No new switch: the reads place the sweep's h214 and the queued h199 and h196 (earlier pioneers) on measured cases.
+
+## 2026-10-27 14:03 PDT: h213 (the hoard in churches) REJECTED at block 1 (t 0.00); the ablation sweep starts: h218
+- **h213 block 1 on v7-m1** (matches 2348-2359, submission 280; done 13:40): 24 of 36, v12's reference 24.0 (wololo 2 of
+  6, botfinalsafe 4, bot1v43 5, uvafan 4, awesomelemonade 6, IanCoolidge0 3). Paired (`tools/panel_paired.sh --studied
+  uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036 progress/panels/v12.ref 2348-2359`): 36 cells, 28
+  alike, D 8 (gained 4, lost 4), net +0.00, **t 0.00**: block 1 rejects at t <= 0, so **h213 is REJECTED** and
+  HOARD_ROUND and HOARD_CHURCH stay off. Gained: IanCoolidge0 1036 red (v12 1 of 3), botfinalsafe 203 blue (2 of 3), 203
+  red (1 of 3) and 2740 blue (1 of 3); lost: IanCoolidge0 1036 blue (1 of 3), 203 blue (2 of 3) and 203 red (1 of 3),
+  wololo 2013 blue (3 of 3). Studied cells: 4, D 2, t 0.45; the other 32: D 6, net -0.33, t -0.21.
+- Mechanism read (scratchpad late_sum.py over study/late.mjs and latebuilds.mjs; a check, not a decision input): 17 of
+  the 36 games reached r600 (h207's block 1: 13). In 8 of them no enemy castle was down by r600 and our castles were
+  level or ahead (h207 7): **h213 won 3 of 8** (h207 3 of 7, v12 7 of 23 on v7-m1). Military plus church K lost after
+  r600, median **505** (h207 615, v12 2,295; bar <= 1,148: passes), the enemy's 152.5 (h207 650); a castle of ours fell
+  after r600 in 3 of 8 (h207 2 of 7). The 13 games to r1000: health margin median +2,980 (h207's 11: +4,990; v12's 32:
+  +1,100), end bank median 812 K (h207 555). After r600 in the 17 games that reached it, the churches built 1,089 held
+  crusaders of their 2,265 units (h207's churches built none; v12's built 2,505 peacetime units of 6,362 in 70 games),
+  the castles 307 of 554. In the 8 class games the churches built held crusaders in 4 (2350 and 2351, botfinalsafe 2740;
+  2354, uvafan 1712; 2359, IanCoolidge0 203); 2 ended by r617; on uvafan 2046 (2354, 2355) they built only SIG.CHAIN
+  units (7 and 12): no castle of ours plans a church there (2026-10-26 21:14), so its churches are line churches, and
+  church.js runs a line's burst (churchChain) before structTurn's hoard. The church half of the mechanism fired where
+  planned churches stood; the bar on losses passes.
+- The hoard cut what we lose late and still left the result where it was: of the 8 class games, 5 were lost, 2 of them
+  by r620 (2349, wololo 2013 and 2644: at r600 we held our 1 castle with 1,310 and 80 health to wololo's 8,130 and
+  9,910) and 2 on health against uvafan 2046 (2,790 and 2,640 to 6,640 and 6,690, as h207's 2,740 and 2,610 and v12's
+  890-1,140), and 1 to IanCoolidge0 203 (2359; a castle of ours fell at r661): the hoard lifts our end health there, but
+  the gap opens before r600 (05:00: an income gap, not an exchange one). Two doctrine tests on the same maps (h207 t
+  1.40 over 120 cells, h213 t 0.00 over 36) found no field gain: the hoard doctrine is set aside; HOARD_ROUND stays in
+  the code at 0 (off).
+- **Correction to the 13:32 entry**: it said h199 (ECON_NOPLAN 1) acts on uvafan 1822, 2057 and 2330 and on 705. h199
+  acts only where no castle of ours plans a church, which was read on v7-m1 alone (uvafan 1653 and 2046, botfinalsafe
+  203; TRAINING_LOG 2026-10-26 21:14); whether our castles plan a church on 1822, 2057, 2330 and 705 (v7-m2 and v7-m3)
+  was not read. v12 had no church at r100 in any of the 6 uvafan games on 1822, 2057 and 2330, and had one in 3 of the 4
+  games on 705. h214 (ECON_UNTIL 0) acts on all of them.
+- progress/ refreshed 13:44 (between blocks). **The ablation sweep (12:44) starts: h218 (MUSTER 0, dist/h218
+  6bc61f8fd8ce) block 1 on v7-m1 = matches 2360-2371** (submission 282, submitted by 13:45, bumped to the queue's
+  front). Score: `tools/panel_paired.sh progress/panels/v12.ref 2360-2371` (no studied cells).
