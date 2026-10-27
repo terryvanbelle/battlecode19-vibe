@@ -89,8 +89,8 @@
   REPLAY` over the 30 cells where v12 founds a church before r150 (v12's per game: scratch idle_v12.txt, rebuild with
   the same read over 1651-1658, 1831-1858): our first church earlier than v12's in 20 of 30, idle turns <= 75% of
   1,295; refresh progress/ before the next block.
-  h201 was REJECTED on block 1 (paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-26 20:56; its bank.sh
-  mechanism check still to run), h198 REJECTED on block 1 (paired t 0.00, D 9; 19:25), h203 REJECTED on
+  h201 was REJECTED on block 1 (paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-26 20:56; mechanism
+  check passed, 21:33), h198 REJECTED on block 1 (paired t 0.00, D 9; 19:25), h203 REJECTED on
   block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z 1.00; TRAINING_LOG
   2026-10-26 16:48), h193 on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42), h192 on block 1 (z -2.65;
   08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).

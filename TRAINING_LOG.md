@@ -7026,3 +7026,13 @@ Driver diagnostics, h206 against v12 in both seats to r160 (first church by seat
   least 20 of 30 games, and idle castle turns at most 75% of v12's 1,295.
 - Queue place: first (it acts on the opening of 30 of 36 cells). h196 (PIONEER_EARLY/OPEN/RACE: the turn-3 race pioneer)
   acts on the same pioneers; if h206 is accepted, h196 is reviewed against it before its block.
+
+## 2026-10-26 21:33 PDT: h201's mechanism check passes (18 of 18 rich cells: army up, bank down); the gains were not there
+
+`tools/reads/bank.sh 1927 ... 1938` against v12's sweep (scratchpad bank/bank_v12.txt, matches 1651-1658, 1831-1858 to
+r125): in the 18 cells where v12 banked 300+ K at r100 in every game, h201's r100 army was above v12's and its bank
+below in all 18 (army 363 to 100 summed; bank 95-285 K to 308-863). The switch did what it says. It gained 4 of those
+cells (IanCoolidge0 1036 both sides, botfinalsafe 203 both sides) and lost none there; its 3 lost cells lie outside
+them: bot1v43 2321 red (r100 army 16 to v12's 11, bank 200 to 275; lost at r211, v12 won at r446-482), wololo 836 blue
+and uvafan 1712 red (lost at r1000 with 5,947 K banked and army 214 to uvafan's 665: karbonite floats late, fuel binds).
+Rejected stands (the rule decides; the read is not a decision input).
