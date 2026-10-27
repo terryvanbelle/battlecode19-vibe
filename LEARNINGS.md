@@ -330,3 +330,11 @@
    our bot is deterministic, but v12's own two games differ in 34 of 36 cells, each first on the opponent's turn (r16
    to r524); the outcome holds because the cell is lopsided, not because the game repeats. (2026-10-26 18:59; games
    corrected 19:57)
+
+51. **A unit parked by a score refills the tile its predecessor died on; park by a rule the enemy cannot reach.** A
+   tile chosen as "the best free one" is the best again the turn its holder dies, so the next unit walks onto it: in
+   h207's first driver game (HOARD_ROUND, 2026-10-27) 49 of 56 held crusaders died on one tile, one every ~4 rounds,
+   shot from r2 64 by a prophet the crusader (vision 49) never saw; earlier, 163 of a church's units died on one tile
+   to one prophet at r2 65 (replica m651-1, config.js SIEGE_NOW). Excluding tiles nearer the enemy than home and building only
+   while a free such tile is in the builder's sight took the deaths to 0 of 40 (end health 5,060 to 7,000).
+   (2026-10-27 03:38)
