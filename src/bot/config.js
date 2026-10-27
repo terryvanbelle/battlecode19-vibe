@@ -211,6 +211,11 @@ export const CFG = {
   CHAIN_MIX: [5],
   CHAIN_BURST: 40,
   CHAIN_FUEL_KEEP: 100,      // ...burst builds leave this much fuel
+  CHAIN_STOPLOSS: 0,         // >0: a line church that saw this many of its burst units die within CHAIN_STOPLOSS_AGE
+  CHAIN_STOPLOSS_AGE: 5,     // turns of birth (gone from its sight from within r2 49, or never seen alive) ends its
+                             // burst (replica 1845, seed 203: v12's r331 line ended in blue's army; its 4 churches built
+                             // 30 preachers in 30 rounds, all dead within 10 rounds of birth, 24 having dealt no damage,
+                             // to prophets beyond a preacher's sight; none of the 4 saw 28 attackers, CHAIN_WALL's bar)
   CHAIN_EVERY: 100,          // a castle sends its next chainer this many rounds after the last (none while one waits)
   CHAIN_STAGGER: 30,         // castle i (canonical order) starts at CHAIN_ROUND + i * this
   CHAIN_PATIENCE: 10,        // a chainer that got no nearer for this many turns counts as staged within

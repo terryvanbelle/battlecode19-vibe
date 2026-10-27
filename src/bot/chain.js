@@ -118,6 +118,7 @@ export function churchChain(B) {
   if (!st.chain) return null;
   if (me.turn > CFG.CHAIN_BURST || gone(B)) { st.chain = null; return null; }
   if (CFG.CHAIN_WALL && wallEnd(B)) return null;
+  if (CFG.CHAIN_STOPLOSS && burstLosses(B) >= CFG.CHAIN_STOPLOSS) { st.chain = null; return null; }
   const [tx, ty] = st.chain;
   if (me.turn === 1 && d2(me.x, me.y, tx, ty) > CFG.CHAIN_END_R2 &&
       w.karbonite >= STATS[PILGRIM].costK + STATS[CHURCH].costK && w.fuel >= STATS[PILGRIM].costF + STATS[CHURCH].costF + 4) {
@@ -136,7 +137,34 @@ export function churchChain(B) {
   if (!best) return null;
   w.signal(encXY(SIG.CHAIN, tx, ty), 2);
   st.nChain = (st.nChain || 0) + 1;
+  if (CFG.CHAIN_STOPLOSS) st.burstPending = { unit, x: me.x + best[0], y: me.y + best[1] };
   return w.build(unit, best[0], best[1]);
+}
+
+// CFG.CHAIN_STOPLOSS: the burst units this church has seen die young. Its newborn of last turn is the friend on its
+// first turn of that type within r2 9 of the build tile (none: killed before the church could see it); one gone from
+// sight within CHAIN_STOPLOSS_AGE turns of birth, last seen within r2 49 (no step leaves a church's sight from there),
+// died.
+function burstLosses(B) {
+  const w = B.w, st = B.st, t = w.me.turn, kids = st.burstKids || (st.burstKids = new Map());
+  const p = st.burstPending;
+  if (p) {
+    st.burstPending = null;
+    let best = null, bd = 1e9;
+    for (const r of w.friends) {
+      if (r.turn !== 1 || r.unit !== p.unit || kids.has(r.id)) continue;
+      const dd = d2(r.x, r.y, p.x, p.y);
+      if (dd <= 9 && dd < bd) { bd = dd; best = r; }
+    }
+    if (best) kids.set(best.id, { t: t - 1, x: best.x, y: best.y }); else st.burstLost = (st.burstLost || 0) + 1;
+  }
+  for (const [id, k] of [...kids]) {
+    const r = w.friends.find(f => f.id === id);
+    if (r) { if (t - k.t >= CFG.CHAIN_STOPLOSS_AGE) kids.delete(id); else { k.x = r.x; k.y = r.y; } continue; }
+    kids.delete(id);
+    if (d2(k.x, k.y, w.me.x, w.me.y) <= 49) st.burstLost = (st.burstLost || 0) + 1;
+  }
+  return st.burstLost || 0;
 }
 
 // CFG.CHAIN_WALL: a line church that sees CHAIN_WALL enemy crusaders, prophets and preachers, or hears another line

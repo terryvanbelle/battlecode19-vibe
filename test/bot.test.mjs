@@ -3699,6 +3699,59 @@ test('chain: CHAIN_WALL ends a line church\'s chain at a wall (radio + CT.WALL) 
   } finally { [CFG.CHAIN_ROUND, CFG.CHAIN_WALL, CFG.CHAIN_WALL_REST, CFG.CHAIN_END_R2] = saved; }
 });
 
+test('chain: CHAIN_STOPLOSS ends a line church\'s burst once its units die young in its sight', () => {
+  const saved = [CFG.CHAIN_ROUND, CFG.CHAIN_STOPLOSS, CFG.CHAIN_STOPLOSS_AGE, CFG.CHAIN_END_R2];
+  try {
+    CFG.CHAIN_ROUND = 150; CFG.CHAIN_STOPLOSS_AGE = 5; CFG.CHAIN_END_R2 = 49;
+    const X = chainFixture();
+    const adj = offsets(2).map(([dx, dy]) => [X.ours[0] + dx, X.ours[1] + dy]).find(([x, y]) => X.g.map[y][x]);
+    // An engine tile r2 50-100 from the church (in its sight, beyond the r2 49 a step cannot leave it from).
+    let far = null;
+    for (let y = 0; y < X.n && !far; y++) for (let x = 0; x < X.n && !far; x++) {
+      const r2 = d2(x, y, X.ours[0], X.ours[1]);
+      if (r2 > 49 && r2 <= 100 && X.g.map[y][x] && !X.g.robots.some(r => r.x === x && r.y === y)) far = [x, y];
+    }
+    assert.ok(X.near && far, 'fixture');
+    // turns[t - 1]: the bank in the church's turn t (0: no build) and the newborns it sees, [index built, turn, engine
+    // tile or the build tile]; a newborn left out is gone.
+    const play = (stop, turns) => {
+      CFG.CHAIN_STOPLOSS = stop;
+      const B = { api: null, w: null, round: 0, birthRound: 0, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      const acts = [], built = [];
+      turns.forEach(([k, seen], i) => {
+        const t = i + 1, church = X.mk(4100, 0, S.CHURCH, X.ours[0], X.ours[1], t), pil = X.mk(4101, 0, S.PILGRIM, adj[0], adj[1]);
+        pil.signal = encXY(SIG.CHAIN, X.near[0], X.near[1]); pil.signal_radius = 2;
+        const kids = seen.map(([j, turn, at]) => X.mk(4400 + j, 0, S.PREACHER, ...(at || built[j]), turn));
+        const { w } = X.world([church, X.castleAt(X.near)].concat(t === 1 ? [pil] : [], kids), church);
+        w.karbonite = k; w.fuel = 3000; B.api = w.api; B.w = w;
+        const act = churchTurn(B);
+        acts.push(act);
+        if (act && act.u === S.PREACHER) built.push([X.ours[0] + act.dx, X.ours[1] + act.dy]);
+      });
+      return { acts, B };
+    };
+    // Turn 2: the first newborn stands on its tile; turn 3: it and the second (never seen) are gone.
+    const dead = [[1000, []], [1000, [[0, 1]]], [1000, []]];
+    const on = play(2, dead);
+    assert.strictEqual(on.acts[0].u, S.PREACHER, 'turn 1: the burst');
+    assert.strictEqual(on.acts[1].u, S.PREACHER, 'turn 2: one loss, the burst goes on');
+    assert.strictEqual(on.B.st.burstLost, 2, 'two dead young');
+    assert.strictEqual(on.B.st.chain, null, 'turn 3: the burst ends');
+    const off = play(0, dead);
+    assert.ok(off.B.st.chain && off.acts[2].u === S.PREACHER, 'off: the burst goes on');
+    // One newborn, gone after it was last seen beyond r2 49 (it may have walked out of sight), after it outlived
+    // CHAIN_STOPLOSS_AGE, or young in sight.
+    const walked = play(1, [[1000, []], [0, [[0, 1]]], [0, [[0, 2, far]]], [0, []]]);
+    assert.ok(walked.B.st.chain && !walked.B.st.burstLost, 'walked out of sight: no loss');
+    const life = n => [[1000, []]].concat(Array.from({ length: n }, (_, i) => [0, [[0, i + 1]]]), [[0, []]]);
+    const old = play(1, life(5));
+    assert.ok(old.B.st.chain && !old.B.st.burstLost, 'gone at 5 turns old: no loss');
+    const young = play(1, life(4));
+    assert.strictEqual(young.B.st.burstLost, 1, 'gone at 4 turns old: a loss');
+    assert.strictEqual(young.B.st.chain, null, 'the burst ends');
+  } finally { [CFG.CHAIN_ROUND, CFG.CHAIN_STOPLOSS, CFG.CHAIN_STOPLOSS_AGE, CFG.CHAIN_END_R2] = saved; }
+});
+
 test('chain: with CHAIN_ROUND 0 castles never launch a chainer and the peacetime reserve is unchanged', () => {
   const saved = CFG.CHAIN_ROUND;
   try {

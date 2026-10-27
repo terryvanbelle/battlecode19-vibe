@@ -6767,3 +6767,35 @@ cell: a change anywhere before r58 can flip it either way, and its replays say n
   accept at z >= 2, reject below 1; else a third, accepted at cumulative z >= 2). No studied cells (a general switch).
   Mechanism check (not a decision input): chainrace.mjs over our side of its blocks, median first-line round at most
   245 (v12 272). Queue place: after h202, before h196.
+
+## 2026-10-26 17:52 PDT: chain bursts feed walls: 136 K a game skipped by a 3-deaths stop; CHAIN_STOPLOSS built (off)
+**IanCoolidge0 203 red** (v11 3 of 3, v12 1 of 3): in the lost 1845 game 1 (1857's has the same 4-church line at r331,
+r2 145 from the castle) our first line fired at r331 from (18,23) into blue's army at x 24-28 (4 churches; the 4th and
+three link pilgrims died at r332); its churches then built 30 preachers by r360, all dead within 10 rounds of birth, 24
+having dealt no damage, most at (23,21) to prophets at (24,14) (r2 50, beyond a preacher's sight); 900 K. No line church
+saw more than 27 attackers, so CHAIN_WALL 28 (h198) would not have ended it. The won 1833 game 1 line (r308) reached r2
+4 of a castle.
+- New read `tools/reads/burstloss.mjs TEAM REPLAY [N T]`: TEAM's line churches (3+ in a round from r150), the military
+  each builds in its first 40 rounds, deaths within T rounds of birth, damage and kills by them, the most enemy
+  attackers in each church's sight, and a stop rule (a church ends its burst once N of its units died within T rounds).
+  Unit test on 407 game 3 and 1845 game 1 cut at r360 (test/fixtures/burst_s203_1845-1.bc19).
+- **Census over v12's 108 panel games** (scratchpad burst_v12.txt): 1,023 line churches built 4,497 units, 132,800 K
+  (1,230 K a game); 1,830 died within 10 rounds of birth, 1,324 of them dealing no damage; damage 67,670 (0.52 per K in
+  wins, 0.45 in losses), 2,123 kills, 73 castles.
+- Stop rule N 3 T 5: 528 units not built (14,690 K, 136 K a game), whose damage was 3,940 (0.27 per K, half the bursts'
+  0.51), 119 kills, 1 castle (uvafan 1712 blue, a 3 of 3 cell). N 3 T 10: 834 units, 23,320 K, 2 castles (adds 1833 game
+  1). N 2 T 5: 662 units, 8 castles. **uvafan 2046 (0 of 6) holds 4,170 K of the 14,690 at no damage lost**;
+  IanCoolidge0 203 both sides 3,010 K at 1,280 damage.
+- CHAIN_WALL 28, approximated by the churches whose sight held 28+ attackers at a round end of their burst: 178
+  churches, 5,875 K of burst, 8,620 damage (1.47 per K: those bursts reach an army and hurt it); 2046 red 1,920 K of
+  5,025. The two triggers pick different bursts: the wall count acts on lines that meet a crowd, the stop on bursts
+  dying unseen. FEED_STOP (h159, rejected on v8 at z 0.66) acts only on threat-response builds; churchChain's burst
+  never consults it.
+- **CHAIN_STOPLOSS built, off** (config.js CHAIN_STOPLOSS 0, CHAIN_STOPLOSS_AGE 5; chain.js burstLosses): a line church
+  that saw N of its burst units die within 5 turns of birth (gone from its sight from within r2 49, or never seen alive)
+  ends its burst. Unit test (two deaths end it at 2; off goes on; a newborn last seen beyond r2 49, or gone at 5 turns
+  old, is no loss; at 4, one). Not queued yet: the karbonite it saves on 2046 would fund the next line into the same
+  wall unless CHAIN_WALL rests the chains, and h198 (CHAIN_WALL 28) plays next; the candidate (CHAIN_STOPLOSS 3) goes on
+  whichever base h198 leaves.
+- No-op: the defaults build (1d496c9be6ba) against itself on 799 to r300 is IDENTICAL to bots/v12's replay; unit tests
+  181/181 + 65.

@@ -67,9 +67,10 @@
   rate and power: `python3 -I tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195 rejected).
-  **Replica queue (17:25): 68 waiting (61 ranked; VM 11 GB free); h203 block 1 running (4 of 12 playing).** While 30+ wait: no
-  local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the autoscrim held
-  (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 16:48 (between blocks; rating-history 75 rated matches).
+  **Replica queue (17:53): 55 waiting (55 ranked; VM 11 GB free); h203 block 1 running (4 of 12 playing).**
+  While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
+  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 16:48 (between blocks; rating-history 75
+  rated matches).
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
   **Now: h203 block 1** = matches 1903-1914 (submission 238; ladder 239; waiter on the driver). When it ends:
   `contest19.py fetch --new --pages 6`, `panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool 1903-1914
@@ -118,6 +119,10 @@
   champion's a game and churches at least 0.9 of its (TRAINING_LOG 2026-10-26 00:02); last: h170 and h190, the same
   class, passed their mechanism reads and lost, LEARNINGS 48).
   h185's mechanism read (escorts.mjs over both blocks, mean hit6 under 40%; not a decision input) runs on the driver.
+  **Built, off, not queued:** CHAIN_STOPLOSS (chain.js burstLosses): a line church that saw 3 of its burst units die
+  within 5 turns of birth ends its burst; on v12's 108 panel games that skips 136 K a game at half the bursts' damage
+  per K, 4,170 K of it on uvafan 2046 at no damage. The candidate goes on whichever base h198 (CHAIN_WALL 28) leaves:
+  without the wall's rest the saved karbonite funds the next line into the same wall (TRAINING_LOG 2026-10-26 17:52).
   **In design (not built, not queued):** h184's OPEN part that keeps a contested cluster v11 takes (h184 + KEEP;
   TRAINING_LOG 06:37, 08:53); a castle recall for field prophet balls (castles.mjs: 14 of v11's 50 castle losses had 10
   or more unfired units within r2 400; RECALL h110 was rejected in self-play; TRAINING_LOG 2026-10-26 10:12).

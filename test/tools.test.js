@@ -715,7 +715,7 @@ test('bump_ours.sh: reorders only, by digit ids or our team; refuses anything el
 });
 
 // tools/reads: the panel's mechanism reads (h170 parked pioneers, h171 escorts, h174 idle miners, held crusaders, stillborn
-// newborns, the army at castle losses, chain races). Values pinned from
+// newborns, the army at castle losses, chain races, chain bursts). Values pinned from
 // the session scripts they replace (identical output on these replays).
 test('reads: idle, parked and escort reads on replica games', () => {
   const { execFileSync } = require('child_process');
@@ -742,6 +742,17 @@ test('reads: idle, parked and escort reads on replica games', () => {
   assert.deepStrictEqual(run('chainrace.mjs', '0', chain), [{ ours: [red, red2], theirs: [], bankAt: null, lost: [] }]);
   assert.deepStrictEqual(run('chainrace.mjs', '1', chain), [{ ours: [], theirs: [red, red2], bankAt: [185, 12875], lost: [282] }]);
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'chainrace.mjs'), '2', chain], { stdio: 'pipe' }));
+  // burstloss.mjs: the same line's 16 churches built 22 units, a castle kill among them, none after 3 young deaths;
+  // 1845 game 1 to r360 (IanCoolidge 203, v12 red): the r331 line's 4 churches fed 30 preachers into prophets out of
+  // their sight (24 dealt nothing); the stop rule skips 16 of them, and no church saw 28 attackers (CHAIN_WALL 28).
+  const nil = { units: 0, k: 0, dmg: 0, kills: 0, killsC: 0 };
+  assert.deepStrictEqual(run('burstloss.mjs', '0', chain), [{ churches: 16, built: 22, k: 645, young: 6, youngNil: 0, dmg: 900,
+    kills: 18, killsC: 1, foes: [3, 0, 6, 0, 7, 4, 12, 7, 12, 8, 16, 9, 2, 1, 0, 0], stop: nil }]);
+  assert.deepStrictEqual(run('burstloss.mjs', '1', chain), [{ churches: 0, built: 0, k: 0, young: 0, youngNil: 0, dmg: 0,
+    kills: 0, killsC: 0, foes: [], stop: nil }]);
+  assert.deepStrictEqual(run('burstloss.mjs', '0', path.join(FIX, 'burst_s203_1845-1.bc19')), [{ churches: 4, built: 30, k: 900,
+    young: 30, youngNil: 24, dmg: 230, kills: 4, killsC: 0, foes: [4, 10, 22, 27], stop: { units: 16, k: 480, dmg: 40, kills: 0, killsC: 0 } }]);
+  assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'burstloss.mjs'), '2', chain], { stdio: 'pipe' }));
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'idle.mjs'), '2', '300', g], { stdio: 'pipe' }));
   // 1180 game 1 (wololo 2013, v9 red): the castle fell at r204 with three held crusaders within 10 steps, none shooting.
   assert.deepStrictEqual(run('held.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')),
