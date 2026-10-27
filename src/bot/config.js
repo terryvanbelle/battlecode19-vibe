@@ -309,12 +309,17 @@ export const CFG = {
                              // m651-1, a church built 176 prophets and 163 units died on one tile to one prophet at
                              // r2 65, out of the newborns' sight; audit 2026-10-24)
   SAFE_BUILD: 0,             // 1: structures never build a robot on a tile where the enemy attackers in sight could kill it
-                             // before its first turn (struct.js exposure; replica 414-3, seed 836: four prophets in a row
+                             // before its first turn (combat.js exposure; replica 414-3, seed 836: four prophets in a row
                              // died unborn on one church tile); 2: counting only attackers with no other target of ours
   DEF_SAFE: 1,               // 1: a structure's military newborn goes on a free tile where the enemy attackers in sight
                              // could kill it before its first turn only when every free tile is one (struct.js buildToward).
                              // 1 is v11's (h178, TRAINING_LOG 2026-10-25 20:50); 0 was v10's. 2: pilgrims too, and no pilgrim
                              // is built while every free tile is one (replica 1446, seed 2321: 17 stillborn pioneers).
+  DOOM_HOLD: 0,              // 1: a structure builds no military unit while every free adjacent tile is one where the
+                             // enemy attackers in sight could deal the newborn its health and none of them can hit the
+                             // structure (combat.js doomed: buildToward and the chain burst). v12 vs dist/creep on 1822:
+                             // the castles' threat responses fed 56 of 66 newborns, killed by prophets at r2 82 from
+                             // castle (19,8), out of its reach and it out of theirs (TRAINING_LOG 2026-10-27).
   PLAN_SERVE_PILGRIM: 0,     // 1: church planning counts a depot as served by pilgrim moves (as staffing does), and
                              // churches a cluster with >= 2 unserved depots (or all, if smaller); 0: any depot within
                              // 2*SERVE_MOVES king steps marks the whole cluster served (seed 1755: never staffed)

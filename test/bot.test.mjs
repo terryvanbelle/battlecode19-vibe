@@ -15,8 +15,8 @@ import { report as planReport } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, strikeSpot, hotRetarget, hereRetarget, siteStalled, siteTaken, siteTimeout, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
-import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, canHit, PRIORITY } from '../src/bot/combat.js';
-import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch, chainsFailed, chainsWalled, hoarding } from '../src/bot/chain.js';
+import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, canHit, PRIORITY, exposure, doomed } from '../src/bot/combat.js';
+import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch, chainsFailed, chainsWalled, hoarding, churchChain } from '../src/bot/chain.js';
 const require = createRequire(import.meta.url);
 const SPECS = require('../engine/node_modules/bc19/specs.json');
 const Game = require('../engine/node_modules/bc19/game.js');
@@ -635,6 +635,41 @@ test('struct: DEF_SAFE 2 builds a pilgrim only on a tile the enemies in sight ca
     const m = build(2, S.PROPHET, true);   // the military still builds when every tile is deadly (DEF_SAFE 1's rule)
     assert.ok(m !== null && at(m) >= 10);
   } finally { CFG.DEF_SAFE = saved; }
+});
+
+test('struct: DOOM_HOLD builds no military unit while every free tile is deadly and nothing can hit the structure', () => {
+  const saved = { DOOM_HOLD: CFG.DOOM_HOLD, CHAIN_STOPLOSS: CFG.CHAIN_STOPLOSS, CHAIN_WALL: CFG.CHAIN_WALL };
+  try {
+    // 28 prophets at r2 65-72 from (10,10): each free adjacent tile in reach of 12-13 of them, the structure of none.
+    const ring = [];
+    for (let dx = -9; dx <= 9; dx++) for (let dy = -9; dy <= 9; dy++) { const r = dx * dx + dy * dy; if (r >= 65 && r <= 72) ring.push({ id: 900 + ring.length, unit: S.PROPHET, x: 10 + dx, y: 10 + dy }); }
+    const built = [];
+    const fw = { me: { x: 10, y: 10, turn: 2, unit: S.CHURCH }, enemies: ring, friends: [], sentR2: 0, fuel: 1000, karbonite: 0,
+      free: () => true, isDepot: () => false, occ: () => 7, canAfford: () => true, signal() {}, build(u, dx, dy) { built.push(u); return { u, dx, dy }; } };
+    assert.ok(ring.every(e => !canHit(e, 10, 10)) && [[-1, -1], [0, 1], [1, 0]].every(([dx, dy]) => exposure(fw, 10 + dx, 10 + dy) >= 60));
+    assert.strictEqual(doomed(fw, S.PREACHER), true);
+    fw.enemies = ring.concat([{ id: 999, unit: S.PROPHET, x: 18, y: 10 }]);         // r2 64: one can hit the structure
+    assert.strictEqual(doomed(fw, S.PREACHER), false);
+    fw.enemies = ring.filter(e => e.y > 10);                                          // the north tiles out of reach
+    assert.strictEqual(doomed(fw, S.CRUSADER), false);
+    fw.enemies = ring; fw.free = (x, y) => y === 11;                                  // only deadly tiles free
+    assert.strictEqual(doomed(fw, S.PREACHER), true);
+    fw.free = () => false; assert.strictEqual(doomed(fw, S.PROPHET), false);           // no free tile: nothing to say
+    fw.free = () => true;
+    const bt = (on, unit) => { CFG.DOOM_HOLD = on; return buildToward({ w: fw, st: {} }, unit, 10, 20); };
+    assert.ok(bt(0, S.PROPHET) !== null, 'v12 builds into it');
+    assert.strictEqual(bt(1, S.PROPHET), null);
+    assert.strictEqual(bt(1, S.CRUSADER), null);
+    assert.ok(bt(1, S.PILGRIM) !== null, 'pilgrims are not held');
+    fw.enemies = ring.concat([{ id: 999, unit: S.PROPHET, x: 18, y: 10 }]);
+    assert.ok(bt(1, S.PROPHET) !== null, 'under fire: it builds');
+    fw.enemies = ring;
+    // A line church's burst (CHAIN_MIX) toward a standing target.
+    CFG.CHAIN_STOPLOSS = 0; CFG.CHAIN_WALL = 0;
+    const burst = on => { CFG.DOOM_HOLD = on; built.length = 0; const B = { w: fw, st: { chain: [10, 30] } }; return [churchChain(B), B.st.chain]; };
+    const [a0] = burst(0); assert.ok(a0 && a0.u === CFG.CHAIN_MIX[0], JSON.stringify(a0));
+    const [a1, c1] = burst(1); assert.deepStrictEqual([a1, c1, built], [null, [10, 30], []]);   // held, the line kept
+  } finally { Object.assign(CFG, saved); }
 });
 
 testPreV7('struct: ECON_UNTIL keeps the peacetime army out before that round, not a threat response', () => {

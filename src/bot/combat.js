@@ -2,7 +2,7 @@
 // robot lists ({team, unit, x, y}). Ties break by canonical position (never id): allies converge on one target and
 // mirror twins choose mirror targets.
 import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './specs.js';
-import { d2 } from './util.js';
+import { d2, ADJ } from './util.js';
 
 // How much we want to kill each unit type (higher first).
 export const PRIORITY = [2, 1, 3, 5, 6, 6];
@@ -83,3 +83,38 @@ export function retreatStep(x, y, threats, offs, maxR2, free) {
   return best;
 }
 export { PILGRIM };
+
+// CFG.SAFE_BUILD: the damage the visible enemy attackers can deal to a robot on (x, y) with one shot each: prophets and
+// castles in their band, crusaders within r2 16, preachers whose 3x3 splash reaches it. A newborn acts after every
+// robot already in the round's queue (replica 414-3, seed 836: in r66-69 a church built four prophets on one tile and
+// each died before its first turn; 414-1, seed 2013: nine on our castle's build tile in r169-180).
+// only (CFG.SAFE_BUILD 2): count only attackers that can hit no mobile robot of ours in sight, whose one target the
+// newborn would be (414's campers; in a contest the enemy has other targets, and one prophet in reach of every tile
+// stopped h109's chain launches on 2013).
+export function exposure(w, x, y, only) {
+  let dmg = 0;
+  for (const e of w.enemies) {
+    const S = STATS[e.unit]; if (!S.damage) continue;
+    if (only && w.friends.some(f => f.unit >= PILGRIM && canHit(e, f.x, f.y))) continue;
+    let hit = false;
+    if (e.unit === PREACHER) {
+      for (let dy = -1; dy <= 1 && !hit; dy++) for (let dx = -1; dx <= 1; dx++) if (d2(x + dx, y + dy, e.x, e.y) <= S.atkMax) { hit = true; break; }
+    } else { const r = d2(x, y, e.x, e.y); hit = r >= S.atkMin && r <= S.atkMax; }
+    if (hit) dmg += S.damage;
+  }
+  return dmg;
+}
+
+// CFG.DOOM_HOLD: every free adjacent tile (one at least) is one where the enemy attackers in sight could deal a `unit`
+// newborn its health, and none of them can hit this structure: a military build there only feeds them.
+export function doomed(w, unit) {
+  const me = w.me;
+  if (w.enemies.some(e => canHit(e, me.x, me.y))) return false;
+  let any = false;
+  for (const [dx, dy] of ADJ) {
+    const x = me.x + dx, y = me.y + dy; if (!w.free(x, y)) continue;
+    if (exposure(w, x, y) < STATS[unit].hp) return false;
+    any = true;
+  }
+  return any;
+}

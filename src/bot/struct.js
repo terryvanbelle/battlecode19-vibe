@@ -4,7 +4,7 @@ import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './s
 import { d2, king, ADJ, offsets } from './util.js';
 import { bfs, econ } from './mapinfo.js';
 import { SIG, FAR, encXY, encNum, HOARD_R2, MUSTER_R2 } from './comms.js';
-import { isAttacker, pickTarget, canHit, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
+import { isAttacker, pickTarget, canHit, THREAT_R2, PRIORITY, churchFirst, exposure, doomed } from './combat.js';
 import { watchDeaths, hoardTile, latticeTile } from './military.js';
 import { chainsFailed, chainsWalled, hoarding } from './chain.js';
 
@@ -87,27 +87,6 @@ function enemyNear(B, x, y) {
   return false;
 }
 
-// CFG.SAFE_BUILD: the damage the visible enemy attackers can deal to a robot on (x, y) with one shot each: prophets and
-// castles in their band, crusaders within r2 16, preachers whose 3x3 splash reaches it. A newborn acts after every
-// robot already in the round's queue (replica 414-3, seed 836: in r66-69 a church built four prophets on one tile and
-// each died before its first turn; 414-1, seed 2013: nine on our castle's build tile in r169-180).
-// only (CFG.SAFE_BUILD 2): count only attackers that can hit no mobile robot of ours in sight, whose one target the
-// newborn would be (414's campers; in a contest the enemy has other targets, and one prophet in reach of every tile
-// stopped h109's chain launches on 2013).
-export function exposure(w, x, y, only) {
-  let dmg = 0;
-  for (const e of w.enemies) {
-    const S = STATS[e.unit]; if (!S.damage) continue;
-    if (only && w.friends.some(f => f.unit >= PILGRIM && canHit(e, f.x, f.y))) continue;
-    let hit = false;
-    if (e.unit === PREACHER) {
-      for (let dy = -1; dy <= 1 && !hit; dy++) for (let dx = -1; dx <= 1; dx++) if (d2(x + dx, y + dy, e.x, e.y) <= S.atkMax) { hit = true; break; }
-    } else { const r = d2(x, y, e.x, e.y); hit = r >= S.atkMin && r <= S.atkMax; }
-    if (hit) dmg += S.damage;
-  }
-  return dmg;
-}
-
 // Build `unit` on the free adjacent tile closest to (tx, ty); avoid depots when possible. Returns the action or null.
 // CFG.SAFE_BUILD: never on a tile whose exposure would kill the newborn before its first turn (null if every tile would).
 // CFG.DEF_SAFE: a military newborn goes on such a tile only when every free tile is one (replica 1373, seed 1884:
@@ -118,6 +97,7 @@ export function exposure(w, x, y, only) {
 // castle never learned of it and resent 80 turns later).
 export function buildToward(B, unit, tx, ty, signal, sigR2 = 2) {
   const w = B.w, me = w.me; let best = null, bd = 1e9;
+  if (CFG.DOOM_HOLD && unit >= CRUSADER && doomed(w, unit)) return null;
   const safe = CFG.SAFE_BUILD && w.enemies.some(e => STATS[e.unit].damage > 0);
   const shun = CFG.DEF_SAFE && (unit >= CRUSADER || (CFG.DEF_SAFE >= 2 && unit === PILGRIM)) && w.enemies.some(e => STATS[e.unit].damage > 0);
   for (const [dx, dy] of ADJ) {

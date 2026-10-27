@@ -12,7 +12,7 @@ import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER } from './specs.js';
 import { d2, ADJ, offsets } from './util.js';
 import { bfs } from './mapinfo.js';
 import { SIG, CT, FAR, encXY, dec, decFarRobot } from './comms.js';
-import { isAttacker, canHit, THREAT_R2 } from './combat.js';
+import { isAttacker, canHit, THREAT_R2, doomed } from './combat.js';
 
 const KING = offsets(2);
 
@@ -126,7 +126,7 @@ export function churchChain(B) {
     if (a) return a;
   }
   const mix = CFG.CHAIN_MIX, unit = mix[(st.nChain || 0) % mix.length];
-  if (!w.canAfford(unit, 0, CFG.CHAIN_FUEL_KEEP)) return null;
+  if (!w.canAfford(unit, 0, CFG.CHAIN_FUEL_KEEP) || (CFG.DOOM_HOLD && doomed(w, unit))) return null;
   let best = null, bd = 1e9;
   for (const [dx, dy] of ADJ) {
     const x = me.x + dx, y = me.y + dy;
