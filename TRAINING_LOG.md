@@ -7312,3 +7312,26 @@ without a radio. HOARD_CHURCH (h208, built as dist/h208 eb432410f84f) therefore 
 Its case is v12's panel games instead (latebuilds.mjs over the 70 that reached r600): after r600 **churches built 2,505
 peacetime units (round radio), castles 287**; builds without a radio 1,863 and 1,547; chain bursts 1,454 (rounds with 2+
 link pilgrims after r600 in 36 of the 70 games, 24 of them lost). The config.js comment is corrected.
+
+## 2026-10-27 06:32 PDT: h207 block 2 = 22 of 42 (v12 18): paired t 1.69 over both blocks -> block 3 on v7-m3
+
+Block 2 = matches 2068-2081 (v7-m2, candidate submission 262) finished at 06:28. h207 won 22 of 42; v12's control block
+on the same set (1966-1979) won 18. By opponent, h207 / v12: wololo 0/6 / 0/6, botfinalsafe 4/6 / 4/6, bot1v43 3/6 /
+4/6, uvafan 0/6 / 0/6, awesomelemonade 6/6 / 4/6, IanCoolidge0 5/6 / 4/6, mvpatel2000 4/6 / 2/6.
+
+Paired rule (`tools/panel_paired.sh --studied uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036
+progress/panels/v12.ref 2046-2057 2068-2081`): 78 cells, 64 alike, D 14 (gained 10, lost 4), net +5.00, t 1.69; studied
+cells 4, D 2, t 0.45; others 74, D 12, net +4.67, t 1.63. Block 2 alone: 42 cells, D 6 (gained 5, lost 1), net +4.00, t
+1.63. Block 2 rejects at t <= 1 and accepts at t >= 2 with D >= 4: neither, so block 3 on v7-m3 (block 3 rejects at t <=
+1.5; block 4 accepts at t >= 2). v12's control block on v7-m3 went in first: matches 2099-2112 (submission 264, ladder
+265). h207's block 3: matches 2113-2118 (submission 266: wololo, botfinalsafe, bot1v43, both sides); the other eight
+scrims were refused by the replica's hourly limit (HTTP 429) and panel_submit.sh requests them again every 15 minutes
+with the candidate resubmitted first.
+
+Where the switch could act (not a decision input). HOARD_ROUND acts only from r600, and h207 plays v12's moves before
+that; a cell whose candidate game ended before r600 differs from v12's by the opponents' randomness alone. Of the 14
+differing cells over both blocks, the candidate's game passed r600 in 7: botfinalsafe 203 blue +0.33, IanCoolidge0 203
+red +0.67 and blue +0.33, IanCoolidge0 1036 blue -0.33 (ended r670), IanCoolidge0 2591 blue +1, mvpatel2000 203 red +1
+and blue +1: net +4.00, 6 for and 1 against; the last three were won at r1000 on health where v12 lost on health. In the
+other 7 (botfinalsafe 203 red -0.33 and 2740 blue +0.67, bot1v43 2321 red -1 and 1915 red -1, IanCoolidge0 1036 red
++0.67, awesomelemonade 747 red +1 and blue +1, all ended by r598) the net is +1.00.

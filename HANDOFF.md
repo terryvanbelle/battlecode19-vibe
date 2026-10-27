@@ -75,7 +75,7 @@
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
   h198, h201, h206, h202 rejected).
-  **Replica queue (06:24): 2 waiting (2 ranked, 0 ours; h207 block 2: 13 of 14 done, 2081 running); VM 9.5 GB free, no VM jobs.**
+  **Replica queue (06:33): 18 waiting (1 ranked, 17 ours: v12 control 2099-2112, h207 block 3 2113-2118; 8 more scrims after HTTP 429); VM 9.5 GB free, no VM jobs.**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
   the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 04:46 (after h207's block 1); next refresh
   between blocks.
@@ -83,17 +83,7 @@
   v12's control block on v7-m2 = matches 1966-1979 (submission 246; 18 of 42) is in progress/panels/v12.ref. h206 (v12 +
   PIONEER_IDLE 2) was REJECTED at block 2 (1980-1993, 20 of 42; blocks 1+2 paired t 0.99 <= 1, D 21: gained 14, lost 7;
   TRAINING_LOG 2026-10-27 01:52). h202 (v12 + CHAIN_FKEEP 1) was REJECTED at block 1 (2014-2025, 24 of 36 to v12's
-  24.0; paired t 0.00, D 8: gained 4, lost 4; TRAINING_LOG 2026-10-27 03:02). h207 block 1 (2046-2057) = 25 of 36 (v12 24.0), paired t 0.60:
-  neither bar; mechanism read passed (K lost after r600 in level games: median 615, v12 2,295; TRAINING_LOG 2026-10-27
-  05:00). **Now: h207 block 2 on v7-m2** = matches 2068-2081 (candidate submission 262, ladder 263; waiter armed:
-  scratchpad wait_block.sh 2068 2081). h207 = v12 + HOARD_ROUND 600 (dist/h207 f227ebbfdcf7: from r600 a castle not
-  behind on castles calls no attack, sends no chainer and builds crusaders held on far-side lattice tiles 2-6 king
-  steps out; TRAINING_LOG 2026-10-27 03:38). When it ends: fetch, `tools/panel_paired.sh --studied
-  uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036 progress/panels/v12.ref 2046-2057 2068-2081`;
-  block 2 rejects at t <= 1, accepts at t >= 2 with D >= 4 and others t >= 0; else block 3 on v7-m3 (play v12's
-  control block there first). Next after h207: h208 (= h207 + HOARD_CHURCH 1, dist/h208 eb432410f84f: churches'
-  peacetime army held too; churches built 2,505 peacetime units after r600 in v12's 70 long panel games, castles 287;
-  pre-register when h207 is decided). Refresh progress/ between blocks only (last 04:46).
+  24.0; paired t 0.00, D 8: gained 4, lost 4; TRAINING_LOG 2026-10-27 03:02). h207 block 1 (2046-2057) = 25 of 36 (v12 24.0), paired t 0.60; block 2 (2068-2081, v7-m2) = 22 of 42 (v12 18 of 42): blocks 1+2 paired t 1.69 (78 cells, D 14: gained 10, lost 4; TRAINING_LOG 2026-10-27 06:32). **Now: h207 block 3 on v7-m3**: v12's control there = matches 2099-2112 (submission 264, in v12.ref); h207 = 2113-2118 (submission 266) and eight more scrims that panel_submit.sh (scratchpad submit_h207_b3.log) re-requests every 15 min after HTTP 429 (record their submission and matches in submissions.tsv when they go in). h207 = v12 + HOARD_ROUND 600 (dist/h207 f227ebbfdcf7: from r600 a castle not behind on castles calls no attack, sends no chainer and builds crusaders held on far-side lattice tiles 2-6 king steps out; TRAINING_LOG 2026-10-27 03:38). When both blocks end: fetch, `tools/panel_paired.sh --studied uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036 progress/panels/v12.ref 2046-2057 2068-2081 <block 3 matches>`; block 3 rejects at t <= 1.5, accepts at t >= 2 with D >= 4 and others t >= 0; else block 4 on v7-m4 (v12 control there first), which accepts at t >= 2. Next after h207: h208 (= h207 + HOARD_CHURCH 1, dist/h208 eb432410f84f: churches' peacetime army held too; churches built 2,505 peacetime units after r600 in v12's 70 long panel games, castles 287; pre-register when h207 is decided). Refresh progress/ between blocks only (last 04:46; due now, before block 3's first game ends).
   h201 was REJECTED on block 1 (paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-26 20:56; mechanism
   check passed, 21:33), h198 REJECTED on block 1 (paired t 0.00, D 9; 19:25), h203 REJECTED on
   block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z 1.00; TRAINING_LOG
