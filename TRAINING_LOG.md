@@ -7094,3 +7094,19 @@ the starting castles); at r100, 200, 300, 500 and the end. Over v12's 108 panel 
   prophet every few turns (21 in r36-130, bank 12 at r100). That is the h117/h118/h121/h124 case (PIONEER_HOLD, replica
   420-3, same map), decided in v7-era self-play and the pooled rule; not re-queued without new evidence. h206 (pioneers
   leave on 40 K) acts on the first part.
+
+## 2026-10-26 23:08 PDT: h206 block 1 (1942-1953): paired t 0.79, to block 2 on v7-m2; mechanism passes (28 of 30)
+`tools/panel_paired.sh progress/panels/v12.ref 1942-1953 --studied m-schier.battlecode-2019-wololo:seed-2644`: 36 cells,
+25 alike; D 11 (gained 8, lost 3), net +2.00, **t 0.79**; studied cells 2, D 0; others t 0.79. Neither bar of block 1
+(reject t <= 0, accept t >= 2): block 2 on v7-m2 (rejects at t <= 1). Gained IanCoolidge0 1036 both sides, 203 both
+sides (v12 1-2 of 3 each), botfinalsafe 1706 blue (v12 0 of 3), 203 both sides, 2740 blue; lost bot1v43 2321 red, wololo
+836 blue, uvafan 1712 red (v12 3 of 3 each). Pooled description (panel_pool.sh, v12-m1.pool): 26 of 36, z 1.24,
+side-aware z 1.33.
+- Mechanism (pre-registered, not a decision input; scratchpad idle_h206.txt against idle_v12.txt, the same read): over
+  the 30 cells where v12 founds a church before r150, h206's first church came earlier than v12's cell mean in **28 of
+  30** (bar 20; equal on bot1v43 2321 both sides, r42), castle idle turns **752 against 1,295 (58%**, bar 75%). First
+  church on wololo 836 r24 (v12 46), 2644 r39 (51), botfinalsafe 2740 r50-56 (75), awesomelemonade 2518 r22 (34),
+  IanCoolidge0 1036 r22 (36). The switch does what it says.
+- v12's control block on v7-m2 is matches 1966-1979 (submission 246, ladder 247; 42 games, mvpatel2000 added); its ids
+  join progress/panels/v12.ref when it ends. h206's block 2 on v7-m2 is submitted once the replica's queue is at 15 or
+  fewer waiting (scratchpad submit_when.sh), so the two blocks never hold 30+ waiting together.
