@@ -3,15 +3,16 @@
 // Enemy castles are exactly the mirrors of ours (canonical frame: (x, n-1-y)).
 import { CFG, defReserveK } from './config.js';
 import { STATS, CHURCH, PILGRIM, CRUSADER } from './specs.js';
-import { SIG, encXY, encNum, CT, FAR, decFarRobot, GUARD_STRIKE } from './comms.js';
+import { SIG, encXY, encNum, CT, FAR, decFarRobot, GUARD_STRIKE, CLAIM_R2 } from './comms.js';
 import { bfs } from './mapinfo.js';
-import { offsets, d2 } from './util.js';
+import { offsets, d2, king } from './util.js';
 import { structInit, structTurn, buildToward } from './struct.js';
 import { chainLaunch, hoarding } from './chain.js';
+import { latticeTile } from './military.js';
 
 const KING = offsets(2), PILGRIM_OFFS = offsets(4);
 
-export { callAttack, callDue, planClusters, expandPlan, nextPioneer, pioneerDue, pioneer, hearStrike, strikeFar };
+export { callAttack, callDue, planClusters, expandPlan, nextPioneer, pioneerDue, pioneer, hearStrike, strikeFar, claimTile, claim };
 
 export function castleTurn(B) {
   const w = B.w, me = w.me, st = B.st;
@@ -40,6 +41,7 @@ export function castleTurn(B) {
   st.count = [1, 0, 0, 0, 0, 0];   // our robots by type, from their status bytes (castles: self + talkers)
   st.march = 0;                    // ...of which military units not free for a wave (CFG.WAVE)
   st.waitN = 0;                    // pioneers waiting at their sites for the church's karbonite (CFG.PIONEER_HOLD)
+  st.claimOpen = false;            // the claim's pioneer is out (CFG.CLAIM_FUND)
   const all = w.robots.concat(w.unplaced);
   st.chainLive = false;            // CFG.CHAIN_ROUND: our chainer still walks or waits
   st.chainAny = false;             // CFG.CHAIN_LIVE: any castle's chainer walks or waits (1), or waits staged (2)
@@ -55,6 +57,7 @@ export function castleTurn(B) {
     else if (ct === CT.WALL && CFG.CHAIN_WALL) { st.count[CHURCH]++; st.wallAt = B.round; }
     else if (ct >= CT.MARCH && ct < CT.MARCH + 6) { st.count[ct - CT.MARCH]++; st.march++; }
     else if (ct === CT.WAIT && CFG.PIONEER_HOLD) { st.count[PILGRIM]++; st.waitN++; }
+    else if (CFG.CLAIM_FUND && ct === CT.CLAIM) { st.count[PILGRIM]++; st.claimOpen = true; }
     else if (ct === CT.BLOCKED && CFG.PIONEER_CALL) {
       st.count[PILGRIM]++;
       const p = CFG.ESCORT && st.pioneers.find(q => q.id === r.id);
@@ -113,7 +116,8 @@ export function castleTurn(B) {
   if (CFG.STRIKE_FAR && st.order) hearStrike(B);
   const act = structTurn(B, allIds, () => (CFG.ESCORT_FIRST ? escort(B) : null) || pioneer(B) || (CFG.ESCORT ? escort(B) : null) ||
     (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null),
-    CFG.PIONEER_EARLY || CFG.ESCORT_EARLY || CFG.STRIKE_FAR ? () => (CFG.STRIKE_FAR ? strikeFar(B) : null) ||
+    CFG.CLAIM || CFG.PIONEER_EARLY || CFG.ESCORT_EARLY || CFG.STRIKE_FAR ? () => (CFG.CLAIM ? claim(B) : null) ||
+      (CFG.STRIKE_FAR ? strikeFar(B) : null) ||
       (CFG.ESCORT_EARLY ? escort(B) : null) || (CFG.PIONEER_EARLY ? earlyPioneer(B) : null) : null);
   if (CFG.CASTLE_POST) callPost(B);   // after the build, so a newborn's radio comes first
   return act === HOPPED ? null : act;
@@ -140,6 +144,7 @@ function planClusters(B) {
   const myIdx = own.findIndex(c => c.x === me.x && c.y === me.y);
   st.plan = []; st.planAll = 0; st.safeAll = 0;   // planAll: clusters planned by any of our castles; safeAll: those
                                                   // with m >= CFG.PIONEER_OPEN
+  let claimC = null;                              // CFG.CLAIM: the team's claim, the same in every castle
   for (const c of B.clusters) {
     const [sx, sy] = c.site, k = sy * n + sx;
     const dOwn = ownF.map(f => f[k] < 0 ? 999 : f[k]);
@@ -151,6 +156,13 @@ function planClusters(B) {
     st.planAll++; if (CFG.PIONEER_OPEN && dThem - dUs >= CFG.PIONEER_OPEN) st.safeAll++;
     let owner = 0; for (let i = 1; i < own.length; i++) if (dOwn[i] < dOwn[owner]) owner = i;
     if (owner === myIdx) st.plan.push({ cluster: c.i, d: dUs, m: dThem - dUs, value: c.nk * 2 + c.nf });
+    if (CFG.CLAIM && dThem - dUs >= CFG.CLAIM_MIN_M && dThem - dUs <= CFG.PLAN_CONTEST_FIRST && (!claimC || dUs < claimC.d))
+      claimC = { cluster: c.i, d: dUs, m: dThem - dUs, owner };
+  }
+  st.claim = null;
+  if (CFG.CLAIM && claimC && claimC.owner === myIdx) {
+    const tile = claimTile(w, B.clusters[claimC.cluster].site, own[myIdx], own.map(c => w.mirror(c.x, c.y)));
+    if (tile) st.claim = { cluster: claimC.cluster, d: claimC.d, m: claimC.m, x: tile[0], y: tile[1], built: 0, sent: false };
   }
   // CFG.PLAN_CONTEST_FIRST: clusters the enemy reaches within that many moves of us go first; the middle is a race
   // (seed 1828 with SERVE_MOVES 2: the near clusters delayed the centre pioneers from round 27 to 48-67 and h19 won it).
@@ -191,6 +203,7 @@ function nextPioneer(B, ok) {
   const w = B.w, st = B.st;
   if (!st.plan || st.pioneers.length >= maxPioneers(st) || w.me.turn < CFG.PIONEER_MIN_ROUND) return null;
   return st.plan.find(p => (!ok || ok(p)) && !st.churched.has(p.cluster) && !st.pioneers.some(q => q.cluster === p.cluster) &&
+    !(CFG.CLAIM && st.claim && !st.claim.sent && st.claim.cluster === p.cluster) &&   // CFG.CLAIM: its own pioneer goes first
     !(st.lost.has(p.cluster) && w.me.turn - st.lost.get(p.cluster) < lostRest(st, p.cluster)) &&
     !(st.taken.has(p.cluster) && w.me.turn - st.taken.get(p.cluster) < 200)) || null;
 }
@@ -276,11 +289,45 @@ function earlyPioneer(B) {
   return a;
 }
 
-function sendPioneer(B, next) {
+// CFG.CLAIM: where the claimant stands for the site (x, y) of a cluster the castle `o` owns: a passable lattice tile, no
+// depot and not the site, within 2 king steps of it, no farther from the castle than the site and beyond r2 144 of
+// every enemy castle (`mirrors`); nearest the site, then canonical order. Null: no claim.
+function claimTile(w, [sx, sy], o, mirrors) {
+  let best = null, bd = 1e9;
+  for (let y = sy - 2; y <= sy + 2; y++) for (let x = sx - 2; x <= sx + 2; x++) {
+    if ((x === sx && y === sy) || !w.passable(x, y) || w.isDepot(x, y) || !latticeTile(x, y)) continue;
+    if (king(x, y, o.x, o.y) > king(sx, sy, o.x, o.y) || mirrors.some(([mx, my]) => d2(x, y, mx, my) <= 144)) continue;
+    const v = d2(x, y, sx, sy) * 4096 + y * 64 + x;
+    if (v < bd) { bd = v; best = [x, y]; }
+  }
+  return best;
+}
+
+// CFG.CLAIM: the claim's owner builds the claimant (radioing SIG.GUARD at its tile at r2 CLAIM_R2) as soon as it can,
+// then, CLAIM_LEAD turns later, the claim's pioneer on a pilgrim's cost (SIG.CHURCH at r2 CLAIM_R2: CFG.CLAIM_FUND).
+// A turn whose radio is taken waits: each newborn must hear it.
+function claim(B) {
+  const w = B.w, st = B.st, c = st.claim;
+  if (!c || c.sent || w.sentR2) return null;
+  if (!c.built) {
+    if (!w.canAfford(CFG.CLAIM_UNIT, 0, 2)) return null;
+    const b = buildToward(B, CFG.CLAIM_UNIT, c.x, c.y, encXY(SIG.GUARD, c.x, c.y), CLAIM_R2);
+    if (!b) return null;
+    c.built = w.me.turn;
+    return b.act;
+  }
+  if (w.me.turn < c.built + CFG.CLAIM_LEAD || st.churched.has(c.cluster) || st.pioneers.length >= maxPioneers(st) ||
+    !w.canAfford(PILGRIM, 0, 200)) return null;
+  const a = sendPioneer(B, c, CLAIM_R2);
+  if (a) c.sent = true;
+  return a;
+}
+
+function sendPioneer(B, next, sigR2 = 2) {
   const w = B.w, st = B.st;
   if (CFG.RADIO_WAIT && w.sentR2) return null;   // the attack call took the radio: build next turn, not deaf
   const c = B.clusters[next.cluster];
-  const b = buildToward(B, PILGRIM, c.site[0], c.site[1], encXY(SIG.CHURCH, c.site[0], c.site[1]));
+  const b = buildToward(B, PILGRIM, c.site[0], c.site[1], encXY(SIG.CHURCH, c.site[0], c.site[1]), sigR2);
   if (!b) return null;
   st.pending = { x: b.x, y: b.y, unit: PILGRIM, kind: 'pioneer', ref: next.cluster };
   st.pioneers.push({ id: -1, cluster: next.cluster, since: w.me.turn, d: next.d });

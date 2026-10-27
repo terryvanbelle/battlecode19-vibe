@@ -6,12 +6,12 @@ import * as S from '../src/bot/specs.js';
 import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
-import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot, GUARD_STRIKE, HOARD_R2, MUSTER_R2 } from '../src/bot/comms.js';
+import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot, GUARD_STRIKE, HOARD_R2, MUSTER_R2, CLAIM_R2 } from '../src/bot/comms.js';
 import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot, hoardTile } from '../src/bot/military.js';
 import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers, hearStrike, strikeFar } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, buildToward, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy, musterTile, hitTrack, sayRescue } from '../src/bot/struct.js';
-import { report as planReport } from '../tools/plan.mjs';
+import { report as planReport, planOf } from '../tools/plan.mjs';
 import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, strikeSpot, hotRetarget, hereRetarget, siteStalled, siteTaken, siteTimeout, stallRetarget } from '../src/bot/pilgrim.js';
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
@@ -4183,4 +4183,171 @@ test('military: LATTICE_SPARSE puts at most 2 lattice tiles under any 3x3 preach
     CFG.LATTICE_SPARSE = 0; assert.deepStrictEqual(scan(), [5, 200]);
     CFG.LATTICE_SPARSE = 1; assert.deepStrictEqual(scan(), [2, 80]);
   } finally { CFG.LATTICE_SPARSE = saved; }
+});
+
+// CFG.CLAIM (TRAINING_LOG 2026-10-27 15:13): one claim a team, its claimant and its pioneer.
+test('castle: CLAIM picks one claim a team, owned by the castle nearest it, the same for both teams; the tile rule', () => {
+  const saved = { ...CFG };
+  try {
+    for (const [seed, nc] of [[836, 2], [203, 3], [2644, 1]]) {
+      CFG.CLAIM = 0;
+      assert.ok(planOf(seed, 0).every(c => !c.B.st.claim), 'off: no claim');
+      CFG.CLAIM = 1;
+      const got = [0, 1].map(team => {
+        const cs = planOf(seed, team), owners = cs.filter(c => c.B.st.claim);
+        assert.strictEqual(cs.length, nc);
+        assert.strictEqual(owners.length, 1, `seed ${seed} team ${team}: one owner`);
+        const { B, x, y } = owners[0], cl = B.st.claim, w = B.w, [sx, sy] = B.clusters[cl.cluster].site;
+        // The team's planned clusters with 2 <= m <= PLAN_CONTEST_FIRST: the claim is the nearest, planned by its owner.
+        const hot = cs.flatMap(c => c.B.st.plan.map(p => ({ ...p, x: c.x, y: c.y })))
+          .filter(p => p.m >= CFG.CLAIM_MIN_M && p.m <= CFG.PLAN_CONTEST_FIRST);
+        const best = Math.min(...hot.map(p => p.d));
+        assert.strictEqual(cl.d, best);
+        assert.ok(B.st.plan.some(p => p.cluster === cl.cluster), 'the owner plans it');
+        // Tile: passable lattice tile, no depot, not the site, within 2 king steps, no farther from the owner, beyond
+        // r2 144 of every enemy castle.
+        assert.ok(!(cl.x === sx && cl.y === sy) && king(cl.x, cl.y, sx, sy) <= 2 && w.passable(cl.x, cl.y) && !w.isDepot(cl.x, cl.y));
+        assert.ok(latticeTile(cl.x, cl.y) && king(cl.x, cl.y, x, y) <= king(sx, sy, x, y));
+        for (const c of cs) { const [mx, my] = w.mirror(c.x, c.y); assert.ok(d2(cl.x, cl.y, mx, my) > 144); }
+        return [cl.cluster, cl.x, cl.y, x, y];
+      });
+      assert.deepStrictEqual(got[0], got[1], `seed ${seed}: both teams claim alike (canonical frame)`);
+    }
+    // CLAIM_MIN_M above every planned cluster's m: no claim.
+    Object.assign(CFG, { CLAIM: 1, CLAIM_MIN_M: 7 });
+    assert.ok(planOf(2644, 0).every(c => !c.B.st.claim));
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('castle: CLAIM builds the claimant first, radioing SIG.GUARD at its tile at r2 CLAIM_R2, then the pioneer CLAIM_LEAD turns later', () => {
+  const saved = { ...CFG };
+  try {
+    const run = on => {
+      CFG.CLAIM = on;
+      const g = new Game(2644, 100, 20, false, false);   // one castle a side; the claim: the centre cluster, m 3
+      const castle = g.robots.find(r => r.team === 0);
+      g.robots = g.robots.filter(r => r.team === 0);
+      const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 }, acts = [];
+      for (const t of [1, 2, 3, 4, 5]) {
+        castle.turn = t; const w = worldFor(g, castle), sent = []; B.w = w; B.api = w.api;
+        w.api.signal = (v, r2) => sent.push([v, r2]);
+        const a = castleTurn(B);
+        acts.push({ t, u: a && a.action === 'build' ? a.u : null, sent });
+        B.st.pending = null;
+      }
+      return { B, acts };
+    };
+    const { B, acts } = run(1), cl = B.st.claim, site = B.clusters[cl.cluster].site;
+    assert.deepStrictEqual(acts[2], { t: 3, u: CFG.CLAIM_UNIT, sent: [[encXY(SIG.GUARD, cl.x, cl.y), CLAIM_R2]] });
+    assert.strictEqual(cl.built, 3);
+    assert.ok(!acts[3].sent.some(([v]) => dec(v).type === SIG.CHURCH), 'turn 4: not yet');
+    assert.deepStrictEqual(acts[4], { t: 5, u: S.PILGRIM, sent: [[encXY(SIG.CHURCH, site[0], site[1]), CLAIM_R2]] });
+    assert.ok(cl.sent && B.st.pioneers.some(p => p.cluster === cl.cluster));
+    // Off: turn 3 builds no prophet and nothing radios at r2 CLAIM_R2.
+    const off = run(0).acts;
+    assert.notStrictEqual(off[2].u, S.PROPHET);
+    assert.ok(off.every(a => a.sent.every(([, r2]) => r2 !== CLAIM_R2)));
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('military: CLAIM a unit born hearing SIG.GUARD at r2 CLAIM_R2 holds its tile when hit, until an enemy church stands by it', () => {
+  const saved = { ...CFG };
+  try {
+    const g = new Game(1205, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let at = null; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]) if (!at && free(castle.x + dx, castle.y + dy)) at = [castle.x + dx, castle.y + dy];
+    const cw = worldFor(g, castle), tile = [cw.me.x + 6, cw.me.y + 8];
+    const life = (on, r2, churchAt) => {
+      CFG.CLAIM = on;
+      castle.signal = encXY(SIG.GUARD, tile[0], tile[1]); castle.signal_radius = r2;
+      const p = { id: 4004, team: 0, unit: S.PROPHET, x: at[0], y: at[1], turn: 1, health: 20, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      g.robots.push(p);
+      const B = { round: 0, birthRound: 0, st: {}, deps: null, clusters: null, rnd: rng(2) };
+      const step = () => { const w = worldFor(g, p); B.w = w; B.api = w.api; B.offs = offsets(S.STATS[S.PROPHET].speed); B.nav = new Nav(w, B.offs, B.rnd); militaryTurn(B); };
+      try {
+        step(); castle.signal = 0; castle.signal_radius = 0;
+        const born = { claim: !!B.st.claim, guard: B.st.guard, home: [B.st.home.x, B.st.home.y] };
+        p.turn = 2; p.health = 10; step();   // hit (no melee near): an escort goes home, a claimant holds
+        const hit = [B.st.home.x, B.st.home.y];
+        let rel = null;
+        if (churchAt) {
+          const [cx, cy] = churchAt;   // engine frame = team 0's canonical frame here (asserted below)
+          const foe = { id: 4990, team: 1, unit: S.CHURCH, x: cx, y: cy, turn: 1, health: 100, signal: 0, signal_radius: 0, castle_talk: 0 };
+          g.robots.push(foe); p.turn = 3; p.health = 5; step(); g.robots.pop();
+          rel = { claim: !!B.st.claim, home: [B.st.home.x, B.st.home.y] };
+        }
+        return { born, hit, rel, base: [B.st.base.x, B.st.base.y] };
+      } finally { g.robots = g.robots.filter(r => r.id !== 4004); castle.signal = 0; castle.signal_radius = 0; }
+    };
+    assert.ok(cw.me.x === castle.x && cw.me.y === castle.y, 'seed 1205: team 0 sees the engine frame');
+    // Default (CLAIM 0): an r2 4 SIG.GUARD is an ordinary escort (ESCORT_FIRST on in v12); hit, it goes home.
+    const esc = life(0, CLAIM_R2);
+    assert.deepStrictEqual(esc.born, { claim: false, guard: esc.born.guard, home: tile });
+    assert.deepStrictEqual(esc.hit, esc.base);
+    // CLAIM: the claimant answers no attack call and holds when hit.
+    const cla = life(1, CLAIM_R2, [tile[0] + 4, tile[1] + 1]);
+    assert.deepStrictEqual(cla.born, { claim: true, guard: true, home: tile });
+    assert.deepStrictEqual(cla.hit, tile);
+    // An enemy church within 5 king steps of the tile releases it, and the hit sends it home.
+    assert.deepStrictEqual(cla.rel, { claim: false, home: cla.base });
+    // r2 2 (an escort's radio) with CLAIM on: no claimant.
+    assert.strictEqual(life(1, 2).born.claim, false);
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('pilgrim: CLAIM_FUND the claim\'s pioneer (SIG.CHURCH at r2 CLAIM_R2) talks CT.CLAIM while it has its site', () => {
+  const saved = { ...CFG };
+  try {
+    const g = new Game(1205, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let at = null; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]) if (!at && free(castle.x + dx, castle.y + dy)) at = [castle.x + dx, castle.y + dy];
+    const cw = worldFor(g, castle), site = [cw.me.x + 6, cw.me.y + 8];
+    const talks = (fund, r2) => {
+      CFG.CLAIM_FUND = fund;
+      castle.signal = encXY(SIG.CHURCH, site[0], site[1]); castle.signal_radius = r2;
+      const p = { id: 4005, team: 0, unit: S.PILGRIM, x: at[0], y: at[1], turn: 1, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+      g.robots.push(p);
+      const B = { round: 0, birthRound: 0, st: {}, deps: null, clusters: null, rnd: rng(2) }, out = [];
+      const step = () => { const w = worldFor(g, p); w.api.castleTalk = v => out.push(v); B.w = w; B.api = w.api; B.offs = offsets(S.STATS[S.PILGRIM].speed); B.nav = new Nav(w, B.offs, B.rnd); pilgrimTurn(B); };
+      try {
+        step(); castle.signal = 0; castle.signal_radius = 0;
+        p.turn = 2; step();
+        B.st.site = null; p.turn = 3; step();   // gave its site up
+        return { out, claimed: !!B.st.claimed };
+      } finally { g.robots = g.robots.filter(r => r.id !== 4005); castle.signal = 0; castle.signal_radius = 0; }
+    };
+    assert.deepStrictEqual(talks(1, CLAIM_R2), { out: [CT.CLAIM, CT.CLAIM], claimed: false });
+    assert.deepStrictEqual(talks(0, CLAIM_R2), { out: [], claimed: false });   // default: no talk
+    assert.deepStrictEqual(talks(1, 2), { out: [], claimed: false });          // an ordinary pioneer
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('struct: CLAIM_FUND keeps the church in the bank from depot pilgrims while the claim\'s pioneer talks CT.CLAIM', () => {
+  const saved = { ...CFG };
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let P = null;
+    for (let r = 3; r <= 6 && !P; r++) for (let dx = -r; dx <= r && !P; dx++) if (free(castle.x + dx, castle.y + r)) P = [castle.x + dx, castle.y + r];
+    if (!P) for (let r = 3; r <= 6 && !P; r++) for (let dx = -r; dx <= r && !P; dx++) if (free(castle.x + dx, castle.y - r)) P = [castle.x + dx, castle.y - r];
+    const pio = { id: 4100, team: 0, unit: S.PILGRIM, x: P[0], y: P[1], turn: 30, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    const turn1 = (fund, k, claimTalk) => {
+      CFG.CLAIM_FUND = fund; castle.turn = 50; pio.castle_talk = claimTalk ? CT.CLAIM : CT.UNIT + S.PILGRIM;
+      const all = g.robots;
+      g.robots = all.filter(r => d2(r.x, r.y, castle.x, castle.y) <= 100).concat([pio]);
+      const w = worldFor(g, castle); g.robots = all;
+      const B = { api: w.api, w, round: 50, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      w.karbonite = k; w.fuel = 2000;
+      const a = castleTurn(B);
+      return { u: a && a.action === 'build' ? a.u : a ? a.action : null, pilgrims: B.st.count[S.PILGRIM], open: B.st.claimOpen };
+    };
+    const pil = S.STATS[S.PILGRIM].costK, def = CFG.DEF_RESERVE_K, church = S.STATS[S.CHURCH].costK;
+    assert.deepStrictEqual(turn1(0, pil + def, true), { u: S.PILGRIM, pilgrims: 0, open: false });   // default: CT.CLAIM unread
+    assert.deepStrictEqual(turn1(1, pil + def, false), { u: S.PILGRIM, pilgrims: 1, open: false });  // no claim out
+    assert.deepStrictEqual(turn1(1, pil + def + church - 1, true), { u: null, pilgrims: 1, open: true });
+    assert.deepStrictEqual(turn1(1, pil + def + church, true), { u: S.PILGRIM, pilgrims: 1, open: true });
+  } finally { Object.assign(CFG, saved); }
 });

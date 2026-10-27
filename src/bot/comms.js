@@ -22,6 +22,7 @@ export const SIG = {
 export const GUARD_STRIKE = 3;   // the r2 of a SIG.GUARD that makes the newborn a striker (buildToward sends others at 2)
 export const HOARD_R2 = 3;       // the r2 of a castle's SIG.ROUND that makes the newborn crusader a held one (CFG.HOARD_ROUND)
 export const MUSTER_R2 = 3;      // the r2 of a SIG.THREAT whose (x, y) is the newborn's hold tile, not the camper (CFG.MUSTER_TILE)
+export const CLAIM_R2 = 4;       // the r2 of a SIG.GUARD (claimant) or SIG.CHURCH (the claim's pioneer) from a claim (CFG.CLAIM)
 export function encXY(type, x, y) { return (type << 12) | (x << 6) | y; }
 export function encNum(type, v) { return (type << 12) | (v & 4095); }
 export function dec(sig) { return { type: sig >> 12, x: (sig >> 6) & 63, y: sig & 63, v: sig & 4095 }; }
@@ -44,6 +45,7 @@ export const CT = {
   CHAINFIRE: 78, // a chainer built its line's first church this turn (CFG.CHAIN_FAILS)
   STAGED: 79,    // a chainer staged, waiting for the bank (CFG.CHAIN_LIVE 2; otherwise it reports CHAINER)
   WALL: 86,      // a line church ended its line facing a wall (CFG.CHAIN_WALL)
+  CLAIM: 87,     // the claim's pioneer, from birth until it builds or gives its site up (CFG.CLAIM_FUND)
 };
 
 // Far messages (to robots that may not see the sender, so cannot check its team): the message type is the exact

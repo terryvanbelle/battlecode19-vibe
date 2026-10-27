@@ -49,6 +49,8 @@ export function report(seed, team) {
     out.push(`castle (${x},${y}): staffs ${B.st.served.length} depots (K ${k} F ${B.st.served.length - k}); plans ` +
       (B.st.plan.map(p => `c${p.cluster}@(${clusters[p.cluster].site})d${p.d}` + (p.m !== undefined ? `m${p.m}` : '') +
         `n${clusters[p.cluster].depots.length}`).join(' ') || 'none'));
+    const cl = B.st.claim;   // CFG.CLAIM: the team's claim, owned by this castle
+    if (cl) out.push(`  claim c${cl.cluster}@(${clusters[cl.cluster].site}) d${cl.d}m${cl.m} tile (${cl.x},${cl.y})`);
   }
   const side = deps.filter(d => { const a = ours[d.y * n + d.x], b = theirs[d.y * n + d.x]; return a >= 0 && (b < 0 || a <= b); });
   const orphans = side.filter(d => !served.has(d.i) && !clusters.some(c => planned.has(c.i) && c.depots.includes(d)));

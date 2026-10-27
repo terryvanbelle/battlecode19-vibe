@@ -89,6 +89,20 @@ export const CFG = {
                              // rounds after a prophet's first shot on 388, 2740, 2644; TRAINING_LOG 2026-10-25 00:37). 1 is
                              // v12's, 0 was v11's. 2: as 1, but an escort with 20+ health whose only enemy attacker or castle
                              // in sight is one prophet charges it instead (military.js escortBack).
+  CLAIM: 0,                  // 1: one claim per team (castle.js claimPick): the castle owning the team's first planned
+                             // cluster with CLAIM_MIN_M <= m <= PLAN_CONTEST_FIRST builds a CLAIM_UNIT on turn 3, before its
+                             // economy pilgrims, to hold OUR site of it (ESCORT_MIRROR's raid holds theirs), and from
+                             // CLAIM_LEAD turns later sends that cluster's pioneer on a pilgrim's cost. The claimant never
+                             // goes home when hit (ESCORT_BACK) until it sees an enemy church by the site. v12's 192 panel
+                             // games: an enemy church held a cluster on our half at r100 in 37 of 77 losses, 13 of 115 wins;
+                             // wololo 2644: its r5 prophet held the centre and its church on our site came at r53
+                             // (TRAINING_LOG 2026-10-27 13:32, 14:18, 15:13)
+  CLAIM_UNIT: 4,             // prophet: it sees r2 64, the reach of every prophet and castle
+  CLAIM_LEAD: 2,
+  CLAIM_MIN_M: 2,            // v9's first pioneers founded 0 of 24 sites at m <= 1 (TRAINING_LOG 2026-10-25 15:45)
+  CLAIM_FUND: 0,             // 1 (with CLAIM): the claim's pioneer talks CT.CLAIM until it builds or gives up, and while
+                             // one talks castles' economy pilgrims leave the church's karbonite in the bank (13:32: 20 of
+                             // the losses' 29 waits at free sites had 50 K or less in the bank)
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short

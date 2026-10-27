@@ -3,7 +3,7 @@
 import { CFG, defReserveK } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, KARB_CAP, FUEL_CAP } from './specs.js';
 import { d2, king, ADJ, rng } from './util.js';
-import { SIG, FAR, dec, decFarRobot, encNum, encXY, CT } from './comms.js';
+import { SIG, FAR, dec, decFarRobot, encNum, encXY, CT, CLAIM_R2 } from './comms.js';
 import { econ, bfs } from './mapinfo.js';
 import { fuelStep } from './nav.js';
 import { isAttacker, retreatStep, THREAT_R2 } from './combat.js';
@@ -20,7 +20,10 @@ function init(B) {
     if (r.signal > 0 && me.turn === 1) {   // the builder's radio is fresh only on our first turn
       const m = dec(r.signal);
       if (m.type === SIG.MINE) st.target = depotAt(B, m.x, m.y);
-      else if (m.type === SIG.CHURCH) { st.site = [m.x, m.y]; st.cluster = B.clusters.findIndex(c => c.site[0] === m.x && c.site[1] === m.y); }
+      else if (m.type === SIG.CHURCH) {
+        st.site = [m.x, m.y]; st.cluster = B.clusters.findIndex(c => c.site[0] === m.x && c.site[1] === m.y);
+        if (CFG.CLAIM_FUND && r.signal_radius === CLAIM_R2) st.claimed = true;   // the claim's pioneer (castle.js claim)
+      }
       else if (m.type === SIG.ROUND) B.birthRound = m.v;
       else if (m.type === SIG.FRONT) { B.birthRound = m.v; st.site = frontSite(w, r.x, r.y); st.cluster = -1; }
       else if (m.type === SIG.CHAIN && CFG.CHAIN_ROUND) { chainStart(B, [m.x, m.y]); st.chainer = r.unit === CASTLE; }
@@ -184,6 +187,8 @@ function pilgrimAct(B) {
 
   siteTaken(B);
   siteTimeout(B);
+  // CFG.CLAIM_FUND: the claim's pioneer tells castles it is out until it builds (CT.CHURCH overwrites) or gives up.
+  if (CFG.CLAIM_FUND && st.claimed) { if (st.site) w.talk(CT.CLAIM); else st.claimed = false; }
 
   // CFG.CHAIN_ROUND: a chainer walks, waits and builds the first church; a link pilgrim builds the next one.
   if (st.chain) { const a = pilgrimChain(B, go); if (a !== undefined) return a; }

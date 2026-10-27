@@ -4,7 +4,7 @@ import { CFG } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, king, rng } from './util.js';
 import { fuelStep } from './nav.js';
-import { SIG, CT, FAR, dec, encXY, decFarRobot, GUARD_STRIKE, HOARD_R2, MUSTER_R2 } from './comms.js';
+import { SIG, CT, FAR, dec, encXY, decFarRobot, GUARD_STRIKE, HOARD_R2, MUSTER_R2, CLAIM_R2 } from './comms.js';
 import { isAttacker, pickTarget, preacherTarget, retreatStep, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
 import { learnRound } from './chain.js';
 
@@ -26,8 +26,9 @@ function init(B) {
         }
       }
       else if (m.type === SIG.CHAIN && CFG.CHAIN_ROUND) st.chainT = [m.x, m.y];   // born in a church chain (chain.js)
-      else if (m.type === SIG.GUARD && (CFG.ESCORT || CFG.ESCORT_FIRST || CFG.STRIKE_FAR)) {
+      else if (m.type === SIG.GUARD && (CFG.ESCORT || CFG.ESCORT_FIRST || CFG.STRIKE_FAR || CFG.CLAIM)) {
         st.guardAt = { x: m.x, y: m.y };   // escort: a pioneer's site
+        if (CFG.CLAIM && r.signal_radius === CLAIM_R2) st.claim = true;   // a claimant: its claim's tile (castle.js claim)
         if (CFG.STRIKE_FAR && r.signal_radius === GUARD_STRIKE) st.strike = { x: m.x, y: m.y };   // a striker (strikeWalk)
       }
       else if (m.type === SIG.THREAT && CFG.MUSTER) {   // musterHold
@@ -49,6 +50,7 @@ function init(B) {
   // Reseed with the birth round: units born on the same tile must not share one random stream.
   B.rnd = rng(((B.birthRound || 0) * 4096 + me.y * 64 + me.x) * 8 + me.unit); B.nav.rnd = B.rnd;
   st.guard = B.rnd() < CFG.HOME_GUARD_FRAC;   // stays home through general attacks (until the last rounds)
+  if (CFG.CLAIM && st.claim) st.guard = true;              // CFG.CLAIM: a claimant answers no attack call before ATTACK_LATE
   st.toCastle = CFG.CASTLE_POST && church && B.rnd() < CFG.CASTLE_POST;   // CFG.CASTLE_POST: guard a castle instead
   st.home0 = st.home; st.post = null;
   if (CFG.RUSH) st.target = w.mirror(st.home.x, st.home.y);   // sparring mode: march at once
@@ -249,6 +251,12 @@ function edgeAvoid(B) {
 // 2026-10-26 14:57).
 function escortBack(B) {
   const st = B.st, me = B.w.me;
+  // CFG.CLAIM: a claimant holds when hit, until an enemy church stands by its claim's site (within 3 king steps of the
+  // site: 5 of its tile, which lies 2 from it); then it is an escort like the others.
+  if (CFG.CLAIM && st.claim && st.guardAt && !B.w.enemies.some(e => e.unit === CHURCH && king(e.x, e.y, st.guardAt.x, st.guardAt.y) <= 5)) {
+    st.hp = me.health; return;
+  }
+  if (CFG.CLAIM) st.claim = false;
   const hit = st.guardAt && st.base && st.hp !== undefined && me.health < st.hp
       && !B.w.enemies.some(e => (e.unit === CRUSADER || e.unit === PREACHER) && d2(e.x, e.y, me.x, me.y) <= 25);
   const duel = CFG.ESCORT_BACK === 2 && st.guardAt && me.health >= 20 ? loneProphet(B.w, me) : null;
