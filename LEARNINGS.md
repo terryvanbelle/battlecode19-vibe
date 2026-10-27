@@ -345,3 +345,8 @@
    held-crusader feed fell from 25 to 4. h210 (DOOM_HOLD) against dist/creep was byte-identical to v12 again: v12's
    newborns there died after their first step, not on a birth tile every attacker covered (study/doom.mjs: 0 doomed
    builds). `cmp` against the champion's replay of the same game is the cheapest check. (2026-10-27 07:44)
+53. **Before re-reading a loss for a new candidate, grep TRAINING_LOG for its cell and its switches.** The plateau
+   protocol's field re-read (step 4) of wololo 2644 rebuilt h203's and h206's cases and planned their pair as step 6;
+   the log had answered it a day earlier (2026-10-26 18:41: h203's escort chased the kiting prophet into wololo's
+   castle reach and died at r20; the cell is lost on the economy behind the escort). `grep -n 2644 TRAINING_LOG.md`
+   plus the switch names costs a minute; the re-read cost half an hour and a build. (2026-10-27 14:21)

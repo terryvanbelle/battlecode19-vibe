@@ -7721,3 +7721,13 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
 - Next, after the sweep's second block (h214), not before: step 6's pair from this read, h206 + h203 (an early pioneer
   to a contested site, and an escort that duels the lone prophet guarding it), pre-registered with a counter for each
   half before it is built into the queue.
+
+## 2026-10-27 14:24 PDT: step 6's pair (h206 + h203) dropped before it was queued: the log had answered it
+- The 14:18 entry planned h206 + h203 for step 6. TRAINING_LOG 2026-10-26 18:41 had already read h203's block: its
+  charges killed no shooter on the studied cells. On wololo 2644 red (1903 game 2) escort #604 chased the prophet south
+  from r12 and died at r20 at (34,31), inside wololo's castle reach (r2 34 from (39,34)); the game lasted to r609 (v12
+  r330), and the cell is lost on the economy behind the escort. h206's earlier pioneer stood off the same guarded
+  centre. Neither half works on the cell the pair was meant for, so the pair has no case: dist/h223 (cbef95da6a8d,
+  PIONEER_IDLE 2 + ESCORT_BACK 2) was built and deleted unplayed; no ledger row. LEARNINGS 53.
+- The sweep goes on as registered (12:44). Step 6 stays open; step 7 (a structural programme designed on paper from the
+  census numbers) is what comes after the sweep.
