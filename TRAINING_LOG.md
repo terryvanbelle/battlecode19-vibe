@@ -6704,3 +6704,32 @@ cell: a change anywhere before r58 can flip it either way, and its replays say n
 - **h203** (v12 + ESCORT_BACK 2, dist/h203 7f352326b9eb, with the World.attack fix) block 1: candidate submission
   238, ladder 239 (bots/v12), matches 1903-1914, bumped. Pre-registration as at 14:57: ordinary rule; studied
   wololo 2644 and bot1v43 2321; others z >= 0 to accept; the eschits.mjs mechanism check over our side of its blocks.
+
+## 2026-10-26 17:14 PDT: the chain race in v12's 108 panel games; botfinalsafe 203 red studied
+- **botfinalsafe 203 red** (v12 1 of 3: 1653 won, 1837 lost r459, 1849 lost on health). 43x43, three castles each; the
+  top pair 16 tiles apart. Our one planned cluster, (18,29) (2 depots, m6), is the left half of a centre cluster whose
+  right half botfinalsafe churched at r14 and guarded with prophets; our pioneer (built r23) wandered south and died at
+  r53, and four more (r154-397) never reached it. We build no church to r400 in all three games. The games split on the
+  chain race: in 1653 and 1849 our middle castle's 7-link line fired at r308-309 and its churches' 19 preachers took
+  botfinalsafe's middle castle by r311-313; in 1837 our bank stood at 970 K (CHAIN_K 1000) when botfinalsafe's own line
+  fired at r311: 11 churches along row 7 to our top castle in one round, a preacher from each every round from r312,
+  the castle dead at r316 (then the other two at r449 and r459).
+- **tools/reads/chainrace.mjs** (new; unit test pinned on fixture chain_s2013_407-3): both teams' lines (3+ churches
+  in a round from r150), each line's nearest church to the other team's nearest castle and the castle kill within 60
+  rounds; TEAM's bank when the enemy's first line fires. Over our side of v12's 108 panel games (scratchpad
+  chainrace_v12.txt): our lines 156 (median 7 links), 86 took a castle within 60 rounds; theirs 19, 12 did.
+
+  | first line | games | won |
+  |---|---|---|
+  | ours only | 78 | 63 |
+  | ours first | 2 | 1 |
+  | theirs only | 11 | 1 |
+  | neither | 17 | 7 |
+
+  Only botfinalsafe fires lines at us (19 lines, 12 castles), and our line fires in 4 of its 18 games (against
+  wololo 12 of 18, 11 kills of 13 lines; against the other four 11-18 of 18). The 11 games where only botfinalsafe
+  fired: 1706 both sides (6; our bank 146-366 K when its line came at r315-331: the economy, studied at 14:57), 203
+  (1837, 970 K; 1654 blue, 633 K, our first castle already lost at r267), 2740 blue (3; 1,110-1,310 K banked, no line:
+  the r200 chainer stood at (44,58) behind botfinalsafe's prophet lattice and gave up at r245, the r300 one built a
+  lone church at r321). A lower CHAIN_K would have changed only 1837 of the 108: not a candidate. Against botfinalsafe
+  the chain race is lost before the trigger, on the economy (1706) and on an approach its lattice closes (2740).

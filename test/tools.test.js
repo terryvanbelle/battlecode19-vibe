@@ -715,7 +715,7 @@ test('bump_ours.sh: reorders only, by digit ids or our team; refuses anything el
 });
 
 // tools/reads: the panel's mechanism reads (h170 parked pioneers, h171 escorts, h174 idle miners, held crusaders, stillborn
-// newborns, the army at castle losses). Values pinned from
+// newborns, the army at castle losses, chain races). Values pinned from
 // the session scripts they replace (identical output on these replays).
 test('reads: idle, parked and escort reads on replica games', () => {
   const { execFileSync } = require('child_process');
@@ -736,6 +736,12 @@ test('reads: idle, parked and escort reads on replica games', () => {
     [{ id: 648, round: 4, hit: 50, by: 'P', r2: 58, seen: 0, foes: 1, foeP: 0, castle: 0, ours: 2, hp: 20, dead: 51, shDead12: 1 },
       { id: 160, round: 5, hit: 52, by: 'P', r2: 40, seen: 1, foes: 1, foeP: 1, castle: 0, ours: 1, hp: 30, dead: 56, shDead12: 1 }]);
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'eschits.mjs'), '2', g], { stdio: 'pipe' }));
+  // chainrace.mjs: 407 game 3 (seed 2013): red's 12-link line at r274 ends at r2 8 from blue's castle, which dies at
+  // r282; blue had 185 K then and fired no line.
+  const red = { r: 274, links: 12, d2: 8, kill: 8 }, red2 = { r: 275, links: 4, d2: 148, kill: 7 };
+  assert.deepStrictEqual(run('chainrace.mjs', '0', chain), [{ ours: [red, red2], theirs: [], bankAt: null, lost: [] }]);
+  assert.deepStrictEqual(run('chainrace.mjs', '1', chain), [{ ours: [], theirs: [red, red2], bankAt: [185, 12875], lost: [282] }]);
+  assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'chainrace.mjs'), '2', chain], { stdio: 'pipe' }));
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'idle.mjs'), '2', '300', g], { stdio: 'pipe' }));
   // 1180 game 1 (wololo 2013, v9 red): the castle fell at r204 with three held crusaders within 10 steps, none shooting.
   assert.deepStrictEqual(run('held.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')),
