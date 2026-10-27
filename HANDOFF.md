@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-27 05:02 PDT)
+## State (2026-10-27 12:30 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both teams
   make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`, `dist/creep` (source +
@@ -76,12 +76,13 @@
   blocks. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
-  h198, h201, h206, h202, h207, h209 rejected).
-  **Replica queue (11:53): 133 waiting (all ranked; the daily autoscrim fired 09:00); h211 block 1 = 2336-2347: 9 of
-  12 done, 3 running; VM 9.2 GB free, no VM jobs. Waiter: scratchpad wait_block.sh 2336 2347.**
-  While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
-  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 11:01 (after h209's block 1); next refresh
-  between blocks.
+  h198, h201, h206, h202, h207, h209, h211 rejected).
+  **Replica queue (12:30): 132 waiting (120 ranked; the daily autoscrim fired 09:00); h213 block 1 = 2348-2359: 12
+  queued (submission 280, bumped to the front); VM 9.1 GB free, no VM jobs. Waiter: scratchpad wait_block.sh 2348
+  2359.**
+  While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the
+  autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 12:29 (after h211's block 1); next refresh between
+  blocks.
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
   v12's control block on v7-m2 = matches 1966-1979 (submission 246; 18 of 42) is in progress/panels/v12.ref. h206 (v12 +
   PIONEER_IDLE 2) was REJECTED at block 2 (1980-1993, 20 of 42; blocks 1+2 paired t 0.99 <= 1, D 21: gained 14, lost 7;
@@ -90,16 +91,19 @@
   f227ebbfdcf7) was REJECTED at block 3 (blocks 1-3 paired t 1.40 <= 1.5, 120 cells, D 18: gained 12, lost 6; block 3 =
   2113-2118 + 2123-2130, 25 of 42 = v12's control 2099-2112; TRAINING_LOG 2026-10-27 09:30); h208 (built on h207) closed
   unplayed. h209 (v12 + MUSTER_TILE 1, dist/h209 c8b2001470f0) was REJECTED at block 1 (2324-2335, 24 of 36 to v12's
-  24.0; paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-27 10:58). **Now: h211 block 1 on v7-m1** = matches
-  2336-2347 (submission 278, bumped to the queue's front). h211 = v12 + ESCORT 2 + PIONEER_CALL 100 (dist/h211
-  97cc0f3a3351, pre-registered TRAINING_LOG 2026-10-27 11:00: 2 crusaders to the site of a pioneer 10 turns overdue or
-  lost, called at once by a pioneer that sees an attacker by its site; a re-test of h103/h119 now that escorts reach
-  their sites). Score: `tools/panel_paired.sh --studied
-  IanCoolidge0.battlecode20~69ce88:seed-2674,mvpatel2000.Battlecode2019:seed-2797 progress/panels/v12.ref 2336-2347`;
-  block 1 rejects at t <= 0, accepts at t >= 2 with D >= 4 and others t >= 0; else block 2 on v7-m2. Mechanism check on
-  its games: SIG.GUARD builds and first-pioneer churches against v12's in the same cells. Then a structural attempt
-  (TRAINING_ALGORITHM §3: none since v7; TRAINING_LOG 10:58), then h204, h205. Refresh progress/ between blocks only
-  (last 11:01, after h209's block 1).
+  24.0; paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-27 10:58). h211 (v12 + ESCORT 2 + PIONEER_CALL 100,
+  dist/h211 97cc0f3a3351) was REJECTED at block 1 (2336-2347, 24 of 36 to v12's 24.0; paired t 0.00, D 10: gained 6,
+  lost 4; TRAINING_LOG 2026-10-27 12:15). h212 (v12 + CHAIN_ROUND 0, the chain's ablation, dist/h212 860968a5a3be) is
+  built and not queued: church lines made 108 of v12's 168 enemy-castle kills (TRAINING_LOG 12:15). **Now: h213 block 1
+  on v7-m1** = matches 2348-2359 (submission 280, bumped to the queue's front). h213 = v12 + HOARD_ROUND 600 +
+  HOARD_CHURCH 2 (dist/h213 d27c9fb544b8, pre-registered TRAINING_LOG 2026-10-27 12:27; the structural slot: from r600
+  castles not behind on castles and every church build held crusaders at home, the castles call no attack and send no
+  chainer, and no chain bank is kept). Score: `tools/panel_paired.sh --studied
+  uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036 progress/panels/v12.ref 2348-2359`; block 1 rejects
+  at t <= 0, accepts at t >= 2 with D >= 4 and others t >= 0; else block 2 on v7-m2 (rejects at t <= 1), block 3 on
+  v7-m3 (rejects at t <= 1.5). Mechanism check on its games past r600 with castles level or ahead: the churches' held
+  crusaders (latebuilds round3) and military plus church K lost after r600 (median at most 1,148). Then h204, h205.
+  Refresh progress/ between blocks only (last 12:29, after h211's block 1).
   h201 was REJECTED on block 1 (paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-26 20:56; mechanism
   check passed, 21:33), h198 REJECTED on block 1 (paired t 0.00, D 9; 19:25), h203 REJECTED on
   block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z 1.00; TRAINING_LOG
