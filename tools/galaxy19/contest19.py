@@ -444,6 +444,7 @@ def main(argv=None):
         if a.panel and not a.dry_run:
             with open(a.panel, 'w') as f:
                 json.dump(panel, f, indent=1)
+                f.write('\n')   # as committed: a block leaves the panel file unchanged
     elif a.cmd == 'matches':
         for m in cl.matches(c, None if a.all else my_id, a.pages):
             print(cl.fmt_match(m))
