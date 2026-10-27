@@ -6835,3 +6835,18 @@ late_deaths_v12.txt, enemy_castles.txt). 32 games reach r1000: 19 are decided on
   not built before h198 (CHAIN_WALL 28) reads; h198's 2046 games show what the wall alone recovers.
 - Correction (18:36): ours exceeds theirs in 16 of the 19 health games, not 15; only botfinalsafe 2740 blue (1654,
   1838, 1850: +520 to +2,590) comes out ahead. IanCoolidge0 203 blue (1858) loses 1,920 to their 1,100.
+
+## 2026-10-26 18:41 PDT: h203's mechanism read misses its bar by one; its charges killed no shooter on the studied cells
+
+- eschits.mjs over our side of h203's block 1 (1903-1914; scratchpad esc_h203.txt), first hits on escorts, as in the
+  14:57 table: a prophet out of sight 32 (dead within 6 rounds 8, shooter dead within 12 rounds 1; 22 games); **the
+  one enemy attacker in sight, a prophet 15 (5; 7; 12 games)**; prophets with company 3 (3; 0). Bar: the shooter dies
+  within 12 rounds in at least half of the lone-prophet hits: **7 of 15, short by one** (v12 18 of 50). A check, not a
+  decision input: h203 was rejected on its games (18:15).
+- The 7 dead shooters sit in cells v12 already wins or splits: wololo 2013 (both sides, 4), awesomelemonade 1712 (2),
+  IanCoolidge0 1036 blue (1). On the studied cells no charge killed its shooter: wololo 2644 both sides (escorts dead
+  at r20 and r26), bot1v43 2321 both sides (r16, r38), and botfinalsafe 203 blue (r20).
+- wololo 2644 red (1903 game 2): escort #604, hit at r12 from r2 45, kept south and died at r20 at (34,31) to a
+  prophet. Red then built 14 pilgrims and 64 prophets in 609 rounds (mined 1,950 K; 576 K by r200) while blue
+  had 22 pilgrims, 2 churches and an army of 31 at r200; red's castle fell at r609 (v12 r330), blue's at r932 (v12
+  r601). h203 made the 2644 games longer, not won: the cell is lost on the economy behind the escort.
