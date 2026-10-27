@@ -10,7 +10,7 @@ Every bot attempt, oldest first, with its score at each stage of the acceptance 
 
 **Recorded games (auto)** is computed at each render from `progress/games.csv`: the attempt's W-L against every opponent (local unless marked replica), under its player name (`build`; candidates are `cand:<codename>`). It includes batches still running at the last refresh.
 
-Totals: 155 other, 62 rejected, 24 accepted, 9 dropped, 6 in progress, 6 queued, 4 sparring partners (266 rows).
+Totals: 156 other, 62 rejected, 24 accepted, 9 dropped, 6 in progress, 6 queued, 4 sparring partners (267 rows).
 
 | Codename | Built (PDT) | Base | What it changes | Local h2h vs incumbent | Reference batches | Replica | Recorded games (auto) | Outcome |
 |---|---|---|---|---|---|---|---|---|
@@ -280,3 +280,4 @@ Totals: 155 other, 62 rejected, 24 accepted, 9 dropped, 6 in progress, 6 queued,
 | `h220` | 2026-10-27 12:44 | v12 | ablation: v12 + DEF_RESERVE_K 0 (v7's switch off) (dist/h220 41392929d5a4) |  |  |  |  | PRE-REGISTERED 2026-10-27 12:44 (ablation sweep, plateau protocol step 2): queued after h213 (5 of 10) |
 | `h221` | 2026-10-27 12:44 | v12 | ablation: v12 + PIONEERS_TEAM 0 (v7's switch off) (dist/h221 5b7284af3c9f) |  |  |  |  | PRE-REGISTERED 2026-10-27 12:44 (ablation sweep, plateau protocol step 2): queued after h213 (8 of 10) |
 | `h222` | 2026-10-27 12:44 | v12 | ablation: v12 + PLAN_VALUE 0: nearest planned cluster first (v7's switch off) (dist/h222 14c1761d7f19) |  |  |  |  | PRE-REGISTERED 2026-10-27 12:44 (ablation sweep, plateau protocol step 2): queued after h213 (9 of 10) |
+| `h224` | 2026-10-27 15:13 | v12 | CLAIM stage 1: v12 + CLAIM 1 + CLAIM_FUND 1: one claim a team, a prophet holding our site of the first contested cluster (m 2-6) from turn 3, its pioneer on a pilgrim's cost with the church's karbonite kept (dist/h224 0331fcc083f3) |  |  |  |  | driver diagnostic running (scratchpad claimdiag.sh, 12 games) |
