@@ -7624,3 +7624,26 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   D >= 4 (the switch's default goes off; a new champion); block 2 on v7-m2 rejects at t <= 1, block 3 on v7-m3 at t <=
   1.5, block 4 accepts at t >= 2. One block in play at a time while 30+ wait; h213's blocks go first. If one ablation is
   accepted, the rest are rebuilt on the new champion before their blocks.
+
+## 2026-10-27 13:32 PDT: land census of v12's panel games: our half lost in the losses; pioneers wait on karbonite
+- `tools/reads/games.sh land.mjs` over 1651-1658, 1831-1858, 1966-1979, 2099-2112 (scratchpad land_v12.txt; clusters as
+  the bot forms them, held when a structure stands within reach of a depot). At r100: wins (115) hold 4.31 clusters to
+  3.57 on average, losses (77) 3.18 to 4.10. **An enemy church holds a cluster on our half at r100 in 37 of 77 losses
+  and 13 of 115 wins** (r200: 42 of 71 and 17 of 115). A free cluster on our half at r100 in 59 games (39 won, 20 lost),
+  mostly fixed cells: wololo 836 red (all three lost, still free at r200), botfinalsafe 2740 (4 of 6 won), bot1v43 2321
+  (3 of 6), uvafan 1712 and IanCoolidge0 2644 (6 of 6 each).
+- Pioneers at a free site (study/pion2.mjs, v12's 150 games of 1651-1658, 1831-1858, 1966-1979; built by r200, arrived,
+  no enemy church there first): church within 10 rounds of arrival 200 times in wins (77 games), 74 in losses (41);
+  later 80 (34 games) and 22 (10); never 3 and 7. The wait to the church, death or r+300: median 22 rounds in wins, 61
+  in losses. Of the losses' 29 waits, the bank at arrival held 50 K or less in 20, and in 15 the castles built no
+  military while the pioneer waited (defK 0): the karbonite-poor maps (botfinalsafe 2740: 224 K mined by r100, bank 30
+  at r100; wololo 1375). wololo 836 red differs: arrivals at r46-50, churches r129, r224 and never, while castles spent
+  340-365 K on military answering wololo's forward church (TRAINING_LOG 2026-10-26 04:57; v7's PIONEER_HOLD attempts:
+  h117 parked, h118, h121 and h124 rejected).
+- The r100 float (econt_v12.txt): cells whose median bank at r100 is 250 K or more hold 90 of the 150 games. The largest
+  are maps where we have no church at r100 and the opponent arms: uvafan 2046 (bank 440, our military 2 to 17; 0 of 6),
+  1822 (559; 3 to 21), 2057 (520; 2 to 25), 2330 (785; 3 to 29), all lost; uvafan 1653 (863; 3 to 34) won 6 of 6.
+  mvpatel2000 705 (median 580) and wololo 705 (571) are lost too, 0 of 2 each. ECON_UNTIL holds the peacetime army to
+  r100 for an economy that has nothing to buy there: h199 (ECON_NOPLAN 1, a castle whose team planned no church) and the
+  sweep's h214 (ECON_UNTIL 0) act on these cells; h201 (ECON_RICH 100) did not flip uvafan 2046.
+- No new switch: the reads place the sweep's h214 and the queued h199 and h196 (earlier pioneers) on measured cases.
