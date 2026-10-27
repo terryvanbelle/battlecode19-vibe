@@ -7168,3 +7168,38 @@ Reading: the queued candidates aim at both. h206 (PIONEER_IDLE: an earlier first
 the r100 gap; h205 (CHAIN_STOPLOSS) and h204 (CHAIN_ROUND 150) aim at the lines. No new candidate from this read. Next
 read: whether the losses decided at r1000 on health (uvafan 2046, IanCoolidge0 1036 and 203, botfinalsafe 203 and 2740
 blue, wololo 836 red) were short of HP that an endgame of crusaders could have bought.
+
+## 2026-10-27 01:20 PDT: v12's m2 control 18 of 42 (wololo 0/6, uvafan 0/6); against uvafan we lose the exchange, not the economy
+
+v12's control block on v7-m2 ended 00:59 (matches 1966-1979, now in progress/panels/v12.ref): wololo 0 of 6 (1375, 616,
+705), uvafan 0 of 6 (1822, 2057, 2330), mvpatel2000 2 of 6 (747 won both sides), botfinalsafe, bot1v43, awesomelemonade
+and IanCoolidge0 4 of 6 each. v12 is fourth on the replica ladder (1612; mvpatel2000 1670, uvafan and wololo 1639).
+
+trade.mjs on the 12 losses (scratchpad trade_m2.txt):
+- uvafan, 6 of 6 lost at r1000, castles level in 5 (red 1822 lost one). Our spend share is 0.17-0.26 at r100 (uvafan's
+  military 515-725 K, ours 75-140), 0.38-0.48 at r200, and over the game 0.35-0.40 on 1822 and 2057 and 0.58-0.59 on
+  2330: there we outspent uvafan and still lost, 8,445-8,465 K of ours destroyed to 750-1,485 of theirs (trade
+  0.09-0.18; 0.12-0.20 on the other two maps). We built 8-27 churches after r200 (lines) and ended with 11-31 units to
+  uvafan's 222-423.
+- Where our units died (scratchpad study/deathplace.mjs, king steps to the nearest starting castle): on 2330 red, 5,125
+  K of our 8,245 K of military and church losses fell on our own half, 3,120 on theirs; on 1822, 2,775 and 1,780; on
+  m1's 2046 (1657), 2,740 and 1,170. uvafan lost nothing on our half on 2330 and 2046 (1,475 and 900 K on its own); on
+  1822 it lost 730 on ours, 200 on its own. The board at r600 on 2330: uvafan's prophets fill its half in a checkerboard
+  to the midline, reaching 8 tiles into ours; our units die walking into that reach, at home as well as in lines.
+- Health at r1000 (scratchpad study/hp.mjs, v12's 32 r1000 games of m1): of the 14 losses, 3 were on castles
+  (IanCoolidge0 203) and 11 on health. Only two were close: botfinalsafe 2740 blue (1850: 7,140 to 7,880) and 203 red
+  (1849: 2,110 to 2,820), both with no karbonite left (K 0-6, fuel 9,159-10,178). The six on 2046 were 890-1,140 to
+  6,290-6,680. Late in long games fuel binds instead (20 of 108 games ended with fuel under 300 and karbonite 300+, 15
+  of them wins); mid-game the median fuel bank is 5,242 at r200 and 11,251 at r500 (45 games still going).
+- wololo m2: 705 is economy (share 0.25 at r100, wololo 538-727 units at r1000); 1375 lost a castle by r186 (red) and
+  r260 (blue) at shares 0.39 and 0.22; 616 is even on spend (0.44-0.48) and lost on trade (0.60-0.68).
+- CHAIN_FAILS replayed over v12's 156 m1 lines (scratchpad chainfails_sim.py; static, the games would change): k 1 stops
+  207 churches in 20 wins and costs 14 enemy castle kills there; k 2 stops 63 churches in 8 losses (2046, IanCoolidge0
+  203) and 49 in 6 wins with 4 kills; k 3 stops one line in each. A stop rule does not separate the cases.
+
+Reading: against a prophet lattice that never leaves its half, each unit we send into its reach is karbonite given away;
+the round-1000 health count rewards keeping it. Lines, crusader marches from r450, everyone's march from r900 and threat
+responses all walk into that reach. The global no-attack switches were rejected in v7's era (h104 block 1 net 0, h96 net
+-3), so the condition must be the opponent's: a candidate is worth building only if it can tell uvafan's lattice from
+the opponents whose castles our lines take. Next read: what our units can see of it (enemy units seen on our half, enemy
+losses there, prophets in sight of our structures) by r200-450, against v12's 72 m1 wins.
