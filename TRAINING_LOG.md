@@ -7285,3 +7285,30 @@ castles 2 to 1 (the turtle's castle fell at r599, as in h207's games), end healt
 after r600 180 K (h207 f227ebbfdcf7: 7,000 to 2,780, 50 K). The turtle never attacks, so v12 loses little after r600
 there too: the diagnostic shows the hoard does its mechanics without harm, not a gain. The gain the panel tests is
 against opponents whose lattices v12 feeds (the 03:38 census).
+
+## 2026-10-27 05:00 PDT: h207 block 1 = 25 of 36 (paired t 0.60): block 2 on v7-m2; mechanism read passes; a correction
+h207 (v12 + HOARD_ROUND 600, dist/h207 f227ebbfdcf7) block 1 = matches 2046-2057 (v7-m1, all 36 cells): **25 of 36**,
+v12's mean 24.0. Per opponent: wololo 3/6, botfinalsafe 3/6, bot1v43 4/6, uvafan 4/6, awesomelemonade 6/6, IanCoolidge0
+5/6. Paired (`tools/panel_paired.sh --studied uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036
+progress/panels/v12.ref 2046-2057`): 36 cells, 28 alike, D 8 (gained 5, lost 3), net +1.00, **t 0.60**: neither bar
+(block 1 rejects at t <= 0, accepts at t >= 2), so **block 2 on v7-m2 = matches 2068-2081** (candidate submission 262,
+ladder 263; submitted 04:47 after the progress/ refresh). Gained: IanCoolidge0 1036 red and 203 red (v12 1/3 each),
+IanCoolidge0 203 blue (2/3), botfinalsafe 203 blue (2/3), botfinalsafe 2740 blue (1/3); lost: IanCoolidge0 1036 blue
+(1/3), bot1v43 2321 red (3/3), botfinalsafe 203 red (1/3). Studied cells net +0.33 (t 0.45); others net +0.67 (t 0.45).
+Mechanism read (study/late.mjs, late_h207.txt; latebuilds.mjs): 13 of block 1's 36 games reached r600 (v12 43 of 108).
+Of those, 7 had no enemy castle down by r600 and castles level or ahead (v12 23 of 108): **h207 won 3 of 7 (v12 7 of
+23)**; military plus church K lost after r600, median **615 (v12 2,295; bar <= 1,148: passes)**, the enemy's 650 (v12
+1,510); a castle of ours fell after r600 in 2 of 7 (v12 8 of 23). The 11 games to r1000: health margin median **+4,990
+(v12's 32: +1,100)**, end bank median 555 K (v12 225). The castles built 543 held crusaders after r600 in the 13 games,
+the churches 477 peacetime units.
+- uvafan 2046 (studied) was lost on both sides as before, on health: 2,740 and 2,610 to 6,720 and 6,730 (v12: 890-1,140
+  to 6,290-6,680). The hoard more than doubles our end health there, but at r600 we already stand at 1,190 to uvafan's
+  2,410, with 56-60 military to its 230 at the end: an income gap, not an exchange one.
+- IanCoolidge0 1036 blue (2057) lost both castles at r642 and r670, attacked while level at r600.
+**Correction to the 03:38 entry** (and to its HANDOFF follow-up): the 43 military units the churches built after r600 in
+the turtle diagnostic were not their peacetime army. They were 28 preachers of a chain line (SIG.CHAIN: a chainer castle
+#2208 sent at r596 waited until the bank reached 1,000 K at r950 and its line went up at r953) and 15 crusaders built
+without a radio. HOARD_CHURCH (h208, built as dist/h208 eb432410f84f) therefore plays that game exactly as h207 does.
+Its case is v12's panel games instead (latebuilds.mjs over the 70 that reached r600): after r600 **churches built 2,505
+peacetime units (round radio), castles 287**; builds without a radio 1,863 and 1,547; chain bursts 1,454 (rounds with 2+
+link pilgrims after r600 in 36 of the 70 games, 24 of them lost). The config.js comment is corrected.

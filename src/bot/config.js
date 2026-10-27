@@ -488,9 +488,9 @@ export const CFG = {
                              // prophet lattices; TRAINING_LOG 2026-10-27).
   HOARD_FAR: 6,              // within a castle's sight (r2 100)
   HOARD_CHURCH: 0,           // 1 (with HOARD_ROUND): from that round a church's peacetime army, on its quota and reserves,
-                             // is held crusaders on hoard tiles around it too (struct.js hoardBuild; h207's turtle
-                             // diagnostic: the churches built 43 prophets and preachers after r600 while the castles held
-                             // 40 crusaders; TRAINING_LOG 2026-10-27 03:38).
+                             // is held crusaders on hoard tiles around it too (struct.js hoardBuild; v12's 70 panel games
+                             // past r600: churches built 2,505 peacetime units after r600, castles 287; TRAINING_LOG
+                             // 2026-10-27).
   FEED_WINDOW: 20,
   FEED_REST: 50,
   // endgame

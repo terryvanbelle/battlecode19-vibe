@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-27 03:42 PDT)
+## State (2026-10-27 05:02 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -75,25 +75,25 @@
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
   h198, h201, h206, h202 rejected).
-  **Replica queue (03:42): 14 waiting (2 ranked, 12 ours: h207 block 1; VM 9.6 GB free, no VM jobs).**
+  **Replica queue (05:02): 11 waiting (2 ranked, 9 ours: h207 block 2; VM 9.5 GB free, no VM jobs).**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
-  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 03:04 (after h202's block 1; rating-history 82
-  rated matches); next refresh between blocks.
+  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 04:46 (after h207's block 1); next refresh
+  between blocks.
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
   v12's control block on v7-m2 = matches 1966-1979 (submission 246; 18 of 42) is in progress/panels/v12.ref. h206 (v12 +
   PIONEER_IDLE 2) was REJECTED at block 2 (1980-1993, 20 of 42; blocks 1+2 paired t 0.99 <= 1, D 21: gained 14, lost 7;
   TRAINING_LOG 2026-10-27 01:52). h202 (v12 + CHAIN_FKEEP 1) was REJECTED at block 1 (2014-2025, 24 of 36 to v12's
-  24.0; paired t 0.00, D 8: gained 4, lost 4; TRAINING_LOG 2026-10-27 03:02). **Now: h207 block 1 on v7-m1** = matches
-  2046-2057 (candidate submission 260, ladder 261; waiter armed: scratchpad wait_block.sh 2046 2057). h207 = v12 +
-  HOARD_ROUND 600 (dist/h207 f227ebbfdcf7: from r600 a castle not behind on castles calls no attack, sends no
-  chainer and builds crusaders held on far-side lattice tiles 2-6 king steps out; TRAINING_LOG 2026-10-27 03:38).
-  When it ends: fetch, `tools/panel_paired.sh --studied
-  uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036 progress/panels/v12.ref 2046-2057`; block 1
-  rejects at t <= 0, accepts at t >= 2 with D >= 4 and others t >= 0; else block 2 on v7-m2. Mechanism read (a check):
-  scratchpad study/late.mjs on block 1's games; in those past r600 with castles level or ahead and no enemy castle
-  down by then, median military plus church K lost after r600 <= 1,148 (v12 2,295 on v7-m1). Follow-up if it holds:
-  the churches' peacetime army after HOARD_ROUND (43 units in the turtle diagnostic). Refresh progress/ between
-  blocks only.
+  24.0; paired t 0.00, D 8: gained 4, lost 4; TRAINING_LOG 2026-10-27 03:02). h207 block 1 (2046-2057) = 25 of 36 (v12 24.0), paired t 0.60:
+  neither bar; mechanism read passed (K lost after r600 in level games: median 615, v12 2,295; TRAINING_LOG 2026-10-27
+  05:00). **Now: h207 block 2 on v7-m2** = matches 2068-2081 (candidate submission 262, ladder 263; waiter armed:
+  scratchpad wait_block.sh 2068 2081). h207 = v12 + HOARD_ROUND 600 (dist/h207 f227ebbfdcf7: from r600 a castle not
+  behind on castles calls no attack, sends no chainer and builds crusaders held on far-side lattice tiles 2-6 king
+  steps out; TRAINING_LOG 2026-10-27 03:38). When it ends: fetch, `tools/panel_paired.sh --studied
+  uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036 progress/panels/v12.ref 2046-2057 2068-2081`;
+  block 2 rejects at t <= 1, accepts at t >= 2 with D >= 4 and others t >= 0; else block 3 on v7-m3 (play v12's
+  control block there first). Next after h207: h208 (= h207 + HOARD_CHURCH 1, dist/h208 eb432410f84f: churches'
+  peacetime army held too; churches built 2,505 peacetime units after r600 in v12's 70 long panel games, castles 287;
+  pre-register when h207 is decided). Refresh progress/ between blocks only (last 04:46).
   h201 was REJECTED on block 1 (paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-26 20:56; mechanism
   check passed, 21:33), h198 REJECTED on block 1 (paired t 0.00, D 9; 19:25), h203 REJECTED on
   block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z 1.00; TRAINING_LOG
