@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-26 10:53 PDT)
+## State (2026-10-26 21:24 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -74,20 +74,23 @@
   blocks. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
-  h198 rejected).
-  **Replica queue (19:53): 30 waiting (22 ranked, 8 ours; VM 10 GB free; the v12 r1000 symcheck runs, nice 15).**
+  h198, h201 rejected).
+  **Replica queue (21:24): 14 waiting (2 ranked, 12 ours; VM 10 GB free, no VM jobs).**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
-  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 18:09 (before h198's block; rating-history 75
-  rated matches); next refresh after h201's block, before the next one.
+  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 21:12 (after h201's block, before h206's;
+  rating-history 78 rated matches); next refresh after h206's block, before the next one.
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
-  **Now: h201 block 1** = matches 1927-1938 (submission 242; ladder 243; waiter on the driver). h201 = v12 + ECON_RICH
-  100, dist/h201 153f6da1dee7: before r100 the peacetime army builds from the bank past 100 K above the reserves; v12
-  banks 300+ K at r100 in 36 of its 72 panel games, army 2-11 (TRAINING_LOG 2026-10-26 11:47). When it ends:
-  `contest19.py fetch --new --pages 6`, `tools/panel_paired.sh progress/panels/v12.ref 1927-1938 --studied
-  StoneT2000.BC19-bot1v43:seed-2321,uvafan.bc2019:seed-2046`; the paired rule (block 1 rejects at t <= 0, accepts at
-  t >= 2 with D >= 4 and the other cells' t >= 0; else block 2 on v7-m2 after v12's control block there); mechanism
-  check (not a decision input) tools/reads/bank.sh; refresh progress/ before the next block.
-  h198 was REJECTED on block 1 (paired t 0.00, D 9: gained 5, lost 4; TRAINING_LOG 2026-10-26 19:25), h203 REJECTED on
+  **Now: h206 block 1** = matches 1942-1953 (submission 244; ladder 245; waiter on the driver). h206 = v12 +
+  PIONEER_IDLE 2, dist/h206 bf82caa846ed: a castle with no home depot left to staff sends its first two pioneers in
+  flight on 40 K, not 90 K (TRAINING_LOG 2026-10-26 21:14). When it ends: `contest19.py fetch --new --pages 6`,
+  `tools/panel_paired.sh progress/panels/v12.ref 1942-1953 --studied m-schier.battlecode-2019-wololo:seed-2644`; the
+  paired rule (block 1 rejects at t <= 0, accepts at t >= 2 with D >= 4 and the other cells' t >= 0; else block 2 on
+  v7-m2 after v12's control block there); mechanism read (not a decision input) `node tools/reads/idlecastle.mjs TEAM
+  REPLAY` over the 30 cells where v12 founds a church before r150 (v12's per game: scratch idle_v12.txt, rebuild with
+  the same read over 1651-1658, 1831-1858): our first church earlier than v12's in 20 of 30, idle turns <= 75% of
+  1,295; refresh progress/ before the next block.
+  h201 was REJECTED on block 1 (paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-26 20:56; its bank.sh
+  mechanism check still to run), h198 REJECTED on block 1 (paired t 0.00, D 9; 19:25), h203 REJECTED on
   block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z 1.00; TRAINING_LOG
   2026-10-26 16:48), h193 on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42), h192 on block 1 (z -2.65;
   08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
@@ -105,7 +108,8 @@
   of birth ends its burst; on v12's 108 panel games 136 K a game at half the bursts' damage per K; paired rule; studied
   uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-203; mechanism read burstloss.mjs 3 5: skipped units a
   game at most half v12's 4.9; TRAINING_LOG 2026-10-26 17:52, 19:31);
-  h196 (= h194 on v12: v12 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h196 ba281d6c0d4d: h184's race
+  h196 (acts on the same pioneers as h206: if h206 is accepted, review it against h206 before its block; = h194 on
+  v12: v12 + PIONEER_EARLY 6 + PIONEER_OPEN 99 + PIONEER_RACE 2, dist/h196 ba281d6c0d4d: h184's race
   part alone; paired rule, other cells t >= 0 to accept; studied awesomelemonade.Battlecode2019:seed-2518,
   StoneT2000.BC19-bot1v43:seed-2591; mechanism read pioneers.mjs: the turn-3 pioneer founds its church in at least
   half of the games on the seven maps where it sends; TRAINING_LOG 2026-10-26 08:53);
