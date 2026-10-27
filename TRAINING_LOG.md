@@ -7278,3 +7278,10 @@ not a decision input): in block 1's games past r600 with castles level or ahead 
 military plus church K lost after r600 at most 1,148 (half v12's 2,295 on v7-m1). Order: next, ahead of h204, h205,
 h196, h197, h199 and h200 (the largest static upside of the queue). Follow-up if the castles' hoard holds: the churches'
 peacetime army (43 units after r600 in the diagnostic) as a second switch.
+
+## 2026-10-27 03:46 PDT: baseline for h207's diagnostic: v12 vs dist/turtle on 2046
+Same flags as h207's (red, --det, --init-ms 5000, no kill; scratchpad h207d/v12_turtle.bc19, study/late.mjs): v12 won on
+castles 2 to 1 (the turtle's castle fell at r599, as in h207's games), end health **6,900 to 2,140**, military lost
+after r600 180 K (h207 f227ebbfdcf7: 7,000 to 2,780, 50 K). The turtle never attacks, so v12 loses little after r600
+there too: the diagnostic shows the hoard does its mechanics without harm, not a gain. The gain the panel tests is
+against opponents whose lattices v12 feeds (the 03:38 census).
