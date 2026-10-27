@@ -476,6 +476,17 @@ export const CFG = {
                              // 1180, seed 2013: wololo's prophets shot castle (15,14) dead in r177-204, r2 61 from it,
                              // while three held crusaders stood 2-4 tiles from it, out of the prophets' sight). 100 is
                              // v10's (h175, TRAINING_LOG 2026-10-25 15:26); 0 was v9's.
+  HOARD_ROUND: 0,            // >0: from this round a castle whose team is not behind on castles (ours alive >= the
+                             // enemy's not reported destroyed, CT.DEAD; chain.js hoarding) calls no general attack, sends
+                             // no chainer and keeps no chain bank; its peacetime army builds crusaders (the most health per
+                             // karbonite, 40 for 15) whenever the reserves allow and it sees a free hoard tile for each,
+                             // each told (SIG.ROUND at r2 HOARD_R2) to hold a lattice tile 2-HOARD_FAR king steps from home
+                             // and no nearer the enemy than home (military.js hoardTile), out of reach of the attackers it
+                             // sees, until an enemy melee unit is in sight (military.js musterHold; MUSTER_RESCUE
+                             // still calls it): health for the round-1000 tiebreak (v12's panel games: 44 of the 70 past
+                             // r600 had no enemy castle down by then and 35 were lost, our lines and marches dying in
+                             // prophet lattices; TRAINING_LOG 2026-10-27).
+  HOARD_FAR: 6,              // within a castle's sight (r2 100)
   FEED_WINDOW: 20,
   FEED_REST: 50,
   // endgame

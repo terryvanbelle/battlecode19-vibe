@@ -3,10 +3,10 @@ import { CFG, defReserveK } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, king, ADJ, offsets } from './util.js';
 import { bfs, econ } from './mapinfo.js';
-import { SIG, FAR, encXY, encNum } from './comms.js';
+import { SIG, FAR, encXY, encNum, HOARD_R2 } from './comms.js';
 import { isAttacker, pickTarget, canHit, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
-import { watchDeaths } from './military.js';
-import { chainsFailed, chainsWalled } from './chain.js';
+import { watchDeaths, hoardTile } from './military.js';
+import { chainsFailed, chainsWalled, hoarding } from './chain.js';
 
 const PILGRIM_OFFS = offsets(4);
 
@@ -376,7 +376,7 @@ function structAct(B, allIds, extra, first) {
   // chainer killed in between, built 136 units in r246-450 and no line fired).
   const chainOn = CFG.CHAIN_ROUND && (B.round >= CFG.CHAIN_ROUND || (CFG.CHAIN_KEEP && me.unit === CHURCH && !B.round)) &&
     !(me.unit === CASTLE && (chainsFailed(st) || chainsWalled(B))) &&   // CFG.CHAIN_FAILS, CFG.CHAIN_WALL
-    !(CFG.CHAIN_LIVE && me.unit === CASTLE && !st.chainAny);
+    !(CFG.CHAIN_LIVE && me.unit === CASTLE && !st.chainAny) && !hoarding(B);   // CFG.HOARD_ROUND
   const reserveK = defReserveK(B) + CFG.PEACE_RESERVE_K + (st.pioneers.length ? CFG.RESERVE_CHURCH_K : 0) +
     (CFG.FRONT_ROUND && st.frontAt !== undefined && B.round - st.frontAt < 40 ? STATS[CHURCH].costK : 0) +
     (CFG.PIONEER_RESERVE && st.pioneerDue ? STATS[PILGRIM].costK + STATS[CHURCH].costK : 0) +
@@ -452,6 +452,22 @@ function structAct(B, allIds, extra, first) {
   { const a = frontPioneer(B); if (a) return a; }
 
   // 4. Peacetime army: a growing guard (prophets, every Nth a preacher), spending what the economy leaves.
+  // CFG.HOARD_ROUND: a hoarding castle builds held crusaders on the far side whenever its reserves allow and it sees a
+  // free hoard tile (military.js hoardTile) for each crusader of ours in sight not yet on one; else it banks.
+  if (hoarding(B)) {
+    const army = st.count[3] + st.count[4] + st.count[5];
+    if (!feeding(B, null, 0) || !w.canAfford(CRUSADER, reserveK, CFG.MIL_FUEL_RESERVE + CFG.MIL_FUEL_PER_UNIT * army)) return null;
+    const [ex, ey] = w.mirror(me.x, me.y), F = CFG.HOARD_FAR;
+    const hold = (x, y) => hoardTile(w, me.x, me.y, ex, ey, x, y);
+    let room = 0;
+    for (let y = me.y - F; y <= me.y + F; y++) for (let x = me.x - F; x <= me.x + F; x++) if (hold(x, y) && w.free(x, y)) room++;
+    for (const r of w.friends) if (r.unit === CRUSADER && king(r.x, r.y, me.x, me.y) <= F && !hold(r.x, r.y)) room--;
+    if (room <= 0) return null;
+    const b = buildToward(B, CRUSADER, 2 * me.x - ex, 2 * me.y - ey, encNum(SIG.ROUND, B.round), HOARD_R2);
+    if (!b) return null;
+    st.nDef++;
+    return b.act;
+  }
   // CFG.ECON_RICH: before ECON_UNTIL only the bank past ECON_RICH + reserveK builds it (the economy had nothing to buy).
   // CFG.ECON_NOPLAN: a castle whose team planned no church has nothing to save for.
   const early = (B.round || 0) < CFG.ECON_UNTIL && !(CFG.ECON_NOPLAN && me.unit === CASTLE && st.planAll === 0);

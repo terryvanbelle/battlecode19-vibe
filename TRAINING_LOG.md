@@ -7236,3 +7236,45 @@ won by castles r483): lines at r318 (7 links, a castle down 35 rounds later) and
 castles r658): one line at r271 (7 links, d2 4 to their castle, no kill); our castles fell at r652 and r658. Keeping the
 fuel puts the line up, but the blue line still takes nothing, and elsewhere the cost in army is about even with the
 gain: nothing to accept. Next: h207 (HOARD_ROUND 600), pre-registered in the next entry.
+
+## 2026-10-27 03:38 PDT: v12 loses the long games it does not lead; h207 (HOARD_ROUND 600) pre-registered
+Late census of v12's 150 panel games (1651-1658, 1831-1858, 1966-1979; scratchpad study/late.mjs, late_v12.txt): our
+side and theirs at r600 and at the end, karbonite lost after r600 by kind, castle kills.
+- 70 games reached r600. 26 had an enemy castle down by then (21 won). **44 had none (9 won)**: 37 of them with our
+  castles level or ahead (9 won), 7 behind (0 won).
+- In the 28 losses of those 37, military plus church karbonite lost after r600: median **ours 2,435, theirs 707.5**
+  (sums 70,755 and 44,075). In the 9 wins it is even (2,410 and 2,505). We lose the late exchange: chain lines, attack
+  calls and lattice newborns feed their prophet lattices, and the tiebreak (more castles, then more health) goes to the
+  side that kept its units.
+- On v7-m1 (block 1's set) the same class is 23 of v12's 108 games, 7 won, median lost after r600 2,295: wololo 2644
+  blue, botfinalsafe 2740 both sides, uvafan 2046 both, IanCoolidge0 203 blue and 1036 both, bot1v43 388 red.
+**h207 = v12 + HOARD_ROUND 600** (new switches HOARD_ROUND, default 0, and HOARD_FAR 6; chain.js hoarding, castle.js
+callAttack, struct.js chainOn and step 4, military.js init, musterHold and hoardTile; comms.js HOARD_R2): from r600 a
+castle whose team is not behind on castles (ours alive >= the enemy's less those CT.DEAD reported) calls no general
+attack, sends no chainer and keeps no chain bank. Its peacetime army builds crusaders (40 health for 15 K, the most per
+karbonite) whenever the reserves allow and it sees a free hoard tile for each, radioing SIG.ROUND at r2 3. The newborn
+holds a lattice tile 2-6 king steps from home and no nearer the enemy than home (MUSTER 2's hold: it shoots what comes
+in reach, and an enemy crusader or preacher in sight, or MUSTER_RESCUE, ends it). Marches called before r600 go on.
+Churches keep v12's army. Driver diagnostics, h207 red vs dist/turtle on 2046 (--det, --init-ms 5000, no kill;
+scratchpad h207d/, hoard.mjs, helddeath.mjs):
+- The first build (c5da95f33a4b, rings on every side) built 95 held crusaders; **56 died unfired**, one every ~4 rounds
+  from r710, 49 of them on tile (32,8), king 4 on the enemy's side of castle (32,4), 50 to one turtle prophet at (32,16)
+  on the centre line, r2 64, out of the crusader's sight (49). Each death freed the tile for the next newborn. End
+  health 5,060 to 2,760.
+- Fixed (military.js hoardTile: no nearer the enemy than home; struct.js: build only with a free hoard tile in sight):
+  **dist/h207 f227ebbfdcf7** built 40 held crusaders from r650 (the bank held 6-86 K at r600-650; the churches built 43
+  military after r600), **all 40 alive at r1000**, at king 2-6 (32 on lattice parity). End health **7,000 to 2,780**, 0
+  exceptions, 0 timeouts. Both games won on castles (2 to 1; the turtle's castle fell at r599, before the hoard).
+No-op: the defaults build (e8297dd6b8a0) replays bots/v12 against itself on 799 to r300 identically; unit tests 185/185
+node + 67 Python (new: hoarding's castle count; the castle's crusader, r2, far side and bank when its hoard tiles are
+full or one is free; the newborn's hold on a far-side lattice tile). Pre-registration: the paired rule on v12.ref.
+Studied cells: uvafan 2046 and IanCoolidge0 1036 (`--studied
+uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036`), the cells where v12 lost level games past r600
+(uvafan 2046, all 6 lost on health: ours 890-1,140 at r1000 to their 6,290-6,680; the 2,265-2,435 K we lost after r600
+plus the bank, had it stood as crusaders, is 7,420-7,783, before what our dead units killed of theirs) and where its
+castles fell with the army out (IanCoolidge0 1036 red 1845, 1857 at r939-974). Others t >= 0: the risk sits in the games
+v12 won after r600 with attacks (first enemy castle kill after r600 in 3 of v12's m1 games). Mechanism read (a check,
+not a decision input): in block 1's games past r600 with castles level or ahead and no enemy castle down by then, median
+military plus church K lost after r600 at most 1,148 (half v12's 2,295 on v7-m1). Order: next, ahead of h204, h205,
+h196, h197, h199 and h200 (the largest static upside of the queue). Follow-up if the castles' hoard holds: the churches'
+peacetime army (43 units after r600 in the diagnostic) as a second switch.

@@ -4,7 +4,7 @@ import { CFG } from './config.js';
 import { STATS, CASTLE, CHURCH, PILGRIM, CRUSADER, PROPHET, PREACHER } from './specs.js';
 import { d2, king, rng } from './util.js';
 import { fuelStep } from './nav.js';
-import { SIG, CT, FAR, dec, encXY, decFarRobot, GUARD_STRIKE } from './comms.js';
+import { SIG, CT, FAR, dec, encXY, decFarRobot, GUARD_STRIKE, HOARD_R2 } from './comms.js';
 import { isAttacker, pickTarget, preacherTarget, retreatStep, THREAT_R2, PRIORITY, churchFirst } from './combat.js';
 import { learnRound } from './chain.js';
 
@@ -17,7 +17,13 @@ function init(B) {
     if (r.unit === CASTLE) B.birthRound = r.turn - me.turn + 1;
     if (r.signal > 0 && me.turn === 1) {
       const m = dec(r.signal);
-      if (m.type === SIG.ROUND) B.birthRound = m.v;
+      if (m.type === SIG.ROUND) {
+        B.birthRound = m.v;
+        if (CFG.HOARD_ROUND && r.unit === CASTLE && r.signal_radius === HOARD_R2 && me.unit === CRUSADER) {   // held: musterHold
+          const [mx, my] = w.mirror(r.x, r.y);
+          st.muster = { x: mx, y: my, until: Infinity, far: CFG.HOARD_FAR };
+        }
+      }
       else if (m.type === SIG.CHAIN && CFG.CHAIN_ROUND) st.chainT = [m.x, m.y];   // born in a church chain (chain.js)
       else if (m.type === SIG.GUARD && (CFG.ESCORT || CFG.ESCORT_FIRST || CFG.STRIKE_FAR)) {
         st.guardAt = { x: m.x, y: m.y };   // escort: a pioneer's site
@@ -161,13 +167,16 @@ function go(B, key, sources, cap, avoid) {
 // structure radios the release (a spot, listen), MUSTER_WAIT turns pass or an enemy crusader or preacher comes in
 // sight. Null: it stays. CFG.MUSTER 2 (hold only): the hold lasts until an enemy melee unit is in sight, on rings 2-4
 // king steps from home, the nearest free first (a full ring 2 would leave newborns on the build tiles).
+// CFG.HOARD_ROUND (m.far: rings 2 to HOARD_FAR, m the mirror of the home castle): held on hoard tiles (latticeOk and
+// hoardTile), crossing other tiles only on the way out.
 function musterHold(B) {
-  const w = B.w, me = w.me, h = B.st.home, m = B.st.muster, S = STATS[me.unit], far = CFG.MUSTER === 2 ? 4 : 2;
+  const w = B.w, me = w.me, h = B.st.home, m = B.st.muster, S = STATS[me.unit], far = m.far || (CFG.MUSTER === 2 ? 4 : 2);
   const th = w.enemies.filter(e => THREAT_R2[e.unit] > 0);
   const hot = (x, y) => d2(x, y, m.x, m.y) <= 64 || th.some(e => d2(x, y, e.x, e.y) <= THREAT_R2[e.unit]);
   const ring = (x, y) => { const k = king(x, y, h.x, h.y); return k >= 2 && k <= far ? (k - 2) * 1e3 : 1e6; };
-  if (!hot(me.x, me.y) && (far === 2 ? king(me.x, me.y, h.x, h.y) === 2 : ring(me.x, me.y) < 1e6)) return null;
-  const score = (x, y) => (hot(x, y) ? 2e6 : 0) + ring(x, y) - d2(x, y, m.x, m.y);
+  const off = (x, y) => m.far && !(latticeOk(B, x, y) && hoardTile(w, h.x, h.y, m.x, m.y, x, y)) ? 5e5 : 0;
+  if (!hot(me.x, me.y) && !off(me.x, me.y) && (far === 2 ? king(me.x, me.y, h.x, h.y) === 2 : ring(me.x, me.y) < 1e6)) return null;
+  const score = (x, y) => (hot(x, y) ? 2e6 : 0) + ring(x, y) + off(x, y) - d2(x, y, m.x, m.y);
   const r = fuelStep(w.fuel, S.speed, S.fuelPerMove, 60);
   let best = null, bs = score(me.x, me.y);
   for (const [dx, dy, r2] of B.offs) {
@@ -219,6 +228,17 @@ function loneProphet(w, me) {
   const v = STATS[me.unit].vision;
   const a = w.enemies.filter(e => (e.unit === CASTLE || e.unit >= CRUSADER) && d2(e.x, e.y, me.x, me.y) <= v);
   return a.length === 1 && a[0].unit === PROPHET ? a[0] : null;
+}
+
+// CFG.HOARD_ROUND: a tile a held crusader of the castle at (hx, hy) may hold: 2 to HOARD_FAR king steps out, a lattice
+// tile (passable, no depot, r2 LATTICE_MIN_R2 out) and no nearer the enemy's mirror castle (mx, my) than home. Castles
+// count the free ones in sight (struct.js). Driver game h207 vs dist/turtle on 2046 without the far-side test: 56 of 95
+// held crusaders died, one every ~4 rounds, at king 4 on the enemy's side of home, to a prophet on the centre line out
+// of their sight (r2 64); TRAINING_LOG 2026-10-27.
+export function hoardTile(w, hx, hy, mx, my, x, y) {
+  const k = king(x, y, hx, hy);
+  return k >= 2 && k <= CFG.HOARD_FAR && latticeTile(x, y) && w.passable(x, y) && !w.isDepot(x, y) &&
+    d2(x, y, hx, hy) >= CFG.LATTICE_MIN_R2 && d2(x, y, mx, my) >= d2(hx, hy, mx, my);
 }
 
 function latticeOk(B, x, y) {

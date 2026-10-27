@@ -7,7 +7,7 @@ import { SIG, encXY, encNum, CT, FAR, decFarRobot, GUARD_STRIKE } from './comms.
 import { bfs } from './mapinfo.js';
 import { offsets, d2 } from './util.js';
 import { structInit, structTurn, buildToward } from './struct.js';
-import { chainLaunch } from './chain.js';
+import { chainLaunch, hoarding } from './chain.js';
 
 const KING = offsets(2), PILGRIM_OFFS = offsets(4);
 
@@ -380,7 +380,7 @@ function strikeFar(B) {
 // castle radios the same one, the mirror nearest our living castles in summed r2 (ties: canonical order).
 function callAttack(B) {
   const w = B.w, st = B.st, me = w.me;
-  if (B.round < CFG.ATTACK_ROUND) return;
+  if (B.round < CFG.ATTACK_ROUND || hoarding(B)) return;   // CFG.HOARD_ROUND: no attack while hoarding
   const army = st.count[3] + st.count[4] + st.count[5];
   if (army < CFG.ATTACK_MIN_ARMY && B.round < 950) return;
   // An army without fuel cannot shoot: attack only with fuel for a few volleys per unit (except at the very end).

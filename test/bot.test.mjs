@@ -6,8 +6,8 @@ import * as S from '../src/bot/specs.js';
 import { offsets, rng, d2, king } from '../src/bot/util.js';
 import { depots, clusters, bfs, costField, econ } from '../src/bot/mapinfo.js';
 import { Nav, fuelStep } from '../src/bot/nav.js';
-import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot, GUARD_STRIKE } from '../src/bot/comms.js';
-import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot } from '../src/bot/military.js';
+import { encXY, encNum, dec, SIG, FAR, CT, decFarRobot, GUARD_STRIKE, HOARD_R2 } from '../src/bot/comms.js';
+import { nextTarget, isChoke, militaryTurn, holdTarget, watchDeaths, inZone, hearZones, edgeAvoid, spot, hearPost, latticeTile, watchThreats, threatHot, hoardTile } from '../src/bot/military.js';
 import { callAttack, callDue, castleTurn, lostRest, nextPioneer, pioneerDue, pioneer, openEscort, escort, maxPioneers, hearStrike, strikeFar } from '../src/bot/castle.js';
 import { churchTurn } from '../src/bot/church.js';
 import { structInit, buildToward, frontSite, frontPioneer, sayZone, sayThreat, sayWatch, watchKids, feeding, nextDepot, musterCase, musterTrack, musterAct, musterArmy, hitTrack, sayRescue } from '../src/bot/struct.js';
@@ -16,7 +16,7 @@ import { minesNow, pilgrimTurn, stepAvoid, detourCost, huntSpot, strikeSpot, hot
 import { CFG } from '../src/bot/config.js';
 import { World, makeTransform, detectSymmetry } from '../src/bot/world.js';
 import { pickTarget, preacherTarget, retreatStep, cover, churchFirst, canHit, PRIORITY } from '../src/bot/combat.js';
-import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch, chainsFailed, chainsWalled } from '../src/bot/chain.js';
+import { pilgrimChain, chainStart, chainStep, learnRound, chainLaunch, chainsFailed, chainsWalled, hoarding } from '../src/bot/chain.js';
 const require = createRequire(import.meta.url);
 const SPECS = require('../engine/node_modules/bc19/specs.json');
 const Game = require('../engine/node_modules/bc19/game.js');
@@ -722,6 +722,118 @@ test('struct: CHAIN_FKEEP: from CHAIN_ROUND the peacetime army leaves the chain\
     assert.ok(mil(turn1(1, r + 100, CFG.CHAIN_F + 2000)));         // past both: builds
     assert.ok(mil(turn1(1, r - 50, 2000)));                        // before CHAIN_ROUND nothing is kept
   } finally { [CFG.CHAIN_FKEEP, CFG.SERVE_MOVES] = saved; }
+});
+
+test('chain: hoarding: a castle from HOARD_ROUND while its team is not behind on castles', () => {
+  const saved = CFG.HOARD_ROUND;
+  try {
+    const at = (round, unit, ours, theirsDown) => hoarding({ round, w: { me: { unit } },
+      st: { order: [{}, {}, {}], castles: new Map([...Array(ours)].map((_, i) => [i, {}])), deadE: new Set([...Array(theirsDown)].map((_, i) => i)) } });
+    CFG.HOARD_ROUND = 0; assert.strictEqual(at(700, S.CASTLE, 3, 0), false);   // off
+    CFG.HOARD_ROUND = 600;
+    assert.strictEqual(at(599, S.CASTLE, 3, 0), false);
+    assert.strictEqual(at(600, S.CASTLE, 3, 0), true);    // level
+    assert.strictEqual(at(600, S.CASTLE, 2, 0), false);   // behind: 2 of ours to their 3
+    assert.strictEqual(at(600, S.CASTLE, 2, 1), true);    // level again: one of theirs reported down
+    assert.strictEqual(at(600, S.CASTLE, 3, 2), true);    // ahead
+    assert.strictEqual(at(600, S.CHURCH, 3, 0), false);   // castles only
+    assert.strictEqual(hoarding({ round: 700, w: { me: { unit: S.CASTLE } }, st: {} }), false);   // before turn 3's order
+  } finally { CFG.HOARD_ROUND = saved; }
+});
+
+test('struct: HOARD_ROUND: a hoarding castle spends the chain bank on crusaders told to hold (SIG.ROUND at r2 HOARD_R2)', () => {
+  const saved = [CFG.HOARD_ROUND, CFG.SERVE_MOVES];
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0);
+    CFG.SERVE_MOVES = 1;   // every served depot is in sight and staffed below: the economy has nothing to build
+    let id = 4100;
+    for (let y = castle.y - 2; y <= castle.y + 2; y++) for (let x = castle.x - 2; x <= castle.x + 2; x++)
+      if (x >= 0 && y >= 0 && x < n && y < n && (g.karbonite_map[y][x] || g.fuel_map[y][x]) && !g.robots.some(q => q.x === x && q.y === y))
+        g.robots.push({ id: id++, team: 0, unit: S.PILGRIM, x, y, turn: 3, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 });
+    const world = () => {
+      const all = g.robots;
+      g.robots = all.filter(r => d2(r.x, r.y, castle.x, castle.y) <= 100);
+      try { return worldFor(g, castle); } finally { g.robots = all; }
+    };
+    const turn1 = (hoard, round, ours) => {
+      CFG.HOARD_ROUND = hoard; castle.turn = round;   // a castle's round is its turn
+      const w = world(), B = { api: w.api, w, round, birthRound: 1, st: {}, deps: null, clusters: null, rnd: rng(1) };
+      castleTurn(B);   // initialises st
+      B.w = world(); B.w.karbonite = 600; B.w.fuel = 5000;   // past every reserve but the chain's CHAIN_K
+      B.st.order = [{ x: B.w.me.x, y: B.w.me.y }, { x: 0, y: 0 }];
+      // A pilgrim it sees stands in for a second castle (a castle id gone from sight is dropped as dead).
+      if (ours === 2) B.st.castles.set(4100, { x: 0, y: 0 });
+      return [castleTurn(B), B.w];
+    };
+    assert.ok(CFG.CHAIN_ROUND && CFG.CHAIN_K > 600 && !CFG.CHAIN_LIVE && !CFG.CHAIN_FAILS, 'v12 values');
+    assert.ok(g.robots.some(r => r.id === 4100 && d2(r.x, r.y, castle.x, castle.y) <= 100));
+    const u = t => (t[0] || {}).u;
+    assert.strictEqual(u(turn1(0, 650, 2)), S.PILGRIM);      // default: a chainer for the next line; the bank waits for it
+    const [a, w] = turn1(600, 650, 2);
+    assert.strictEqual((a || {}).u, S.CRUSADER);             // hoarding: no chainer; a crusader, past the chain's bank
+    assert.strictEqual(w.sentR2, HOARD_R2);                  // told to hold
+    const [mx, my] = w.mirror(w.me.x, w.me.y), [tx, ty] = w.T.toC(castle.x + a.dx, castle.y + a.dy);   // a: engine frame
+    assert.ok(d2(tx, ty, mx, my) >= d2(w.me.x, w.me.y, mx, my));   // on the far side
+    // Every free hoard tile in sight held by a crusader of ours: it banks. One short of that: it builds.
+    let cid = 4200, room = [];
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (hoardTile(w, w.me.x, w.me.y, mx, my, x, y) && w.free(x, y)) room.push([x, y]);
+    assert.ok(room.length >= 4, `${room.length} hoard tiles`);
+    const held = room.map(([x, y]) => { const [ex, ey] = w.T.toE(x, y);
+      return { id: cid++, team: 0, unit: S.CRUSADER, x: ex, y: ey, turn: 9, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 }; });
+    const base = g.robots;
+    try {
+      g.robots = base.concat(held);
+      assert.strictEqual(u(turn1(600, 650, 2)), undefined);   // full
+      g.robots = base.concat(held.slice(1));
+      assert.strictEqual(u(turn1(600, 650, 2)), S.CRUSADER);  // one free
+    } finally { g.robots = base; }
+    assert.strictEqual(u(turn1(600, 650, 1)), S.PILGRIM);    // behind on castles (1 to 2): v12's chainer
+    assert.strictEqual(u(turn1(600, 550, 2)), S.PILGRIM);    // before HOARD_ROUND
+  } finally { [CFG.HOARD_ROUND, CFG.SERVE_MOVES] = saved; }
+});
+
+test('military: HOARD_ROUND: a crusader born to a castle\'s SIG.ROUND at r2 HOARD_R2 holds lattice tiles 2-HOARD_FAR king steps out', () => {
+  const saved = [CFG.HOARD_ROUND, CFG.HOARD_FAR];
+  try {
+    const g = new Game(3, 100, 20, false, false), n = g.map.length;
+    const castle = g.robots.find(r => r.team === 0 && r.unit === S.CASTLE);
+    const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
+    let at = null;
+    for (let dy = -1; dy <= 1 && !at; dy++) for (let dx = -1; dx <= 1 && !at; dx++) if ((dx || dy) && free(castle.x + dx, castle.y + dy)) at = [castle.x + dx, castle.y + dy];
+    const own = g.robots.filter(r => r.team === 0 && d2(r.x, r.y, castle.x, castle.y) <= 100);
+    const crus = { id: 4005, team: 0, unit: S.CRUSADER, x: at[0], y: at[1], turn: 1, health: 40, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
+    const all = g.robots;
+    const step = (st, sig, radius) => {
+      castle.signal = sig; castle.signal_radius = radius;
+      g.robots = own.concat([crus]);
+      try {
+        const w = worldFor(g, crus), B = { api: w.api, w, round: 650, birthRound: 650, st, deps: null, clusters: null, rnd: rng(2) };
+        B.offs = offsets(S.STATS[S.CRUSADER].speed); B.nav = new Nav(w, B.offs, B.rnd);
+        return [militaryTurn(B), w];
+      } finally { g.robots = all; castle.signal = 0; castle.signal_radius = 0; }
+    };
+    CFG.HOARD_ROUND = 600; CFG.HOARD_FAR = 6;
+    const st = {}, [a, w] = step(st, encNum(SIG.ROUND, 650), HOARD_R2);
+    const [hx, hy] = w.T.toC(castle.x, castle.y), [mx, my] = w.mirror(hx, hy);
+    assert.deepStrictEqual([st.muster.x, st.muster.y, st.muster.until, st.muster.far], [mx, my, Infinity, 6]);
+    assert.ok(a && a.action === 'move');
+    let x = at[0] + a.dx, y = at[1] + a.dy;
+    for (let t = 2; t < 6; t++) {   // it walks out to a lattice tile within rings 2-6 and stays
+      crus.x = x; crus.y = y; crus.turn = t;
+      const [b] = step(st, 0, 0);
+      if (!b) break;
+      x += b.dx; y += b.dy;
+    }
+    const [cx, cy] = w.T.toC(x, y), k = king(x, y, castle.x, castle.y);
+    assert.ok(k >= 2 && k <= 6 && latticeTile(cx, cy) && !g.karbonite_map[y][x] && !g.fuel_map[y][x], `held at king ${k}`);
+    assert.ok(hoardTile(w, hx, hy, mx, my, cx, cy) && d2(cx, cy, mx, my) >= d2(hx, hy, mx, my));   // no nearer the enemy
+    crus.x = at[0]; crus.y = at[1]; crus.turn = 1;
+    const st2 = {}; step(st2, encNum(SIG.ROUND, 650), 2);
+    assert.strictEqual(st2.muster, undefined);                 // an ordinary peacetime build's round
+    CFG.HOARD_ROUND = 0; const st3 = {}; step(st3, encNum(SIG.ROUND, 650), HOARD_R2);
+    assert.strictEqual(st3.muster, undefined);                 // off
+  } finally { [CFG.HOARD_ROUND, CFG.HOARD_FAR] = saved; }
 });
 
 test('struct: ECON_RICH builds the peacetime army before ECON_UNTIL from the bank past it and the reserves only', () => {

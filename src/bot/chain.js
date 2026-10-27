@@ -191,12 +191,20 @@ export function chainsFailed(st) {
   return CFG.CHAIN_FAILS > 0 && (st.chainMiss || 0) >= CFG.CHAIN_FAILS;
 }
 
+// CFG.HOARD_ROUND: a castle from that round while its team is not behind on castles (ours alive >= the enemy's, less
+// those our units reported destroyed).
+export function hoarding(B) {
+  const st = B.st;
+  return CFG.HOARD_ROUND > 0 && B.round >= CFG.HOARD_ROUND && B.w.me.unit === CASTLE && !!st.order &&
+    st.castles.size >= st.order.length - st.deadE.size;
+}
+
 // Castle: send a chainer at the mirror castle from CHAIN_ROUND (staggered by castle order), again CHAIN_EVERY rounds
 // after the last one left unless it still walks or waits (it reports CT.CHAINER); never again once one reported the
 // target gone (CT.CHAINGONE). Returns {act, x, y} like buildToward, or null.
 export function chainLaunch(B, buildToward) {
   const w = B.w, me = w.me, st = B.st;
-  if (!CFG.CHAIN_ROUND || !st.order || st.chainOff || st.chainLive || chainsFailed(st) || chainsWalled(B)) return null;
+  if (!CFG.CHAIN_ROUND || !st.order || st.chainOff || st.chainLive || chainsFailed(st) || chainsWalled(B) || hoarding(B)) return null;
   const idx = Math.max(0, st.order.findIndex(c => c.x === me.x && c.y === me.y));
   if (B.round < CFG.CHAIN_ROUND + idx * CFG.CHAIN_STAGGER) return null;
   if (st.chainAt !== undefined && B.round - st.chainAt < CFG.CHAIN_EVERY) return null;
