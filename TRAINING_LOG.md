@@ -7222,3 +7222,17 @@ red, wololo 836 blue and uvafan 1712 red.
 
 Next: h202 (v12 + CHAIN_FKEEP 1) block 1 on v7-m1 = matches 2014-2025 (candidate submission 258, ladder 259; waiter
 armed). Then h204, h205, h196, h197, h199 (noplan-m1), h200.
+
+## 2026-10-27 03:02 PDT: h202 REJECTED at block 1 (paired t 0.00); h207 next
+h202 (v12 + CHAIN_FKEEP 1, dist/h202 a7c9a4cfd5ae) block 1 = matches 2014-2025 (v7-m1, all 36 cells): **24 of 36**,
+v12's mean on the same cells 24.0 (72 of its 108). Per opponent: wololo 2/6, botfinalsafe 3/6, bot1v43 5/6, uvafan 4/6,
+awesomelemonade 6/6, IanCoolidge0 4/6. Paired (`tools/panel_paired.sh --studied
+IanCoolidge0.battlecode20~69ce88:seed-1036 progress/panels/v12.ref 2014-2025`): 36 cells, 28 alike, D 8 (gained 4, lost
+4), net 0.00, **t 0.00 <= 0: rejected**. Gained: IanCoolidge0 1036 red (v12 1/3), IanCoolidge0 203 blue (2/3),
+botfinalsafe 203 blue (2/3), botfinalsafe 2740 blue (1/3); lost: IanCoolidge0 1036 blue (1/3), IanCoolidge0 203 red
+(1/3), botfinalsafe 203 red (1/3), wololo 836 blue (3/3). Studied cell 1036: net +0.33, t 0.45; others net -0.33, t
+-0.24. Mechanism read (chainrace.mjs): the chain fired in both 1036 games, as pre-registered (at least half). Red (2024,
+won by castles r483): lines at r318 (7 links, a castle down 35 rounds later) and r453 (5 links, 30). Blue (2025, lost by
+castles r658): one line at r271 (7 links, d2 4 to their castle, no kill); our castles fell at r652 and r658. Keeping the
+fuel puts the line up, but the blue line still takes nothing, and elsewhere the cost in army is about even with the
+gain: nothing to accept. Next: h207 (HOARD_ROUND 600), pre-registered in the next entry.
