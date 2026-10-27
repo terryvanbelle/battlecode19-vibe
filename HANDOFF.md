@@ -1,11 +1,13 @@
 # HANDOFF.md — state and how to run things
 
 ## State (2026-10-27 05:02 PDT)
-- Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
-  teams make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12,
-  sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
-  built bundles (`tools/build_bot.js src/bot dist/hN --cfg KEY=JSON ...`, one --cfg per key), never the source
-  directory. Every candidate change is a CFG switch whose default is the incumbent.
+- Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both teams
+  make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12, sparring
+  partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`, `dist/creep` (source +
+  MIL_ROTATION [4], ATTACK_ROUND 1001, ATTACK_LATE 1001, CHAIN_ROUND 0, CREEP_ROUND 200, CREEP_EVERY 30: a prophet wall
+  creeping toward us; v12 loses to it on health on 1822). Games run built bundles (`tools/build_bot.js src/bot dist/hN
+  --cfg KEY=JSON ...`, one --cfg per key), never the source directory. Every candidate change is a CFG switch whose
+  default is the incumbent.
 - No-op check after every bot code change: a defaults-only build replays the champion against itself on 799 to r300
   (--det --seed 799 --max-rounds 300 --timescale 100 --init-ms 5000 --fast-turn --fast-init --fast-view --no-kill; the
   default 100 ms init fails on the driver, and timescale 10 freezes robots when anything else runs) IDENTICAL to
@@ -96,7 +98,10 @@
   3 matches>`; block 3 rejects at t <= 1.5, accepts at t >= 2 with D >= 4 and others t >= 0; else block 4 on v7-m4 (v12
   control there first), which accepts at t >= 2. Next after h207: h208 (= h207 + HOARD_CHURCH 1, dist/h208 eb432410f84f:
   churches' peacetime army held too; churches built 2,505 peacetime units after r600 in v12's 70 long panel games,
-  castles 287; pre-register when h207 is decided). Refresh progress/ between blocks only (last 06:38, before
+  castles 287; pre-register when h207 is decided), then **h209** (v12 + MUSTER_TILE 1, dist/h209 c8b2001470f0,
+  pre-registered TRAINING_LOG 2026-10-27 07:19: held crusaders' tiles picked by the structure out of every seen
+  attacker's reach; vs dist/creep on 1822 castle held-crusader feed 25 -> 4; rebuild on h207 if h207 is accepted),
+  then h204, h205. Refresh progress/ between blocks only (last 06:38, before
   block 3's first game ends).
   h201 was REJECTED on block 1 (paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-26 20:56; mechanism
   check passed, 21:33), h198 REJECTED on block 1 (paired t 0.00, D 9; 19:25), h203 REJECTED on

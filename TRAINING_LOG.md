@@ -7335,3 +7335,47 @@ red +0.67 and blue +0.33, IanCoolidge0 1036 blue -0.33 (ended r670), IanCoolidge
 and blue +1: net +4.00, 6 for and 1 against; the last three were won at r1000 on health where v12 lost on health. In the
 other 7 (botfinalsafe 203 red -0.33 and 2740 blue +0.67, bot1v43 2321 red -1 and 1915 red -1, IanCoolidge0 1036 red
 +0.67, awesomelemonade 747 red +1 and blue +1, all ended by r598) the net is +1.00.
+
+
+## 2026-10-27 07:19 PDT: v12 feeds its held crusaders; h209 (MUSTER_TILE) pre-registered
+Feed census of v12's 150 panel games (1651-1658, 1831-1858, 1966-1979; scratchpad study/feed.mjs, feed_v12.txt): a
+military newborn killed within 5 rounds of its build is fed. 29,422 built, **6,550 fed** (162,505 K): in losses 3,967 of
+10,464 (38%), in wins 2,583 of 18,958 (14%). Fed by builder and radio: church chain 2,197, church none (threat
+responses) 1,330, castle none 811, **church SIG.THREAT 740**, church round 418, castle far 301, castle round 272,
+**castle SIG.THREAT 251**, church far 226. Castle builds with an enemy robot in its own reach (r2 64, a shot it did not
+take): 600, 409 fed (losses 465 and 375).
+- The SIG.THREAT newborns are MUSTER 2's held crusaders: **991 fed in 68 of the 150 games**; castle ones almost all in
+  losses (250 of 251; uvafan 226). 1973 seed 1822 (uvafan, side 1, lost on health 2,420 to 10,900): castle (19,43) built
+  162 held crusaders in r450-950 and every one died, each to a prophet at r2 82 from the castle, with ~8 enemy prophets
+  within r2 100 at each build (~50 uvafan prophets at r2 65-365 north of it, just out of its reach). 1855 seed 1712
+  (awesomelemonade, won): church (46,38) fed ~80 to prophets at r2 74-106. 1973 seed 2330 (uvafan, lost): 92.
+- Cause: the newborn (vision r2 49) avoids r2 64 around the one radioed camper and the attackers it sees; the camper's
+  neighbours stand out of its sight, so it walks or is born into their reach (LEARNINGS 51).
+**h209 = v12 + MUSTER_TILE 1** (new switches MUSTER_TILE, default 0, MUSTER_TILE_TTL 12, MUSTER_TILE_BAN 100; struct.js
+musterTile, tileBuild and musterTrack, military.js init and tileHold, comms.js MUSTER_R2 3): the structure, which sees
+r2 100, picks the held crusader's tile itself: a free lattice tile 2-4 king steps out, no nearer the camper than home,
+out of reach (THREAT_R2) of every enemy attacker in its sight, not given in the last 12 turns and not one whose holder
+died there in the last 100; it builds on an adjacent tile none of them reaches, radios the tile (SIG.THREAT at r2 3) and
+builds nothing when either is lacking (the bank waits instead of feeding). The crusader holds that tile, steps off it
+while an attacker it sees reaches it, and trades a taken tile for the nearest free one; an enemy crusader or preacher in
+sight or MUSTER_RESCUE still ends the hold. Driver diagnostics (red, --det, --init-ms 5000, no kill; scratchpad h209d/):
+against dist/camp on 2321 the case never arose (both games byte-identical, won on castles at r266). New sparring partner
+**dist/creep** (75cd82f21365) = the current source + MIL_ROTATION [4] + ATTACK_ROUND 1001 + ATTACK_LATE 1001 +
+CHAIN_ROUND 0 + CREEP_ROUND 200 + CREEP_EVERY 30: prophets only, never attacks, its lattice creeping 1 tile toward us
+every 30 rounds from r200 (a uvafan-like wall). On 1822 to r1000:
+- **v12**: castles built 68 held crusaders (25 fed), churches 10 (2 fed); 139 military fed in all; lost on health 3,690
+  to 4,140.
+- **h209 (dist/h209 c8b2001470f0)**: castles built 54 held crusaders (**4 fed**), churches 9 (3 fed); 100 fed in all;
+  lost on health 4,210 to 4,460. 0 errors, 0 exceptions, 0 timeouts on both sides of both games.
+- Both lose a never-attacking wall's game on health. The castles' threat responses (no radio) fed 56 of 66 newborns
+  (v12) and 40 of 54 (h209): the next lead.
+No-op: the defaults build (421bd5edf1ac) replays bots/v12 against itself on 799 to r300 identically; unit tests 188/188
+node + 67 Python (new: the tile pick, ring order, TTL, ban on a holder's death, release on its walk-off, no build when
+every tile or build tile is in reach or the radio is taken, the build tile out of reach; the newborn's walk onto its
+tile, hold, step-off and trade; SIEGE units ignore the tile radio). Pre-registration: the paired rule on v12.ref.
+Studied cells (the feed in cells v12 does not win every game): uvafan 1822 and 2330 (v7-m2; 174 and 105 fed, v12 0 of 2
+each) and IanCoolidge0 203 (v7-m1; 89 fed, 3 of 6). Others t >= 0: the risk sits where v12 feeds and still wins every
+game (awesomelemonade 2797 and 1712, uvafan 1653 on v7-m1: 171, 131, 114 fed), where fewer held crusaders means less
+health for the tiebreak. Mechanism read (a check, not a decision input): SIG.THREAT newborns fed in the block at most
+half of v12's on the same cells. Order: after h207's decision (and h208 if h207 is accepted), ahead of h204 and h205:
+the castle feed sits in losses. If h207 is accepted, h209 is rebuilt on it.
