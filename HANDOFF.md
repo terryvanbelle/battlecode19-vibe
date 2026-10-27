@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-27 00:19 PDT)
+## State (2026-10-27 01:00 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both
   teams make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12,
   sparring partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`. Games run
@@ -81,13 +81,12 @@
   the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 23:09 (after h206's block 1, before v12's m2
   control; rating-history 81 rated matches); next refresh between blocks.
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
-  **Now: v12's control block on v7-m2** = matches 1966-1979 (submission 246, ladder 247; 42 games, mvpatel2000 added),
-  then **h206 block 2 on v7-m2** = matches 1980-1993 (submissions 248 and 256, the second after the hourly limit's
-  retry; waiters armed on both blocks: scratchpad wait_block.sh 1966 1979, 1980 1993). h206 = v12 + PIONEER_IDLE 2,
+  v12's control block on v7-m2 = matches 1966-1979 (submission 246, ladder 247; 42 games, mvpatel2000 added) ended
+  00:59 and is in progress/panels/v12.ref. **Now: h206 block 2 on v7-m2** = matches 1980-1993 (submissions 248 and 256, the second after the hourly limit's
+  retry; waiter armed: scratchpad wait_block.sh 1980 1993). h206 = v12 + PIONEER_IDLE 2,
   dist/h206 bf82caa846ed: a castle with no home depot left to staff sends its first two pioneers in flight on 40 K,
   not 90 K (TRAINING_LOG 2026-10-26 21:14). Block 1 (1942-1953): paired t 0.79, D 11 (gained 8, lost 3); mechanism
-  passed: first church earlier than v12's in 28 of 30 cells, idle 58% (TRAINING_LOG 23:08). When the control ends:
-  append its ids to progress/panels/v12.ref (a line `1966-1979`). When block 2 ends: fetch, `tools/panel_paired.sh
+  passed: first church earlier than v12's in 28 of 30 cells, idle 58% (TRAINING_LOG 23:08). When block 2 ends: fetch, `tools/panel_paired.sh
   --studied m-schier.battlecode-2019-wololo:seed-2644 progress/panels/v12.ref 1942-1953 BLOCK2` (the cells of both
   blocks, each once); block 2 rejects at t <= 1, accepts at t >= 2 with D >= 4 and others t >= 0; else block 3 on
   v7-m3 (after v12's control there). Refresh progress/ between blocks only.
