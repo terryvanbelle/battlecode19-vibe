@@ -78,3 +78,4 @@ submission	build	note
 266	cand:h207	panel candidate dist/h207 (f227ebbfdcf7), block 3 = matches 2113-2118 (v7-m3; wololo, botfinalsafe, bot1v43; both sides) (TRAINING_LOG 2026-10-27 06:32)
 274	cand:h207	panel candidate dist/h207 (f227ebbfdcf7), block 3 = matches 2123-2130 (v7-m3; uvafan, awesomelemonade, IanCoolidge0, mvpatel2000; both sides; after HTTP 429) (TRAINING_LOG 2026-10-27 06:32)
 276	cand:h209	panel candidate dist/h209 (c8b2001470f0), block 1 = matches 2324-2335 (v7-m1; wololo, botfinalsafe, bot1v43, uvafan, awesomelemonade, IanCoolidge0; both sides) (TRAINING_LOG 2026-10-27 09:30)
+278	cand:h211	panel candidate dist/h211 (97cc0f3a3351), block 1 = matches 2336-2347 (v7-m1; wololo, botfinalsafe, bot1v43, uvafan, awesomelemonade, IanCoolidge0; both sides) (TRAINING_LOG 2026-10-27 11:00)
