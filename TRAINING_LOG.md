@@ -7110,3 +7110,16 @@ side-aware z 1.33.
 - v12's control block on v7-m2 is matches 1966-1979 (submission 246, ladder 247; 42 games, mvpatel2000 added); its ids
   join progress/panels/v12.ref when it ends. h206's block 2 on v7-m2 is submitted once the replica's queue is at 15 or
   fewer waiting (scratchpad submit_when.sh), so the two blocks never hold 30+ waiting together.
+
+## 2026-10-26 23:39 PDT: pioneer speed is not a lever (PIONEER_FAST stays parked); a fast loss to bot1v43 read
+- `tools/reads/pioneers.mjs` on our side of v12's 108 panel games (scratchpad pio_v12.txt), pioneers built by r150: 425;
+  302 reached their site, 72 died on the way, 51 neither. Those that arrived walked 1.29 king steps a turn (median; k
+  10-16 in 9 turns, 16-30 in 15): PILGRIM_FAST_FUEL's r2-2 cap already lets most steps be diagonal. 295 of the 302 built
+  their own church, a median 2 turns after arriving (p75 13, p90 29; 59 waited 20+ turns for the bank). Only 20 arrived
+  at a site the enemy churched first, and at 2 king steps a turn at most 6 of them would have arrived before the enemy's
+  church: PIONEER_FAST (h64, h140) stays parked.
+- Ranked 1864-3 (bot1v43, seed 2321, v12 blue, one castle each 22 tiles apart): lost at r132. Our castle banked 180-460
+  K in r60-100 with 12 pilgrims, 1 church (r42) and 2 crusaders, its other planned sites lost to bot1v43's churches (r20
+  at (19,16), r93 at (22,22)); bot1v43 founded a forward church at (25,16) at r110, 8 tiles from our castle, built
+  prophets there every turn and killed the castle. ECON_RICH (h201) was the switch for that bank and was rejected; the
+  panel's bot1v43 2321 blue cell is a v12 win (1859-1864 are ranked games, not panel cells).
