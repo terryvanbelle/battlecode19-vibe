@@ -7731,3 +7731,20 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   PIONEER_IDLE 2 + ESCORT_BACK 2) was built and deleted unplayed; no ledger row. LEARNINGS 53.
 - The sweep goes on as registered (12:44). Step 6 stays open; step 7 (a structural programme designed on paper from the
   census numbers) is what comes after the sweep.
+
+## 2026-10-27 15:01 PDT: h218 (MUSTER 0) REJECTED at block 1 (t 0.00), MUSTER 2 stays; h214 block 1 started
+- **h218** (v12 with MUSTER 0, dist/h218 6bc61f8fd8ce; the ablation sweep's first build, 12:44), block 1 on v7-m1 =
+  matches 2360-2371 (submission 282), finished 14:56: 24 of 36 (wololo 2 of 6, botfinalsafe 4, bot1v43 4, uvafan 4,
+  awesomelemonade 5, IanCoolidge0 5). Paired fresh cells against progress/panels/v12.ref: 36 cells, 26 alike, D 10
+  (gained 6, lost 4), net +0.00, **t 0.00 <= 0: rejected** by the rule fixed at 12:44.
+- Gained: IanCoolidge0 1036 blue (+0.67), 203 blue (+0.33) and red (+0.67); botfinalsafe 203 blue (+0.33) and red
+  (+0.67), 2740 blue (+0.67). Lost: IanCoolidge0 1036 red (-0.33), bot1v43 388 blue, awesomelemonade 2797 blue and
+  wololo 2013 red (-1.00 each, cells v12 won 3 of 3). The gains sit in the cells v12 wins 1 or 2 of 3, the chance cells
+  that "gain" for every candidate (12:15); the losses are cells v12 owned.
+- MUSTER 2 (v9) and MUSTER_RESCUE (v10) stay. Eleven rejects in a row since v12 (h213 and h218 the latest).
+- progress/ refreshed at 14:58, between blocks (LEARNINGS 38, 43).
+- **h214** (ECON_UNTIL 0, dist/h214 2e0b3ce253ef; sweep 2 of 10), block 1 on v7-m1 = matches 2372-2383 (candidate
+  submission 284, ladder submission 285), submitted 14:59; scored with `tools/panel_paired.sh progress/panels/v12.ref
+  2372-2383` by the same rule.
+- Correction: the entry headed "14:24" (step 6's pair dropped) was written at 14:21; its header time was typed by hand
+  (LEARNINGS 34).
