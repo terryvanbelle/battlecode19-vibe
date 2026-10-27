@@ -7079,3 +7079,18 @@ exceptions), h203 0.78, h198 0.91, h201 0.95 (0 exceptions each); their opponent
 exceptions are "Not enough fuel to attack" from builds older than 16:40's World.attack fuel check (v12 is a frozen
 snapshot from before it; h198, h201, h203 and h206 carry it). No lever here: at about 0.3 killed turns a game our rate
 is the shared process's floor (08:42); the next champion clears the exception.
+
+## 2026-10-26 22:58 PDT: land census of v12's panel games: no idle land of ours; the enemy takes some on our half
+New read `tools/reads/land.mjs TEAM REPLAY` (unit-tested on the held fixture): the map's clusters as the bot forms them,
+each held by a team whose living castle or church stands within 4 king steps of a depot, split by half (king steps from
+the starting castles); at r100, 200, 300, 500 and the end. Over v12's 108 panel games (our side):
+- **Free land on our half is rare**: 0.6 clusters a game at r100, 0.2 at r200 (wins and losses alike). ECONOMICS'
+  "church gap after r100" (v8 era) is not idle land of ours in v12's games: by r200 every cluster is held.
+- **Losses**: at r200 we hold 3.0 clusters, they 4.3; 0.8 of theirs on our half (in 21 of 33 games), ours on their half
+  0.0 (at every checkpoint). Wins: 4.8 against 4.2. Churches at r200: losses 1.2 against 3.5, wins 3.1 / 3.3.
+- Worst cell, wololo 836 red (lost 3 of 3; blue won 3 of 3): 4 free clusters of our half at r100, 3 of them wololo's by
+  r200. 1651-3: pioneers left at r25 (bank 80-90: PIONEER_DEPART_K) and r34-35; two reached their safe sites at r50 and
+  stood there to r179 and r224 waiting for the church's 80 K, while the other castle answered wololo's attackers with a
+  prophet every few turns (21 in r36-130, bank 12 at r100). That is the h117/h118/h121/h124 case (PIONEER_HOLD, replica
+  420-3, same map), decided in v7-era self-play and the pooled rule; not re-queued without new evidence. h206 (pioneers
+  leave on 40 K) acts on the first part.
