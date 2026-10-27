@@ -75,8 +75,8 @@
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
   h198, h201, h206, h202 rejected).
-  **Replica queue (06:33): 18 waiting (1 ranked, 17 ours: v12 control 2099-2112, h207 block 3 2113-2118; 8 more scrims
-  after HTTP 429); VM 9.5 GB free, no VM jobs.**
+  **Replica queue (06:53): 13 waiting (1 ranked, 12 ours: v12 control to 2112, h207 block 3 2113-2118; 8 more scrims
+  after HTTP 429); VM 9.4 GB free, no VM jobs.**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
   the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 06:38 (after h207's block 2); next refresh
   between blocks.
