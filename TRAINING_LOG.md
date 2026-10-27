@@ -7842,3 +7842,18 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   defaults bundle under 48,000). Unit test added (2644: every turn before the claimant builds a depot pilgrim). The same
   12 games are run on h225 against the same baseline and read with the same bars. If it misses, fix round 2 names the
   defect again; a miss after it closes stage 1 as an execution failure (15:13).
+
+## 2026-10-27 16:12 PDT: h214 (ECON_UNTIL 0) block 1: t 0.46, neither bar; block 2 on v7-m2 = 2386-2399; h225 diagnostic
+- **h214** (ECON_UNTIL 0, dist/h214 2e0b3ce253ef; sweep 2 of 10) block 1 on v7-m1 = matches 2372-2383 (submission 284),
+  finished 16:01: **25 of 36** (wololo 3 of 6, botfinalsafe 3, bot1v43 5, uvafan 3, awesomelemonade 5, IanCoolidge0 6).
+  `tools/panel_paired.sh progress/panels/v12.ref 2372-2383`: 36 cells, 27 alike, D 9 (gained 6, lost 3), net +1.00, **t
+  0.46**: neither bar of block 1 (reject t <= 0, accept t >= 2 with D >= 4), so block 2 on v7-m2 (rejects at t <= 1).
+  Gained: IanCoolidge0 1036 both sides (v12 1 of 3 each), 203 blue (2 of 3) and red (1 of 3); botfinalsafe 203 red (1 of
+  3), 2740 blue (1 of 3). Lost: botfinalsafe 203 blue (2 of 3), awesomelemonade 2797 red and uvafan 1712 red (3 of 3
+  each). As with h218, the gains are the chance cells v12 wins 1 or 2 of 3; two of the three losses are cells v12 owned.
+  Pooled (`tools/panel_pool.sh 1847-1858 progress/panels/v12-m1.pool 2372-2383`): expectation 23.6, z 0.73.
+- progress/ refreshed at 16:11, between blocks (LEARNINGS 38, 43). **h214 block 2 on v7-m2 = matches 2386-2399**
+  (candidate submission 286, ladder submission 287; 42 games, mvpatel2000 included), submitted after the refresh, scored
+  with `tools/panel_paired.sh progress/panels/v12.ref 2386-2399` (block 2 rejects at t <= 1, accepts at t >= 2 with D >=
+  4).
+- h225 (CLAIM fix round 1, 16:00) is on the driver: the 12 games of h224's diagnostic, one at a time.
