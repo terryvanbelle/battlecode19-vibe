@@ -7379,3 +7379,24 @@ game (awesomelemonade 2797 and 1712, uvafan 1653 on v7-m1: 171, 131, 114 fed), w
 health for the tiebreak. Mechanism read (a check, not a decision input): SIG.THREAT newborns fed in the block at most
 half of v12's on the same cells. Order: after h207's decision (and h208 if h207 is accepted), ahead of h204 and h205:
 the castle feed sits in losses. If h207 is accepted, h209 is rebuilt on it.
+
+
+## 2026-10-27 08:15 PDT: v12's radio-less builds: the feed is under threat, not doomed; h210 (DOOM_HOLD) closed unplayed
+**h210 = v12 + DOOM_HOLD 1** (new switch, default 0; combat.js doomed, gating struct.js buildToward and chain.js's line
+burst; exposure moved to combat.js; defaults build 2e7b8f4cc131 replays bots/v12 on 799 to r300 identically, unit tests
+189/189 node + 67 Python; dist/h210 2e331652b6d6): no military build while every free adjacent tile is in reach of
+attackers in sight for the newborn's health and none of them can hit the structure. Against dist/creep on 1822 its game
+is byte-identical to v12's: v12's castle there built its prophets on a tile one prophet reached (DEF_SAFE 1 needs two to
+call it deadly), and each shot once and died at r2 64 from a prophet at r2 82 from the castle (scratchpad
+study/fedpath.mjs: 72 fed, 31 on the birth tile, 54 after a shot). Census over v12's 150 panel games (study/threat.mjs,
+threat_v12.txt): 5,547 radio-less military builds by castles and churches (threat responses mostly), 2,141 fed. Split by
+whether an enemy attacker in the builder's sight threatened it or a robot of ours in its sight (d2 <= THREAT_R2):
+- **Doomed** (DOOM_HOLD's case): **32 builds** (29 fed) in 150 games. h210 is closed unplayed: nothing to gain.
+- Threatened, in losses: castles 597 built, **457 fed (77%)**; churches 883, **574 fed (65%)**. In wins: castles 371,
+  143 fed (39%); churches 859, 429 (50%).
+- No threat in sight: losses castles 795 (175 fed, 22%), churches 726 (209, 29%); wins castles 401 (24, 6%), churches
+  883 (101, 11%). Most of these live: holding them back (answering only attackers that threaten us) would cut 2,805
+  builds to save 509, so that switch is not built either.
+The feed that matters is the answer to a real threat, built toward the attacker into the reach of its neighbours: 1,031
+of 1,480 such newborns in losses. h209 (MUSTER_TILE) covers the camper case; the rest (enemy melee in sight, or
+attackers that moved within MUSTER_DWELL) stays v8's answer.
