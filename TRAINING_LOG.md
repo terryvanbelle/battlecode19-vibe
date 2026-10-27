@@ -7139,3 +7139,32 @@ ranked 1864-3 (r132). A never-won cell of v12's, lost the same way each time; it
   matches' expense (they fill every slot our blocks leave); not done: the field's ratings are the benchmark.
 - 1942's game 3 (wololo, seed 836) died with exit status -11 (SIGSEGV in node) at 37 minutes; saturn nacked, retried at
   22:09 and kept the two finished games (the only game failure in the journal's 34 h). No kernel record.
+
+## 2026-10-27 00:24 PDT: trade census: v12's losses are decided by the r100 economy; on uvafan 2046 the chain loses
+
+h206 block 2 = matches 1980-1993 (candidate submissions 248 for wololo, botfinalsafe and bot1v43; 256 for the other four
+after the hourly limit's retry at 00:14). Waiters armed on v12's control (1966-1979) and on block 2.
+
+tools/reads/trade.mjs (new; unit test on held_s2013_1180-1): the karbonite each team spent (pilgrims, churches,
+military) and lost at build cost, at r100, r200, r400 and the end. Over v12's 108 panel games (1651-1658, 1831-1858),
+our spend share (our spend / both teams'):
+
+- r100: 0.51 in wins, 0.37 in losses; 29 of 36 losses were behind at r100 (34 of 72 wins). Trade (enemy karbonite
+  destroyed / ours) at r100: 0.98 in wins, 0.85 in losses. Mean r100 spend, wins: ours pilgrims 166, churches 136,
+  military 184 to theirs 126, 135, 285; losses: ours 107, 57, 175 to theirs 143, 121, 254.
+- r200: share 0.56 vs 0.44, trade 0.91 vs 0.60; r400: share 0.59 vs 0.39, trade 0.85 vs 0.36. We win by outspending, not
+  by the exchange: trade was under 1 at r200 in 37 of 72 wins.
+- Loss cells at r100 (each cell and side plays the same game three times): uvafan 2046 both sides 120 vs 495 (the same 7
+  pilgrims, no church either side, our bank 440 K at r100 under ECON_UNTIL with no church planned: h199's ECON_NOPLAN
+  case, queued); botfinalsafe 1706 200 vs 340-380; botfinalsafe 203 270-355 vs 450-455; bot1v43 2321 blue 260 vs 620;
+  botfinalsafe 2740 blue 270 vs 485; wololo 2644 red 210 vs 395 (blue 315 vs 315), 836 red 650 vs 905; IanCoolidge0 203
+  455-540 vs 630. IanCoolidge0 1036 is the exception: 725-740 vs 620-680 at r100, lost later.
+- uvafan 2046 after r200 (6 of 6 lost at r1000): we built 17-19 churches and lost every one, and lost 4,106-4,285 K to
+  uvafan's 475-966 while spending 3,681-3,815 to its 4,495-4,505. Uvafan never built a church (7 pilgrims) and ended
+  with 211-228 units to our 10-14. The church lines lose 2046, as CHAIN_FAILS's comment found on v7 (3,410 of 4,670 K).
+  Lines die in wins too: about 12 of 13-18 churches on uvafan 1653 (won 6 of 6), 17-19 of 25-28 on IanCoolidge0 203.
+
+Reading: the queued candidates aim at both. h206 (PIONEER_IDLE: an earlier first church) and h199 (ECON_NOPLAN) aim at
+the r100 gap; h205 (CHAIN_STOPLOSS) and h204 (CHAIN_ROUND 150) aim at the lines. No new candidate from this read. Next
+read: whether the losses decided at r1000 on health (uvafan 2046, IanCoolidge0 1036 and 203, botfinalsafe 203 and 2740
+blue, wololo 836 red) were short of HP that an endgame of crusaders could have bought.

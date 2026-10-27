@@ -774,6 +774,15 @@ test('reads: idle, parked and escort reads on replica games', () => {
   assert.deepStrictEqual(land('1'), [[100, 2, 3, 2, 4, 5, 3, 0, 1, 90, 20], [200, 8, 3, 7, 4, 0, 0, 0, 2, 135, 40],
     [204, 8, 3, 7, 3, 1, 0, 0, 2, 220, 41]]);
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'land.mjs'), '2', held], { stdio: 'pipe' }));
+  // trade.mjs: the same game: by r200 wololo had spent 2,245 K to v9's 1,735 and destroyed 1,145 K to its 735 (trade
+  // 0.64); the r204 line counts the castle; seen from wololo's side the books swap.
+  const trade = (t) => run('trade.mjs', t, held).map(o => [o.round, o.us.pil, o.us.ch, o.us.mil, o.us.lostMil, o.us.lostCastle,
+    o.us.army, o.them.pil, o.them.ch, o.them.mil, o.them.lostMil, o.trade, o.milTrade]);
+  assert.deepStrictEqual(trade('0'), [[100, 170, 150, 115, 55, 0, 3, 200, 100, 90, 40, 0.73, 0.73],
+    [200, 270, 200, 1265, 995, 0, 13, 410, 450, 1385, 675, 0.64, 0.68], [204, 270, 200, 1315, 1060, 1, 12, 420, 450, 1410, 700, 0.63, 0.66]]);
+  assert.deepStrictEqual(trade('1'), [[100, 200, 100, 90, 40, 0, 2, 170, 150, 115, 55, 1.38, 1.38],
+    [200, 410, 450, 1385, 675, 0, 28, 270, 200, 1265, 995, 1.56, 1.47], [204, 420, 450, 1410, 700, 0, 28, 270, 200, 1315, 1060, 1.59, 1.51]]);
+  assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'trade.mjs'), '2', held], { stdio: 'pipe' }));
   assert.throws(() => execFileSync(process.execPath, [path.join(__dirname, '..', 'tools', 'reads', 'idle.mjs'), '2', '300', g], { stdio: 'pipe' }));
   // 1180 game 1 (wololo 2013, v9 red): the castle fell at r204 with three held crusaders within 10 steps, none shooting.
   assert.deepStrictEqual(run('held.mjs', '0', path.join(FIX, 'held_s2013_1180-1.bc19')),
