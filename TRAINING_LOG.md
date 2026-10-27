@@ -7546,3 +7546,43 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   on castles at r600 and 5 level (1834 203 IanCoolidge0, 1849 2740 and 1968 1915 botfinalsafe, 2109 388 and 2110 1884
   IanCoolidge0). An endgame that holds the army at home bets the 5 against the 40: the structural slot (TRAINING_LOG
   10:58) goes there (next entries).
+
+## 2026-10-27 12:27 PDT: h213 (v12 + HOARD_ROUND 600 + HOARD_CHURCH 2) pre-registered: the structural slot
+- **h213 = v12 + HOARD_ROUND 600 + HOARD_CHURCH 2** (dist/h213 d27c9fb544b8; HOARD_CHURCH 2 is new, commit e7f87a4).
+  From r600 a castle not behind on castles calls no general attack, sends no chainer, keeps no chain bank and builds
+  held crusaders on far-side hoard tiles (h207, 03:38). From r600 every church builds its peacetime army as held
+  crusaders too (its quota and reserves, struct.js hoardBuild), and its reserves leave out the chain's bank CHAIN_K: at
+  HOARD_CHURCH 1 (h208) a church built only while the bank held CHAIN_K past its reserves, which the castles' hoard
+  spends first. The church does not check castles; a line that a castle behind on castles founds still bursts. A
+  team-wide endgame army doctrine: TRAINING_ALGORITHM §3's structural slot (none since v7; 10:58).
+- Why. Castles level or ahead at r600 in v12's 192 panel games (12:15): 40 losses with no enemy castle killed after
+  r600, 3 with one; 5 wins from level with a late kill. h207 (the castles alone) was rejected at 09:30 at t 1.40 over
+  120 cells (D 18: gained 12, lost 6); where it could act (games past r600, blocks 1-2) net +4.00, 6 for and 1 against
+  (06:32); block 1's games past r600 lost a median 615 K after r600 (v12 2,295) and the 11 to r1000 ended at a health
+  margin of +4,990 (v12 +1,100) (05:00). v12's churches built 2,505 peacetime units after r600 in its 70 panel games
+  that got there, its castles 287 (05:00): h207 left most of the late army out of the hoard. A near-miss extended to the
+  churches and tested as a new arm (§2); h207's blocks are not reused.
+- Driver diagnostics (scratchpad h213d/, study/late.mjs, latebuilds.mjs; red, --det, --init-ms 5000, no kill, fast
+  flags; 0 errors, exceptions and timeouts in every game, net_isolated true):
+  - vs dist/turtle on 2046 (castles level, the turtle's castle fell at r599, as in h207's game): won on castles 2 to 1,
+    end health **7,710 to 2,800** (h207 7,000 to 2,780, v12 6,900 to 2,140), military at r1000 157 (h207 112), military
+    lost after r600 50 K (h207 50). Builds after r600: castles 40 held crusaders and 1 with no radio; churches 52 held
+    crusaders, 28 with no radio, 7 radioing CHAIN. No line went up (h207's waiting chainer founded one at r953).
+  - vs bots/v12 on 2046: the same moves as v12's game to r600, where red had already lost a castle (r588), so the
+    castles never hoarded; the churches built 2 held crusaders. h213 lost on castles at r1000 (1 to 2, health 290 to
+    3,040); v12 lost its second castle at r862.
+- No-op: the defaults build (730ca19a6412) replays bots/v12 against itself on 799 to r300 identically; tests 189/189
+  node + 67 Python (new: from HOARD_ROUND a church at HOARD_CHURCH 2 builds a held crusader, radioing SIG.ROUND at r2
+  HOARD_R2, from a bank short of CHAIN_K past its reserves, where 1 builds nothing; before HOARD_ROUND it builds v12's
+  unit).
+- **Rule** (fixed before any of h213's games): paired fresh cells against progress/panels/v12.ref, with h207's studied
+  cells, since h213 comes from the same evidence: `--studied
+  uvafan.bc2019:seed-2046,IanCoolidge0.battlecode20~69ce88:seed-1036`. Block 1 on v7-m1 rejects at t <= 0; any block
+  accepts at t >= 2 with D >= 4 and others t >= 0; block 2 (v7-m2) rejects at t <= 1, block 3 (v7-m3) at t <= 1.5, block
+  4 accepts at t >= 2. This is the hoard doctrine's second test on the same map sets. Each test runs at the panel's 5-6%
+  false-accept rate for a neutral candidate, so the doctrine has had about twice that; no bar moves.
+- Mechanism read (a check, not a decision input), in each block's games past r600 with castles level or ahead and no
+  enemy castle down by then: the churches build held crusaders after r600 (latebuilds round3) in most of them; the
+  median military plus church K lost after r600 is at most 1,148 (h207's bar: half of v12's 2,295 on v7-m1).
+- Order: block 1 on v7-m1 now; then h204, h205, h196, h197, h199, h200. h212 (the chain's ablation) stays built and
+  unqueued.
