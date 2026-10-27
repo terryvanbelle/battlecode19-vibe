@@ -7123,3 +7123,8 @@ side-aware z 1.33.
   at (19,16), r93 at (22,22)); bot1v43 founded a forward church at (25,16) at r110, 8 tiles from our castle, built
   prophets there every turn and killed the castle. ECON_RICH (h201) was the switch for that bank and was rejected; the
   panel's bot1v43 2321 blue cell is a v12 win (1859-1864 are ranked games, not panel cells).
+
+## 2026-10-26 23:39 PDT: correction to the entry above: v12 loses bot1v43 2321 blue in every game
+The last sentence of the 23:39 entry is wrong: in v12's panel games bot1v43 on seed 2321 is won red 3 of 3 (1655, 1839,
+1851) and **lost blue 3 of 3** (1656 at r126, 1840 r124, 1852 r133, all by castles), the same r124-133 castle loss as
+ranked 1864-3 (r132). A never-won cell of v12's, lost the same way each time; it is studied next.
