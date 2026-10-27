@@ -7413,3 +7413,28 @@ HOARD_CHURCH 1) is built on h207 and closes unplayed. Next is h209 (v12 + MUSTER
 pre-registered 07:19, built on v12 as registered): block 1 on v7-m1 submitted at 09:30 (studied cell there IanCoolidge0
 203; uvafan 1822 and 2330 are on v7-m2). The autoscrim fired at 09:00 PDT: 163 waiting, all ranked. Queue rule: our
 blocks one at a time and bumped to the front, no local VM jobs.
+
+
+## 2026-10-27 09:40 PDT: where v12's losses feed and stall (reads over its 150 panel games); no new switch
+Three scratchpad reads over v12's 150 panel games (1651-1658, 1831-1858, 1966-1979; our side only):
+- **Threatened answers** (study/threat2.mjs: radio-less castle/church military builds with an enemy attacker threatening
+  the builder or a robot of ours in its sight). Losses: 1,497 built, 1,047 fed (killed within 5 rounds). Two thirds came
+  while no enemy could hit the structure itself (side: 1,006 built, 660 fed) and mostly while ours already outnumbered
+  theirs in the builder's sight (fewer: 749 side builds, 482 fed): v8's 2A + 1 gate keeps building past parity. Fed
+  prophets fired 0.4-1.9 shots each (1.2-1.4 in the two commonest classes). Wins: 1,239 built, 579 fed. Half of the
+  losses' feed is one opponent: wololo, 553 of 1,047 in 15 games, 37 a game (836 red, 616, 705, 2644).
+- **Economy against wololo** (study/econt.mjs): wololo out-expands us where it wins. 836 red: at r200 we have 15
+  pilgrims and 2 churches, wololo 40 and 9; 2644: 6 and 1 against 19 and 2 (it churched the centre K8 cluster on our
+  half at r53); 705: 10/1 against 27/3. On 836 our opening is identical on both sides through r36 (study/opening.mjs);
+  as red three pioneers reached free sites at r46-50 and churched at r129, r224 and never, while castles spent 340 K on
+  military units in the 60 rounds after; as blue the same sites churched r66-99 and we won 3 of 3 (red 0 of 3).
+- **Pioneers** (study/pion2.mjs: tools/reads/pioneers.mjs plus the lead m and military built before): the first pioneer
+  leaves at a median r24-34 behind two escorts and the bank's 90 K margin; it founds its church in 66 of 90 wins and 15
+  of 60 losses. 295 pioneers in 150 games neither reached their site nor died within 300 rounds (154 in losses), e.g.
+  2674 (IanCoolidge0's two crusaders on our m-21 site from r14; ours circled 60 turns) and 1706 (botfinalsafe's
+  prophets; ours idled in a corner from r76 on), re-sent every ~81 rounds. h200 (PIONEER_TIMEOUT_HOME 80, queued) covers
+  the stalled ones. v12's 2644 red loss to wololo is h203's case (the escort's retreat after a crusader's hit, then
+  wololo's lone prophet held the centre; v11 won there); h203 was rejected.
+- Overruns (match.json): v12's 156 replica games 45 vm2 kills and 146 frozen turns, at most 23 in a game (the long
+  836/616 games), against the opponents' far larger counts in the same games: the floor LEARNINGS 31 describes.
+Nothing here is a new switch beyond those queued; the feed's lever stays h209 (held crusaders' tiles).
