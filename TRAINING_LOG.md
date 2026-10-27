@@ -6733,3 +6733,19 @@ cell: a change anywhere before r58 can flip it either way, and its replays say n
   the r200 chainer stood at (44,58) behind botfinalsafe's prophet lattice and gave up at r245, the r300 one built a
   lone church at r321). A lower CHAIN_K would have changed only 1837 of the 108: not a candidate. Against botfinalsafe
   the chain race is lost before the trigger, on the economy (1706) and on an approach its lattice closes (2740).
+
+## 2026-10-26 17:23 PDT: botfinalsafe 2740 blue (plan order); where our lines end
+- **botfinalsafe 2740** (one castle each, 59x59, 40 depots in 15 clusters; v12 red 3/3, blue 1/3). Our opening is the
+  same on both sides to r100: 2 churches, 224 K mined (botfinalsafe 5-6 churches, 444-512 K; its first at r42). The
+  castle staffs one karbonite depot, and PLAN_CONTEST_FIRST puts three far races first (plan c7 d47 m0, c4 and c10
+  d57 m0, then c2 d25, c5 d16): pioneers.mjs on 1654 blue: the first pioneer left at r46 for the centre (35 king
+  steps; died r100, botfinalsafe churched it r100), the next two walked 45-46 steps (churches r97, r110: those races
+  were not contested), and the two near sites (13-14 steps) got pioneers at r60 and r72 (churches r75, r121). Eight
+  more pioneers went to the lost centre from r201 to r849, none arriving (h200's class). 1654 was lost on health at
+  r1000: botfinalsafe's 120 churches (12,000 hp) against our 272 units. Red won on health with 225 units to 178 and 9
+  churches. A cap on how far a contested cluster jumps the queue changes the order on 7 of the 15 panel maps (2740,
+  1706, 2321, 1036, 2013, 388, 836 by plan.mjs), among them 2013 and 388, won 6 of 6: ECONOMICS row 11's class, a
+  targeted panel if built.
+- **Where our lines end** (chainrace_v12.txt, our 156 lines): last church within r2 2 of a castle 24 kills of 33,
+  r2 3-25 52 of 81, farther 10 of 42 (uvafan 21 such lines, 4 kills; IanCoolidge0 11, 0). A line stops where no free
+  tile is nearer (units in the way) or a link cannot pay; the far ones are h198's (CHAIN_WALL 28) case.
