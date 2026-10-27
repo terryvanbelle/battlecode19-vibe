@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-27 13:53 PDT)
+## State (2026-10-27 14:23 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both teams
   make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`, `dist/creep` (source +
@@ -77,9 +77,9 @@
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
   h198, h201, h206, h202, h207, h209, h211, h213 rejected).
-  **Replica queue (13:53): 109 waiting (99 ranked; the daily autoscrim fired 09:00); h218 block 1 = 2360-2371: 2
-  running, 10 queued (submission 282, bumped to the front); VM 9.0 GB free, no VM jobs. Waiter: scratchpad wait_block.sh
-  2360 2371.**
+  **Replica queue (14:23): 100 waiting (99 ranked; the daily autoscrim fired 09:00); h218 block 1 = 2360-2371: 6 done, 5
+  running, 1 queued (submission 282, bumped to the front); VM 9.0 GB free, no VM jobs. Waiter: scratchpad wait_block.sh
+  2360 2371. Workflow wf_9cd22802-9cc (read-only): a staged land programme for plateau step 7.**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the
   autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 13:44 (after h213's block 1); next refresh between
   blocks.
