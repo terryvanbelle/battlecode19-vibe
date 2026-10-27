@@ -7036,3 +7036,24 @@ cells (IanCoolidge0 1036 both sides, botfinalsafe 203 both sides) and lost none 
 them: bot1v43 2321 red (r100 army 16 to v12's 11, bank 200 to 275; lost at r211, v12 won at r446-482), wololo 836 blue
 and uvafan 1712 red (lost at r1000 with 5,947 K banked and army 214 to uvafan's 665: karbonite floats late, fuel binds).
 Rejected stands (the rule decides; the read is not a decision input).
+
+## 2026-10-26 21:42 PDT: mvpatel2000's seven r1000 health wins are economy, not endgame margins
+
+Correction to 21:33's heading: h201 gained 4 of the rich cells and lost none there; its 3 lost cells lie outside them
+(the body is right; the heading's "the gains were not there" is not). Our seven r1000 losses on health to mvpatel2000
+(replica 490-2, 490-3, 770-3, 1373-2, 1373-3, 1467-1, 1467-2; `node tools/replay.js timeline ... --at
+50,100,200,500,999`), to see whether an endgame spend could close them. None could:
+- 2644, three times (v7 red, v9 blue, v11 blue): no church in 1,000 rounds (v11's first at r929, a chain line); we mined
+  876-1,542 K to its 10,404-17,834. In v11's game the chainer (built r201, talk CT.CHAINER) stood beside its site
+  (40,25) r218-929 waiting for CHAIN_K 1000 while the peacetime army left that reserve alone: the bank held 80+ K on all
+  713 rounds (275-850 K from r300), the army stayed at 2-4 units r200-900, income 1.5 K a round.
+- 1915 (v11 red, one castle a side): the pioneer and two pilgrims died r44-51; from r105 the two home miners stopped
+  mining for 895 rounds, carrying 12 K and 40 F, beside the castle: one blue prophet at (33,9) covered the karbonite
+  depot (41,9) at r2 64 from outside the castle's reach (r2 82), our two prophets idle at (43,13) and (44,12), out of
+  its sight. Bank 5 K from r200 (a pilgrim costs 10): 192 K mined in the whole game.
+- 2518 (v7 blue): first church near r500; mined 2,956 to 5,558.
+- 2330 (v8 red) and 1884 (v9 red): mined about even (9,028 to 9,064; 5,560 to 6,454), army 11 and 5 to 158 and 197 at
+  r1000: we lost the trades.
+Two leads, unbuilt: a structure that sees an enemy attacker covering a home depot from outside its own reach could call
+crusaders onto it (a prophet cannot hit within r2 16), and a chain reserve sized to income (CHAIN_LIVE 1, h148, was
+rejected on v8's panel). Before either: how often v12's panel games show them.
