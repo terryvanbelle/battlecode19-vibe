@@ -7810,3 +7810,35 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
 - **Order.** TRAINING_ALGORITHM §3 asks a structural attempt in every four: after h213 come h218, h214 and h212, so
   stage 1's block 1 is the fourth, queued when its diagnostic passes and the block then in play is scored; the sweep
   goes on after it in its registered order.
+
+## 2026-10-27 16:00 PDT: CLAIM stage 1 diagnostic (h224): the claim works, the economy bar fails; fix 1 = h225
+- dist/h224 (CLAIM 1, CLAIM_FUND 1; 0331fcc083f3), 12 driver games to r150 (scratchpad claimdiag.sh, study/claim.mjs),
+  read against a v12 baseline in the same seats (bots/v12 in h224's place, same seeds and opponents). 0 exceptions,
+  timeouts, frozen turns or errors; net_isolated in all 12.
+- **The claim fired in 11 of 12 games** (2518 has no claim, as planned): claimant built r3 in 11 of 11; on station by
+  r20 in 10 of 11 (91%, bar 75%; 1706's tile is 27 steps out; it died at r18, 8 short); alive at r40 in 7 of 11 (bar
+  half); the pioneer away at r5 in 10 of 11 and r7 on 203 (bar r8); our church on the claimed site in 11 of 11
+  (r22-r65). v12 in the same seats had no church there by r150 in 4 (1706, 1712, 2321, 2644 red), a later one in 4 (2644
+  blue r50 vs r39, camp 1706 r66 vs r33, camp 2644 r74 vs r39, 203 r31 vs r22), the same round in 2 (836, block 836
+  r33), an earlier one in 1 (block 2644 r50 vs r65).
+- **The claimant's deaths** (tools/replay.js unit): 1706 r18 and 2321 r12 to a crusader at r2 16 (2 melee deaths, under
+  the 3 that call CLAIM_COVER); camp 2644 r13 to a prophet that shot first (it walked into r2 58); 1712 r71.
+- **The economy bar fails.** Pilgrims built by r30 (the claim's pioneer included, as v12's own pioneers are), h224 vs
+  v12: 836 5 vs 8, block 836 5 vs 8, 2321 6 vs 9, 1712 6 vs 8 (short by 2-3); the other 8 equal or 1 more. Churches at
+  r60: 836 1 vs 3, 1712 1 vs 2, block 836 3 vs 4, block 2644 0 vs 1 (short); 2321 2 vs 1; 7 equal. The bar was "pilgrims
+  within 1, churches at least v12's": failed in 5 of 12 games.
+- **Cause, from the build orders.** The owner castle's turn-3 prophet (25 K) and turn-5 pioneer (10 K) are bought where
+  v12 buys its turn 3-4 depot pilgrims; after them the bank is under DEF_RESERVE_K 30 + a pilgrim, so the other castle's
+  turn-3 pilgrim goes too (836: v12 built 3 pilgrims on turns 3-4, h224 none; 1712: castle (21,3) built a pilgrim on
+  turns 3 and 4 in v12, a prophet and the pioneer in h224; 2321: a pilgrim on turn 3 in v12, the prophet in h224, and
+  then 2 of v12's 4 pilgrims on turns 24-28, with CLAIM_FUND's 50 K held from r5 to r38). Over the game the claim pays:
+  karbonite mined by r150 is higher in 6 of 11 fired games (2644 1364 vs 412, 2321 1798 vs 1082, 1706 1000 vs 472),
+  level on 203 (1256 vs 1268) and lower in 4 (1712 -14%, block 2644 -7%, block 836 -5%, 836 -4%). The bars stay as
+  registered.
+- **Fix round 1 (of 2) is not the registered CLAIM_LEAD 4.** That fix moves the pioneer 2 turns and leaves the turn-3
+  prophet where the depot pilgrims were, the cause measured above. It is replaced, the bars unchanged, by CLAIM_AFTER 1:
+  the claimant comes on the owner's first turn whose depot pilgrims leave (structTurn's extra hook, not first), the
+  pioneer CLAIM_LEAD 2 turns after it. dist/h225 = CLAIM 1, CLAIM_FUND 1, CLAIM_AFTER 1 (f39140d6b775, 49,258 bytes;
+  defaults bundle under 48,000). Unit test added (2644: every turn before the claimant builds a depot pilgrim). The same
+  12 games are run on h225 against the same baseline and read with the same bars. If it misses, fix round 2 names the
+  defect again; a miss after it closes stage 1 as an execution failure (15:13).

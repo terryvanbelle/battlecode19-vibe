@@ -103,6 +103,9 @@ export const CFG = {
   CLAIM_FUND: 0,             // 1 (with CLAIM): the claim's pioneer talks CT.CLAIM until it builds or gives up, and while
                              // one talks castles' economy pilgrims leave the church's karbonite in the bank (13:32: 20 of
                              // the losses' 29 waits at free sites had 50 K or less in the bank)
+  CLAIM_AFTER: 0,            // 1 (with CLAIM): the claimant comes after the owner's depot pilgrims (structTurn's extra hook,
+                             // not first): h224's turn-3 prophet took 2-3 of v12's turn 3-4 pilgrims on 836, 1712 and 2321
+                             // (TRAINING_LOG 2026-10-27 16:00)
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short

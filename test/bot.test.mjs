@@ -4250,6 +4250,30 @@ test('castle: CLAIM builds the claimant first, radioing SIG.GUARD at its tile at
   } finally { Object.assign(CFG, saved); }
 });
 
+test('castle: CLAIM_AFTER builds the claimant on the first turn the depot pilgrims leave, the pioneer CLAIM_LEAD turns later', () => {
+  const saved = { ...CFG };
+  try {
+    Object.assign(CFG, { CLAIM: 1, CLAIM_AFTER: 1 });
+    const g = new Game(2644, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0);
+    g.robots = g.robots.filter(r => r.team === 0);
+    const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 }, acts = [];
+    for (let t = 1; t <= 12; t++) {
+      castle.turn = t; const w = worldFor(g, castle), sent = []; B.w = w; B.api = w.api;
+      w.api.signal = (v, r2) => sent.push([v, r2]);
+      const a = castleTurn(B);
+      acts.push({ t, u: a && a.action === 'build' ? a.u : null, sent: sent.map(([v, r2]) => [dec(v).type, r2]) });
+      B.st.pending = null;
+    }
+    const k = acts.findIndex(a => a.u === CFG.CLAIM_UNIT);
+    assert.ok(k >= 3, 'after turn 3: ' + JSON.stringify(acts));
+    assert.ok(acts.slice(0, k).every(a => a.u === S.PILGRIM && a.sent.length === 1 && a.sent[0][0] === SIG.MINE),
+      'every earlier turn a depot pilgrim: ' + JSON.stringify(acts));
+    assert.deepStrictEqual(acts[k].sent, [[SIG.GUARD, CLAIM_R2]]);
+    assert.deepStrictEqual(acts[k + CFG.CLAIM_LEAD], { t: k + 1 + CFG.CLAIM_LEAD, u: S.PILGRIM, sent: [[SIG.CHURCH, CLAIM_R2]] });
+  } finally { Object.assign(CFG, saved); }
+});
+
 test('military: CLAIM a unit born hearing SIG.GUARD at r2 CLAIM_R2 holds its tile when hit, until an enemy church stands by it', () => {
   const saved = { ...CFG };
   try {

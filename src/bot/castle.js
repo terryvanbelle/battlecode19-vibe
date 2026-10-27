@@ -114,9 +114,10 @@ export function castleTurn(B) {
   callAttack(B);
   st.pioneerDue = pioneerDue(B);   // CFG.PIONEER_RESERVE: the peacetime army leaves the pioneer's karbonite alone
   if (CFG.STRIKE_FAR && st.order) hearStrike(B);
-  const act = structTurn(B, allIds, () => (CFG.ESCORT_FIRST ? escort(B) : null) || pioneer(B) || (CFG.ESCORT ? escort(B) : null) ||
+  const act = structTurn(B, allIds, () => (CFG.CLAIM && CFG.CLAIM_AFTER ? claim(B) : null) ||
+    (CFG.ESCORT_FIRST ? escort(B) : null) || pioneer(B) || (CFG.ESCORT ? escort(B) : null) ||
     (CFG.CHAIN_ROUND ? (chainLaunch(B, buildToward) || {}).act : null),
-    CFG.CLAIM || CFG.PIONEER_EARLY || CFG.ESCORT_EARLY || CFG.STRIKE_FAR ? () => (CFG.CLAIM ? claim(B) : null) ||
+    CFG.CLAIM || CFG.PIONEER_EARLY || CFG.ESCORT_EARLY || CFG.STRIKE_FAR ? () => (CFG.CLAIM && !CFG.CLAIM_AFTER ? claim(B) : null) ||
       (CFG.STRIKE_FAR ? strikeFar(B) : null) ||
       (CFG.ESCORT_EARLY ? escort(B) : null) || (CFG.PIONEER_EARLY ? earlyPioneer(B) : null) : null);
   if (CFG.CASTLE_POST) callPost(B);   // after the build, so a newborn's radio comes first
@@ -303,8 +304,9 @@ function claimTile(w, [sx, sy], o, mirrors) {
   return best;
 }
 
-// CFG.CLAIM: the claim's owner builds the claimant (radioing SIG.GUARD at its tile at r2 CLAIM_R2) as soon as it can,
-// then, CLAIM_LEAD turns later, the claim's pioneer on a pilgrim's cost (SIG.CHURCH at r2 CLAIM_R2: CFG.CLAIM_FUND).
+// CFG.CLAIM: the claim's owner builds the claimant (radioing SIG.GUARD at its tile at r2 CLAIM_R2) as soon as it can
+// (CFG.CLAIM_AFTER: on the first turn its depot pilgrims leave), then, CLAIM_LEAD turns later, the claim's pioneer on a
+// pilgrim's cost (SIG.CHURCH at r2 CLAIM_R2: CFG.CLAIM_FUND).
 // A turn whose radio is taken waits: each newborn must hear it.
 function claim(B) {
   const w = B.w, st = B.st, c = st.claim;
