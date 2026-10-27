@@ -7128,3 +7128,14 @@ side-aware z 1.33.
 The last sentence of the 23:39 entry is wrong: in v12's panel games bot1v43 on seed 2321 is won red 3 of 3 (1655, 1839,
 1851) and **lost blue 3 of 3** (1656 at r126, 1840 r124, 1852 r133, all by castles), the same r124-133 castle loss as
 ranked 1864-3 (r132). A never-won cell of v12's, lost the same way each time; it is studied next.
+
+## 2026-10-26 23:43 PDT: replica throughput: saturn is full; a block's 110 minutes are slot waits and match tails
+- Saturn's journal (VM, from 2026-10-25 20:53 UTC, 33.7 h): the 8 execute slots were busy 100% of the time (every full
+  hour 8.0 busy slots): no scheduling change adds games per hour.
+- h206's block 1 (submitted 21:14, done 23:04): the first match started 21:28 (a slot freed), the twelfth at 22:22 (one
+  slot freed every ~5 min, each held by a field match), and the last ended at 23:01 (uvafan 1948, its three games 2,639
+  + 386 + 410 s run one after another in one slot). The block's 36 games hold 277 slot-minutes, 35 minutes of 8 slots.
+  Running a match's games in parallel with ours first would bring a block near 60 minutes, at the field's ranked
+  matches' expense (they fill every slot our blocks leave); not done: the field's ratings are the benchmark.
+- 1942's game 3 (wololo, seed 836) died with exit status -11 (SIGSEGV in node) at 37 minutes; saturn nacked, retried at
+  22:09 and kept the two finished games (the only game failure in the journal's 34 h). No kernel record.
