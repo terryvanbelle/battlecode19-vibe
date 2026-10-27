@@ -62,32 +62,31 @@
   add the tools/progress/submissions.tsv rows. Read: `contest19.py fetch --new --pages 6`, then for v12-based
   candidates `tools/panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool BLOCK... [--studied ...]` (it
   refuses a block with a match unfinished); a rejected block joins the pool file only when its own z lies within
-  +-1. The pool file holds h185's block 2 (1835-1846), the v12 control block (1847-1858) and rejected h195's three
-  (1865-1888, 1891-1902): v12's reference is 216 games (TRAINING_LOG 2026-10-26 10:39, 16:48). The rule's false-accept
+  +-1. The pool file holds h185's block 2 (1835-1846), the v12 control block (1847-1858), rejected h195's three
+  (1865-1888, 1891-1902) and h203's one (1903-1914): v12's reference is 252 games (TRAINING_LOG 2026-10-26 10:39,
+  16:48, 18:15). The rule's false-accept
   rate and power: `python3 -I tools/galaxy19/panelsim.py CONTROL POOLFILE`. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
-  accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195 rejected).
-  **Replica queue (17:53): 55 waiting (55 ranked; VM 11 GB free); h203 block 1 running (4 of 12 playing).**
+  accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203
+  rejected).
+  **Replica queue (17:53): 55 waiting (55 ranked; VM 11 GB free); h198 block 1 in play, bumped (TRAINING_LOG 18:15).**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`),
-  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 16:48 (between blocks; rating-history 75
+  the autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 18:09 (between blocks; rating-history 75
   rated matches).
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
-  **Now: h203 block 1** = matches 1903-1914 (submission 238; ladder 239; waiter on the driver). When it ends:
-  `contest19.py fetch --new --pages 6`, `panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool 1903-1914
-  --studied m-schier.battlecode-2019-wololo:seed-2644,StoneT2000.BC19-bot1v43:seed-2321`; ordinary rule (block 1
-  rejects at z < 0.5); refresh progress/ before the next block.
-  h195 was REJECTED on three blocks (74 of 108, z 1.00; TRAINING_LOG 2026-10-26 16:48), h193 on block 1 (16 of 36, z
-  -1.42; TRAINING_LOG 2026-10-26 09:42), h192 on block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85;
-  06:37), h190 (z -1.42; 00:42).
+  **Now: h198 block 1** = matches 1915-1926 (submission 240; ladder 241; waiter on the driver). When it ends:
+  `contest19.py fetch --new --pages 6`, `panel_pool.sh 1651-1658,1831-1834 progress/panels/v12-m1.pool 1915-1926
+  --studied uvafan.bc2019:seed-2046,uvafan.bc2019:seed-1653,IanCoolidge0.battlecode20~69ce88:seed-1036`; ordinary
+  rule (block 1 rejects at z < 0.5), accepted only with the other cells' side-aware z >= 0 too; mechanism read (not a
+  decision input): lines whose churches saw 28+ that CT.WALL ended, at least half (TRAINING_LOG 2026-10-24 22:39);
+  refresh progress/ before the next block.
+  h203 was REJECTED on block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z
+  1.00; TRAINING_LOG 2026-10-26 16:48), h193 on block 1 (16 of 36, z -1.42; TRAINING_LOG 2026-10-26 09:42), h192 on
+  block 1 (z -2.65; 08:21), h184 on three blocks (z 2.51, others -0.85; 06:37), h190 (z -1.42; 00:42).
   **Then, one block at a time** (each v11 candidate rebuilt on v12 with its switches unchanged and its
   pre-registration kept; bars relative to the champion recomputed from v12's panel games (h185's 1651-1658,
   1831-1834, 1835-1846 and the v12 control block) before the candidate's block is read; TRAINING_LOG 2026-10-26 10:39;
   rebuilt again at 16:40 with the World.attack fuel fix, hashes below):
-  h203 (v12 + ESCORT_BACK 2, dist/h203 7f352326b9eb: an escort with 20+ health whose only enemy attacker or castle in
-  sight is one prophet charges it instead of going home; 50 of v12's 153 escort hits were by a lone prophet in sight,
-  among them always-lost wololo 2644, which v11 won red 3 of 3 by that charge; ordinary rule; studied
-  m-schier.battlecode-2019-wololo:seed-2644,StoneT2000.BC19-bot1v43:seed-2321; mechanism check tools/reads/eschits.mjs:
-  shooter dead within 12 rounds in half the lone-prophet hits, v12 18 of 50; TRAINING_LOG 2026-10-26 14:57);
   h198 (= h187 on v12: v12 + CHAIN_WALL 28, dist/h198 28c0ca9175f7; h172's; studied cells uvafan 2046, 1653,
   IanCoolidge0 1036; moved up 2026-10-26 15:49: v12 loses uvafan 2046 on health at r1000 after its three chain lines,
   which saw 29, 33 and 74 enemy attackers, lost 19 churches; TRAINING_LOG 2026-10-26 15:49);

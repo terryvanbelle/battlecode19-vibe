@@ -6799,3 +6799,15 @@ saw more than 27 attackers, so CHAIN_WALL 28 (h198) would not have ended it. The
   whichever base h198 leaves.
 - No-op: the defaults build (1d496c9be6ba) against itself on 799 to r300 is IDENTICAL to bots/v12's replay; unit tests
   181/181 + 65.
+
+## 2026-10-26 18:15 PDT: h203 (ESCORT_BACK 2) REJECTED on block 1 (23 of 36, side-aware z -0.78); h198 block 1 in play
+**h203 block 1** (matches 1903-1914, submission 238): 23 of 36, pooled expectation 23.8 (z -0.43), side-aware
+expectation 24.2, **z -0.78** (< 0.5: rejected at block 1 under the ordinary rule); effect -86 Elo (95% -302 to +128).
+Studied cells 1 of 4 (z -0.04): it won bot1v43 2321 blue (v12 0 of 6) and lost wololo 2644 both sides as v12 does.
+Others 22 of 32 (z -0.81): lost bot1v43 2321 red and 388 red and wololo 836 blue (v12 6 of 6 each). Its own z lies
+within +-1, so 1903-1914 joins progress/panels/v12-m1.pool (v12's reference: 252 games). The mechanism read
+(eschits.mjs) is not run: the decision does not use it and the driver holds the late-build census.
+- progress/ refreshed between blocks (18:09; rating-history 75 rated matches).
+- **h198 block 1 submitted** (v12 + CHAIN_WALL 28, dist/h198 28c0ca9175f7): submission 240, matches 1915-1926 (both
+  sides; ladder 241), bumped. Pre-registration as h164's (2026-10-24 22:39): ordinary rule; studied uvafan 2046, 1653
+  and IanCoolidge0 1036, accepted only with the other cells' side-aware z >= 0 too.
