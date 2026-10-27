@@ -70,3 +70,5 @@ submission	build	note
 240	cand:h198	panel candidate dist/h198 (28c0ca9175f7), block 1 = matches 1915-1926, both sides (TRAINING_LOG 2026-10-26 18:15)
 242	cand:h201	panel candidate dist/h201 (153f6da1dee7), block 1 = matches 1927-1938, both sides (TRAINING_LOG 2026-10-26 19:25)
 244	cand:h206	panel candidate dist/h206 (bf82caa846ed), block 1 = matches 1942-1953, both sides (TRAINING_LOG 2026-10-26 21:14)
+248	cand:h206	panel candidate dist/h206 (bf82caa846ed), block 2 = matches 1980-1985 (wololo, botfinalsafe, bot1v43; both sides) (TRAINING_LOG 2026-10-27 00:19)
+256	cand:h206	panel candidate dist/h206 (bf82caa846ed), block 2 = matches 1986-1993 (uvafan, awesomelemonade, IanCoolidge0, mvpatel2000; both sides; resubmitted after HTTP 429) (TRAINING_LOG 2026-10-27 00:19)
