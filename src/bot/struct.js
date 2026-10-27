@@ -447,6 +447,7 @@ function structAct(B, allIds, extra, first) {
     const b = buildToward(B, PILGRIM, dep.x, dep.y, encXY(SIG.MINE, dep.x, dep.y));
     if (b) { st.pending = { x: b.x, y: b.y, unit: PILGRIM, kind: 'mine', ref: dep.i }; st.assign.set(dep.i, { id: -1, seen: me.turn }); return b.act; }
   }
+  st.noDepot = !dep;   // CFG.PIONEER_IDLE: no depot left to staff this turn (castle.js pioneer)
   if (extra) { const a = extra(); if (a) return a; }
   { const a = frontPioneer(B); if (a) return a; }
 

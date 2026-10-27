@@ -352,6 +352,13 @@ export const CFG = {
                              // waits at the site), so 0 starts the walk on the reserve's surplus and the mining on the way
                              // pays the church (replica 411-3, seed 1712: castle (21,3) built nothing r5-22 waiting for
                              // 90 K, our centre church came at r50, uvafan's at r27; h89's open bank lost castles to rush4)
+  PIONEER_IDLE: 0,           // 1: a castle whose served home depots are all staffed (no economy pilgrim due this turn)
+                             // sends its pioneer without PIONEER_DEPART_K, on a pilgrim and DEF_RESERVE_K: it has
+                             // nothing else to buy, so the walk overlaps the saving for the church (v12's 108 panel
+                             // games: every one had 24+ castle turns with 40+ K and no build before our first church,
+                             // r28-75, often 10-30 rounds after the enemy's; v11 vs mvpatel2000 on 2644, replica 1467:
+                             // castle idle r6-39, first church r929). Unlike PIONEER_DEPART_K 0 (h97: the pioneer then
+                             // waited while its castle spent the bank on depot pilgrims) it acts only on an idle castle.
   FRONT_ROUND: 0,            // >0: from this round a structure with none of ours ahead in sight sends a pilgrim to build
                              // a church FRONT_STEP rows toward the enemy (struct.js frontPioneer), at most every
   FRONT_EVERY: 50,           // ...this many rounds (replica seed 2924: StoneT2000's church lines took our castles)

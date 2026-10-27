@@ -219,7 +219,9 @@ function pioneer(B) {
   const w = B.w;
   const next = nextPioneer(B);
   if (!next) return null;
-  if (!w.canAfford(PILGRIM, CFG.PIONEER_DEPART_K + defReserveK(B), 200)) return null;
+  // CFG.PIONEER_IDLE: a castle with no home depot left to staff this turn has nothing else to buy before its pioneer.
+  const departK = CFG.PIONEER_IDLE && B.st.noDepot ? 0 : CFG.PIONEER_DEPART_K;
+  if (!w.canAfford(PILGRIM, departK + defReserveK(B), 200)) return null;
   if (CFG.HOP_GAIN) { const h = hopPioneer(B, next); if (h) return h; }
   return sendPioneer(B, next);
 }

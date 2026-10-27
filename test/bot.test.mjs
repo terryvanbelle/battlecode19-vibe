@@ -1967,6 +1967,32 @@ test('castle: PIONEER_DEPART_K 0 sends a pioneer on the pilgrim and the reserve;
   } finally { Object.assign(CFG, saved); }
 });
 
+test('castle: PIONEER_IDLE drops PIONEER_DEPART_K only on a turn with no depot to staff', () => {
+  const saved = { ...CFG };
+  try {
+    const g = new Game(1205, 100, 20, false, false);
+    const castle = g.robots.find(r => r.team === 0);
+    const B = { st: {}, deps: null, clusters: null, rnd: rng(1), round: 1, birthRound: 1 };
+    for (const t of [1, 2, 3]) { castle.turn = t; const w = worldFor(g, castle); B.w = w; B.api = w.api; castleTurn(B); }
+    const st = B.st, w = B.w;
+    st.pioneers = []; st.pending = null; B.round = 3; w.fuel = 500;
+    CFG.DEF_RESERVE_K = 30; CFG.PIONEER_DEPART_K = 50;
+    w.karbonite = 40;
+    st.noDepot = true;
+    assert.strictEqual(pioneer(B), null);                 // off: the castle waits for 90 K
+    CFG.PIONEER_IDLE = 1;
+    st.noDepot = false;
+    assert.strictEqual(pioneer(B), null);                 // a depot pilgrim is due: the castle still waits
+    st.noDepot = true;
+    w.karbonite = 39;
+    assert.strictEqual(pioneer(B), null);                 // the reserve still holds
+    w.karbonite = 40;
+    assert.ok(pioneer(B), 'an idle castle sends its pioneer on 40 K');
+    assert.strictEqual(st.pioneers.length, 1);
+    assert.strictEqual(st.pending.kind, 'pioneer');
+  } finally { Object.assign(CFG, saved); }
+});
+
 test('castle: PIONEER_CALL opens the escort when its pioneer talks BLOCKED, before it is overdue', () => {
   const saved = { ...CFG };
   try {
