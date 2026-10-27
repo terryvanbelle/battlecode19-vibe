@@ -1967,7 +1967,7 @@ test('castle: PIONEER_DEPART_K 0 sends a pioneer on the pilgrim and the reserve;
   } finally { Object.assign(CFG, saved); }
 });
 
-test('castle: PIONEER_IDLE drops PIONEER_DEPART_K only on a turn with no depot to staff', () => {
+test('castle: PIONEER_IDLE drops PIONEER_DEPART_K for the first N pioneers, on a turn with no depot to staff', () => {
   const saved = { ...CFG };
   try {
     const g = new Game(1205, 100, 20, false, false);
@@ -1990,6 +1990,15 @@ test('castle: PIONEER_IDLE drops PIONEER_DEPART_K only on a turn with no depot t
     assert.ok(pioneer(B), 'an idle castle sends its pioneer on 40 K');
     assert.strictEqual(st.pioneers.length, 1);
     assert.strictEqual(st.pending.kind, 'pioneer');
+    st.pending = null; w.karbonite = 40;
+    assert.strictEqual(pioneer(B), null);                 // PIONEER_IDLE 1 and a pioneer out: the next waits for 90 K
+    CFG.PIONEER_IDLE = 2;
+    assert.ok(pioneer(B), 'PIONEER_IDLE 2: the second pioneer leaves on 40 K');
+    assert.strictEqual(st.pioneers.length, 2);
+    st.pending = null; CFG.MAX_PIONEERS = 3; CFG.PIONEERS_TEAM = 0; w.karbonite = 40;
+    assert.strictEqual(pioneer(B), null);                 // the third waits for 90 K
+    w.karbonite = 90;
+    assert.ok(pioneer(B), 'the third pioneer leaves on 90 K');
   } finally { Object.assign(CFG, saved); }
 });
 
