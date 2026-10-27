@@ -7748,3 +7748,65 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   2372-2383` by the same rule.
 - Correction: the entry headed "14:24" (step 6's pair dropped) was written at 14:21; its header time was typed by hand
   (LEARNINGS 34).
+
+## 2026-10-27 15:13 PDT: plateau step 7: the CLAIM programme (hold our side of the contested cluster, then church it)
+- Designed on paper by a read-only workflow (wf_9cd22802-9cc: three designs from the 13:32 and 14:18 censuses, two
+  judges, one synthesis; no games). Both judges ranked first the field-style design: CLAIM (evidence 8 and 7 of 10,
+  expected effect 6 and 6). Second was contested-land (a leash on escorts, a picket prophet); third a LAND economy (a
+  rolling plan and funded packages), set aside because each of its stages repeats a rejected gate (h27/h125/h158,
+  h97/h117/h124/h206, h116/h201/h214) and it aims at waits at free sites, not the contested sites lost on our half. Its
+  claims were checked against the code and this log before this entry (LEARNINGS 53).
+- **Thesis.** v12's contested force raids the enemy's mirror site (ESCORT_FIRST 2 crusaders, ESCORT_MIRROR 1) and goes
+  home once hit (ESCORT_BACK 1). Nothing of ours then stands on our side of the cluster, and the pioneer walks there
+  alone behind the 90 K gate (a pilgrim, DEF_RESERVE_K 30, PIONEER_DEPART_K 50). The field holds the site first and
+  churches it when the bank allows (2644, 14:18: wololo's r5 prophet on the centre; its church on our site (28,19) at
+  r53). CLAIM adds one claim per team: a prophet holds our site of the team's first contested cluster (m 2-6) from turn
+  3, and the pioneer follows on a pilgrim's cost with the church's karbonite kept from that moment. The holder and the
+  early pioneer are a jointly necessary pair (ADVICE §29): h100 had a holder (built late, held within 12 steps) and no
+  early pioneer; h120, h121 and h147 an early pioneer and no holder on our site.
+- **Evidence.** An enemy church holds a cluster on our half at r100 in 37 of 77 losses and 13 of 115 wins (13:32). At
+  r60 losses have churches 0.9 to 1.4 and wins 1.5 to 1.5; our count is at least theirs in 90 of 115 wins and 44 of 77
+  losses; the first church's round does not separate them (14:18). v9's first pioneers founded 0 of 24 sites at m <= 1,
+  20 of 60 at m 2-6, 12 of 12 at m >= 7 (2026-10-25 15:45). Of 216 escorts, 94 were first hit by a prophet out of a
+  crusader's sight (2026-10-26 14:57); a prophet sees r2 64, the reach of every prophet and castle, and an enemy that
+  walks into r2 64 has spent its turn moving.
+- **Stage 0, done before code.** The claim fires: `tools/plan.mjs` on the five studied seeds, both teams, gives a team
+  cluster with m 2-6 on all five (2644 c2 (28,19) d12 m3; 836 c8 (45,28) d10 m3; 1706 c2 (7,17) d27 m2; 203 c3 (29,18)
+  d10 m6; 2321 c3 (16,19) d10 m4). Not taken from the synthesis: a leash on the raid's crusaders. It changes v12's raid,
+  is not part of the pair, and would confound stage 1; it is priced (eschits deaths inside enemy castle reach) and
+  tested later as its own candidate if at least 10 of 216 escorts died that way.
+- **Stage 1 = CLAIM 1 + CLAIM_FUND 1** (defaults 0 replay v12; the raid and every ESCORT_* switch as in v12):
+  - planClusters (identical in every castle) picks the team's claim: the planned cluster with CLAIM_MIN_M 2 <= m <=
+    PLAN_CONTEST_FIRST nearest its owner (ties by index). Its owner alone acts. The claim tile: a passable lattice tile,
+    no depot, within 2 king steps of our site, no farther from the owner than the site, outside r2 144 of every mirrored
+    enemy castle; none, no claim.
+  - The owner's `first` hook (before depot pilgrims) builds CLAIM_UNIT 4 (a prophet) on turn 3 or the first turn it can,
+    radioing SIG.GUARD (tile) at r2 CLAIM_R2 4; from CLAIM_LEAD 2 turns later, on a pilgrim's cost, it sends the claim's
+    pioneer (sendPioneer, SIG.CHURCH at r2 4).
+  - The claimant holds within ESCORT_HOLD_R 2 of the tile, never escortBack, ignores attack calls before ATTACK_LATE; it
+    becomes an ordinary escort (home when hit) once it sees an enemy church within 3 king steps of the site.
+  - CLAIM_FUND: the claim's pioneer talks CT.CLAIM (87, the last free byte; castles count it a pilgrim) from birth until
+    it builds, gives the site up or dies. While one talks, castles' depot pilgrims leave the church's 50 K besides
+    DEF_RESERVE_K.
+- **Stage 1's driver diagnostic** (one game at a time, to r150, red and blue, at most 12 games; against bots/v12,
+  dist/camp and dist/block; seeds 2644, 1706, 2321, 836, 203, guards 1712 and 2518; the claim's firing checked before
+  each game is read): the claimant built by r5, on station by r20 in >= 75% of fired games and alive at r40 in >= half;
+  the claim's pioneer away by r8; its church standing in >= half of the games where the claimant held; economy pilgrims
+  at r30 within 1 of v12's and churches at r60 at least v12's; 0 exceptions, 0 overruns. At most 2 fix rounds (melee
+  deaths in 3+ games: CLAIM_COVER, one extra crusader beside the claimant; bank short: CLAIM_LEAD 4).
+- **Stage 1's rule** (fixed now): paired fresh cells against progress/panels/v12.ref, studied cells `--studied` wololo
+  2644 and 836, botfinalsafe 1706 and 203, bot1v43 2321 (the cells the evidence names; the studied cells must gain and
+  the others hold t >= 0, h184's rule). Block 1 on v7-m1 rejects at t <= 0; any block accepts at t >= 2 with D >= 4;
+  block 2 (v7-m2) rejects at t <= 1, block 3 (v7-m3) at t <= 1.5. Guard cells awesomelemonade 1712, 2797, 2518 and
+  uvafan 1712: one lost where v12 won is read before the verdict. Mechanism read (a check, not a decision input): an
+  enemy church on our half at r100 in <= 18% of games (v12 26%), the contested first pioneer's church share >= 65%.
+- **Stages 2-3** (each only after stage 1's verdict, rules fixed before their games): HUB (the claimed church builds a
+  guard prophet and hops the next pioneers, CHURCH_GUARD_D, HOP_GAIN) only if stage 1 is accepted; CLAIM_EACH (a
+  claimant ahead of every later contested pioneer, from the r60-100 bank) on the champion of the day.
+- **Budget and closing** (ADVICE §30): 3 stages, at most 2 fix rounds and 3 panel blocks a stage, 9 blocks in all. A
+  stage that misses its diagnostic after 2 fixes is an execution failure (the defect is named; reopened once fixed). If
+  stage 1's diagnostic and mechanism read pass and the panel rejects it, the premise fails and the programme closes:
+  holding our contested site from r3 with a funded early church does not win on v12's base (LEARNINGS gets the entry).
+- **Order.** TRAINING_ALGORITHM §3 asks a structural attempt in every four: after h213 come h218, h214 and h212, so
+  stage 1's block 1 is the fourth, queued when its diagnostic passes and the block then in play is scored; the sweep
+  goes on after it in its registered order.
