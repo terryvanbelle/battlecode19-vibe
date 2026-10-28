@@ -355,3 +355,8 @@
    r30 on rich openings (h224); bought after the depot pilgrims it left 5 K for six turns and the pioneer waited to r12
    (h225); a 15 K crusader kept the timing and died to the enemy's crusader pair (h226). Price an opening change in
    pilgrims by r30 against the champion in the same seats before writing it. (2026-10-27 16:58)
+55. **Test a named cause by its switch alone before spending a fix round on it.** 18:00 read h227's economy misses as
+   CLAIM_FUND's hold (bank flat at 60-85 K, pilgrims flat) and spent the last fix round on h228, CLAIM_FUND 2 bundled
+   with CLAIM_REACH. h228's 8 fired games replayed h227's board-identical (`tools/replay.js diverge --board`): the hold
+   never bound a build; no depot was left to staff. One game with the switch alone and a `diverge --board` against the
+   old replay (minutes) shows whether the named cause acts at all. (2026-10-27 18:21)

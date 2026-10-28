@@ -8015,3 +8015,41 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   chance cells; nothing in them asks for a follow-up.
 - Next: progress/ refreshed between blocks (after h228's driver diagnostic, one heavy job at a time), then h212's block
   1 (CHAIN_ROUND 0, sweep 3) on v7-m1.
+
+## 2026-10-27 18:21 PDT: h228 misses the economy bar in 3 of 8 games; CLAIM stage 1 closes; 18:00's defect 3 was wrong
+- **h228** (dist/h228 6d10ac7afa11, 39,103 bytes). No-op: the defaults build replays v12 IDENTICAL on 799 to r300; 197
+  node + 67 Python unit tests pass. The ten games of 18:00: the claim fired in 8; 388 and 1375 dropped it (CLAIM_REACH)
+  and their games are byte-identical to v12's in the same seat, as are 836 and 1712 to claimbase_v12's. 0 exceptions,
+  timeouts and frozen turns.
+- **Met:** the claimant built r3-r4 in each; on station by r20 in 7 of 8 (blue 2013 r23); alive at r40 in 8 of 8; the
+  pioneer away r5-r6 in each; our church on the claimed site in 8 of 8 (r23-r37; v12 in the same seats: none).
+- **Missed, the economy bar** (each game): pilgrims at r30 9 to v12's 11 on 826; churches at r60 1 to 2 on 1915 and 3 to
+  4 on blue 1036.
+- **18:00's defect 3 was not the cause.** h228's 8 fired games are board-identical to h227's (`tools/replay.js diverge
+  --board`, radio and castle talk ignored): CLAIM_FUND 2 changed only when CT.CLAIM is talked, so the hold never bound a
+  build in these games. The economy pilgrims had no depot left to staff (826: 7 pilgrims by r10), and every other buy
+  waits for more than the hold leaves. The shortfall is the claim pair's 35 K by turn 6: v12's next pioneers leave when
+  the bank holds 90 K (PIONEER_DEPART_K 50 + DEF_RESERVE_K 30 + a pilgrim). On 826 v12 had 40 K at r10 to h228's 5 K,
+  and its wave left r25-r30 (6 to 11 pilgrims) to h228's r30-r40; on 1915 (about 2 K a round) v12's churches came r50
+  and r60, h228's claimed church r40 and the next after r60; on blue 1036 v12 had 7 pilgrims at r25 and 15 at r50 to
+  h228's 6 and 12. By r150 (churches / pilgrims / mined K) h228 is ahead on 2013 red (4/24/1532 to 4/21/1278), 1036 red
+  (5/26/2712 to 4/18/1598), 1241 (8/33/1898 to 6/27/1084), 747 (1/9/1172 to 0/7/712) and 826 (8/32/2862 to 7/29/2682),
+  level on 1915 (630 to 640), behind on blue 2013 (1532 to 1674) and blue 1036 (2712 to 2872).
+- **CLAIM stage 1 closes for good** (18:00: a miss, no further fix round), five builds in (h224-h228). The thesis is not
+  refuted: no panel block was played. What a reopening needs: the 35 K paid without delaying the 90 K pioneer wave by
+  r30-r60, priced against v12 in the same seats before any build. LEARNINGS 55 (test a named cause by its switch alone
+  first). config.js's CLAIM_FUND comment is corrected.
+- **Next:** progress/ refresh (running since 18:20, between blocks), then h212's block 1 (sweep 3, CHAIN_ROUND 0) on
+  v7-m1. The structural slot stays owed (§3): chosen and pre-registered while h212 plays.
+
+## 2026-10-27 18:44 PDT: h212 (CHAIN_ROUND 0) block 1 queued on v7-m1 = matches 2400-2411
+- progress/ refreshed 18:20-18:22, between h214's block 2 and this block (LEARNINGS 38, 43): ladder snapshot 18:20, 86
+  rated matches in the rating history, ATTEMPTS.md 271 rows.
+- **h212** (v12 + CHAIN_ROUND 0, the chain's ablation, dist/h212 860968a5a3be; sweep 3 of 10): block 1 on v7-m1 =
+  matches 2400-2411 (candidate submission 288, ladder submission 289; requests 1313-1324), bumped by
+  tools/panel_submit.sh (52 waiting at 18:08). Scored with `tools/panel_paired.sh progress/panels/v12.ref 2400-2411`:
+  block 1 rejects at t <= 0, accepts at t >= 2 with D >= 4; else block 2 on v7-m2 (t <= 1 rejects). Waiter: scratchpad
+  wait_block.sh 2400 2411.
+- The unit tests after config.js's comment fix: one run failed test 172 (run_game --turnlog: the castles' turn times
+  against the clock bank) while the refresh had just loaded the driver; it passed alone twice and the full suite then
+  passed (197 node + 67 Python). A timing test under load, not the change.

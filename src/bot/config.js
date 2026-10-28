@@ -103,8 +103,8 @@ export const CFG = {
   CLAIM_FUND: 0,             // 1 (with CLAIM): the claim's pioneer talks CT.CLAIM until it builds or gives up, and while
                              // one talks castles' economy pilgrims leave the church's karbonite in the bank (13:32: 20 of
                              // the losses' 29 waits at free sites had 50 K or less in the bank). 2: it talks only once
-                             // beside its site (h227's hold from its birth idled 50 K through its walk: on 1375 the bank sat
-                             // at 60-85 K with 4 pilgrims r15-r30 while v12 sent its pioneers; TRAINING_LOG 2026-10-27 18:00)
+                             // beside its site (h228: board-identical to 1 in all 8 of its fired games, the hold never bound
+                             // a build; TRAINING_LOG 2026-10-27 18:21)
   CLAIM_REACH: 0,            // >0 (with CLAIM): the claim only where its tile is at most this many of the claimant's moves
                              // from the owner (15: a claimant built on turn 5, CLAIM_BANK 4's latest, stands by r20, the
                              // bar; h227's claimants came r21 and r23 on 388 and 1375, 16 and 21 moves out)
