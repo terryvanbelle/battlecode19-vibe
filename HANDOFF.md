@@ -101,8 +101,7 @@
   + HOARD_ROUND 600 + HOARD_CHURCH 2, dist/h213 d27c9fb544b8; the structural slot) was REJECTED at block 1 (2348-2359,
   24 of 36 to v12's 24.0; paired t 0.00, D 8: gained 4, lost 4; TRAINING_LOG 2026-10-27 14:03). **Now: the ablation
   sweep** (plateau protocol step 2; TRAINING_LOG 2026-10-27 12:44): one carried switch off a build, each its own
-  candidate,
-  block 1 on v7-m1, paired rule against progress/panels/v12.ref, no studied cells: `tools/panel_paired.sh
+  candidate, block 1 on v7-m1, paired rule against progress/panels/v12.ref, no studied cells: `tools/panel_paired.sh
   progress/panels/v12.ref LO-HI`; block 1 rejects at t <= 0, accepts at t >= 2 with D >= 4; else block 2 on v7-m2
   (rejects at t <= 1), block 3 on v7-m3 (t <= 1.5). h218 (MUSTER 0, dist/h218 6bc61f8fd8ce) was REJECTED at block 1
   (2360-2371, 24 of 36; paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-27 15:01): MUSTER 2 stays. h214
