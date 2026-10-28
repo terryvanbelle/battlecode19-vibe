@@ -8122,3 +8122,18 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   escorts turned back on a prophet's first shot or died one at a time without killing the guard; close if they killed
   the guard and the site still went to the enemy in most. Stage 1 then uses v12-vs-v12 seats that already block our site
   (2321, 1706, 1712, 2644 red; TRAINING_LOG 16:00) before any squat partner.
+
+## 2026-10-27 20:01 PDT: EVICT closed at stage 0a: lost sites reachable in 3 loss cells (bar 4), an arithmetic ceiling
+- study/evict_arith.py (pion2_v12.txt with econt_v12.txt; scratchpad evict_arith.txt), the rule as registered at 19:59:
+  27 lost m 2-6 sites in the losses, **6 reachable, in 3 loss cells**: botfinalsafe 203 red (1837, 1849: squad there r73
+  to the enemy church r92) and blue (1654: r52 to r101), bot1v43 2321 blue (1656, 1840, 1852: r72 to r110), the judge's
+  count exactly. The rest fall short: wololo 836 red and 2644 (the bank reaches 185 K at r260-262 or never, the enemy
+  church r49-88), botfinalsafe 1706 (enemy church r36-39 before our call at r64), IanCoolidge0 1036 (r51-52 to a squad
+  at r79-81), bot1v43 1241 red (r83 to r139), wololo 1375 (bank never). In wins: 13 lost sites, 7 reachable, 4 cells (it
+  would fire there as often). **Under 4 cells EVICT closes as an arithmetic ceiling under the 155 K gate**: the bank
+  that pays a squad without delaying the pioneer wave comes after the enemy's church on most lost sites, and the 203
+  cells move for every candidate (12:15).
+- Described, not a decision input (the census was registered for m 2-6, the switch's EVICT_MMIN covers m 2 and up): lost
+  sites of m 7 and more in the losses are 12, 3 reachable, in 3 cells (uvafan 1822 both sides m 7, IanCoolidge0 2674
+  blue m 21). The closure stands; a land programme on those cells would need its own registration and fresh data.
+- The structural slot (still owed) goes to the panel's third proposal, FORT, whose stage 0 is a 0-game read (next).
