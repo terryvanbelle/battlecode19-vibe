@@ -8223,3 +8223,23 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   it returned) and the check-in cron.
 - h215 (PEACE_RESERVE_K 0) block 1 = 2412-2423 was queued and unplayed: no result, and it is not scored. HANDOFF's
   State says how to resume.
+
+## 2026-10-27 21:46 PDT: 2019 data deleted on battlecode-dev and claude-driver (PROMPTS 51, 52)
+
+- battlecode-dev: the replica was removed with the installed `galaxy-setup.sh teardown --purge-data`, which kept the
+  bc23 Caddy chain and site. These paths were then deleted by name:
+  - system: /etc/postgresql/15/bc19, the galaxy19 Caddy logs and certificate, /var/tmp/bc19-rating-snapshot.json and
+    two /tmp items;
+  - in ~: .bc19-galaxy, .bc19-replica-password, .cache/bc19-compile, bc19-galaxy-stage, fi, rpx, runs, scratch19,
+    smoketest, jobq and firsts_vm.sh;
+  - in ~/projects/vibe: 2019, 2019-next, bc19-benchmarks, bc19-toolchain and bc19-viewer-inputs.
+  Afterwards no path named bc19 or galaxy19 was left, and 16 GB of the disk is free. Kept: ~/projects/vibe/reference
+  (other years' material) and ~/crontab.bak.20261022 (it also holds a 2023 line).
+- claude-driver, after this commit is pushed:
+  - in ~/projects/vibe: bc19-benchmarks, bc19-galaxy-replays, bc19-toolchain, bc19-official and bc19-progress-cache;
+  - in ~: bc19 (the tmux launcher), .bc19-galaxy, .bc19-galaxy-team, .bc19-replica-password and .cache/bc19-compile;
+  - the session scratchpad;
+  - this checkout, last (everything in it is pushed; the untracked out/, 50 MB of diagnostic replays, was never
+    committed).
+  The session itself is ended last of all. Kept: other years' directories, ~/projects/vibe/reference, ~/.claude and
+  ~/.ssh.

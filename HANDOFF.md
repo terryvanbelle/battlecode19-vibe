@@ -1,14 +1,26 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-27 21:35 PDT)
-- **Shut down 2026-10-27 21:35 PDT at the owner's request (PROMPTS 51).** On battlecode-dev these units were stopped but
-  not disabled: bc19-galaxy-scheduler.timer, bc19-galaxy-activity, -saturn, -relay and -web, bc23-replica-caddy and
-  postgresql@15-bc19. The jobq runner (tools/jobq.sh run) was killed. To resume, start the units with
-  `sudo systemctl start` (postgres first, then web, relay, saturn, activity, the timer and caddy) and the runner
-  with `tools/jobq.sh start` in the VM's checkout.
-  h215's block 1 (2412-2423, submission 290) was queued and unplayed when saturn stopped: check its status, then
-  requeue or resubmit it. The second design panel (wf_1a0e58e8-36e) was stopped before it returned, and the
-  session's check-in cron was deleted. The structural slot is still owed.
+## State (2026-10-27 21:46 PDT)
+- **Shut down 2026-10-27 at the owner's request (PROMPTS 51, 52); the local 2019 data is deleted.** At 21:35 every
+  project process on battlecode-dev was stopped, the jobq runner included. bc23-replica-caddy was also stopped; it is
+  intact, but nothing is running.
+  At 21:45 the 2019 replica was torn down with `galaxy-setup.sh teardown --purge-data`. That removed:
+  - its units, CLI and egress unit;
+  - /opt/bc19-galaxy and /srv/bc19-galaxy;
+  - the bc19replica user and its galaxy home;
+  - Postgres cluster 15/bc19;
+  - /etc/bc19-galaxy and /usr/local/lib/bc19-galaxy;
+  - the Caddy site and its import line (the bc23 site is untouched).
+  The 2019 checkouts (2019, 2019-next), benchmarks, toolchain, job queue, scratch directories and replica credentials
+  were deleted on battlecode-dev and on claude-driver. The replica's match archives (bc19-galaxy-replays) are gone
+  too; only progress/ and the logs keep their results.
+  To resume:
+  - clone this repo;
+  - fetch and scan the benchmarks again (tools/bench-scan.sh);
+  - rebuild the replica from tools/galaxy19/deploy (README);
+  - restore v12.ref's reference games, which progress/panels/v12.ref names but which are no longer stored.
+  h215's block 1 (2412-2423) never played. The second design panel (wf_1a0e58e8-36e) was stopped before it returned.
+  The structural slot is still owed.
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both teams
   make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`, `dist/creep` (source +
