@@ -8053,3 +8053,36 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
 - The unit tests after config.js's comment fix: one run failed test 172 (run_game --turnlog: the castles' turn times
   against the clock bank) while the refresh had just loaded the driver; it passed alone twice and the full suite then
   passed (197 node + 67 Python). A timing test under load, not the change.
+
+## 2026-10-27 19:41 PDT: the structural slot: CHAIN_PRICE (price the line at r250) pre-registered; stage 0 first
+- **A design panel** (read-only workflow wf_38ac13af-089: three designers on land, capital and the lost cells, one judge
+  who spot-checked their numbers and grepped the ledger) proposed EVICT (a squad sized to the guard retakes a blocked
+  pioneer's site), CHAIN_PRICE and FORT (a wall read at r300 on poor boards, then a hoard). The judge picked CHAIN_PRICE
+  (6.5 of 10; EVICT 5, FORT 4): EVICT's reachable cells are few (6 of 27 lost sites have both 20+ rounds and 95+ K) and
+  its squad gate re-opens LEARNINGS 54; FORT's gate is unmeasured and mostly the hoard doctrine again.
+- **Thesis** (scratchpad econt_v12.txt, v12's 150 games of 1651-1658, 1831-1858, 1966-1979; reproduced with
+  study/price_class.py): from r200 v12 saves CHAIN_K and its guard quota waits on it. Project at r250 the round the bank
+  reaches 1,090 K: fill = 250 + (1090 - bank250) / ((bank250 - bank200) / 50). Games whose fill is after r350 (no line
+  fired over r200-250, bank under 1,090) went **3 W / 28 L**; fill by r350 69 / 20, a line fired 15 / 3, ended before
+  r250 2 / 6. Inside the class our military at r200-400 was 11-15 to their 36-60, and castles fell with 306-885 K banked
+  (botfinalsafe 1706 and 1884 blue, bot1v43 1915 blue). The projection splits uvafan 1653 (6-0, fill r278) from 2046
+  (0-6, fill r386). The hoard (h207, HOARD_ROUND 600) lifted 2046's end health to 2,610-2,790 from v12's 890-1,140 but
+  began after the r352 line had spent the gap; h207 was rejected at block 3, t 1.40 (+12 -6).
+- **The programme** (switches default 0 = v12): CHAIN_PRICE_BY 350 (a castle whose projected fill is later turns the
+  team, once, to a terminal-bank doctrine: no chain bank, chainer or attack calls; the guard quota resumes; with
+  TERM_SINK 1 karbonite past the quota goes to held crusaders on far-side hoard tiles (h207's hoardBuild, HOARD_FAR 6),
+  then to the bank; the endgame dump builds toward the far side). Later stages, each only on its trigger: HOARD_FAR 10
+  (dump boxed in), TERM_SAFE (the resumed guard fed), TERM_CHURCH, CHAIN_PRICE_MIL. If h212 (CHAIN_ROUND 0, block 1
+  running) is accepted first, the gate is rebased inverted (lines only where priced) under the same bars; no CHAIN_PRICE
+  block is submitted before h212's block 1 is scored.
+- **Stage 0a, out of sample, now** (replay reads only): study/econt.mjs over v12's v7-m3 control block 2099-2112 (42
+  games, one per cell, never used to design the gate), classified by study/price_class.py. **Bar: at least 4 of the 42
+  games unpriced, with losses at least 3 times wins. Otherwise the programme closes (criterion 4: too rare for a panel),
+  the switch never built.**
+- **Stage 0b and stage 1** (pre-registered after 0a passes, before any build): the firing seat chosen from existing
+  replays (scratchpad h209d/v12_creep_1822, h207d's 2046) or v12 self-play to r260; the stage 1 diagnostic (no-op on
+  799; inert to r300 on 1653 and 2013; a firing game to r1000 diffed `--board` against v12's in the same seat, the first
+  difference on our turn at r250 +- 1) with the judge's bars: every castle unpriced at r250 +- 1, 0 lines and 0 attack
+  calls after r251; guard per structure at least GUARD_BASE + round/40 by r400; held crusaders alive at r1000 >= 90% of
+  those built; end bank <= 150 K; fuel never below 500 in the dump; castles lost no more than v12's; 0 exceptions,
+  timeouts and frozen turns.
