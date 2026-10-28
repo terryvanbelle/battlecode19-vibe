@@ -163,7 +163,8 @@ function planClusters(B) {
   st.claim = null;
   if (CFG.CLAIM && claimC && claimC.owner === myIdx && (!CFG.CLAIM_BANK || claimPaid(B, own, myIdx))) {
     const tile = claimTile(w, B.clusters[claimC.cluster].site, own[myIdx], own.map(c => w.mirror(c.x, c.y)));
-    if (tile) st.claim = { cluster: claimC.cluster, d: claimC.d, m: claimC.m, x: tile[0], y: tile[1], built: 0, sent: false };
+    if (tile && (!CFG.CLAIM_REACH || claimReach(w, own[myIdx], tile)))
+      st.claim = { cluster: claimC.cluster, d: claimC.d, m: claimC.m, x: tile[0], y: tile[1], built: 0, sent: false };
   }
   // CFG.PLAN_CONTEST_FIRST: clusters the enemy reaches within that many moves of us go first; the middle is a race
   // (seed 1828 with SERVE_MOVES 2: the near clusters delayed the centre pioneers from round 27 to 48-67 and h19 won it).
@@ -301,6 +302,12 @@ function claimPaid(B, own, owner) {
   const team = staffed.reduce((a, b) => a + b, 0);
   return staffed[owner] <= CFG.CLAIM_BANK &&
     (team + 1) * STATS[PILGRIM].costK + STATS[CFG.CLAIM_UNIT].costK <= START_K;
+}
+
+// CFG.CLAIM_REACH: the claimant's tile is at most CLAIM_REACH of its own moves from the castle `o` over passable tiles.
+function claimReach(w, o, [x, y]) {
+  const k = bfs(w, [[o.x, o.y]], offsets(STATS[CFG.CLAIM_UNIT].speed))[y * w.n + x];
+  return k >= 0 && k <= CFG.CLAIM_REACH;
 }
 
 // CFG.CLAIM: where the claimant stands for the site (x, y) of a cluster the castle `o` owns: a passable lattice tile, no

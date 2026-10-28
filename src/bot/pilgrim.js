@@ -187,8 +187,12 @@ function pilgrimAct(B) {
 
   siteTaken(B);
   siteTimeout(B);
-  // CFG.CLAIM_FUND: the claim's pioneer tells castles it is out until it builds (CT.CHURCH overwrites) or gives up.
-  if (CFG.CLAIM_FUND && st.claimed) { if (st.site) w.talk(CT.CLAIM); else st.claimed = false; }
+  // CFG.CLAIM_FUND: the claim's pioneer tells castles it is out until it builds (CT.CHURCH overwrites) or gives up (2: only
+  // once it stands beside its site).
+  if (CFG.CLAIM_FUND && st.claimed) {
+    if (!st.site) st.claimed = false;
+    else if (CFG.CLAIM_FUND < 2 || king(me.x, me.y, st.site[0], st.site[1]) <= 1) w.talk(CT.CLAIM);
+  }
 
   // CFG.CHAIN_ROUND: a chainer walks, waits and builds the first church; a link pilgrim builds the next one.
   if (st.chain) { const a = pilgrimChain(B, go); if (a !== undefined) return a; }

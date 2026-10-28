@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-27 17:33 PDT)
+## State (2026-10-27 18:04 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both teams
   make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`, `dist/creep` (source +
@@ -76,21 +76,21 @@
   blocks. Decided panels: progress/ATTEMPTS.md and
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
-  h198, h201, h206, h202, h207, h209, h211, h213 rejected; sweep: h218 rejected).
-  **Replica queue (17:31): 67 waiting (67 ranked); h214 block 2 = 2386-2399: 10 done, 4 running (submission 286,
-  bumped); VM 8.9 GB free, no VM jobs. Waiter: scratchpad wait_block.sh 2386 2399. The CLAIM programme (plateau step 7,
-  TRAINING_LOG 2026-10-27 15:13), closed at stage 1 at 16:58, is reopened with a fix for the opening bank (TRAINING_LOG
-  17:33): h227 (dist/h227 1e8676ce0ebc: CLAIM 1, CLAIM_FUND 1, CLAIM_AFTER 1, CLAIM_BANK 4, the claim only where the
-  opening bank pays it: 12 of 40 pool maps) plays its driver diagnostic on fresh seeds (scratchpad claimpair.sh;
-  claimpair_h227 and claimpair_v12, bars as registered); if it passes, its block 1 on the targeted panel
-  progress/panels/claim-t1.json (40 cells with v12 references, no control block) is the structural slot's, submitted
-  after h212's block 1 is scored (`PANEL=progress/panels/claim-t1.json tools/panel_submit.sh dist/h227 ...`), scored
-  with `tools/panel_paired.sh --studied m-schier.battlecode-2019-wololo:seed-2644,StoneT2000.BC19-botfinalsafe:seed-1706
-  progress/panels/v12.ref LO-HI`. tools/build_bot.js inlines CFG from 17:20 (defaults bundle 47,767 -> 37,433 bytes;
-  replays identical: TRAINING_LOG 17:20).**
+  h198, h201, h206, h202, h207, h209, h211, h213 rejected; sweep: h218, h214 rejected).
+  **Replica queue (17:31): 67 waiting (67 ranked); no block of ours playing since h214's block 2 finished 18:02; VM
+  8.9 GB free, no VM jobs. The CLAIM programme (plateau step 7, TRAINING_LOG 2026-10-27 15:13; stage 1 closed 16:58,
+  reopened 17:33): h227 (CLAIM_BANK 4) missed its driver diagnostic (TRAINING_LOG 18:00: station by r20 7 of 10, the
+  economy bar on 1375, 826, 1915, blue 1036). The one fix round, h228 (CLAIM 1, CLAIM_FUND 2: the hold only once the
+  claim's pioneer is beside its site; CLAIM_AFTER 1, CLAIM_BANK 4, CLAIM_REACH 15: the claimant's tile within 15 of its
+  moves; 7 of 40 pool maps), plays the same ten games on the driver (scratchpad h228_run.sh: no-op check, unit tests,
+  build, `SKIP_V12=1 INERT_ALSO="red_388 red_1375" claimpair.sh h228`; outputs claimpair_h228). A miss closes CLAIM
+  stage 1 for good; a pass queues its block 1 on the targeted panel progress/panels/claim-t2.json (28 cells, to be
+  written from 18:00's list), the structural slot's, after h212's block 1 is scored, scored with `tools/panel_paired.sh
+  --studied m-schier.battlecode-2019-wololo:seed-2644 progress/panels/v12.ref LO-HI`. tools/build_bot.js inlines CFG
+  from 17:20 (TRAINING_LOG 17:20).**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the
-  autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 16:11 (after h214's block 1); next refresh between
-  blocks.
+  autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 16:11 (after h214's block 1); next refresh before
+  h212's block 1, after h228's driver games (one heavy job at a time).
   Replica gate: the JWT path answers siarnaq's 401 as 403 (PROMPTS 48, LEARNINGS 49; TRAINING_LOG 2026-10-26 13:51).
   v12's control block on v7-m2 = matches 1966-1979 (submission 246; 18 of 42) is in progress/panels/v12.ref. h206 (v12 +
   PIONEER_IDLE 2) was REJECTED at block 2 (1980-1993, 20 of 42; blocks 1+2 paired t 0.99 <= 1, D 21: gained 14, lost 7;
@@ -111,12 +111,13 @@
   (rejects at t <= 1), block 3 on v7-m3 (t <= 1.5). h218 (MUSTER 0, dist/h218 6bc61f8fd8ce) was REJECTED at block 1
   (2360-2371, 24 of 36; paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-27 15:01): MUSTER 2 stays. h214
   (ECON_UNTIL 0, dist/h214 2e0b3ce253ef) block 1 (2372-2383, 25 of 36; paired t 0.46, D 9: gained 6, lost 3;
-  TRAINING_LOG 2026-10-27 16:12) passed neither bar: **block 2 on v7-m2 = matches 2386-2399** (submission 286). Then
-  h212 (CHAIN_ROUND 0), h215 (PEACE_RESERVE_K 0), h220 (DEF_RESERVE_K 0), h216 (MARCH_MASK 56), h219 (PIONEER_RESERVE
-  0), h221 (PIONEERS_TEAM 0), h222 (PLAN_VALUE 0), h217 (ESCORT_FIRST 0), each submitted with `tools/panel_submit.sh
-  dist/hN "..."` after the last one's block 1 is scored and progress/ refreshed; an accepted ablation becomes the
+  TRAINING_LOG 2026-10-27 16:12) passed neither bar and was REJECTED at block 2 (2386-2399; blocks 1+2 paired t 0.84 <=
+  1, 78 cells, D 17: gained 11, lost 6; TRAINING_LOG 2026-10-27 18:04): ECON_UNTIL 100 stays. **Next: h212 (CHAIN_ROUND
+  0)**, h215 (PEACE_RESERVE_K 0), h220 (DEF_RESERVE_K 0), h216 (MARCH_MASK 56), h219 (PIONEER_RESERVE 0), h221
+  (PIONEERS_TEAM 0), h222 (PLAN_VALUE 0), h217 (ESCORT_FIRST 0), each submitted with `tools/panel_submit.sh dist/hN
+  "..."` after the last one's block 1 is scored and progress/ refreshed; an accepted ablation becomes the
   champion and the rest are rebuilt on it. Then h204, h205.
-  Refresh progress/ between blocks only (last 16:11, after h214's block 1).
+  Refresh progress/ between blocks only (last 16:11, after h214's block 1; next before h212's block 1).
   h201 was REJECTED on block 1 (paired t 0.00, D 10: gained 6, lost 4; TRAINING_LOG 2026-10-26 20:56; mechanism
   check passed, 21:33), h198 REJECTED on block 1 (paired t 0.00, D 9; 19:25), h203 REJECTED on
   block 1 (23 of 36, z -0.78; TRAINING_LOG 2026-10-26 18:15), h195 on three blocks (74 of 108, z 1.00; TRAINING_LOG

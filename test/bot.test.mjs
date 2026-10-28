@@ -4236,6 +4236,13 @@ test('castle: CLAIM_BANK keeps the claim only where the opening bank pays it and
     for (const s of [2321, 836, 203]) assert.deepStrictEqual(kept[s], [0, 0], 'dropped ' + s);
     CFG.CLAIM_BANK = 5;   // 2321's owner staffs 5 depots
     assert.deepStrictEqual(claims()[2321], [1, 1]);
+    // CLAIM_REACH: the claimant's tile within that many prophet moves of its owner (h227: 826 11, 388 16, 1375 21).
+    Object.assign(CFG, { CLAIM_BANK: 0, CLAIM_REACH: 15 });
+    const near = Object.fromEntries([826, 388, 1375].map(s => [s, [0, 1].map(t => planOf(s, t).filter(c => c.B.st.claim).length)]));
+    assert.deepStrictEqual(near, { 826: [1, 1], 388: [0, 0], 1375: [0, 0] });
+    CFG.CLAIM_REACH = 21;
+    assert.deepStrictEqual([0, 1].map(t => planOf(1375, t).filter(c => c.B.st.claim).length), [1, 1]);
+    CFG.CLAIM_REACH = 0;
     // A crusader claimant (15 K) leaves room for one more pilgrim: 203's 8 depots still do not fit (9 x 10 + 15 > 100).
     Object.assign(CFG, { CLAIM_BANK: 4, CLAIM_UNIT: S.CRUSADER });
     assert.deepStrictEqual(claims()[203], [0, 0]);
@@ -4365,7 +4372,7 @@ test('military: CLAIM a unit born hearing SIG.GUARD at r2 CLAIM_R2 holds its til
   } finally { Object.assign(CFG, saved); }
 });
 
-test('pilgrim: CLAIM_FUND the claim\'s pioneer (SIG.CHURCH at r2 CLAIM_R2) talks CT.CLAIM while it has its site', () => {
+test('pilgrim: CLAIM_FUND the claim\'s pioneer (SIG.CHURCH at r2 CLAIM_R2) talks CT.CLAIM while it has its site (2: beside it)', () => {
   const saved = { ...CFG };
   try {
     const g = new Game(1205, 100, 20, false, false), n = g.map.length;
@@ -4373,9 +4380,9 @@ test('pilgrim: CLAIM_FUND the claim\'s pioneer (SIG.CHURCH at r2 CLAIM_R2) talks
     const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && g.map[y][x] && !g.robots.some(q => q.x === x && q.y === y);
     let at = null; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]) if (!at && free(castle.x + dx, castle.y + dy)) at = [castle.x + dx, castle.y + dy];
     const cw = worldFor(g, castle), site = [cw.me.x + 6, cw.me.y + 8];
-    const talks = (fund, r2) => {
+    const talks = (fund, r2, [sx, sy] = site) => {
       CFG.CLAIM_FUND = fund;
-      castle.signal = encXY(SIG.CHURCH, site[0], site[1]); castle.signal_radius = r2;
+      castle.signal = encXY(SIG.CHURCH, sx, sy); castle.signal_radius = r2;
       const p = { id: 4005, team: 0, unit: S.PILGRIM, x: at[0], y: at[1], turn: 1, health: 10, karbonite: 0, fuel: 0, signal: 0, signal_radius: 0, castle_talk: 0 };
       g.robots.push(p);
       const B = { round: 0, birthRound: 0, st: {}, deps: null, clusters: null, rnd: rng(2) }, out = [];
@@ -4390,6 +4397,8 @@ test('pilgrim: CLAIM_FUND the claim\'s pioneer (SIG.CHURCH at r2 CLAIM_R2) talks
     assert.deepStrictEqual(talks(1, CLAIM_R2), { out: [CT.CLAIM, CT.CLAIM], claimed: false });
     assert.deepStrictEqual(talks(0, CLAIM_R2), { out: [], claimed: false });   // default: no talk
     assert.deepStrictEqual(talks(1, 2), { out: [], claimed: false });          // an ordinary pioneer
+    assert.deepStrictEqual(talks(2, CLAIM_R2), { out: [], claimed: false });   // 2: still walking to its site
+    assert.deepStrictEqual(talks(2, CLAIM_R2, [cw.me.x, cw.me.y]), { out: [CT.CLAIM, CT.CLAIM], claimed: false });   // beside it
   } finally { Object.assign(CFG, saved); }
 });
 

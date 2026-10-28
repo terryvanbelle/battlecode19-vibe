@@ -7960,3 +7960,58 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   an enemy church on our half at r100 in fewer of them than in v12's games on the same cells.
 - **Order:** h227's block 1 is the structural slot's (§3): queued when its diagnostic passes and h212's block 1 (next
   after h214's block 2) is scored; the sweep goes on after it.
+
+## 2026-10-27 18:00 PDT: h227 (CLAIM_BANK) misses its diagnostic on station and economy; the one fix round = h228
+- **h227's diagnostic** (17:33's ten fresh-seed games against bots/v12 to r150, read against bots/v12 in the same seat;
+  scratchpad claimpair_h227, claimpair_v12): the claim fired in 10 of 10; 0 exceptions, timeouts and frozen turns. Met:
+  the claimant built r3-r5 in every game, alive at r40 in 10 of 10 (16:58's defect 2, the raid, did not show); the
+  pioneer away r5-r7 in every game; our church on the claimed site in 10 of 10 (r23-r40; v12 in the same seat: none by
+  r150 in any); inert on 836 and 1712 (byte-identical to v12's replays).
+- **Missed:** on station by r20 in 7 of 10 (bar 75%): 388 r21, 1375 r23, blue 2013 r23 (it fought on the way, r10-r18;
+  the red 2013 game is not its mirror: the claimant stood at r17). The economy bar, in every game: pilgrims by r30 h227
+  / v12 4/7 on 1375 and 9/11 on 826 (the rest within 1); churches at r60 1/2 on 1375, 1/2 on 1915, 3/4 on blue 1036 (the
+  rest at least v12's). At r150 (churches / pilgrims / mined K, h227 vs v12): 2013 4/24/1532 vs 4/21/1278, 388 2/9/1210
+  vs 1/9/1022, 1036 5/26/2712 vs 4/18/1598, 1375 6/24/1398 vs 9/37/2026, 1915 2/8/630 vs 2/6/640, 1241 8/33/1898 vs
+  6/27/1084, 747 1/9/1172 vs 0/7/712, 826 8/32/2862 vs 7/29/2682, blue 2013 4/24/1532 vs 5/24/1674, blue 1036 5/26/2712
+  vs 5/26/2872: ahead on 6, level on 1915, behind on 3.
+- **Defect 3, the hold idles while the pioneer walks.** CLAIM_FUND 1 holds 50 K from the economy pilgrims from the claim
+  pioneer's birth (r5-r7) to its church; the pioneer can use it only beside its site. On 1375 (pioneer arrives r32,
+  church r40) the bank sat at 60-85 K with 4 pilgrims from r15 to r30 (v12: 3 to 7 pilgrims r20-r30); on 826 at 71 K
+  r15-r20 (v12 sent 5 more by r30). On 1915 (two depots, about 2 K a round) the 35 K opening and the claimed church at
+  r40 put the second church after r60 (v12: r50 and r60); level by r150.
+- **Defect 4, reach.** The claimants that missed r20 on their own were the two farthest: 388 16 and 1375 21 of the
+  claimant's moves (r2 4) from its castle; the rest 11-15 (scratchpad study/claimdist.mjs). h225's 1706 (19 moves) stood
+  at r20 and r23. Station = built + moves + 1 to 3.
+- **The fix round (the one 17:33 allowed): dist/h228** = h227 with CLAIM_FUND 2 (the claim's pioneer talks CT.CLAIM only
+  once beside its site; pilgrim.js) and CLAIM_REACH 15 (castle.js claimReach: the claim only where its tile is at most
+  15 of the claimant's moves from its owner: a claimant built on turn 5, CLAIM_BANK 4's latest, stands by r20). On the
+  ladder pool CLAIM_BANK 4 + CLAIM_REACH 15 keeps the claim on 7 of 40 maps (826, 1915, 747, 2013, 1241, 2644, 1036) and
+  drops 493, 1375, 1706, 388 and 53 (tools/plan.mjs). Unit tests: CLAIM_FUND 2 talks only beside the site; CLAIM_REACH
+  15 keeps 826 and drops 388 and 1375, both teams. The no-op check and the diagnostic run on the driver.
+- **h228's diagnostic, bars fixed now**: the same ten games (scratchpad claimpair.sh h228). The registered bars of 15:13
+  per fired game (now 8: 388 and 1375 drop the claim): claimant built by r5 in each, on station by r20 in >= 75% (6 of
+  8), alive at r40 in >= half; pioneer away by r8 in each; our church on the claimed site in >= half where the claimant
+  held; pilgrims at r30 within 1 of v12's and churches at r60 at least v12's in each; 0 exceptions, timeouts and frozen
+  turns. Inert: h228's 388 and 1375 games byte-identical to v12's in the same seat, and 836 and 1712 to claimbase_v12's.
+  A miss closes CLAIM stage 1 as an execution failure; no further fix round.
+- **If it passes, a targeted panel of h228's own maps** (§4): block 1 = progress/panels/claim-t2.json, every cell of
+  v7-m1, m2 and m3 on a map where h228 claims: wololo 2644, 2013; botfinalsafe 1915, 1036; bot1v43 1915, 1241; uvafan
+  1036; awesomelemonade 1915, 747; IanCoolidge0 1036, 2644, 2013, 1241; mvpatel2000 747. 14 opponent-maps, both sides,
+  28 games, all in progress/panels/v12.ref. panelsim --cells 28: a neutral candidate accepted 4.7-5.3%; one that wins
+  75% of the cells it changes, 37% at 20% of cells changed. Rule as 17:33's with `--studied
+  m-schier.battlecode-2019-wololo:seed-2644` (1706 is no longer claimed): block 1 rejects at t <= 0, accepts at t >= 2
+  with D >= 4, the studied cell gaining and the others at t >= 0; blocks 2-4 on T2/T3 drawn as 17:33 says. Its worth to
+  the ladder is the effect times 7 of 40 maps.
+
+## 2026-10-27 18:04 PDT: h214 (ECON_UNTIL 0) REJECTED at block 2 (t 0.84): ECON_UNTIL 100 stays; h212 next
+- **h214 block 2** on v7-m2 = matches 2386-2399 (submission 286), finished 18:02, fetched. Scored by the rule
+  (TRAINING_ALGORITHM §4: every cell of the candidate's blocks once): `tools/panel_paired.sh progress/panels/v12.ref
+  2372-2383 2386-2399`: 78 cells, 61 alike; D 17 (gained 11, lost 6), net +3.00, **t 0.84**, at or below block 2's
+  reject bar (t <= 1). Block 2 alone (16:12 wrote its command for block 2 only): 42 cells, 34 alike, D 8 (gained 5, lost
+  3), net +2.00, t 0.71: the same verdict. Block 2's gains: IanCoolidge0 2591 blue and 2674 blue, awesomelemonade 747
+  both sides, mvpatel2000 203 red (v12 0 of 1 each); losses: bot1v43 1915 red, botfinalsafe 1915 blue and 2924 blue (v12
+  1 of 1 each). No pooled description: the v7-m2 set has no pool file.
+- **Sweep 2 of 10 rejected:** v12 keeps ECON_UNTIL 100 (no peacetime army before r100). The two blocks' gains were again
+  chance cells; nothing in them asks for a follow-up.
+- Next: progress/ refreshed between blocks (after h228's driver diagnostic, one heavy job at a time), then h212's block
+  1 (CHAIN_ROUND 0, sweep 3) on v7-m1.
