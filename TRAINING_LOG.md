@@ -8206,3 +8206,10 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   at r501-541; castlekill_v12.txt, chain_v12.txt), the build without the chain loses both sides on health.
 - Sweep 3 of 10 done (h218, h214, h212 rejected). Next, by the 12:44 order: h215 (PEACE_RESERVE_K 0) block 1 on v7-m1,
   after the progress refresh between blocks.
+
+## 2026-10-27 21:19 PDT: h215 (v12 + PEACE_RESERVE_K 0, sweep 4 of 10) block 1 submitted: matches 2412-2423
+
+- progress/ refreshed 21:18 between blocks (h212's block 1 is in it). h215 (dist/h215 58eabebea4e1, built 12:44 on
+  src e7f87a4) = candidate submission 290, v7-m1 panel, both sides against six opponents; ladder submission 291 =
+  bots/v12; panel_submit.sh bumped our matches to the front as it always does (13 waiting after, 1 ranked). Scored as
+  the 12:44 rule says when 2412-2423 finish (waiter scratchpad wait_block.sh 2412 2423).
