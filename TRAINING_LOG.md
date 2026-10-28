@@ -8137,3 +8137,30 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   sites of m 7 and more in the losses are 12, 3 reachable, in 3 cells (uvafan 1822 both sides m 7, IanCoolidge0 2674
   blue m 21). The closure stands; a land programme on those cells would need its own registration and fresh data.
 - The structural slot (still owed) goes to the panel's third proposal, FORT, whose stage 0 is a 0-game read (next).
+
+## 2026-10-27 20:06 PDT: FORT stage 0 pre-registered (a 0-game read of v12's 192 reference games)
+- FORT (the design panel's third proposal, wf_38ac13af-089, judged 4): on karbonite-poor boards, if nothing of the
+  enemy's has crossed to our half or hit us by r300, stop lines and attacks, pull the guard out of a midline wall's
+  reach, and hold every karbonite past the reserves as crusaders (2.67 health per K) on the safe zone. Target: the 15
+  games v12 lost on health at r1000 against a wall: uvafan 2046 (1657, 1658, 1841, 1842, 1853, 1854), 2330 (1972 red,
+  1973 blue), 2057 (1972 red, 1973 blue), 2518 red (2105); mvpatel2000 2046 (2111 red, 2112 blue), 203 (1978 red, 1979
+  blue). The stage 0 read answers the 01:20 question "tell uvafan's lattice from the opponents whose castles our lines
+  take".
+- Tool: scratchpad study/fortread.mjs (replay simulate to r350, our side from match.json red_team;
+  study/fortread_matches.sh over 1651-1658, 1831-1858, 1966-1979, 2099-2112). Per game: K (karbonite depots), safe
+  (passable non-depot tiles of our half more than 9 rows from the mirror line, ((cx+cy)&1)===0 in our canonical frame),
+  our castles, and the first round of: inv (an enemy crusader, prophet or preacher on our half within r2 100 of our
+  castle, church or pilgrim, at a round's end), hit (damage to our castle or church), kill (an enemy castle dead), ech
+  (an enemy church born on our half).
+- **Rule R at cut c (registered c = 300): K <= 10, and none of inv, hit, kill, ech by round c.**
+- Bars, as the proposal set them:
+  - bar 1: R fires in at least 11 of the 15 target games;
+  - bar 2: R fires in at most 2 of the wins on K <= 10 maps whose first enemy castle kill (castlekill_v12.txt) came
+    after c;
+  - bar 3: R fires in at most 25% of the other K <= 10 games;
+  - bar 4: on at least 3 of the 5 target maps (2046, 2330, 2057, 2518, 203), safe x 40 + 200 x our castles is at least
+    1.2 x the largest opponent end health among that map's target games (fixed here: the largest, not the median).
+- Budget: one alternative cut, chosen by the bar that fails: bar 1 short, castle vision only (inv counted only near a
+  castle); bar 2 or 3 over, c = 350. Bar 4 has no alternative. Then FORT closes at stage 0, or stage 1 (the read in the
+  bot, FORT_ACT 0) follows.
+- Seen before this entry: the tool's test run on 1657 seed-2046 red (a target game): K 6, safe 105, no event to r350.
