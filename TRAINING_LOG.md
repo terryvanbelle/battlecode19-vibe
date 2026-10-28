@@ -8188,3 +8188,21 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
 - The structural slot is still owed. All three proposals of the design panel (wf_38ac13af-089) closed at stage 0 for 0
   games: CHAIN_PRICE (out of sample), EVICT (arithmetic) and FORT (separation and capacity). The next structural attempt
   needs a new design round that is shown these three closures.
+
+## 2026-10-27 21:15 PDT: h212 (v12 + CHAIN_ROUND 0, the chain's ablation) REJECTED at block 1: 18 of 36, t -1.92
+- Block 1 = matches 2400-2411 (v7-m1, submission 288, finished 21:15): 18 of 36 to v12's 24.0 on the same cells; paired
+  against progress/panels/v12.ref: 36 cells, 21 alike, D 15 (gained 5, lost 10), net -6.00, **t -1.92 <= 0: REJECTED**
+  under the 12:44 rule. The church chain (v7) stays. Pooled against v12-m1.pool (description): z -2.85, side-aware -340
+  Elo (95% -533 to -150).
+- Lost cells (d -1 unless noted): wololo 2013 red and blue (the pool's 17 of 18; castles at r515 and r951), wololo 836
+  blue (castles at r1000, 5,250 to 4,250 in health), uvafan 1653 red and blue (pool 17 of 18; health 3,740 and 3,870
+  against 7,300 and 7,370), bot1v43 2321 red (castles at r393) and 388 blue (health 1,530 to 4,930), awesomelemonade
+  2797 blue (health 7,870 to 14,470), IanCoolidge0 1036 blue (-0.33, castles at r664), botfinalsafe 203 red (-0.33,
+  castles at r929). Gained: IanCoolidge0 1036 red and 203 red (+0.67 each), 203 blue (+0.33), botfinalsafe 203 blue
+  (+0.33) and 2740 blue (+0.67).
+- The cells that motivated the ablation did not move: uvafan 2046 lost both sides on health, 740 and 670 against 5,210
+  and 5,280 (v12: 890-1,140 against 6,290-6,680). On uvafan 1653, where v12 won all six reference games with one castle
+  kill each (red by a castle's crusader at r471-472 after two lines without a kill, blue by a preacher from a third line
+  at r501-541; castlekill_v12.txt, chain_v12.txt), the build without the chain loses both sides on health.
+- Sweep 3 of 10 done (h218, h214, h212 rejected). Next, by the 12:44 order: h215 (PEACE_RESERVE_K 0) block 1 on v7-m1,
+  after the progress refresh between blocks.
