@@ -77,12 +77,12 @@
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
   h198, h201, h206, h202, h207, h209, h211, h213 rejected; sweep: h218, h214 rejected).
-  **Replica queue (18:08): 52 waiting (52 ranked); h212 block 1 = 2400-2411 queued 18:44 (submission 288, bumped; waiter
-  scratchpad wait_block.sh 2400 2411); VM 8.8 GB free, no VM jobs. The CLAIM programme (plateau step 7, TRAINING_LOG
-  2026-10-27 15:13) is closed for good at stage 1 after five builds (h224-h228; TRAINING_LOG 18:21): h228, the one fix
-  round, missed the economy bar on 826, 1915 and blue 1036 (the claim pair's 35 K delays the 90 K pioneer wave); its
-  CLAIM_FUND 2 replayed h227 board-identical (LEARNINGS 55). The structural slot stays owed: chosen and pre-registered
-  while h212 plays. tools/build_bot.js inlines CFG from 17:20 (TRAINING_LOG 17:20).**
+  **Replica queue (19:23): 40 waiting (39 ranked); h212 block 1 = 2400-2411: 4 done, 7 running (submission 288, bumped;
+  waiter scratchpad wait_block.sh 2400 2411); VM 8.7 GB free, no VM jobs. The CLAIM programme (plateau step 7,
+  TRAINING_LOG 2026-10-27 15:13) is closed for good at stage 1 after five builds (h224-h228; TRAINING_LOG 18:21): h228,
+  the one fix round, missed the economy bar on 826, 1915 and blue 1036 (the claim pair's 35 K delays the 90 K pioneer
+  wave); its CLAIM_FUND 2 replayed h227 board-identical (LEARNINGS 55). The structural slot stays owed: chosen and
+  pre-registered while h212 plays. tools/build_bot.js inlines CFG from 17:20 (TRAINING_LOG 17:20).**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the
   autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 18:22 (between h214's block 2 and h212's block
   1); next refresh after h212's block 1 is scored.
