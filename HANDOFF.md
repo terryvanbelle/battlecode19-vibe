@@ -1,6 +1,14 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-27 21:19 PDT)
+## State (2026-10-27 21:35 PDT)
+- **Shut down 2026-10-27 21:35 PDT at the owner's request (PROMPTS 51).** On battlecode-dev these units were stopped but
+  not disabled: bc19-galaxy-scheduler.timer, bc19-galaxy-activity, -saturn, -relay and -web, bc23-replica-caddy and
+  postgresql@15-bc19. The jobq runner (tools/jobq.sh run) was killed. To resume, start the units with
+  `sudo systemctl start` (postgres first, then web, relay, saturn, activity, the timer and caddy) and the runner
+  with `tools/jobq.sh start` in the VM's checkout.
+  h215's block 1 (2412-2423, submission 290) was queued and unplayed when saturn stopped: check its status, then
+  requeue or resubmit it. The second design panel (wf_1a0e58e8-36e) was stopped before it returned, and the
+  session's check-in cron was deleted. The structural slot is still owed.
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both teams
   make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`, `dist/creep` (source +

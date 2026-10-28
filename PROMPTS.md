@@ -182,3 +182,6 @@ progress/ doesn't have v12, and it looks like the panel games for it are complet
 
 ## 50. 2026-10-26 14:35 PDT
 Which acceptances have stemmed from ideas you got from ECONOMICS.md?
+
+## 51. 2026-10-27 21:34 PDT
+OK, time to shut down.  Please commit all changes, kill all processes on the two VMs, and delete all local data

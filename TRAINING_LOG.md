@@ -8213,3 +8213,13 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   src e7f87a4) = candidate submission 290, v7-m1 panel, both sides against six opponents; ladder submission 291 =
   bots/v12; panel_submit.sh bumped our matches to the front as it always does (13 waiting after, 1 ranked). Scored as
   the 12:44 rule says when 2412-2423 finish (waiter scratchpad wait_block.sh 2412 2423).
+
+## 2026-10-27 21:35 PDT: shut down at the owner's request (PROMPTS 51)
+
+- These were stopped and not disabled on battlecode-dev: the replica's units bc19-galaxy-scheduler.timer,
+  bc19-galaxy-activity, -saturn, -relay and -web, bc23-replica-caddy and postgresql@15-bc19. The jobq runner was killed
+  by PID. Afterwards no process of terryvanbelle, bc19replica, caddy or postgres was left.
+- The session's own background work was stopped: h215's block waiter, the second design panel (wf_1a0e58e8-36e, before
+  it returned) and the check-in cron.
+- h215 (PEACE_RESERVE_K 0) block 1 = 2412-2423 was queued and unplayed: no result, and it is not scored. HANDOFF's
+  State says how to resume.
