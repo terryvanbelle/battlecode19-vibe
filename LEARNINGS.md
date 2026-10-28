@@ -350,3 +350,8 @@
    the log had answered it a day earlier (2026-10-26 18:41: h203's escort chased the kiting prophet into wololo's
    castle reach and died at r20; the cell is lost on the economy behind the escort). `grep -n 2644 TRAINING_LOG.md`
    plus the switch names costs a minute; the re-read cost half an hour and a build. (2026-10-27 14:21)
+54. **The opening bank is spoken for: an early unit costs a depot pilgrim, or waits.** 100 K pays our depot pilgrims
+   through turn 4 and the 30 K reserve. A claim pair (25 K prophet + 10 K pioneer) on turns 3-5 cost 2-3 pilgrims by
+   r30 on rich openings (h224); bought after the depot pilgrims it left 5 K for six turns and the pioneer waited to r12
+   (h225); a 15 K crusader kept the timing and died to the enemy's crusader pair (h226). Price an opening change in
+   pilgrims by r30 against the champion in the same seats before writing it. (2026-10-27 16:58)

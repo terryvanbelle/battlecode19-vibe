@@ -7880,3 +7880,29 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   deaths were 20-HP prophets killed at r2 16 by crusaders. Unit test added (2644: turn 3 a depot pilgrim, turn 4 the
   crusader with SIG.GUARD at r2 4, turn 6 the pioneer). Same 12 games, same bars; a miss closes stage 1 as an execution
   failure (15:13), the defect named.
+
+## 2026-10-27 16:58 PDT: CLAIM stage 1 closed as an execution failure after fix round 2 (h226); the defects named
+- dist/h226 (CLAIM 1, CLAIM_FUND 1, CLAIM_AT 4, CLAIM_UNIT 3; 793f89e343aa; no-op check IDENTICAL, 196 + 67 unit tests
+  pass), the same 12 games and bars (scratchpad claimdiag_h226). 0 exceptions, timeouts, frozen turns or errors.
+- **Passed:** the crusader claimant built on turn 4 in 11 of 11, on station by r13 in 11 of 11 (r6-r13); the pioneer
+  away by r7 in 10 of 11; pilgrims by r30 within 1 of v12's in 11 of 12.
+- **Missed:** alive at r40 in **2 of 11** (bar half; deaths r11-r25); the pioneer on 203 at r11 (bar r8); pilgrims by
+  r30 on 2321 5 against v12's 9; churches at r60 on 1712 (1 against 2) and 836 (2 against 3); no church on the claimed
+  site on 1706 and 2644 red, where an enemy church stood within 3 of it at r66 and r50.
+- **Who killed the claimants** (tools/replay.js events): on 2644, 836 and 1706 two crusaders; on 2321 and 203 one
+  crusader (three hits); on camp 2644 a prophet. The pairs have the size and timing of v12's mirror raid (ESCORT_FIRST 2
+  crusaders with ESCORT_MIRROR 1 hold the enemy's mirror of their contested site, which is our claimed site). Two of
+  h224's prophet claimants died to a crusader too (1706 r18, 2321 r12).
+- **Stage 1 closes as an execution failure** (rule of 15:13: a miss after two fix rounds), with the defects named: 1.
+  *The opening bank.* 100 K pays v12's depot pilgrims through turn 4 and the 30 K reserve. The claim pair's 35 K on
+  turns 3-5 displaced 2-3 pilgrims on the rich openings (h224: 836, 1712, 2321); bought after the depot pilgrims it
+  emptied the bank and the pioneer waited to r12 (h225: 836 had 5 K from r5 to r10); a 15 K crusader claimant (h226)
+  kept the timing and died. 2. *The lone claimant meets the raid.* Two crusaders reached our site by r10-r16 against
+  v12-family opponents; CLAIM_COVER (a second unit, registered for 3+ melee deaths) costs 15 K more against defect 1.
+  The thesis is not refuted: no panel block was played. h224's openings where the claim was free (2644 both sides, 1706,
+  camp 2644, camp 1706: pilgrims at r30 at least v12's) mined more by r150 (2644 red 1364 against 412, 1706 1000 against
+  472). Reopening needs a fix for defect 1 first (a claim only where the bank pays it, e.g. by the owner's served
+  depots), then one for defect 2; stages 2-3 wait on stage 1's verdict.
+- The structural slot (one attempt in four, TRAINING_ALGORITHM §3) stays owed: h218 and h214 were ablations and the
+  CLAIM programme played no block. The sweep goes on in order (h214's block 2 in play, then h212); the next structural
+  candidate is chosen before h212's block 1 is scored.

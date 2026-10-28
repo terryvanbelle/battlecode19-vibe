@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-27 16:14 PDT)
+## State (2026-10-27 17:04 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both teams
   make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`, `dist/creep` (source +
@@ -77,13 +77,14 @@
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
   h198, h201, h206, h202, h207, h209, h211, h213 rejected; sweep: h218 rejected).
-  **Replica queue (16:14): 85 waiting (71 ranked); h214 block 2 = 2386-2399 started (submission 286, bumped to the
-  front); VM 8.9 GB free, no VM jobs. Waiter: scratchpad wait_block.sh 2386 2399. Plateau step 7 = the CLAIM programme
-  (TRAINING_LOG 2026-10-27 15:13): stage 1's diagnostic on h224 (CLAIM 1, CLAIM_FUND 1) passed the claimant and church
-  bars and failed the economy bar in 5 of 12 games (the turn-3 prophet took the turn 3-4 depot pilgrims; TRAINING_LOG
-  16:00). Fix round 1 (of 2) = dist/h225 (+ CLAIM_AFTER 1, f39140d6b775) is on the driver: scratchpad claimdiag.sh h225,
-  read with claimcmp.py against claimbase_v12 (v12 in the same seats). If it passes, its block 1 on v7-m1 follows h212's
-  block 1 (the fourth attempt after h213).**
+  **Replica queue (17:04): 73 waiting (71 ranked); h214 block 2 = 2386-2399: 5 done, 7 running, 2 queued (submission
+  286, bumped); VM 8.9 GB free, no VM jobs. Waiter: scratchpad wait_block.sh 2386 2399. The CLAIM programme (plateau
+  step 7, TRAINING_LOG 2026-10-27 15:13) is closed at stage 1 as an execution failure (16:58): h224, h225 and h226 each
+  missed the driver diagnostic; the defects are the opening bank (LEARNINGS 54) and the lone claimant against the
+  enemy's crusader pair. No block was played; reopening needs a fix for the bank first. The structural slot stays owed:
+  choose the next structural candidate before h212's block 1 is scored. Uncommitted: tools/build_bot.js inlines CFG
+  (defaults bundle 47,767 -> 37,433 bytes); scratchpad inline_check.sh (replay identity on 5 games + unit tests) decides
+  whether it is committed.**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the
   autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 16:11 (after h214's block 1); next refresh between
   blocks.
