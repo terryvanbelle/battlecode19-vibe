@@ -185,3 +185,6 @@ Which acceptances have stemmed from ideas you got from ECONOMICS.md?
 
 ## 51. 2026-10-27 21:34 PDT
 OK, time to shut down.  Please commit all changes, kill all processes on the two VMs, and delete all local data
+
+## 52. 2026-10-27 21:43 PDT
+Answers to the shutdown questions: "Which two VMs did you mean?" = "dev + claude-driver"; "What should 'delete all local data' cover on claude-driver?" = "2019 here + on battlecode-dev"
