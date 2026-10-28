@@ -8164,3 +8164,27 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   castle); bar 2 or 3 over, c = 350. Bar 4 has no alternative. Then FORT closes at stage 0, or stage 1 (the read in the
   bot, FORT_ACT 0) follows.
 - Seen before this entry: the tool's test run on 1657 seed-2046 red (a target game): K 6, safe 105, no event to r350.
+
+## 2026-10-27 20:17 PDT: FORT closed at stage 0: bars 1, 2 and 4 missed (no separation; the safe zone holds too little)
+- study/fortread.mjs over the 192 v12 reference games (scratchpad fortread_v12.txt; bars by study/fort_bars.py with
+  castlekill_v12.txt), the rule as registered at 20:06, c = 300:
+  - bar 1: R fires in **8 of 15** target games (bar 11): all 8 on 2046 (uvafan x6, mvpatel2000 x2, no event to r350). It
+    misses uvafan 2057 x2 (an enemy unit on our half at r44, a hit on our church at r44, an enemy church on our half at
+    r40-42), uvafan 2518 red (inv r33), and uvafan 2330 x2 and mvpatel2000 203 x2, where the only event is a hit at
+    r286-288.
+  - bar 2: R fires in **7 of 24** K <= 10 wins with the first castle kill after r300 (bar 2): StoneT2000's bots on 2822
+    x2 and 2965 x2, 1915 (1968 red), IanCoolidge0 203 blue (1834: the first hit at r302) and 1884 blue (2110: inv r316).
+  - bar 3: 6 of 37 other K <= 10 games (16%, bar 25%): passes.
+  - bar 4: **2 of 5** target maps (bar 3). Parity safe-zone tiles x 40 + 200 per castle against 1.2 x the opponent's
+    largest end health: 2330 8,520 vs 7,428 and 203 9,600 vs 3,792 pass; 2518 5,160 vs 5,472, 2046 4,600 vs 8,016 (105
+    tiles) and 2057 6,640 vs 13,608 miss. This is a capacity ceiling for a parity hold on 3 of the 5 maps.
+- The registered alternative (bar 1 short: castle vision only) gives 9 of 15, 8 of 24, 19% and 2 of 5: FORT closes at
+  stage 0. 0 games, 0 builds. The 01:20 question ("tell uvafan's lattice from the opponents whose castles our lines
+  take") is answered no at r300.
+- Described, not a decision input: the r283-288 hits are on our own line churches on the enemy's half, from v12's chain
+  at ~r280. This holds in the three games checked (1972 2330 red, 1978 203 red and 1655 2591 red; study/firsthit.mjs).
+  With hits counted only on our half, uvafan 2330 and mvpatel2000 203 would read like StoneT2000's 2591 wins: every one
+  of those games has a hit as its only event before r300, and 2591's six wins all come from the second line.
+- The structural slot is still owed. All three proposals of the design panel (wf_38ac13af-089) closed at stage 0 for 0
+  games: CHAIN_PRICE (out of sample), EVICT (arithmetic) and FORT (separation and capacity). The next structural attempt
+  needs a new design round that is shown these three closures.
