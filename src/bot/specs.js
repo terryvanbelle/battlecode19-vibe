@@ -12,3 +12,4 @@ export const STATS = [
 ];
 export const KARB_CAP = 20, FUEL_CAP = 100, KARB_YIELD = 2, FUEL_YIELD = 10, MINE_FUEL = 1;
 export const MAX_ROUNDS = 1000;
+export const START_K = 100;   // each team's karbonite at round 1 (INITIAL_KARBONITE)

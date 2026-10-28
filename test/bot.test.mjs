@@ -76,6 +76,7 @@ test('specs.js matches the engine', () => {
   assert.strictEqual(S.FUEL_CAP, SPECS.UNITS[2].FUEL_CAPACITY);
   assert.strictEqual(S.KARB_YIELD, SPECS.KARBONITE_YIELD);
   assert.strictEqual(S.FUEL_YIELD, SPECS.FUEL_YIELD);
+  assert.strictEqual(S.START_K, SPECS.INITIAL_KARBONITE);
 });
 
 test('util: offsets, rng, distances', () => {
@@ -4216,6 +4217,28 @@ test('castle: CLAIM picks one claim a team, owned by the castle nearest it, the 
     // CLAIM_MIN_M above every planned cluster's m: no claim.
     Object.assign(CFG, { CLAIM: 1, CLAIM_MIN_M: 7 });
     assert.ok(planOf(2644, 0).every(c => !c.B.st.claim));
+  } finally { Object.assign(CFG, saved); }
+});
+
+test('castle: CLAIM_BANK keeps the claim only where the opening bank pays it and the owner staffs at most CLAIM_BANK depots', () => {
+  const saved = { ...CFG };
+  try {
+    // tools/plan.mjs, team staffed depots / the owner's: 2644 3/3, 1036 4/2, 388 4/4, 826 6/3 (claim kept); 2321 5/5
+    // (owner over 4), 836 7/4 and 203 8/3 (team over 6: 8 pilgrims and a prophet are 105 K), no claim.
+    const claims = () => Object.fromEntries([2644, 1036, 388, 826, 2321, 836, 203].map(s =>
+      [s, [0, 1].map(t => planOf(s, t).filter(c => c.B.st.claim).length)]));
+    Object.assign(CFG, { CLAIM: 1, CLAIM_BANK: 0 });
+    const all = claims();
+    for (const v of Object.values(all)) assert.deepStrictEqual(v, [1, 1]);
+    CFG.CLAIM_BANK = 4;
+    const kept = claims();
+    for (const s of [2644, 1036, 388, 826]) assert.deepStrictEqual(kept[s], [1, 1], 'kept ' + s);
+    for (const s of [2321, 836, 203]) assert.deepStrictEqual(kept[s], [0, 0], 'dropped ' + s);
+    CFG.CLAIM_BANK = 5;   // 2321's owner staffs 5 depots
+    assert.deepStrictEqual(claims()[2321], [1, 1]);
+    // A crusader claimant (15 K) leaves room for one more pilgrim: 203's 8 depots still do not fit (9 x 10 + 15 > 100).
+    Object.assign(CFG, { CLAIM_BANK: 4, CLAIM_UNIT: S.CRUSADER });
+    assert.deepStrictEqual(claims()[203], [0, 0]);
   } finally { Object.assign(CFG, saved); }
 });
 

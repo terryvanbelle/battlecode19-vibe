@@ -108,6 +108,12 @@ export const CFG = {
   CLAIM_AFTER: 0,            // 1 (with CLAIM): the claimant comes after the owner's depot pilgrims (structTurn's extra hook,
                              // not first): h224's turn-3 prophet took 2-3 of v12's turn 3-4 pilgrims on 836, 1712 and 2321
                              // (TRAINING_LOG 2026-10-27 16:00)
+  CLAIM_BANK: 0,             // >0 (with CLAIM): the claim only where the opening bank pays it: the team's staffed depots'
+                             // pilgrims, the claimant and the claim's pioneer within START_K, and the owner staffing at most
+                             // CLAIM_BANK depots (with CLAIM_AFTER its claimant comes on turn CLAIM_BANK + 1 at the latest).
+                             // h225 kept the economy everywhere but its pioneer waited to r12 on 836, 1712 and 203 (7-8
+                             // staffed depots: 70-80 K of pilgrims and the 25 K prophet leave 5 K until the first cargo
+                             // comes home) and its claimant came r6 on 2321 (5 depots) (TRAINING_LOG 2026-10-27 16:58)
   DEPOT_COOL: 30,            // turns before re-staffing a depot whose pilgrim died, per death there
   DEPOT_COOL_MAX: 150,
   KARB_FIRST: 2,             // karbonite depots assigned per fuel depot while fuel is not short

@@ -4,6 +4,7 @@ sides and tallies, the replay archive; the field roster and challenge picker (fi
 client neighbours/team names; the map picker (maps.py). Standard library only, no network, no game.
 Run: python3 test/galaxy19/test_galaxy19_tools.py (also run by test/galaxy19.test.js in tools/unit-tests.sh)
 """
+import contextlib
 import io
 import json
 import math
@@ -431,6 +432,14 @@ class Contest(unittest.TestCase):
         self.assertEqual(panelsim.pooled_trial(0, .5, 0, rnd)[0], 'reject')
         acc, blocks = panelsim.simulate('paired', .2, .5, .2, 400)
         self.assertTrue(acc <= .12 and 1 <= blocks <= 4)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            panelsim.main(['--cells', '40', '--rho', '0.3', '--pi', '0.5', '--trials', '50', '--rule', 'paired'])
+        try:
+            self.assertEqual(len(panelsim.block(.2, .5, .2, rnd)), 40)                # --cells sets a block's size
+        finally:
+            panelsim.CELLS = 36
+        self.assertIn('rho 0.3', out.getvalue())
 
     def test_split_order(self):
         self.assertEqual([contest19.split_order(s) for s in ('a~b@+', 'a~b@-', 'a~b', 'x@')],

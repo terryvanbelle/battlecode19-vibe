@@ -2,7 +2,7 @@
 // plans and sends church pioneers, calls attacks, and runs the structure loop.
 // Enemy castles are exactly the mirrors of ours (canonical frame: (x, n-1-y)).
 import { CFG, defReserveK } from './config.js';
-import { STATS, CHURCH, PILGRIM, CRUSADER } from './specs.js';
+import { STATS, CHURCH, PILGRIM, CRUSADER, START_K } from './specs.js';
 import { SIG, encXY, encNum, CT, FAR, decFarRobot, GUARD_STRIKE, CLAIM_R2 } from './comms.js';
 import { bfs } from './mapinfo.js';
 import { offsets, d2, king } from './util.js';
@@ -161,7 +161,7 @@ function planClusters(B) {
       claimC = { cluster: c.i, d: dUs, m: dThem - dUs, owner };
   }
   st.claim = null;
-  if (CFG.CLAIM && claimC && claimC.owner === myIdx) {
+  if (CFG.CLAIM && claimC && claimC.owner === myIdx && (!CFG.CLAIM_BANK || claimPaid(B, own, myIdx))) {
     const tile = claimTile(w, B.clusters[claimC.cluster].site, own[myIdx], own.map(c => w.mirror(c.x, c.y)));
     if (tile) st.claim = { cluster: claimC.cluster, d: claimC.d, m: claimC.m, x: tile[0], y: tile[1], built: 0, sent: false };
   }
@@ -288,6 +288,19 @@ function earlyPioneer(B) {
   const a = sendPioneer(B, next);
   if (a) st.earlySent = true;
   return a;
+}
+
+// CFG.CLAIM_BANK: the opening bank pays the claim: every castle's staffed depots get their pilgrims, and the claimant
+// and the claim's pioneer, out of START_K; the owner (index `owner` in `own`) staffs at most CLAIM_BANK depots.
+function claimPaid(B, own, owner) {
+  const w = B.w, n = w.n;
+  const staffed = own.map(c => {
+    const f = bfs(w, [[c.x, c.y]], PILGRIM_OFFS);
+    return B.deps.filter(d => { const k = f[d.y * n + d.x]; return k >= 0 && k <= CFG.SERVE_MOVES; }).length;
+  });
+  const team = staffed.reduce((a, b) => a + b, 0);
+  return staffed[owner] <= CFG.CLAIM_BANK &&
+    (team + 1) * STATS[PILGRIM].costK + STATS[CFG.CLAIM_UNIT].costK <= START_K;
 }
 
 // CFG.CLAIM: where the claimant stands for the site (x, y) of a cluster the castle `o` owns: a passable lattice tile, no

@@ -14,7 +14,8 @@ are drawn to match).
     POOL champion games a cell (the side-aware z over every game); block 1 rejects at z < 0.5, block 2 accepts at
     z >= 2 and rejects below 1, block 3 accepts at z >= 2.
   python3 -I tools/galaxy19/panelsim.py [--rho 0.05,0.1,0.2,0.3] [--pi 0.5,0.65,0.75,0.85] [--eta 0.2]
-                                        [--trials 4000] [--rule paired,pooled]
+                                        [--trials 4000] [--rule paired,pooled] [--cells 36]
+  --cells: cells a block (36 on the general panel's six opponents; a targeted panel has its own count).
 """
 import argparse
 import math
@@ -26,11 +27,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import contest19  # noqa: E402
 
-CELLS = 36
+CELLS = 36   # cells a block (--cells)
 
 
 def block(rho, pi, eta, rnd, win=0.67):
-    """36 cells: (noisy, champion's fixed result or None, candidate's fixed result or None)."""
+    """CELLS cells: (noisy, champion's fixed result or None, candidate's fixed result or None)."""
     out = []
     for _ in range(CELLS):
         if rnd.random() < eta:
@@ -99,7 +100,10 @@ def main(argv=None):
     ap.add_argument('--trials', type=int, default=4000)
     ap.add_argument('--rule', default='paired,pooled')
     ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--cells', type=int, default=36)
     a = ap.parse_args(argv)
+    global CELLS
+    CELLS = a.cells
     for rule in a.rule.split(','):
         for rho in (float(x) for x in a.rho.split(',')):
             row = [f'pi {pi}: {100 * acc:4.1f}% ({blk:.2f} blocks)'

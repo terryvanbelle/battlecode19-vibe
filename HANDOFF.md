@@ -1,6 +1,6 @@
 # HANDOFF.md — state and how to run things
 
-## State (2026-10-27 17:04 PDT)
+## State (2026-10-27 17:33 PDT)
 - Bot `src/bot`: the v2 canonical-frame design (src/bot/world.js): every robot sees its own side on top, so both teams
   make mirror-image decisions. Champion **v12** (`bots/v12` = h185, bots/ROSTER.tsv); frozen history v0-v12, sparring
   partners `bots/rush`, `bots/rush4`, `dist/turtle` (prophets only, never attacks), `dist/camp`, `dist/creep` (source +
@@ -77,13 +77,17 @@
   TRAINING_LOG (v8 era: h145-h151, h157, h159, h161-h163 rejected; h167 accepted; v9 era: h170 rejected, h175
   accepted; v10 era: h178 accepted; v11 era: h184, h190, h192, h193 rejected, h185 accepted; v12 era: h195, h203,
   h198, h201, h206, h202, h207, h209, h211, h213 rejected; sweep: h218 rejected).
-  **Replica queue (17:04): 73 waiting (71 ranked); h214 block 2 = 2386-2399: 5 done, 7 running, 2 queued (submission
-  286, bumped); VM 8.9 GB free, no VM jobs. Waiter: scratchpad wait_block.sh 2386 2399. The CLAIM programme (plateau
-  step 7, TRAINING_LOG 2026-10-27 15:13) is closed at stage 1 as an execution failure (16:58): h224, h225 and h226 each
-  missed the driver diagnostic; the defects are the opening bank (LEARNINGS 54) and the lone claimant against the
-  enemy's crusader pair. No block was played; reopening needs a fix for the bank first. The structural slot stays owed:
-  choose the next structural candidate before h212's block 1 is scored. tools/build_bot.js inlines CFG from 17:20
-  (defaults bundle 47,767 -> 37,433 bytes; replays identical: TRAINING_LOG 17:20).**
+  **Replica queue (17:31): 67 waiting (67 ranked); h214 block 2 = 2386-2399: 10 done, 4 running (submission 286,
+  bumped); VM 8.9 GB free, no VM jobs. Waiter: scratchpad wait_block.sh 2386 2399. The CLAIM programme (plateau step 7,
+  TRAINING_LOG 2026-10-27 15:13), closed at stage 1 at 16:58, is reopened with a fix for the opening bank (TRAINING_LOG
+  17:33): h227 (dist/h227 1e8676ce0ebc: CLAIM 1, CLAIM_FUND 1, CLAIM_AFTER 1, CLAIM_BANK 4, the claim only where the
+  opening bank pays it: 12 of 40 pool maps) plays its driver diagnostic on fresh seeds (scratchpad claimpair.sh;
+  claimpair_h227 and claimpair_v12, bars as registered); if it passes, its block 1 on the targeted panel
+  progress/panels/claim-t1.json (40 cells with v12 references, no control block) is the structural slot's, submitted
+  after h212's block 1 is scored (`PANEL=progress/panels/claim-t1.json tools/panel_submit.sh dist/h227 ...`), scored
+  with `tools/panel_paired.sh --studied m-schier.battlecode-2019-wololo:seed-2644,StoneT2000.BC19-botfinalsafe:seed-1706
+  progress/panels/v12.ref LO-HI`. tools/build_bot.js inlines CFG from 17:20 (defaults bundle 47,767 -> 37,433 bytes;
+  replays identical: TRAINING_LOG 17:20).**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the
   autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 16:11 (after h214's block 1); next refresh between
   blocks.

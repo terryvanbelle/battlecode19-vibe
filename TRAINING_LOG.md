@@ -7918,3 +7918,45 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   dist/h224 rebuilt (38,728 bytes) replays its diagnostic games 836 and 1712 IDENTICAL, dist/h226 rebuilt (38,741) 2644
   and 2321 IDENTICAL; 196 node + 67 Python unit tests pass. test/tools.test.js checks that no CFG literal or key name is
   left in the minified bundle. Built candidates in dist/ keep their old bundles and hashes (the same play).
+
+## 2026-10-27 17:33 PDT: CLAIM stage 1 reopened with a fix for the opening bank (CLAIM_BANK): h227, a targeted panel
+- **Defect 1 is arithmetic** (16:58: the opening bank). START_K (100) pays the pilgrims of 7-8 staffed depots (70-80 K);
+  a 25 K prophet then leaves 5 K until the first cargo comes home, so the claim's pioneer cannot leave by r8 without
+  displacing depot pilgrims (h224 on 836, 1712, 2321) or waiting (h225: r12 on 836, block 836, 1712 and 203); and an
+  owner staffing 5 depots builds its claimant after them on turn 6 (h225 on 2321). Where the bank pays it, h225 met
+  every bar: on 2644 (v12 red and blue, camp, block) and 1706 (v12, camp) the claimant came r4, the pioneer r6, pilgrims
+  at r30 were 4 to v12's 3, churches at r60 equal, our church stood on the claimed site at r33-r39 in 6 of 6 (v12 in the
+  same seats: none by r150 in 2, r50-r74 in 4), the claimant was alive at r40 in 5 of 6 and on station by r20 in 5 of 6.
+- **The fix, CLAIM_BANK N** (castle.js claimPaid; default 0): the claim is kept only where (the team's staffed depots +
+  1) x 10 K + CLAIM_UNIT's cost <= START_K and the owner staffs at most N depots. N 4: with CLAIM_AFTER the claimant
+  comes on turn 5 at the latest, the bar. The rule reads the map alone (turn 3): of the ladder pool's 40 maps it keeps
+  the claim on 12 (493, 1375, 826, 1915, 747, 1706, 2013, 1241, 388, 2644, 53, 1036), drops it on 6 (203, 1712, 1828,
+  2924, 2321, 836); 22 have no claim (scratchpad claimgate_pool.txt, from tools/plan.mjs).
+- **dist/h227** = CLAIM 1, CLAIM_FUND 1, CLAIM_AFTER 1, CLAIM_BANK 4 (1e8676ce0ebc, 38,969 bytes). No-op: the defaults
+  build replays v12 IDENTICAL on 799 to r300. Unit test: the claim kept on 2644, 1036, 388 and 826 and dropped on 2321,
+  836 and 203, both teams; specs.js START_K checked against the engine's INITIAL_KARBONITE. 197 node + 67 Python unit
+  tests pass (panelsim --cells tested).
+- **Diagnostic on fresh seeds** (the gate was designed on the old diagnostic's): h227 and bots/v12 in the same seat
+  against bots/v12, one game at a time to r150, on 2013, 388, 1036, 1375, 1915, 1241, 747 and 826 red and 2013 and 1036
+  blue (scratchpad claimpair.sh). The registered bars (15:13), per fired game: the claimant built by r5 in every one, on
+  station by r20 in >= 75%, alive at r40 in >= half; the pioneer away by r8 in every one; our church on the claimed site
+  in >= half of those where the claimant held; pilgrims at r30 within 1 of v12's and churches at r60 at least v12's in
+  every game; 0 exceptions, timeouts and frozen turns. Inert where it drops the claim: h227 red against v12 on 836 and
+  1712 byte-identical to v12's own replays (scratchpad claimbase_v12). One diagnostic: a miss names its defect and
+  closes the stage again, with at most one fix round.
+- **A targeted panel** (TRAINING_ALGORITHM §4: a map-conditional switch). Block 1 = progress/panels/claim-t1.json: every
+  cell of the general panel's sets v7-m1, m2 and m3 on a map where the claim is kept: wololo 2644, 2013, 1375, 493;
+  botfinalsafe 1706, 1915, 1036; bot1v43 388, 1915, 1241; uvafan 1036; awesomelemonade 1915, 747, 1706; IanCoolidge0
+  1036, 2644, 2013, 1241, 388; mvpatel2000 747. 20 opponent-maps, both sides, 40 games; v12's games on every one are in
+  progress/panels/v12.ref, so no control block is needed. tools/galaxy19/panelsim.py --cells 40 (new option): a neutral
+  candidate is accepted 4.5-5.2% of the time; one that wins 75% of the cells it changes, 48% at 20% of cells changed.
+- **Rule** (paired fresh-cell, fixed now): `tools/panel_paired.sh --studied
+  m-schier.battlecode-2019-wololo:seed-2644,StoneT2000.BC19-botfinalsafe:seed-1706 progress/panels/v12.ref BLOCK` (the
+  studied cells are the 15:13 ones that the gate keeps). Block 1 rejects at t <= 0 and accepts at t >= 2 with D >= 4,
+  the studied cells gaining and the others at t >= 0. Neither: block 2 on T2 (drawn then with random.Random(2): two
+  qualifying maps a panel opponent, none of its T1 maps; v12's control block on T2 first) rejects at t <= 1; block 3
+  (T3, likewise) at t <= 1.5; block 4 accepts at t >= 2. Its worth to the ladder is the effect times 12 of 40 maps.
+  Mechanism read (a check, not a decision input): our church on the claimed site in at least half of the block's games;
+  an enemy church on our half at r100 in fewer of them than in v12's games on the same cells.
+- **Order:** h227's block 1 is the structural slot's (§3): queued when its diagnostic passes and h212's block 1 (next
+  after h214's block 2) is scored; the sweep goes on after it.
