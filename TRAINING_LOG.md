@@ -7906,3 +7906,15 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
 - The structural slot (one attempt in four, TRAINING_ALGORITHM §3) stays owed: h218 and h214 were ablations and the
   CLAIM programme played no block. The sweep goes on in order (h214's block 2 in play, then h212); the next structural
   candidate is chosen before h212's block 1 is scored.
+
+## 2026-10-27 17:20 PDT: build_bot.js inlines CFG: the defaults bundle 47,767 -> 37,433 bytes, play byte-identical
+- The defaults bundle had reached 47,767 bytes against the 48,000 test bound (LEARNINGS 3): terser kept config.js's
+  top-level CFG literal (about 4 KB of key names) and every `CFG.KEY` read live. tools/build_bot.js now inlines it
+  before minifying (inlineCfg): each `CFG.KEY` read becomes its literal value (an object or array value is hoisted once
+  as `CFG$KEY`), the literal is dropped, an unknown key or any other use of CFG stops the build; terser then runs as a
+  module at top level (toplevel: true, MyRobot reserved, the export removed after). src/bot never writes CFG or reads it
+  by a computed key, so the substitution is exact, and the dead branches of off switches drop out.
+- Identity (scratchpad inline_check.sh): the defaults build replays bots/v12 on 799 to r300 IDENTICAL (37,433 bytes);
+  dist/h224 rebuilt (38,728 bytes) replays its diagnostic games 836 and 1712 IDENTICAL, dist/h226 rebuilt (38,741) 2644
+  and 2321 IDENTICAL; 196 node + 67 Python unit tests pass. test/tools.test.js checks that no CFG literal or key name is
+  left in the minified bundle. Built candidates in dist/ keep their old bundles and hashes (the same play).

@@ -82,9 +82,8 @@
   step 7, TRAINING_LOG 2026-10-27 15:13) is closed at stage 1 as an execution failure (16:58): h224, h225 and h226 each
   missed the driver diagnostic; the defects are the opening bank (LEARNINGS 54) and the lone claimant against the
   enemy's crusader pair. No block was played; reopening needs a fix for the bank first. The structural slot stays owed:
-  choose the next structural candidate before h212's block 1 is scored. Uncommitted: tools/build_bot.js inlines CFG
-  (defaults bundle 47,767 -> 37,433 bytes); scratchpad inline_check.sh (replay identity on 5 games + unit tests) decides
-  whether it is committed.**
+  choose the next structural candidate before h212's block 1 is scored. tools/build_bot.js inlines CFG from 17:20
+  (defaults bundle 47,767 -> 37,433 bytes; replays identical: TRAINING_LOG 17:20).**
   While 30+ wait: no local VM jobs, our blocks one at a time and bumped to the front (`tools/bump_ours.sh --ours`), the
   autoscrim held (TRAINING_LOG 2026-10-25 09:12). progress/ refreshed 16:11 (after h214's block 1); next refresh between
   blocks.

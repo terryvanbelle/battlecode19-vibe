@@ -293,6 +293,8 @@ test('build_bot: --cfg overrides land in the bundle; unknown keys are refused', 
   await build(src, out, { cfg: { PIONEER_TIMEOUT_REST: 0 } });
   assert.strictEqual(read(), plain);
   assert.ok(plain.length < 48000, `bundle ${plain.length} bytes`);
+  // CFG is inlined (build_bot.js inlineCfg): no CFG literal and no key name is left in the minified bundle.
+  assert.ok(!/\bCFG\b|PIONEER_TIMEOUT_REST|SERVE_MOVES/.test(plain), 'CFG inlined');
   fs.rmSync(out, { recursive: true, force: true });
 });
 
