@@ -8086,3 +8086,39 @@ Nothing here is a new switch beyond those queued; the feed's lever stays h209 (h
   calls after r251; guard per structure at least GUARD_BASE + round/40 by r400; held crusaders alive at r1000 >= 90% of
   those built; end bank <= 150 K; fuel never below 500 in the dump; castles lost no more than v12's; 0 exceptions,
   timeouts and frozen turns.
+
+## 2026-10-27 19:52 PDT: CHAIN_PRICE closed at stage 0a (out of sample, unpriced 3 W / 7 L; bar 3 losses a win)
+- **Stage 0a** (pre-registered 19:41): study/econt.mjs over v12's v7-m3 control block 2099-2112 (42 games, one a cell),
+  classified by study/price_class.py with the same fill formula and r350 line (scratchpad econt_v12_m3.txt). Classes (W
+  / L): ended before r250 1 / 0, a line fired 4 / 1, banked 1,090 K by r250 0 / 1, fill by r350 17 / 8, **fill after
+  r350 3 / 7** (10 of 42 games). The class is common enough (bar: 4 or more) but **misses the loss bar: 7 losses to 3
+  wins, under 3 to 1. CHAIN_PRICE closes as pre-registered, the switch never built.**
+- The 3 wins are StoneT2000 (2733 red fill r406, 2965 both sides r401 and r421): in those games a slow bank went with a
+  win, and the terminal doctrine would have staked them. The 7 losses: mvpatel2000 2046 both sides (r386) and 2797 blue,
+  uvafan 2518 both sides, IanCoolidge0 1884 red, m-schier 493 blue. The in-sample 3 / 28 came from the v7-m1 and v7-m2
+  pools; the split does not hold on v7-m3.
+- The stage 1 code drafted while the census ran (CHAIN_PRICE_BY, FAR.PRICE stand-down radio, TERM_SINK, 4 unit tests) is
+  reverted unbuilt; the diff stays in the scratchpad (chain_price_stage1.diff) for a later reopening on new evidence.
+- **Next for the structural slot** (still owed): the panel's runner-up EVICT, with the judge's fix to its gate (the
+  squad only when the bank holds the 90 K pioneer wave plus RESERVE_CHURCH_K), pre-registered before any build.
+  Meanwhile h212 (CHAIN_ROUND 0) block 1 = 2400-2411 plays (7 done, 5 running at 19:51).
+
+## 2026-10-27 19:59 PDT: EVICT stage 0 pre-registered (the structural slot's next attempt): arithmetic first, then h211
+- **EVICT** (the design panel's runner-up, 5 of 10; scratchpad evict_proposal.json): a pioneer held off its site (margin
+  2-6, our half) by enemy attackers for 6 turns calls a crusader squad of max(3, 2A+1), at most 5 (A = attackers it sees
+  by the site); the squad gathers at the pioneer out of the guard's reach and charges together on its radio, leashed to
+  the site; ESCORT_BACK waits for the church. The judge's fix: the squad builds only while the bank holds 15 + 90 (the
+  pioneer wave's departure) + 50 (RESERVE_CHURCH_K) = 155 K, so the opening is untouched (LEARNINGS 54). The judge's
+  count: of the 27 m 2-6 sites lost in v12's losses only 6 have both 20+ rounds and 95+ K at r50.
+- **Stage 0a, arithmetic** (no games): pion2_v12.txt with econt_v12.txt (v12's 150 games of 1651-1658, 1831-1858,
+  1966-1979). A lost site: a loss's first pioneer to a site of margin 2-6 that we never churched and the enemy did
+  (theirs >= 0). Call round C = send + king steps + 6. Funded round F = the first round from C at which our bank, linear
+  between econt's 50-round samples (100 K at r0), holds 185 K (the gate plus two more crusaders: N = 3). Squad there S =
+  F + 3 builds + ceil(king steps / 3) walking + 4 (gather 2, charge 2). Reachable: S before the enemy church. **Bar:
+  lost sites reachable in at least 4 distinct loss cells (opponent, map, side); fewer closes EVICT as an arithmetic
+  ceiling under the 155 K gate (a block 1 accept needs D >= 4).** Printed for description: the same count in wins.
+- **Stage 0b** (only if 0a passes; reads only): h211's block 2336-2347 against v12.ref in the reachable cells (escorts'
+  arrival, first hit, turn-back, the guard's fate), with the proposal's bars: go on if in at least 3 of those cells the
+  escorts turned back on a prophet's first shot or died one at a time without killing the guard; close if they killed
+  the guard and the site still went to the enemy in most. Stage 1 then uses v12-vs-v12 seats that already block our site
+  (2321, 1706, 1712, 2644 red; TRAINING_LOG 16:00) before any squat partner.
